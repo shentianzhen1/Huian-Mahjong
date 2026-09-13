@@ -1,0 +1,32 @@
+[
+  {
+    "page": 1,
+    "file": "huian_rules_page_1.jpg",
+    "source_file": "codex-clipboard-b78f2df6-2173-4477-9768-cd686dae603f.jpg",
+    "sha256": "656CDC11065D199104506B2D6D7CD93D94E4C95FB9A59D3B4407FE339C7C775C"
+  },
+  {
+    "page": 2,
+    "file": "huian_rules_page_2.jpg",
+    "source_file": "codex-clipboard-ea934397-c654-4ffc-b54d-7b7c15a3f1d7.jpg",
+    "sha256": "58C15A139779CDA9DAAF6D4D3F9E9F51411D789FF4203DAC3DF3908244F45A1B"
+  },
+  {
+    "page": 3,
+    "file": "huian_rules_page_3.jpg",
+    "source_file": "codex-clipboard-c6ed28be-04a7-41cd-a7f8-c2a52c393351.jpg",
+    "sha256": "21A06D51D46271459911920B248833518290C22E7FCFC91046DD9CAD36049FC8"
+  },
+  {
+    "page": 4,
+    "file": "huian_rules_page_4.jpg",
+    "source_file": "codex-clipboard-efb60f3f-7c07-42ec-a0b2-700fa5933fef.jpg",
+    "sha256": "95AFCA5C01727CC45F1C42D51B36CF4738D4740BE753CA8C927CAD86704AAF96"
+  },
+  {
+    "page": 5,
+    "file": "huian_rules_page_5.jpg",
+    "source_file": "codex-clipboard-00855829-f943-404b-a435-dd4710d394cb.jpg",
+    "sha256": "A8B451F28FE79654570ECD55EB1A66F9F40C8D98377BF90A795FE71662A323F6"
+  }
+]

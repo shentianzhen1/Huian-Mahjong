@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.venv-capture/
+data/capture_validation/
+venv/
+.env
+*.log
+.DS_Store
+Thumbs.db
+models/*.pt
+models/*.onnx
+data/raw_frames/

@@ -1,0 +1,9 @@
+{
+  "mode": "two_player",
+  "capture_backend": "iphone_mirror_window",
+  "hand_roi": null,
+  "draw_roi": null,
+  "stable_required_frames": 4,
+  "frame_interval_ms": 120,
+  "bad_frame_cooldown_sec": 8
+}

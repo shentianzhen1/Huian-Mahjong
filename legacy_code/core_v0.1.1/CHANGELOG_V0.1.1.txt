@@ -1,0 +1,5 @@
+﻿V0.1.1
+- Corrected single-gold pinghu rule: NOT allowed.
+- Double-gold pinghu remains NOT allowed.
+- Added configurable default match length: 8 rounds.
+- Updated automated tests.

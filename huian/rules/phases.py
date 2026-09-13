@@ -1,0 +1,167 @@
+"""M2 legality and validation. Unknown alternatives are reported explicitly."""
+from collections import Counter
+from dataclasses import dataclass
+from huian._legacy import env
+from .config import UnknownRuleError
+from .engine import nonnegative_int
+
+
+@dataclass(frozen=True)
+class ActionReport:
+    known_actions: tuple
+    unresolved: tuple[str, ...] = ()
+
+    @property
+    def complete(self):
+        return not self.unresolved
+
+
+PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
+          "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
+          "TERMINAL"}
+
+
+def validate(adapter, state):
+    # Legacy validation disallows flowers in hands. Allow only the explicit,
+    # blocked replacement phase, without losing physical accounting below.
+    from copy import deepcopy
+    normal = deepcopy(state)
+    if state.phase == "NEED_FLOWER_REPLACE":
+        normal.hands = [[t for t in hand if t not in env.FLOWERS] for hand in state.hands]
+    adapter._validate_legacy_state(normal)
+    if state.phase not in PHASES:
+        raise ValueError("Invalid Huian phase")
+    if type(state.terminal) is not bool or state.terminal != (state.phase == "TERMINAL"):
+        raise ValueError("Terminal flag and phase disagree")
+    for value in (state.players, state.dealer, state.current_player, state.turn_index):
+        nonnegative_int(value, "state integer")
+    if len(state.special_states) != 2 or any(s not in (
+        "UNKNOWN", "NORMAL", "YOUJIN", "DOUBLE_YOU", "TRIPLE_YOU"
+    ) for s in state.special_states):
+        raise ValueError("Invalid special states")
+    if any(type(r) is not int for r in state.rewards):
+        raise ValueError("Rewards must be integer net scores")
+    if not state.terminal and state.rewards != [0, 0]:
+        raise ValueError("Nonterminal rewards must be zero")
+    if Counter(state.physical_tiles()) != Counter(env.full_wall()):
+        raise ValueError("Every physical tile must be accounted for: exactly the 144-tile set")
+    if state.phase == "READY":
+        if len(state.wall) != 144 or state.gold_tile is not None or state.pending_discard is not None:
+            raise ValueError("READY must be an undealt 144-tile wall")
+        return
+    if state.gold_tile is None:
+        raise ValueError("An imported active scenario must specify its gold tile")
+    for p, melds in enumerate(state.melds):
+        if len(melds) > 5:
+            raise ValueError("At most five melds")
+        for meld in melds:
+            expected_source = None if meld.kind == "AN_GANG" else 1 - p
+            if meld.from_player != expected_source or (
+                expected_source is not None and type(meld.from_player) is not int
+            ):
+                raise ValueError("Invalid meld source player")
+    if not state.terminal:
+        for p in range(2):
+            expected = 16 - 3 * len(state.melds[p])
+            if p == state.current_player and state.phase in (
+                "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE"
+            ):
+                expected += 1
+            if len(state.hands[p]) != expected:
+                raise ValueError(f"Invalid hand size for player {p} in {state.phase}")
+    if state.phase.startswith("AFTER_") and state.phase.removeprefix("AFTER_") in (
+        "CHI", "PENG", "MING_GANG", "AN_GANG"
+    ):
+        melds = state.melds[state.current_player]
+        if not melds or melds[-1].kind != state.phase.removeprefix("AFTER_"):
+            raise ValueError("Phase and latest meld disagree")
+    pending = state.pending_discard
+    if state.phase == "AFTER_DISCARD":
+        source = 1 - state.current_player
+        if not isinstance(pending, dict) or set(pending) != {"player", "tile", "river_index"}:
+            raise ValueError("Missing pending discard reference")
+        index = pending["river_index"]
+        if type(pending["player"]) is not int or type(index) is not int:
+            raise ValueError("Invalid pending discard reference types")
+        river = state.discards[source]
+        if pending["player"] != source or index != len(river) - 1 or not river:
+            raise ValueError("Pending discard must refer to the opponent's latest river tile")
+        if river[index] != pending["tile"]:
+            raise ValueError("Pending discard tile mismatch")
+    elif pending is not None:
+        raise ValueError("Pending discard outside claim phase")
+    if state.phase == "NEED_FLOWER_REPLACE":
+        if not any(t in env.FLOWERS for t in state.hands[state.current_player]):
+            raise ValueError("Replacement phase without a flower")
+        if any(t in env.FLOWERS for t in state.hands[1 - state.current_player]):
+            raise ValueError("Flower in inactive player's hand")
+
+
+def report(adapter, state):
+    validate(adapter, state)
+    if state.terminal:
+        return ActionReport(())
+    if state.phase == "READY":
+        return ActionReport((), ("deal_replacement_order", "open_gold_procedure", "tianhu"))
+    if state.phase == "NEED_FLOWER_REPLACE":
+        return ActionReport((), ("deal_replacement_order",))
+    if state.special_states != ["NORMAL", "NORMAL"]:
+        return ActionReport((), ("youjin_permissions",))
+    # A defensive stop, NOT a declaration that the hand is a draw at <=16.
+    if len(state.wall) <= 16:
+        return ActionReport((), ("wall_boundary",))
+    p = state.current_player
+    hand = state.hands[p]
+    phase = state.phase
+    A, T = env.Action, env.ActionType
+    if phase in ("AFTER_MING_GANG", "AFTER_AN_GANG"):
+        # Importing this phase explicitly means kong response resolution is over.
+        return ActionReport((A(p, T.DRAW, metadata={"source": "tail"}),))
+    if phase == "NEED_DRAW":
+        return ActionReport((A(p, T.DRAW, metadata={"source": "head"}),))
+    if state.gold_tile in hand:
+        return ActionReport((), ("youjin_trigger", "sanjindao"))
+    if phase in ("AFTER_CHI", "AFTER_PENG"):
+        return ActionReport(tuple(A(p, T.DISCARD, tile=t) for t in sorted(set(hand))))
+    actions, unknown = [], []
+    if phase == "AFTER_DRAW":
+        actions.extend(A(p, T.DISCARD, tile=t) for t in sorted(set(hand)))
+        if adapter.rules.can_win(hand, state.gold_tile, len(state.melds[p])):
+            # Declining an available ordinary win is not part of this milestone.
+            return ActionReport((), ("win_declaration_and_settlement",))
+        kongs = adapter.rules.concealed_kongs(hand, state.gold_tile)
+        if kongs:
+            if adapter.rules.config.experimental_no_rob_kong:
+                actions.extend(A(p, T.AN_GANG, tile=t, tiles=(t,) * 4) for t in kongs)
+            else:
+                unknown.append("rob_kong")
+        if any(m.kind == "PENG" and m.tiles[0] in hand for m in state.melds[p]):
+            unknown.append("added_kong_details")
+    elif phase == "AFTER_DISCARD":
+        tile = state.pending_discard["tile"]
+        candidates = adapter.rules.meld_options(hand, tile, state.gold_tile)
+        actions.extend(A(p, T.CHI, tile=tile, tiles=seq) for seq in candidates["chi"])
+        if candidates["peng"]:
+            actions.append(A(p, T.PENG, tile=tile, tiles=(tile,) * 3))
+        if candidates["ming_gang"]:
+            if adapter.rules.config.experimental_no_rob_kong:
+                actions.append(A(p, T.MING_GANG, tile=tile, tiles=(tile,) * 4))
+            else:
+                unknown.append("rob_kong")
+        if adapter.rules.can_win(hand + [tile], state.gold_tile, len(state.melds[p]), "pinghu"):
+            unknown.append("win_declaration_and_settlement")
+        unknown.append("pass_transition")
+    return ActionReport(tuple(actions), tuple(unknown))
+
+
+def authorize(adapter, state, action):
+    result = report(adapter, state)
+    if type(action.player) is not int:
+        raise ValueError("Invalid action player")
+    # Individually known actions can execute even when other alternatives are
+    # unresolved. legal_actions() never presents this as a complete action set.
+    if action in result.known_actions:
+        return
+    if result.unresolved:
+        raise UnknownRuleError(*result.unresolved)
+    raise ValueError(f"Illegal action: {action}")

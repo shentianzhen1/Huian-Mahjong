@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>泉州麻将助手 V0.4</title>
+<style>
+body{font-family:Arial,"Microsoft YaHei",sans-serif;max-width:850px;margin:40px auto;line-height:1.75;padding:0 24px}
+code{background:#f2f2f2;padding:2px 6px;border-radius:4px}
+.note{background:#f6f6f6;padding:14px;border-left:4px solid #888}
+</style>
+<h1>泉州麻将助手 V0.4</h1>
+<p>本版先使用苹果手机镜像测试，并优先开发二人麻将。暂时不使用采集卡。</p>
+<h2>安装</h2>
+<ol>
+<li>完整解压 ZIP 到英文路径，例如 <code>D:\MahjongAssistant\</code>。</li>
+<li>双击 <code>INSTALL_AND_RUN.bat</code>。</li>
+<li>程序会自动创建独立 Python 环境并安装 OpenCV、NumPy、Pillow、mss、pywin32。</li>
+</ol>
+<div class="note">如果现有 Python 3.14 安装 OpenCV/NumPy 失败，建议额外安装 Python 3.12 64-bit。无需卸载 3.14。</div>
+<h2>测试步骤</h2>
+<ol>
+<li>先把 iPhone 麻将画面镜像到 Windows。</li>
+<li>点击 <b>Select mirror window</b>，选择镜像窗口。</li>
+<li>点击 <b>Calibrate hand ROI</b>，框住你底部的全部手牌。</li>
+<li>点击 <b>Calibrate draw ROI</b>，框住右侧单独摸牌区域。</li>
+<li>点击 <b>Start monitoring</b>。</li>
+</ol>
+<p>绿色框代表当前检测到的麻将牌候选。识别异常时点击 <b>Save snapshot</b>，或者查看 <code>data\bad_frames\</code>。</p>
+<p>V0.4 重点是“看得稳、分得开”。V0.5 才会继续加入完整牌面识别和基础 Top 3 出牌建议。</p>
+</html>

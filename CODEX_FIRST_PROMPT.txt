@@ -1,0 +1,13 @@
+Read AGENTS.md, PROJECT_CONTEXT.md, RULE_STATUS.md, TODO.md, and the code under legacy_code/.
+
+Do not modify files yet.
+
+First do the following:
+1. Summarize the existing architecture and code baseline.
+2. Identify which legacy rules/scoring assumptions conflict with RULE_STATUS.md.
+3. Run the existing Core and Environment tests and report results.
+4. Propose a minimal migration plan that preserves working code while introducing HuianRules / HuianRulesAdapter.
+5. Propose Simulator V0.1 interfaces and file structure.
+6. List every rule that is still UNKNOWN and ensure none is silently guessed.
+
+After I approve the plan, implement only the first milestone.

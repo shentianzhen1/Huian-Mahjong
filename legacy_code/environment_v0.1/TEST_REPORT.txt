@@ -1,0 +1,24 @@
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 720, in _warm_feature_flows
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 704, in _warm_collaboration_flows
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/generated/interface/models.py", line 32317, in hydrate_crdt_from_proto
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/rpc/remote.py", line 749, in __call__
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/rpc/client.py", line 150, in call
+artifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document.
+test_checkpoint_rollback (test_environment.EnvTests.test_checkpoint_rollback) ... ok
+test_clone_is_independent (test_environment.EnvTests.test_clone_is_independent) ... ok
+test_discard_moves_tile_to_river (test_environment.EnvTests.test_discard_moves_tile_to_river) ... ok
+test_draw_reduces_wall (test_environment.EnvTests.test_draw_reduces_wall) ... ok
+test_end_hand_rewards (test_environment.EnvTests.test_end_hand_rewards) ... ok
+test_event_log (test_environment.EnvTests.test_event_log) ... ok
+test_paired_wall_seeds (test_environment.EnvTests.test_paired_wall_seeds) ... ok
+test_reset_144 (test_environment.EnvTests.test_reset_144) ... ok
+test_zero_sum_stats (test_environment.EnvTests.test_zero_sum_stats) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.003s
+
+OK

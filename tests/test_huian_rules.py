@@ -1,0 +1,200 @@
+import unittest
+from copy import deepcopy
+
+from huian import HuianRules, HuianRulesAdapter, RulesConfig, UnknownRuleError
+from huian.rules import EvidenceStatus
+from huian._legacy import env
+
+
+HAND = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+        "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+
+
+class HuianRulesTests(unittest.TestCase):
+    def setUp(self):
+        self.rules = HuianRules()
+
+    def test_normal_win_and_ting(self):
+        self.assertTrue(self.rules.can_win(HAND))
+        self.assertIn("E", [x["tile"] for x in self.rules.ting_tiles(HAND[:-1])])
+
+    def test_single_and_double_gold_cannot_pinghu(self):
+        for indices in ((4,), (0, 1)):
+            hand = HAND.copy()
+            for i in indices:
+                hand[i] = "P9"
+            self.assertTrue(self.rules.can_win(hand, "P9"))
+            self.assertFalse(self.rules.can_win(hand, "P9", win_type="pinghu"))
+
+    def test_gold_cannot_be_consumed_by_chi(self):
+        self.assertEqual(self.rules.meld_options(["M2", "M4"], "M3", "M2")["chi"], [])
+        self.assertEqual(self.rules.meld_options(["M2", "M4"], "M3", "P9")["chi"],
+                         [("M2", "M3", "M4")])
+
+    def test_single_gold_pinghu_room_setting_and_ting(self):
+        hand = HAND.copy()
+        hand[4] = "P9"
+        enabled = HuianRules(RulesConfig(single_gold_can_pinghu=True))
+        self.assertFalse(self.rules.can_win(hand, "P9", win_type="pinghu"))
+        self.assertTrue(enabled.can_win(hand, "P9", win_type="pinghu"))
+        self.assertEqual(self.rules.ting_tiles(hand[:-1], "P9", win_type="pinghu"), [])
+        waits = enabled.ting_tiles(hand[:-1], "P9", win_type="pinghu")
+        self.assertIn("E", [entry["tile"] for entry in waits])
+        hand[3] = "P9"
+        self.assertFalse(enabled.can_win(hand, "P9", win_type="pinghu"))
+
+    def test_single_gold_setting_rejects_non_boolean(self):
+        for invalid in (None, 0, 1, "false", "true"):
+            with self.assertRaises(ValueError):
+                RulesConfig(single_gold_can_pinghu=invalid)
+
+    def test_discarded_gold_cannot_be_claimed_for_meld(self):
+        result = self.rules.meld_options(["M2"] * 3, "M2", "M2")
+        self.assertEqual(result, {"chi": [], "peng": False, "ming_gang": False})
+        self.assertEqual(self.rules.concealed_kongs(["M2"] * 4, "M2"), ())
+
+    def test_normal_melds(self):
+        result = self.rules.meld_options(["M2"] * 3, "M2", "P9")
+        self.assertTrue(result["peng"])
+        self.assertTrue(result["ming_gang"])
+        self.assertEqual(self.rules.concealed_kongs(["E"] * 4, "P9"), ("E",))
+
+    def test_fifth_copy_and_flowers_rejected(self):
+        for hand in (["M1"] * 5, ["F1"]):
+            with self.assertRaises(ValueError):
+                self.rules.can_win(hand)
+        with self.assertRaises(ValueError):
+            self.rules.meld_options(["M1"] * 4, "M1")
+
+    def test_unknown_special_wins_are_not_false(self):
+        for win_type in ("sanjindao", "youjin", "double_you", "triple_you", "qianggang"):
+            with self.assertRaises(UnknownRuleError):
+                self.rules.can_win(HAND, win_type=win_type)
+        with self.assertRaises(UnknownRuleError):
+            self.rules.can_win(["P9"] * 3, "P9", win_type="pinghu")
+
+    def test_visible_fifth_copy_rejected(self):
+        with self.assertRaises(ValueError):
+            self.rules.ting_tiles(["M1"] * 3, visible_tiles=["M1"] * 2)
+
+    def test_fan_is_not_silently_aggregated(self):
+        with self.assertRaises(UnknownRuleError):
+            self.rules.calculate_fan(flowers=["F1", "F2", "F3", "F4"])
+
+
+class SettlementTests(unittest.TestCase):
+    def setUp(self):
+        self.rules = HuianRules(RulesConfig("current_dealer_plus_winner_v1"))
+
+    def test_screenshot_a_and_b(self):
+        # Transcribed from RULE_STATUS.md; source PNGs are under references/settlement_examples.
+        for base, fan, multiplier, expected in ((10, 12, 2, 44), (15, 7, 4, 88)):
+            for winner in (0, 1):
+                result = self.rules.settle(winner=winner, current_dealer_base=base,
+                                           winner_fan=fan, multiplier=multiplier)
+                self.assertEqual(result.rewards[winner], expected)
+                self.assertEqual(sum(result.rewards), 0)
+                self.assertEqual(result.status, EvidenceStatus.HIGH_CONFIDENCE)
+
+    def test_explicit_hypothesis_and_multiplier_required(self):
+        kwargs = dict(winner=0, current_dealer_base=10, winner_fan=12)
+        with self.assertRaises(UnknownRuleError):
+            HuianRules().settle(**kwargs, multiplier=2)
+        with self.assertRaises(UnknownRuleError):
+            self.rules.settle(**kwargs)
+
+    def test_invalid_inputs(self):
+        for value in (-1, True, 1.5):
+            with self.assertRaises(ValueError):
+                self.rules.settle(winner=0, current_dealer_base=10,
+                                  winner_fan=value, multiplier=2)
+
+
+class AdapterTests(unittest.TestCase):
+    def setUp(self):
+        self.adapter = HuianRulesAdapter()
+
+    def post_claim(self):
+        state = env.GameState(gold_tile="P9", phase="AFTER_CHI")
+        state.hands[0] = HAND[:2] + HAND[5:]
+        state.melds[0] = [env.Meld("CHI", ["M2", "M3", "M4"], 1)]
+        return state
+
+    def test_discard_only_after_chi_or_peng(self):
+        for phase in ("AFTER_CHI", "AFTER_PENG"):
+            state = self.post_claim()
+            state.phase = phase
+            if phase == "AFTER_PENG":
+                state.melds[0] = [env.Meld("PENG", ["P8"] * 3, 1)]
+            actions = self.adapter.legal_actions(state)
+            self.assertTrue(actions)
+            self.assertTrue(all(a.type == env.ActionType.DISCARD for a in actions))
+
+    def test_legal_step_rollback_clone(self):
+        game = env.QuanzhouEnvironment(self.adapter)
+        game.set_state(self.post_claim())
+        original = game.state.state_hash()
+        token = game.checkpoint()
+        clone = game.clone()
+        action = game.legal_actions()[0]
+        game.step(action)
+        self.assertEqual(clone.state.state_hash(), original)
+        game.rollback(token)
+        self.assertEqual(game.state.state_hash(), original)
+
+    def test_illegal_step_does_not_mutate(self):
+        game = env.QuanzhouEnvironment(self.adapter)
+        game.set_state(self.post_claim())
+        before = deepcopy(game.state.canonical_dict())
+        with self.assertRaises(ValueError):
+            game.step(env.Action(0, env.ActionType.DRAW))
+        self.assertEqual(game.state.canonical_dict(), before)
+        self.assertEqual(game.events, [])
+
+    def test_unsupported_phases_block_instead_of_looping(self):
+        for phase in ("READY", "AFTER_DRAW", "AFTER_DISCARD", "PASS", "YOUJIN"):
+            state = self.post_claim()
+            state.phase = phase
+            with self.assertRaises(UnknownRuleError):
+                self.adapter.legal_actions(state)
+
+    def test_gold_state_blocks_partial_action_set(self):
+        state = self.post_claim()
+        state.hands[0][0] = "P9"
+        with self.assertRaises(UnknownRuleError):
+            self.adapter.legal_actions(state)
+
+    def test_global_fifth_copy_and_non_zero_sum_rejected(self):
+        state = self.post_claim()
+        state.wall = ["E"] * 2
+        with self.assertRaises(ValueError):
+            self.adapter.validate_state(state)
+        state = self.post_claim()
+        state.rewards = [44, 0]
+        with self.assertRaises(ValueError):
+            self.adapter.reward(state)
+
+    def test_fixed_seed_wall_reproducibility(self):
+        a, b = env.QuanzhouEnvironment(self.adapter), env.QuanzhouEnvironment(self.adapter)
+        self.assertEqual(a.reset(seed=42).state_hash(), b.reset(seed=42).state_hash())
+        self.assertEqual(len(a.state.wall), 144)
+
+    def test_negative_wall_count_rejected(self):
+        state = self.post_claim()
+        state.wall_remaining = lambda: -1
+        with self.assertRaises(ValueError):
+            self.adapter.validate_state(state)
+
+    def test_invalid_meld_rejected(self):
+        state = self.post_claim()
+        state.melds[0][0].tiles = ["M2", "M3", "M5"]
+        with self.assertRaises(ValueError):
+            self.adapter.legal_actions(state)
+
+    def test_legacy_action_identity(self):
+        from qzenv import Action, ActionType
+        self.assertTrue(self.adapter.is_legal(self.post_claim(), Action(0, ActionType.DISCARD, "M1")))
+
+
+if __name__ == "__main__":
+    unittest.main()

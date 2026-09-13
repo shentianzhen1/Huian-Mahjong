@@ -1,0 +1,59 @@
+{
+  "game": "Happy Quanzhou Mahjong - Two Player",
+  "players": 2,
+  "total_tiles": 144,
+  "dealer_start_tiles": 17,
+  "non_dealer_start_tiles": 16,
+  "draw_game_wall_remaining": 16,
+  "full_tile_set_in_two_player": true,
+  "allow_chi": null,
+  "gold": {
+    "wildcard": true,
+    "can_replace_flower": false,
+    "single_gold_can_pinghu": false,
+    "double_gold_can_pinghu": false
+  },
+  "fan_confirmed": {
+    "gold_each": 1,
+    "flower_each": 1,
+    "concealed_triplet_suited": 1,
+    "concealed_triplet_honor": 2,
+    "open_pung_honor": 1,
+    "ming_gang_suited": 2,
+    "ming_gang_honor": 3,
+    "an_gang_suited": 3,
+    "an_gang_honor": 4,
+    "spring_summer_autumn_winter": 8,
+    "plum_orchid_bamboo_chrysanthemum": 8,
+    "all_eight_flowers": 16
+  },
+  "two_player_scoring": {
+    "formula": "((winner_base + winner_fan) - (loser_base + loser_fan)) * multiplier",
+    "multipliers": {
+      "pinghu": 1,
+      "zimo": 2,
+      "qianggang": 2,
+      "sanjindao": 3,
+      "youjin": 3,
+      "double_you": null,
+      "triple_you": null
+    },
+    "evidence_case": {
+      "winner_base": 5,
+      "winner_fan": 24,
+      "loser_base": 10,
+      "loser_fan": 2,
+      "win_type": "zimo",
+      "expected_net": 34
+    }
+  },
+  "unknown_or_pending": [
+    "Whether chi is allowed in the exact two-player room",
+    "Exact two-player double-you multiplier",
+    "Exact two-player triple-you multiplier",
+    "Exact flower set bonus stacking/de-duplication",
+    "Exact tian-ting trigger conditions",
+    "Whether all gold-assisted concealed triplets count fan identically to natural triplets"
+  ],
+  "default_match_rounds": 8
+}
