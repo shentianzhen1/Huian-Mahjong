@@ -33,8 +33,8 @@ class ConfirmedFlowTests(unittest.TestCase):
         state.reserved_tiles.extend(state.wall[16:])
         state.wall = state.wall[:16]
         instance = game(state)
-        passed = next(a for a in instance.action_report().known_actions if a.type == env.ActionType.PASS)
-        after, _ = instance.step(passed)
+        after = instance.state
+        self.assertEqual(instance.legal_actions(), [])
         self.assertTrue(after.terminal)
         self.assertEqual(after.phase, "TERMINAL")
         self.assertEqual(after.rewards, [0, 0])
@@ -45,9 +45,8 @@ class ConfirmedFlowTests(unittest.TestCase):
         state.reserved_tiles.extend(state.wall[16:])
         state.wall = state.wall[:16]
         instance = game(state)
-        action = instance.legal_actions()[0]
-        self.assertEqual(action.type, env.ActionType.END_HAND)
-        after, _ = instance.step(action)
+        self.assertEqual(instance.legal_actions(), [])
+        after = instance.state
         self.assertTrue(after.terminal)
         self.assertEqual(after.rewards, [0, 0])
 

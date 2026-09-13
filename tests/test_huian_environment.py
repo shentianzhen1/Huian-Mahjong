@@ -41,8 +41,7 @@ def choose(instance, kind):
 class EnvironmentTests(unittest.TestCase):
     def test_chi_transfers_river_tile_and_requires_discard(self):
         instance = game(scenario())
-        with self.assertRaises(UnknownRuleError):
-            instance.legal_actions()  # PASS is unresolved; never claim a complete list.
+        self.assertIn(env.Action(0, env.ActionType.PASS), instance.legal_actions())
         before = sorted(instance.state.physical_tiles())
         state, event = instance.step(choose(instance, env.ActionType.CHI))
         self.assertEqual(state.discards[1], [])
@@ -201,26 +200,27 @@ class EnvironmentTests(unittest.TestCase):
         self.assertFalse(instance.action_report().known_actions)
         self.assertIn("win_declaration_and_settlement", instance.action_report().unresolved)
 
-    def test_pass_and_startup_remain_unknown(self):
+    def test_pass_known_and_startup_remains_unknown(self):
         instance = game(scenario())
-        with self.assertRaises(UnknownRuleError):
-            instance.step(env.Action(0, env.ActionType.PASS))
+        instance.step(env.Action(0, env.ActionType.PASS))
+        self.assertEqual(instance.state.phase, "NEED_DRAW")
         instance.reset(seed=42)
         with self.assertRaises(UnknownRuleError):
             instance.legal_actions()
 
-    def test_boundary_and_empty_wall_block_without_terminal_or_mutation(self):
+    def test_boundary_import_and_invalid_short_wall(self):
         for count in (0, 15, 16):
             state = scenario("NEED_DRAW")
             state.reserved_tiles.extend(state.wall[count:])
             state.wall = state.wall[:count]
-            instance = game(state)
-            before = instance.state.state_hash()
-            with self.assertRaises(UnknownRuleError):
-                instance.step(env.Action(0, env.ActionType.DRAW, metadata={"source": "head"}))
-            self.assertEqual(instance.state.state_hash(), before)
-            self.assertFalse(instance.is_terminal())
-            self.assertGreaterEqual(instance.state.wall_remaining(), 0)
+            if count < 16:
+                with self.assertRaises(ValueError):
+                    game(state)
+            else:
+                instance = game(state)
+                self.assertTrue(instance.is_terminal())
+                self.assertEqual(instance.get_reward(), [0, 0])
+                self.assertEqual(instance.state.wall_remaining(), 16)
 
     def test_no_legality_bypass_and_no_caller_mutation(self):
         instance = game(scenario("NEED_DRAW"))

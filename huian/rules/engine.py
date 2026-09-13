@@ -23,6 +23,11 @@ class Settlement:
 
 
 class HuianRules:
+    DRAW_WALL_REMAINING = 16
+
+    def is_wall_draw(self, state):
+        return state.phase != "READY" and len(state.wall) == self.DRAW_WALL_REMAINING
+
     def __init__(self, config=None):
         self.config = config if config is not None else RulesConfig()
 

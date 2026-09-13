@@ -26,13 +26,21 @@ def validate(adapter, state):
     # blocked replacement phase, without losing physical accounting below.
     from copy import deepcopy
     normal = deepcopy(state)
-    if state.phase == "NEED_FLOWER_REPLACE":
+    if state.phase == "NEED_FLOWER_REPLACE" or state.terminal_reason == "WALL_16":
         normal.hands = [[t for t in hand if t not in env.FLOWERS] for hand in state.hands]
     adapter._validate_legacy_state(normal)
     if state.phase not in PHASES:
         raise ValueError("Invalid Huian phase")
     if type(state.terminal) is not bool or state.terminal != (state.phase == "TERMINAL"):
         raise ValueError("Terminal flag and phase disagree")
+    if not state.terminal and len(state.wall) < adapter.rules.DRAW_WALL_REMAINING:
+        raise ValueError("Active wall cannot be below the 16-tile draw boundary")
+    if state.terminal_reason not in (None, "WALL_16"):
+        raise ValueError("Invalid terminal reason")
+    if state.terminal_reason == "WALL_16" and (
+        not state.terminal or len(state.wall) != 16 or state.rewards != [0, 0]
+    ):
+        raise ValueError("Wall draw requires terminal state, 16 tiles and zero rewards")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
         nonnegative_int(value, "state integer")
     if len(state.special_states) != 2 or any(s not in (
@@ -107,9 +115,8 @@ def report(adapter, state):
         return ActionReport((), ("deal_replacement_order",))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
-    # A defensive stop, NOT a declaration that the hand is a draw at <=16.
-    if len(state.wall) <= 16:
-        return ActionReport((), ("wall_boundary",))
+    if adapter.rules.is_wall_draw(state):
+        return ActionReport(())
     p = state.current_player
     hand = state.hands[p]
     phase = state.phase
@@ -150,7 +157,7 @@ def report(adapter, state):
                 unknown.append("rob_kong")
         if adapter.rules.can_win(hand + [tile], state.gold_tile, len(state.melds[p]), "pinghu"):
             unknown.append("win_declaration_and_settlement")
-        unknown.append("pass_transition")
+        actions.append(A(p, T.PASS))
     return ActionReport(tuple(actions), tuple(unknown))
 
 

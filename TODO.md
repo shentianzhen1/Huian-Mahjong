@@ -5,14 +5,15 @@
 - See `references/ingame_rules/2026-09-13/README.md` for originals and transcription.
 - Received actual 惠安 two-player creation options: `references/room_settings/2026-09-13/README.md`. The screenshot has 单金不平胡 unchecked (label maps to `single_gold_can_pinghu=True`); verify the final created-room choice for each recorded game. Keep project default False per earlier player preference.
 - Record opening through first discard to resolve two-player flower scheduling and exact gold-opening/index/accounting behavior.
-- Record all-PASS progression and remaining-wall boundary; these are still absent from the pages.
+- Done (2026-09-14 player confirmation): PASS advances to next player's draw; 16 tiles ends the hand with [0, 0]. Target room: 2 players, 8 hands, 单金不平胡 checked, no trusteeship.
 - Obtain a third real settlement and Double/Triple results: the in-game page says 4/8/16, with an outer ×3 that must not be silently applied to two-player net scoring.
 - Flower-set values and honor Peng now have in-game textual evidence, but stacking/room applicability and added-kong fan remain pending. No runtime defaults changed from these pages alone.
 
-### M2 implementation status (2026-09-13)
+### M2 implementation status (2026-09-14)
 - Done: Huian Environment atomic transitions, 144-tile accounting, pending-discard transfer, post-Chi/Peng discard, resolved-kong tail draw, clone/rollback and loop guards.
 - Experimental only: Ming/An-Gang declaration assuming no rob-kong, explicitly recorded in configuration/events.
-- Pending evidence/integration: opening procedure, all-PASS progression, flower replacement, exact wall boundary, special wins, automatic settlement and complete hand loop.
+- Done: default Environment PASS, immediate 17→16 draw termination (head/tail), 16-tile import termination, zero rewards, deterministic replay/rollback regression tests; confirmed_flow names reuse the default implementation.
+- Pending evidence/integration: opening procedure, flower replacement, special wins, automatic winning settlement and complete hand loop.
 - See `huian/environment/README.md`. M3 Simulator remains pending.
 
 ### 1. Rules integration

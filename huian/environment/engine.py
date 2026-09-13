@@ -50,6 +50,8 @@ class HuianEnvironment:
             raise TypeError("Use HuianGameState with explicit phase/history and all 144 tiles")
         candidate = deepcopy(state)
         self.rules.validate_state(candidate)
+        self._resolve_wall_draw(candidate)
+        self.rules.validate_state(candidate)
         self._state = candidate
         self._events = []
         self._snapshots = []
@@ -116,6 +118,7 @@ class HuianEnvironment:
         before = self._state.state_hash()
         candidate = deepcopy(self._state)
         self._apply(candidate, action)
+        self._resolve_wall_draw(candidate)
         candidate.turn_index += 1
         candidate.last_action = action.to_dict()
         self.rules.validate_state(candidate)
@@ -133,6 +136,14 @@ class HuianEnvironment:
         self._seen.add(position)
         return self.state, deepcopy(event)
 
+    def _resolve_wall_draw(self, state):
+        if not state.terminal and self.rules.rules.is_wall_draw(state):
+            state.terminal = True
+            state.phase = "TERMINAL"
+            state.terminal_reason = "WALL_16"
+            state.rewards = [0, 0]
+            state.pending_discard = None
+
     @staticmethod
     def _apply(state, action):
         p, kind = action.player, action.type
@@ -141,6 +152,11 @@ class HuianEnvironment:
             tile = state.wall.pop(-1 if action.metadata["source"] == "tail" else 0)
             state.hands[p].append(tile)
             state.phase = "NEED_FLOWER_REPLACE" if tile in env.FLOWERS else "AFTER_DRAW"
+        elif kind == T.PASS:
+            # DISCARD already selected the sole opponent as current_player.
+            # The declined tile stays in its owner's river.
+            state.pending_discard = None
+            state.phase = "NEED_DRAW"
         elif kind == T.DISCARD:
             state.hands[p].remove(action.tile)
             state.discards[p].append(action.tile)

@@ -1,5 +1,14 @@
 # Baseline Test Results at Handoff
 
+## PASS / 16-tile regression — 2026-09-14
+
+- Project tests: 53 passed; legacy Core: 9 passed; legacy Environment: 9 passed.
+- Total: 71 tests passed with Python `-B -m unittest discover -s tests -q`.
+- Covers both-seat PASS, river retention, head draw, head/kong-tail 17→16
+  termination (including a flower), [0, 0] rewards, 144-tile conservation,
+  illegal actions, boundary imports, seeded multi-turn replay and rollback.
+- Screenshot A/B settlements still pass unchanged; no four-player scoring imported.
+
 Environment used for this verification: Python 3.13.5.
 
 ## Core V0.1.1

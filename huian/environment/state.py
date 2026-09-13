@@ -11,12 +11,14 @@ class HuianGameState(env.GameState):
     # Physical tiles explicitly excluded from play by an imported scenario.
     # This represents accounting only, not a guessed indicator-opening rule.
     reserved_tiles: list[str] = field(default_factory=list)
+    terminal_reason: str | None = None
 
     def canonical_dict(self):
         data = super().canonical_dict()
         data.update(pending_discard=self.pending_discard,
                     special_states=list(self.special_states),
-                    reserved_tiles=list(self.reserved_tiles))
+                    reserved_tiles=list(self.reserved_tiles),
+                    terminal_reason=self.terminal_reason)
         return data
 
     def physical_tiles(self):

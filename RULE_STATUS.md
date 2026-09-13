@@ -7,7 +7,8 @@ Do not silently promote UNKNOWN rules.
 - Full 144-tile set is used.
 - Dealer starts with 17 tiles; non-dealer starts with 16.
 - Flowers do not participate in normal meld composition; they score separately.
-- Wall exhaustion/draw behavior is associated with 16 tiles remaining.
+- Player confirmation (2026-09-14): unclaimed discard + PASS advances to the next player's head draw; at 16 wall tiles the hand draws with rewards [0, 0].
+- Target room is fixed: 2 players, 8 hands, 单金不平胡 checked (`single_gold_can_pinghu=False`), no trusteeship. Earlier unchecked screenshot records the option UI, not this final room choice.
 - Opponent discard can offer Chi/Peng/Gang/Hu where legal; Rules should return all legal actions and AI chooses.
 - In 2-player Huian, the sole opponent's discard may be Chi'd.
 - After Chi or Peng, player enters discard phase and must discard.
@@ -127,7 +128,7 @@ review below; its formulas also include an outer ×3.
 5. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
 6. Exact Tianhu timing relative to flower replacement/open-gold.
 7. Exact Tianting definition.
-8. PASS transition when all claims are declined.
+8. Resolved 2026-09-14: all-PASS advances to the next player's draw.
 9. 8-hand match tie handling.
 10. Third real settlement to validate the scoring formula.
 
@@ -188,6 +189,6 @@ Conflicts and preserved decisions:
   evidence. Do not reinstate legacy subtraction or add ×3 to two-player results.
   Current settlement hypothesis still needs a third real settlement.
 
-Still missing: all-PASS transition, rob-kong scope, exact 16-tile boundary timing,
+Still missing after the 2026-09-14 flow clarification: rob-kong scope,
 Tianhu/Tianting definitions, extended dealer base/cap and match ties. A listed
 multiplier does not establish a win type's eligibility or declaration timing.
