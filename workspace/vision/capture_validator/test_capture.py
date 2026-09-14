@@ -11,6 +11,10 @@ from PIL import Image
 from windows_capture import Frame, WindowsCapture
 
 from workspace.vision.capture_validator.backend import offer, wgc_frame_to_image
+from workspace.vision.capture_validator.auto_recorder import (
+    AutoHandRecorder, FrameRingBuffer, HandPhase,
+    PhaseDetection, TemplatePhaseDetector,
+)
 from workspace.vision.capture_validator.media import FrameHealth, Recorder, snapshot
 
 
@@ -81,7 +85,151 @@ class CaptureTests(unittest.TestCase):
             timeline = [json.loads(line) for line in path.with_suffix(".jsonl").read_text(encoding="utf-8").splitlines()]
             self.assertEqual(len(timeline), 10)
             self.assertTrue(all(row["source"]["sequence"] == 1 for row in timeline))
-            self.assertEqual(json.loads(path.with_suffix(".json").read_text(encoding="utf-8"))["frames"], 10)
+            metadata = json.loads(path.with_suffix(".json").read_text(encoding="utf-8"))
+            self.assertEqual(metadata["frames"], 10)
+            self.assertEqual(metadata["stop_reason"], "test complete")
+            self.assertIn("start_time", metadata)
+            self.assertIn("end_time", metadata)
+            self.assertEqual(metadata["detected_phases"], [])
+
+    def test_long_and_manual_unlimited_durations(self):
+        with tempfile.TemporaryDirectory() as directory:
+            image = Image.new("RGB", (160, 90), "green")
+            long_recording = Recorder(directory, image.size, {}, seconds=1800)
+            self.assertFalse(long_recording.append(
+                image, {}, long_recording.started
+            ))
+            long_path = long_recording.close("long manual stop")
+            unlimited = Recorder(directory, image.size, {}, seconds=None)
+            try:
+                self.assertFalse(unlimited.append(
+                    image, {}, unlimited.started + 1
+                ))
+            finally:
+                unlimited_path = unlimited.close("manual unlimited stop")
+            self.assertNotEqual(long_path, unlimited_path)
+            long_meta = json.loads(
+                long_path.with_suffix(".json").read_text(encoding="utf-8")
+            )
+            unlimited_meta = json.loads(
+                unlimited_path.with_suffix(".json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(long_meta["duration_limit_seconds"], 1800)
+            self.assertIsNone(unlimited_meta["duration_limit_seconds"])
+
+    def test_ring_buffer_keeps_only_last_ten_seconds(self):
+        ring = FrameRingBuffer(seconds=10)
+        image = Image.new("RGB", (32, 18), "blue")
+        for second in range(13):
+            ring.append(
+                image, {"sequence": second}, second, 1000 + second
+            )
+        buffered = ring.snapshot()
+        self.assertEqual(buffered[0].monotonic, 2)
+        self.assertEqual(buffered[-1].monotonic, 12)
+        self.assertEqual(buffered[-1].image().size, image.size)
+
+    def test_fixed_roi_template_detector(self):
+        with tempfile.TemporaryDirectory() as directory:
+            opening = Image.new("RGB", (160, 90), "black")
+            settlement = Image.new("RGB", (160, 90), "black")
+            opening_pixels = np.asarray(opening).copy()
+            settlement_pixels = np.asarray(settlement).copy()
+            opening_pixels[10:70:4, 20:140] = 255
+            settlement_pixels[10:70, 20:140:4] = 255
+            opening = Image.fromarray(opening_pixels)
+            settlement = Image.fromarray(settlement_pixels)
+            opening_path = Path(directory) / "opening.png"
+            settlement_path = Path(directory) / "settlement.png"
+            opening.save(opening_path)
+            settlement.save(settlement_path)
+            detector = TemplatePhaseDetector({
+                "OPENING": [opening_path],
+                "SETTLEMENT": [settlement_path],
+            }, threshold=.9)
+            self.assertEqual(detector.detect(opening).phase, "OPENING")
+            self.assertEqual(
+                detector.detect(settlement).phase, "SETTLEMENT"
+            )
+
+    def test_auto_hand_recorder_state_machine_and_independent_files(self):
+        class SequenceDetector:
+            def __init__(self, phases):
+                self.phases = iter(phases)
+
+            def detect(self, _image):
+                phase = next(self.phases)
+                return PhaseDetection(
+                    phase, 0.99 if phase else 0.20, "test_feature"
+                )
+
+        phases = (
+            [None, None, "OPENING", "OPENING", None, None,
+             "SETTLEMENT", "SETTLEMENT", None]
+            + ["OPENING", "OPENING", None, None,
+               "SETTLEMENT", "SETTLEMENT", None]
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            automatic = AutoHandRecorder(
+                directory, lambda: {"backend": "TEST"},
+                SequenceDetector(phases), fps=2,
+                pre_roll_seconds=10, post_roll_seconds=.5,
+                confirm_frames=2,
+            )
+            image = Image.new("RGB", (160, 90), "green")
+            completed = []
+            for index in range(len(phases)):
+                path = automatic.process(
+                    image, {"sequence": index},
+                    index * .5, 1000 + index * .5
+                )
+                if path:
+                    completed.append(path)
+            self.assertEqual(len(completed), 2)
+            self.assertNotEqual(completed[0], completed[1])
+            self.assertEqual(automatic.state, HandPhase.WAITING)
+            for path in completed:
+                self.assertTrue(path.exists())
+                self.assertTrue(path.with_suffix(".json").exists())
+                self.assertTrue(path.with_suffix(".jsonl").exists())
+                metadata = json.loads(
+                    path.with_suffix(".json").read_text(encoding="utf-8")
+                )
+                self.assertTrue(metadata["hand_id"])
+                self.assertEqual(
+                    [row["phase"] for row in metadata["detected_phases"]],
+                    ["OPENING", "PLAYING", "SETTLEMENT"],
+                )
+                self.assertEqual(
+                    metadata["stop_reason"],
+                    "检测到结算页并完成 5 秒后录制",
+                )
+
+    def test_uncertain_detection_never_auto_stops_active_hand(self):
+        class Detector:
+            def __init__(self):
+                self.calls = 0
+
+            def detect(self, _image):
+                self.calls += 1
+                phase = "OPENING" if self.calls <= 2 else None
+                return PhaseDetection(phase, .99 if phase else .4)
+
+        with tempfile.TemporaryDirectory() as directory:
+            automatic = AutoHandRecorder(
+                directory, lambda: {}, Detector(), fps=2,
+                pre_roll_seconds=10, post_roll_seconds=.5,
+                confirm_frames=2,
+            )
+            image = Image.new("RGB", (160, 90), "green")
+            for index in range(8):
+                self.assertIsNone(automatic.process(
+                    image, {}, index * .5, 1000 + index * .5
+                ))
+            self.assertIsNotNone(automatic.recorder)
+            self.assertEqual(automatic.state, HandPhase.PLAYING)
+            path = automatic.close("test cleanup")
+            self.assertTrue(path.exists())
 
     def test_resize_and_large_delay_do_not_write_bad_frames(self):
         with tempfile.TemporaryDirectory() as directory:

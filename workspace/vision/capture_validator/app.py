@@ -9,18 +9,28 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
 from .backend import CaptureSession, dpi_awareness, geometry, windows
+from .auto_recorder import AutoHandRecorder, TemplatePhaseDetector
 from .media import FrameHealth, Recorder, snapshot
 
-OUTPUT = Path(__file__).resolve().parents[3] / "data" / "capture_validation"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+OUTPUT = PROJECT_ROOT / "data" / "capture_validation"
+DURATIONS = {
+    "30 秒": 30,
+    "120 秒": 120,
+    "10 分钟": 10 * 60,
+    "30 分钟": 30 * 60,
+    "手动停止": None,
+}
 
 
 class App(tk.Tk):
     def __init__(self, demo=False):
         super().__init__()
-        self.title("惠安窗口采集验证器 V0.1")
+        self.title("惠安窗口采集验证器 Recorder V0.2")
         self.geometry("1100x760")
         self.minsize(800, 560)
         self.session = self.recorder = self.frame = self.photo = None
+        self.auto_recorder = None
         self.target = None
         self.source = {}
         self.backend_name = ""
@@ -36,7 +46,7 @@ class App(tk.Tk):
         self.status = tk.StringVar(value="选择小程序窗口，然后开始预览。")
         self.saved = tk.StringVar(value=f"保存位置：{OUTPUT}")
         self.backend = tk.StringVar(value="WGC")
-        self.duration = tk.IntVar(value=30)
+        self.duration = tk.StringVar(value="30 秒")
         top = ttk.Frame(self, padding=10)
         top.pack(fill="x")
         ttk.Label(top, text="目标窗口").grid(row=0, column=0)
@@ -47,12 +57,16 @@ class App(tk.Tk):
                      values=["WGC", "PrintWindow", "屏幕区域"], width=14).grid(row=0, column=3, padx=6)
         controls = ttk.Frame(self, padding=(10, 0, 10, 8))
         controls.pack(fill="x")
-        for text, command in (("开始预览", self.start), ("停止", self.stop),
-                              ("保存截图", self.save_snapshot), ("开始短录屏", self.record),
-                              ("停止录屏", self.stop_recording)):
+        for text, command in (("开始预览", self.start), ("停止采集", self.stop),
+                              ("保存截图", self.save_snapshot),
+                              ("开始手动录屏", self.record),
+                              ("停止手动录屏", self.stop_recording),
+                              ("开始自动按局录制", self.start_auto_recording),
+                              ("停止自动录制", self.stop_auto_recording)):
             ttk.Button(controls, text=text, command=command).pack(side="left", padx=(0, 6))
-        ttk.Label(controls, text="秒数").pack(side="left")
-        ttk.Spinbox(controls, from_=1, to=120, textvariable=self.duration, width=5).pack(side="left")
+        ttk.Label(controls, text="手动时长").pack(side="left")
+        ttk.Combobox(controls, state="readonly", textvariable=self.duration,
+                     values=list(DURATIONS), width=10).pack(side="left")
         ttk.Label(self, text="只采集画面，不操作游戏。屏幕区域后端会包含遮挡物；后端不会自动切换。",
                   padding=(10, 0, 10, 6)).pack(anchor="w")
         self.canvas = tk.Canvas(self, background="#111827", highlightthickness=0)
@@ -103,7 +117,7 @@ class App(tk.Tk):
             self.status.set(f"启动失败：{exc}")
 
     def stop(self):
-        self.stop_recording("采集停止")
+        self.stop_all_recordings("采集停止")
         if self.session:
             self.session.close()
             self.session = None
@@ -137,7 +151,12 @@ class App(tk.Tk):
             return
         try:
             self.usable()
-            self.recorder = Recorder(OUTPUT, self.frame.size, self.metadata(), self.duration.get())
+            if self.auto_recorder:
+                raise RuntimeError("自动按局录制运行中，请先停止自动录制")
+            seconds = DURATIONS[self.duration.get()]
+            self.recorder = Recorder(
+                OUTPUT, self.frame.size, self.metadata(), seconds
+            )
             self.recorder.append(self.frame, self.source)
             self.saved.set(f"正在录屏：{self.recorder.path}")
         except Exception as exc:
@@ -153,6 +172,41 @@ class App(tk.Tk):
             except Exception as exc:
                 self.saved.set(f"录屏结束，但写入记录失败：{exc}")
 
+    def start_auto_recording(self):
+        if self.auto_recorder:
+            return
+        try:
+            self.usable()
+            if self.recorder:
+                raise RuntimeError("手动录屏运行中，请先停止手动录屏")
+            detector = TemplatePhaseDetector.from_project_evidence(PROJECT_ROOT)
+            self.auto_recorder = AutoHandRecorder(
+                OUTPUT, self.metadata, detector,
+                pre_roll_seconds=10, post_roll_seconds=5
+            )
+            self.saved.set(
+                "自动按局录制已启动：等待高置信开局画面；不确定时继续等待或录制"
+            )
+        except Exception as exc:
+            self.auto_recorder = None
+            messagebox.showerror("自动录制未开始", str(exc))
+
+    def stop_auto_recording(self, reason="手动停止自动录制"):
+        if self.auto_recorder:
+            automatic, self.auto_recorder = self.auto_recorder, None
+            try:
+                path = automatic.close(reason)
+                self.saved.set(
+                    f"自动录制已停止：{path}" if path
+                    else "自动录制已停止；等待阶段没有生成空录像"
+                )
+            except Exception as exc:
+                self.saved.set(f"自动录制结束，但写入记录失败：{exc}")
+
+    def stop_all_recordings(self, reason):
+        self.stop_recording(reason)
+        self.stop_auto_recording(reason)
+
     def accept(self, item):
         _, sequence, captured, wall_time, size, pixels, rect = item
         self.frame = Image.frombytes("RGB", size, pixels)
@@ -165,16 +219,23 @@ class App(tk.Tk):
         notes = []
         if self.black:
             notes.append("疑似黑屏")
-            self.stop_recording("疑似黑屏")
+            self.stop_all_recordings("疑似黑屏")
         if health["resized"]:
             notes.append("尺寸变化，已重新适配预览")
-            self.stop_recording("尺寸变化")
+            self.stop_all_recordings("尺寸变化")
         if self.last_rect is not None and tuple(rect[:2]) != tuple(self.last_rect[:2]):
             notes.append("窗口位置变化")
         self.last_rect = rect
         if health["unchanged_seconds"] > 5:
             notes.append("画面长时间无变化：可能正常静止，也可能停帧")
         fps = (len(self.times)-1)/(self.times[-1]-self.times[0]) if len(self.times)>1 and self.times[-1]>self.times[0] else 0
+        if self.auto_recorder:
+            notes.append(f"自动录制 {self.auto_recorder.state.value}")
+            path = self.auto_recorder.process(
+                self.frame, self.source, captured, wall_time
+            )
+            if path:
+                self.saved.set(f"本局自动录像已保存：{path}；继续等待下一局")
         self.status.set(f"{self.backend_name} | {size[0]}×{size[1]} | 接收 {fps:.1f} FPS | " + ("；".join(notes) or "正在接收画面（不代表识别正确）"))
         self.render()
 
@@ -210,7 +271,7 @@ class App(tk.Tk):
                 age = time.monotonic() - self.last_received
                 if age > 3:
                     self.status.set(f"{self.backend_name}：{age:.1f} 秒无新帧；可能静止／停帧，请检查目标窗口。")
-                    self.stop_recording("超过 3 秒无新帧")
+                    self.stop_all_recordings("超过 3 秒无新帧")
             if self.recorder and self.frame:
                 if self.recorder.append(self.frame, self.source):
                     self.stop_recording("达到设定时长")

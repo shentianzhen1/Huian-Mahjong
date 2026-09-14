@@ -5,7 +5,7 @@
 ## 当前版本 / 里程碑
 
 - 当前阶段：M2 局中 Environment 已可用；M3 Simulator V0.1 可确定性重放开局并在未知规则处安全停止，尚不能完整模拟一局。
-- 最新已核验代码基线：`f324a77`（Record observed Huian outcomes in environment）。本文件自身的提交 SHA 在提交后通过 `git log -1 --format=%H -- PROJECT_STATUS.md CHANGELOG.md` 查询，避免自引用。
+- 最新已核验代码基线：本文件所在提交；提交 SHA 可通过 `git log -1 --format=%H -- PROJECT_STATUS.md CHANGELOG.md` 查询，避免在提交正文中自引用。
 - 远程：`https://github.com/shentianzhen1/Maj.git`，分支：`main`。
 
 ## 已完成模块
@@ -16,7 +16,7 @@
 - Environment：144 张实体牌守恒、吃碰、PASS、头摸、已解决杠后尾摸、开局及中途补花、16 张零分流局、原子提交、回滚/克隆、死循环保护和合法动作检查。
 - 已观察结算：`HuianObservedSettlementPlugin` 仅支持录屏已证实的 `PINGHU`（×1）和 `ZIMO`（×2）。`finalize_observed_outcome()` 可写入由录屏或 Vision 已确认的终局，保留 `END_HAND` 审计事件；不会自动判胡或算番。
 - Simulator V0.1：固定种子生成牌墙并重放开局，返回种子、骰子、事件、状态哈希、阶段、牌墙数及 UNKNOWN 列表。抢金核验处安全停止。
-- Vision 采集：WGC / PrintWindow / 屏幕区域、PNG/AVI 与元数据、黑屏/停帧/尺寸变化保护。昨日录屏的关键帧已归档在 [capture review](references/capture_review/2026-09-13/README.md)。
+- Vision 采集：Recorder V0.2 支持 WGC / PrintWindow / 屏幕区域、PNG、有限或无限手动 AVI，以及按局自动录像。自动模式使用固定 ROI 模板执行 `WAITING → OPENING → PLAYING → SETTLEMENT → WAITING`，保留开局前10秒并在结算后录5秒；每局独立保存 AVI/JSON/JSONL。黑屏、停帧、尺寸变化和处理落后保护继续生效。
 
 ## 已确认流程与证据边界
 
@@ -28,16 +28,16 @@
 
 ## 当前测试结果
 
-2026-09-14 全量自动测试：**106 项通过，0 失败，0 跳过**。
+2026-09-14 全量自动测试：**111 项通过，0 失败，0 跳过**。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
 | 项目根目录 | `python -B -m unittest discover -s tests -v` | 79 通过 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
-| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 9 通过 |
+| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过 |
 
-覆盖固定种子复现、144 张守恒、第五张牌拒绝、非法动作拒绝、16 张流局零和、开局回放、观察结算、回滚、死循环、legacy 基线及 AVI/PNG 编解码。没有完整小程序自动对局端到端测试，也没有 AI 对战评估。
+覆盖固定种子复现、144 张守恒、第五张牌拒绝、非法动作拒绝、16 张流局零和、开局回放、观察结算、回滚、死循环、legacy 基线、AVI/PNG 编解码、长时/无限手动录制、环形缓存、ROI 模板检测和自动按局文件生命周期。没有完整小程序自动对局端到端测试，也没有 AI 对战评估。
 
 ## 已知问题 / 安全停止点
 
@@ -47,7 +47,7 @@
 4. 抢金、三金倒、游金链、抢杠、加杠细节、杠分与流局杠分均未实现，保持 UNKNOWN。
 5. Simulator 不能越过抢金核验点，尚无完整动作循环、批量统计、交换座位评估或 AI。
 6. `HuianOnlineRoomV01` 的动态留牌开关是隔离的工作假设，不能覆盖 `RULE_STATUS.md` 的已确认规则。
-7. Vision 尚未识别牌面、按钮或结算字段；Executor 尚未接入任何自动点击。
+7. Recorder V0.2 的开局/结算模板来自既有归档画面，仍需在当前小程序窗口实测误检和漏检；Vision 尚未识别牌面、按钮或结算字段，Executor 尚未接入任何自动点击。
 
 ## 下一步计划
 

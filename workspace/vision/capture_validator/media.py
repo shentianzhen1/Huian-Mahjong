@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import time
@@ -37,11 +37,16 @@ def snapshot(image, folder, metadata):
 
 
 class Recorder:
-    def __init__(self, folder, size, metadata, seconds=30, fps=10):
+    def __init__(self, folder, size, metadata, seconds=30, fps=10, *,
+                 prefix="recording", hand_id=None, started=None, started_at=None):
         import cv2
-        if not 1 <= seconds <= 120:
-            raise ValueError("录屏长度应为 1–120 秒")
-        self.path = unique_path(folder, "recording", ".avi")
+        if seconds is not None and (
+                isinstance(seconds, bool) or not isinstance(seconds, (int, float))
+                or seconds <= 0):
+            raise ValueError("录屏长度必须是正数或 None（手动停止）")
+        if isinstance(fps, bool) or not isinstance(fps, int) or fps <= 0:
+            raise ValueError("fps 必须是正整数")
+        self.path = unique_path(folder, prefix, ".avi")
         self.encoded_size = (size[0] + size[0] % 2, size[1] + size[1] % 2)
         self.writer = cv2.VideoWriter(str(self.path), cv2.VideoWriter_fourcc(*"MJPG"), fps, self.encoded_size)
         if not self.writer.isOpened():
@@ -49,19 +54,25 @@ class Recorder:
             raise RuntimeError("无法创建 MJPG AVI 录像")
         self.size, self.metadata = size, dict(metadata)
         self.frames, self.fps = 0, fps
-        self.started, self.seconds = time.monotonic(), seconds
+        self.started = time.monotonic() if started is None else started
+        self.started_wall_time = time.time() if started_at is None else started_at
+        self.seconds = seconds
+        self.hand_id = hand_id
+        self.detected_phases = []
         try:
             self.timeline = self.path.with_suffix(".jsonl").open("w", encoding="utf-8")
         except Exception:
             self.writer.release()
             raise
 
-    def append(self, image, source, now=None):
+    def append(self, image, source, now=None, phase=None):
         import cv2
         now = time.monotonic() if now is None else now
         if image.size != self.size:
             raise ValueError("窗口画面尺寸变化，录像已停止，请重新录制")
-        elapsed = min(max(0, now - self.started), self.seconds)
+        elapsed = max(0, now - self.started)
+        if self.seconds is not None:
+            elapsed = min(elapsed, self.seconds)
         target = max(1, int(elapsed * self.fps))
         if target - self.frames > self.fps * 2:
             raise RuntimeError("录制处理落后超过 2 秒，已停止以免掩盖掉帧")
@@ -71,10 +82,29 @@ class Recorder:
                                      0, self.encoded_size[0] - self.size[0], cv2.BORDER_CONSTANT)
             while self.frames < target:
                 self.writer.write(bgr)
-                self.timeline.write(json.dumps(dict(frame=self.frames, video_seconds=self.frames/self.fps,
-                                                     source=source), ensure_ascii=False) + "\n")
+                self.timeline.write(json.dumps(dict(
+                    type="frame", frame=self.frames,
+                    video_seconds=self.frames/self.fps, phase=phase, source=source
+                ), ensure_ascii=False) + "\n")
                 self.frames += 1
-        return now - self.started >= self.seconds
+            self.timeline.flush()
+        return self.seconds is not None and now - self.started >= self.seconds
+
+    def mark_phase(self, phase, monotonic_time, wall_time, confidence, method):
+        event = dict(
+            phase=phase,
+            monotonic=monotonic_time,
+            timestamp=datetime.fromtimestamp(
+                wall_time, timezone.utc
+            ).astimezone().isoformat(),
+            confidence=float(confidence),
+            method=method,
+        )
+        self.detected_phases.append(event)
+        self.timeline.write(json.dumps(
+            dict(type="phase", **event), ensure_ascii=False
+        ) + "\n")
+        self.timeline.flush()
 
     def close(self, reason="手动停止"):
         if self.writer is None:
@@ -84,6 +114,13 @@ class Recorder:
         self.timeline.close()
         self.metadata.update(frames=self.frames, fps=self.fps, video_seconds=self.frames/self.fps,
                              source_size=self.size, encoded_size=self.encoded_size,
+                             hand_id=self.hand_id,
+                             duration_limit_seconds=self.seconds,
+                             start_time=datetime.fromtimestamp(
+                                 self.started_wall_time, timezone.utc
+                             ).astimezone().isoformat(),
+                             end_time=datetime.now().astimezone().isoformat(),
+                             detected_phases=self.detected_phases,
                              stop_reason=reason, format="MJPG AVI, no audio",
                              timing="constant frame rate; duplicated source frames identified in JSONL")
         self.path.with_suffix(".json").write_text(json.dumps(self.metadata, ensure_ascii=False, indent=2), encoding="utf-8")
