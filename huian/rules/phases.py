@@ -35,7 +35,10 @@ def validate(adapter, state):
         raise ValueError("Terminal flag and phase disagree")
     if not state.terminal and len(state.wall) < adapter.rules.DRAW_WALL_REMAINING:
         raise ValueError("Active wall cannot be below the 16-tile draw boundary")
-    if state.terminal_reason not in (None, "WALL_16"):
+    observed_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
+        "OBSERVED_PINGHU", "OBSERVED_ZIMO"
+    )
+    if state.terminal_reason not in (None, "WALL_16") and not observed_reason:
         raise ValueError("Invalid terminal reason")
     if state.phase == "OPENING_QIANGJIN_CHECK" and state.terminal_reason is not None:
         raise ValueError("Opening check cannot have a terminal reason")
@@ -43,6 +46,8 @@ def validate(adapter, state):
         not state.terminal or len(state.wall) != 16 or state.rewards != [0, 0]
     ):
         raise ValueError("Wall draw requires terminal state, 16 tiles and zero rewards")
+    if observed_reason and (not state.terminal or state.rewards == [0, 0]):
+        raise ValueError("Observed win requires a terminal non-zero settlement")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
         nonnegative_int(value, "state integer")
     if len(state.special_states) != 2 or any(s not in (

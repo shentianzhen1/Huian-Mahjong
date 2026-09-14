@@ -9,6 +9,7 @@ from huian._legacy import env
 from huian.rules import HuianRulesAdapter
 from .state import HuianGameState
 from .opening import HuianOpeningPlugin
+from huian.rules.observed_settlement import HuianObservedSettlementPlugin
 
 
 class DeadLoopError(RuntimeError):
@@ -16,11 +17,12 @@ class DeadLoopError(RuntimeError):
 
 
 class HuianEnvironment:
-    def __init__(self, rules=None, opening=None, max_steps=10000):
+    def __init__(self, rules=None, opening=None, max_steps=10000, settlement=None):
         if type(max_steps) is not int or max_steps <= 0:
             raise ValueError("max_steps must be a positive integer")
         self.rules = rules if rules is not None else HuianRulesAdapter()
         self.opening = opening if opening is not None else HuianOpeningPlugin()
+        self.settlement = settlement if settlement is not None else HuianObservedSettlementPlugin()
         self.max_steps = max_steps
         self._state = None
         self._events = []
@@ -104,6 +106,46 @@ class HuianEnvironment:
         self._snapshots = []
         self._seen = {self._position(candidate)}
         return self.state
+    def finalize_observed_outcome(self, *, winner, current_dealer_base, winner_fan, win_type):
+        """Record an externally verified ordinary outcome without inferring it.
+
+        This API is for replay/Vision-confirmed outcomes.  It deliberately does
+        not decide whether a hand may Hu, aggregate fan, or settle special wins.
+        """
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        result = self.settlement.settle(
+            winner=winner,
+            current_dealer_base=current_dealer_base,
+            winner_fan=winner_fan,
+            win_type=win_type,
+        )
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = list(result.rewards)
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "OBSERVED_" + result.win_type
+        candidate.pending_discard = None
+        self.rules.validate_state(candidate)
+        event = {
+            "seq": len(self._events),
+            "action": {"player": winner, "type": "END_HAND", "tile": None, "tiles": [],
+                       "metadata": {"source": "observed", "win_type": result.win_type,
+                                    "current_dealer_base": current_dealer_base,
+                                    "winner_fan": winner_fan,
+                                    "multiplier": result.multiplier}},
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
     def action_report(self):
         self._require_state()
         return self.rules.action_report(self.state)

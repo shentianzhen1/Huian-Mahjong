@@ -58,6 +58,21 @@ game.reset(seed=42)  # 仅建立 144 张确定性牌墙，停在 READY。
 三金倒、游金链、加杠、开局发牌／补花／开金、普通胡牌宣告与自动番结算仍未接入。
 终局导入可校验净分，但不表示环境重新验证了终局获胜资格或自动算出了该净分。
 
+## 已观察结算的显式终局
+
+`finalize_observed_outcome()` 只用于录像、结算页或 Vision 已经确认的结果。调用方必须
+明确提供赢家、当前庄底、赢家番数和 `PINGHU` 或 `ZIMO`。Environment 只调用对应的
+已观察结算插件、写入零和奖励并记录 `END_HAND` 事件；它不会自行判胡、聚合番项、确定
+抢金优先级或结算任何特殊胡。
+
+```python
+state, event = game.finalize_observed_outcome(
+    winner=1, current_dealer_base=15, winner_fan=1, win_type="PINGHU"
+)
+# state.rewards == [-16, 16]
+```
+
+抢金、三金倒、游金、杠分和流局杠分仍会被拒绝，直到有单独证据与对应插件实现。
 ## 抢杠的实验配置
 
 ```python
