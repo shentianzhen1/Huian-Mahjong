@@ -8,6 +8,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 
 from huian._legacy import env
+from mahjong_framework import MahjongOpeningPlugin
 from .flowers import FlowerReplacementResult, replace_flowers
 
 
@@ -27,6 +28,14 @@ class OpeningPlan:
     flower_replacement: FlowerReplacementResult
     gold_indicator: GoldIndicator
 
+
+class HuianOpeningPlugin(MahjongOpeningPlugin):
+    """Huian two-player opening implementation behind the neutral contract."""
+
+    variant_id = "huian.two_player.v0_1"
+
+    def plan_opening(self, wall, dealer, dice_total):
+        return plan_opening(wall, dealer, dice_total)
 
 def deal_initial_hands(wall, dealer):
     """Deal 16 alternating tiles, then the dealer's seventeenth tile.

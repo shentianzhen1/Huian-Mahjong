@@ -8,7 +8,7 @@ import random
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
 from .state import HuianGameState
-from .opening import plan_opening
+from .opening import HuianOpeningPlugin
 
 
 class DeadLoopError(RuntimeError):
@@ -16,10 +16,11 @@ class DeadLoopError(RuntimeError):
 
 
 class HuianEnvironment:
-    def __init__(self, rules=None, max_steps=10000):
+    def __init__(self, rules=None, opening=None, max_steps=10000):
         if type(max_steps) is not int or max_steps <= 0:
             raise ValueError("max_steps must be a positive integer")
         self.rules = rules if rules is not None else HuianRulesAdapter()
+        self.opening = opening if opening is not None else HuianOpeningPlugin()
         self.max_steps = max_steps
         self._state = None
         self._events = []
@@ -77,7 +78,7 @@ class HuianEnvironment:
         if self._state.phase != "READY":
             raise ValueError("Opening can begin only from READY")
         before = self._state.state_hash()
-        opening = plan_opening(self._state.wall, self._state.dealer, dice_total)
+        opening = self.opening.plan_opening(self._state.wall, self._state.dealer, dice_total)
         candidate = deepcopy(self._state)
         candidate.hands = [list(zone) for zone in opening.hands]
         candidate.flowers = [list(zone) for zone in opening.flowers]

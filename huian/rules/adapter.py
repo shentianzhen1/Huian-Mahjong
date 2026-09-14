@@ -1,11 +1,13 @@
 """Legacy M1 compatibility plus explicit M2 Huian state validation/legality."""
 from huian._legacy import env
 from qzenv.rules_adapter import RulesAdapter
+from mahjong_framework import MahjongRulesPlugin
 from .config import UnknownRuleError
 from .engine import HuianRules
 
 
-class HuianRulesAdapter(RulesAdapter):
+class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
+    variant_id = "huian.two_player.v0_1"
     def __init__(self, rules=None):
         self.rules = rules if rules is not None else HuianRules()
 
