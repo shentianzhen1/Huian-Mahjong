@@ -20,6 +20,7 @@ Do not silently promote UNKNOWN rules.
 - Gold is a wildcard in allowed hand/win composition.
 - A triplet completed using gold is not a natural concealed-triplet fan.
 - Single-gold Pinghu is a player/room setting (player clarification 2026-09-13). It is usually disabled. Default `single_gold_can_pinghu=False` preserves the observed target-room behavior; enable only for a room explicitly allowing it. The generic page's allowance does not override a room's setting.
+- Player confirmation (2026-09-14): in the target room, exactly one gold may complete a self-draw Hu when the standard structure is valid. The checked 单金不平胡 option blocks ordinary discard-win Pinghu; it does not block this self-draw.
 - Player confirmation (2026-09-14): with exactly two gold tiles, Hu is allowed only by self-draw; the player cannot Hu on any opponent discard. This supersedes the older blanket statement that double gold could not Pinghu. The Rules API must carry the win source before this restriction can be implemented correctly.
 - Player confirmation (2026-09-14): ordinary Hu evaluation and Youjin evaluation are separate branches. Passing or failing an ordinary structural Hu check must not silently decide Youjin eligibility.
 - Player confirmation (2026-09-14): 抢金 is checked only after all opening flower replacement and opening gold are complete, and before the dealer has discarded a first tile. A hand must already be a valid Hu after treating its gold copies as wildcards. Holding three or more copies of the single gold tile takes the 三金倒 branch first; it does not take 抢金. At this opening point no Chi/Peng/Gang can yet have occurred.
@@ -29,7 +30,10 @@ Do not silently promote UNKNOWN rules.
 - Dealer loss -> other player becomes dealer.
 - Match default is 8 hands.
 - Player confirmation (2026-09-14): the target rules do not award complex combination fans such as 门清、碰碰胡、清一色、混一色 or similar pattern families. Such tile arrangements may still satisfy the standard Hu structure, but receive no special fan for those names.
-- Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
+- Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
+- Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
+- Player confirmation (2026-09-14): 八花游 exists in the target rules. Its existence is confirmed; exact declaration timing, relation to ordinary flower fan, multiplier, and settlement remain UNKNOWN.
+- Confirmed opponent permissions during the Youjin chain (player confirmation, 2026-09-14): while one player is in Youjin, the opponent may Hu; while one player is in Double-You, the opponent may self-draw Hu; while one player is in Triple-You, the opponent may Hu only through a kong-replacement self-draw (杠上自摸胡 / 杠胡).
 
 ## High-confidence settlement evidence from real Huian screenshots
 Room-settings evidence received 2026-09-13: [archived two-player creation page](references/room_settings/2026-09-13/README.md)
@@ -86,8 +90,10 @@ Likely sequence: 5 / 10 / 15 / 20 / ...
 Still needs real-game confirmation for 庄3+ and any cap.
 
 ## Flower scoring
-Real screenshot evidence:
-- one flower can show 1 fan
+Confirmed by player feedback, with supporting real screenshot evidence:
+- each flower has a base value of 1 fan
+
+Additional real screenshot evidence:
 - three ordinary flowers can show 3 fan
 - six flowers have shown 10 fan
 
@@ -121,7 +127,8 @@ Still UNKNOWN programmatically:
 - exact trigger condition for all edge cases
 - whether Double-You can be entered directly or must pass through Youjin
 - exact Triple-You chronological sequence
-- exact rights of the opponent while the other player is in Youjin/Double-You/Triple-You
+- during Youjin, the exact Hu sources/windows covered by the confirmed general Hu right
+- during Double-You, whether the opponent has any Hu right beyond the confirmed self-draw
 - which actions cancel the state in every case
 
 The existence of Youjin and its separation from ordinary Hu are confirmed. The
@@ -146,7 +153,7 @@ review below; its formulas also include an outer ×3.
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options, multi-seat declaration priority, and settlement/dealer result.
 2. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
 2. Exact Sanjindao declaration timing.
-3. Exact Youjin / Double-You / Triple-You triggers and opponent permissions.
+3. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
 4. Exact room multiplier chain.
 5. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
 6. Exact Tianhu timing relative to flower replacement/open-gold.
@@ -167,7 +174,7 @@ No target-room rule was promoted to CONFIRMED in this review.
 Additional UNKNOWN questions exposed by the comparison:
 11. Whether a natural exposed suited triplet scores fan, and the exact honor Peng value in the target room.
 12. Whether added-kong fan is an incremental bonus or a total meld value.
-13. Whether all eight flowers grant a special win, rather than only flower fan, and any declaration timing/multiplier. This is an external variant question, not a confirmed Huian feature.
+13. Resolved in part by player confirmation: 八花游 exists. Its declaration timing, interaction with the eight individual flower fans, multiplier and settlement remain UNKNOWN.
 
 Before adopting new web claims, verify the mini-program identity, 惠安 two-player selection, room options and current in-game rules. General 泉州 rules and another provider's official page are lower-priority external evidence for this project.
 

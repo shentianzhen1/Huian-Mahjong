@@ -16,9 +16,11 @@ Owns legality, Hu/Ting, gold (金), flowers, Chi/Peng/Gang, Sanjindao, Youjin/Do
 
 Confirmed target scope:
 - single gold cannot Pinghu in the selected room
+- exactly one gold may self-draw Hu when the standard structure is valid
 - exactly two gold tiles can Hu only by self-draw, never from an opponent discard
 - ordinary Hu and Youjin are evaluated as separate branches
-- retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, flowers, repeat-dealer/base scoring
+- retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You, flowers, repeat-dealer/base scoring
+- each flower has a confirmed base value of 1 fan
 - no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
 - when a discard has multiple legal Chi sequences, Rules exposes every sequence and the player/AI selects one exact option
 
@@ -31,6 +33,14 @@ Confirmed Chi interaction boundary:
 - Environment actions carry the selected three-tile sequence and execute only it
 - AI evaluates each Chi sequence as a different action
 - Vision/Executor must identify and select the matching option in the mini-program panel; uncertainty stops execution
+
+Confirmed opponent Hu permissions during the Youjin chain:
+- opponent of a Youjin player may Hu
+- opponent of a Double-You player may self-draw Hu
+- opponent of a Triple-You player may Hu only by kong-replacement self-draw
+
+Any more specific Youjin/Double-You response windows remain UNKNOWN unless listed
+in `RULE_STATUS.md`.
 
 ### Environment
 Owns GameState and state transitions:
