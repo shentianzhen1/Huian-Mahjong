@@ -24,7 +24,7 @@ class PassBoundaryTests(unittest.TestCase):
                 self.assertEqual(passed.discards, state.discards)
                 self.assertEqual(passed.hands, state.hands)
                 self.assertEqual(passed.wall, state.wall)
-                action = env.Action(player, env.ActionType.DRAW, metadata={"source": "head"})
+                action = env.Action(player, env.ActionType.DRAW, metadata={"source": "wall_head"})
                 self.assertEqual(instance.legal_actions(), [action])
                 drawn, _ = instance.step(action)
                 self.assertEqual(drawn.hands[player][-1], state.wall[0])
@@ -104,7 +104,7 @@ class PassBoundaryTests(unittest.TestCase):
                     action = env.Action(state.current_player, env.ActionType.PASS)
                 elif state.phase == "NEED_DRAW":
                     action = env.Action(state.current_player, env.ActionType.DRAW,
-                                        metadata={"source": "head"})
+                                        metadata={"source": "wall_head"})
                 else:
                     action = env.Action(state.current_player, env.ActionType.DISCARD,
                                         tile=state.hands[state.current_player][-1])

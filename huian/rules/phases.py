@@ -3,6 +3,7 @@ from collections import Counter
 from dataclasses import dataclass
 from huian._legacy import env
 from .config import UnknownRuleError
+from .context import DrawSource
 from .engine import nonnegative_int
 
 
@@ -135,11 +136,17 @@ def report(adapter, state):
     A, T = env.Action, env.ActionType
     if phase in ("AFTER_MING_GANG", "AFTER_AN_GANG"):
         # Importing this phase explicitly means kong response resolution is over.
-        return ActionReport((A(p, T.DRAW, metadata={"source": "tail"}),))
+        return ActionReport((A(p, T.DRAW, metadata={
+            "source": DrawSource.WALL_TAIL.value,
+            "kong_kind": phase.removeprefix("AFTER_"),
+        }),))
     if phase == "NEED_DRAW":
-        return ActionReport((A(p, T.DRAW, metadata={"source": "head"}),))
+        return ActionReport((A(p, T.DRAW, metadata={"source": DrawSource.WALL_HEAD.value}),))
     if state.gold_tile in hand:
-        return ActionReport((), ("youjin_trigger", "sanjindao"))
+        unresolved = ["youjin_trigger"]
+        if adapter.rules.can_sanjindao(hand, state.gold_tile):
+            unresolved.append("sanjindao_timing")
+        return ActionReport((), tuple(unresolved))
     if phase in ("AFTER_CHI", "AFTER_PENG"):
         return ActionReport(tuple(A(p, T.DISCARD, tile=t) for t in sorted(set(hand))))
     actions, unknown = [], []
@@ -167,7 +174,8 @@ def report(adapter, state):
                 actions.append(A(p, T.MING_GANG, tile=tile, tiles=(tile,) * 4))
             else:
                 unknown.append("rob_kong")
-        if adapter.rules.can_win(hand + [tile], state.gold_tile, len(state.melds[p]), "pinghu"):
+        if adapter.rules.can_win(hand + [tile], state.gold_tile, len(state.melds[p]),
+                                 "pinghu", winning_tile=tile):
             unknown.append("win_declaration_and_settlement")
         actions.append(A(p, T.PASS))
     return ActionReport(tuple(actions), tuple(unknown))

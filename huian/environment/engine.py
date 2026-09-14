@@ -7,6 +7,7 @@ import random
 
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
+from huian.rules.context import DrawSource
 from .state import HuianGameState
 from .opening import HuianOpeningPlugin
 from .flowers import replace_flowers
@@ -191,11 +192,11 @@ class HuianEnvironment:
         self._require_state()
         if strict is not True:
             raise ValueError("HuianEnvironment does not allow legality bypass")
-        action = deepcopy(action)
         if self._state.terminal:
             raise ValueError("Hand is terminal")
         if len(self._events) >= self.max_steps:
             raise DeadLoopError("Scenario action limit reached; not a drawn hand")
+        action = self._canonical_action(self._state, deepcopy(action))
         self.rules.authorize_action(self.state, action)
         before = self._state.state_hash()
         candidate = deepcopy(self._state)
@@ -244,11 +245,27 @@ class HuianEnvironment:
             state.pending_discard = None
 
     @staticmethod
+    def _canonical_action(state, action):
+        """Normalize old replay draw labels before legality checks and new logging."""
+        if action.type != env.ActionType.DRAW:
+            return action
+        metadata = dict(action.metadata)
+        metadata.pop("drawn_tile", None)
+        source = DrawSource.parse(metadata.get("source"))
+        metadata["source"] = source.value
+        if source == DrawSource.WALL_TAIL and "kong_kind" not in metadata:
+            if state.phase in ("AFTER_MING_GANG", "AFTER_AN_GANG"):
+                metadata["kong_kind"] = state.phase.removeprefix("AFTER_")
+        return env.Action(action.player, action.type, action.tile, action.tiles, metadata)
+
+    @staticmethod
     def _apply(state, action):
         p, kind = action.player, action.type
         T = env.ActionType
         if kind == T.DRAW:
-            tile = state.wall.pop(-1 if action.metadata["source"] == "tail" else 0)
+            source = DrawSource.parse(action.metadata.get("source"))
+            tile = state.wall.pop(-1 if source == DrawSource.WALL_TAIL else 0)
+            action.metadata["drawn_tile"] = tile
             state.hands[p].append(tile)
             state.phase = "NEED_FLOWER_REPLACE" if tile in env.FLOWERS else "AFTER_DRAW"
         elif kind == T.PASS:

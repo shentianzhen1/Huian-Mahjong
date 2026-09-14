@@ -12,8 +12,9 @@
 - Done in rule scope (2026-09-14 player confirmation): `can_sanjindao = hand_gold_count >= 3`; declaring is optional and continued play may pursue 三金游. 三金游 follows the same trigger flow as 二金游, but the exact shared executable steps, multiplier, settlement, and naming relation to 三游 remain pending.
 - Done/reconfirmed (2026-09-14 player confirmation): after Chi, as after Peng, the acting player immediately discards without a normal draw; current Environment already implements this transition.
 
-### M2 implementation status (2026-09-14)
-- Done: Huian Environment atomic transitions, 144-tile accounting, pending-discard transfer, post-Chi/Peng discard, resolved Ming/An-Kong tail draw, clone/rollback and loop guards. Internal source is still `tail`; normalize it to `wall_tail` when implementing the confirmed draw-source contract. Added-Kong execution remains pending.
+### M2 implementation status (2026-09-15)
+- Done: Huian Environment atomic transitions, 144-tile accounting, pending-discard transfer, post-Chi/Peng discard, resolved Ming/An-Kong tail draw, clone/rollback and loop guards. Draw sources now emit `wall_head` / `wall_tail`; kong-tail events record `kong_kind` and `drawn_tile`, while old replay aliases remain readable. Added-Kong execution remains pending.
+- Done in Rules: `HuContext` source-aware ordinary Hu, target-room one/two-gold discard restrictions, discarded-gold rejection, all-three-kong Gang-Hu classification, and shape-independent optional `SanjindaoDecision`.
 - Experimental only: Ming/An-Gang declaration assuming no rob-kong, explicitly recorded in configuration/events.
 - Done: default Environment PASS, immediate 17→16 draw termination (head/tail), 16-tile import termination, zero rewards, deterministic replay/rollback regression tests; confirmed_flow names reuse the default implementation.
 - Pending evidence/integration: opening procedure, flower replacement, special wins, automatic winning settlement and complete hand loop.

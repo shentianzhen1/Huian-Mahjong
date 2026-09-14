@@ -39,10 +39,34 @@ candidate as well as Peng and kong candidates. `calculate_fan` explicitly raises
 until the aggregation policy is implemented; it never falls back to legacy fan
 totals or silently ignores flower groups.
 
+Ordinary Hu analysis now accepts a source-aware context. A discard analysis must
+name the winning tile; kong-tail self-draw also names the completed kong kind:
+
+```python
+from huian import HuContext, KongKind, WinSource
+
+discard_result = rules.analyze_hu(
+    hand, gold_tile, win_context=HuContext(WinSource.DISCARD, winning_tile)
+)
+gang_hu_result = rules.analyze_hu(
+    hand, gold_tile,
+    win_context=HuContext(WinSource.KONG_TAIL_DRAW, winning_tile,
+                          KongKind.MING_GANG),
+)
+assert gang_hu_result.is_gang_hu
+
+decision = rules.sanjindao_decision(hand, gold_tile)
+# Eligible decisions contain DECLARE_SANJINDAO and CONTINUE_PLAY.
+```
+
+`sanjindao_decision` confirms only the three-or-more-gold eligibility and the two
+player choices. It does not choose a phase, calculate Sanjin-You, or settle scores.
+
 Player clarification (2026-09-13): single-gold Pinghu is configurable and usually
 disabled. Use `RulesConfig(single_gold_can_pinghu=True)` only for a room explicitly
 allowing it; default False preserves the previously observed setting. Double-gold
-Pinghu stays forbidden. Both ordinary Hu and Ting queries respect the setting;
+discard Hu stays forbidden, while one or two gold may self-draw when the ordinary
+structure is valid. Both ordinary Hu and Ting queries respect the setting;
 M2 phase-level gold/special-state blocking is unchanged. Events record this option
 with the other rule settings.
 
@@ -65,11 +89,12 @@ belong to M2/M3. Legacy `strict=False` remains an unsafe testing escape hatch.
 ## Uncertainty registry
 
 `rules/config.py:UNKNOWN_RULES` tracks the unresolved questions from RULE_STATUS
-and the migration audit. It includes rob-kong, Sanjindao, Youjin entry/upgrades,
+and the migration audit. Sanjindao eligibility is implemented; its phase timing,
+settlement and Sanjin-You continuation remain unresolved. The registry also includes rob-kong, Youjin entry/upgrades,
 opponent permissions/cancellation, room multipliers, flower-open-gold, Tianhu,
 Tianting, PASS, match ties, extended dealer bases, flower groups, fan edge cases,
-honor pung fan, indicator accounting, deal/replacement order, the exact 16-tile
-boundary, added-kong details, decomposition scoring and three-plus-gold Pinghu.
+honor pung fan, indicator accounting, deal/replacement order, added-kong details,
+decomposition scoring and ordinary-Hu handling with three or more golds.
 Configuration does not promote an uncertain rule to confirmed evidence.
 
 ## Tests
@@ -82,7 +107,7 @@ legacy_code/core_v0.1.1:             python -B -m unittest discover -s tests -v
 legacy_code/environment_v0.1:        python -B -m unittest discover -s tests -v
 ```
 
-Verified on 2026-09-13 with Python 3.12.14: Huian 22/22, Core 9/9,
+Verified on 2026-09-15: project suite 84/84, legacy Core 9/9 and legacy
 Environment 9/9. The legacy score-34 test remains a compatibility test only.
 The new tests cover A/B settlement, UNKNOWN blocking, gold constraints, fifth
 copies, negative wall counts, legal action enforcement, seed reproducibility,

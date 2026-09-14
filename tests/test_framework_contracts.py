@@ -1,7 +1,7 @@
 import unittest
 
 from mahjong_framework import MahjongOpeningPlugin, MahjongRulesPlugin
-from huian.rules import HuResult, HuianRulesAdapter
+from huian.rules import HuResult, HuianRulesAdapter, WinSource
 from huian.environment.opening import HuianOpeningPlugin
 
 
@@ -18,6 +18,7 @@ class FrameworkContractTests(unittest.TestCase):
         result = adapter.analyze_hu(hand, win_type="zimo")
         self.assertIsInstance(result, HuResult)
         self.assertTrue(result.legal)
+        self.assertEqual(result.win_source, WinSource.SELF_DRAW)
 
     def test_huian_opening_implements_neutral_opening_contract(self):
         opening = HuianOpeningPlugin()

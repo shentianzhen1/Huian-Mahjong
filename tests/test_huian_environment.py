@@ -1,7 +1,7 @@
 import unittest
 
-from huian import (HuianEnvironment, HuianGameState, HuianRules, HuianRulesAdapter,
-                   RulesConfig, UnknownRuleError, DeadLoopError)
+from huian import (HuContext, HuianEnvironment, HuianGameState, HuianRules,
+                   HuianRulesAdapter, RulesConfig, UnknownRuleError, DeadLoopError)
 from huian._legacy import env
 
 
@@ -84,12 +84,18 @@ class EnvironmentTests(unittest.TestCase):
             self.assertEqual(after.phase, "AFTER_" + kind.value)
             self.assertTrue(event["rules_config"]["experimental_no_rob_kong"])
             action = instance.legal_actions()[0]
-            self.assertEqual(action.metadata, {"source": "tail"})
+            self.assertEqual(action.metadata, {
+                "source": "wall_tail", "kong_kind": kind.value
+            })
             final, _ = instance.step(action)
             self.assertEqual(final.hands[0][-1], "P8")
             self.assertEqual(len(final.wall), len(state.wall) - 1)
             self.assertEqual(len(final.hands[0]), 14)
             self.assertEqual(final.phase, "AFTER_DRAW")
+            self.assertEqual(final.last_action["metadata"]["source"], "wall_tail")
+            self.assertEqual(final.last_action["metadata"]["kong_kind"], kind.value)
+            self.assertEqual(final.last_action["metadata"]["drawn_tile"], "P8")
+            self.assertTrue(HuContext.from_draw_metadata(final.last_action["metadata"]).is_gang_hu)
 
     def test_default_kong_scope_blocks_declaration(self):
         instance = game(scenario(discard="E"))
@@ -104,7 +110,9 @@ class EnvironmentTests(unittest.TestCase):
         experimental.step(choose(experimental, env.ActionType.MING_GANG))
         # External verified scenario begins AFTER kong response resolution.
         instance = game(experimental.state)
-        self.assertEqual(instance.legal_actions()[0].metadata, {"source": "tail"})
+        self.assertEqual(instance.legal_actions()[0].metadata, {
+            "source": "wall_tail", "kong_kind": "MING_GANG"
+        })
         instance.step(instance.legal_actions()[0])
 
     def test_tail_flower_runs_dealer_first_replacement_rounds(self):
@@ -138,10 +146,18 @@ class EnvironmentTests(unittest.TestCase):
         expected = instance.state.wall[0]
         before = instance.state.state_hash()
         with self.assertRaises(ValueError):
-            instance.step(env.Action(0, env.ActionType.DRAW, metadata={"source": "tail"}))
+            instance.step(env.Action(0, env.ActionType.DRAW, metadata={"source": "wall_tail"}))
         self.assertEqual(instance.state.state_hash(), before)
         after, _ = instance.step(instance.legal_actions()[0])
         self.assertEqual(after.hands[0][-1], expected)
+
+    def test_legacy_draw_source_alias_is_logged_canonically(self):
+        instance = game(scenario("NEED_DRAW"))
+        after, event = instance.step(
+            env.Action(0, env.ActionType.DRAW, metadata={"source": "head"})
+        )
+        self.assertEqual(event["action"]["metadata"]["source"], "wall_head")
+        self.assertEqual(event["action"]["metadata"]["drawn_tile"], after.hands[0][-1])
 
     def test_atomic_post_validation_failure(self):
         class Broken(HuianEnvironment):
@@ -200,6 +216,16 @@ class EnvironmentTests(unittest.TestCase):
         with self.assertRaises(UnknownRuleError):
             instance.legal_actions()
 
+    def test_three_gold_reports_confirmed_decision_but_unknown_phase_timing(self):
+        for count, expected in (
+            (2, ("youjin_trigger",)),
+            (3, ("youjin_trigger", "sanjindao_timing")),
+        ):
+            instance = game(scenario(hand=["P9"] * count + HAND[count:]))
+            report = instance.action_report()
+            self.assertFalse(report.known_actions)
+            self.assertEqual(report.unresolved, expected)
+
     def test_fifth_copy_rejected_even_when_total_remains_144(self):
         state = scenario()
         replacement = next(i for i, tile in enumerate(state.wall) if tile != "E")
@@ -245,11 +271,11 @@ class EnvironmentTests(unittest.TestCase):
         result, event = instance.step(action)
         expected = instance.state.state_hash()
         result.wall.clear()
-        action.metadata["source"] = "tail"
-        event["action"]["metadata"]["source"] = "tail"
+        action.metadata["source"] = "wall_tail"
+        event["action"]["metadata"]["source"] = "wall_tail"
         instance.events.clear()
         self.assertEqual(instance.state.state_hash(), expected)
-        self.assertEqual(instance.events[0]["action"]["metadata"]["source"], "head")
+        self.assertEqual(instance.events[0]["action"]["metadata"]["source"], "wall_head")
 
     def test_seed_clone_rollback_and_replayed_actions(self):
         a, b = HuianEnvironment(), HuianEnvironment()

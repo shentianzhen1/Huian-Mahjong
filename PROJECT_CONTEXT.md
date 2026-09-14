@@ -31,6 +31,12 @@ The excluded fan names do not make an otherwise standard Hu structure illegal.
 They simply add no named fan or AI objective. Exact special-Hu triggers and
 unverified multipliers remain controlled by `RULE_STATUS.md`.
 
+Current Rules API boundary:
+- `HuContext` carries `SELF_DRAW`, `DISCARD`, or `KONG_TAIL_DRAW`, the winning tile, and the resolved kong kind where applicable
+- discard-Hu analysis requires the winning tile, so an opponent-discarded gold cannot be silently accepted
+- `SanjindaoDecision` exposes eligibility plus `DECLARE_SANJINDAO` / `CONTINUE_PLAY`; phase timing and settlement stay outside the pure eligibility service
+- `DrawSource` emits `wall_head` / `wall_tail`; old `head` / `tail` replay values are accepted only as migration aliases and new events are canonical
+
 Confirmed Chi interaction boundary:
 - Rules returns a list of concrete Chi sequences, not only `true/false`
 - Environment actions carry the selected three-tile sequence and execute only it

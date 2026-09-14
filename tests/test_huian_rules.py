@@ -1,7 +1,8 @@
 import unittest
 from copy import deepcopy
 
-from huian import HuianRules, HuianRulesAdapter, RulesConfig, UnknownRuleError
+from huian import (HuContext, HuianRules, HuianRulesAdapter, KongKind, RulesConfig,
+                   SanjindaoChoice, UnknownRuleError, WinSource)
 from huian.rules import EvidenceStatus
 from huian._legacy import env
 
@@ -21,7 +22,7 @@ class HuianRulesTests(unittest.TestCase):
     def test_hu_result_exposes_structure_without_fan(self):
         result = self.rules.analyze_hu(HAND)
         self.assertTrue(result.legal)
-        self.assertEqual(result.win_source, "zimo")
+        self.assertEqual(result.win_source, WinSource.SELF_DRAW)
         self.assertTrue(result.decompositions)
         split = result.decompositions[0]
         self.assertEqual(len(split.pair), 2)
@@ -35,7 +36,9 @@ class HuianRulesTests(unittest.TestCase):
         result = self.rules.analyze_hu(hand, gold_tile="P9")
         self.assertTrue(result.legal)
         self.assertTrue(any(split.gold_used == 1 for split in result.decompositions))
-        self.assertFalse(self.rules.analyze_hu(hand, "P9", win_type="pinghu").legal)
+        self.assertFalse(self.rules.analyze_hu(
+            hand, "P9", win_type="pinghu", winning_tile="E"
+        ).legal)
         with self.assertRaises(ValueError):
             self.rules.analyze_hu(HAND, max_decompositions=0)
 
@@ -52,7 +55,9 @@ class HuianRulesTests(unittest.TestCase):
             for i in indices:
                 hand[i] = "P9"
             self.assertTrue(self.rules.can_win(hand, "P9"))
-            self.assertFalse(self.rules.can_win(hand, "P9", win_type="pinghu"))
+            self.assertFalse(self.rules.can_win(
+                hand, "P9", win_type="pinghu", winning_tile="E"
+            ))
 
     def test_gold_cannot_be_consumed_by_chi(self):
         self.assertEqual(self.rules.meld_options(["M2", "M4"], "M3", "M2")["chi"], [])
@@ -63,13 +68,65 @@ class HuianRulesTests(unittest.TestCase):
         hand = HAND.copy()
         hand[4] = "P9"
         enabled = HuianRules(RulesConfig(single_gold_can_pinghu=True))
-        self.assertFalse(self.rules.can_win(hand, "P9", win_type="pinghu"))
-        self.assertTrue(enabled.can_win(hand, "P9", win_type="pinghu"))
+        self.assertFalse(self.rules.can_win(
+            hand, "P9", win_type="pinghu", winning_tile="E"
+        ))
+        self.assertTrue(enabled.can_win(
+            hand, "P9", win_type="pinghu", winning_tile="E"
+        ))
         self.assertEqual(self.rules.ting_tiles(hand[:-1], "P9", win_type="pinghu"), [])
         waits = enabled.ting_tiles(hand[:-1], "P9", win_type="pinghu")
         self.assertIn("E", [entry["tile"] for entry in waits])
+        contextual = enabled.ting_tiles(
+            hand[:-1], "P9", win_context=HuContext(WinSource.DISCARD)
+        )
+        self.assertIn("E", [entry["tile"] for entry in contextual])
         hand[3] = "P9"
-        self.assertFalse(enabled.can_win(hand, "P9", win_type="pinghu"))
+        self.assertFalse(enabled.can_win(
+            hand, "P9", win_type="pinghu", winning_tile="E"
+        ))
+
+    def test_discard_source_requires_tile_and_discarded_gold_never_hu(self):
+        enabled = HuianRules(RulesConfig(single_gold_can_pinghu=True))
+        hand = HAND.copy()
+        hand[4] = "P9"
+        with self.assertRaises(ValueError):
+            enabled.can_win(hand, "P9", win_type="pinghu")
+        self.assertFalse(enabled.can_win(
+            hand, "P9", win_context=HuContext(WinSource.DISCARD, "P9")
+        ))
+
+    def test_kong_tail_context_classifies_all_three_kong_kinds_as_gang_hu(self):
+        for kind in KongKind:
+            result = self.rules.analyze_hu(
+                HAND, win_context=HuContext(WinSource.KONG_TAIL_DRAW, "E", kind)
+            )
+            self.assertTrue(result.legal)
+            self.assertTrue(result.is_gang_hu)
+            self.assertEqual(result.kong_kind, kind)
+        with self.assertRaises(ValueError):
+            HuContext(WinSource.KONG_TAIL_DRAW, "E")
+        with self.assertRaises(ValueError):
+            HuContext(WinSource.SELF_DRAW, "E", KongKind.MING_GANG)
+        with self.assertRaises(ValueError):
+            HuContext.from_draw_metadata({
+                "source": "wall_tail", "kong_kind": "MING_GANG"
+            })
+        with self.assertRaises(ValueError):
+            HuContext.from_draw_metadata({
+                "source": "wall_head", "drawn_tile": "E", "kong_kind": "MING_GANG"
+            })
+
+    def test_sanjindao_is_shape_independent_and_optional(self):
+        hand = ["P9", "P9", "P9", "M1"]
+        result = self.rules.sanjindao_decision(hand, "P9")
+        self.assertTrue(result.eligible)
+        self.assertEqual(result.gold_count, 3)
+        self.assertEqual(result.choices, (
+            SanjindaoChoice.DECLARE_SANJINDAO,
+            SanjindaoChoice.CONTINUE_PLAY,
+        ))
+        self.assertFalse(self.rules.sanjindao_decision(["P9"] * 2, "P9").eligible)
 
     def test_single_gold_setting_rejects_non_boolean(self):
         for invalid in (None, 0, 1, "false", "true"):
@@ -99,7 +156,8 @@ class HuianRulesTests(unittest.TestCase):
             with self.assertRaises(UnknownRuleError):
                 self.rules.can_win(HAND, win_type=win_type)
         with self.assertRaises(UnknownRuleError):
-            self.rules.can_win(["P9"] * 3, "P9", win_type="pinghu")
+            self.rules.can_win(["P9"] * 3 + ["M1"], "P9", win_type="pinghu",
+                               winning_tile="M1")
 
     def test_visible_fifth_copy_rejected(self):
         with self.assertRaises(ValueError):
