@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新日期：2026-09-14（Asia/Shanghai）。本文件只描述当前真实状态；规则证据唯一依据为 [RULE_STATUS.md](RULE_STATUS.md)，实现存在或测试通过不等于规则已确认。
+更新日期：2026-09-14（Asia/Shanghai）。本文件只描述当前真实状态；规则证据唯一依据为 [RULE_STATUS.md](RULE_STATUS.md)；实施缺口与录像登记见 [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)。实现存在或测试通过不等于规则已确认。
 
 ## 当前版本 / 里程碑
 
