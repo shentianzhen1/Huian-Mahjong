@@ -102,7 +102,7 @@ def validate(adapter, state):
     elif pending is not None:
         raise ValueError("Pending discard outside claim phase")
     if state.phase == "OPENING_QIANGJIN_CHECK":
-        return ActionReport((), ("qiangjin",))
+        return ActionReport((), ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
     if state.phase == "NEED_FLOWER_REPLACE":
         if not any(t in env.FLOWERS for t in state.hands[state.current_player]):
             raise ValueError("Replacement phase without a flower")
@@ -117,7 +117,7 @@ def report(adapter, state):
     if state.phase == "READY":
         return ActionReport((), ("deal_replacement_order", "open_gold_procedure", "tianhu"))
     if state.phase == "OPENING_QIANGJIN_CHECK":
-        return ActionReport((), ("qiangjin",))
+        return ActionReport((), ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
     if state.phase == "NEED_FLOWER_REPLACE":
         return ActionReport((), ("deal_replacement_order",))
     if state.special_states != ["NORMAL", "NORMAL"]:

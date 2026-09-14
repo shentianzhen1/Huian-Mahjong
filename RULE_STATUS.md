@@ -15,11 +15,12 @@ Do not silently promote UNKNOWN rules.
 - Ming-gang and An-gang replacement draws come from the wall tail.
 - Added kong after Peng is allowed.
 - Gold cannot participate in Chi/Peng/Ming-Gang/An-Gang.
-- If opponent discards the current gold tile, it cannot be Chi/Peng/Gang, but it may be Hu'd if the Hu rule allows it.
+- If opponent discards the current gold tile, it cannot be Chi/Peng/Gang/Hu.
 - Gold is a wildcard in allowed hand/win composition.
 - A triplet completed using gold is not a natural concealed-triplet fan.
 - Single-gold Pinghu is a player/room setting (player clarification 2026-09-13). It is usually disabled. Default `single_gold_can_pinghu=False` preserves the observed target-room behavior; enable only for a room explicitly allowing it. The generic page's allowance does not override a room's setting.
 - Double gold cannot Pinghu.
+- Player confirmation (2026-09-14): 抢金 is checked only after all opening flower replacement and opening gold are complete, and before the dealer has discarded a first tile. A hand must already be a valid Hu after treating its gold copies as wildcards. Holding three or more copies of the single gold tile takes the 三金倒 branch first; it does not take 抢金. At this opening point no Chi/Peng/Gang can yet have occurred.
 - Sanjindao can win without a normal complete hand when its conditions are met; player may be allowed to continue instead of immediately declaring it.
 - Dealer win -> dealer stays.
 - Draw -> dealer stays.
@@ -121,7 +122,8 @@ says, but is not yet a verified two-player room configuration. See the screensho
 review below; its formulas also include an outer ×3.
 
 ## Still important UNKNOWN questions
-1. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
+1. 抢金 remaining gaps: the exact effective Hu decomposition/options, multi-seat declaration priority, and settlement/dealer result.
+2. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
 2. Exact Sanjindao declaration timing.
 3. Exact Youjin / Double-You / Triple-You triggers and opponent permissions.
 4. Exact room multiplier chain.

@@ -24,7 +24,7 @@ class OpeningEnvironmentTests(unittest.TestCase):
         self.assertEqual(first.events[0]["action"]["metadata"]["dice_total"], 7)
         with self.assertRaises(UnknownRuleError) as raised:
             first.legal_actions()
-        self.assertEqual(raised.exception.rule_ids, ("qiangjin",))
+        self.assertEqual(raised.exception.rule_ids, ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
 
     def test_begin_opening_rejects_duplicate_or_invalid_request(self):
         game = HuianEnvironment()
