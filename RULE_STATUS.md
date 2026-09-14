@@ -12,9 +12,10 @@ Do not silently promote UNKNOWN rules.
 - Opponent discard can offer Chi/Peng/Gang/Hu where legal; Rules must return all legal actions and AI chooses.
 - In 2-player Huian, the sole opponent's discard may be Chi'd.
 - Confirmed rule and system interaction (player confirmation, 2026-09-14): when one discard permits multiple Chi sequences, every legal sequence is a separate choice. The mini-program opens a Chi-option selection panel and the player selects the exact sequence; it does not auto-select and a generic Chi action must not silently choose one. Example: discard M5 with M3/M4, M4/M6 and M6/M7 available offers M3-M4-M5, M4-M5-M6 and M5-M6-M7.
-- After Chi or Peng, player enters discard phase and must discard.
-- Ming-gang and An-gang replacement draws come from the wall tail.
+- Confirmed/reconfirmed player interaction (2026-09-14): after Chi or Peng completes, that player immediately enters the discard phase and must discard one tile; there is no intervening normal draw.
+- Player confirmation (2026-09-14): after a completed Ming-Gang, An-Gang, or Added-Gang, the declarer draws from the wall tail. That draw follows the normal draw/flower-processing pipeline; its provenance must be recorded as `wall_tail` rather than modeled as a separate complex replacement flow.
 - Added kong after Peng is allowed.
+- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). This does not answer whether or when another player may rob a kong; rob-kong remains a separate UNKNOWN response window.
 - Gold cannot participate in Chi/Peng/Ming-Gang/An-Gang.
 - If opponent discards the current gold tile, it cannot be Chi/Peng/Gang/Hu.
 - Gold is a wildcard in allowed hand/win composition.
@@ -24,7 +25,7 @@ Do not silently promote UNKNOWN rules.
 - Player confirmation (2026-09-14): with exactly two gold tiles, Hu is allowed only by self-draw; the player cannot Hu on any opponent discard. This supersedes the older blanket statement that double gold could not Pinghu. The Rules API must carry the win source before this restriction can be implemented correctly.
 - Player confirmation (2026-09-14): ordinary Hu evaluation and Youjin evaluation are separate branches. Passing or failing an ordinary structural Hu check must not silently decide Youjin eligibility.
 - Player confirmation (2026-09-14): 抢金 is checked only after all opening flower replacement and opening gold are complete, and before the dealer has discarded a first tile. A hand must already be a valid Hu after treating its gold copies as wildcards. Holding three or more copies of the single gold tile takes the 三金倒 branch first; it does not take 抢金. At this opening point no Chi/Peng/Gang can yet have occurred.
-- Sanjindao can win without a normal complete hand when its conditions are met; player may be allowed to continue instead of immediately declaring it.
+- Player confirmation (2026-09-14): `can_sanjindao = hand_gold_count >= 3`; ordinary complete-hand structure is not required for this eligibility check. Sanjindao is an optional action, not an automatic terminal: the player may declare it immediately or continue playing through the Youjin route to pursue 三金游. 三金游 follows the same trigger flow as 二金游. This confirms the relationship between those routes, but the shared executable trigger sequence is still not sufficiently specified. The exact 三金游 multiplier/settlement and its naming relation to Triple-You (三游) remain UNKNOWN; the names must not be silently merged.
 - Dealer win -> dealer stays.
 - Draw -> dealer stays.
 - Dealer loss -> other player becomes dealer.
@@ -152,15 +153,17 @@ review below; its formulas also include an outer ×3.
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options, multi-seat declaration priority, and settlement/dealer result.
 2. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
-2. Exact Sanjindao declaration timing.
-3. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
-4. Exact room multiplier chain.
-5. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
-6. Exact Tianhu timing relative to flower replacement/open-gold.
-7. Exact Tianting definition.
-8. Resolved 2026-09-14: all-PASS advances to the next player's draw.
-9. 8-hand match tie handling.
-10. Third real settlement to validate the scoring formula.
+3. Sanjindao remaining gaps: exact action-offer windows at opening/mid-hand/after flower or kong; how declining it interacts with the opening 抢金 check; multiplier, settlement, and next dealer. Eligibility at three or more gold and the declare/continue choice are confirmed.
+4. 三金游 remaining gaps: the player confirms it follows the same trigger flow as 二金游, but the exact shared executable trigger sequence is not yet specified; multiplier/settlement and whether it is related to or distinct in implementation from 三游 remain UNKNOWN. Keep the player-used names separate until evidence resolves this.
+5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
+6. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
+7. Exact room multiplier chain.
+8. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
+9. Exact Tianhu timing relative to flower replacement/open-gold.
+10. Exact Tianting definition.
+11. Resolved 2026-09-14: all-PASS advances to the next player's draw.
+12. 8-hand match tie handling.
+13. Third real settlement to validate the scoring formula.
 
 ## External web review — 2026-09-13 (not rule confirmation)
 

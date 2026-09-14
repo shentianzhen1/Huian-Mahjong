@@ -8,9 +8,12 @@
 - Done (2026-09-14 player confirmation): PASS advances to next player's draw; 16 tiles ends the hand with [0, 0]. Target room: 2 players, 8 hands, 单金不平胡 checked, no trusteeship.
 - Obtain a third real settlement and Double/Triple results: the in-game page says 4/8/16, with an outer ×3 that must not be silently applied to two-player net scoring.
 - Flower-set values and honor Peng now have in-game textual evidence, but stacking/room applicability and added-kong fan remain pending. No runtime defaults changed from these pages alone.
+- Done (2026-09-14 player confirmation): all completed Ming/An/Added Kongs draw from `wall_tail` through the normal draw pipeline, and a Hu by the declarer on that draw is Gang-Hu. Gang-Hu scoring and rob-kong remain pending.
+- Done in rule scope (2026-09-14 player confirmation): `can_sanjindao = hand_gold_count >= 3`; declaring is optional and continued play may pursue 三金游. 三金游 follows the same trigger flow as 二金游, but the exact shared executable steps, multiplier, settlement, and naming relation to 三游 remain pending.
+- Done/reconfirmed (2026-09-14 player confirmation): after Chi, as after Peng, the acting player immediately discards without a normal draw; current Environment already implements this transition.
 
 ### M2 implementation status (2026-09-14)
-- Done: Huian Environment atomic transitions, 144-tile accounting, pending-discard transfer, post-Chi/Peng discard, resolved-kong tail draw, clone/rollback and loop guards.
+- Done: Huian Environment atomic transitions, 144-tile accounting, pending-discard transfer, post-Chi/Peng discard, resolved Ming/An-Kong tail draw, clone/rollback and loop guards. Internal source is still `tail`; normalize it to `wall_tail` when implementing the confirmed draw-source contract. Added-Kong execution remains pending.
 - Experimental only: Ming/An-Gang declaration assuming no rob-kong, explicitly recorded in configuration/events.
 - Done: default Environment PASS, immediate 17→16 draw termination (head/tail), 16-tile import termination, zero rewards, deterministic replay/rollback regression tests; confirmed_flow names reuse the default implementation.
 - Pending evidence/integration: opening procedure, flower replacement, special wins, automatic winning settlement and complete hand loop.

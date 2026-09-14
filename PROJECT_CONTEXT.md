@@ -19,7 +19,10 @@ Confirmed target scope:
 - exactly one gold may self-draw Hu when the standard structure is valid
 - exactly two gold tiles can Hu only by self-draw, never from an opponent discard
 - ordinary Hu and Youjin are evaluated as separate branches
-- retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You, flowers, repeat-dealer/base scoring
+- retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Gang-Hu, Youjin, Double-You, Triple-You, Eight-Flower You, flowers, repeat-dealer/base scoring
+- Sanjindao eligibility is `hand_gold_count >= 3`; declaration is optional, so legal actions must expose both immediate Sanjindao and continued play toward the separately tracked 三金游 path; 三金游 follows the same trigger flow as 二金游, while the exact shared state sequence and multiplier remain unresolved
+- every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong remains a separate unresolved response path
+- completed Ming/An/Added Kong draws reuse the normal draw pipeline and record their source as `wall_tail`
 - each flower has a confirmed base value of 1 fan
 - no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
 - when a discard has multiple legal Chi sequences, Rules exposes every sequence and the player/AI selects one exact option
@@ -31,6 +34,7 @@ unverified multipliers remain controlled by `RULE_STATUS.md`.
 Confirmed Chi interaction boundary:
 - Rules returns a list of concrete Chi sequences, not only `true/false`
 - Environment actions carry the selected three-tile sequence and execute only it
+- after the selected Chi completes, Environment immediately enters discard phase for that player; no normal draw occurs between Chi and discard
 - AI evaluates each Chi sequence as a different action
 - Vision/Executor must identify and select the matching option in the mini-program panel; uncertainty stops execution
 
@@ -54,7 +58,9 @@ Roadmap:
 Baseline heuristics -> Monte Carlo EV -> opponent/danger model -> optional RL/NN later.
 
 Huian AI should prioritize ordinary Hu/Zimo value, Sanjindao, Youjin paths and
-risk. It should not optimize toward Menqing, Pengpenghu, Qingyise, Hunyise or
+risk. When Sanjindao is available it must compare declaring now with continuing
+toward 三金游; exact 三金游 EV remains blocked until its trigger and multiplier are
+confirmed. It should not optimize toward Menqing, Pengpenghu, Qingyise, Hunyise or
 other excluded complex fan patterns.
 
 Decision output should distinguish:
