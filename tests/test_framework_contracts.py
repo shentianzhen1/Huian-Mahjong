@@ -1,7 +1,7 @@
 import unittest
 
 from mahjong_framework import MahjongOpeningPlugin, MahjongRulesPlugin
-from huian.rules import HuianRulesAdapter
+from huian.rules import HuResult, HuianRulesAdapter
 from huian.environment.opening import HuianOpeningPlugin
 
 
@@ -10,6 +10,14 @@ class FrameworkContractTests(unittest.TestCase):
         adapter = HuianRulesAdapter()
         self.assertIsInstance(adapter, MahjongRulesPlugin)
         self.assertEqual(adapter.variant_id, "huian.two_player.v0_1")
+
+    def test_structural_hu_analysis_crosses_plugin_boundary(self):
+        adapter = HuianRulesAdapter()
+        hand = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+                "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+        result = adapter.analyze_hu(hand, win_type="zimo")
+        self.assertIsInstance(result, HuResult)
+        self.assertTrue(result.legal)
 
     def test_huian_opening_implements_neutral_opening_contract(self):
         opening = HuianOpeningPlugin()

@@ -108,8 +108,10 @@ class HuianRules:
             if gold_count >= 3:
                 raise UnknownRuleError("three_plus_gold_pinghu")
         raw_splits = winning_decompositions(
-            hand, gold_tile, open_melds, max_solutions=max_decompositions
+            hand, gold_tile, open_melds, max_solutions=max_decompositions + 1
         )
+        may_be_truncated = len(raw_splits) > max_decompositions
+        raw_splits = raw_splits[:max_decompositions]
         decompositions = tuple(
             HuDecomposition(
                 pair=tuple(split["pair"]),
@@ -123,7 +125,7 @@ class HuianRules:
             gold_tile=gold_tile,
             open_melds=open_melds,
             win_source=win_type,
-            may_be_truncated=len(raw_splits) >= max_decompositions,
+            may_be_truncated=may_be_truncated,
         )
 
     def can_win(self, hand, gold_tile=None, open_melds=0, win_type="zimo"):

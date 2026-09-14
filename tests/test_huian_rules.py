@@ -39,6 +39,13 @@ class HuianRulesTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.rules.analyze_hu(HAND, max_decompositions=0)
 
+    def test_hu_result_truncation_is_detected_by_lookahead(self):
+        complete = self.rules.analyze_hu(HAND, max_decompositions=64)
+        limited = self.rules.analyze_hu(HAND, max_decompositions=1)
+        self.assertEqual(len(limited.decompositions), 1)
+        self.assertEqual(limited.may_be_truncated,
+                         len(complete.decompositions) > 1)
+
     def test_single_and_double_gold_cannot_pinghu(self):
         for indices in ((4,), (0, 1)):
             hand = HAND.copy()

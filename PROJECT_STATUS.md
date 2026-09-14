@@ -10,7 +10,7 @@
 
 ## 已完成模块
 
-- 通用框架：`mahjong_framework` 提供 Rules、Opening、Settlement 三类玩法插件契约；惠安已实现对应插件，未来玩法可复用 Environment、Simulator、Vision 与 Executor 边界。
+- 通用框架：`mahjong_framework` 提供 Rules、Opening、Settlement 三类玩法插件契约；Rules 契约现可统一请求不含计分的结构胡分析。惠安已实现对应插件，未来玩法可复用 Environment、Simulator、Vision 与 Executor 边界。
 - Rules：144 张实体牌校验、普通结构胡听及可审计 HuResult 拆解、金牌不能参与吃碰杠、单金平胡房间配置、吃碰杠候选与 UNKNOWN 阻断。
 - Opening：17/16 发牌、庄家优先分轮补花、骰子开金候选规划；`begin_opening()` 将结果写入 Environment，停在 `OPENING_QIANGJIN_CHECK`。
 - Environment：144 张实体牌守恒、吃碰、PASS、头摸、已解决杠后尾摸、开局及中途补花、16 张零分流局、原子提交、回滚/克隆、死循环保护和合法动作检查。
@@ -28,11 +28,11 @@
 
 ## 当前测试结果
 
-2026-09-14 全量自动测试：**104 项通过，0 失败，0 跳过**。
+2026-09-14 全量自动测试：**106 项通过，0 失败，0 跳过**。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| 项目根目录 | `python -B -m unittest discover -s tests -v` | 77 通过 |
+| 项目根目录 | `python -B -m unittest discover -s tests -v` | 79 通过 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 9 通过 |

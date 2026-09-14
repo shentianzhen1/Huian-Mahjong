@@ -22,6 +22,9 @@ class MahjongRulesPlugin(Protocol):
     def authorize_action(self, state: Any, action: Any) -> None:
         """Reject actions outside the supported legal action set."""
 
+    def analyze_hu(self, hand: Any, **context: Any) -> Any:
+        """Return a variant-owned structural win analysis without scoring it."""
+
     def reward(self, state: Any) -> list[int]:
         """Return terminal rewards in seat order."""
 

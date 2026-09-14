@@ -89,6 +89,10 @@ class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
         self.validate_state(state)
         return list(state.rewards)
 
+    def analyze_hu(self, hand, **context):
+        """Expose Huian structural analysis through the neutral plugin boundary."""
+        return self.rules.analyze_hu(hand, **context)
+
     def action_report(self, state):
         from .phases import report
         return report(self, state)
