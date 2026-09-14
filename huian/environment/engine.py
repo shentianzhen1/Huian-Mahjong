@@ -8,6 +8,7 @@ import random
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
 from .state import HuianGameState
+from .opening import plan_opening
 
 
 class DeadLoopError(RuntimeError):
@@ -65,6 +66,43 @@ class HuianEnvironment:
         return self.set_state(HuianGameState(wall=tiles, dealer=dealer,
                                            current_player=dealer, phase="READY"))
 
+    def begin_opening(self, dice_total):
+        """Apply the V0.1 opening planner and stop for the unresolved 抢金 check.
+
+        This is an explicit simulator setup operation, not an automatic game
+        action.  It preserves the selected indicator in the wall until the
+        real room's physical accounting is observed.
+        """
+        self._require_state()
+        if self._state.phase != "READY":
+            raise ValueError("Opening can begin only from READY")
+        before = self._state.state_hash()
+        opening = plan_opening(self._state.wall, self._state.dealer, dice_total)
+        candidate = deepcopy(self._state)
+        candidate.hands = [list(zone) for zone in opening.hands]
+        candidate.flowers = [list(zone) for zone in opening.flowers]
+        candidate.wall = list(opening.wall)
+        candidate.gold_tile = opening.gold_indicator.tile
+        candidate.current_player = candidate.dealer
+        candidate.phase = "OPENING_QIANGJIN_CHECK"
+        self.rules.validate_state(candidate)
+        self._state = candidate
+        self._events = [{
+            "seq": 0,
+            "action": {"player": candidate.dealer, "type": "OPEN_GOLD",
+                       "tile": candidate.gold_tile, "tiles": [],
+                       "metadata": {"dice_total": dice_total,
+                                    "indicator_wall_index": opening.gold_indicator.wall_index,
+                                    "skipped_flowers": list(opening.gold_indicator.skipped_flowers)}},
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }]
+        self._snapshots = []
+        self._seen = {self._position(candidate)}
+        return self.state
     def action_report(self):
         self._require_state()
         return self.rules.action_report(self.state)

@@ -13,6 +13,7 @@ class EvidenceStatus(str, Enum):
 # Evidence authority: RULE_STATUS.md, not legacy KNOWN_RULES.md.
 UNKNOWN_RULES = MappingProxyType({
     "rob_kong": "Scope, response window and resolution for each kong kind",
+    "qiangjin": "Eligibility, seat priority and resolution after opening gold",
     "sanjindao": "Eligibility, declaration timing and rights after continuing",
     "youjin_trigger": "Exact entry conditions and edge cases",
     "double_you_entry": "Direct entry versus required prior Youjin",

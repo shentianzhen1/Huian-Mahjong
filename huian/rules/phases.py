@@ -18,7 +18,7 @@ class ActionReport:
 
 PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
-          "TERMINAL"}
+          "OPENING_QIANGJIN_CHECK", "TERMINAL"}
 
 
 def validate(adapter, state):
@@ -37,6 +37,8 @@ def validate(adapter, state):
         raise ValueError("Active wall cannot be below the 16-tile draw boundary")
     if state.terminal_reason not in (None, "WALL_16"):
         raise ValueError("Invalid terminal reason")
+    if state.phase == "OPENING_QIANGJIN_CHECK" and state.terminal_reason is not None:
+        raise ValueError("Opening check cannot have a terminal reason")
     if state.terminal_reason == "WALL_16" and (
         not state.terminal or len(state.wall) != 16 or state.rewards != [0, 0]
     ):
@@ -72,7 +74,8 @@ def validate(adapter, state):
         for p in range(2):
             expected = 16 - 3 * len(state.melds[p])
             if p == state.current_player and state.phase in (
-                "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE"
+                "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
+                "OPENING_QIANGJIN_CHECK"
             ):
                 expected += 1
             if len(state.hands[p]) != expected:
@@ -98,6 +101,8 @@ def validate(adapter, state):
             raise ValueError("Pending discard tile mismatch")
     elif pending is not None:
         raise ValueError("Pending discard outside claim phase")
+    if state.phase == "OPENING_QIANGJIN_CHECK":
+        return ActionReport((), ("qiangjin",))
     if state.phase == "NEED_FLOWER_REPLACE":
         if not any(t in env.FLOWERS for t in state.hands[state.current_player]):
             raise ValueError("Replacement phase without a flower")
@@ -111,6 +116,8 @@ def report(adapter, state):
         return ActionReport(())
     if state.phase == "READY":
         return ActionReport((), ("deal_replacement_order", "open_gold_procedure", "tianhu"))
+    if state.phase == "OPENING_QIANGJIN_CHECK":
+        return ActionReport((), ("qiangjin",))
     if state.phase == "NEED_FLOWER_REPLACE":
         return ActionReport((), ("deal_replacement_order",))
     if state.special_states != ["NORMAL", "NORMAL"]:
