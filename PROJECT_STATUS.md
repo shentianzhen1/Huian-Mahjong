@@ -28,11 +28,11 @@
 
 ## 当前测试结果
 
-2026-09-14 全量自动测试：**101 项通过，0 失败，0 跳过**。
+2026-09-14 全量自动测试：**102 项通过，0 失败，0 跳过**。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| 项目根目录 | `python -B -m unittest discover -s tests -v` | 74 通过（本轮） |
+| 项目根目录 | `python -B -m unittest discover -s tests -v` | 75 通过 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 9 通过 |

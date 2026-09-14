@@ -2,6 +2,13 @@
 
 按日期倒序维护。规则是否确认以 RULE_STATUS.md 为准；历史提交中的实现或注释不能自动提高规则证据等级。历史测试数量由提交差异中新增测试用例及现存记录核对，未保留的当时完整测试结果不补造。
 
+## 2026-09-14 — Simulator 异常分类收紧
+
+- Commit：随本轮提交。
+- 新增功能：无。
+- 修复内容：Simulator 只将 `UnknownRuleError` 标记为 `UNRESOLVED` / `STOPPED_UNKNOWN`；无效骰子和其他程序/输入错误会直接暴露。
+- 规则变更：无。
+- 测试变化：新增非法骰子不会伪装为未知规则的回归；本轮全量测试 102 项通过（项目 75、legacy Core 9、legacy Environment 9、采集 9），0 失败、0 跳过。
 ## 2026-09-14 — 中途补花接入 Environment
 
 - Commit：随本轮提交。

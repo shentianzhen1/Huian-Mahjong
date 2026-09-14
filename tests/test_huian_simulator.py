@@ -29,6 +29,9 @@ class SimulatorTests(unittest.TestCase):
         self.assertIn(first.dice_total, range(2, 13))
         self.assertGreater(first.wall_remaining, 16)
 
+    def test_invalid_opening_input_is_not_relabelled_as_unknown(self):
+        with self.assertRaises(ValueError):
+            Simulator().run_opening(seed=99, dice_total=1)
     def test_explicit_dice_value_is_replayed(self):
         result = Simulator().run_opening(seed=99, dice_total=7)
         self.assertEqual(result.dice_total, 7)

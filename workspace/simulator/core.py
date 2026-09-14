@@ -8,6 +8,7 @@ import random
 
 from huian._legacy import env
 from huian.environment import HuianEnvironment
+from huian.rules import UnknownRuleError
 
 
 def make_wall(seed=None):
@@ -60,9 +61,9 @@ class Simulator:
         game.reset(wall=make_wall(seed))
         try:
             game.legal_actions()
-        except Exception as exc:
+        except UnknownRuleError as exc:
             return self._result(game, seed=seed, status="UNRESOLVED",
-                                unresolved=getattr(exc, "rule_ids", (str(exc),)))
+                                unresolved=exc.rule_ids)
         return self._result(game, seed=seed, status="READY")
 
     def run_opening(self, seed=None, dice_total=None, max_steps=100):
@@ -74,8 +75,8 @@ class Simulator:
         try:
             game.begin_opening(dice_total)
             game.legal_actions()
-        except Exception as exc:
+        except UnknownRuleError as exc:
             return self._result(game, seed=seed, status="STOPPED_UNKNOWN",
                                 dice_total=dice_total,
-                                unresolved=getattr(exc, "rule_ids", (str(exc),)))
+                                unresolved=exc.rule_ids)
         return self._result(game, seed=seed, status="READY", dice_total=dice_total)
