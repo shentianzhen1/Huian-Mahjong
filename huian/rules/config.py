@@ -45,7 +45,8 @@ UNKNOWN_RULES = MappingProxyType({
     "decomposition_scoring": "Selection among multiple winning decompositions",
     "three_plus_gold_ordinary_hu": "Whether any ordinary Hu branch remains available with three or more golds",
     "environment_phase": "Complete legal action set for unsupported legacy phases",
-    "win_declaration_and_settlement": "TODO: phase-aware win declaration and automatic settlement integration",
+    "win_declaration_and_settlement": "Automatic fan aggregation and settlement after an audited Hu declaration",
+    "self_draw_decline": "Whether an available ordinary self-draw Hu may be declined to continue play",
 })
 
 

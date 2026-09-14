@@ -3,7 +3,7 @@ from collections import Counter
 from dataclasses import dataclass
 from huian._legacy import env
 from .config import UnknownRuleError
-from .context import DrawSource
+from .context import DrawSource, HuContext, WinSource
 from .engine import nonnegative_int
 
 
@@ -19,7 +19,47 @@ class ActionReport:
 
 PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
-          "OPENING_QIANGJIN_CHECK", "TERMINAL"}
+          "OPENING_QIANGJIN_CHECK", "HU_DECLARED", "TERMINAL"}
+
+
+def _validate_pending_hu(state):
+    pending = state.pending_hu
+    if state.phase != "HU_DECLARED":
+        if pending is not None:
+            raise ValueError("Pending Hu outside HU_DECLARED")
+        return
+    keys = {"winner", "source", "winning_tile", "kong_kind",
+            "discard_player", "river_index"}
+    if not isinstance(pending, dict) or set(pending) != keys:
+        raise ValueError("HU_DECLARED requires a complete pending Hu reference")
+    winner = pending["winner"]
+    if type(winner) is not int or winner not in (0, 1) or winner != state.current_player:
+        raise ValueError("Invalid pending Hu winner")
+    try:
+        source = WinSource(pending["source"])
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Invalid pending Hu source") from exc
+    tile = pending["winning_tile"]
+    if tile is not None and tile not in env.BASE_TILES:
+        raise ValueError("Invalid pending Hu winning tile")
+    kind = pending["kong_kind"]
+    if source == WinSource.KONG_TAIL_DRAW:
+        if kind not in ("MING_GANG", "AN_GANG", "ADDED_GANG"):
+            raise ValueError("Gang-Hu must record its kong kind")
+    elif kind is not None:
+        raise ValueError("Only Gang-Hu may record a kong kind")
+    if source == WinSource.DISCARD:
+        player, index = pending["discard_player"], pending["river_index"]
+        if player != 1 - winner or type(index) is not int:
+            raise ValueError("Invalid discard Hu source reference")
+        river = state.discards[player]
+        if index < 0 or index >= len(river) or river[index] != tile:
+            raise ValueError("Discard Hu must reference its source river tile")
+    else:
+        if pending["discard_player"] is not None or pending["river_index"] is not None:
+            raise ValueError("Self-draw Hu cannot reference a discard")
+        if tile is None or tile not in state.hands[winner]:
+            raise ValueError("Self-draw Hu tile must remain in the winner's hand")
 
 
 def validate(adapter, state):
@@ -62,7 +102,8 @@ def validate(adapter, state):
     if Counter(state.physical_tiles()) != Counter(env.full_wall()):
         raise ValueError("Every physical tile must be accounted for: exactly the 144-tile set")
     if state.phase == "READY":
-        if len(state.wall) != 144 or state.gold_tile is not None or state.pending_discard is not None:
+        if (len(state.wall) != 144 or state.gold_tile is not None
+                or state.pending_discard is not None or state.pending_hu is not None):
             raise ValueError("READY must be an undealt 144-tile wall")
         return
     if state.gold_tile is None:
@@ -76,6 +117,7 @@ def validate(adapter, state):
                 expected_source is not None and type(meld.from_player) is not int
             ):
                 raise ValueError("Invalid meld source player")
+    _validate_pending_hu(state)
     if not state.terminal:
         for p in range(2):
             expected = 16 - 3 * len(state.melds[p])
@@ -83,6 +125,9 @@ def validate(adapter, state):
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
                 "OPENING_QIANGJIN_CHECK"
             ):
+                expected += 1
+            if (p == state.current_player and state.phase == "HU_DECLARED"
+                    and state.pending_hu["source"] != WinSource.DISCARD.value):
                 expected += 1
             if len(state.hands[p]) != expected:
                 raise ValueError(f"Invalid hand size for player {p} in {state.phase}")
@@ -126,6 +171,11 @@ def report(adapter, state):
         return ActionReport((), ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
     if state.phase == "NEED_FLOWER_REPLACE":
         return ActionReport((), ("deal_replacement_order",))
+    if state.phase == "HU_DECLARED":
+        unresolved = ["win_declaration_and_settlement"]
+        if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
+            unresolved.append("gang_hu_scoring")
+        return ActionReport((), tuple(unresolved))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
     if adapter.rules.is_wall_draw(state):
@@ -142,19 +192,45 @@ def report(adapter, state):
         }),))
     if phase == "NEED_DRAW":
         return ActionReport((A(p, T.DRAW, metadata={"source": DrawSource.WALL_HEAD.value}),))
+    gold_unresolved = []
     if state.gold_tile in hand:
-        unresolved = ["youjin_trigger"]
+        gold_unresolved.append("youjin_trigger")
         if adapter.rules.can_sanjindao(hand, state.gold_tile):
-            unresolved.append("sanjindao_timing")
-        return ActionReport((), tuple(unresolved))
+            gold_unresolved.append("sanjindao_timing")
+            return ActionReport((), tuple(gold_unresolved))
     if phase in ("AFTER_CHI", "AFTER_PENG"):
+        if gold_unresolved:
+            return ActionReport((), tuple(gold_unresolved))
         return ActionReport(tuple(A(p, T.DISCARD, tile=t) for t in sorted(set(hand))))
+    if phase == "AFTER_DISCARD" and gold_unresolved:
+        return ActionReport((), tuple(gold_unresolved))
     actions, unknown = [], []
     if phase == "AFTER_DRAW":
+        draw_context = None
+        last = state.last_action
+        if (isinstance(last, dict) and last.get("type") == T.DRAW.value
+                and last.get("player") == p):
+            try:
+                draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
+            except ValueError:
+                draw_context = None
+        if draw_context is not None and adapter.rules.can_win(
+                hand, state.gold_tile, len(state.melds[p]), win_context=draw_context):
+            metadata = {"win_source": draw_context.source.value,
+                        "kong_kind": (draw_context.kong_kind.value
+                                      if draw_context.kong_kind else None)}
+            actions.append(A(p, T.HU, tile=draw_context.winning_tile, metadata=metadata))
+            unknown.extend(gold_unresolved)
+            unknown.extend(("self_draw_decline", "win_declaration_and_settlement"))
+            if draw_context.is_gang_hu:
+                unknown.append("gang_hu_scoring")
+            return ActionReport(tuple(actions), tuple(unknown))
+        if draw_context is None and adapter.rules.can_win(
+                hand, state.gold_tile, len(state.melds[p])):
+            return ActionReport((), tuple(gold_unresolved + ["win_declaration_and_settlement"]))
+        if gold_unresolved:
+            return ActionReport((), tuple(gold_unresolved))
         actions.extend(A(p, T.DISCARD, tile=t) for t in sorted(set(hand)))
-        if adapter.rules.can_win(hand, state.gold_tile, len(state.melds[p])):
-            # Declining an available ordinary win is not part of this milestone.
-            return ActionReport((), ("win_declaration_and_settlement",))
         kongs = adapter.rules.concealed_kongs(hand, state.gold_tile)
         if kongs:
             if adapter.rules.config.experimental_no_rob_kong:
@@ -176,6 +252,10 @@ def report(adapter, state):
                 unknown.append("rob_kong")
         if adapter.rules.can_win(hand + [tile], state.gold_tile, len(state.melds[p]),
                                  "pinghu", winning_tile=tile):
+            context = HuContext(WinSource.DISCARD, tile)
+            actions.append(A(p, T.HU, tile=tile, metadata={
+                "win_source": context.source.value, "kong_kind": None,
+            }))
             unknown.append("win_declaration_and_settlement")
         actions.append(A(p, T.PASS))
     return ActionReport(tuple(actions), tuple(unknown))

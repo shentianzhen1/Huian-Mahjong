@@ -194,6 +194,10 @@ class EnvironmentTests(unittest.TestCase):
             lambda s: s.pending_discard.update(river_index=-1),
             lambda s: s.wall.append(s.hands[0].pop()),
             lambda s: s.special_states.clear(),
+            lambda s: setattr(s, "pending_hu", {
+                "winner": 0, "source": "self_draw", "winning_tile": "E",
+                "kong_kind": None, "discard_player": None, "river_index": None,
+            }),
         ):
             state = scenario()
             mutate(state)
@@ -240,6 +244,106 @@ class EnvironmentTests(unittest.TestCase):
         instance = game(scenario("AFTER_DRAW", hand))
         self.assertFalse(instance.action_report().known_actions)
         self.assertIn("win_declaration_and_settlement", instance.action_report().unresolved)
+
+    def test_draw_hu_is_declared_then_observed_zimo_settles(self):
+        complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+                    "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+        state = scenario("NEED_DRAW", complete[:-1])
+        index = state.wall.index("E")
+        state.wall[0], state.wall[index] = state.wall[index], state.wall[0]
+        instance = game(state)
+        instance.step(instance.legal_actions()[0])
+        report = instance.action_report()
+        hu = next(action for action in report.known_actions
+                  if action.type == env.ActionType.HU)
+        self.assertEqual(hu.tile, "E")
+        self.assertEqual(hu.metadata, {"win_source": "self_draw", "kong_kind": None})
+        self.assertIn("self_draw_decline", report.unresolved)
+        declared, _ = instance.step(hu)
+        self.assertEqual(declared.phase, "HU_DECLARED")
+        self.assertEqual(declared.pending_hu, {
+            "winner": 0, "source": "self_draw", "winning_tile": "E",
+            "kong_kind": None, "discard_player": None, "river_index": None,
+        })
+        with self.assertRaises(UnknownRuleError):
+            instance.legal_actions()
+        terminal, event = instance.finalize_observed_outcome(
+            winner=0, current_dealer_base=10, winner_fan=1, win_type="ZIMO"
+        )
+        self.assertTrue(terminal.terminal)
+        self.assertIsNone(terminal.pending_hu)
+        self.assertEqual(event["action"]["metadata"]["hu_declaration"]["source"],
+                         "self_draw")
+
+    def test_discard_hu_keeps_source_tile_in_river_until_observed_settlement(self):
+        complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+                    "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+        instance = game(scenario("AFTER_DISCARD", complete[:-1], discard="E"))
+        hu = next(action for action in instance.action_report().known_actions
+                  if action.type == env.ActionType.HU)
+        declared, _ = instance.step(hu)
+        self.assertEqual(declared.phase, "HU_DECLARED")
+        self.assertEqual(declared.discards[1], ["E"])
+        self.assertIsNone(declared.pending_discard)
+        self.assertEqual(declared.pending_hu["discard_player"], 1)
+        self.assertEqual(declared.pending_hu["river_index"], 0)
+        with self.assertRaises(ValueError):
+            instance.finalize_observed_outcome(
+                winner=0, current_dealer_base=10, winner_fan=1, win_type="ZIMO"
+            )
+        terminal, _ = instance.finalize_observed_outcome(
+            winner=0, current_dealer_base=10, winner_fan=1, win_type="PINGHU"
+        )
+        self.assertEqual(terminal.rewards, [11, -11])
+
+    def test_flower_replacement_records_effective_self_draw_for_hu(self):
+        complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+                    "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+        state = scenario("NEED_DRAW", complete[:-1])
+        flower_index = state.wall.index("F1")
+        state.wall[0], state.wall[flower_index] = state.wall[flower_index], state.wall[0]
+        gold_index = state.wall.index("E")
+        state.wall[-1], state.wall[gold_index] = state.wall[gold_index], state.wall[-1]
+        instance = game(state)
+        _, event = instance.step(instance.legal_actions()[0])
+        self.assertEqual(event["action"]["metadata"]["drawn_tile"], "F1")
+        self.assertEqual(event["action"]["metadata"]["effective_drawn_tile"], "E")
+        hu = next(action for action in instance.action_report().known_actions
+                  if action.type == env.ActionType.HU)
+        self.assertEqual(hu.tile, "E")
+
+    def test_kong_tail_hu_declaration_preserves_kind_and_blocks_scoring(self):
+        state = HuianGameState(phase="AFTER_AN_GANG", gold_tile="P9",
+                               special_states=["NORMAL", "NORMAL"])
+        state.hands[0] = ["M1", "M1", "M2", "M3", "M4", "M5", "M6",
+                          "M7", "P1", "P2", "P3", "E", "E"]
+        state.melds[0] = [env.Meld("AN_GANG", ["S9"] * 4, None)]
+        state.reserved_tiles = ["P9"]
+        remaining = env.full_wall()
+        for tile in state.physical_tiles():
+            remaining.remove(tile)
+        for tile in remaining.copy():
+            if tile in env.BASE_TILES and tile != "P9" and len(state.hands[1]) < 16:
+                state.hands[1].append(tile)
+                remaining.remove(tile)
+        index = remaining.index("E")
+        remaining[-1], remaining[index] = remaining[index], remaining[-1]
+        state.wall = remaining
+        instance = game(state)
+        instance.step(instance.legal_actions()[0])
+        hu = next(action for action in instance.action_report().known_actions
+                  if action.type == env.ActionType.HU)
+        self.assertEqual(hu.metadata, {
+            "win_source": "kong_tail_draw", "kong_kind": "AN_GANG",
+        })
+        declared, _ = instance.step(hu)
+        self.assertEqual(declared.pending_hu["kong_kind"], "AN_GANG")
+        before = declared.state_hash()
+        with self.assertRaises(UnknownRuleError):
+            instance.finalize_observed_outcome(
+                winner=0, current_dealer_base=10, winner_fan=1, win_type="ZIMO"
+            )
+        self.assertEqual(instance.state.state_hash(), before)
 
     def test_pass_known_and_startup_remains_unknown(self):
         instance = game(scenario())

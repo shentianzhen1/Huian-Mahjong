@@ -7,6 +7,9 @@ from huian._legacy import env
 class HuianGameState(env.GameState):
     # Reference to a tile STILL in the river; never an extra physical copy.
     pending_discard: dict | None = None
+    # Auditable Hu declaration facts. This is a logical reference only; a
+    # discarded winning tile remains in its source river for tile accounting.
+    pending_hu: dict | None = None
     special_states: list[str] = field(default_factory=lambda: ["UNKNOWN", "UNKNOWN"])
     # Physical tiles explicitly excluded from play by an imported scenario.
     # This represents accounting only, not a guessed indicator-opening rule.
@@ -16,6 +19,7 @@ class HuianGameState(env.GameState):
     def canonical_dict(self):
         data = super().canonical_dict()
         data.update(pending_discard=self.pending_discard,
+                    pending_hu=self.pending_hu,
                     special_states=list(self.special_states),
                     reserved_tiles=list(self.reserved_tiles),
                     terminal_reason=self.terminal_reason)

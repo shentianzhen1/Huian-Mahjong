@@ -72,7 +72,7 @@ class HuContext:
     @classmethod
     def from_draw_metadata(cls, metadata):
         source = DrawSource.parse(metadata.get("source"))
-        tile = metadata.get("drawn_tile")
+        tile = metadata.get("effective_drawn_tile", metadata.get("drawn_tile"))
         if tile is None:
             raise ValueError("Completed draw metadata must record drawn_tile")
         if source == DrawSource.WALL_HEAD:

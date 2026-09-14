@@ -7,7 +7,7 @@ import random
 
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
-from huian.rules.context import DrawSource
+from huian.rules.context import DrawSource, WinSource
 from .state import HuianGameState
 from .opening import HuianOpeningPlugin
 from .flowers import replace_flowers
@@ -117,6 +117,17 @@ class HuianEnvironment:
         self._require_state()
         if self._state.terminal:
             raise ValueError("Hand is already terminal")
+        declaration = deepcopy(self._state.pending_hu)
+        if declaration is not None:
+            if winner != declaration["winner"]:
+                raise ValueError("Observed winner disagrees with the Hu declaration")
+            source = WinSource(declaration["source"])
+            if source == WinSource.KONG_TAIL_DRAW:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError("gang_hu_scoring")
+            expected = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
+            if win_type != expected:
+                raise ValueError("Observed win type disagrees with the Hu declaration source")
         result = self.settlement.settle(
             winner=winner,
             current_dealer_base=current_dealer_base,
@@ -130,14 +141,17 @@ class HuianEnvironment:
         candidate.terminal = True
         candidate.terminal_reason = "OBSERVED_" + result.win_type
         candidate.pending_discard = None
+        candidate.pending_hu = None
         self.rules.validate_state(candidate)
+        metadata = {"source": "observed", "win_type": result.win_type,
+                    "current_dealer_base": current_dealer_base,
+                    "winner_fan": winner_fan, "multiplier": result.multiplier}
+        if declaration is not None:
+            metadata["hu_declaration"] = declaration
         event = {
             "seq": len(self._events),
             "action": {"player": winner, "type": "END_HAND", "tile": None, "tiles": [],
-                       "metadata": {"source": "observed", "win_type": result.win_type,
-                                    "current_dealer_base": current_dealer_base,
-                                    "winner_fan": winner_fan,
-                                    "multiplier": result.multiplier}},
+                       "metadata": metadata},
             "before_hash": before,
             "after_hash": candidate.state_hash(),
             "wall_remaining": candidate.wall_remaining(),
@@ -206,6 +220,12 @@ class HuianEnvironment:
         if not candidate.terminal:
             flower_result = self._resolve_flowers(candidate)
             self._resolve_wall_draw(candidate)
+        if flower_result is not None and action.type == env.ActionType.DRAW:
+            replacements = [tile for item in flower_result.events
+                            if item.player == action.player
+                            for tile in item.replacements if tile not in env.FLOWERS]
+            if len(replacements) == 1:
+                action.metadata["effective_drawn_tile"] = replacements[0]
         candidate.turn_index += 1
         candidate.last_action = action.to_dict()
         self.rules.validate_state(candidate)
@@ -280,6 +300,20 @@ class HuianEnvironment:
                                          river_index=len(state.discards[p]) - 1)
             state.current_player = 1 - p
             state.phase = "AFTER_DISCARD"
+        elif kind == T.HU:
+            source = WinSource(action.metadata.get("win_source"))
+            pending = state.pending_discard if source == WinSource.DISCARD else None
+            state.pending_hu = {
+                "winner": p,
+                "source": source.value,
+                "winning_tile": action.tile,
+                "kong_kind": action.metadata.get("kong_kind"),
+                "discard_player": pending["player"] if pending else None,
+                "river_index": pending["river_index"] if pending else None,
+            }
+            state.pending_discard = None
+            state.current_player = p
+            state.phase = "HU_DECLARED"
         elif kind in (T.CHI, T.PENG, T.MING_GANG, T.AN_GANG):
             consume = list(action.tiles)
             source = None
