@@ -14,6 +14,17 @@ Build an offline-first Windows assistant for 开心惠安二人麻将 that can e
 ### Rules
 Owns legality, Hu/Ting, gold (金), flowers, Chi/Peng/Gang, Sanjindao, Youjin/Double-You/Triple-You, fan and settlement.
 
+Confirmed target scope:
+- single gold cannot Pinghu in the selected room
+- exactly two gold tiles can Hu only by self-draw, never from an opponent discard
+- ordinary Hu and Youjin are evaluated as separate branches
+- retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, flowers, repeat-dealer/base scoring
+- no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
+
+The excluded fan names do not make an otherwise standard Hu structure illegal.
+They simply add no named fan or AI objective. Exact special-Hu triggers and
+unverified multipliers remain controlled by `RULE_STATUS.md`.
+
 ### Environment
 Owns GameState and state transitions:
 `reset()`, `legal_actions()`, `step(action)`, `clone()`, `checkpoint()`, `rollback()`, `is_terminal()`, `get_reward()`, event log.
@@ -24,6 +35,10 @@ Runs full games and batches. Must support deterministic fixed walls/seeds and pa
 ### AI
 Roadmap:
 Baseline heuristics -> Monte Carlo EV -> opponent/danger model -> optional RL/NN later.
+
+Huian AI should prioritize ordinary Hu/Zimo value, Sanjindao, Youjin paths and
+risk. It should not optimize toward Menqing, Pengpenghu, Qingyise, Hunyise or
+other excluded complex fan patterns.
 
 Decision output should distinguish:
 - Win Probability
@@ -67,6 +82,8 @@ The package includes three legacy baselines:
 - Vision Assistant V0.4
 
 They still use Quanzhou naming. Core scoring contains outdated assumptions and must not be treated as final Huian scoring.
+In particular, legacy or current boolean Hu helpers that do not receive a win
+source cannot correctly enforce the confirmed two-gold self-draw-only rule.
 
 ## Python
 User currently has Python 3.14.7 on Windows.

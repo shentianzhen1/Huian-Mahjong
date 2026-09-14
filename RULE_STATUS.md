@@ -19,13 +19,16 @@ Do not silently promote UNKNOWN rules.
 - Gold is a wildcard in allowed hand/win composition.
 - A triplet completed using gold is not a natural concealed-triplet fan.
 - Single-gold Pinghu is a player/room setting (player clarification 2026-09-13). It is usually disabled. Default `single_gold_can_pinghu=False` preserves the observed target-room behavior; enable only for a room explicitly allowing it. The generic page's allowance does not override a room's setting.
-- Double gold cannot Pinghu.
+- Player confirmation (2026-09-14): with exactly two gold tiles, Hu is allowed only by self-draw; the player cannot Hu on any opponent discard. This supersedes the older blanket statement that double gold could not Pinghu. The Rules API must carry the win source before this restriction can be implemented correctly.
+- Player confirmation (2026-09-14): ordinary Hu evaluation and Youjin evaluation are separate branches. Passing or failing an ordinary structural Hu check must not silently decide Youjin eligibility.
 - Player confirmation (2026-09-14): 抢金 is checked only after all opening flower replacement and opening gold are complete, and before the dealer has discarded a first tile. A hand must already be a valid Hu after treating its gold copies as wildcards. Holding three or more copies of the single gold tile takes the 三金倒 branch first; it does not take 抢金. At this opening point no Chi/Peng/Gang can yet have occurred.
 - Sanjindao can win without a normal complete hand when its conditions are met; player may be allowed to continue instead of immediately declaring it.
 - Dealer win -> dealer stays.
 - Draw -> dealer stays.
 - Dealer loss -> other player becomes dealer.
 - Match default is 8 hands.
+- Player confirmation (2026-09-14): the target rules do not award complex combination fans such as 门清、碰碰胡、清一色、混一色 or similar pattern families. Such tile arrangements may still satisfy the standard Hu structure, but receive no special fan for those names.
+- Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 
 ## High-confidence settlement evidence from real Huian screenshots
 Room-settings evidence received 2026-09-13: [archived two-player creation page](references/room_settings/2026-09-13/README.md)
@@ -120,6 +123,9 @@ Still UNKNOWN programmatically:
 - exact rights of the opponent while the other player is in Youjin/Double-You/Triple-You
 - which actions cancel the state in every case
 
+The existence of Youjin and its separation from ordinary Hu are confirmed. The
+items above remain unknown only for the executable state-machine details.
+
 ## Multipliers
 Real Huian screenshot confirms:
 - Zimo x2 in at least one room
@@ -195,10 +201,11 @@ Newly documented page statements:
   added-kong fan, decomposition edges and two-player applicability remain pending.
 
 Conflicts and preserved decisions:
-- C1, clarified by player feedback: single-gold Pinghu is configurable, usually
-  disabled. Generic page text and the earlier disabled gameplay setting can differ.
-  Runtime now exposes `single_gold_can_pinghu` with default False; Double-gold
-  Pinghu remains forbidden regardless of this setting. Record each room's choice.
+- C1, clarified by player feedback: single-gold Pinghu is configurable and is
+  disabled in the target room. Generic page text and the earlier disabled gameplay
+  setting can differ. Runtime exposes `single_gold_can_pinghu` with default False.
+  Exactly two gold tiles are self-draw-only and cannot Hu on an opponent discard;
+  this newer confirmation replaces the older blanket double-gold prohibition.
 - C2: page multiplier chain 4/8/16 versus external 4/8/12. Record 16 accurately;
   keep actual two-player Double/Triple multipliers unconfigured.
 - C3: outer ×3 and non-winner fan adjustment text versus A/B two-player net
