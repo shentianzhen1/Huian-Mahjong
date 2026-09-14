@@ -22,6 +22,30 @@ class Settlement:
     evidence: str = "RULE_STATUS.md: settlement examples A/B; third example pending"
 
 
+@dataclass(frozen=True)
+class HuDecomposition:
+    """One structural ordinary-Hu split; ``GOLD`` denotes a wildcard position."""
+
+    pair: tuple[str, str]
+    groups: tuple[tuple[str, str, str], ...]
+
+    @property
+    def gold_used(self):
+        return self.pair.count("GOLD") + sum(group.count("GOLD") for group in self.groups)
+
+
+@dataclass(frozen=True)
+class HuResult:
+    """Structural Hu analysis only; fan and settlement remain separate concerns."""
+
+    legal: bool
+    decompositions: tuple[HuDecomposition, ...]
+    gold_tile: str | None
+    open_melds: int
+    win_source: str
+    may_be_truncated: bool = False
+
+
 class HuianRules:
     DRAW_WALL_REMAINING = 16
 
@@ -57,23 +81,54 @@ class HuianRules:
         self._validate_hand(hand, gold_tile)
         return tuple(t for t in core.BASE_TILES if can_an_gang(hand, t, gold_tile))
 
-    def can_win(self, hand, gold_tile=None, open_melds=0, win_type="zimo"):
-        """Ordinary structural win only; does not infer special-win timing/rights."""
+    def analyze_hu(self, hand, gold_tile=None, open_melds=0, win_type="zimo",
+                   max_decompositions=64):
+        """Return ordinary structural Hu splits without inferring fan or special Hu.
+
+        The legacy solver has a result cap. ``may_be_truncated`` warns callers
+        when the cap was reached so scoring code never mistakes this for a full
+        enumeration.
+        """
         self._validate_hand(hand, gold_tile)
         nonnegative_int(open_melds, "open_melds")
         if open_melds > 5:
             raise ValueError("At most five melds")
+        if (isinstance(max_decompositions, bool)
+                or not isinstance(max_decompositions, Integral)
+                or max_decompositions <= 0):
+            raise ValueError("max_decompositions must be a positive integer")
         if win_type not in ("zimo", "pinghu"):
             raise UnknownRuleError("rob_kong" if win_type == "qianggang" else win_type)
         gold_count = hand.count(gold_tile) if gold_tile else 0
         if win_type == "pinghu":
             if gold_count == 1 and not self.config.single_gold_can_pinghu:
-                return False
+                return HuResult(False, (), gold_tile, open_melds, win_type)
             if gold_count == 2:
-                return False
+                return HuResult(False, (), gold_tile, open_melds, win_type)
             if gold_count >= 3:
                 raise UnknownRuleError("three_plus_gold_pinghu")
-        return bool(winning_decompositions(hand, gold_tile, open_melds))
+        raw_splits = winning_decompositions(
+            hand, gold_tile, open_melds, max_solutions=max_decompositions
+        )
+        decompositions = tuple(
+            HuDecomposition(
+                pair=tuple(split["pair"]),
+                groups=tuple(tuple(group) for group in split["groups"]),
+            )
+            for split in raw_splits
+        )
+        return HuResult(
+            legal=bool(decompositions),
+            decompositions=decompositions,
+            gold_tile=gold_tile,
+            open_melds=open_melds,
+            win_source=win_type,
+            may_be_truncated=len(raw_splits) >= max_decompositions,
+        )
+
+    def can_win(self, hand, gold_tile=None, open_melds=0, win_type="zimo"):
+        """Compatibility boolean wrapper around :meth:`analyze_hu`."""
+        return self.analyze_hu(hand, gold_tile, open_melds, win_type).legal
 
     def ting_tiles(self, hand, gold_tile=None, open_melds=0, win_type="zimo", visible_tiles=()):
         """Ordinary structural waits; remaining counts exclude supplied public tiles."""

@@ -18,6 +18,27 @@ class HuianRulesTests(unittest.TestCase):
         self.assertTrue(self.rules.can_win(HAND))
         self.assertIn("E", [x["tile"] for x in self.rules.ting_tiles(HAND[:-1])])
 
+    def test_hu_result_exposes_structure_without_fan(self):
+        result = self.rules.analyze_hu(HAND)
+        self.assertTrue(result.legal)
+        self.assertEqual(result.win_source, "zimo")
+        self.assertTrue(result.decompositions)
+        split = result.decompositions[0]
+        self.assertEqual(len(split.pair), 2)
+        self.assertEqual(len(split.groups), 5)
+        self.assertEqual(split.gold_used, 0)
+        self.assertFalse(hasattr(result, "fan"))
+
+    def test_hu_result_marks_gold_positions_and_pinghu_room_gate(self):
+        hand = HAND.copy()
+        hand[4] = "P9"
+        result = self.rules.analyze_hu(hand, gold_tile="P9")
+        self.assertTrue(result.legal)
+        self.assertTrue(any(split.gold_used == 1 for split in result.decompositions))
+        self.assertFalse(self.rules.analyze_hu(hand, "P9", win_type="pinghu").legal)
+        with self.assertRaises(ValueError):
+            self.rules.analyze_hu(HAND, max_decompositions=0)
+
     def test_single_and_double_gold_cannot_pinghu(self):
         for indices in ((4,), (0, 1)):
             hand = HAND.copy()

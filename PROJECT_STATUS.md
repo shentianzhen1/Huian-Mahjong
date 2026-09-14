@@ -11,7 +11,7 @@
 ## 已完成模块
 
 - 通用框架：`mahjong_framework` 提供 Rules、Opening、Settlement 三类玩法插件契约；惠安已实现对应插件，未来玩法可复用 Environment、Simulator、Vision 与 Executor 边界。
-- Rules：144 张实体牌校验、普通结构胡听、金牌不能参与吃碰杠、单金平胡房间配置、吃碰杠候选与 UNKNOWN 阻断。
+- Rules：144 张实体牌校验、普通结构胡听及可审计 HuResult 拆解、金牌不能参与吃碰杠、单金平胡房间配置、吃碰杠候选与 UNKNOWN 阻断。
 - Opening：17/16 发牌、庄家优先分轮补花、骰子开金候选规划；`begin_opening()` 将结果写入 Environment，停在 `OPENING_QIANGJIN_CHECK`。
 - Environment：144 张实体牌守恒、吃碰、PASS、头摸、已解决杠后尾摸、开局及中途补花、16 张零分流局、原子提交、回滚/克隆、死循环保护和合法动作检查。
 - 已观察结算：`HuianObservedSettlementPlugin` 仅支持录屏已证实的 `PINGHU`（×1）和 `ZIMO`（×2）。`finalize_observed_outcome()` 可写入由录屏或 Vision 已确认的终局，保留 `END_HAND` 审计事件；不会自动判胡或算番。
@@ -28,11 +28,11 @@
 
 ## 当前测试结果
 
-2026-09-14 全量自动测试：**102 项通过，0 失败，0 跳过**。
+2026-09-14 全量自动测试：**104 项通过，0 失败，0 跳过**。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| 项目根目录 | `python -B -m unittest discover -s tests -v` | 75 通过 |
+| 项目根目录 | `python -B -m unittest discover -s tests -v` | 77 通过 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 9 通过 |
@@ -43,7 +43,7 @@
 
 1. 开金候选的骰子定位与补花流程已实现，但翻出的金牌在真实牌墙中的精确实体归属仍未确认；当前 Environment 保留候选牌在墙内，录屏显示开金时可摸牌墙计数会变化，二者尚未完全对齐。
 2. 中途摸花与杠后摸花已接入庄家优先补花轮；该流程基于高置信规则，仍需更多实局录像覆盖翻花、墙边界和双人时序。
-3. 普通胡牌的实际声明、赢家番数自动聚合、点炮/自摸事件判定尚未接入。观察结算入口只接受外部已确认数据。
+3. HuResult 已能提供普通结构胡的拆解，但实际胡牌声明、全部拆解的最终选择、赢家番数自动聚合、点炮/自摸事件判定尚未接入。观察结算入口只接受外部已确认数据。
 4. 抢金、三金倒、游金链、抢杠、加杠细节、杠分与流局杠分均未实现，保持 UNKNOWN。
 5. Simulator 不能越过抢金核验点，尚无完整动作循环、批量统计、交换座位评估或 AI。
 6. `HuianOnlineRoomV01` 的动态留牌开关是隔离的工作假设，不能覆盖 `RULE_STATUS.md` 的已确认规则。
