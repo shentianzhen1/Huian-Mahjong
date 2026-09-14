@@ -9,8 +9,9 @@ Do not silently promote UNKNOWN rules.
 - Flowers do not participate in normal meld composition; they score separately.
 - Player confirmation (2026-09-14): unclaimed discard + PASS advances to the next player's head draw; at 16 wall tiles the hand draws with rewards [0, 0].
 - Target room is fixed: 2 players, 8 hands, 单金不平胡 checked (`single_gold_can_pinghu=False`), no trusteeship. Earlier unchecked screenshot records the option UI, not this final room choice.
-- Opponent discard can offer Chi/Peng/Gang/Hu where legal; Rules should return all legal actions and AI chooses.
+- Opponent discard can offer Chi/Peng/Gang/Hu where legal; Rules must return all legal actions and AI chooses.
 - In 2-player Huian, the sole opponent's discard may be Chi'd.
+- Confirmed rule and system interaction (player confirmation, 2026-09-14): when one discard permits multiple Chi sequences, every legal sequence is a separate choice. The mini-program opens a Chi-option selection panel and the player selects the exact sequence; it does not auto-select and a generic Chi action must not silently choose one. Example: discard M5 with M3/M4, M4/M6 and M6/M7 available offers M3-M4-M5, M4-M5-M6 and M5-M6-M7.
 - After Chi or Peng, player enters discard phase and must discard.
 - Ming-gang and An-gang replacement draws come from the wall tail.
 - Added kong after Peng is allowed.

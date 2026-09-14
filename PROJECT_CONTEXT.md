@@ -20,10 +20,17 @@ Confirmed target scope:
 - ordinary Hu and Youjin are evaluated as separate branches
 - retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, flowers, repeat-dealer/base scoring
 - no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
+- when a discard has multiple legal Chi sequences, Rules exposes every sequence and the player/AI selects one exact option
 
 The excluded fan names do not make an otherwise standard Hu structure illegal.
 They simply add no named fan or AI objective. Exact special-Hu triggers and
 unverified multipliers remain controlled by `RULE_STATUS.md`.
+
+Confirmed Chi interaction boundary:
+- Rules returns a list of concrete Chi sequences, not only `true/false`
+- Environment actions carry the selected three-tile sequence and execute only it
+- AI evaluates each Chi sequence as a different action
+- Vision/Executor must identify and select the matching option in the mini-program panel; uncertainty stops execution
 
 ### Environment
 Owns GameState and state transitions:
