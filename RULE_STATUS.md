@@ -58,6 +58,20 @@ Current scoring hypothesis (HIGH CONFIDENCE, not final):
 Winner +X, loser -X.
 Need at least one additional real settlement to confirm.
 
+## 2026-09-13 WGC capture review — additional real settlements
+
+Archived frames and a full transcription are in
+[`references/capture_review/2026-09-13`](references/capture_review/2026-09-13/README.md).
+
+- Pinghu, winner base 10 + concealed triplet 1 = **+11/-11**.
+- Pinghu, current dealer base 15 + winner flower 1 = **+16/-16**, although the winner's own displayed base is 5. This confirms the verified formula uses the **current dealer base**.
+- Zimo x2, current dealer/winner base 10 + gold 1 + flowers 5 + triplet 1 + kong 2 = **+38/-38**.
+- A flow settlement is explicitly **0/0** despite displayed hand fan values.
+
+For observed Pinghu and Zimo cases, the formula
+`(current dealer base + winner fan) × win-type multiplier` is now supported by
+multiple direct recordings. It remains unconfirmed for 抢金、三金倒、游金、杠分和
+other special outcomes.
 ## Dealer base hypothesis
 Observed:
 - non-dealer: 5 base
