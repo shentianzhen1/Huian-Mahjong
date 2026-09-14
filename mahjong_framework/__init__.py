@@ -2,6 +2,6 @@
 
 Concrete variants live outside this package, for example ``huian``.
 """
-from .contracts import MahjongOpeningPlugin, MahjongRulesPlugin
+from .contracts import MahjongOpeningPlugin, MahjongRulesPlugin, MahjongSettlementPlugin
 
-__all__ = ["MahjongOpeningPlugin", "MahjongRulesPlugin"]
+__all__ = ["MahjongOpeningPlugin", "MahjongRulesPlugin", "MahjongSettlementPlugin"]

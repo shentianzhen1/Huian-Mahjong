@@ -34,3 +34,12 @@ class MahjongOpeningPlugin(Protocol):
 
     def plan_opening(self, wall: list[str], dealer: int, dice_total: int) -> Any:
         """Produce an auditable opening plan without mutating the input wall."""
+@runtime_checkable
+class MahjongSettlementPlugin(Protocol):
+    """Variant-owned settlement calculation for explicitly supported win types."""
+
+    variant_id: str
+
+    def settle(self, *, winner: int, current_dealer_base: int,
+               winner_fan: int, win_type: str) -> Any:
+        """Return a zero-sum settlement or reject an unsupported win type."""
