@@ -1,0 +1,6 @@
+images/frames/*
+!images/frames/.gitkeep
+images/rois/*
+!images/rois/.gitkeep
+meta/frames.jsonl
+meta/roi_crops.jsonl
