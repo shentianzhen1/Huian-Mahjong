@@ -9,6 +9,7 @@ from huian._legacy import env
 from huian.rules import HuianRulesAdapter
 from .state import HuianGameState
 from .opening import HuianOpeningPlugin
+from .flowers import replace_flowers
 from huian.rules.observed_settlement import HuianObservedSettlementPlugin
 
 
@@ -200,6 +201,10 @@ class HuianEnvironment:
         candidate = deepcopy(self._state)
         self._apply(candidate, action)
         self._resolve_wall_draw(candidate)
+        flower_result = None
+        if not candidate.terminal:
+            flower_result = self._resolve_flowers(candidate)
+            self._resolve_wall_draw(candidate)
         candidate.turn_index += 1
         candidate.last_action = action.to_dict()
         self.rules.validate_state(candidate)
@@ -211,12 +216,25 @@ class HuianEnvironment:
         event = env.Event(len(self._events), action, before, candidate.state_hash(),
                           candidate.wall_remaining(), candidate.current_player, candidate.phase).to_dict()
         event["rules_config"] = asdict(self.rules.rules.config)
+        if flower_result is not None:
+            event["flower_replacements"] = [asdict(item) for item in flower_result.events]
         # Commit only after every check succeeds. Caller never receives live data.
         self._state = candidate
         self._events.append(event)
         self._seen.add(position)
         return self.state, deepcopy(event)
 
+    @staticmethod
+    def _resolve_flowers(state):
+        """Apply the high-confidence dealer-first flower replacement rounds."""
+        if state.phase != "NEED_FLOWER_REPLACE":
+            return None
+        result = replace_flowers(state.hands, state.flowers, state.wall, state.dealer)
+        state.hands = [list(zone) for zone in result.hands]
+        state.flowers = [list(zone) for zone in result.flowers]
+        state.wall = list(result.wall)
+        state.phase = "AFTER_DRAW"
+        return result
     def _resolve_wall_draw(self, state):
         if not state.terminal and self.rules.rules.is_wall_draw(state):
             state.terminal = True

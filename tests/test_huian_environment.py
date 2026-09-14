@@ -107,17 +107,32 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(instance.legal_actions()[0].metadata, {"source": "tail"})
         instance.step(instance.legal_actions()[0])
 
-    def test_tail_flower_stops_without_guessing_replacement(self):
+    def test_tail_flower_runs_dealer_first_replacement_rounds(self):
         instance = game(scenario(discard="E"), experimental=True)
         instance.step(choose(instance, env.ActionType.MING_GANG))
-        after, _ = instance.step(instance.legal_actions()[0])  # Full-wall order ends with F8.
-        self.assertEqual(after.hands[0][-1], "F8")
-        self.assertEqual(after.phase, "NEED_FLOWER_REPLACE")
-        before = after.state_hash()
-        with self.assertRaises(UnknownRuleError):
-            instance.legal_actions()
-        self.assertEqual(instance.state.state_hash(), before)
+        after, event = instance.step(instance.legal_actions()[0])  # Full-wall order ends with F8.
+        self.assertEqual(after.phase, "AFTER_DRAW")
+        self.assertFalse(any(tile in env.FLOWERS for hand in after.hands for tile in hand))
+        self.assertIn("F8", after.flowers[0])
+        self.assertEqual(len(after.hands[0]), 14)
+        self.assertIn("flower_replacements", event)
+        self.assertTrue(event["flower_replacements"])
 
+    def test_head_flower_replaces_from_tail_and_audits_event(self):
+        state = scenario("NEED_DRAW")
+        flower_index = state.wall.index("F1")
+        state.wall[0], state.wall[flower_index] = state.wall[flower_index], state.wall[0]
+        normal_index = next(i for i, tile in enumerate(state.wall[:-1]) if tile == "M9")
+        state.wall[-1], state.wall[normal_index] = state.wall[normal_index], state.wall[-1]
+        instance = game(state)
+        before_wall = len(state.wall)
+        after, event = instance.step(instance.legal_actions()[0])
+        self.assertEqual(after.phase, "AFTER_DRAW")
+        self.assertEqual(after.flowers[0], ["F1"])
+        self.assertEqual(after.hands[0][-1], "M9")
+        self.assertEqual(len(after.wall), before_wall - 2)
+        self.assertEqual(event["flower_replacements"][0]["player"], 0)
+        self.assertEqual(event["flower_replacements"][0]["flowers"], ("F1",))
     def test_head_draw_and_wrong_source_rejected(self):
         instance = game(scenario("NEED_DRAW"))
         expected = instance.state.wall[0]
