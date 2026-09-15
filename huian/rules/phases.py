@@ -77,7 +77,7 @@ def validate(adapter, state):
     if not state.terminal and len(state.wall) < adapter.rules.DRAW_WALL_REMAINING:
         raise ValueError("Active wall cannot be below the 16-tile draw boundary")
     observed_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
-        "OBSERVED_PINGHU", "OBSERVED_ZIMO"
+        "OBSERVED_PINGHU", "OBSERVED_ZIMO", "SIMULATION_PINGHU", "SIMULATION_ZIMO"
     )
     if state.terminal_reason not in (None, "WALL_16") and not observed_reason:
         raise ValueError("Invalid terminal reason")
@@ -194,7 +194,7 @@ def report(adapter, state):
     if phase == "NEED_DRAW":
         return ActionReport((A(p, T.DRAW, metadata={"source": DrawSource.WALL_HEAD.value}),))
     gold_unresolved = []
-    if state.gold_tile in hand:
+    if state.gold_tile in hand and not adapter.rules.config.simulation_only_normal_hand:
         gold_unresolved.append("youjin_trigger")
         if adapter.rules.can_sanjindao(hand, state.gold_tile):
             gold_unresolved.append("sanjindao_timing")
@@ -222,7 +222,8 @@ def report(adapter, state):
                                       if draw_context.kong_kind else None)}
             actions.append(A(p, T.HU, tile=draw_context.winning_tile, metadata=metadata))
             unknown.extend(gold_unresolved)
-            unknown.extend(("self_draw_decline", "win_declaration_and_settlement"))
+            if not adapter.rules.config.simulation_only_normal_hand:
+                unknown.extend(("self_draw_decline", "win_declaration_and_settlement"))
             if draw_context.is_gang_hu:
                 unknown.append("gang_hu_scoring")
             return ActionReport(tuple(actions), tuple(unknown))
@@ -257,7 +258,8 @@ def report(adapter, state):
             actions.append(A(p, T.HU, tile=tile, metadata={
                 "win_source": context.source.value, "kong_kind": None,
             }))
-            unknown.append("win_declaration_and_settlement")
+            if not adapter.rules.config.simulation_only_normal_hand:
+                unknown.append("win_declaration_and_settlement")
         actions.append(A(p, T.PASS))
     return ActionReport(tuple(actions), tuple(unknown))
 

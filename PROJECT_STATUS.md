@@ -4,7 +4,7 @@
 
 ## 当前版本 / 里程碑
 
-- 当前阶段：M2 局中 Environment 已可用；M3 Simulator V0.1 可确定性重放开局并在未知规则处安全停止，尚不能完整模拟一局；Vision V0.1 已建立三块固定 ROI 的离线数据与推理原型。
+- 当前阶段：M2 局中 Environment 已可用；M3 Simulator V0.1 已可在显式 simulation-only 普通局模式下完成摸打、普通胡/流局闭环，真实特殊规则仍安全停止；Vision V0.1 已建立三块固定 ROI 的离线数据与推理原型。
 - 最新已核验代码基线：本文件所在提交；提交 SHA 可通过 `git log -1 --format=%H -- PROJECT_STATUS.md CHANGELOG.md` 查询，避免在提交正文中自引用。
 - 远程：`https://github.com/shentianzhen1/Huian-Mahjong.git`（旧名 `Maj` 仍重定向），分支：`main`。
 

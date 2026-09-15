@@ -9,6 +9,9 @@ import random
 from huian._legacy import env
 from huian.environment import HuianEnvironment
 from huian.rules import UnknownRuleError
+from huian.rules.adapter import HuianRulesAdapter
+from huian.rules.engine import HuianRules
+from huian.rules.config import RulesConfig
 
 
 def make_wall(seed=None):
@@ -37,6 +40,17 @@ class SimulationResult:
     phase: str | None = None
     state_hash: str | None = None
     wall_remaining: int | None = None
+    rewards: tuple[int, int] = (0, 0)
+
+@dataclass(frozen=True)
+class SimulatorConfig:
+    normal_hand_mode: bool = False
+    enable_qiangjin: bool = False
+    enable_sanjindao: bool = False
+    enable_youjin: bool = False
+    enable_eight_flower_you: bool = False
+    enable_rob_kong: bool = False
+    enable_added_kong: bool = False
 
 
 class Simulator:
@@ -53,7 +67,7 @@ class Simulator:
         state = game.state
         return SimulationResult(seed, status, tuple(game.events), tuple(unresolved),
                                 dice_total, state.phase, state.state_hash(),
-                                state.wall_remaining())
+                                state.wall_remaining(), tuple(state.rewards))
 
     def run(self, seed=None, agent=None, max_steps=100):
         """Preserve the legacy READY-only simulator entry point."""
@@ -80,3 +94,32 @@ class Simulator:
                                 dice_total=dice_total,
                                 unresolved=exc.rule_ids)
         return self._result(game, seed=seed, status="READY", dice_total=dice_total)
+
+    def run_normal_hand(self, seed=None, agent=None, dice_total=None, max_steps=1000):
+        """Run only ordinary draw/discard/claim/Hu logic with unit simulation rewards."""
+        if dice_total is None:
+            dice_total = self._dice_total(seed)
+        config = RulesConfig(simulation_only_normal_hand=True)
+        game = self.environment_factory(rules=HuianRulesAdapter(HuianRules(config=config)), max_steps=max_steps)
+        game.reset(wall=make_wall(seed))
+        game.begin_normal_hand(dice_total)
+        agent = agent or RandomAgent(seed)
+        try:
+            for _ in range(max_steps):
+                if game.is_terminal():
+                    return self._result(game, seed=seed, status="COMPLETED", dice_total=dice_total)
+                if game.state.phase == "HU_DECLARED":
+                    game.finalize_simulation_only_outcome()
+                    continue
+                actions = game.legal_actions()
+                game.step(agent.choose_action(game.state, actions))
+        except UnknownRuleError as exc:
+            return self._result(game, seed=seed, status="STOPPED_UNKNOWN", dice_total=dice_total, unresolved=exc.rule_ids)
+        return self._result(game, seed=seed, status="MAX_STEPS", dice_total=dice_total)
+
+    def benchmark_normal_hands(self, count=100, *, seed_offset=0, max_steps=1000):
+        """Manual benchmark; intentionally excluded from default unit tests."""
+        if type(count) is not int or count <= 0:
+            raise ValueError("count must be a positive integer")
+        return tuple(self.run_normal_hand(seed=seed_offset + seed, max_steps=max_steps)
+                     for seed in range(count))

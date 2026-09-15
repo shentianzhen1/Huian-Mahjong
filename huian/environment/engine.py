@@ -108,6 +108,43 @@ class HuianEnvironment:
         self._snapshots = []
         self._seen = {self._position(candidate)}
         return self.state
+    def begin_normal_hand(self, dice_total):
+        """Simulation-only opening bypass; never resolves or enables 抢金."""
+        self.begin_opening(dice_total)
+        candidate = deepcopy(self._state)
+        candidate.phase = "AFTER_DRAW"
+        candidate.special_states = ["NORMAL", "NORMAL"]
+        self.rules.validate_state(candidate)
+        self._state = candidate
+        self._events.append({"seq": len(self._events), "action": {"player": candidate.dealer,
+            "type": "SIMULATION_SKIP_QIANGJIN", "tile": None, "tiles": [], "metadata": {}},
+            "before_hash": self._events[-1]["after_hash"], "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(), "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase})
+        return self.state
+    def finalize_simulation_only_outcome(self):
+        """Close an already-declared ordinary Hu with non-real scoring units."""
+        self._require_state()
+        if self._state.phase != "HU_DECLARED":
+            raise ValueError("Simulation settlement requires HU_DECLARED")
+        pending = self._state.pending_hu
+        if pending["source"] == WinSource.KONG_TAIL_DRAW.value:
+            raise ValueError("Simulation-only mode excludes Gang-Hu")
+        winner = pending["winner"]
+        multiplier = 1 if pending["source"] == WinSource.DISCARD.value else 2
+        candidate = deepcopy(self._state)
+        candidate.rewards = [multiplier if winner == 0 else -multiplier,
+                             -multiplier if winner == 0 else multiplier]
+        candidate.phase, candidate.terminal = "TERMINAL", True
+        candidate.terminal_reason = "SIMULATION_" + ("PINGHU" if multiplier == 1 else "ZIMO")
+        candidate.pending_discard = candidate.pending_hu = None
+        self.rules.validate_state(candidate)
+        self._state = candidate
+        self._events.append({"seq": len(self._events), "action": {"player": winner,
+            "type": "END_HAND", "tile": None, "tiles": [], "metadata": {"source": "simulation_only", "multiplier": multiplier}},
+            "before_hash": "", "after_hash": candidate.state_hash(), "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player, "phase_after": candidate.phase})
+        return self.state
     def finalize_observed_outcome(self, *, winner, current_dealer_base, winner_fan, win_type):
         """Record an externally verified ordinary outcome without inferring it.
 

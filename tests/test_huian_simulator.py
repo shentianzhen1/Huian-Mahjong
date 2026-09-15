@@ -37,6 +37,23 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(result.dice_total, 7)
         self.assertEqual(result.events[0]["action"]["metadata"]["dice_total"], 7)
 
+    def test_normal_hand_mode_skips_qiangjin_and_is_reproducible(self):
+        first = Simulator().run_normal_hand(seed=3)
+        self.assertEqual(first, Simulator().run_normal_hand(seed=3))
+        self.assertEqual(first.status, "COMPLETED")
+        self.assertEqual(first.phase, "TERMINAL")
+        self.assertTrue(any(event["action"]["type"] == "SIMULATION_SKIP_QIANGJIN"
+                            for event in first.events))
+        self.assertEqual(sum(first.rewards), 0)
+
+    def test_normal_hand_batch_terminates_zero_sum(self):
+        # CI smoke coverage; use the manual benchmark for 100+ hands.
+        for seed in range(20):
+            result = Simulator().run_normal_hand(seed=seed)
+            self.assertIn(result.status, ("COMPLETED", "STOPPED_UNKNOWN"))
+            self.assertNotEqual(result.status, "MAX_STEPS")
+            self.assertEqual(sum(result.rewards), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

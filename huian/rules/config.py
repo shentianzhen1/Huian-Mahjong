@@ -62,11 +62,15 @@ class RulesConfig:
     experimental_no_rob_kong: bool = False
     # Player feedback: room/player setting, usually disabled. Never infer from the generic page.
     single_gold_can_pinghu: bool = False
+    # Simulator-only profile.  It never enables a special Huian rule.
+    simulation_only_normal_hand: bool = False
 
     def __post_init__(self):
         if type(self.single_gold_can_pinghu) is not bool:
             raise ValueError("single_gold_can_pinghu must be boolean")
         if type(self.experimental_no_rob_kong) is not bool:
             raise ValueError("experimental_no_rob_kong must be boolean")
+        if type(self.simulation_only_normal_hand) is not bool:
+            raise ValueError("simulation_only_normal_hand must be boolean")
         if self.settlement_model not in (None, "current_dealer_plus_winner_v1"):
             raise ValueError("Unsupported settlement model")
