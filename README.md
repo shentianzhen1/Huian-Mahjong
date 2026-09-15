@@ -45,7 +45,7 @@ python -B -m unittest discover -s tests -v
 
 ## 测试
 
-核心回归（GitHub Actions 默认在 Python 3.11/3.12 执行）：
+核心回归（GitHub Actions 默认在 Python 3.10/3.11/3.12 执行）：
 
 ```powershell
 python -B -m unittest discover -s tests -v
@@ -62,6 +62,7 @@ Push-Location legacy_code\environment_v0.1; python -B -m unittest discover -s te
 ```
 
 Vision 使用单独的 `.venv-capture` 和 OpenCV；CI 只提供手动、非阻断的 advisory job。
+评估落盘默认写入 `data/evaluations/`，该目录已忽略，不会进入 Git。
 
 ## 文档入口
 

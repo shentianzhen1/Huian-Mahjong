@@ -6,15 +6,13 @@ Huian Mahjong — 当前入口
 先读：
   README.md
   AGENTS.md
-  PROJECT_CONTEXT.md
   RULE_STATUS.md
   PROJECT_STATUS.md
   TODO.md
 
-不要一开始重写整个项目。
-保留现有代码，先跑核心测试，再按模块迁移。
+当前已有：已确认普通流程的 Rules/Environment、simulation-only 普通局闭环、BaselineAgent 批量评估、Vision 离线原型。
+不要一开始重写整个项目。先跑核心测试，再按模块推进。
 
-legacy_code/ 仍含泉州命名和过时计分假设，
-53ea当基线，不当现行惠安规则。
+legacy_code/ 仍含泉州命名和过时计分假设，只当基线，不当现行惠安规则。
 
 未知规则必须标为 UNKNOWN，不要硬编码。
