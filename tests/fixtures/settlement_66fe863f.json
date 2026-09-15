@@ -1,0 +1,184 @@
+{
+  "id": "66fe863f_youjin100",
+  "evidence": "references/gameplay/2026-09-15/66fe863f_youjin100/README.md",
+  "source_manifest": "references/gameplay/2026-09-15/66fe863f_youjin100/source.json",
+  "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+  "settlement_frame": "settlement_095000ms.jpg",
+  "settlement_time_ms": 95000,
+  "room_id": "206640",
+  "settlement_display_datetime": "2026-09-15 17:35:44",
+  "room_options": {
+    "variant": "huian",
+    "players": 2,
+    "hand_number": 5,
+    "hand_total": 8,
+    "single_gold_can_pinghu": false,
+    "trusteeship": false
+  },
+  "winner": 0,
+  "dealer": 1,
+  "dealer_badge": 3,
+  "winner_own_base": 5,
+  "current_dealer_base": 20,
+  "gold_tile": "M1",
+  "win_type": "YOUJIN",
+  "stage": "YOUJIN",
+  "winning_tile": "M7",
+  "winner_melds": [
+    {
+      "kind": "ADDED_GANG",
+      "tiles": [
+        "P1",
+        "P1",
+        "P1",
+        "P1"
+      ],
+      "observation": "P1 Peng is visible before the fourth P1; the later stack is classified as an added kong from this visible sequence."
+    },
+    {
+      "kind": "CHI",
+      "tiles": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    }
+  ],
+  "winner_hand_before_youjin_discard": [
+    "M1",
+    "P9",
+    "P9",
+    "P9",
+    "S1",
+    "S5",
+    "S6",
+    "S7",
+    "M4",
+    "M5",
+    "M6"
+  ],
+  "youjin_discard": "S1",
+  "winner_hand_before_final_draw": [
+    "M1",
+    "P9",
+    "P9",
+    "P9",
+    "S5",
+    "S6",
+    "S7",
+    "M4",
+    "M5",
+    "M6"
+  ],
+  "winner_hand_after_final_draw": [
+    "M1",
+    "P9",
+    "P9",
+    "P9",
+    "S5",
+    "S6",
+    "S7",
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+  ],
+  "structural_analysis": {
+    "is_client_decomposition": false,
+    "possible_pair": [
+      "M7",
+      "GOLD"
+    ],
+    "possible_concealed_groups": [
+      [
+        "P9",
+        "P9",
+        "P9"
+      ],
+      [
+        "S5",
+        "S6",
+        "S7"
+      ],
+      [
+        "M4",
+        "M5",
+        "M6"
+      ]
+    ],
+    "note": "One legal ordinary structural decomposition; it does not establish Youjin eligibility, unique gold assignment, or a general state-transition rule."
+  },
+  "winner_fan": 5,
+  "fan_breakdown": {
+    "gold": 1,
+    "flowers": 1,
+    "concealed_triplets": 1,
+    "kongs": 2
+  },
+  "winner_flower_count": 1,
+  "winner_displayed_value": 40,
+  "loser_fan_displayed": 1,
+  "loser_fan_breakdown": {
+    "flowers": 1
+  },
+  "youjin_multiplier": 4,
+  "dealer_multiplier": 1,
+  "rewards": [
+    100,
+    -100
+  ],
+  "observed_sequence": [
+    {
+      "time_ms": 35000,
+      "observation": "Two P1 tiles are visible in hand."
+    },
+    {
+      "time_ms": 40000,
+      "observation": "P1 Peng is visible."
+    },
+    {
+      "time_ms": 69000,
+      "observation": "A fourth P1 is visible while P1 Peng already exists."
+    },
+    {
+      "time_ms": 70000,
+      "observation": "P1 meld becomes stacked; a B (white dragon) appears on the right. Exact draw source and rob-kong response window are not recovered."
+    },
+    {
+      "time_ms": 80000,
+      "observation": "Opponent S9 discard is visible."
+    },
+    {
+      "time_ms": 82000,
+      "observation": "S7/S8/S9 Chi is visible; Youjin hint appears above S1."
+    },
+    {
+      "time_range_ms": [
+        84000,
+        86000
+      ],
+      "observation": "S1 has been discarded; ten concealed tiles remain."
+    },
+    {
+      "time_ms": 88000,
+      "observation": "M7 and Youjin/Pass prompts are visible. This records a prompt, not a tested decline outcome."
+    },
+    {
+      "time_ms": 90000,
+      "observation": "Youjin animation is visible."
+    },
+    {
+      "time_ms": 95000,
+      "observation": "Youjin x4 settlement shows winner display 40 and net +100/-100."
+    }
+  ],
+  "notes": [
+    "Seat 0 maps to the winning player. The opponent at logical seat 1 visibly has dealer badge 3/base20; the winner has own base5.",
+    "Raw winner fan is 5; displayed40=(winner own base5+fan5)*4; net100=(current dealer base20+fan5)*4. These are distinct quantities.",
+    "Fan amounts are manually transcribed display items, not automatically inferred from the decomposition.",
+    "One four-tile kong and one three-tile Chi occupy seven physical tiles: ten concealed before the final draw means17 physical tiles, eleven after it means18.",
+    "Sampling times belong to the screen recording of an in-game replay, not an original game event log. No exact action window, wall-tail provenance, or absent rob-kong opportunity is inferred.",
+    "The ordinary structural analyzer is used only to check the transcribed hand; the observed win is YOUJIN, and no Youjin or added-kong state machine is enabled.",
+    "The non-dealer winner does not test a dealer-winner Youjin multiplier. Independent kong payments and draw-hand kong scoring are not established."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "source": {
+    "path": "C:\\Users\\ThinkPad\\Documents\\xwechat_files\\xdoooo_7526\\msg\\video\\2026-09\\21d61237df9c476e144744f6400e3a18.mp4",
+    "sha256": "88E82486EB9CC99098B06478239153A3484336D84D05B260D31589B388D35884",
+    "duration_seconds": 57.467,
+    "fps": 30,
+    "size": [656, 1280]
+  },
+  "observations": [
+    {"time_seconds": 38.7, "label": "DOUBLE_YOU_ANIMATION", "confidence": "high"},
+    {"time_seconds": 45.9, "label": "TRIPLE_YOU_ANIMATION", "confidence": "high"},
+    {"time_seconds": 57.0, "label": "SETTLEMENT", "confidence": "high", "details": {"youjin": "TRIPLE_YOU", "multiplier": 16, "gold_fan": 1, "flower_fan": 2, "winner_delta": 608, "loser_delta": -608}}
+  ],
+  "unknown": [
+    "exact first-you trigger frame and full hand decomposition",
+    "triple-you action restrictions before settlement",
+    "triple-you versus sanjindao simultaneous priority",
+    "dealer-base progression and cap"
+  ]
+}

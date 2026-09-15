@@ -11,6 +11,7 @@ Thumbs.db
 models/*.pt
 models/*.onnx
 data/raw_frames/
+data/evaluations/
 # Local derivatives extracted while reviewing gameplay video. Text evidence remains tracked.
 references/gameplay/**/keyframes/
 references/gameplay/**/contact_sheet_*.png

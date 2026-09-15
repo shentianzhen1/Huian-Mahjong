@@ -1,0 +1,103 @@
+{
+  "source": "C:\\Users\\ThinkPad\\Documents\\xwechat_files\\xdoooo_7526\\msg\\video\\2026-09\\66fe863fdfa006ea5e6cb999ae3ed82a.mp4",
+  "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+  "source_bytes": 11036223,
+  "fps": 29.00012850586044,
+  "frame_count": 3192,
+  "duration_seconds": 110.06847777777779,
+  "width": 1046,
+  "height": 480,
+  "evidence_id": "66fe863f_youjin100",
+  "recording_type": "screen_recording_of_in_game_replay",
+  "local_source_copy": "data\\capture_validation\\review_66fe863f_20260915\\source.mp4",
+  "source_copy_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+  "room_id": "206640",
+  "hand": "5/8",
+  "settlement_display_datetime": "2026-09-15 17:35:44",
+  "selected_frames": [
+    {
+      "file": "opening_excerpt_000000ms.jpg",
+      "frame_index": 0,
+      "time_ms": 0,
+      "sha256": "c564438b3dfc0f8e0f4962a639e54ea8b0a9c7e8601b35d13d8f10fe10f27097",
+      "observation": "Replay starts at progress 2/28; opening not covered"
+    },
+    {
+      "file": "peng_offer_p1_035000ms.jpg",
+      "frame_index": 1015,
+      "time_ms": 35000,
+      "sha256": "d29e37ca1a59b745a214a83b3ad460a0138bea7c176fcd7fadc69025b37aa072",
+      "observation": "Opponent P1 discard; bottom hand contains two P1 copies"
+    },
+    {
+      "file": "peng_p1_visible_040000ms.jpg",
+      "frame_index": 1160,
+      "time_ms": 40000,
+      "sha256": "8113ac95c339ceff1f7f22e7e5290f759699ae4af4a21020941605ec6c7f5f39",
+      "observation": "Three-tile P1 Peng visible; fourth copy not yet present"
+    },
+    {
+      "file": "fourth_p1_visible_069000ms.jpg",
+      "frame_index": 2001,
+      "time_ms": 69000,
+      "sha256": "f79ca547b64367462ad89cc988fa353d6c72fa2440e43efe7be3f3aa68e35ebf",
+      "observation": "Existing P1 Peng and an additional P1 at the hand edge"
+    },
+    {
+      "file": "added_kong_white_visible_070000ms.jpg",
+      "frame_index": 2030,
+      "time_ms": 70000,
+      "sha256": "d1ffa1d0201f2af0b8eedbd35067d0b72ace5cd41a5557bbf108a8f0b3208e96",
+      "observation": "P1 meld becomes a stacked kong; extra white B visible; wall display 95 to 94"
+    },
+    {
+      "file": "chi_offer_s9_080000ms.jpg",
+      "frame_index": 2320,
+      "time_ms": 80000,
+      "sha256": "257a1a557adcffe4f9cbcc413e7522c687aec0489da5184bd6d54bc8f43e1d97",
+      "observation": "Opponent S9 offered; S7 and S8 in bottom hand"
+    },
+    {
+      "file": "chi_s789_youjin_hint_082000ms.jpg",
+      "frame_index": 2378,
+      "time_ms": 82000,
+      "sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "observation": "S789 Chi visible; S1 has Youjin discard hint"
+    },
+    {
+      "file": "after_s1_discard_084000ms.jpg",
+      "frame_index": 2436,
+      "time_ms": 84000,
+      "sha256": "ea88290840f85d0c8251992480fc0d7de890c7a3fa9c194a4c827983a531d36e",
+      "observation": "S1 removed; ten concealed tiles with one gold M1; replay progress 25/28"
+    },
+    {
+      "file": "opponent_turn_085000ms.jpg",
+      "frame_index": 2465,
+      "time_ms": 85000,
+      "sha256": "46e03b620d80b8b89db4b49ad07d77f231fbbc407598721f4e018fee09cde455",
+      "observation": "Opponent N displayed after bottom S1 discard; wall display 92"
+    },
+    {
+      "file": "youjin_offer_m7_088000ms.jpg",
+      "frame_index": 2552,
+      "time_ms": 88000,
+      "sha256": "829432d7831da1bbe65660530d232003f15e6038e05565e6d20ed3dcccf43876",
+      "observation": "M7 at hand edge; Youjin/Pass UI visible with replay overlay; exact optional continuation untested"
+    },
+    {
+      "file": "youjin_animation_090000ms.jpg",
+      "frame_index": 2610,
+      "time_ms": 90000,
+      "sha256": "5c2cb234438d37e96c9ec93059a3b2109d1e66de38c9c6dc1585af35b734f52c",
+      "observation": "Youjin animation visible; same M7 present"
+    },
+    {
+      "file": "settlement_095000ms.jpg",
+      "frame_index": 2755,
+      "time_ms": 95000,
+      "sha256": "794a03a0fa0f87840289a1ccac28adf515ac472c297ed1eb5e78fd8bffa9b949",
+      "observation": "Winner base5, fan5, display40, YOUJIN x4; opponent dealer3/base20; +100/-100"
+    }
+  ]
+}

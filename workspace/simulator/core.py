@@ -259,11 +259,11 @@ class Simulator:
             return finish("STOPPED_LOOP", stop_reason=str(exc))
 
     def run_many_normal_hands(self, seeds=range(20), *, agent_factories=None,
-                              max_steps=1000, swap_seats=False, dealer=0):
+                              max_steps=1000, swap_seats=False, dealer=0, on_hand=None):
         from .evaluation import run_many_normal_hands
         return run_many_normal_hands(
             seeds, simulator=self, agent_factories=agent_factories,
-            max_steps=max_steps, swap_seats=swap_seats, dealer=dealer,
+            max_steps=max_steps, swap_seats=swap_seats, dealer=dealer, on_hand=on_hand,
         )
 
     def benchmark_normal_hands(self, count=100, *, seed_offset=0, max_steps=1000):

@@ -1,0 +1,109 @@
+{
+  "id": "b3892b34_zimo68",
+  "evidence": "references/gameplay/2026-09-15/b3892b34_zimo68/README.md",
+  "source_manifest": "references/gameplay/2026-09-15/b3892b34_zimo68/source.json",
+  "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+  "settlement_frame": "settlement_075000ms.jpg",
+  "settlement_time_ms": 75000,
+  "room_id": "745816",
+  "room_options": {
+    "variant": "huian",
+    "players": 2,
+    "hand_number": 8,
+    "hand_total": 8,
+    "single_gold_can_pinghu": false,
+    "trusteeship": false
+  },
+  "winner": 0,
+  "dealer": 0,
+  "dealer_badge": 5,
+  "current_dealer_base": 30,
+  "gold_tile": "S3",
+  "win_type": "ZIMO",
+  "winning_tile": "M5",
+  "winner_melds": [
+    {
+      "kind": "CHI",
+      "tiles": [
+        "M4",
+        "M5",
+        "M6"
+      ]
+    },
+    {
+      "kind": "CHI",
+      "tiles": [
+        "P6",
+        "P7",
+        "P8"
+      ]
+    }
+  ],
+  "winner_hand_before_draw": [
+    "S3",
+    "P4",
+    "P5",
+    "P6",
+    "S5",
+    "S6",
+    "S9",
+    "S9",
+    "S9",
+    "M5"
+  ],
+  "winner_hand_after_draw": [
+    "S3",
+    "P4",
+    "P5",
+    "P6",
+    "S5",
+    "S6",
+    "S9",
+    "S9",
+    "S9",
+    "M5",
+    "M5"
+  ],
+  "winner_fan": 4,
+  "fan_breakdown": {
+    "gold": 1,
+    "flowers": 2,
+    "concealed_triplets": 1
+  },
+  "winner_flower_count": 2,
+  "loser_hand": [
+    "P2",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P7",
+    "P8",
+    "P9",
+    "S6",
+    "S7",
+    "M6",
+    "M7",
+    "M7",
+    "W",
+    "W",
+    "W"
+  ],
+  "loser_fan_displayed": 4,
+  "loser_fan_breakdown": {
+    "flowers": 2,
+    "concealed_triplets": 2
+  },
+  "hu_multiplier": 2,
+  "extra_dealer_multiplier_observed": 1,
+  "rewards": [
+    68,
+    -68
+  ],
+  "notes": [
+    "Seat 0 maps to the bottom/winning player in this replay; the winner visibly carries dealer badge 5.",
+    "Ordinary Zimo instance only: (30+1+2+1)*2=68. No extra dealer x2 or loser-fan subtraction.",
+    "Three suits are physically present. The wildcard can complete S4/S5/S6 or S5/S6/S7; this is structural analysis, not a revealed system decomposition.",
+    "Flower identities and exact frame-level declaration timing are not recovered. No special Youjin or kong flow is observed."
+  ]
+}

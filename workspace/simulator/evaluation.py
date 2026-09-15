@@ -3,6 +3,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 
 from .core import RandomAgent, Simulator
+from .pairing import PairedSummary, summarize_swapped_pairs
 
 
 @dataclass(frozen=True)
@@ -21,6 +22,16 @@ class HandSummary:
     state_hash: str | None
     wall_hash: str | None
     initial_state_hash: str | None
+    pair_index: int = 0
+
+
+def make_hand_summary(result, *, seed, swapped, agent_names, pair_index=0):
+    return HandSummary(
+        seed, swapped, tuple(agent_names), result.status, result.winner,
+        result.win_source, result.terminal_reason, result.rewards, result.steps,
+        result.unresolved, result.stop_reason, result.state_hash, result.wall_hash,
+        result.initial_state_hash, pair_index,
+    )
 
 
 @dataclass(frozen=True)
@@ -41,18 +52,20 @@ class BatchEvaluation:
     by_agent: dict
     per_seed: tuple[HandSummary, ...]
     simulation_only: bool = True
+    paired: PairedSummary | None = None
 
     def to_dict(self):
         return asdict(self)
 
 
 def run_many_normal_hands(seeds=range(20), *, simulator=None, agent_factories=None,
-                          max_steps=1000, swap_seats=False, dealer=0):
+                          max_steps=1000, swap_seats=False, dealer=0, on_hand=None):
     """Fresh agents each run; swapped pairs reuse wall, dice and agent RNG seeds.
 
     Average rewards use COMPLETED hands only. UNKNOWN/MAX_STEPS/STOPPED_LOOP
     are censored observations, excluded from wins/losses/draws and rewards.
     by_agent keys identify factories (A/B), even if both classes are identical.
+    on_hand(summary, result) observes each finished attempt before the next.
     """
     seeds = tuple(seeds)
     if not seeds or any(type(seed) is not int for seed in seeds):
@@ -63,6 +76,8 @@ def run_many_normal_hands(seeds=range(20), *, simulator=None, agent_factories=No
         raise ValueError("max_steps must be a positive integer")
     if type(dealer) is not int or dealer not in (0, 1):
         raise ValueError("dealer must be seat 0 or 1")
+    if on_hand is not None and not callable(on_hand):
+        raise ValueError("on_hand must be callable")
     factories = tuple(agent_factories) if agent_factories is not None else (
         RandomAgent, RandomAgent)
     if len(factories) != 2 or not all(callable(f) for f in factories):
@@ -79,7 +94,7 @@ def run_many_normal_hands(seeds=range(20), *, simulator=None, agent_factories=No
     reward_sums = [0, 0]
     completed = draws = self_draws = discard_wins = unknown = limited = loops = 0
     reasons = Counter()
-    for seed in seeds:
+    for pair_index, seed in enumerate(seeds):
         for swapped in ((False, True) if swap_seats else (False,)):
             identities = (1, 0) if swapped else (0, 1)
             identity_agents = [factory(seed=seed * 2 + i)
@@ -131,12 +146,12 @@ def run_many_normal_hands(seeds=range(20), *, simulator=None, agent_factories=No
                     key = {"STOPPED_UNKNOWN": "unknown", "MAX_STEPS": "max_steps",
                            "STOPPED_LOOP": "stopped_loops"}[result.status]
                     item[key] += 1
-            summaries.append(HandSummary(
-                seed, swapped, tuple(type(agent).__name__ for agent in agents),
-                result.status, result.winner, result.win_source, result.terminal_reason,
-                result.rewards, result.steps, result.unresolved, result.stop_reason,
-                result.state_hash, result.wall_hash, result.initial_state_hash,
-            ))
+            summary = make_hand_summary(
+                result, seed=seed, swapped=swapped, pair_index=pair_index,
+                agent_names=tuple(type(agent).__name__ for agent in agents))
+            summaries.append(summary)
+            if on_hand is not None:
+                on_hand(summary, result)
     for item in by_agent.values():
         item["average_reward"] = (item["reward_sum"] / item["completed"]
                                   if item["completed"] else 0.0)
@@ -145,4 +160,5 @@ def run_many_normal_hands(seeds=range(20), *, simulator=None, agent_factories=No
         draws, self_draws, discard_wins, unknown, limited, loops,
         tuple(value / completed if completed else 0.0 for value in reward_sums),
         completed, dict(sorted(reasons.items())), by_agent, tuple(summaries),
+        paired=summarize_swapped_pairs(summaries) if swap_seats else None,
     )

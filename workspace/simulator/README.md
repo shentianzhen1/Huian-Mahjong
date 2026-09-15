@@ -61,7 +61,24 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 每次创建新Agent；交换座位复用牌墙/骰子/庄位以及各Agent的随机种子。
 不保存整批完整事件到内存；需要单局详细日志时单独重跑该seed。
 
+## 保存报告与校验重放
+
+```powershell
+python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 1000 --output-dir data/evaluations/run_001 --progress
+python -B -m workspace.simulator.replay data/evaluations/run_001 --hand-index 1 --output data/evaluations/run_001/hand_1_trace.json
+```
+
+每次选择新的输出目录；已有目录/重放文件不会被覆盖。`run.json`保存种子、Agent、配置、源码及Python版本；`hands.jsonl`逐局写入并刷新；完整批次生成`summary.json`，`completion.json`记录完成、中断或失败。Ctrl+C后已写入的对局仍可重放。数据目录默认不提交Git。
+
+重放索引从0开始，核对源码/运行时、摘要、状态哈希和决策事件摘要后才导出完整日志。代码或Python版本不同会拒绝，需恢复到原评估环境后重试。
+
+`paired`只统计同一输入序号的正反座位均完成的组合；重复seed仍按输入序号区分。不完整配对单独计数，无完整配对时均值为null。`paired_average_reward_by_agent`按原Agent身份给出两局平均模拟收益，不能与按座位统计混用。
+
 ## 本轮命令验证
+
+seed 0–99交换座位200局：81局完成（自摸71、点炮2、流局8）、119局UNKNOWN（抢杠102、补杠14、三金倒时机3），无max_steps或死循环。完整配对16组/32局，配对平均模拟收益Random=-1.6875、Baseline=+1.6875；高UNKNOWN占比导致结果不能代表真实胜率。已从落盘报告成功校验重放第1号记录。
+
+较早的小样本记录：
 
 seed 0–9交换座位20局：7局自摸完成、13局UNKNOWN（抢杠12、补杠1），无max_steps或死循环。
 完成局中BaselineAgent赢7局；有大量UNKNOWN和很小样本，不能据此推断真实胜率或策略强度。

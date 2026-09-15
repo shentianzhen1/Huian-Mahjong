@@ -1,0 +1,82 @@
+{
+  "source": "C:\\Users\\ThinkPad\\Documents\\xwechat_files\\xdoooo_7526\\msg\\video\\2026-09\\b3892b3412b3d925c9317a0a842eac8d.mp4",
+  "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+  "source_bytes": 8745659,
+  "fps": 29.000164695188815,
+  "frame_count": 2473,
+  "duration_seconds": 85.27537777777778,
+  "width": 1046,
+  "height": 480,
+  "evidence_id": "b3892b34_zimo68",
+  "recording_type": "screen_recording_of_in_game_replay",
+  "local_source_copy": "data\\capture_validation\\review_b3892b34_20260915\\source.mp4",
+  "source_copy_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+  "room_id": "745816",
+  "hand": "8/8",
+  "settlement_display_datetime": "2026-09-15 17:10:49",
+  "selected_frames": [
+    {
+      "file": "opening_excerpt_000000ms.jpg",
+      "frame_index": 0,
+      "time_ms": 0,
+      "sha256": "9ba569bde80d13b89ec922a08d177eb2200c34ca3af28edc4bd47e7311bfeb08",
+      "observation": "Replay already at step 2/21; opening not covered"
+    },
+    {
+      "file": "chi_m4_offer_033000ms.jpg",
+      "frame_index": 957,
+      "time_ms": 33000,
+      "sha256": "ca2527edf287b752be4a80e88f47916e598a2f9fae43f2a6c5153cde8ead3856",
+      "observation": "Opponent M4 before first Chi"
+    },
+    {
+      "file": "chi_m456_035000ms.jpg",
+      "frame_index": 1015,
+      "time_ms": 35000,
+      "sha256": "7cc505b7f0abb0e5ca52272554eb2cb3b9004d0163a9f5aee42ff0b60410ee74",
+      "observation": "M456 Chi visible"
+    },
+    {
+      "file": "chi_p7_offer_055000ms.jpg",
+      "frame_index": 1595,
+      "time_ms": 55000,
+      "sha256": "5e521e6477d168e63f9b0f065cadb5bab3698be30e445867bcd1d2f11549ef1e",
+      "observation": "Opponent P7 before second Chi"
+    },
+    {
+      "file": "chi_p678_057000ms.jpg",
+      "frame_index": 1653,
+      "time_ms": 57000,
+      "sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "observation": "P678 Chi visible"
+    },
+    {
+      "file": "pre_hu_060000ms.jpg",
+      "frame_index": 1740,
+      "time_ms": 60000,
+      "sha256": "21f8d6369e6d917fe2cf5c5e8be70402dd4019b0b20faa53cbaa90d1380233bd",
+      "observation": "Two exposed Chi sequences, ten concealed tiles, one S3 gold"
+    },
+    {
+      "file": "winning_m5_visible_065000ms.jpg",
+      "frame_index": 1885,
+      "time_ms": 65000,
+      "sha256": "6a0d83469ddc37887ada4e31254068e17445acb4dad059d37fe2f67858820885",
+      "observation": "Extra M5 visible; replay overlay obscures exact offer/draw timing"
+    },
+    {
+      "file": "settlement_071000ms.jpg",
+      "frame_index": 2059,
+      "time_ms": 71000,
+      "sha256": "f0a0ea1b12d3dca88b642ecea910eb9402a5e3e135e4f0c99edb7682f776dd6f",
+      "observation": "Zimo x2, dealer badge 5/base30, gold1 flowers2 triplet1, +68/-68"
+    },
+    {
+      "file": "settlement_075000ms.jpg",
+      "frame_index": 2175,
+      "time_ms": 75000,
+      "sha256": "f3af223715289f689c5e71f71a576a2fb7e5aeb205cb41b8417f95aceae38461",
+      "observation": "Stable settlement for manual transcription"
+    }
+  ]
+}
