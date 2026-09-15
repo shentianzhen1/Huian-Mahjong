@@ -35,10 +35,12 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 
 - 无配置的 `Simulator.run()` 保留历史安全停止；`run_opening()` 始终停在抢金核验。
 - 显式调用 `run_normal_hand()` 或 `Simulator(config=SimulatorConfig()).run()` 才使用普通局模拟模式。开局跳过抢金，事件标记simulation-only。
-- config中的抢金、三金倒、游金链、八花游、抢杠、补杠和真实计分开关默认关闭；设置为True会返回 `STOPPED_UNKNOWN / unsupported_config`，不会启用猜测实现。
+- config中的抢金、三金倒、游金链、八花游、广义抢杠和真实计分开关默认关闭；设置为True会返回 `STOPPED_UNKNOWN / unsupported_config`。
+- `enable_added_kong=True`默认开启补杠候选；设False可禁用。按用户本轮实现要求，补杠专用窗口支持 `ROB_KONG_HU` / PASS，与仍未支持的广义 `enable_rob_kong` 不同。原PENG与第4张保留至PASS，随后升级并必须尾摸、复用补花；不将此实现当作录像已验证的抢杠交互。
 - 三张以上金、八花、显式游金状态、未解决杠窗口出现时停止并记录规则ID。不会从普通胡拆牌方式推断游金状态。
 - 普通局自摸使用“能胡即胡”的模拟策略；真实房间能否放弃自摸继续打仍未确认。
 - 平胡赢家+1/对手−1，自摸赢家+2/对手−2，流局[0,0]。均为simulation-only单位，不含真实花/金番、庄底或特殊胡计分。
+- 抢杠成功 → `ROB_KONG_SCORING_UNKNOWN`；尾摸后声明杠胡 → `GANG_HU_SCORING_UNKNOWN`；补杠尾摸不胡 → `ADD_KONG_SCORING_UNKNOWN`。不会套普通奖励；含补杠的16张边界不假定零杠费，补花不跨边界。胡声明保留winner/source。
 - 固定墙通过 `wall=完整144张列表` 输入；`initial_state=` 只接受可校验的局中状态（含全部实体牌归属），不能与wall同时提供，也不能输入已结束对局。
 - 不接Vision、Executor，不评估真实游戏胜率。
 
@@ -74,7 +76,9 @@ python -B -m workspace.simulator.replay data/evaluations/run_001 --hand-index 1 
 
 `paired`只统计同一输入序号的正反座位均完成的组合；重复seed仍按输入序号区分。不完整配对单独计数，无完整配对时均值为null。`paired_average_reward_by_agent`按原Agent身份给出两局平均模拟收益，不能与按座位统计混用。
 
-## 本轮命令验证
+## 历史命令验证（补杠响应实现前）
+
+下列结果来自旧版本，不代表启用补杠专用窗口后的当前完成率；新增UNKNOWN分类应按当前代码重新评估。
 
 seed 0–99交换座位200局：81局完成（自摸71、点炮2、流局8）、119局UNKNOWN（抢杠102、补杠14、三金倒时机3），无max_steps或死循环。完整配对16组/32局，配对平均模拟收益Random=-1.6875、Baseline=+1.6875；高UNKNOWN占比导致结果不能代表真实胜率。已从落盘报告成功校验重放第1号记录。
 

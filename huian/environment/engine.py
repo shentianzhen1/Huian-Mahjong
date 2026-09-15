@@ -7,7 +7,7 @@ import random
 
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
-from huian.rules.context import DrawSource, WinSource
+from huian.rules.context import DrawSource, HuContext, WinSource
 from .state import HuianGameState
 from .opening import HuianOpeningPlugin
 from .flowers import replace_flowers
@@ -131,14 +131,20 @@ class HuianEnvironment:
         self._require_state()
         if not self.rules.rules.config.simulation_only_normal_hand:
             raise ValueError("Simulation settlement requires simulation_only_normal_hand")
-        if self._state.phase != "HU_DECLARED":
+        if self._state.phase not in ("HU_DECLARED", "ROB_KONG_HU_DECLARED"):
             raise ValueError("Simulation settlement requires HU_DECLARED")
         self.rules.validate_state(self._state)
         before = self._state.state_hash()
         pending = deepcopy(self._state.pending_hu)
+        if pending["source"] == WinSource.ROB_KONG.value:
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
         if pending["source"] == WinSource.KONG_TAIL_DRAW.value:
             from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("gang_hu_scoring")
+            raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
+        if self._has_added_kong(self._state):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("ADD_KONG_SCORING_UNKNOWN")
         winner = pending["winner"]
         multiplier = 1 if pending["source"] == WinSource.DISCARD.value else 2
         candidate = deepcopy(self._state)
@@ -173,12 +179,25 @@ class HuianEnvironment:
             if winner != declaration["winner"]:
                 raise ValueError("Observed winner disagrees with the Hu declaration")
             source = WinSource(declaration["source"])
+            if source == WinSource.ROB_KONG:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
             if source == WinSource.KONG_TAIL_DRAW:
                 from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("gang_hu_scoring")
+                raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
             expected = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
             if win_type != expected:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
+        if self._state.pending_kong is not None or self._has_added_kong(self._state):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("ADD_KONG_SCORING_UNKNOWN")
+        last = self._state.last_action
+        if (self._state.phase in ("AFTER_DRAW", "NEED_FLOWER_REPLACE")
+                and isinstance(last, dict) and last.get("type") == env.ActionType.DRAW.value):
+            context = HuContext.from_draw_metadata(last.get("metadata", {}))
+            if context.is_gang_hu:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
         result = self.settlement.settle(
             winner=winner,
             current_dealer_base=current_dealer_base,
@@ -290,6 +309,8 @@ class HuianEnvironment:
         event["rules_config"] = asdict(self.rules.rules.config)
         if flower_result is not None:
             event["flower_replacements"] = [asdict(item) for item in flower_result.events]
+        if action.type == env.ActionType.ROB_KONG_HU:
+            event["hu_declaration"] = deepcopy(candidate.pending_hu)
         # Commit only after every check succeeds. Caller never receives live data.
         self._state = candidate
         self._events.append(event)
@@ -297,17 +318,30 @@ class HuianEnvironment:
         return self.state, deepcopy(event)
 
     @staticmethod
-    def _resolve_flowers(state):
+    def _has_added_kong(state):
+        return any(meld.kind == "ADDED_GANG" for zone in state.melds for meld in zone)
+
+    @classmethod
+    def _resolve_flowers(cls, state):
         """Apply the high-confidence dealer-first flower replacement rounds."""
         if state.phase != "NEED_FLOWER_REPLACE":
             return None
-        result = replace_flowers(state.hands, state.flowers, state.wall, state.dealer)
+        # An added kong has unresolved accounting at a drawn-hand boundary.
+        # Stop replacement at 16 without manufacturing a zero-fee settlement.
+        boundary = 16 if cls._has_added_kong(state) else 0
+        result = replace_flowers(state.hands, state.flowers, state.wall, state.dealer,
+                                 minimum_wall_remaining=boundary)
         state.hands = [list(zone) for zone in result.hands]
         state.flowers = [list(zone) for zone in result.flowers]
         state.wall = list(result.wall)
-        state.phase = "AFTER_DRAW"
+        state.phase = ("NEED_FLOWER_REPLACE" if any(
+            tile in env.FLOWERS for zone in state.hands for tile in zone
+        ) else "AFTER_DRAW")
         return result
     def _resolve_wall_draw(self, state):
+        if state.pending_kong is not None or self._has_added_kong(state):
+            # Preserve the response/declaration first; scoring remains UNKNOWN.
+            return
         if not state.terminal and self.rules.rules.is_wall_draw(state):
             state.terminal = True
             state.phase = "TERMINAL"
@@ -318,14 +352,21 @@ class HuianEnvironment:
     @staticmethod
     def _canonical_action(state, action):
         """Normalize old replay draw labels before legality checks and new logging."""
+        if (action.type == env.ActionType.PASS and state.phase == "ROB_KONG_WINDOW"
+                and action.metadata == state.pending_kong
+                and type(action.metadata.get("kong_player")) is int
+                and type(action.metadata.get("meld_index")) is int
+                and type(action.metadata.get("tile")) is str):
+            return env.Action(action.player, action.type, action.tile, action.tiles)
         if action.type != env.ActionType.DRAW:
             return action
         metadata = dict(action.metadata)
         metadata.pop("drawn_tile", None)
+        metadata.pop("effective_drawn_tile", None)
         source = DrawSource.parse(metadata.get("source"))
         metadata["source"] = source.value
         if source == DrawSource.WALL_TAIL and "kong_kind" not in metadata:
-            if state.phase in ("AFTER_MING_GANG", "AFTER_AN_GANG"):
+            if state.phase in ("AFTER_MING_GANG", "AFTER_AN_GANG", "AFTER_ADDED_GANG"):
                 metadata["kong_kind"] = state.phase.removeprefix("AFTER_")
         return env.Action(action.player, action.type, action.tile, action.tiles, metadata)
 
@@ -340,6 +381,18 @@ class HuianEnvironment:
             state.hands[p].append(tile)
             state.phase = "NEED_FLOWER_REPLACE" if tile in env.FLOWERS else "AFTER_DRAW"
         elif kind == T.PASS:
+            if state.phase == "ROB_KONG_WINDOW":
+                pending = state.pending_kong
+                kong_player, tile = pending["kong_player"], pending["tile"]
+                meld = state.melds[kong_player][pending["meld_index"]]
+                state.hands[kong_player].remove(tile)
+                state.melds[kong_player][pending["meld_index"]] = env.Meld(
+                    "ADDED_GANG", list(meld.tiles) + [tile], meld.from_player)
+                action.metadata.update(pending)
+                state.pending_kong = None
+                state.current_player = kong_player
+                state.phase = "AFTER_ADDED_GANG"
+                return
             # DISCARD already selected the sole opponent as current_player.
             # The declined tile stays in its owner's river.
             state.pending_discard = None
@@ -351,6 +404,23 @@ class HuianEnvironment:
                                          river_index=len(state.discards[p]) - 1)
             state.current_player = 1 - p
             state.phase = "AFTER_DISCARD"
+        elif kind == T.ADD_KONG:
+            state.pending_kong = {
+                "kong_player": p, "tile": action.tile,
+                "meld_index": action.metadata["meld_index"],
+            }
+            state.current_player = 1 - p
+            state.phase = "ROB_KONG_WINDOW"
+        elif kind == T.ROB_KONG_HU:
+            pending = state.pending_kong
+            state.pending_hu = {
+                "winner": p, "loser": pending["kong_player"],
+                "source": WinSource.ROB_KONG.value, "robbed_tile": action.tile,
+                "winning_tile": action.tile, "kong_player": pending["kong_player"],
+                "meld_index": pending["meld_index"],
+            }
+            state.current_player = p
+            state.phase = "ROB_KONG_HU_DECLARED"
         elif kind == T.HU:
             source = WinSource(action.metadata.get("win_source"))
             pending = state.pending_discard if source == WinSource.DISCARD else None

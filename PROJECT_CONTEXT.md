@@ -23,7 +23,7 @@ Confirmed target scope:
 - the same recording shows 庄5/base30 and gold1 + flowers2 + triplet1: ordinary Zimo `(30+4)×2=68`, without extra dealer ×2 or subtraction of the loser’s fan; see `references/gameplay/2026-09-15/b3892b34_zimo68/README.md`
 - retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Gang-Hu, Youjin, Double-You, Triple-You, Eight-Flower You, flowers, repeat-dealer/base scoring
 - Sanjindao eligibility is `hand_gold_count >= 3`; declaration is optional, so legal actions must expose both immediate Sanjindao ×3 and continued play toward 三金游. 三金游 is the same state as Triple-You/三游 and is canonicalized as `TRIPLE_YOU` ×16. The exact shared state sequence, non-flower base and full settlements remain unresolved
-- every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong remains a separate unresolved response path
+- every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong is a separate response path, with an added-kong-only implementation contract and unresolved actual-room response evidence/scoring
 - completed Ming/An/Added Kong draws reuse the normal draw pipeline and record their source as `wall_tail`
 - each flower has a confirmed base value of 1 fan
 - player confirmation: “坐庄底分5分，连庄+5”; repeat increment +5 is confirmed. Keep the starting-base wording and observed dealer badge/base values as separately sourced facts until their field mapping is reconciled; a cap remains UNKNOWN
@@ -37,7 +37,7 @@ They simply add no named fan or AI objective. Exact special-Hu triggers and
 unverified multipliers remain controlled by `RULE_STATUS.md`.
 
 Current Rules API boundary:
-- `HuContext` carries `SELF_DRAW`, `DISCARD`, or `KONG_TAIL_DRAW`, the winning tile, and the resolved kong kind where applicable
+- `HuContext` carries `SELF_DRAW`, `DISCARD`, `KONG_TAIL_DRAW`, or `ROB_KONG`, the winning tile, and the resolved kong kind where applicable
 - discard-Hu analysis requires the winning tile, so an opponent-discarded gold cannot be silently accepted
 - `SanjindaoDecision` exposes eligibility, confirmed multiplier 3, and `DECLARE_SANJINDAO` / `CONTINUE_PLAY`; phase timing and full settlement stay outside the pure eligibility service
 - `YoujinStage.SANJIN_YOU` is an alias of `YoujinStage.TRIPLE_YOU`; it must not create a second state, while Sanjindao remains independent
@@ -63,8 +63,12 @@ in `RULE_STATUS.md`.
 Owns GameState and state transitions:
 `reset()`, `legal_actions()`, `step(action)`, `clone()`, `checkpoint()`, `rollback()`, `is_terminal()`, `get_reward()`, event log.
 
+The user's current implementation contract adds a non-gold Peng upgrade through `ADD_KONG` → `ROB_KONG_WINDOW`. Only this window offers eligible `ROB_KONG_HU` or `PASS`. The original Peng and fourth hand tile remain physically unchanged until PASS commits `ADDED_GANG`; `pending_kong` never counts as another tile. PASS then requires a tail draw and the existing flower pipeline. A successful rob records winner/source without completing the kong. The 66fe863f replay supports the upgrade itself, not the rob-kong interaction; Ming/An rob-kong remains UNKNOWN.
+
 ### Simulator
 Runs full games and batches. Must support deterministic fixed walls/seeds and paired evaluation with swapped seats/dealer.
+
+`SimulatorConfig.enable_added_kong` defaults to True; False removes added-kong candidates. The broad `enable_rob_kong` remains False/unsupported and must not be confused with the implemented added-kong-only response window. Successful rob, declared kong-tail Hu, and an added-kong tail draw without Hu stop with `ROB_KONG_SCORING_UNKNOWN`, `GANG_HU_SCORING_UNKNOWN`, and `ADD_KONG_SCORING_UNKNOWN` respectively. The 16-tile boundary cannot manufacture a zero-fee settlement for an added-kong hand, and flower replacement cannot cross it. These stops retain audit facts and do not use ordinary simulation rewards.
 
 ### AI
 Roadmap:

@@ -64,8 +64,10 @@ class SimulatorConfig:
     enable_sanjindao: bool = False
     enable_youjin: bool = False  # Includes Double-You / Triple-You.
     enable_eight_flower_you: bool = False
+    # Broad rob-kong scopes (concealed/exposed) are still unsupported.
+    # The added-kong-only response window is part of enable_added_kong.
     enable_rob_kong: bool = False
-    enable_added_kong: bool = False
+    enable_added_kong: bool = True
     enable_real_scoring: bool = False
 
     def __post_init__(self):
@@ -76,7 +78,7 @@ class SimulatorConfig:
     def unsupported_rules(self):
         return tuple(name.removeprefix("enable_")
                      for name, value in asdict(self).items()
-                     if name.startswith("enable_") and value)
+                     if name.startswith("enable_") and name != "enable_added_kong" and value)
 
 
 class Simulator:
@@ -103,7 +105,7 @@ class Simulator:
             for event in reversed(events)
             if event["action"]["type"] == "END_HAND"
             and "hu_declaration" in event["action"].get("metadata", {})
-        ), None)
+        ), None) or state.pending_hu
         return SimulationResult(
             seed=seed, status=status, events=tuple(events),
             unresolved=tuple(unresolved), dice_total=dice_total,
@@ -179,7 +181,8 @@ class Simulator:
         profile = self.config if self.config is not None else SimulatorConfig()
         if not profile.normal_hand_mode:
             raise ValueError("run_normal_hand requires normal_hand_mode")
-        rules = HuianRulesAdapter(HuianRules(RulesConfig(simulation_only_normal_hand=True)))
+        rules = HuianRulesAdapter(HuianRules(RulesConfig(
+            simulation_only_normal_hand=True, enable_added_kong=profile.enable_added_kong)))
         # Environment also limits events. Two setup events are not agent steps.
         game = self.environment_factory(rules=rules, max_steps=max_steps + 2)
         if initial_state is None:
@@ -218,6 +221,13 @@ class Simulator:
                 if game.is_terminal():
                     return finish("COMPLETED")
                 state = game.state
+                if state.phase == "ROB_KONG_HU_DECLARED":
+                    return finish("STOPPED_UNKNOWN", ("ROB_KONG_SCORING_UNKNOWN",),
+                                  "unresolved_rule")
+                if (state.phase == "HU_DECLARED"
+                        and state.pending_hu["source"] == "kong_tail_draw"):
+                    return finish("STOPPED_UNKNOWN", ("GANG_HU_SCORING_UNKNOWN",),
+                                  "unresolved_rule")
                 unknown = self._special_rules(state)
                 if unknown:
                     return finish("STOPPED_UNKNOWN", unknown, "special_rule_encountered")
@@ -225,6 +235,12 @@ class Simulator:
                     # Settlement is part of the declaring action, even on last step.
                     game.finalize_simulation_only_outcome()
                     continue
+                if any(meld.kind == "ADDED_GANG" for zone in state.melds for meld in zone):
+                    # Classify an already-reached scoring barrier before the
+                    # action budget; checking it does not execute another step.
+                    report = game.action_report()
+                    if "ADD_KONG_SCORING_UNKNOWN" in report.unresolved:
+                        return finish("STOPPED_UNKNOWN", report.unresolved, "unresolved_rule")
                 if steps >= max_steps:
                     return finish("MAX_STEPS", stop_reason="max_steps")
                 actions = game.legal_actions()

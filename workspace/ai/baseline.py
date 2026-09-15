@@ -71,9 +71,9 @@ class BaselineAgent:
         if not legal_actions:
             raise ValueError("No legal actions")
         actions = sorted(legal_actions, key=self._key)
-        wins = [a for a in actions if a.type.value == "HU"]
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
         if wins:
-            return AgentDecision(wins[0], "HU: take the legal ordinary win")
+            return AgentDecision(wins[0], f"{wins[0].type.value}: take the legal ordinary-shape win")
         discards = [a for a in actions if a.type.value == "DISCARD"]
         if discards:
             action = min(discards, key=lambda a: (

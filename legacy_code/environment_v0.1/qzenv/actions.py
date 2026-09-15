@@ -10,6 +10,8 @@ class ActionType(str, Enum):
     PENG = "PENG"
     MING_GANG = "MING_GANG"
     AN_GANG = "AN_GANG"
+    ADD_KONG = "ADD_KONG"
+    ROB_KONG_HU = "ROB_KONG_HU"
     PASS = "PASS"
     HU = "HU"
     FLOWER_REPLACE = "FLOWER_REPLACE"

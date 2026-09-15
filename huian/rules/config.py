@@ -12,6 +12,9 @@ class EvidenceStatus(str, Enum):
 
 # Evidence authority: RULE_STATUS.md, not legacy KNOWN_RULES.md.
 UNKNOWN_RULES = MappingProxyType({
+    "ROB_KONG_SCORING_UNKNOWN": "Settlement for a declared added-kong robbery",
+    "GANG_HU_SCORING_UNKNOWN": "Settlement for a declared kong-tail win",
+    "ADD_KONG_SCORING_UNKNOWN": "Added-kong payments and remaining-hand settlement",
     "rob_kong": "Scope, response window and resolution for each kong kind",
     "qiangjin_hand_shape": "Exact effective Hu decomposition and room-option interaction at the opening check",
     "qiangjin_seat_priority": "Which eligible seat has priority if more than one can declare",
@@ -64,8 +67,12 @@ class RulesConfig:
     single_gold_can_pinghu: bool = False
     # Simulator-only profile.  It never enables a special Huian rule.
     simulation_only_normal_hand: bool = False
+    # Disable only new added-kong offers; an existing response window still resolves.
+    enable_added_kong: bool = True
 
     def __post_init__(self):
+        if type(self.enable_added_kong) is not bool:
+            raise ValueError("enable_added_kong must be boolean")
         if type(self.single_gold_can_pinghu) is not bool:
             raise ValueError("single_gold_can_pinghu must be boolean")
         if type(self.experimental_no_rob_kong) is not bool:

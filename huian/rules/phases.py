@@ -19,11 +19,71 @@ class ActionReport:
 
 PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
-          "OPENING_QIANGJIN_CHECK", "HU_DECLARED", "TERMINAL"}
+          "OPENING_QIANGJIN_CHECK", "HU_DECLARED", "TERMINAL", "ROB_KONG_WINDOW",
+          "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG"}
+
+
+def _has_added_kong(state):
+    return any(meld.kind == "ADDED_GANG" for melds in state.melds for meld in melds)
+
+
+def _validate_pending_kong(state):
+    pending = getattr(state, "pending_kong", None)
+    if state.phase not in ("ROB_KONG_WINDOW", "ROB_KONG_HU_DECLARED"):
+        if pending is not None:
+            raise ValueError("Pending kong outside its response/declaration phase")
+        return
+    if not isinstance(pending, dict) or set(pending) != {"kong_player", "tile", "meld_index"}:
+        raise ValueError("A rob-kong phase requires a complete pending kong reference")
+    player, index, tile = pending["kong_player"], pending["meld_index"], pending["tile"]
+    if type(player) is not int or player not in (0, 1) or state.current_player != 1 - player:
+        raise ValueError("The opponent must respond to an added kong")
+    if type(index) is not int or not 0 <= index < len(state.melds[player]):
+        raise ValueError("Invalid pending kong meld index")
+    meld = state.melds[player][index]
+    if (tile not in env.BASE_TILES or tile == state.gold_tile or meld.kind != "PENG"
+            or meld.tiles != [tile] * 3 or state.hands[player].count(tile) != 1):
+        raise ValueError("Pending kong must retain its original pung and fourth hand tile")
+    if state.pending_discard is not None:
+        raise ValueError("A rob-kong window cannot also claim a river discard")
+
+
+def _validate_rob_kong_hu(state):
+    pending = state.pending_kong
+    player = pending["kong_player"]
+    expected = {"winner": 1 - player, "loser": player, "source": WinSource.ROB_KONG.value,
+                "robbed_tile": pending["tile"], "winning_tile": pending["tile"],
+                "kong_player": player, "meld_index": pending["meld_index"]}
+    hu = state.pending_hu
+    if (not isinstance(hu, dict) or hu != expected
+            or any(type(hu.get(name)) is not int
+                   for name in ("winner", "loser", "kong_player", "meld_index"))):
+        raise ValueError("Rob-kong Hu must reference the pending kong without moving its tile")
+
+
+def _validate_added_kong_phase(state):
+    last = state.last_action
+    p = state.current_player
+    if (not isinstance(last, dict) or last.get("type") != env.ActionType.PASS.value
+            or type(last.get("player")) is not int or last["player"] != 1 - p):
+        raise ValueError("Added-kong completion requires its opponent's PASS")
+    metadata = last.get("metadata")
+    if not isinstance(metadata, dict) or set(metadata) != {"kong_player", "tile", "meld_index"}:
+        raise ValueError("Added-kong completion requires the indexed PASS audit reference")
+    index, tile = metadata["meld_index"], metadata["tile"]
+    if (type(metadata["kong_player"]) is not int or metadata["kong_player"] != p
+            or type(index) is not int or not 0 <= index < len(state.melds[p])):
+        raise ValueError("Invalid completed added-kong reference")
+    meld = state.melds[p][index]
+    if meld.kind != "ADDED_GANG" or meld.tiles != [tile] * 4 or tile in state.hands[p]:
+        raise ValueError("The indexed original pung must now be the added kong")
 
 
 def _validate_pending_hu(state):
     pending = state.pending_hu
+    if state.phase == "ROB_KONG_HU_DECLARED":
+        _validate_rob_kong_hu(state)
+        return
     if state.phase != "HU_DECLARED":
         if pending is not None:
             raise ValueError("Pending Hu outside HU_DECLARED")
@@ -39,6 +99,8 @@ def _validate_pending_hu(state):
         source = WinSource(pending["source"])
     except (TypeError, ValueError) as exc:
         raise ValueError("Invalid pending Hu source") from exc
+    if source == WinSource.ROB_KONG:
+        raise ValueError("Rob-kong Hu requires its dedicated declaration phase")
     tile = pending["winning_tile"]
     if tile is not None and tile not in env.BASE_TILES:
         raise ValueError("Invalid pending Hu winning tile")
@@ -90,6 +152,10 @@ def validate(adapter, state):
         not state.terminal or len(state.wall) != 16 or state.rewards != [0, 0]
     ):
         raise ValueError("Wall draw requires terminal state, 16 tiles and zero rewards")
+    if _has_added_kong(state) and state.terminal_reason in (
+            "WALL_16", "SIMULATION_PINGHU", "SIMULATION_ZIMO",
+            "OBSERVED_PINGHU", "OBSERVED_ZIMO"):
+        raise ValueError("An added-kong hand cannot receive an assumed normal settlement")
     if observed_reason and (not state.terminal or state.rewards == [0, 0]):
         raise ValueError("Observed win requires a terminal non-zero settlement")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
@@ -105,6 +171,7 @@ def validate(adapter, state):
         raise ValueError("Nonterminal rewards must be zero")
     if Counter(state.physical_tiles()) != Counter(env.full_wall()):
         raise ValueError("Every physical tile must be accounted for: exactly the 144-tile set")
+    _validate_pending_kong(state)
     if state.phase == "READY":
         if (len(state.wall) != 144 or state.gold_tile is not None
                 or state.pending_discard is not None or state.pending_hu is not None):
@@ -133,6 +200,9 @@ def validate(adapter, state):
             if (p == state.current_player and state.phase == "HU_DECLARED"
                     and state.pending_hu["source"] != WinSource.DISCARD.value):
                 expected += 1
+            if (state.phase in ("ROB_KONG_WINDOW", "ROB_KONG_HU_DECLARED")
+                    and p == state.pending_kong["kong_player"]):
+                expected += 1
             if len(state.hands[p]) != expected:
                 raise ValueError(f"Invalid hand size for player {p} in {state.phase}")
     if state.phase.startswith("AFTER_") and state.phase.removeprefix("AFTER_") in (
@@ -141,6 +211,8 @@ def validate(adapter, state):
         melds = state.melds[state.current_player]
         if not melds or melds[-1].kind != state.phase.removeprefix("AFTER_"):
             raise ValueError("Phase and latest meld disagree")
+    if state.phase == "AFTER_ADDED_GANG":
+        _validate_added_kong_phase(state)
     pending = state.pending_discard
     if state.phase == "AFTER_DISCARD":
         source = 1 - state.current_player
@@ -173,27 +245,51 @@ def report(adapter, state):
         return ActionReport((), ("deal_replacement_order", "open_gold_procedure", "tianhu"))
     if state.phase == "OPENING_QIANGJIN_CHECK":
         return ActionReport((), ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
+    if state.phase == "ROB_KONG_HU_DECLARED":
+        return ActionReport((), ("ROB_KONG_SCORING_UNKNOWN",))
     if state.phase == "NEED_FLOWER_REPLACE":
+        if _has_added_kong(state):
+            return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
         return ActionReport((), ("deal_replacement_order",))
     if state.phase == "HU_DECLARED":
-        unresolved = ["win_declaration_and_settlement"]
         if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
-            unresolved.append("gang_hu_scoring")
-        return ActionReport((), tuple(unresolved))
+            return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
+        if _has_added_kong(state):
+            return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
+        return ActionReport((), ("win_declaration_and_settlement",))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
-    if adapter.rules.is_wall_draw(state):
-        return ActionReport(())
     p = state.current_player
     hand = state.hands[p]
     phase = state.phase
     A, T = env.Action, env.ActionType
-    if phase in ("AFTER_MING_GANG", "AFTER_AN_GANG"):
+    if phase == "ROB_KONG_WINDOW":
+        pending = state.pending_kong
+        tile = pending["tile"]
+        actions = [A(p, T.PASS)]
+        context = HuContext(WinSource.ROB_KONG, winning_tile=tile)
+        try:
+            eligible = adapter.rules.can_win(
+                [*hand, tile], state.gold_tile, len(state.melds[p]), win_context=context)
+        except UnknownRuleError as exc:
+            return ActionReport(tuple(actions), exc.rule_ids)
+        if eligible:
+            actions.insert(0, A(p, T.ROB_KONG_HU, tile=tile, metadata={
+                "win_source": WinSource.ROB_KONG.value,
+                "kong_player": pending["kong_player"], "meld_index": pending["meld_index"],
+            }))
+        return ActionReport(tuple(actions))
+    added_kong = _has_added_kong(state)
+    if adapter.rules.is_wall_draw(state):
+        return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",) if added_kong else ())
+    if phase in ("AFTER_MING_GANG", "AFTER_AN_GANG", "AFTER_ADDED_GANG"):
         # Importing this phase explicitly means kong response resolution is over.
         return ActionReport((A(p, T.DRAW, metadata={
             "source": DrawSource.WALL_TAIL.value,
             "kong_kind": phase.removeprefix("AFTER_"),
         }),))
+    if added_kong and phase != "AFTER_DRAW":
+        return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
     if phase == "NEED_DRAW":
         return ActionReport((A(p, T.DRAW, metadata={"source": DrawSource.WALL_HEAD.value}),))
     gold_unresolved = []
@@ -224,12 +320,17 @@ def report(adapter, state):
                         "kong_kind": (draw_context.kong_kind.value
                                       if draw_context.kong_kind else None)}
             actions.append(A(p, T.HU, tile=draw_context.winning_tile, metadata=metadata))
+            if draw_context.is_gang_hu:
+                # Audit the declaration before stopping at its unknown settlement.
+                return ActionReport(tuple(actions))
+            if added_kong:
+                return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
             unknown.extend(gold_unresolved)
             if not adapter.rules.config.simulation_only_normal_hand:
                 unknown.extend(("self_draw_decline", "win_declaration_and_settlement"))
-            if draw_context.is_gang_hu:
-                unknown.append("gang_hu_scoring")
             return ActionReport(tuple(actions), tuple(unknown))
+        if added_kong:
+            return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
         if draw_context is None and adapter.rules.can_win(
                 hand, state.gold_tile, len(state.melds[p])):
             return ActionReport((), tuple(gold_unresolved + ["win_declaration_and_settlement"]))
@@ -242,8 +343,11 @@ def report(adapter, state):
                 actions.extend(A(p, T.AN_GANG, tile=t, tiles=(t,) * 4) for t in kongs)
             else:
                 unknown.append("rob_kong")
-        if any(m.kind == "PENG" and m.tiles[0] in hand for m in state.melds[p]):
-            unknown.append("added_kong_details")
+        if adapter.rules.config.enable_added_kong:
+            actions.extend(A(p, T.ADD_KONG, tile=tile, tiles=(tile,) * 4,
+                             metadata={"meld_index": index})
+                           for index, tile in adapter.rules.added_kong_options(
+                               hand, state.melds[p], state.gold_tile))
     elif phase == "AFTER_DISCARD":
         tile = state.pending_discard["tile"]
         candidates = adapter.rules.meld_options(hand, tile, state.gold_tile)
@@ -271,6 +375,13 @@ def authorize(adapter, state, action):
     result = report(adapter, state)
     if type(action.player) is not int:
         raise ValueError("Invalid action player")
+    if action.type in (env.ActionType.ADD_KONG, env.ActionType.ROB_KONG_HU):
+        if (not isinstance(action.metadata, dict)
+                or type(action.metadata.get("meld_index")) is not int):
+            raise ValueError("A kong action requires an integer meld index")
+        if (action.type == env.ActionType.ROB_KONG_HU
+                and type(action.metadata.get("kong_player")) is not int):
+            raise ValueError("A rob-kong action requires an integer kong player")
     # Individually known actions can execute even when other alternatives are
     # unresolved. legal_actions() never presents this as a complete action set.
     if action in result.known_actions:

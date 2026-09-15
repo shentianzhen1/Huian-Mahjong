@@ -134,7 +134,7 @@ class NormalSimulationTests(unittest.TestCase):
 
     def test_special_config_is_unknown_and_strictly_boolean(self):
         for field in SimulatorConfig.__dataclass_fields__:
-            if field.startswith("enable_"):
+            if field.startswith("enable_") and field != "enable_added_kong":
                 simulator = Simulator(config=SimulatorConfig(**{field: True}))
                 result = simulator.run_normal_hand(seed=1)
                 self.assertEqual(result.status, "STOPPED_UNKNOWN")

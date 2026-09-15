@@ -3,6 +3,18 @@
 This file separates CONFIRMED / HIGH-CONFIDENCE / UNKNOWN rules.
 Do not silently promote UNKNOWN rules.
 
+## Implemented added-kong response contract — user implementation request
+
+The current implementation request defines an added-kong-only response path. This is an explicit engineering contract, not new video proof of the mini-program's rob-kong interaction. The 66fe863f replay confirms a Peng upgraded to an added kong and that example's displayed fan; it does not show a rob-kong attempt.
+
+- `ADD_KONG` is offered for an existing non-gold Peng plus its fourth tile in the declarer's hand. Gold cannot be added-konged.
+- Declaration enters `ROB_KONG_WINDOW`. The original Peng and fourth hand tile remain unchanged; `pending_kong` is a logical reference, not another physical tile. Only this added-kong window offers `ROB_KONG_HU` when Rules establishes eligibility, or `PASS`.
+- `PASS` commits the fourth tile once, forming `ADDED_GANG`, then requires a `wall_tail` draw through the existing flower replacement pipeline. A successful rob records winner/source and keeps the original Peng and tile accounting; it does not complete the kong or draw a replacement.
+- `enable_added_kong=True` is the default. False disables added-kong candidates. Simulator `enable_rob_kong=False` remains the broad unsupported scope switch; setting it True does not enable Ming/An rob-kong.
+- Scoring remains UNKNOWN: successful rob → `ROB_KONG_SCORING_UNKNOWN`; declared kong-tail Hu → `GANG_HU_SCORING_UNKNOWN`; completed added-kong tail draw without Hu → `ADD_KONG_SCORING_UNKNOWN`. These paths do not receive ordinary simulation rewards or assumed zero-fee drawn-hand settlement. Flower replacement stops at the 16-tile boundary instead of crossing it.
+
+Remaining evidence gaps: actual-room added-kong response/decline footage, exposed/concealed-kong rob permissions, independent kong fees, boundary settlement and all rob-kong/Gang-Hu scoring. Implemented transitions and passing tests do not promote those gaps to confirmed rules.
+
 ## Latest direct replay evidence — 66fe863f, 2026-09-15
 
 [Source and frame-by-frame review](references/gameplay/2026-09-15/66fe863f_youjin100/README.md): room 206640, hand 5/8, gold M1, 单金不平胡, no trusteeship.
@@ -36,7 +48,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Confirmed/reconfirmed player interaction (2026-09-14): after Chi or Peng completes, that player immediately enters the discard phase and must discard one tile; there is no intervening normal draw.
 - Player confirmation (2026-09-14): after a completed Ming-Gang, An-Gang, or Added-Gang, the declarer draws from the wall tail. That draw follows the normal draw/flower-processing pipeline; its provenance must be recorded as `wall_tail` rather than modeled as a separate complex replacement flow.
 - Added kong after Peng is allowed.
-- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). This does not answer whether or when another player may rob a kong; rob-kong remains a separate UNKNOWN response window.
+- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). Rob-kong is a separate response path. Its added-kong-only engineering contract is implemented above; actual-room response evidence and Ming/An rob-kong scope remain incomplete.
 - Gold cannot participate in Chi/Peng/Ming-Gang/An-Gang.
 - If opponent discards the current gold tile, it cannot be Chi/Peng/Gang/Hu.
 - Gold is a wildcard in allowed hand/win composition.
@@ -177,7 +189,7 @@ room. Flower fan is included before the Hu multiplier in the +608 report and ord
 
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options, multi-seat declaration priority, and settlement/dealer result.
-2. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
+2. Actual-room rob-kong scope and response evidence: the added-kong-only contract is implemented, but Ming/An rob-kong and all rob-kong scoring remain UNKNOWN; the existing replay does not verify the response window.
 3. Sanjindao remaining gaps: exact action-offer windows at opening/mid-hand/after flower or kong; how declining it interacts with the opening 抢金 check; non-flower base, payment, terminal flow and next dealer. Eligibility at three or more gold, the declare/continue choice and ×3 multiplier are confirmed.
 4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16 and `(current dealer base + winner fan) × Hu multiplier` are supported by the +608 video report; flowers are one fan each inside winner fan. The exact shared executable trigger sequence, payer, terminal transition and next-dealer result remain UNKNOWN.
 5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.

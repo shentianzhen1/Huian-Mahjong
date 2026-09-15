@@ -47,7 +47,7 @@ class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
                         f"{first[0]}{int(first[1:]) + i}" for i in range(3)
                     ]:
                         raise ValueError("Invalid Chi sequence")
-                elif kind in ("PENG", "MING_GANG", "AN_GANG"):
+                elif kind in ("PENG", "MING_GANG", "AN_GANG", "ADDED_GANG"):
                     expected = 3 if kind == "PENG" else 4
                     if len(meld.tiles) != expected or len(set(meld.tiles)) != 1:
                         raise ValueError("Invalid pung/kong composition")

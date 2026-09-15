@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-09-15 — 补杠专用抢杠窗口与计分停止分类
+
+- 新增 `ADD_KONG`：仅已有碰副露且手牌有第四张同牌时可选，金牌禁止补杠；默认普通局启用，可通过 `enable_added_kong=False` 隐藏新候选。
+- 补杠先进入 `ROB_KONG_WINDOW`，原碰及第四张手牌保持不变。对手满足普通非自摸胡限制时可选 `ROB_KONG_HU`，也可PASS；PASS后按原副露索引完成补杠，再从 `wall_tail` 摸牌，连续花复用现有流程。Baseline优先选择合法抢杠胡并记录理由。
+- 抢杠胡记录 winner、loser、robbed_tile、kong_player、source=rob_kong，原碰保留；补杠尾摸胡记录Gang-Hu来源。实体牌始终只有一份，待处理结构仅保存引用；事件可确定性重放。
+- `SimulationResult.unresolved` 精确区分 `ROB_KONG_SCORING_UNKNOWN`、`ADD_KONG_SCORING_UNKNOWN`、`GANG_HU_SCORING_UNKNOWN`；已发生的计分阻断优先于末步max_steps。补杠后的16张边界不会伪造零分流局，观察结算或导入终局也不能绕过未知计分。
+- 范围按本轮用户要求执行，未新增抢杠实局证据；明杠/暗杠抢杠范围、独立杠费、流局杠费和真实抢杠/杠胡结算继续UNKNOWN。未接Vision、Executor或特殊胡状态机。
+- 验证：全量199项通过（项目161、Core9、Environment9、Recorder14、Vision6），新增25项补杠回归。100seed交换座位200局：85完成、115 UNKNOWN（明杠/暗杠rob_kong105、补杠计分7、三金倒时机3），无超步/死循环；完整配对17组。随机样本未出现的抢杠胡和杠后胡分类由固定夹具覆盖。报告为simulation-only，不能代表真实胜率。
+
 ## 2026-09-15 — 视频证据补充与评估归档复现
 
 - 归档 b3892b34 和 66fe863f 的源哈希、21张精选帧、时间线和结构化结算夹具；原视频及批量抽帧保留在本地忽略目录。前者确认一金三门齐全普通自摸与庄家 `(30+4)×2=68`；后者记录碰后补杠、吃后弃一条留单金、再游金的实际路径，并区分番项5、显示40与净分100。

@@ -120,6 +120,19 @@ class HuianRules:
         self._validate_hand(hand, gold_tile)
         return tuple(t for t in core.BASE_TILES if can_an_gang(hand, t, gold_tile))
 
+    def added_kong_options(self, hand, melds, gold_tile=None):
+        """Pure indexed candidates; never mutate the original pung or hand."""
+        self._validate_hand(hand, gold_tile)
+        self.validate_tiles([*hand, *(tile for meld in melds for tile in meld.tiles)])
+        options = []
+        for index, meld in enumerate(melds):
+            if (meld.kind == "PENG" and len(meld.tiles) == 3
+                    and len(set(meld.tiles)) == 1):
+                tile = meld.tiles[0]
+                if tile != gold_tile and tile in hand:
+                    options.append((index, tile))
+        return tuple(options)
+
     def can_sanjindao(self, hand, gold_tile):
         """Confirmed eligibility only; phase timing and settlement remain separate."""
         self._validate_hand(hand, gold_tile)
@@ -168,6 +181,7 @@ class HuianRules:
             "pinghu": WinSource.DISCARD,
             "discard": WinSource.DISCARD,
             "kong_tail_draw": WinSource.KONG_TAIL_DRAW,
+            "rob_kong": WinSource.ROB_KONG,
         }
         if win_type not in source_aliases:
             raise UnknownRuleError("rob_kong" if win_type == "qianggang" else win_type)
@@ -195,10 +209,10 @@ class HuianRules:
             self.validate_tiles([context.winning_tile])
             if context.winning_tile not in hand:
                 raise ValueError("Winning tile must be present in the analyzed hand")
-        if context.source == WinSource.DISCARD and context.winning_tile is None:
-            raise ValueError("Discard Hu analysis requires winning_tile")
+        if context.source in (WinSource.DISCARD, WinSource.ROB_KONG) and context.winning_tile is None:
+            raise ValueError("Non-self-draw Hu analysis requires winning_tile")
         gold_count = hand.count(gold_tile) if gold_tile else 0
-        if context.source == WinSource.DISCARD:
+        if context.source in (WinSource.DISCARD, WinSource.ROB_KONG):
             if context.winning_tile == gold_tile:
                 return HuResult(False, (), gold_tile, open_melds, context)
             if gold_count == 1 and not self.config.single_gold_can_pinghu:
@@ -246,7 +260,7 @@ class HuianRules:
             remaining = 4 - hand.count(tile) - visible_tiles.count(tile)
             context = win_context.with_winning_tile(tile) if win_context is not None else None
             kwargs = {"win_context": context} if context is not None else {}
-            if win_type in ("pinghu", "discard"):
+            if win_type in ("pinghu", "discard", "rob_kong"):
                 kwargs["winning_tile"] = tile
             if remaining and self.can_win([*hand, tile], gold_tile, open_melds,
                                           win_type, **kwargs):

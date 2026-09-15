@@ -25,6 +25,7 @@ class WinSource(str, Enum):
     SELF_DRAW = "self_draw"
     DISCARD = "discard"
     KONG_TAIL_DRAW = "kong_tail_draw"
+    ROB_KONG = "rob_kong"
 
 
 class KongKind(str, Enum):

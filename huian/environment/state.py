@@ -10,6 +10,9 @@ class HuianGameState(env.GameState):
     # Auditable Hu declaration facts. This is a logical reference only; a
     # discarded winning tile remains in its source river for tile accounting.
     pending_hu: dict | None = None
+    # Logical reference only: the fourth tile stays in the declarer's hand
+    # until PASS commits the kong. A robbed tile remains there for accounting.
+    pending_kong: dict | None = None
     special_states: list[str] = field(default_factory=lambda: ["UNKNOWN", "UNKNOWN"])
     # Physical tiles explicitly excluded from play by an imported scenario.
     # This represents accounting only, not a guessed indicator-opening rule.
@@ -20,6 +23,7 @@ class HuianGameState(env.GameState):
         data = super().canonical_dict()
         data.update(pending_discard=self.pending_discard,
                     pending_hu=self.pending_hu,
+                    pending_kong=self.pending_kong,
                     special_states=list(self.special_states),
                     reserved_tiles=list(self.reserved_tiles),
                     terminal_reason=self.terminal_reason)
