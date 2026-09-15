@@ -136,25 +136,30 @@ class HuianRulesTests(unittest.TestCase):
         self.assertIn("sanjindao_settlement", UNKNOWN_RULES)
         self.assertNotIn("sanjinyou_multiplier", UNKNOWN_RULES)
 
-    def test_youjin_score_terms_keep_flowers_outside_multipliers(self):
+    def test_youjin_score_terms_match_recorded_triple_you_608(self):
         for stage, multiplier in ((YoujinStage.YOUJIN, 4),
                                   (YoujinStage.DOUBLE_YOU, 8),
                                   (YoujinStage.TRIPLE_YOU, 16),
                                   (YoujinStage.SANJIN_YOU, 16)):
             terms = self.rules.youjin_score_terms(
-                stage, winner=0, dealer=0, flower_count=3
+                stage, winner=1, dealer=0, winner_fan=3
             )
             self.assertEqual(terms.youjin_multiplier, multiplier)
-            self.assertEqual(terms.dealer_multiplier, 2)
-            self.assertEqual(terms.flower_points, 3)
-            self.assertEqual(terms.total_for_nonflower_base(2), 2 * multiplier * 2 + 3)
-        idle = self.rules.youjin_score_terms(
-            YoujinStage.YOUJIN, winner=1, dealer=0, flower_count=3
+            self.assertEqual(terms.dealer_multiplier, 1)
+            self.assertEqual(terms.winner_fan, 3)
+            self.assertEqual(terms.total_for_current_dealer_base(35),
+                             (35 + 3) * multiplier)
+        triple = self.rules.youjin_score_terms(
+            YoujinStage.TRIPLE_YOU, winner=1, dealer=0, winner_fan=3
         )
-        self.assertEqual(idle.dealer_multiplier, 1)
+        self.assertEqual(triple.total_for_current_dealer_base(35), 608)
+        dealer = self.rules.youjin_score_terms(
+            YoujinStage.YOUJIN, winner=0, dealer=0, winner_fan=3
+        )
+        self.assertEqual(dealer.dealer_multiplier, 2)
         with self.assertRaises(ValueError):
             self.rules.youjin_score_terms(
-                YoujinStage.NORMAL, winner=0, dealer=0, flower_count=0
+                YoujinStage.NORMAL, winner=0, dealer=0, winner_fan=0
             )
 
     def test_single_gold_setting_rejects_non_boolean(self):

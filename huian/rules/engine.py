@@ -71,12 +71,12 @@ class YoujinScoreTerms:
     stage: YoujinStage
     youjin_multiplier: int
     dealer_multiplier: int
-    flower_points: int
+    winner_fan: int
 
-    def total_for_nonflower_base(self, nonflower_base):
-        nonnegative_int(nonflower_base, "nonflower_base")
-        return (nonflower_base * self.youjin_multiplier * self.dealer_multiplier
-                + self.flower_points)
+    def total_for_current_dealer_base(self, current_dealer_base):
+        nonnegative_int(current_dealer_base, "current_dealer_base")
+        return ((current_dealer_base + self.winner_fan)
+                * self.youjin_multiplier * self.dealer_multiplier)
 
 
 class HuianRules:
@@ -133,14 +133,14 @@ class HuianRules:
                     SanjindaoChoice.CONTINUE_PLAY) if eligible else ())
         return SanjindaoDecision(eligible, count, choices, self.SANJINDAO_MULTIPLIER)
 
-    def youjin_score_terms(self, stage, *, winner, dealer, flower_count):
-        """Return confirmed multiplicative and additive terms separately."""
+    def youjin_score_terms(self, stage, *, winner, dealer, winner_fan):
+        """Return confirmed terms; fan aggregation and payer remain external."""
         try:
             stage = stage if isinstance(stage, YoujinStage) else YoujinStage(stage)
         except (TypeError, ValueError) as exc:
             raise ValueError("Invalid Youjin stage") from exc
         for name, value in (("winner", winner), ("dealer", dealer),
-                            ("flower_count", flower_count)):
+                            ("winner_fan", winner_fan)):
             nonnegative_int(value, name)
         if winner not in (0, 1) or dealer not in (0, 1):
             raise ValueError("winner and dealer must be seat 0 or 1")
@@ -150,7 +150,7 @@ class HuianRules:
             stage=stage,
             youjin_multiplier=self.YOUJIN_MULTIPLIERS[stage],
             dealer_multiplier=2 if winner == dealer else 1,
-            flower_points=flower_count,
+            winner_fan=winner_fan,
         )
 
     @staticmethod

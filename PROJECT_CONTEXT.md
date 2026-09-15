@@ -24,7 +24,7 @@ Confirmed target scope:
 - every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong remains a separate unresolved response path
 - completed Ming/An/Added Kong draws reuse the normal draw pipeline and record their source as `wall_tail`
 - each flower has a confirmed base value of 1 fan
-- Youjin/Double-You/Triple-You multipliers are 4/8/16; a dealer winner adds a ×2 factor to the non-flower component, while flower water is added afterward at one point per flower and is never multiplied
+- Youjin/Double-You/Triple-You multipliers are 4/8/16; winner fan, including one fan per flower, is added to current dealer base before the Hu multiplier. A dealer winner adds a further ×2 according to player confirmation. Recorded Triple-You: `(35 + gold 1 + flowers 2) × 16 = 608`
 - no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
 - when a discard has multiple legal Chi sequences, Rules exposes every sequence and the player/AI selects one exact option
 
@@ -37,7 +37,7 @@ Current Rules API boundary:
 - discard-Hu analysis requires the winning tile, so an opponent-discarded gold cannot be silently accepted
 - `SanjindaoDecision` exposes eligibility, confirmed multiplier 3, and `DECLARE_SANJINDAO` / `CONTINUE_PLAY`; phase timing and full settlement stay outside the pure eligibility service
 - `YoujinStage.SANJIN_YOU` is an alias of `YoujinStage.TRIPLE_YOU`; it must not create a second state, while Sanjindao remains independent
-- `YoujinScoreTerms` exposes confirmed Youjin, dealer and flower terms without deciding the still-unknown base component or payer
+- `YoujinScoreTerms` accepts the externally audited current dealer base and winner fan, then applies the confirmed Youjin and dealer factors without deciding payer or automatically aggregating unresolved fan categories
 - `DrawSource` emits `wall_head` / `wall_tail`; old `head` / `tail` replay values are accepted only as migration aliases and new events are canonical
 
 Confirmed Chi interaction boundary:

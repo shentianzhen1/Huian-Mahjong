@@ -33,7 +33,7 @@ Do not silently promote UNKNOWN rules.
 - Player confirmation (2026-09-14): the target rules do not award complex combination fans such as 门清、碰碰胡、清一色、混一色 or similar pattern families. Such tile arrangements may still satisfy the standard Hu structure, but receive no special fan for those names.
 - Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 - Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
-- Player confirmation (2026-09-15): target-room Youjin multipliers are Youjin ×4, Double-You ×8, and Triple-You/三金游 ×16. If the winner is the dealer, the non-flower component receives a further ×2 dealer multiplier. Flower water is additive at 1 point per flower and is added after these multipliers; it is not multiplied by the Youjin or dealer factors. This confirms the arithmetic terms, not the unresolved base component, payer, declaration timing, or next dealer.
+- Player-reported real-game video evidence `7bc12fa…mp4` (2026-09-15): target-room Youjin multipliers are Youjin ×4, Double-You ×8, and Triple-You/三金游 ×16. The recorded Triple-You settlement is +608/-608 with current dealer base 35 and winner fan 3 (gold line 1 + two flowers 2): `(35 + 3) × 16 = 608`. Winner fan, including flower fan, is therefore inside the Hu multiplier. This supersedes the earlier same-day statement that flower water was added after multiplication. If the winner is the dealer, player feedback says a further ×2 applies. The non-video-verified payer flow, declaration timing and next dealer remain unresolved. See `references/gameplay/2026-09-15/7bc12fa_video_evidence.md`.
 - Player confirmation (2026-09-14): 八花游 exists in the target rules. Its existence is confirmed; exact declaration timing, relation to ordinary flower fan, multiplier, and settlement remain UNKNOWN.
 - Confirmed opponent permissions during the Youjin chain (player confirmation, 2026-09-14): while one player is in Youjin, the opponent may Hu; while one player is in Double-You, the opponent may self-draw Hu; while one player is in Triple-You, the opponent may Hu only through a kong-replacement self-draw (杠上自摸胡 / 杠胡).
 
@@ -156,10 +156,10 @@ this target-room calculation.
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options, multi-seat declaration priority, and settlement/dealer result.
 2. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
 3. Sanjindao remaining gaps: exact action-offer windows at opening/mid-hand/after flower or kong; how declining it interacts with the opening 抢金 check; non-flower base, payment, terminal flow and next dealer. Eligibility at three or more gold, the declare/continue choice and ×3 multiplier are confirmed.
-4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16, dealer-winner ×2, and additive one-point-per-flower terms are confirmed. The exact shared executable trigger sequence, non-flower base component, payer, terminal transition and next-dealer result remain UNKNOWN.
+4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16 and `(current dealer base + winner fan) × Hu multiplier` are supported by the +608 video report; flowers are one fan each inside winner fan. The exact shared executable trigger sequence, payer, terminal transition and next-dealer result remain UNKNOWN.
 5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
 6. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
-7. Exact room multiplier chain.
+7. Remaining room multipliers outside confirmed Sanjindao ×3, Youjin 4/8/16 and dealer-winner ×2.
 8. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
 9. Exact Tianhu timing relative to flower replacement/open-gold.
 10. Exact Tianting definition.
@@ -223,9 +223,9 @@ Conflicts and preserved decisions:
   Youjin/Double/Triple multipliers 4/8/16. The external 4/8/12 chain does not apply.
 - C3: outer ×3 and non-winner fan adjustment text versus A/B two-player net
   evidence. Do not reinstate legacy subtraction or add the page's outer ×3 to
-  two-player results. Target-room dealer winners instead apply ×2 to the non-flower
-  component, and flowers add afterward at one point each. The non-flower base and
-  full settlement flow still need direct evidence.
+  two-player results. Target-room dealer winners instead apply a further ×2 according
+  to player feedback. The +608 Triple-You report confirms flowers are included in
+  winner fan before ×16. The full settlement flow still needs direct video ingestion.
 
 Still missing after the 2026-09-14 flow clarification: rob-kong scope,
 Tianhu/Tianting definitions, extended dealer base/cap and match ties. A listed
