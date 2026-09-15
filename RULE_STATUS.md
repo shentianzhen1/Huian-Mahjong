@@ -25,7 +25,7 @@ Do not silently promote UNKNOWN rules.
 - Player confirmation (2026-09-14): with exactly two gold tiles, Hu is allowed only by self-draw; the player cannot Hu on any opponent discard. This supersedes the older blanket statement that double gold could not Pinghu. The Rules API must carry the win source before this restriction can be implemented correctly.
 - Player confirmation (2026-09-14): ordinary Hu evaluation and Youjin evaluation are separate branches. Passing or failing an ordinary structural Hu check must not silently decide Youjin eligibility.
 - Player confirmation (2026-09-14): 抢金 is checked only after all opening flower replacement and opening gold are complete, and before the dealer has discarded a first tile. A hand must already be a valid Hu after treating its gold copies as wildcards. Holding three or more copies of the single gold tile takes the 三金倒 branch first; it does not take 抢金. At this opening point no Chi/Peng/Gang can yet have occurred.
-- Player confirmation (2026-09-14): `can_sanjindao = hand_gold_count >= 3`; ordinary complete-hand structure is not required for this eligibility check. Sanjindao is an optional action, not an automatic terminal: the player may declare it immediately or continue playing through the Youjin route to pursue 三金游. 三金游 follows the same trigger flow as 二金游. This confirms the relationship between those routes, but the shared executable trigger sequence is still not sufficiently specified. The exact 三金游 multiplier/settlement and its naming relation to Triple-You (三游) remain UNKNOWN; the names must not be silently merged.
+- Player confirmation (2026-09-15): `can_sanjindao = hand_gold_count >= 3`; ordinary complete-hand structure is not required for this eligibility check. Sanjindao is an optional action, not an automatic terminal: the player may declare it immediately or continue through the Youjin route. 三金游 and Triple-You (三游) are two names for the same state, represented canonically as `TRIPLE_YOU`; it follows the same trigger flow as 二金游. 三金倒 is a separate ×3 outcome, while 三游 is ×16. The exact executable sequence, non-flower base, payer and full settlement remain UNKNOWN.
 - Dealer win -> dealer stays.
 - Draw -> dealer stays.
 - Dealer loss -> other player becomes dealer.
@@ -33,6 +33,7 @@ Do not silently promote UNKNOWN rules.
 - Player confirmation (2026-09-14): the target rules do not award complex combination fans such as 门清、碰碰胡、清一色、混一色 or similar pattern families. Such tile arrangements may still satisfy the standard Hu structure, but receive no special fan for those names.
 - Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 - Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
+- Player confirmation (2026-09-15): target-room Youjin multipliers are Youjin ×4, Double-You ×8, and Triple-You/三金游 ×16. If the winner is the dealer, the non-flower component receives a further ×2 dealer multiplier. Flower water is additive at 1 point per flower and is added after these multipliers; it is not multiplied by the Youjin or dealer factors. This confirms the arithmetic terms, not the unresolved base component, payer, declaration timing, or next dealer.
 - Player confirmation (2026-09-14): 八花游 exists in the target rules. Its existence is confirmed; exact declaration timing, relation to ordinary flower fan, multiplier, and settlement remain UNKNOWN.
 - Confirmed opponent permissions during the Youjin chain (player confirmation, 2026-09-14): while one player is in Youjin, the opponent may Hu; while one player is in Double-You, the opponent may self-draw Hu; while one player is in Triple-You, the opponent may Hu only through a kong-replacement self-draw (杠上自摸胡 / 杠胡).
 
@@ -145,16 +146,17 @@ External rules suggest room-configurable groups may exist, for example:
 - Youjin x4 -> Double-You x8 -> Triple-You x12
 Do NOT hard-code the chain until Huian room evidence confirms it.
 
-New in-game text evidence: the user-supplied 惠安 tab lists Youjin/Double/Triple
-as **4/8/16**, not 4/8/12. This supersedes external guesses about what the page
-says, but is not yet a verified two-player room configuration. See the screenshot
-review below; its formulas also include an outer ×3.
+The user-supplied 惠安 tab lists Youjin/Double/Triple as **4/8/16**, not 4/8/12.
+The 2026-09-15 player confirmation now applies 4/8/16 to the target two-player
+room, with a separate dealer-winner ×2 and additive flower water. The page's
+outer ×3 belongs to other displayed formula context and must not be applied to
+this target-room calculation.
 
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options, multi-seat declaration priority, and settlement/dealer result.
 2. Exact rob-kong scope: added kong only? exposed kong? concealed kong?
-3. Sanjindao remaining gaps: exact action-offer windows at opening/mid-hand/after flower or kong; how declining it interacts with the opening 抢金 check; multiplier, settlement, and next dealer. Eligibility at three or more gold and the declare/continue choice are confirmed.
-4. 三金游 remaining gaps: the player confirms it follows the same trigger flow as 二金游, but the exact shared executable trigger sequence is not yet specified; multiplier/settlement and whether it is related to or distinct in implementation from 三游 remain UNKNOWN. Keep the player-used names separate until evidence resolves this.
+3. Sanjindao remaining gaps: exact action-offer windows at opening/mid-hand/after flower or kong; how declining it interacts with the opening 抢金 check; non-flower base, payment, terminal flow and next dealer. Eligibility at three or more gold, the declare/continue choice and ×3 multiplier are confirmed.
+4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16, dealer-winner ×2, and additive one-point-per-flower terms are confirmed. The exact shared executable trigger sequence, non-flower base component, payer, terminal transition and next-dealer result remain UNKNOWN.
 5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
 6. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
 7. Exact room multiplier chain.
@@ -217,11 +219,13 @@ Conflicts and preserved decisions:
   setting can differ. Runtime exposes `single_gold_can_pinghu` with default False.
   Exactly two gold tiles are self-draw-only and cannot Hu on an opponent discard;
   this newer confirmation replaces the older blanket double-gold prohibition.
-- C2: page multiplier chain 4/8/16 versus external 4/8/12. Record 16 accurately;
-  keep actual two-player Double/Triple multipliers unconfigured.
+- C2, resolved by 2026-09-15 player confirmation: the target two-player room uses
+  Youjin/Double/Triple multipliers 4/8/16. The external 4/8/12 chain does not apply.
 - C3: outer ×3 and non-winner fan adjustment text versus A/B two-player net
-  evidence. Do not reinstate legacy subtraction or add ×3 to two-player results.
-  Current settlement hypothesis still needs a third real settlement.
+  evidence. Do not reinstate legacy subtraction or add the page's outer ×3 to
+  two-player results. Target-room dealer winners instead apply ×2 to the non-flower
+  component, and flowers add afterward at one point each. The non-flower base and
+  full settlement flow still need direct evidence.
 
 Still missing after the 2026-09-14 flow clarification: rob-kong scope,
 Tianhu/Tianting definitions, extended dealer base/cap and match ties. A listed

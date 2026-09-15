@@ -3,7 +3,7 @@ from collections import Counter
 from dataclasses import dataclass
 from huian._legacy import env
 from .config import UnknownRuleError
-from .context import DrawSource, HuContext, WinSource
+from .context import DrawSource, HuContext, WinSource, YoujinStage
 from .engine import nonnegative_int
 
 
@@ -91,9 +91,10 @@ def validate(adapter, state):
         raise ValueError("Observed win requires a terminal non-zero settlement")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
         nonnegative_int(value, "state integer")
-    if len(state.special_states) != 2 or any(s not in (
-        "UNKNOWN", "NORMAL", "YOUJIN", "DOUBLE_YOU", "TRIPLE_YOU"
-    ) for s in state.special_states):
+    known_special_states = {stage.value for stage in YoujinStage}
+    if len(state.special_states) != 2 or any(
+            s != "UNKNOWN" and s not in known_special_states
+            for s in state.special_states):
         raise ValueError("Invalid special states")
     if any(type(r) is not int for r in state.rewards):
         raise ValueError("Rewards must be integer net scores")

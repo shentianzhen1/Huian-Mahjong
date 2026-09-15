@@ -33,6 +33,15 @@ class KongKind(str, Enum):
     ADDED_GANG = "ADDED_GANG"
 
 
+class YoujinStage(str, Enum):
+    NORMAL = "NORMAL"
+    YOUJIN = "YOUJIN"
+    DOUBLE_YOU = "DOUBLE_YOU"
+    TRIPLE_YOU = "TRIPLE_YOU"
+    # Player terminology: 三金游 and 三游 are the same state.
+    SANJIN_YOU = "TRIPLE_YOU"
+
+
 class SanjindaoChoice(str, Enum):
     DECLARE_SANJINDAO = "DECLARE_SANJINDAO"
     CONTINUE_PLAY = "CONTINUE_PLAY"
@@ -90,3 +99,4 @@ class SanjindaoDecision:
     eligible: bool
     gold_count: int
     choices: tuple[SanjindaoChoice, ...]
+    multiplier: int = 3

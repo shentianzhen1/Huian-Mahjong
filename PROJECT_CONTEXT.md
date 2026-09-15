@@ -20,10 +20,11 @@ Confirmed target scope:
 - exactly two gold tiles can Hu only by self-draw, never from an opponent discard
 - ordinary Hu and Youjin are evaluated as separate branches
 - retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Gang-Hu, Youjin, Double-You, Triple-You, Eight-Flower You, flowers, repeat-dealer/base scoring
-- Sanjindao eligibility is `hand_gold_count >= 3`; declaration is optional, so legal actions must expose both immediate Sanjindao and continued play toward the separately tracked 三金游 path; 三金游 follows the same trigger flow as 二金游, while the exact shared state sequence and multiplier remain unresolved
+- Sanjindao eligibility is `hand_gold_count >= 3`; declaration is optional, so legal actions must expose both immediate Sanjindao ×3 and continued play toward 三金游. 三金游 is the same state as Triple-You/三游 and is canonicalized as `TRIPLE_YOU` ×16. The exact shared state sequence, non-flower base and full settlements remain unresolved
 - every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong remains a separate unresolved response path
 - completed Ming/An/Added Kong draws reuse the normal draw pipeline and record their source as `wall_tail`
 - each flower has a confirmed base value of 1 fan
+- Youjin/Double-You/Triple-You multipliers are 4/8/16; a dealer winner adds a ×2 factor to the non-flower component, while flower water is added afterward at one point per flower and is never multiplied
 - no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
 - when a discard has multiple legal Chi sequences, Rules exposes every sequence and the player/AI selects one exact option
 
@@ -34,7 +35,9 @@ unverified multipliers remain controlled by `RULE_STATUS.md`.
 Current Rules API boundary:
 - `HuContext` carries `SELF_DRAW`, `DISCARD`, or `KONG_TAIL_DRAW`, the winning tile, and the resolved kong kind where applicable
 - discard-Hu analysis requires the winning tile, so an opponent-discarded gold cannot be silently accepted
-- `SanjindaoDecision` exposes eligibility plus `DECLARE_SANJINDAO` / `CONTINUE_PLAY`; phase timing and settlement stay outside the pure eligibility service
+- `SanjindaoDecision` exposes eligibility, confirmed multiplier 3, and `DECLARE_SANJINDAO` / `CONTINUE_PLAY`; phase timing and full settlement stay outside the pure eligibility service
+- `YoujinStage.SANJIN_YOU` is an alias of `YoujinStage.TRIPLE_YOU`; it must not create a second state, while Sanjindao remains independent
+- `YoujinScoreTerms` exposes confirmed Youjin, dealer and flower terms without deciding the still-unknown base component or payer
 - `DrawSource` emits `wall_head` / `wall_tail`; old `head` / `tail` replay values are accepted only as migration aliases and new events are canonical
 
 Confirmed Chi interaction boundary:
@@ -65,7 +68,7 @@ Baseline heuristics -> Monte Carlo EV -> opponent/danger model -> optional RL/NN
 
 Huian AI should prioritize ordinary Hu/Zimo value, Sanjindao, Youjin paths and
 risk. When Sanjindao is available it must compare declaring now with continuing
-toward 三金游; exact 三金游 EV remains blocked until its trigger and multiplier are
+toward 三游/三金游; exact EV remains blocked until its trigger and multiplier are
 confirmed. It should not optimize toward Menqing, Pengpenghu, Qingyise, Hunyise or
 other excluded complex fan patterns.
 

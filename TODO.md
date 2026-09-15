@@ -6,10 +6,10 @@
 - Received actual 惠安 two-player creation options: `references/room_settings/2026-09-13/README.md`. The screenshot has 单金不平胡 unchecked (label maps to `single_gold_can_pinghu=True`); verify the final created-room choice for each recorded game. Keep project default False per earlier player preference.
 - Record opening through first discard to resolve two-player flower scheduling and exact gold-opening/index/accounting behavior.
 - Done (2026-09-14 player confirmation): PASS advances to next player's draw; 16 tiles ends the hand with [0, 0]. Target room: 2 players, 8 hands, 单金不平胡 checked, no trusteeship.
-- Obtain a third real settlement and Double/Triple results: the in-game page says 4/8/16, with an outer ×3 that must not be silently applied to two-player net scoring.
+- Done in multiplier scope (2026-09-15 player confirmation): target-room Youjin/Double/Triple are 4/8/16, dealer winner adds ×2 to the non-flower component, and flowers add 1 each after multiplication. Still obtain real Double/Triple settlements to confirm the base component, payer, terminal flow and next dealer; never import the page's unrelated outer ×3.
 - Flower-set values and honor Peng now have in-game textual evidence, but stacking/room applicability and added-kong fan remain pending. No runtime defaults changed from these pages alone.
 - Done (2026-09-14 player confirmation): all completed Ming/An/Added Kongs draw from `wall_tail` through the normal draw pipeline, and a Hu by the declarer on that draw is Gang-Hu. Gang-Hu scoring and rob-kong remain pending.
-- Done in rule scope (2026-09-14 player confirmation): `can_sanjindao = hand_gold_count >= 3`; declaring is optional and continued play may pursue 三金游. 三金游 follows the same trigger flow as 二金游, but the exact shared executable steps, multiplier, settlement, and naming relation to 三游 remain pending.
+- Done in rule scope (2026-09-15 player confirmation): `can_sanjindao = hand_gold_count >= 3`; declaring is optional and continued play may pursue 三游/三金游. 三金游 and 三游 are the same `TRIPLE_YOU` ×16 state; 三金倒 is a separate ×3 outcome. Their shared executable steps, non-flower base and full settlement remain pending.
 - Done/reconfirmed (2026-09-14 player confirmation): after Chi, as after Peng, the acting player immediately discards without a normal draw; current Environment already implements this transition.
 
 ### M2 implementation status (2026-09-15)

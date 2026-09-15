@@ -5,7 +5,8 @@ from huian._legacy import core
 from qzcore.legal_actions import chi_options, can_peng, can_ming_gang, can_an_gang
 from qzcore.win_checker import winning_decompositions
 from .config import EvidenceStatus, RulesConfig, UnknownRuleError
-from .context import HuContext, SanjindaoChoice, SanjindaoDecision, WinSource
+from .context import (HuContext, SanjindaoChoice, SanjindaoDecision, WinSource,
+                      YoujinStage)
 
 
 def nonnegative_int(value, name):
@@ -63,8 +64,29 @@ class HuResult:
         return self.context.is_gang_hu
 
 
+@dataclass(frozen=True)
+class YoujinScoreTerms:
+    """Confirmed target-room factors without inferring base or payer."""
+
+    stage: YoujinStage
+    youjin_multiplier: int
+    dealer_multiplier: int
+    flower_points: int
+
+    def total_for_nonflower_base(self, nonflower_base):
+        nonnegative_int(nonflower_base, "nonflower_base")
+        return (nonflower_base * self.youjin_multiplier * self.dealer_multiplier
+                + self.flower_points)
+
+
 class HuianRules:
     DRAW_WALL_REMAINING = 16
+    SANJINDAO_MULTIPLIER = 3
+    YOUJIN_MULTIPLIERS = {
+        YoujinStage.YOUJIN: 4,
+        YoujinStage.DOUBLE_YOU: 8,
+        YoujinStage.TRIPLE_YOU: 16,
+    }
 
     def is_wall_draw(self, state):
         return state.phase != "READY" and len(state.wall) == self.DRAW_WALL_REMAINING
@@ -109,7 +131,27 @@ class HuianRules:
         count = hand.count(gold_tile) if gold_tile is not None else 0
         choices = ((SanjindaoChoice.DECLARE_SANJINDAO,
                     SanjindaoChoice.CONTINUE_PLAY) if eligible else ())
-        return SanjindaoDecision(eligible, count, choices)
+        return SanjindaoDecision(eligible, count, choices, self.SANJINDAO_MULTIPLIER)
+
+    def youjin_score_terms(self, stage, *, winner, dealer, flower_count):
+        """Return confirmed multiplicative and additive terms separately."""
+        try:
+            stage = stage if isinstance(stage, YoujinStage) else YoujinStage(stage)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Invalid Youjin stage") from exc
+        for name, value in (("winner", winner), ("dealer", dealer),
+                            ("flower_count", flower_count)):
+            nonnegative_int(value, name)
+        if winner not in (0, 1) or dealer not in (0, 1):
+            raise ValueError("winner and dealer must be seat 0 or 1")
+        if stage not in self.YOUJIN_MULTIPLIERS:
+            raise ValueError("Score terms require Youjin, Double-You or Triple-You")
+        return YoujinScoreTerms(
+            stage=stage,
+            youjin_multiplier=self.YOUJIN_MULTIPLIERS[stage],
+            dealer_multiplier=2 if winner == dealer else 1,
+            flower_points=flower_count,
+        )
 
     @staticmethod
     def _hu_context(win_type, win_context, winning_tile, kong_kind):

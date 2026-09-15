@@ -2,8 +2,8 @@ import unittest
 from copy import deepcopy
 
 from huian import (HuContext, HuianRules, HuianRulesAdapter, KongKind, RulesConfig,
-                   SanjindaoChoice, UnknownRuleError, WinSource)
-from huian.rules import EvidenceStatus
+                   SanjindaoChoice, UnknownRuleError, WinSource, YoujinStage)
+from huian.rules import EvidenceStatus, UNKNOWN_RULES
 from huian._legacy import env
 
 
@@ -126,7 +126,36 @@ class HuianRulesTests(unittest.TestCase):
             SanjindaoChoice.DECLARE_SANJINDAO,
             SanjindaoChoice.CONTINUE_PLAY,
         ))
+        self.assertEqual(result.multiplier, 3)
         self.assertFalse(self.rules.sanjindao_decision(["P9"] * 2, "P9").eligible)
+
+    def test_sanjinyou_is_the_triple_you_state_but_not_sanjindao(self):
+        self.assertIs(YoujinStage.SANJIN_YOU, YoujinStage.TRIPLE_YOU)
+        self.assertEqual(YoujinStage.SANJIN_YOU.value, "TRIPLE_YOU")
+        self.assertNotIn("sanjinyou_relation", UNKNOWN_RULES)
+        self.assertIn("sanjindao_settlement", UNKNOWN_RULES)
+        self.assertNotIn("sanjinyou_multiplier", UNKNOWN_RULES)
+
+    def test_youjin_score_terms_keep_flowers_outside_multipliers(self):
+        for stage, multiplier in ((YoujinStage.YOUJIN, 4),
+                                  (YoujinStage.DOUBLE_YOU, 8),
+                                  (YoujinStage.TRIPLE_YOU, 16),
+                                  (YoujinStage.SANJIN_YOU, 16)):
+            terms = self.rules.youjin_score_terms(
+                stage, winner=0, dealer=0, flower_count=3
+            )
+            self.assertEqual(terms.youjin_multiplier, multiplier)
+            self.assertEqual(terms.dealer_multiplier, 2)
+            self.assertEqual(terms.flower_points, 3)
+            self.assertEqual(terms.total_for_nonflower_base(2), 2 * multiplier * 2 + 3)
+        idle = self.rules.youjin_score_terms(
+            YoujinStage.YOUJIN, winner=1, dealer=0, flower_count=3
+        )
+        self.assertEqual(idle.dealer_multiplier, 1)
+        with self.assertRaises(ValueError):
+            self.rules.youjin_score_terms(
+                YoujinStage.NORMAL, winner=0, dealer=0, flower_count=0
+            )
 
     def test_single_gold_setting_rejects_non_boolean(self):
         for invalid in (None, 0, 1, "false", "true"):

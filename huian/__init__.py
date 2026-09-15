@@ -2,10 +2,11 @@
 from .rules import (DrawSource, HuContext, HuDecomposition, HuianRules,
                     HuianRulesAdapter, HuResult, KongKind, RulesConfig,
                     SanjindaoChoice, SanjindaoDecision, UnknownRuleError,
-                    WinSource)
+                    WinSource, YoujinScoreTerms, YoujinStage)
 from .environment import HuianGameState, HuianEnvironment, DeadLoopError
 
 __all__ = ["DrawSource", "HuContext", "HuDecomposition", "HuianRules",
            "HuianRulesAdapter", "HuResult", "KongKind", "RulesConfig",
            "SanjindaoChoice", "SanjindaoDecision", "UnknownRuleError", "WinSource",
-           "HuianGameState", "HuianEnvironment", "DeadLoopError"]
+           "YoujinScoreTerms", "YoujinStage", "HuianGameState", "HuianEnvironment",
+           "DeadLoopError"]
