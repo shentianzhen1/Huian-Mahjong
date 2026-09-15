@@ -110,6 +110,8 @@ class HuianEnvironment:
         return self.state
     def begin_normal_hand(self, dice_total):
         """Simulation-only opening bypass; never resolves or enables 抢金."""
+        if not self.rules.rules.config.simulation_only_normal_hand:
+            raise ValueError("Normal-hand opening requires simulation_only_normal_hand")
         self.begin_opening(dice_total)
         candidate = deepcopy(self._state)
         candidate.phase = "AFTER_DRAW"
@@ -117,19 +119,26 @@ class HuianEnvironment:
         self.rules.validate_state(candidate)
         self._state = candidate
         self._events.append({"seq": len(self._events), "action": {"player": candidate.dealer,
-            "type": "SIMULATION_SKIP_QIANGJIN", "tile": None, "tiles": [], "metadata": {}},
+            "type": "SIMULATION_SKIP_QIANGJIN", "tile": None, "tiles": [],
+            "metadata": {"simulation_only": True}},
             "before_hash": self._events[-1]["after_hash"], "after_hash": candidate.state_hash(),
             "wall_remaining": candidate.wall_remaining(), "current_player_after": candidate.current_player,
             "phase_after": candidate.phase})
+        self._seen.add(self._position(candidate))
         return self.state
     def finalize_simulation_only_outcome(self):
         """Close an already-declared ordinary Hu with non-real scoring units."""
         self._require_state()
+        if not self.rules.rules.config.simulation_only_normal_hand:
+            raise ValueError("Simulation settlement requires simulation_only_normal_hand")
         if self._state.phase != "HU_DECLARED":
             raise ValueError("Simulation settlement requires HU_DECLARED")
-        pending = self._state.pending_hu
+        self.rules.validate_state(self._state)
+        before = self._state.state_hash()
+        pending = deepcopy(self._state.pending_hu)
         if pending["source"] == WinSource.KONG_TAIL_DRAW.value:
-            raise ValueError("Simulation-only mode excludes Gang-Hu")
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("gang_hu_scoring")
         winner = pending["winner"]
         multiplier = 1 if pending["source"] == WinSource.DISCARD.value else 2
         candidate = deepcopy(self._state)
@@ -141,9 +150,14 @@ class HuianEnvironment:
         self.rules.validate_state(candidate)
         self._state = candidate
         self._events.append({"seq": len(self._events), "action": {"player": winner,
-            "type": "END_HAND", "tile": None, "tiles": [], "metadata": {"source": "simulation_only", "multiplier": multiplier}},
-            "before_hash": "", "after_hash": candidate.state_hash(), "wall_remaining": candidate.wall_remaining(),
+            "type": "END_HAND", "tile": None, "tiles": [], "metadata": {
+                "source": "simulation_only", "simulation_only": True,
+                "win_type": "PINGHU" if multiplier == 1 else "ZIMO",
+                "unit_base": 1, "multiplier": multiplier,
+                "hu_declaration": pending, "rewards": list(candidate.rewards)}},
+            "before_hash": before, "after_hash": candidate.state_hash(), "wall_remaining": candidate.wall_remaining(),
             "current_player_after": candidate.current_player, "phase_after": candidate.phase})
+        self._seen.add(self._position(candidate))
         return self.state
     def finalize_observed_outcome(self, *, winner, current_dealer_base, winner_fan, win_type):
         """Record an externally verified ordinary outcome without inferring it.

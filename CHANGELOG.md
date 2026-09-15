@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-09-15 — 普通局固定牌墙、批量评估与 BaselineAgent
+
+- 新增完整144张固定牌墙的普通自摸/点炮终局回归、局中固定牌墙的16张流局回归，检查末步结算、合法动作、牌数守恒和事件哈希链。
+- 新增 `run_many_normal_hands` 与手动benchmark命令，支持每seed摘要、交换座位、按座位/Agent统计胜负及奖励；UNKNOWN、max_steps和循环停止独立统计，均值只使用已完成局。
+- 新增可解释BaselineAgent：能胡必胡、保留金/对子/搭子、优先弃孤张、可选吃碰先PASS。Agent只接收自己的手牌与公开信息，理由单独记录，不修改合法动作元数据。
+- 修复SimulatorConfig未接入运行入口、模拟终局缺少胡牌来源/前置哈希的问题；真实配置拒绝simulation-only结算；已结束夹具不能重复当作新对局。
+- 规则边界不变：普通平胡±1、自摸±2仅是模拟单位；三金、八花、显式游金状态、抢杠/补杠窗口继续UNKNOWN；未接Vision、Executor或EV。
+- 验证：全量152项通过（项目114、Core9、Environment9、Recorder14、Vision6）。默认10局smoke及固定seed交换座位回归；手动CLI的seed 0–9交换座位共20局，7局自摸完成、13局UNKNOWN（抢杠12、补杠1），无步数超限/死循环。这些样本不能代表真实游戏胜率。
+
 ## 2026-09-15 — 普通局 Simulator 闭环
 
 - 新增功能：simulation-only 普通局可跳过抢金检查，使用 RandomAgent 驱动已确认的普通摸打、吃碰、普通胡与16张流局；结果记录事件、赢家来源、UNKNOWN 原因和零和 rewards。

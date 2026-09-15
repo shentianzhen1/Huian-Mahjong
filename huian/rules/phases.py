@@ -81,6 +81,9 @@ def validate(adapter, state):
     )
     if state.terminal_reason not in (None, "WALL_16") and not observed_reason:
         raise ValueError("Invalid terminal reason")
+    if (state.terminal_reason in ("SIMULATION_PINGHU", "SIMULATION_ZIMO")
+            and not adapter.rules.config.simulation_only_normal_hand):
+        raise ValueError("Simulation rewards cannot be imported as real outcomes")
     if state.phase == "OPENING_QIANGJIN_CHECK" and state.terminal_reason is not None:
         raise ValueError("Opening check cannot have a terminal reason")
     if state.terminal_reason == "WALL_16" and (

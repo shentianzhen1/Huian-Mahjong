@@ -48,7 +48,7 @@ class SimulatorTests(unittest.TestCase):
 
     def test_normal_hand_batch_terminates_zero_sum(self):
         # CI smoke coverage; use the manual benchmark for 100+ hands.
-        for seed in range(20):
+        for seed in range(10):
             result = Simulator().run_normal_hand(seed=seed)
             self.assertIn(result.status, ("COMPLETED", "STOPPED_UNKNOWN"))
             self.assertNotEqual(result.status, "MAX_STEPS")

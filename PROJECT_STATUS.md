@@ -4,7 +4,7 @@
 
 ## 当前版本 / 里程碑
 
-- 当前阶段：M2 局中 Environment 已可用；M3 Simulator V0.1 已可在显式 simulation-only 普通局模式下完成摸打、普通胡/流局闭环，真实特殊规则仍安全停止；Vision V0.1 已建立三块固定 ROI 的离线数据与推理原型。
+- 当前阶段：M2 局中 Environment 已可用；M3 已有 simulation-only 普通局闭环、固定牌墙回归和批量评估；M4 已建立可解释 BaselineAgent 与 RandomAgent 交换座位回归。真实特殊规则仍安全停止；Vision 保持已有离线原型。
 - 最新已核验代码基线：本文件所在提交；提交 SHA 可通过 `git log -1 --format=%H -- PROJECT_STATUS.md CHANGELOG.md` 查询，避免在提交正文中自引用。
 - 远程：`https://github.com/shentianzhen1/Huian-Mahjong.git`（旧名 `Maj` 仍重定向），分支：`main`。
 
@@ -15,7 +15,9 @@
 - Opening：17/16 发牌、庄家优先分轮补花、骰子开金候选规划；`begin_opening()` 将结果写入 Environment，停在 `OPENING_QIANGJIN_CHECK`。
 - Environment：144 张实体牌守恒、吃碰、PASS、头摸、已解决明杠/暗杠后尾摸、开局及中途补花、普通自摸/点炮 `HU` 声明、16 张零分流局、原子提交、回滚/克隆、死循环保护和合法动作检查。摸牌来源已统一为 `wall_head` / `wall_tail`；杠后事件同时记录 `kong_kind` 与实际 `drawn_tile`，摸花后另记录最终有效摸牌。合法胡进入 `HU_DECLARED`，保存赢家、来源、胡牌张、杠种或弃牌河引用，并在自动番数未知处停止。旧回放中的 `head` / `tail` 会迁移为规范值。补杠流程尚未实现。
 - 已观察结算：`HuianObservedSettlementPlugin` 仅支持录屏已证实的 `PINGHU`（×1）和 `ZIMO`（×2）。`finalize_observed_outcome()` 可写入由录屏或 Vision 已确认的终局；若已有 `HU_DECLARED`，会核对赢家及自摸/点炮来源并把声明写入 `END_HAND` 审计事件。它不会自动聚合番数，杠胡计分继续阻断。
-- Simulator V0.1：固定种子生成牌墙并重放开局，返回种子、骰子、事件、状态哈希、阶段、牌墙数及 UNKNOWN 列表。抢金核验处安全停止。
+- Simulator：默认真实规则路径停在抢金核验；显式普通局模式跳过该检查，驱动合法动作循环。固定完整144张牌墙已覆盖普通自摸、点炮；显式局中牌墙夹具覆盖16张流局。结果记录赢家、来源、奖励、事件哈希链、决策理由和停止原因。配置开关现已接入运行入口，特殊规则开启请求返回 UNKNOWN。
+- 批量评估：`run_many_normal_hands` 输出胜负、流局、自摸/点炮、平均奖励、UNKNOWN原因、步数上限、循环停止及每seed摘要；可交换座位复用牌墙、骰子及Agent随机种子。均值只统计完成局，另报样本数，UNKNOWN不充作流局。
+- AI：`BaselineAgent` 优先合法胡牌，弃牌时依次保留金牌、对子和同花色搭子，优先弃孤张；可选吃碰先PASS。每步返回可解释理由，只读取自己的手牌和公开信息，不读取对手手牌或牌墙顺序。未实现EV、危险度或特殊胡策略。
 - Vision 采集：Recorder V0.2 支持 WGC / PrintWindow / 屏幕区域、PNG、有限或无限手动 AVI，以及按局自动录像。自动模式使用固定 ROI 模板执行 `WAITING → OPENING → PLAYING → SETTLEMENT → WAITING`，保留开局前10秒并在结算后录5秒；每局独立保存 AVI/JSON/JSONL。黑屏、停帧、尺寸变化和处理落后保护继续生效。
 - Vision 牌面原型：`tiles_v0_1` 可从 Recorder AVI 按固定时间间隔抽帧，人工校准 `hand_region` / `draw_region` / `gold_region` 和牌槽，写入可审计 JSONL 标签，并用本地已确认牌块模板对单张截图离线推理。后处理覆盖低置信过滤、牌数上限、实体同牌最多四张和多帧投票接口；输出固定禁止 Executor 使用。
 
@@ -37,17 +39,17 @@
 
 ## 当前测试结果
 
-2026-09-15 上一轮全量自动测试为 128 项通过。本轮仅新增 1 项结算夹具回归，未复跑 Vision/录制套件，不改写其历史数字。
+2026-09-15 本轮全量自动测试：152 项通过，0 失败、0 跳过（项目114 + Core9 + Environment9 + Recorder14 + Vision6）。默认随机回归为10局smoke；另含3个固定seed的交换座位重复回归，100/1000局保留为手动benchmark。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| 项目根目录 | `python -B -m unittest discover -s tests -v` | 上轮 90 + 本轮新增 1 项夹具 |
-| `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过（未复跑） |
-| `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过（未复跑） |
-| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过（未复跑） |
-| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.tiles_v0_1.test_tiles_v0_1 -v` | 6 通过（未复跑） |
+| 项目根目录 | `python -B -m unittest discover -s tests -v` | 114 通过 |
+| `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
+| `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
+| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过 |
+| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.tiles_v0_1.test_tiles_v0_1 -v` | 6 通过 |
 
-覆盖固定种子复现、144 张守恒、第五张牌拒绝、非法动作拒绝、16 张流局零和、开局回放、观察结算、自摸/点炮声明、声明来源与观察结果核对、补花后的有效胡牌张、单/双金限制、弃金不可胡、三金倒×3可选决策、三金游/三游状态别名、游金4/8/16与庄家/花水算术、三游608 夹具、三类杠胡上下文、规范/旧版摸牌来源回放、回滚、死循环、legacy 基线、AVI/PNG 编解码、长时/无限手动录制、环形缓存、ROI 模板检测、自动按局文件生命周期、关键帧抽取、三块固定 ROI 裁剪、人工标签模板、单图离线推理、视觉数量约束和多帧投票接口。没有完整小程序自动对局端到端测试，也没有 AI 对战评估或真实牌面准确率基准。
+覆盖固定种子复现、144 张守恒、第五张牌拒绝、非法动作拒绝、16 张流局零和、开局回放、观察结算、自摸/点炮声明、声明来源与观察结果核对、补花后的有效胡牌张、单/双金限制、弃金不可胡、三金倒×3可选决策、三金游/三游状态别名、游金4/8/16与庄家/花水算术、三游608 夹具、三类杠胡上下文、规范/旧版摸牌来源回放、回滚、死循环、legacy 基线、AVI/PNG 编解码、长时/无限手动录制、环形缓存、ROI 模板检测、自动按局文件生命周期、关键帧抽取、三块固定 ROI 裁剪、人工标签模板、单图离线推理、视觉数量约束和多帧投票接口。没有完整小程序自动对局端到端测试，也没有真实牌面准确率基准。普通局AI对战评估已加入；UNKNOWN停止不计入胜负和奖励均值。
 
 ## 已知问题 / 安全停止点
 
@@ -55,16 +57,16 @@
 2. 中途摸花与杠后摸花已接入庄家优先补花轮；该流程基于高置信规则，仍需更多实局录像覆盖翻花、墙边界和双人时序。
 3. 普通自摸/点炮的 `HU` 声明已接入，并在 `HU_DECLARED` 保存可复核来源；赢家番数仍不能自动聚合，自摸可否放弃继续打也未确认。普通胡与游金分支尚未打通，观察结算入口仍只接受外部已确认数据；杠胡只记录资格上下文，不会套用普通自摸结算。
 4. 三金倒资格、×3倍率与声明/继续决策已在 Rules 层实现，三金游已映射为`TRIPLE_YOU`；游金链4/8/16和`(庄底+赢家番)×倍率`已有+608回归。但三金倒动作窗口、二金游/三游状态机、多金番、付款和下局庄位尚未实现。抢金、八花游、自动杠胡终局、抢杠、补杠、杠分与流局杠分继续安全停止。
-5. Simulator 不能越过抢金核验点，尚无完整动作循环、批量统计、交换座位评估或 AI。
+5. 普通局模式使用平胡±1、自摸±2模拟单位，不含真实番数/庄底。该模式的自摸采用能胡即胡策略；不推断游金入口。三金、八花、显式游金状态及未解决杠窗口仍返回UNKNOWN；这些规则没有因此获得确认。真实规则路径仍不能完整自动跑局。
 6. `HuianOnlineRoomV01` 的动态留牌开关是隔离的工作假设，不能覆盖 `RULE_STATUS.md` 的已确认规则。
 7. Recorder V0.2 的开局/结算模板来自既有归档画面，仍需在当前小程序窗口实测误检和漏检。Vision V0.1 只有本地模板分类原型，尚未人工校准当前窗口 ROI、建立足量真实标签或测量准确率；不识别按钮和结算字段，Executor 未接入任何自动点击。
 
 ## 下一步计划
 
 1. 将`7bc12fa…mp4`原文件导入项目，补齐SHA256、时长、三游状态及+608结算时间点；同时继续核验开金实体归属、抢金和三金倒声明窗口。
-2. 用真实界面确认普通自摸能否放弃；随后把 `HU_DECLARED` 接入 Simulator 事件消费，并保持外部番数输入与自动计分明确分离。
+2. 扩大手动固定seed对战样本，分析UNKNOWN覆盖率和决策日志，改进普通局弃牌启发式；用真实界面确认自摸能否放弃，再扩展真实规则路径。模拟单位奖励与真实结算继续分离。
 3. 将已完成的三金倒资格决策接入牌局动作前，先补齐各阶段的准确声明窗口；二金游/三游共同流程、非花底数和付款未确认时继续安全停止。补杠及抢杠同样等待响应窗口证据。
-4. 完成基础 AI 与可复现批量评估后，再接入 Vision 状态识别和安全 Executor。
+4. 基于已完成的基础AI与批量评估建立稳定基准；更复杂AI、Vision集成和Executor留待后续独立范围。
 5. 从已抽取的 1108×690 Recorder 帧人工校准三块 ROI，标注首批万/筒/条/字/花样本并建立离线准确率基线；在准确率和多帧稳定性达标前不接 Executor。
 
 ## 维护约定

@@ -22,12 +22,13 @@ python -B -m unittest discover -s tests -v
 - 校验 144 张实体牌、普通结构胡拆解、金牌限制和所有合法吃牌方案。
 - 确定性执行发牌、补花、吃、碰、PASS、头摸、已确认杠后尾摸、普通胡声明和 16 张流局。
 - 审计已观察的平胡/自摸结算；固定种子重放开局并在未知规则处停止。
+- 用 simulation-only 普通局模式验证完整摸打和终局；运行 RandomAgent / BaselineAgent 批量对战与交换座位评估，保留每步决策理由。操作见 [Simulator说明](workspace/simulator/README.md)。
 - Recorder V0.2 录制对局；Vision V0.1 对固定 ROI 离线抽帧、标注和模板推理。
 
 ## 当前不能做什么
 
-- 不能越过抢金、游金链、抢杠、补杠、杠分等 UNKNOWN 规则完整模拟一局。
-- 没有 AI 对战评估、EV 决策或整桌实时识别。
+- 真实规则路径仍不能越过抢金、游金链、抢杠、补杠、杠分等 UNKNOWN；普通局模拟奖励不能代表真实最终计分。
+- 没有EV决策、特殊胡AI策略或整桌实时识别。
 - Executor 未接入，项目不会自动点击小程序。
 
 ## 架构
@@ -36,8 +37,8 @@ python -B -m unittest discover -s tests -v
 | --- | --- | --- |
 | Rules | 合法性、胡牌结构、番项、结算 | 仅实现已确认部分 |
 | Environment | GameState 与可复现状态转移 | M2 可用 |
-| Simulator | Agent 驱动牌局 | V0.1 在未知规则处停止 |
-| AI | 选择合法动作与风险评估 | 未正式开始 |
+| Simulator | Agent 驱动牌局 | 普通局闭环、批量评估；特殊规则UNKNOWN |
+| AI | 选择合法动作与风险评估 | 可解释Baseline与Random对战；尚无风险模型 |
 | Vision | 画面转局面观察 | V0.1 离线 ROI 原型 |
 | Executor | 验证通过后执行界面操作 | 未接入 |
 

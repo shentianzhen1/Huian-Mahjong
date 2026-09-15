@@ -1,0 +1,237 @@
+import unittest
+from collections import Counter
+from copy import deepcopy
+
+from huian import HuianEnvironment, DeadLoopError
+from huian._legacy import env
+from workspace.ai import AgentDecision, BaselineAgent
+from workspace.simulator import Simulator, SimulatorConfig
+from test_huian_environment import scenario
+
+
+WIN_HAND = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+            "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+DEALER_HAND = ["M8", "M9", "M9", "P4", "P5", "P7", "P8", "S4",
+               "S5", "S7", "S8", "S9", "N", "N", "W", "P6", "E"]
+
+
+def opening_wall(self_draw=False):
+    """Complete, deterministic 144-tile fixture in simulator dealing order."""
+    dealer = list(DEALER_HAND)
+    if self_draw:
+        dealer[-1] = "N"
+    waiting = WIN_HAND[:-1]
+    prefix = [tile for pair in zip(dealer[:16], waiting) for tile in pair] + dealer[16:]
+    remaining = env.full_wall()
+    for tile in prefix:
+        remaining.remove(tile)
+    if self_draw:
+        remaining.remove("E")
+        remaining.insert(0, "E")
+    # Dice total 7: indicator is the 13th tile from the remaining wall's tail.
+    remaining.remove("P9")
+    remaining.insert(len(remaining) + 1 - 13, "P9")
+    return prefix + remaining
+
+
+def boundary_state():
+    state = scenario("NEED_DRAW")
+    state.reserved_tiles.extend(state.wall[17:])
+    state.wall = state.wall[:17]
+    return state
+
+
+class FirstDiscardAgent:
+    def __init__(self, tile):
+        self.tile = tile
+
+    def choose_action(self, observation, legal_actions):
+        action = next(a for a in legal_actions if a.type == env.ActionType.DISCARD
+                      and a.tile == self.tile)
+        return AgentDecision(action, "Fixed-wall fixture: specified first discard")
+
+
+class NormalSimulationTests(unittest.TestCase):
+    def run_fixture(self, **kwargs):
+        instances = []
+
+        def factory(**options):
+            game = HuianEnvironment(**options)
+            instances.append(game)
+            return game
+
+        result = Simulator(factory).run_normal_hand(**kwargs)
+        return result, instances[0]
+
+    def assert_audit(self, result, game):
+        previous = result.initial_state_hash
+        for seq, event in enumerate(result.events):
+            self.assertEqual(event["seq"], seq)
+            self.assertEqual(event["before_hash"], previous)
+            previous = event["after_hash"]
+            if event["action"]["type"] not in (
+                    "OPEN_GOLD", "SIMULATION_SKIP_QIANGJIN", "END_HAND"):
+                self.assertTrue(event["decision"]["reason"])
+                self.assertNotIn("reason", event["action"].get("metadata", {}))
+        self.assertEqual(previous, result.state_hash)
+        self.assertEqual(Counter(game.state.physical_tiles()), Counter(env.full_wall()))
+        self.assertEqual(sum(result.rewards), 0)
+        self.assertEqual(game.legal_actions(), [])
+
+    def test_fixed_full_wall_pinghu_both_dealers(self):
+        for dealer in (0, 1):
+            agents = [None, None]
+            agents[dealer] = FirstDiscardAgent("E")
+            agents[1 - dealer] = BaselineAgent()
+            result, game = self.run_fixture(wall=opening_wall(), dice_total=7, dealer=dealer,
+                                            agents=agents, max_steps=2)
+            self.assertEqual(result.status, "COMPLETED")
+            self.assertEqual(result.winner, 1 - dealer)
+            self.assertEqual(result.win_source, "discard")
+            self.assertEqual(result.rewards[1 - dealer], 1)
+            self.assertEqual(result.steps, 2)
+            self.assertEqual(game.state.discards[dealer], ["E"])
+            self.assert_audit(result, game)
+            end = result.events[-1]["action"]["metadata"]
+            self.assertTrue(end["simulation_only"])
+            self.assertEqual(end["hu_declaration"]["discard_player"], dealer)
+            self.assertEqual(end["hu_declaration"]["river_index"], 0)
+
+    def test_fixed_full_wall_self_draw_at_exact_step_limit(self):
+        result, game = self.run_fixture(
+            wall=opening_wall(True), dice_total=7,
+            agents=(FirstDiscardAgent("P8"), BaselineAgent()), max_steps=4)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.winner, 1)
+        self.assertEqual(result.win_source, "self_draw")
+        self.assertEqual(result.rewards, (-2, 2))
+        self.assertEqual(result.steps, 4)
+        self.assert_audit(result, game)
+        self.assertEqual(result.events[-1]["action"]["metadata"]["hu_declaration"]["winning_tile"], "E")
+
+    def test_fixed_wall_reaches_16_on_last_allowed_step(self):
+        original = boundary_state()
+        snapshot = deepcopy(original)
+        result, game = self.run_fixture(initial_state=original, max_steps=1)
+        self.assertEqual(original, snapshot)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.terminal_reason, "WALL_16")
+        self.assertEqual(result.wall_remaining, 16)
+        self.assertIsNone(result.winner)
+        self.assertIsNone(result.win_source)
+        self.assertEqual(result.rewards, (0, 0))
+        self.assert_audit(result, game)
+
+    def test_max_steps_does_not_fabricate_terminal(self):
+        result = Simulator().run_normal_hand(
+            wall=opening_wall(True), dice_total=7,
+            agents=(FirstDiscardAgent("P8"), BaselineAgent()), max_steps=1)
+        self.assertEqual(result.status, "MAX_STEPS")
+        self.assertEqual(result.steps, 1)
+        self.assertIsNone(result.winner)
+        self.assertIsNone(result.terminal_reason)
+        self.assertEqual(result.stop_reason, "max_steps")
+
+    def test_special_config_is_unknown_and_strictly_boolean(self):
+        for field in SimulatorConfig.__dataclass_fields__:
+            if field.startswith("enable_"):
+                simulator = Simulator(config=SimulatorConfig(**{field: True}))
+                result = simulator.run_normal_hand(seed=1)
+                self.assertEqual(result.status, "STOPPED_UNKNOWN")
+                self.assertEqual(result.stop_reason, "unsupported_config")
+                self.assertIn(field.removeprefix("enable_"), result.unresolved)
+                self.assertEqual(result.steps, 0)
+        with self.assertRaises(ValueError):
+            SimulatorConfig(enable_youjin="false")
+        with self.assertRaises(ValueError):
+            Simulator(config=SimulatorConfig(normal_hand_mode=False)).run_normal_hand()
+
+    def test_observed_special_situation_stops_with_reason(self):
+        state = boundary_state()
+        # Leave >16 in wall so set_state does not itself resolve a draw.
+        state.special_states[0] = "TRIPLE_YOU"
+        result = Simulator().run_normal_hand(initial_state=state)
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertEqual(result.unresolved, ("youjin_permissions",))
+        self.assertEqual(result.steps, 0)
+        state.special_states[0] = "NORMAL"
+        # Three E already occur in our fixture; change the indicator, not inventory.
+        state.gold_tile = "E"
+        result = Simulator().run_normal_hand(initial_state=state)
+        self.assertIn("sanjindao_timing", result.unresolved)
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        state = scenario("NEED_DRAW")
+        for flower in env.FLOWERS:
+            state.wall.remove(flower)
+            state.flowers[0].append(flower)
+        result = Simulator().run_normal_hand(initial_state=state)
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertIn("eight_flowers_special_win", result.unresolved)
+
+    def test_rules_unknown_and_dead_loop_are_recorded(self):
+        state = scenario("AFTER_DRAW", hand=DEALER_HAND[:14] + ["N", "P6", "N"])
+        # Four N is an unresolved concealed-kong opportunity, not ignored.
+        result = Simulator().run_normal_hand(initial_state=state)
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertTrue(result.unresolved)
+
+        class LoopEnvironment(HuianEnvironment):
+            def step(self, action):
+                raise DeadLoopError("fixture repeated position")
+
+        result = Simulator(LoopEnvironment).run_normal_hand(initial_state=boundary_state())
+        self.assertEqual(result.status, "STOPPED_LOOP")
+        self.assertEqual(result.stop_reason, "fixture repeated position")
+        self.assertIsNone(result.terminal_reason)
+
+    def test_illegal_agent_and_bad_inputs_are_errors(self):
+        class BadAgent:
+            def choose_action(self, state, legal_actions):
+                return AgentDecision(env.Action(1, env.ActionType.HU), "Invalid fixture action")
+        with self.assertRaises(ValueError):
+            Simulator().run_normal_hand(initial_state=boundary_state(), agent=BadAgent())
+        for limit in (0, -1, True):
+            with self.assertRaises(ValueError):
+                Simulator().run_normal_hand(max_steps=limit)
+        bad_wall = opening_wall()
+        bad_wall[-1] = "M1"  # A fifth M1 and a missing flower.
+        with self.assertRaises(ValueError):
+            Simulator().run_normal_hand(wall=bad_wall)
+        state = boundary_state()
+        state.reserved_tiles.extend(state.wall[15:])
+        state.wall = state.wall[:15]
+        with self.assertRaises(ValueError):
+            Simulator().run_normal_hand(initial_state=state)
+
+    def test_simulation_profile_cannot_be_used_as_real_outcome(self):
+        real = HuianEnvironment()
+        real.reset(seed=1)
+        original = real.state.state_hash()
+        with self.assertRaises(ValueError):
+            real.begin_normal_hand(7)
+        self.assertEqual(real.state.state_hash(), original)
+        result, simulated = self.run_fixture(
+            wall=opening_wall(), dice_total=7,
+            agents=(FirstDiscardAgent("E"), BaselineAgent()), max_steps=2)
+        self.assertEqual(result.status, "COMPLETED")
+        with self.assertRaises(ValueError):
+            real.set_state(simulated.state)
+        self.assertEqual(real.state.state_hash(), original)
+        with self.assertRaises(ValueError):
+            real.finalize_simulation_only_outcome()
+
+    def test_run_dispatches_only_explicit_profile(self):
+        result = Simulator(config=SimulatorConfig()).run(seed=1, max_steps=1)
+        self.assertTrue(result.simulation_only)
+        self.assertNotEqual(result.phase, "OPENING_QIANGJIN_CHECK")
+        self.assertFalse(Simulator().run(seed=1).simulation_only)
+
+    def test_finished_fixture_cannot_masquerade_as_a_new_completed_hand(self):
+        result, game = self.run_fixture(initial_state=boundary_state(), max_steps=1)
+        self.assertEqual(result.status, "COMPLETED")
+        with self.assertRaisesRegex(ValueError, "active mid-hand"):
+            Simulator().run_normal_hand(initial_state=game.state)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,22 +1,67 @@
-# Simulator V0.1
+# 普通局 Simulator 与批量评估
 
-`Simulator.run()` retains the historical READY-only safe stop.
+在项目根目录执行，Python 3.10+，只依赖标准库。
 
-`Simulator.run_normal_hand()` is an isolated simulation-only profile. It skips
-the unresolved Qiangjin check and disables special Hu branches. It uses ordinary
-draw/discard/claim/Hu transitions only. Pinghu is settled as +1/-1 and Zimo as
-+2/-2 strictly to prove replayability and zero-sum accounting; these are not
-the final Huian scoring formula.
+## 快速运行
 
-`benchmark_normal_hands(count=100)` is manual. Default tests run a 20-hand
-smoke batch, each with a max_steps guard; UNKNOWN exits are recorded in
-SimulationResult.unresolved and never retried indefinitely.
+```python
+from workspace.ai import BaselineAgent
+from workspace.simulator import RandomAgent, Simulator, SimulatorConfig, run_many_normal_hands
 
-`Simulator.run_opening(seed, dice_total)` deterministically replays the currently
-implemented Huian opening: shuffled 144-tile wall, dealer/idle dealing,
-dealer-first flower replacement and opening-gold planning. It returns a frozen,
-replayable `SimulationResult` at `OPENING_QIANGJIN_CHECK` until the complete
-抢金 declaration, priority and settlement rules are confirmed.
+game = Simulator(config=SimulatorConfig())
+result = game.run_normal_hand(
+    seed=3, agents=(RandomAgent(3), BaselineAgent()), max_steps=1000)
+print(result.status, result.winner, result.win_source, result.rewards)
+for event in result.events:
+    if "decision" in event:
+        print(event["seq"], event["action"], event["decision"]["reason"])
 
-No action is selected or inferred after that stop. The result includes its seed,
-dice total, event trace, state hash, phase, wall count and unresolved rule IDs.
+report = run_many_normal_hands(
+    range(10), agent_factories=(RandomAgent, BaselineAgent),
+    swap_seats=True, max_steps=1000)
+print(report.to_dict())
+```
+
+手动benchmark（100个seed，交换座位后实际200局；1000局可改count或关闭交换）：
+
+```powershell
+python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 1000
+```
+
+默认单元测试只运行10局随机smoke，以及seed 0/3/7的交换座位重复回归。
+单局还有固定完整144张牌墙的自摸/点炮夹具，以及明确保留未参与牌的局中16张流局夹具。
+
+## 模式与边界
+
+- 无配置的 `Simulator.run()` 保留历史安全停止；`run_opening()` 始终停在抢金核验。
+- 显式调用 `run_normal_hand()` 或 `Simulator(config=SimulatorConfig()).run()` 才使用普通局模拟模式。开局跳过抢金，事件标记simulation-only。
+- config中的抢金、三金倒、游金链、八花游、抢杠、补杠和真实计分开关默认关闭；设置为True会返回 `STOPPED_UNKNOWN / unsupported_config`，不会启用猜测实现。
+- 三张以上金、八花、显式游金状态、未解决杠窗口出现时停止并记录规则ID。不会从普通胡拆牌方式推断游金状态。
+- 普通局自摸使用“能胡即胡”的模拟策略；真实房间能否放弃自摸继续打仍未确认。
+- 平胡赢家+1/对手−1，自摸赢家+2/对手−2，流局[0,0]。均为simulation-only单位，不含真实花/金番、庄底或特殊胡计分。
+- 固定墙通过 `wall=完整144张列表` 输入；`initial_state=` 只接受可校验的局中状态（含全部实体牌归属），不能与wall同时提供，也不能输入已结束对局。
+- 不接Vision、Executor，不评估真实游戏胜率。
+
+## 结果与统计口径
+
+`SimulationResult` 返回事件、决策理由、种子/骰子、配置、初始状态/牌墙/最终状态哈希、赢家、胡牌来源、奖励、动作步数及停止原因。
+决策记录在 `event.decision`，不会加入可执行的 `Action.metadata`。头尾哈希可以核验事件链，终局事件保留完整胡牌声明。
+
+- `COMPLETED`：仅普通胡或16张流局；winner是座位0/1，流局为None。
+- `STOPPED_UNKNOWN`：unresolved记录规则ID。
+- `MAX_STEPS`：达到动作步数上限；最后一步已胡会先完成结算。
+- `STOPPED_LOOP`：Environment检测到重复局面，保留原因。
+
+未完成局的rewards仍是Environment的[0,0]，但这不是结算。
+批量统计将其排除在胜负、流局和平均奖励之外；`reward_samples` 是已完成局数。
+无完成局时均值显示0且样本数为0，不能解释为策略期望收益。
+
+顶层wins/losses/average_reward按座位；`by_agent.A/B` 按传入的两个factory身份统计，交换座位后身份不变。
+`per_seed` 保留每次运行的seed、是否交换、双方Agent、状态、来源、奖励、步数、哈希和UNKNOWN原因。
+每次创建新Agent；交换座位复用牌墙/骰子/庄位以及各Agent的随机种子。
+不保存整批完整事件到内存；需要单局详细日志时单独重跑该seed。
+
+## 本轮命令验证
+
+seed 0–9交换座位20局：7局自摸完成、13局UNKNOWN（抢杠12、补杠1），无max_steps或死循环。
+完成局中BaselineAgent赢7局；有大量UNKNOWN和很小样本，不能据此推断真实胜率或策略强度。
