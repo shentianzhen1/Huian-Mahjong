@@ -16,11 +16,11 @@ dev = [
     "ruff>=0.6",
     "black>=24.0",
 ]
-# Vision dependencies remain optional because capture backends vary by platform.
-# Add the verified runtime dependencies here once the Vision V0.1 environment is pinned.
+# Vision dependencies remain unpinned until the capture environment is verified.
 vision = []
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["huian*", "mahjong_framework*", "workspace*"]
-namespaces = true
+include = ["huian*", "mahjong_framework*"]
+exclude = ["tests*", "legacy_code*", "workspace*", "dataset*", "references*"]
+namespaces = false

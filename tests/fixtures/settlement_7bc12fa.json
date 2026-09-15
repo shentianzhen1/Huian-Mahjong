@@ -1,0 +1,17 @@
+{
+  "id": "7bc12fa",
+  "evidence": "references/gameplay/2026-09-15/7bc12fa_video_evidence.md",
+  "stage": "TRIPLE_YOU",
+  "current_dealer_base": 35,
+  "winner_fan": 3,
+  "fan_breakdown": {
+    "gold": 1,
+    "flowers": 2
+  },
+  "youjin_multiplier": 16,
+  "dealer_multiplier": 1,
+  "winner": 1,
+  "dealer": 0,
+  "net": 608,
+  "notes": "The recorded 608 product has no extra dealer x2. Seat numbers are a test convention, not a proven dealer identity from the video file."
+}

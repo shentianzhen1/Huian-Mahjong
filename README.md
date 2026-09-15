@@ -2,17 +2,20 @@
 
 以真实对局证据驱动的惠安双人麻将工程。Rules、Environment、Simulator、AI、Vision 与 Executor 分层；UNKNOWN 规则不会被硬编码。
 
+仓库私有：`git clone` 需要已登录且有访问权限的 GitHub 账号。旧名 `Maj` 仍会重定向到现仓库。
+
 ## 5 分钟上手
 
 ```powershell
-git clone https://github.com/shentianzhen1/Maj.git
-cd Maj
+git clone https://github.com/shentianzhen1/Huian-Mahjong.git
+cd Huian-Mahjong
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install -e .
 python -B -m unittest discover -s tests -v
 ```
 
-可选开发工具：`python -m pip install -e ".[dev]"`。核心测试只依赖 Python 标准库。
+可选开发工具：`python -m pip install -e ".[dev]"`。核心测试只依赖 Python 标准库；在仓库根目录直接跑 `unittest` 仍可以。
 
 ## 当前能做什么
 
@@ -40,7 +43,7 @@ python -B -m unittest discover -s tests -v
 
 ## 测试
 
-核心回归（GitHub Actions 默认执行）：
+核心回归（GitHub Actions 默认在 Python 3.11/3.12 执行）：
 
 ```powershell
 python -B -m unittest discover -s tests -v
@@ -65,5 +68,6 @@ Vision 使用单独的 `.venv-capture` 和 OpenCV；CI 只提供手动、非阻�
 - [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)：规则证据与状态机缺口。
 - [TODO.md](TODO.md)：短期工作清单。
 - [docs/huian_rules.md](docs/huian_rules.md)：中文规则开发摘要。
+- [AGENTS.md](AGENTS.md)：代理改代码前的约束。
 
 修改规则或计分前先更新规则证据；实现存在或测试通过不等于规则已确认。

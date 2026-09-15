@@ -1,20 +1,20 @@
-Huian Mahjong - Codex Handoff
+Huian Mahjong — 当前入口
 
-1. Extract this ZIP to a permanent folder, for example:
-   D:\HuianMahjong
+仓库：https://github.com/shentianzhen1/Huian-Mahjong
+分支：main
 
-2. Open that folder in Codex.
+先读：
+  README.md
+  AGENTS.md
+  PROJECT_CONTEXT.md
+  RULE_STATUS.md
+  PROJECT_STATUS.md
+  TODO.md
 
-3. First ask Codex to read these files in order:
-   AGENTS.md
-   PROJECT_CONTEXT.md
-   RULE_STATUS.md
-   TODO.md
-   CODEX_FIRST_PROMPT.txt
+不要一开始重写整个项目。
+保留现有代码，先跑核心测试，再按模块迁移。
 
-4. Do NOT let Codex rewrite everything immediately.
-   First preserve the existing code, run the baseline tests, and then migrate module-by-module.
+legacy_code/ 仍含泉州命名和过时计分假设，
+53ea当基线，不当现行惠安规则。
 
-5. The current legacy code is under legacy_code/.
-   It still contains Quanzhou naming and some outdated scoring assumptions.
-   Treat it as a working baseline, not the final Huian rules implementation.
+未知规则必须标为 UNKNOWN，不要硬编码。
