@@ -3,9 +3,9 @@
 ## 2026-09-15 — 仓库卫生（不改业务逻辑）
 
 - 修正 `START_HERE.txt` 笔误，使入口文档与当前普通局闭环/评估能力一致。
-- 更新 `AGENTS.md` 开发优先级：先补 UNKNOWN 证据与评估口径，不再把 Simulator V0.1 当未完成任务。
+- 更新 `AGENTS.md` 开发优先级：先补 UNKNOWN 证据与评估口径，不再把 Simulator V0.1 当成未完成任务。
 - CI 核心回归补齐 `requires-python`，增加 Python 3.10。
-- 补齐 `.gitignore`、`.editorconfig` 与可选 ruff/black 配置；不启用样式检查作为必要 CI 门禁。
+- 补齐 `.gitignore`、`.editorconfig` 与可选 ruff/black 配置；不启用风格检查作为必要 CI 门槛。
 - 规则变更：无。未修改 Rules、Environment、Simulator 或测试用例。
 
 ## 2026-09-15 — 视频证据补充与评估归档复现
@@ -15,3 +15,4 @@
 - 登记玩家原话“坐庄底分5分，连庄+5”；每次连庄+5已确认，初始坐庄字段与画面显示值映射留待 a562bd21 视频核对；该新片尚未分析。
 - 新增评估落盘、完整配对统计与单局校验重放；支持进度、中断记录、防覆盖、源码/运行时/事件摘要验证；本地评估输出由Git忽略。
 - 验证：全量174项通过（项目136、Core9、Environment9、Recorder14、Vision6）。手动100seed交换座位共200局：81完成、119 UNKNOWN，无超步/死循环；完整配对16组，配对模拟奖励Random/Baseline为-1.6875/+1.6875。第1号记录已成功复现。结果不代表真实麻将胜率。
+
