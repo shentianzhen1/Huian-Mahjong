@@ -24,3 +24,17 @@ where = ["."]
 include = ["huian*", "mahjong_framework*"]
 exclude = ["tests*", "legacy_code*", "workspace*", "dataset*", "references*"]
 namespaces = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["legacy_code", "dataset", "references"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+extend-exclude = "/legacy_code/"
