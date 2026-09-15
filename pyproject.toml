@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "huian-mahjong-assistant"
+version = "0.1.0"
+description = "Evidence-driven Huian Mahjong rules, simulation, and vision tooling"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+# Kept intentionally small: the built-in unittest runner is sufficient for CI.
+dev = [
+    "ruff>=0.6",
+    "black>=24.0",
+]
+# Vision dependencies remain optional because capture backends vary by platform.
+# Add the verified runtime dependencies here once the Vision V0.1 environment is pinned.
+vision = []
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["huian*", "mahjong_framework*", "workspace*"]
+namespaces = true

@@ -11,3 +11,8 @@ Thumbs.db
 models/*.pt
 models/*.onnx
 data/raw_frames/
+# Local derivatives extracted while reviewing gameplay video. Text evidence remains tracked.
+references/gameplay/**/keyframes/
+references/gameplay/**/contact_sheet_*.png
+references/gameplay/**/contact_sheet_*.jpg
+references/gameplay/**/timeline_rotated.jpg

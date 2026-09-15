@@ -1,5 +1,13 @@
 # 重要变更记录
 
+## 2026-09-15 — 工程入口、打包与 CI
+
+- Commit：随本轮提交。
+- 新增功能：README 改为入口页，包含 5 分钟上手、能力边界、架构、测试和状态文档导航；新增 Python 3.10+ 的打包声明与 GitHub Actions 核心回归。
+- 修复内容：TODO 改为与当前状态一致的短清单，删除“M3 Simulator remains pending”等过期表述；本地录像分析派生图片默认忽略，避免误提交。
+- 规则变更：无。RULE_STATUS.md、RULE_EVIDENCE_MATRIX.md、PROJECT_STATUS.md 继续分别作为规则、证据和进度真相源。
+- 测试变化：未改业务代码；全量 128 项通过（项目 90、legacy Core 9、legacy Environment 9、Recorder 14、Vision 6），0 失败、0 跳过。
+
 按日期倒序维护。规则是否确认以 RULE_STATUS.md 为准；历史提交中的实现或注释不能自动提高规则证据等级。历史测试数量由提交差异中新增测试用例及现存记录核对，未保留的当时完整测试结果不补造。
 
 ## 2026-09-15 — 三金游状态统一与游金计分项

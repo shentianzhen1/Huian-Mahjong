@@ -1,19 +1,69 @@
-# Huian Mahjong AI Project
+# 惠安麻将助手
 
-Target game: 开心惠安二人麻将.
+以真实对局证据驱动的惠安双人麻将工程。Rules、Environment、Simulator、AI、Vision 与 Executor 分层；UNKNOWN 规则不会被硬编码。
 
-Long-term architecture:
+## 5 分钟上手
 
-`Rules -> Environment -> Simulator -> AI -> Vision -> Executor`
+```powershell
+git clone https://github.com/shentianzhen1/Maj.git
+cd Maj
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -B -m unittest discover -s tests -v
+```
 
-Current status:
-- Rules: partially confirmed, still being calibrated from real Huian settlement screenshots and player feedback.
-- Environment: V0.1 baseline exists and passes tests.
-- Simulator: next major milestone.
-- AI: not yet formally started.
-- Vision: early prototype exists. Android + scrcpy is the preferred future capture path.
-- Executor: not started.
+可选开发工具：`python -m pip install -e ".[dev]"`。核心测试只依赖 Python 标准库。
 
-The project is designed to work offline for normal use. Network access should be optional for updates, model sync, or remote training.
+## 当前能做什么
 
-See `PROJECT_CONTEXT.md`, `RULE_STATUS.md`, and `TODO.md` before modifying core logic.
+- 校验 144 张实体牌、普通结构胡拆解、金牌限制和所有合法吃牌方案。
+- 确定性执行发牌、补花、吃、碰、PASS、头摸、已确认杠后尾摸、普通胡声明和 16 张流局。
+- 审计已观察的平胡/自摸结算；固定种子重放开局并在未知规则处停止。
+- Recorder V0.2 录制对局；Vision V0.1 对固定 ROI 离线抽帧、标注和模板推理。
+
+## 当前不能做什么
+
+- 不能越过抢金、游金链、抢杠、补杠、杠分等 UNKNOWN 规则完整模拟一局。
+- 没有 AI 对战评估、EV 决策或整桌实时识别。
+- Executor 未接入，项目不会自动点击小程序。
+
+## 架构
+
+| 层 | 责任 | 状态 |
+| --- | --- | --- |
+| Rules | 合法性、胡牌结构、番项、结算 | 仅实现已确认部分 |
+| Environment | GameState 与可复现状态转移 | M2 可用 |
+| Simulator | Agent 驱动牌局 | V0.1 在未知规则处停止 |
+| AI | 选择合法动作与风险评估 | 未正式开始 |
+| Vision | 画面转局面观察 | V0.1 离线 ROI 原型 |
+| Executor | 验证通过后执行界面操作 | 未接入 |
+
+## 测试
+
+核心回归（GitHub Actions 默认执行）：
+
+```powershell
+python -B -m unittest discover -s tests -v
+```
+
+完整本地回归：
+
+```powershell
+python -B -m unittest discover -s tests -v
+Push-Location legacy_code\core_v0.1.1; python -B -m unittest discover -s tests -v; Pop-Location
+Push-Location legacy_code\environment_v0.1; python -B -m unittest discover -s tests -v; Pop-Location
+.\.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v
+.\.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.tiles_v0_1.test_tiles_v0_1 -v
+```
+
+Vision 使用单独的 `.venv-capture` 和 OpenCV；CI 只提供手动、非阻断的 advisory job。
+
+## 文档入口
+
+- [PROJECT_STATUS.md](PROJECT_STATUS.md)：当前能力、问题、测试和进度。
+- [RULE_STATUS.md](RULE_STATUS.md)：规则确认等级的唯一真相源。
+- [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)：规则证据与状态机缺口。
+- [TODO.md](TODO.md)：短期工作清单。
+- [docs/huian_rules.md](docs/huian_rules.md)：中文规则开发摘要。
+
+修改规则或计分前先更新规则证据；实现存在或测试通过不等于规则已确认。
