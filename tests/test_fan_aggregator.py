@@ -76,6 +76,38 @@ class FanAggregatorTests(unittest.TestCase):
             [("gold", 1)],
         )
 
+    def test_discard_completed_triplet_is_not_concealed_triplet_fan(self):
+        hand = [
+            "M1", "M1",
+            "M2", "M3", "M4",
+            "M5", "M6", "M7",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+        ]
+
+        zimo = self.rules.analyze_hu(
+            hand, winning_tile="E", win_type="zimo")
+        zimo_fan = self.rules.aggregate_fan(
+            hand, hu_result=zimo)
+        self.assertTrue(zimo_fan.complete)
+        self.assertEqual(zimo_fan.fan, 2)
+        self.assertEqual(
+            [(item.category, item.fan) for item in zimo_fan.components],
+            [("concealed_triplet", 2)],
+        )
+
+        pinghu = self.rules.analyze_hu(
+            hand, winning_tile="E", win_type="pinghu")
+        pinghu_fan = self.rules.aggregate_fan(
+            hand, hu_result=pinghu)
+        self.assertTrue(pinghu_fan.complete)
+        self.assertEqual(pinghu_fan.fan, 0)
+        self.assertFalse(any(
+            item.category == "concealed_triplet"
+            for item in pinghu_fan.components
+        ))
+
     def test_two_gold_fan_stays_unknown_instead_of_being_guessed(self):
         hand = [
             "P9", "P9",
