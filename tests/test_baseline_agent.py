@@ -3,7 +3,8 @@ from copy import deepcopy
 from dataclasses import FrozenInstanceError
 
 from huian._legacy import env
-from workspace.ai import BaselineAgent, EfficiencyAgent, PlayerObservation
+from workspace.ai import (BaselineAgent, EfficiencyAgent, PlayerObservation,
+                          ShantenAgent)
 from test_huian_environment import scenario
 
 
@@ -72,6 +73,41 @@ class BaselineAgentTests(unittest.TestCase):
         diagnostics = EfficiencyAgent.discard_diagnostics(view, "E")
         self.assertIn("weighted_gain", diagnostics)
         self.assertIn("live_improving_copies", diagnostics)
+
+    def test_shanten_agent_prefers_live_wait_over_dead_wait(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("N", "N", "N"), ()),
+            ((), ()), ((), ()),
+        )
+        decision = ShantenAgent().choose_decision(view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        self.assertIn("shanten_v0.1", decision.reason)
+        self.assertIn("live=3", decision.reason)
+
+    def test_shanten_agent_keeps_hu_and_pass_priorities(self):
+        view = observation(["M1"])
+        hu = env.Action(0, env.ActionType.HU, metadata={"source": "self_draw"})
+        self.assertEqual(
+            ShantenAgent().choose_decision(view, discards(["M1"]) + [hu]).action,
+            hu,
+        )
+        claim = [
+            env.Action(0, env.ActionType.CHI, tiles=("M1", "M2", "M3")),
+            env.Action(0, env.ActionType.PASS),
+        ]
+        self.assertEqual(
+            ShantenAgent().choose_decision(observation([]), claim).action,
+            claim[1],
+        )
 
     def test_observation_has_only_private_hand_and_public_immutable_fields(self):
         state = scenario()
