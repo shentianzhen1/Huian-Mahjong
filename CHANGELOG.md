@@ -1,5 +1,15 @@
 # 重要变更记录
 
+## 2026-09-18 — Real ordinary 8局 MatchRunner 接通
+
+- 新增 `MatchRunner` / `MatchHandContext` / `MatchHandResult` / `MatchRunResult`：每局拿到当前手数、庄家、当前庄底、双方比分和剩余局数；已结算单局推进总账，UNKNOWN单局不改分并停止整场。
+- Simulator 的 `enable_real_scoring=True` 已正式启用：普通局仍使用ordinary-only特殊规则旁路，但普通平胡/自摸改用 FanAggregator + 真实 Settlement，不再使用±1/±2单位奖励。结果同时标记 `simulation_only=True` 与 `real_scoring=True`，避免误称全规则真实房。
+- 新增 `run_real_ordinary_match()`：把 ordinary-real Simulator 直接接入8局 MatchRunner，每局自动读取 dealer/current_dealer_base 并回写真实 rewards。
+- 固定墙回归：普通点炮在庄底5、0番时结算+5；自然字牌暗刻自摸2番时结算 `(5+2)×2=14`。
+- 整场基线：10个match seed×交换座位=20场，0场完整8局；共真实结算23局，平均1.15局/场。UNKNOWN累计：多金番10、杠费9、拆解2、普通碰1、花组1。最远样本完成7局。
+- 结论：整场架构已接通；现阶段最高优先级从“写8局Runner”转为“补双金/多金番数与杠费证据”。
+- Core regression 在 Python 3.10/3.11/3.12 均198项全通过。
+
 ## 2026-09-18 — 8局 MatchProgress 庄位与连庄底骨架
 
 - 新增 `MatchProgressState`：在 `MatchScoreState` 的1000/1000总账之上，记录当前庄家、连续坐庄次数、当前手数和下一局庄底。
