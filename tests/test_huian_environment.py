@@ -97,7 +97,7 @@ class EnvironmentTests(unittest.TestCase):
             self.assertEqual(final.last_action["metadata"]["drawn_tile"], "P8")
             self.assertTrue(HuContext.from_draw_metadata(final.last_action["metadata"]).is_gang_hu)
 
-    def test_default_ming_gang_is_confirmed_unrobbable(self):
+    def test_big_ming_gang_from_opponent_discard_is_confirmed_unrobbable(self):
         instance = game(scenario(discard="E"))
         report = instance.action_report()
         self.assertNotIn("rob_kong", report.unresolved)
