@@ -13,6 +13,8 @@ class ActionType(str, Enum):
     ADD_KONG = "ADD_KONG"
     ROB_KONG_HU = "ROB_KONG_HU"
     PASS = "PASS"
+    PASS_QIANGJIN = "PASS_QIANGJIN"
+    QIANGJIN = "QIANGJIN"
     HU = "HU"
     FLOWER_REPLACE = "FLOWER_REPLACE"
     OPEN_GOLD = "OPEN_GOLD"
