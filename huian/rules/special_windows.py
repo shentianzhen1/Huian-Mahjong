@@ -11,9 +11,8 @@ can run without inventing a decomposition.
 """
 from huian._legacy import env
 from .phases import ActionReport, report as base_report, validate
-from .context import YoujinStage
+from .context import DrawSource, YoujinStage
 
-QIANGJIN_PHASES = {"OPENING_QIANGJIN_CHECK", "QIANGJIN_WINDOW", "AFTER_DRAW"}
 QIANGJIN_MULTIPLIER = 4
 SANJINDAO_MULTIPLIER = 3
 EIGHT_FLOWER_MULTIPLIER = 8
@@ -29,11 +28,15 @@ def _in_youjin(state, player):
 
 
 def working_qiangjin_eligible(state, player):
-    """Window gate only. Exact qiangjin shape is still UNKNOWN."""
     if _in_youjin(state, player):
         return False
     gold = state.gold_tile
     return gold is not None and gold in state.hands[player]
+
+
+def _window_just_closed(state):
+    last = state.last_action
+    return isinstance(last, dict) and last.get("type") == env.ActionType.PASS_QIANGJIN.value
 
 
 def current_player_special_actions(adapter, state):
@@ -60,7 +63,6 @@ def current_player_special_actions(adapter, state):
 
 
 def _strip_unrobbable_kong_unknown(adapter, state, result):
-    """Ming/an gangs cannot be robbed; keep added-kong robbery only."""
     if "rob_kong" not in result.unresolved:
         return result
     unresolved = tuple(item for item in result.unresolved if item != "rob_kong")
@@ -81,16 +83,21 @@ def _strip_unrobbable_kong_unknown(adapter, state, result):
 
 
 def report_with_specials(adapter, state):
+    A, T = env.Action, env.ActionType
+    p = state.current_player
+    if _window_just_closed(state) and state.phase in ("AFTER_DRAW", "NEED_DRAW"):
+        validate(adapter, state)
+        if state.phase == "NEED_DRAW":
+            return ActionReport((A(p, T.DRAW, metadata={
+                "source": DrawSource.WALL_HEAD.value}),))
+        return ActionReport(tuple(
+            A(p, T.DISCARD, tile=tile) for tile in sorted(set(state.hands[p]))))
     if state.phase in ("OPENING_QIANGJIN_CHECK", "QIANGJIN_WINDOW"):
+        validate(adapter, state)
+        return ActionReport(current_player_special_actions(adapter, state))
+    if state.phase == "NEED_DRAW" and working_qiangjin_eligible(state, p):
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
     result = base_report(adapter, state)
     result = _strip_unrobbable_kong_unknown(adapter, state, result)
-    if (state.phase == "AFTER_DRAW"
-            and not adapter.rules.config.simulation_only_normal_hand
-            and not result.unresolved):
-        specials = current_player_special_actions(adapter, state)
-        declares = tuple(a for a in specials if a.type != env.ActionType.PASS_QIANGJIN)
-        if declares:
-            return ActionReport(declares + result.known_actions)
     return result
