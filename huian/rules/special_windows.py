@@ -6,7 +6,7 @@ Player spec 2026-09-18:
 - AN_GANG = 暗杠: four matching concealed tiles; not robbable.
 - Qiangjin belongs only to the acting player after draw / flower / kong.
 - Opening flip does not offer opponent qiangjin. PASS does not hand off.
-- Sanjindao outranks qiangjin at the same node. With 3+ golds the player may declare immediately or PASS and continue developing the hand.
+- Sanjindao outranks qiangjin only at the one-shot node where a draw has just changed 2 golds to exactly 3. PASS closes that Sanjindao chance.
 Hand-shape details for qiangjin remain UNKNOWN; eligibility here is the
 working gate "gold in hand, not in Youjin" so the window ownership tests
 can run without inventing a decomposition.
@@ -17,7 +17,7 @@ from .context import DrawSource, YoujinStage
 
 QIANGJIN_MULTIPLIER = 4
 SANJINDAO_MULTIPLIER = 3
-EIGHT_FLOWER_MULTIPLIER = 2
+EIGHT_FLOWER_MULTIPLIER = 2  # Project provisional setting, not real-room evidence.
 
 
 def _in_youjin(state, player):
