@@ -39,6 +39,16 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 
 因此本文件下面的 `run_many_normal_hands`、单局胜率和±1/±2单位奖励都只是**单局诊断/开发基线**，不是最终AI目标。后续真实8局Simulator要把当前总分、剩余局数、庄位和连庄底传给AI；策略评估以最终分数/分差为主。
 
+## 普通真实结算 V0.1
+
+Environment 已提供 `finalize_ordinary_outcome(current_dealer_base=...)`。在普通 `HU_DECLARED` 后，它会自动重建胡牌手牌、调用 `FanAggregator`，并仅在 `FanResult.complete=True` 时使用已确认公式：
+
+`(当前庄家底 + 赢家番) × 平胡1 / 自摸2`
+
+生成真实零和 `rewards`。点炮胡牌张仍留在牌河，只为结构和番数分析临时加入赢家手牌。多金、花组/拆解歧义、任何未解决杠费、抢杠胡或杠上胡都会安全停止，不制造真实分数。
+
+simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结算严格分离；下一阶段由8局 Match Simulator 消费真实结算结果。
+
 ## 模式与边界
 
 - 无配置的 `Simulator.run()` 保留历史安全停止；`run_opening()` 始终停在抢金核验。
