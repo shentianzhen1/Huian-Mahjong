@@ -398,23 +398,24 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(metadata["fan_components"], [])
 
     def test_automatic_settlement_stays_atomic_when_fan_is_unknown(self):
+        # Multiple valid decompositions can score concealed triplets differently.
         hand = [
-            "P9", "P9",
-            "M1", "M2", "M3",
-            "M4", "M5", "M6",
-            "M7", "M8", "M9",
-            "P1", "P2", "P3",
-            "S1", "S2", "S3",
+            "M1", "M1", "M1",
+            "M2", "M2", "M2",
+            "M3", "M3", "M3",
+            "M4", "M4", "M4",
+            "M5", "M5", "M5",
+            "M6", "M6",
         ]
         state = scenario("HU_DECLARED", hand)
         state.pending_hu = {
-            "winner": 0, "source": "self_draw", "winning_tile": "S3",
+            "winner": 0, "source": "self_draw", "winning_tile": "M6",
             "kong_kind": None, "discard_player": None, "river_index": None,
         }
         instance = game(state)
         before = instance.state.state_hash()
         events = instance.events
-        with self.assertRaisesRegex(UnknownRuleError, "multi_gold_fan"):
+        with self.assertRaisesRegex(UnknownRuleError, "decomposition_scoring"):
             instance.finalize_ordinary_outcome(current_dealer_base=10)
         self.assertEqual(instance.state.state_hash(), before)
         self.assertEqual(instance.events, events)
