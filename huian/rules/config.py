@@ -41,7 +41,7 @@ UNKNOWN_RULES = MappingProxyType({
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
     "honor_peng_fan": "Whether exposed honor pung scores one fan",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
-    "exposed_triplet_fan": "Whether natural exposed suited triplets score in the target room",
+    # exposed_triplet_fan resolved 2026-09-18: suited exposed Peng=0, honor Peng=1.
     # Eight-flower trigger/pass confirmed; project provisional multiplier is x2.
     "eight_flower_real_multiplier": "Real-room multiplier for eight-flower win; project uses provisional x2",
     "open_gold_procedure": "Reveal location and physical tile accounting",
@@ -50,7 +50,7 @@ UNKNOWN_RULES = MappingProxyType({
     "decomposition_scoring": "Selection among multiple winning decompositions when search is truncated or ambiguity is not classifiable",
     # decomposition_concealed_triplet_choice resolved 2026-09-18: choose maximum total fan.
     # three_plus_gold_ordinary_hu resolved for self-draw after declining Sanjindao.
-    "three_plus_gold_discard_hu": "Whether 3+ golds may win from an opponent discard after Sanjindao was declined",
+    # three_plus_gold_discard_hu resolved 2026-09-18: ordinary discard Hu remains legal after Sanjindao PASS.
     "environment_phase": "Complete legal action set for unsupported legacy phases",
     "win_declaration_and_settlement": "Automatic fan aggregation and settlement after an audited Hu declaration",
     "self_draw_decline": "Whether an available ordinary self-draw Hu may be declined to continue play",
