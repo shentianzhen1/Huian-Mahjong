@@ -17,7 +17,7 @@ from .context import DrawSource, YoujinStage
 
 QIANGJIN_MULTIPLIER = 4
 SANJINDAO_MULTIPLIER = 3
-EIGHT_FLOWER_MULTIPLIER = 8
+EIGHT_FLOWER_MULTIPLIER = 2
 
 
 def _in_youjin(state, player):
@@ -41,13 +41,46 @@ def _window_just_closed(state):
     return isinstance(last, dict) and last.get("type") == env.ActionType.PASS_QIANGJIN.value
 
 
+def _last_effective_draw(state, player):
+    last = state.last_action
+    if (not isinstance(last, dict)
+            or last.get("type") != env.ActionType.DRAW.value
+            or last.get("player") != player):
+        return None
+    metadata = last.get("metadata") or {}
+    return metadata.get("effective_drawn_tile", metadata.get("drawn_tile"))
+
+
+def _just_received_third_gold(state, player):
+    gold = state.gold_tile
+    return (gold is not None
+            and state.hands[player].count(gold) == 3
+            and _last_effective_draw(state, player) == gold)
+
+
+def _just_completed_eight_flowers(state, player):
+    if len(state.flowers[player]) != 8:
+        return False
+    if state.phase == "OPENING_QIANGJIN_CHECK":
+        return True
+    last = state.last_action
+    if (not isinstance(last, dict)
+            or last.get("type") != env.ActionType.DRAW.value
+            or last.get("player") != player):
+        return False
+    metadata = last.get("metadata") or {}
+    return metadata.get("drawn_tile") in env.FLOWERS
+
+
 def current_player_special_actions(adapter, state):
     p = state.current_player
     A, T = env.Action, env.ActionType
     actions = []
-    # Three or more golds enter the optional Sanjindao branch first.
-    # The player may declare immediately or pass and keep developing the hand.
-    if adapter.rules.can_sanjindao(state.hands[p], state.gold_tile):
+    # Sanjindao is a one-shot window only when the third gold has just arrived.
+    third_gold = _just_received_third_gold(state, p)
+    if adapter.rules.can_sanjindao(
+            state.hands[p], state.gold_tile,
+            third_gold_just_received=third_gold):
         return (
             A(p, T.HU, metadata={
                 "win_source": "sanjindao", "special": "SANJINDAO",
@@ -63,10 +96,11 @@ def current_player_special_actions(adapter, state):
             "win_source": "qiangjin", "multiplier": QIANGJIN_MULTIPLIER,
             "self_draw": True,
         }))
-    if len(state.flowers[p]) >= 8:
+    if _just_completed_eight_flowers(state, p):
         actions.append(A(p, T.HU, metadata={
             "win_source": "eight_flower_you", "special": "EIGHT_FLOWER_YOU",
             "multiplier": EIGHT_FLOWER_MULTIPLIER,
+            "project_rule": True,
         }))
     actions.append(A(p, T.PASS_QIANGJIN, metadata={"window": "current_only"}))
     return tuple(actions)
@@ -111,7 +145,8 @@ def report_with_specials(adapter, state):
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
     if state.phase in ("NEED_DRAW", "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG") and (
-            adapter.rules.can_sanjindao(state.hands[p], state.gold_tile)
+            _just_received_third_gold(state, p)
+            or _just_completed_eight_flowers(state, p)
             or working_qiangjin_eligible(state, p)):
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
