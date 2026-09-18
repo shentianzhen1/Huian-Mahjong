@@ -297,6 +297,71 @@ class EnvironmentTests(unittest.TestCase):
         )
         self.assertEqual(terminal.rewards, [11, -11])
 
+    def test_automatic_zimo_settlement_uses_fan_aggregator(self):
+        complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+                    "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+        state = scenario("NEED_DRAW", complete[:-1])
+        index = state.wall.index("E")
+        state.wall[0], state.wall[index] = state.wall[index], state.wall[0]
+        instance = game(state)
+        instance.step(instance.legal_actions()[0])
+        hu = next(action for action in instance.action_report().known_actions
+                  if action.type == env.ActionType.HU)
+        instance.step(hu)
+
+        terminal, event = instance.finalize_ordinary_outcome(
+            current_dealer_base=10)
+        self.assertEqual(terminal.terminal_reason, "AUTO_ZIMO")
+        self.assertEqual(terminal.rewards, [24, -24])
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["winner_fan"], 2)
+        self.assertEqual(metadata["multiplier"], 2)
+        self.assertEqual(metadata["source"], "automatic_fan")
+        self.assertEqual(
+            [(item["category"], item["fan"]) for item in metadata["fan_components"]],
+            [("concealed_triplet", 2)],
+        )
+
+    def test_automatic_pinghu_does_not_count_discard_completed_triplet(self):
+        complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
+                    "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
+        instance = game(scenario("AFTER_DISCARD", complete[:-1], discard="E"))
+        hu = next(action for action in instance.action_report().known_actions
+                  if action.type == env.ActionType.HU)
+        instance.step(hu)
+
+        terminal, event = instance.finalize_ordinary_outcome(
+            current_dealer_base=10)
+        self.assertEqual(terminal.terminal_reason, "AUTO_PINGHU")
+        self.assertEqual(terminal.rewards, [10, -10])
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["winner_fan"], 0)
+        self.assertEqual(metadata["multiplier"], 1)
+        self.assertEqual(metadata["fan_components"], [])
+
+    def test_automatic_settlement_stays_atomic_when_fan_is_unknown(self):
+        hand = [
+            "P9", "P9",
+            "M1", "M2", "M3",
+            "M4", "M5", "M6",
+            "M7", "M8", "M9",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+        ]
+        state = scenario("HU_DECLARED", hand)
+        state.pending_hu = {
+            "winner": 0, "source": "self_draw", "winning_tile": "S3",
+            "kong_kind": None, "discard_player": None, "river_index": None,
+        }
+        instance = game(state)
+        before = instance.state.state_hash()
+        events = instance.events
+        with self.assertRaisesRegex(UnknownRuleError, "multi_gold_fan"):
+            instance.finalize_ordinary_outcome(current_dealer_base=10)
+        self.assertEqual(instance.state.state_hash(), before)
+        self.assertEqual(instance.events, events)
+        self.assertFalse(instance.is_terminal())
+
     def test_flower_replacement_records_effective_self_draw_for_hu(self):
         complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
                     "P1", "P2", "P3", "S1", "S2", "S3", "E", "E", "E"]
