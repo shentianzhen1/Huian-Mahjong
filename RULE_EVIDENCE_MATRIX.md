@@ -57,7 +57,7 @@
 ## 实施顺序
 
 1. 已完成 `HuResult`：只枚举普通胡拆解与金牌使用，不在其中计算番数。
-2. 已完成 `FanAggregator`、普通真实 Settlement、`MatchProgressState` 和 `MatchRunner`；多金/花组/无独立杠费规则均已实现。`KONG_FEE_SETTLEMENT_UNKNOWN` 已退役，当前首要缺口改为 `decomposition_scoring`。
+2. 已完成 `FanAggregator`、普通真实 Settlement、`MatchProgressState` 和 `MatchRunner`；多金/花组/无独立杠费规则均已实现。`KONG_FEE_SETTLEMENT_UNKNOWN` 已退役，当前首要缺口改为 `decomposition_concealed_triplet_choice`：现有9例均为自摸无副露，合法拆法之间只差自然暗刻数量，规则问题已收敛为“系统是否取最高番拆法”。
 3. 三金倒已改为“摸进第3金的一次性窗口”，不再是3+金任意节点触发；PASS后可继续普通自摸/游金。剩余只补三金倒真实结算、付款/庄位、第4金是否有新窗口及与游金链的完整状态机；三金游就是 `TRIPLE_YOU`。
 4. 普通胡与模拟循环已接入；补杠专用响应窗口、PASS后尾摸与三种杠胡来源审计已完成。杠番表已按当前证据和玩家指示采用；玩家确认无独立杠费，因此完成杠后的普通胡与16张0/0流局都不再阻断。剩余杠类缺口仅为补杠抢杠真实录像、抢杠胡结算与杠上胡结算。
 
