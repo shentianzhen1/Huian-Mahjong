@@ -12,3 +12,15 @@
 
 RandomAgent在 `workspace.simulator` 保留兼容入口；它的 `choose_decision()` 同样提供理由。
 批量对战和运行命令见 [Simulator说明](../simulator/README.md)。
+
+
+## EfficiencyAgent V0.2（实验）
+
+`EfficiencyAgent` 暂不替换稳定的 `BaselineAgent`。它保持“HU优先、可选吃碰先PASS、强制动作照做”，只替换弃牌排序：
+
+- 先评估弃牌后的整体成组结构；
+- 再按公开牌河/副露扣除可见牌，计算下一摸对手牌结构的加权改良潜力；
+- 绝不读取对手暗牌、牌墙顺序或保留牌；
+- 决策日志记录 shape / weighted_gain / live_improving / types，便于A/B回归。
+
+这是轻量一层牌效率启发式，不是完整向听数、危险度或Monte Carlo。只有在配对固定seed评估稳定优于旧Baseline后，才考虑升为默认基线。
