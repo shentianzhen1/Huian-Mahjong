@@ -1,4 +1,4 @@
-name: Shanten Agent AB Benchmark SegmentDP
+name: Shanten Agent AB Benchmark 40
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
           complete = 0
           stopped = 0
 
-          for seed in range(10):
+          for seed in range(20):
               for swapped in (False, True):
                   factories = ((ShantenAgent, BaselineAgent)
                                if not swapped else (BaselineAgent, ShantenAgent))
