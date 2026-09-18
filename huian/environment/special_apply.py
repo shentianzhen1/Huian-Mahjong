@@ -32,13 +32,9 @@ def apply_qiangjin_action(state, action):
     if action.type == T.QIANGJIN:
         state.pending_hu = {
             "winner": p,
-            "source": "self_draw",
-            "winning_tile": state.gold_tile,
-            "kong_kind": None,
-            "discard_player": None,
-            "river_index": None,
+            "source": "qiangjin",
         }
         state.current_player = p
-        state.phase = "HU_DECLARED"
+        state.phase = "QIANGJIN_DECLARED"
         return True
     return False
