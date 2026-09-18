@@ -5,6 +5,15 @@ from huian._legacy import env
 def apply_qiangjin_action(state, action):
     T = env.ActionType
     p = action.player
+    if action.type == T.HU and action.metadata.get("special") == "SANJINDAO":
+        state.pending_hu = {
+            "winner": p,
+            "source": "sanjindao",
+            "gold_count": state.hands[p].count(state.gold_tile),
+        }
+        state.current_player = p
+        state.phase = "SANJINDAO_DECLARED"
+        return True
     if action.type == T.PASS_QIANGJIN:
         expected = 16 - 3 * len(state.melds[p])
         state.phase = "AFTER_DRAW" if len(state.hands[p]) > expected else "NEED_DRAW"
