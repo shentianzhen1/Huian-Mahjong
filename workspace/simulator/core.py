@@ -52,6 +52,7 @@ class SimulationResult:
     steps: int = 0
     stop_reason: str | None = None
     simulation_only: bool = False
+    real_scoring: bool = False
     config: dict | None = None
     initial_state_hash: str | None = None
     wall_hash: str | None = None
@@ -76,9 +77,10 @@ class SimulatorConfig:
                 raise ValueError(f"{name} must be boolean")
 
     def unsupported_rules(self):
+        supported = {"enable_added_kong", "enable_real_scoring"}
         return tuple(name.removeprefix("enable_")
                      for name, value in asdict(self).items()
-                     if name.startswith("enable_") and name != "enable_added_kong" and value)
+                     if name.startswith("enable_") and name not in supported and value)
 
 
 class Simulator:
@@ -156,8 +158,13 @@ class Simulator:
         return tuple(unknown)
 
     def run_normal_hand(self, seed=None, agent=None, dice_total=None, max_steps=1000,
-                        *, agents=None, wall=None, initial_state=None, dealer=0):
-        """Run ordinary play with unit rewards, never real fan aggregation.
+                        *, agents=None, wall=None, initial_state=None, dealer=0,
+                        current_dealer_base=None):
+        """Run the confirmed ordinary subset with unit or real ordinary scoring.
+
+        enable_real_scoring keeps the ordinary-only special-rule bypass but
+        closes complete Pinghu/Zimo through FanAggregator + real Settlement.
+        current_dealer_base is required only in real-scoring mode.
 
         wall is a complete 144-tile opening wall. initial_state is a validated
         mid-hand fixture with its wall and reserved tiles explicitly accounted.
@@ -178,6 +185,11 @@ class Simulator:
         profile = self.config if self.config is not None else SimulatorConfig()
         if not profile.normal_hand_mode:
             raise ValueError("run_normal_hand requires normal_hand_mode")
+        if profile.enable_real_scoring:
+            if type(current_dealer_base) is not int or current_dealer_base < 0:
+                raise ValueError("real scoring requires a nonnegative integer current_dealer_base")
+        elif current_dealer_base is not None:
+            raise ValueError("current_dealer_base is only valid with enable_real_scoring")
         rules = HuianRulesAdapter(HuianRules(RulesConfig(
             simulation_only_normal_hand=True, enable_added_kong=profile.enable_added_kong)))
         # Environment also limits events. Two setup events are not agent steps.
@@ -204,6 +216,7 @@ class Simulator:
                 game, seed=seed, status=status, dice_total=dice_total,
                 unresolved=unresolved, decisions=decisions, steps=steps,
                 stop_reason=stop_reason, simulation_only=True,
+                real_scoring=profile.enable_real_scoring,
                 config=asdict(profile), initial_state_hash=initial_hash,
                 wall_hash=wall_hash,
             )
@@ -230,7 +243,11 @@ class Simulator:
                     return finish("STOPPED_UNKNOWN", unknown, "special_rule_encountered")
                 if state.phase == "HU_DECLARED":
                     # Settlement is part of the declaring action, even on last step.
-                    game.finalize_simulation_only_outcome()
+                    if profile.enable_real_scoring:
+                        game.finalize_ordinary_outcome(
+                            current_dealer_base=current_dealer_base)
+                    else:
+                        game.finalize_simulation_only_outcome()
                     continue
                 if (any(meld.kind == "ADDED_GANG" for zone in state.melds for meld in zone)
                         and game.rules.rules.is_wall_draw(state)):
