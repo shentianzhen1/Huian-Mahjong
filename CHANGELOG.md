@@ -7,8 +7,8 @@
 - Environment 新增 `SANJINDAO_DECLARED` 声明阶段；声明后只在 `sanjindao_settlement` 安全停止。PASS/继续则恢复正常牌局流程。
 - 普通 simulation-only 基线对3+金固定选择 CONTINUE 分支，不把三金倒收益混入普通单位奖励；`sanjindao_timing` 已从 UNKNOWN 分类移除。
 - 同一批 seed 0–99、交换座位共200局重跑：188局完成、12局 UNKNOWN，剩余全部为 `ADD_KONG_SCORING_UNKNOWN`；0超步、0循环。完整配对88/100组，配对模拟平均奖励 Random=-1.358、Baseline=+1.358。
-- 为支持16张节点“过后继续摸牌”，循环检测位置现在保留 `last_action`，因为合法动作集合确实依赖最近一次特殊窗口选择。
-- 针对性三金倒/普通模拟测试已通过；一次性 benchmark workflow 已删除。全量 Core regression 当前仍为171项中8失败、4错误，包含旧规则断言和若干需继续修复的真实回归，尚不能标记为全量通过。
+- 为支持16张节点“过后继续摸牌”，保留原有语义位置循环检测，并对 `PASS_QIANGJIN` 这一合法的无实体牌变化动作单独放行；其他动作仍必须产生状态进展。
+- 针对性三金倒/普通模拟测试已通过；一次性 benchmark workflow 已删除。随后修复动作鉴权过宽问题：完整 Action（含 metadata）必须严格匹配，`False` 不再可冒充整数索引，错误摸牌来源和伪造补杠/抢杠引用会被拒绝。最新 GitHub Actions Core regression 在 Python 3.10/3.11/3.12 均为171项全通过，Legacy 两套 advisory 也通过；Vision advisory 本轮未手动运行。
 
 ## 2026-09-18 — 抢金窗口与明/暗杠不可抢规则同步
 
