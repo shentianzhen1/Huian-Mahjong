@@ -67,7 +67,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Dealer starts with 17 tiles; non-dealer starts with 16.
 - Flowers do not participate in normal meld composition; their fan is a separate component included before the Hu multiplier in verified ordinary settlements.
 - Player confirmation (2026-09-14): unclaimed discard + PASS advances to the next player's head draw; at 16 wall tiles the hand draws with rewards [0, 0].
-- Target room is fixed: 2 players, 8 hands, 单金不平胡 checked (`single_gold_can_pinghu=False`), no trusteeship. Earlier unchecked screenshot records the option UI, not this final room choice.
+- Target room is fixed: 2 players, 8 hands, each player starts the match at 1000 points, 单金不平胡 checked (`single_gold_can_pinghu=False`), no trusteeship. Earlier unchecked screenshot records the option UI, not this final room choice.
 - Opponent discard can offer Chi/Peng/Gang/Hu where legal; Rules must return all legal actions and AI chooses.
 - In 2-player Huian, the sole opponent's discard may be Chi'd.
 - Confirmed rule and system interaction (player confirmation, 2026-09-14): when one discard permits multiple Chi sequences, every legal sequence is a separate choice. The mini-program opens a Chi-option selection panel and the player selects the exact sequence; it does not auto-select and a generic Chi action must not silently choose one. Example: discard M5 with M3/M4, M4/M6 and M6/M7 available offers M3-M4-M5, M4-M5-M6 and M5-M6-M7.
@@ -89,7 +89,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Dealer win -> dealer stays.
 - Draw -> dealer stays.
 - Dealer loss -> other player becomes dealer.
-- Match default is 8 hands.
+- Match default is 8 hands. Player confirmation (2026-09-18): both players start at 1000 points. Each settled hand transfers its net result between the two players; after hand 8, the accumulated scores are the match result. Therefore the AI's primary objective is to maximize its own final score after 8 hands (equivalently, with equal starts and zero-sum transfers, maximize accumulated score delta / final score margin), not to maximize single-hand win count. Tie handling remains UNKNOWN.
 - Player confirmation (2026-09-14): the target rules do not award complex combination fans such as 门清、碰碰胡、清一色、混一色 or similar pattern families. Such tile arrangements may still satisfy the standard Hu structure, but receive no special fan for those names.
 - Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 - Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
