@@ -44,7 +44,7 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
         rob_kong = special_outcome_profile("ROB_KONG_HU")
         self.assertEqual(rob_kong.multiplier, 2)
         self.assertEqual(
-            rob_kong.multiplier_status, EvidenceStatus.HIGH_CONFIDENCE
+            rob_kong.multiplier_status, EvidenceStatus.CONFIRMED
         )
         self.assertFalse(rob_kong.settlement_ready)
 
