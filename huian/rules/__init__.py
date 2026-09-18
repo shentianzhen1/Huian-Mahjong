@@ -6,6 +6,8 @@ from .context import (DrawSource, HuContext, KongKind, SanjindaoChoice,
                       SanjindaoDecision, WinSource, YoujinStage)
 from .observed_settlement import HuianObservedSettlement, HuianObservedSettlementPlugin
 from .special_outcomes import (SPECIAL_OUTCOMES, SpecialOutcomeProfile,
+                               special_outcome_for_phase,
+                               special_outcome_for_source,
                                special_outcome_profile)
 from .adapter import HuianRulesAdapter
 
@@ -15,4 +17,5 @@ __all__ = ["DrawSource", "FanAggregator", "FanComponent", "FanResult", "HuContex
            "UnknownRuleError", "UNKNOWN_RULES", "KongFanResult", "Settlement", "YoujinScoreTerms",
            "YoujinStage",
            "HuianObservedSettlement", "HuianObservedSettlementPlugin",
-           "SPECIAL_OUTCOMES", "SpecialOutcomeProfile", "special_outcome_profile"]
+           "SPECIAL_OUTCOMES", "SpecialOutcomeProfile", "special_outcome_profile",
+           "special_outcome_for_phase", "special_outcome_for_source"]
