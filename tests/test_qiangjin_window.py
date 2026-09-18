@@ -115,6 +115,45 @@ class QiangjinWindowTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "qiangjin_settlement"):
             game.legal_actions()
 
+    def test_observed_qiangjin_can_be_recorded_without_formula_inference(self):
+        state = two_seat_gold_state(current_gold=1, opponent_gold=0)
+        game = env_of(state)
+        action = next(
+            a for a in game.legal_actions()
+            if a.type == env.ActionType.QIANGJIN
+        )
+        game.step(action)
+
+        with self.assertRaisesRegex(RuntimeError, "qiangjin_settlement"):
+            game.finalize_observed_outcome(
+                winner=0, current_dealer_base=5, winner_fan=1,
+                win_type="ZIMO",
+            )
+
+        terminal, event = game.finalize_observed_special_outcome(
+            winner=0,
+            rewards=(37, -37),
+            evidence_id="fixture:qiangjin-observed",
+            observed_fields={
+                "shown_net": 37,
+                "shown_base": 5,
+                "shown_multiplier": None,
+            },
+        )
+        self.assertTrue(terminal.terminal)
+        self.assertEqual(terminal.terminal_reason, "OBSERVED_SPECIAL")
+        self.assertEqual(terminal.rewards, [37, -37])
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["special"], "QIANGJIN")
+        self.assertIsNone(metadata["registered_multiplier"])
+        self.assertEqual(
+            metadata["registered_multiplier_evidence"], "UNKNOWN")
+        self.assertEqual(
+            metadata["registered_settlement_rule_id"],
+            "qiangjin_settlement")
+        self.assertEqual(
+            metadata["evidence_id"], "fixture:qiangjin-observed")
+
     def test_c_pass_qiangjin_requires_discard(self):
         state = two_seat_gold_state(current_gold=1, opponent_gold=0)
         game = env_of(state)
