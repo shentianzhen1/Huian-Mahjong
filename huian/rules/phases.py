@@ -20,7 +20,8 @@ class ActionReport:
 PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
           "OPENING_QIANGJIN_CHECK", "HU_DECLARED", "TERMINAL", "ROB_KONG_WINDOW",
-          "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG", "SANJINDAO_DECLARED"}
+          "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG", "SANJINDAO_DECLARED",
+          "EIGHT_FLOWER_YOU_DECLARED"}
 
 
 def _has_added_kong(state):
@@ -92,10 +93,24 @@ def _validate_pending_hu(state):
                 or pending["winner"] not in (0, 1)
                 or pending["winner"] != state.current_player
                 or type(pending["gold_count"]) is not int
-                or pending["gold_count"] < 3):
-            raise ValueError("SANJINDAO_DECLARED requires a valid three-gold declaration")
-        if state.gold_tile is None or state.hands[pending["winner"]].count(state.gold_tile) < 3:
-            raise ValueError("Sanjindao declaration must retain at least three gold tiles")
+                or pending["gold_count"] != 3):
+            raise ValueError("SANJINDAO_DECLARED requires an exact third-gold declaration")
+        if state.gold_tile is None or state.hands[pending["winner"]].count(state.gold_tile) != 3:
+            raise ValueError("Sanjindao declaration must retain exactly three gold tiles")
+        return
+    if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
+        expected = {"winner", "source", "flower_count", "multiplier", "project_rule"}
+        if (not isinstance(pending, dict) or set(pending) != expected
+                or pending["source"] != "eight_flower_you"
+                or type(pending["winner"]) is not int
+                or pending["winner"] not in (0, 1)
+                or pending["winner"] != state.current_player
+                or pending["flower_count"] != 8
+                or pending["multiplier"] != 2
+                or pending["project_rule"] is not True):
+            raise ValueError("EIGHT_FLOWER_YOU_DECLARED requires the project x2 declaration")
+        if len(state.flowers[pending["winner"]]) != 8:
+            raise ValueError("Eight-flower declaration must retain all eight flowers")
         return
     if state.phase != "HU_DECLARED":
         if pending is not None:
@@ -153,7 +168,7 @@ def validate(adapter, state):
         raise ValueError("Active wall cannot be below the 16-tile draw boundary")
     scored_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
         "OBSERVED_PINGHU", "OBSERVED_ZIMO", "AUTO_PINGHU", "AUTO_ZIMO",
-        "SIMULATION_PINGHU", "SIMULATION_ZIMO"
+        "SIMULATION_PINGHU", "SIMULATION_ZIMO", "PROJECT_EIGHT_FLOWER_YOU"
     )
     if state.terminal_reason not in (None, "WALL_16") and not scored_reason:
         raise ValueError("Invalid terminal reason")
@@ -213,7 +228,8 @@ def validate(adapter, state):
             if (p == state.current_player and state.phase == "HU_DECLARED"
                     and state.pending_hu["source"] != WinSource.DISCARD.value):
                 expected += 1
-            if p == state.current_player and state.phase == "SANJINDAO_DECLARED":
+            if p == state.current_player and state.phase in (
+                    "SANJINDAO_DECLARED", "EIGHT_FLOWER_YOU_DECLARED"):
                 if len(state.hands[p]) not in (expected, expected + 1):
                     raise ValueError(f"Invalid hand size for player {p} in {state.phase}")
                 continue
@@ -266,6 +282,8 @@ def report(adapter, state):
         return ActionReport((), ("ROB_KONG_SCORING_UNKNOWN",))
     if state.phase == "SANJINDAO_DECLARED":
         return ActionReport((), ("sanjindao_settlement",))
+    if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
+        return ActionReport((), ("eight_flower_settlement_pending",))
     if state.phase == "NEED_FLOWER_REPLACE":
         if _has_added_kong(state) and len(state.wall) == adapter.rules.DRAW_WALL_REMAINING:
             return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",))
