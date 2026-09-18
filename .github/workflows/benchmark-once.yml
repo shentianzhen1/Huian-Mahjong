@@ -1,5 +1,5 @@
 name: One-time Simulator Benchmark
-# rerun after qiangjin wrapper fix
+# rerun after simulation isolation fix
 
 on:
   push:
