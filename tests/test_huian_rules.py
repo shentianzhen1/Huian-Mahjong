@@ -96,6 +96,27 @@ class HuianRulesTests(unittest.TestCase):
             hand, "P9", win_context=HuContext(WinSource.DISCARD, "P9")
         ))
 
+    def test_adopted_kong_fan_table_tracks_evidence_grade(self):
+        cases = (
+            (KongKind.MING_GANG, "P1", 2, EvidenceStatus.HIGH_CONFIDENCE),
+            (KongKind.MING_GANG, "E", 3, EvidenceStatus.HIGH_CONFIDENCE),
+            (KongKind.ADDED_GANG, "P1", 2, EvidenceStatus.CONFIRMED),
+            (KongKind.ADDED_GANG, "E", 3, EvidenceStatus.HIGH_CONFIDENCE),
+            (KongKind.AN_GANG, "P1", 3, EvidenceStatus.HIGH_CONFIDENCE),
+            (KongKind.AN_GANG, "E", 4, EvidenceStatus.HIGH_CONFIDENCE),
+        )
+        for kind, tile, fan, status in cases:
+            with self.subTest(kind=kind, tile=tile):
+                result = self.rules.kong_fan(kind, tile)
+                self.assertEqual(result.fan, fan)
+                self.assertEqual(result.status, status)
+                self.assertEqual(result.kind, kind)
+                self.assertEqual(result.tile, tile)
+        with self.assertRaises(ValueError):
+            self.rules.kong_fan("BAD", "P1")
+        with self.assertRaises(ValueError):
+            self.rules.kong_fan(KongKind.MING_GANG, "F1")
+
     def test_kong_tail_context_classifies_all_three_kong_kinds_as_gang_hu(self):
         for kind in KongKind:
             result = self.rules.analyze_hu(
