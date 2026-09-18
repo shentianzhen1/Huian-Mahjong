@@ -4,7 +4,7 @@ Player spec 2026-09-18:
 - Only added kongs are robbable; ming/an gangs are not.
 - Qiangjin belongs only to the acting player after draw / flower / kong.
 - Opening flip does not offer opponent qiangjin. PASS does not hand off.
-- Sanjindao outranks qiangjin at the same node.
+- Sanjindao outranks qiangjin at the same node. With 3+ golds the player may declare immediately or PASS and continue developing the hand.
 Hand-shape details for qiangjin remain UNKNOWN; eligibility here is the
 working gate "gold in hand, not in Youjin" so the window ownership tests
 can run without inventing a decomposition.
@@ -43,11 +43,19 @@ def current_player_special_actions(adapter, state):
     p = state.current_player
     A, T = env.Action, env.ActionType
     actions = []
+    # Three or more golds enter the optional Sanjindao branch first.
+    # The player may declare immediately or pass and keep developing the hand.
     if adapter.rules.can_sanjindao(state.hands[p], state.gold_tile):
-        actions.append(A(p, T.HU, metadata={
-            "win_source": "sanjindao", "special": "SANJINDAO",
-            "multiplier": SANJINDAO_MULTIPLIER,
-        }))
+        return (
+            A(p, T.HU, metadata={
+                "win_source": "sanjindao", "special": "SANJINDAO",
+                "multiplier": SANJINDAO_MULTIPLIER,
+            }),
+            A(p, T.PASS_QIANGJIN, metadata={
+                "window": "current_only", "declined": "SANJINDAO",
+                "continue_play": True,
+            }),
+        )
     if working_qiangjin_eligible(state, p):
         actions.append(A(p, T.QIANGJIN, metadata={
             "win_source": "qiangjin", "multiplier": QIANGJIN_MULTIPLIER,
@@ -99,7 +107,9 @@ def report_with_specials(adapter, state):
     if state.phase in ("OPENING_QIANGJIN_CHECK", "QIANGJIN_WINDOW"):
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
-    if state.phase == "NEED_DRAW" and working_qiangjin_eligible(state, p):
+    if state.phase in ("NEED_DRAW", "AFTER_DRAW") and (
+            adapter.rules.can_sanjindao(state.hands[p], state.gold_tile)
+            or working_qiangjin_eligible(state, p)):
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
     result = base_report(adapter, state)
