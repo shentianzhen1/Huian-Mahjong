@@ -73,6 +73,17 @@ class HuResult:
 
 
 @dataclass(frozen=True)
+class KongFanResult:
+    """Adopted kong fan value with its evidence grade."""
+
+    kind: KongKind
+    tile: str
+    fan: int
+    status: EvidenceStatus
+    evidence: str
+
+
+@dataclass(frozen=True)
 class YoujinScoreTerms:
     """Confirmed target-room factors without inferring base or payer."""
 
@@ -140,6 +151,44 @@ class HuianRules:
     def concealed_kongs(self, hand, gold_tile=None):
         self._validate_hand(hand, gold_tile)
         return tuple(t for t in core.BASE_TILES if can_an_gang(hand, t, gold_tile))
+
+    def kong_fan(self, kind, tile):
+        """Return the currently adopted target-room fan for a completed kong.
+
+        Operational rule adopted 2026-09-18, subject to revision if stronger
+        direct video evidence conflicts:
+        - 大明杠 / MING_GANG: suited 2, honor 3.
+        - 补杠/蓄杠/加杠 / ADDED_GANG: same exposed-kong table, suited 2, honor 3.
+        - 暗杠 / AN_GANG: suited 3, honor 4.
+
+        The suited ADD_KONG=2 value is directly confirmed by replay 66fe863f.
+        The remaining cells are adopted from the in-game Huian rule page and
+        therefore retain HIGH_CONFIDENCE provenance.
+        """
+        try:
+            kind = kind if isinstance(kind, KongKind) else KongKind(kind)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Invalid kong kind") from exc
+        if tile not in core.BASE_TILES:
+            raise ValueError("Kong fan requires a normal tile")
+        honor = core.is_honor(tile)
+        if kind == KongKind.AN_GANG:
+            fan = 4 if honor else 3
+        else:
+            fan = 3 if honor else 2
+        direct_added_suited = kind == KongKind.ADDED_GANG and not honor
+        return KongFanResult(
+            kind=kind,
+            tile=tile,
+            fan=fan,
+            status=(EvidenceStatus.CONFIRMED if direct_added_suited
+                    else EvidenceStatus.HIGH_CONFIDENCE),
+            evidence=(
+                "66fe863f replay: suited added kong displayed as 2 fan"
+                if direct_added_suited
+                else "Huian in-game rule page fan table; adopted pending contrary video"
+            ),
+        )
 
     def added_kong_options(self, hand, melds, gold_tile=None):
         """补杠/蓄杠/加杠 candidates: upgrade an existing Peng with a self-drawn fourth tile.
