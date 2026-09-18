@@ -162,6 +162,122 @@ class HuianEnvironment:
             "current_player_after": candidate.current_player, "phase_after": candidate.phase})
         self._seen.add(self._position(candidate))
         return self.state
+    def finalize_ordinary_outcome(self, *, current_dealer_base):
+        """Automatically fan-count and settle a declared ordinary Pinghu/Zimo.
+
+        This is the first real-scoring path: it derives winner fan from the
+        current audited state instead of accepting caller-supplied fan. It only
+        closes a hand when FanAggregator is complete and no unresolved kong side
+        payment can affect the match score.
+        """
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        if self._state.phase != "HU_DECLARED" or not isinstance(self._state.pending_hu, dict):
+            raise ValueError("Automatic ordinary settlement requires HU_DECLARED")
+
+        declaration = deepcopy(self._state.pending_hu)
+        source = WinSource(declaration["source"])
+        if source == WinSource.ROB_KONG:
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
+        if source == WinSource.KONG_TAIL_DRAW:
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
+        if source not in (WinSource.DISCARD, WinSource.SELF_DRAW):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("win_declaration_and_settlement")
+
+        # Until independent kong payments/flow handling are confirmed, a real
+        # match score cannot be reconstructed if either seat completed any kong.
+        if any(meld.kind in ("MING_GANG", "AN_GANG", "ADDED_GANG")
+               for zone in self._state.melds for meld in zone):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
+
+        winner = declaration["winner"]
+        winning_tile = declaration["winning_tile"]
+        hand = list(self._state.hands[winner])
+        if source == WinSource.DISCARD:
+            # The winning discard remains in the source river for physical-tile
+            # accounting; add a virtual copy only for structural/fan analysis.
+            hand.append(winning_tile)
+
+        context = HuContext(source, winning_tile=winning_tile)
+        hu_result = self.rules.rules.analyze_hu(
+            hand,
+            self._state.gold_tile,
+            open_melds=len(self._state.melds[winner]),
+            win_context=context,
+        )
+        if not hu_result.legal:
+            raise ValueError("Declared ordinary Hu no longer passes structural analysis")
+
+        fan_result = self.rules.rules.aggregate_fan(
+            hand,
+            self._state.melds[winner],
+            self._state.flowers[winner],
+            self._state.gold_tile,
+            hu_result=hu_result,
+        )
+        if not fan_result.complete:
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError(*fan_result.unresolved)
+
+        win_type = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
+        result = self.settlement.settle(
+            winner=winner,
+            current_dealer_base=current_dealer_base,
+            winner_fan=fan_result.fan,
+            win_type=win_type,
+        )
+
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = list(result.rewards)
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "AUTO_" + result.win_type
+        candidate.pending_discard = None
+        candidate.pending_hu = None
+        self.rules.validate_state(candidate)
+
+        fan_components = [{
+            "category": component.category,
+            "fan": component.fan,
+            "detail": component.detail,
+            "status": component.status.value,
+            "evidence": component.evidence,
+        } for component in fan_result.components]
+        metadata = {
+            "source": "automatic_fan",
+            "win_type": result.win_type,
+            "current_dealer_base": current_dealer_base,
+            "winner_fan": fan_result.fan,
+            "multiplier": result.multiplier,
+            "fan_components": fan_components,
+            "fan_candidate_fans": list(fan_result.candidate_fans),
+            "fan_decomposition_count": fan_result.decomposition_count,
+            "hu_declaration": declaration,
+            "rewards": list(result.rewards),
+        }
+        event = {
+            "seq": len(self._events),
+            "action": {
+                "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
+                "metadata": metadata,
+            },
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
+
     def finalize_observed_outcome(self, *, winner, current_dealer_base, winner_fan, win_type):
         """Record an externally verified ordinary outcome without inferring it.
 
