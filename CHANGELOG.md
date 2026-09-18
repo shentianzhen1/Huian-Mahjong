@@ -8,6 +8,8 @@
 - 若胡牌求解器明确标记拆分枚举被截断，则不在不完整候选集上取最大值，继续以 `decomposition_scoring` 安全阻断。
 - `FanResult` 新增 `selected_decomposition_index` 与 `selection_policy=MAX_TOTAL_FAN`，真实普通结算事件同步记录候选番、选中拆分与策略，方便回溯。
 - 原9个 `decomposition_concealed_triplet_choice` 停止案例因此不再作为规则UNKNOWN；后续AI的出牌后对手吃/碰/杠/胡反应仍留给Environment/Monte Carlo层，不混入本次结算实现。
+- Core regression 在 Python 3.10 / 3.11 / 3.12 均206项全通过；Legacy baseline advisory通过。
+- 同口径20场 ordinary-real 复测：完整8局由6场提升到12场；真实结算局数由87提升到118；平均已结算局数由4.35提升到5.9。多拆解UNKNOWN归零，剩余仅 `three_plus_gold_discard_hu` 5次、`exposed_triplet_fan` 3次。
 
 ## 2026-09-18 — 多拆解UNKNOWN收敛为暗刻择优问题
 
