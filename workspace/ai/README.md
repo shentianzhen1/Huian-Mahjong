@@ -24,3 +24,10 @@ RandomAgent在 `workspace.simulator` 保留兼容入口；它的 `choose_decisio
 - 决策日志记录 shape / weighted_gain / live_improving / types，便于A/B回归。
 
 这是轻量一层牌效率启发式，不是完整向听数、危险度或Monte Carlo。只有在配对固定seed评估稳定优于旧Baseline后，才考虑升为默认基线。
+
+
+### V0.2 A/B结果
+
+固定20个match seed、正反换座，共40场8局全部完成。结果：EfficiencyAgent 6胜，BaselineAgent 33胜，1平；平均最终分 Efficiency=925.125、Baseline=1074.875，平均分差 Efficiency-Baseline=-149.75。
+
+结论：V0.2没有通过晋级门槛，**不得替换BaselineAgent**。这说明“手工结构分+一摸改良潜力”会产生系统性错误弃牌。下一版优先做可验证的16/17张惠安牌型向听/有效牌，再考虑公开信息危险度和Monte Carlo/EV。
