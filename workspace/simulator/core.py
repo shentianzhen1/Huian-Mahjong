@@ -153,8 +153,8 @@ class Simulator:
         unknown = []
         if state.special_states != ["NORMAL", "NORMAL"]:
             unknown.append("youjin_permissions")
-        if any(len(flowers) == 8 for flowers in state.flowers):
-            unknown.append("eight_flowers_special_win")
+        # Ordinary-only simulation takes the confirmed PASS branch for an
+        # eight-flower special and keeps the eight base flower fan for ordinary Hu.
         return tuple(unknown)
 
     def run_normal_hand(self, seed=None, agent=None, dice_total=None, max_steps=1000,
