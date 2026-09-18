@@ -1,0 +1,86 @@
+name: Real Ordinary Match Benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/real-ordinary-match-once.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run 10-seed swapped-seat eight-hand benchmark
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import json
+          from collections import Counter
+          from workspace.ai import BaselineAgent
+          from workspace.simulator import RandomAgent, run_real_ordinary_match
+
+          rows = []
+          reasons = Counter()
+          completed_scores = {"RandomAgent": [], "BaselineAgent": []}
+          errors = []
+          for seed in range(10):
+              for swapped in (False, True):
+                  factories = ((RandomAgent, BaselineAgent)
+                               if not swapped else (BaselineAgent, RandomAgent))
+                  try:
+                      result = run_real_ordinary_match(
+                          seed=seed,
+                          agent_factories=factories,
+                          max_steps=1000,
+                          initial_dealer=0,
+                      )
+                  except Exception as exc:
+                      errors.append({
+                          "seed": seed, "swapped": swapped,
+                          "type": type(exc).__name__, "message": str(exc),
+                      })
+                      continue
+                  row = {
+                      "seed": seed,
+                      "swapped": swapped,
+                      "status": result.status,
+                      "settled_hands": result.progress.hand_index,
+                      "scores": list(result.final_scores),
+                      "unresolved": list(result.unresolved),
+                      "stopped_hand_index": result.stopped_hand_index,
+                  }
+                  rows.append(row)
+                  reasons.update(result.unresolved)
+                  if result.complete:
+                      names = ["RandomAgent", "BaselineAgent"] if not swapped else ["BaselineAgent", "RandomAgent"]
+                      for seat, name in enumerate(names):
+                          completed_scores[name].append(result.final_scores[seat])
+
+          summary = {
+              "total_attempts": 20,
+              "returned_matches": len(rows),
+              "errors": errors,
+              "complete_matches": sum(r["status"] == "COMPLETED" for r in rows),
+              "stopped_unknown": sum(r["status"] == "STOPPED_UNKNOWN" for r in rows),
+              "unknown_reasons": dict(sorted(reasons.items())),
+              "settled_hands_total": sum(r["settled_hands"] for r in rows),
+              "average_settled_hands_before_stop_or_finish": (
+                  sum(r["settled_hands"] for r in rows) / len(rows) if rows else 0
+              ),
+              "completed_match_average_final_score": {
+                  name: (sum(values) / len(values) if values else None)
+                  for name, values in completed_scores.items()
+              },
+              "rows": rows,
+          }
+          print("MATCH_BENCHMARK_START")
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          print("MATCH_BENCHMARK_END")
+          PY
