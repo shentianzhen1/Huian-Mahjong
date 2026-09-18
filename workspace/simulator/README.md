@@ -45,7 +45,7 @@ Environment 已提供 `finalize_ordinary_outcome(current_dealer_base=...)`。在
 
 `(当前庄家底 + 赢家番) × 平胡1 / 自摸2`
 
-生成真实零和 `rewards`。点炮胡牌张仍留在牌河，只为结构和番数分析临时加入赢家手牌。多金、花组/拆解歧义、任何未解决杠费、抢杠胡或杠上胡都会安全停止，不制造真实分数。
+生成真实零和 `rewards`。点炮胡牌张仍留在牌河，只为结构和番数分析临时加入赢家手牌。多金和普通花组已解决，不再单独阻断；多拆解、普通数牌碰、3+金点炮、任何未解决杠费、抢杠胡或杠上胡仍会安全停止，不制造真实分数。
 
 simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结算严格分离；下一阶段由8局 Match Simulator 消费真实结算结果。
 
@@ -53,7 +53,7 @@ simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结�
 
 2026-09-18 首次整场级回归使用10个match seed，并将 RandomAgent / BaselineAgent 交换座位，共20场；每场目标8局、1000/1000起分。
 
-结果：0/20场完整跑完8局；共真实结算23局，平均每场先完成1.15局。UNKNOWN累计为：`multi_gold_fan` 10、`KONG_FEE_SETTLEMENT_UNKNOWN` 9、`decomposition_scoring` 2、`exposed_triplet_fan` 1、`flower_groups` 1。最远样本完成7局后才因多金番未知停止。
+更新后结果：3/20场完整跑完8局；共真实结算52局，平均每场先完成2.6局。UNKNOWN累计为：KONG_FEE_SETTLEMENT_UNKNOWN 9、decomposition_scoring 4、exposed_triplet_fan 2、three_plus_gold_discard_hu 2。multi_gold_fan 与 flower_groups 已从停止原因消失。
 
 这说明 MatchRunner / dealer-base / 总账链路已经可运行，当前整场完成率主要受真实计分证据缺口限制，而不是8局状态机限制。未完成整场的部分比分只用于审计，不作为最终AI成绩。
 
@@ -63,7 +63,7 @@ simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结�
 - 显式调用 `run_normal_hand()` 或 `Simulator(config=SimulatorConfig()).run()` 才使用普通局模拟模式。开局跳过抢金，事件标记simulation-only。
 - config中的抢金、三金倒、游金链、八花游、广义抢杠和真实计分开关默认关闭；设置为True会返回 `STOPPED_UNKNOWN / unsupported_config`。
 - `enable_added_kong=True`默认开启补杠候选。这里的 `ADD_KONG` 就是补杠/蓄杠/加杠：已经碰过三张，自己再摸到第4张后升级成明杠；这是唯一允许抢杠的杠，窗口支持 `ROB_KONG_HU` / PASS。`MING_GANG` 在代码中专指大明杠（别人打来一张、自己三张直接杠），不可抢；`AN_GANG` 暗杠也不可抢。原PENG与第4张保留至PASS，随后升级并必须尾摸、复用补花。
-- 三张以上金不再因“时机未知”停止：玩家已确认三金倒可立即声明或选择继续，因此普通 simulation-only 基线固定走 CONTINUE 分支，并继续普通牌局；该模式不计三金倒收益，也不会据此推断游金状态。完成补杠后也继续普通牌局；八花、显式游金状态、抢杠胡/杠胡以及流局杠费边界仍会按对应规则ID停止。
+- 三金倒只在第三金到手瞬间触发；ordinary-only 基线固定走 CONTINUE 分支，之后允许3金普通自摸。八花游也固定走PASS分支，保留8个基础花番继续普通牌局。完成补杠后普通行牌继续；显式游金状态、3+金点炮、抢杠胡/杠胡以及流局杠费边界仍会按对应规则ID停止。
 - 普通局自摸使用“能胡即胡”的模拟策略；真实房间能否放弃自摸继续打仍未确认。
 - 平胡赢家+1/对手−1，自摸赢家+2/对手−2，流局[0,0]。均为simulation-only单位，不含真实花/金番、庄底或特殊胡计分。
 - 抢杠成功 → `ROB_KONG_SCORING_UNKNOWN`；尾摸后声明杠胡 → `GANG_HU_SCORING_UNKNOWN`；普通补杠完成后不再停止，继续行牌；若含补杠的牌局到16张流局边界，则返回 `KONG_FEE_SETTLEMENT_UNKNOWN`，不假定零杠费。
