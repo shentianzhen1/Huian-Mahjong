@@ -35,7 +35,7 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 
 真实目标房按玩家确认：2人、默认8局、双方开局各1000分。每局结算的零和净得失累加到总分，第8局结束后的最终分数才是项目真正要优化的结果。
 
-`MatchScoreState` 只负责这一层总账：1000/1000开局、总分2000守恒、记录已打/剩余局数、当前分数和分差；`score_eight_hand_match()` 聚合完整8局。它不会猜任何UNKNOWN单局结算。
+`MatchScoreState` 负责1000/1000总账；`MatchProgressState` 在此基础上继续记录当前庄家和连续坐庄次数，并自动计算下一局庄底。庄赢或流局留庄并+5，庄输换庄且回到底5。两层都只消费已经结算的真实 rewards，不猜UNKNOWN单局结算。
 
 因此本文件下面的 `run_many_normal_hands`、单局胜率和±1/±2单位奖励都只是**单局诊断/开发基线**，不是最终AI目标。后续真实8局Simulator要把当前总分、剩余局数、庄位和连庄底传给AI；策略评估以最终分数/分差为主。
 
