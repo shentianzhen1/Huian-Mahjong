@@ -8,7 +8,7 @@
 - 普通 simulation-only 基线对3+金固定选择 CONTINUE 分支，不把三金倒收益混入普通单位奖励；`sanjindao_timing` 已从 UNKNOWN 分类移除。
 - 同一批 seed 0–99、交换座位共200局重跑：188局完成、12局 UNKNOWN，剩余全部为 `ADD_KONG_SCORING_UNKNOWN`；0超步、0循环。完整配对88/100组，配对模拟平均奖励 Random=-1.358、Baseline=+1.358。
 - 为支持16张节点“过后继续摸牌”，循环检测位置现在保留 `last_action`，因为合法动作集合确实依赖最近一次特殊窗口选择。
-- 针对性三金倒/普通模拟测试已通过；一次性 benchmark workflow 已删除。
+- 针对性三金倒/普通模拟测试已通过；一次性 benchmark workflow 已删除。全量 Core regression 当前仍为171项中8失败、4错误，包含旧规则断言和若干需继续修复的真实回归，尚不能标记为全量通过。
 
 ## 2026-09-18 — 抢金窗口与明/暗杠不可抢规则同步
 
