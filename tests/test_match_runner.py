@@ -3,7 +3,7 @@ import unittest
 from huian import UnknownRuleError
 from workspace.simulator import (
     MatchHandResult, MatchRunner, SimulationResult, run_eight_hand_match,
-    run_real_ordinary_match,
+    run_real_ordinary_match, summarize_match_rule_gaps,
 )
 
 
@@ -155,6 +155,40 @@ class MatchRunnerTests(unittest.TestCase):
             "hands_remaining": 6,
             "hand_seed": 1002,
         })
+
+    def test_rule_gap_summary_counts_and_keeps_bounded_examples(self):
+        def stopped(rule_id, marker):
+            return MatchRunner(lambda context: MatchHandResult.unknown(
+                rule_id, evidence={"marker": marker}
+            )).run()
+
+        complete = run_eight_hand_match(
+            lambda context: MatchHandResult.settled(
+                (0, 0), winner=None, terminal_reason="WALL_16"
+            )
+        )
+        report = summarize_match_rule_gaps([
+            stopped("KONG_FEE_SETTLEMENT_UNKNOWN", "a"),
+            stopped("decomposition_scoring", "b"),
+            stopped("KONG_FEE_SETTLEMENT_UNKNOWN", "c"),
+            complete,
+        ], max_examples_per_rule=1)
+
+        self.assertEqual(report["total_matches"], 4)
+        self.assertEqual(report["complete_matches"], 1)
+        self.assertEqual(report["stopped_unknown"], 3)
+        self.assertEqual(
+            list(report["rules"]),
+            ["KONG_FEE_SETTLEMENT_UNKNOWN", "decomposition_scoring"],
+        )
+        self.assertEqual(
+            report["rules"]["KONG_FEE_SETTLEMENT_UNKNOWN"]["count"], 2)
+        self.assertEqual(
+            report["rules"]["KONG_FEE_SETTLEMENT_UNKNOWN"]["examples"],
+            [{"marker": "a"}],
+        )
+        with self.assertRaises(ValueError):
+            summarize_match_rule_gaps([], max_examples_per_rule=-1)
 
     def test_runner_rejects_invalid_hand_result(self):
         with self.assertRaises(TypeError):
