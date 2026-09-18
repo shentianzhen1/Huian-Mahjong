@@ -109,6 +109,47 @@ class NormalSimulationTests(unittest.TestCase):
         self.assert_audit(result, game)
         self.assertEqual(result.events[-1]["action"]["metadata"]["hu_declaration"]["winning_tile"], "E")
 
+    def test_real_scoring_profile_uses_fan_aggregator_for_pinghu_and_zimo(self):
+        instances = []
+
+        def factory(**options):
+            game = HuianEnvironment(**options)
+            instances.append(game)
+            return game
+
+        simulator = Simulator(
+            factory, config=SimulatorConfig(enable_real_scoring=True))
+
+        result = simulator.run_normal_hand(
+            wall=opening_wall(), dice_total=7, dealer=0,
+            agents=(FirstDiscardAgent("E"), BaselineAgent()),
+            max_steps=2, current_dealer_base=5)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertTrue(result.simulation_only)
+        self.assertTrue(result.real_scoring)
+        self.assertEqual(result.terminal_reason, "AUTO_PINGHU")
+        self.assertEqual(result.rewards, (-5, 5))
+        self.assertEqual(result.winner, 1)
+        self.assertEqual(result.events[-1]["action"]["metadata"]["winner_fan"], 0)
+
+        result = simulator.run_normal_hand(
+            wall=opening_wall(True), dice_total=7, dealer=0,
+            agents=(FirstDiscardAgent("P8"), BaselineAgent()),
+            max_steps=4, current_dealer_base=5)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertTrue(result.real_scoring)
+        self.assertEqual(result.terminal_reason, "AUTO_ZIMO")
+        self.assertEqual(result.rewards, (-14, 14))
+        self.assertEqual(result.events[-1]["action"]["metadata"]["winner_fan"], 2)
+
+    def test_real_scoring_profile_requires_explicit_dealer_base(self):
+        simulator = Simulator(config=SimulatorConfig(enable_real_scoring=True))
+        with self.assertRaisesRegex(ValueError, "current_dealer_base"):
+            simulator.run_normal_hand(seed=1, max_steps=1)
+        with self.assertRaisesRegex(ValueError, "only valid"):
+            Simulator().run_normal_hand(
+                seed=1, max_steps=1, current_dealer_base=5)
+
     def test_fixed_wall_reaches_16_on_last_allowed_step(self):
         original = boundary_state()
         snapshot = deepcopy(original)
@@ -134,7 +175,7 @@ class NormalSimulationTests(unittest.TestCase):
 
     def test_special_config_is_unknown_and_strictly_boolean(self):
         for field in SimulatorConfig.__dataclass_fields__:
-            if field.startswith("enable_") and field != "enable_added_kong":
+            if field.startswith("enable_") and field not in ("enable_added_kong", "enable_real_scoring"):
                 simulator = Simulator(config=SimulatorConfig(**{field: True}))
                 result = simulator.run_normal_hand(seed=1)
                 self.assertEqual(result.status, "STOPPED_UNKNOWN")
