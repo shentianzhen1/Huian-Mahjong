@@ -48,7 +48,7 @@ UNKNOWN_RULES = MappingProxyType({
     "deal_replacement_order": "Dealing order, flower replacement order and source",
     "added_kong_details": "Remaining added-kong UI/payment edge cases; fan table and rob scope are adopted",
     "decomposition_scoring": "Selection among multiple winning decompositions when search is truncated or ambiguity is not classifiable",
-    "decomposition_concealed_triplet_choice": "When multiple legal decompositions differ only in natural concealed-triplet fan, whether the room selects the highest-fan decomposition or uses another ordering",
+    # decomposition_concealed_triplet_choice resolved 2026-09-18: choose maximum total fan.
     # three_plus_gold_ordinary_hu resolved for self-draw after declining Sanjindao.
     "three_plus_gold_discard_hu": "Whether 3+ golds may win from an opponent discard after Sanjindao was declined",
     "environment_phase": "Complete legal action set for unsupported legacy phases",
