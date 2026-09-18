@@ -110,13 +110,14 @@ _SPECIAL_OUTCOMES = {
         key="ROB_KONG_HU",
         declaration_phase="ROB_KONG_HU_DECLARED",
         multiplier=2,
-        multiplier_status=EvidenceStatus.HIGH_CONFIDENCE,
+        multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="ROB_KONG_SCORING_UNKNOWN",
         settlement_ready=False,
         note=(
-            "The in-game Huian rules page lists rob-kong x2. Target two-player "
-            "direct settlement, payer/dealer flow and stacking are still missing, "
-            "so this multiplier is evidence metadata only and does not enable settlement."
+            "Player confirmation: rob-kong uses the same Hu multiplier as self-draw, x2. "
+            "The in-game Huian rules page independently lists rob-kong x2. Exact target-room "
+            "payment/dealer continuation and remaining settlement flow are still incomplete, "
+            "so confirmed multiplier evidence does not yet enable automatic settlement."
         ),
     ),
     "GANG_HU": SpecialOutcomeProfile(
