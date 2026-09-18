@@ -13,10 +13,9 @@ aggregates already-settled reward vectors.
 from dataclasses import dataclass
 from numbers import Integral
 
-from huian.rules.dealer_base import MATCH_HAND_COUNT
-
-MATCH_STARTING_SCORE = 1000
-MATCH_TOTAL_SCORE = MATCH_STARTING_SCORE * 2
+from huian.rules.dealer_base import (
+    MATCH_HAND_COUNT, MATCH_STARTING_SCORE, MATCH_TOTAL_SCORE,
+)
 
 
 def _score_int(value, name):
