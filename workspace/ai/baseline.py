@@ -4,6 +4,7 @@ from collections import Counter
 from typing import Any
 
 from huian._legacy import env
+from .shanten import rank_discards
 
 
 @dataclass(frozen=True)
@@ -203,6 +204,67 @@ class EfficiencyAgent(BaselineAgent):
                 f"(shape={info['base_shape']}, weighted_gain={info['weighted_gain']}, "
                 f"live_improving={info['live_improving_copies']}, "
                 f"types={info['improving_types']}); use only private hand + public table",
+            )
+
+        passes = [a for a in actions if a.type.value == "PASS"]
+        if passes:
+            return AgentDecision(
+                passes[0], "PASS: preserve the current hand over optional melds")
+        return AgentDecision(
+            actions[0], f"{actions[0].type.value}: take the required legal action")
+
+
+
+class ShantenAgent(BaselineAgent):
+    """Experimental V0.3: ordinary shanten + live effective tiles for discards.
+
+    Action priority deliberately stays conservative: legal Hu first, optional
+    claims PASS, forced actions unchanged. Only discard selection uses the
+    Huian 16/17-tile shanten engine, public rivers and public melds.
+    """
+
+    @staticmethod
+    def _public_tiles(observation):
+        tiles = []
+        for river in observation.discards:
+            tiles.extend(river)
+        for melds in observation.melds:
+            for _, meld_tiles in melds:
+                tiles.extend(meld_tiles)
+        return tuple(tile for tile in tiles if tile in env.BASE_TILES)
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
+        if wins:
+            return AgentDecision(
+                wins[0], f"{wins[0].type.value}: take the legal ordinary-shape win")
+
+        discards = [a for a in actions if a.type.value == "DISCARD"]
+        if discards:
+            open_melds = len(observation.melds[observation.seat])
+            ranked = rank_discards(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=self._public_tiles(observation),
+            )
+            legal_by_tile = {action.tile: action for action in discards}
+            choice = next(
+                item for item in ranked if item.discard in legal_by_tile
+            )
+            action = legal_by_tile[choice.discard]
+            waits = ",".join(choice.effective_tile_types[:8])
+            if len(choice.effective_tile_types) > 8:
+                waits += ",..."
+            return AgentDecision(
+                action,
+                f"DISCARD {choice.discard}: shanten_v0.1 "
+                f"(shanten={choice.shanten}, live={choice.total_live_copies}, "
+                f"types={len(choice.effective_tiles)}, effective=[{waits}]); "
+                f"use private hand + public table only",
             )
 
         passes = [a for a in actions if a.type.value == "PASS"]
