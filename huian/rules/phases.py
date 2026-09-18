@@ -181,9 +181,6 @@ def validate(adapter, state):
         not state.terminal or len(state.wall) != 16 or state.rewards != [0, 0]
     ):
         raise ValueError("Wall draw requires terminal state, 16 tiles and zero rewards")
-    if _has_added_kong(state) and state.terminal_reason in (
-            "WALL_16", "OBSERVED_PINGHU", "OBSERVED_ZIMO"):
-        raise ValueError("Real/flow settlement after a completed added kong requires explicit fee accounting")
     if scored_reason and (not state.terminal or state.rewards == [0, 0]):
         raise ValueError("Scored win requires a terminal non-zero settlement")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
@@ -285,14 +282,10 @@ def report(adapter, state):
     if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
         return ActionReport((), ("eight_flower_settlement_pending",))
     if state.phase == "NEED_FLOWER_REPLACE":
-        if _has_added_kong(state) and len(state.wall) == adapter.rules.DRAW_WALL_REMAINING:
-            return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         return ActionReport((), ("deal_replacement_order",))
     if state.phase == "HU_DECLARED":
         if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
             return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
-        if _has_added_kong(state) and not adapter.rules.config.simulation_only_normal_hand:
-            return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         return ActionReport((), ("win_declaration_and_settlement",))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
@@ -316,9 +309,8 @@ def report(adapter, state):
                 "kong_player": pending["kong_player"], "meld_index": pending["meld_index"],
             }))
         return ActionReport(tuple(actions))
-    added_kong = _has_added_kong(state)
     if adapter.rules.is_wall_draw(state):
-        return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",) if added_kong else ())
+        return ActionReport(())
     if phase in ("AFTER_MING_GANG", "AFTER_AN_GANG", "AFTER_ADDED_GANG"):
         # Importing this phase explicitly means kong response resolution is over.
         return ActionReport((A(p, T.DRAW, metadata={
