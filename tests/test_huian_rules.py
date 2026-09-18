@@ -161,7 +161,7 @@ class HuianRulesTests(unittest.TestCase):
         self.assertTrue(result.legal)
         with self.assertRaisesRegex(UnknownRuleError, "three_plus_gold_discard_hu"):
             self.rules.analyze_hu(
-                hand, "P9", win_type="pinghu", winning_tile="E")
+                hand, "P9", win_type="pinghu", winning_tile="M1")
 
     def test_sanjinyou_is_the_triple_you_state_but_not_sanjindao(self):
         self.assertIs(YoujinStage.SANJIN_YOU, YoujinStage.TRIPLE_YOU)
