@@ -139,6 +139,20 @@ class QiangjinWindowTests(unittest.TestCase):
         ))
         self.assertTrue(any(a.type == env.ActionType.QIANGJIN for a in actions))
 
+    def test_fourth_gold_never_reopens_sanjindao(self):
+        state = two_seat_gold_state(
+            current=0, current_gold=4, opponent_gold=0, current_tiles=17,
+            phase="AFTER_DRAW")
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": GOLD},
+        ).to_dict()
+        game = env_of(state)
+        actions = game.legal_actions()
+        self.assertFalse(any(
+            a.metadata.get("special") == "SANJINDAO" for a in actions
+        ))
+
     def test_idle_16_tiles_can_be_eligible_on_own_node_only(self):
         state = two_seat_gold_state(
             current=1, current_gold=1, opponent_gold=1, current_tiles=16,
