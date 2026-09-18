@@ -232,6 +232,12 @@ class Simulator:
                     # Settlement is part of the declaring action, even on last step.
                     game.finalize_simulation_only_outcome()
                     continue
+                if (any(meld.kind == "ADDED_GANG" for zone in state.melds for meld in zone)
+                        and game.rules.rules.is_wall_draw(state)):
+                    report = game.action_report()
+                    if "KONG_FEE_SETTLEMENT_UNKNOWN" in report.unresolved:
+                        return finish("STOPPED_UNKNOWN", report.unresolved,
+                                      "unresolved_rule")
                 if steps >= max_steps:
                     return finish("MAX_STEPS", stop_reason="max_steps")
                 actions = game.legal_actions()
