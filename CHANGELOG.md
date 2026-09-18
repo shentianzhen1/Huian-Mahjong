@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-09-18 — 普通胡多拆法改为取最高总番
+
+- 采用当前项目规则：先处理特殊胡；进入普通胡后，枚举全部合法普通胡拆分方案，包含金牌万能替换产生的全部合法组合。
+- 每套拆分独立计算完整番数，最终选择**总番最高**的一套作为普通胡结算方案；同番时取枚举顺序中的第一套，仅用于确定性审计，不影响最终分数。
+- 门外已经公开的吃/碰/杠副露固定，不参与重新拆分。
+- 若胡牌求解器明确标记拆分枚举被截断，则不在不完整候选集上取最大值，继续以 `decomposition_scoring` 安全阻断。
+- `FanResult` 新增 `selected_decomposition_index` 与 `selection_policy=MAX_TOTAL_FAN`，真实普通结算事件同步记录候选番、选中拆分与策略，方便回溯。
+- 原9个 `decomposition_concealed_triplet_choice` 停止案例因此不再作为规则UNKNOWN；后续AI的出牌后对手吃/碰/杠/胡反应仍留给Environment/Monte Carlo层，不混入本次结算实现。
+
 ## 2026-09-18 — 多拆解UNKNOWN收敛为暗刻择优问题
 
 - 无杠费规则落地后的20场 ordinary-real 基线中，原 `decomposition_scoring` 共9次。
