@@ -32,7 +32,7 @@ The current implementation request defines an added-kong-only response path. Thi
 - Declaration enters `ROB_KONG_WINDOW`. The original Peng and fourth hand tile remain unchanged; `pending_kong` is a logical reference, not another physical tile. Only this added-kong window offers `ROB_KONG_HU` when Rules establishes eligibility, or `PASS`.
 - `PASS` commits the fourth tile once, forming `ADDED_GANG`, then requires a `wall_tail` draw through the existing flower replacement pipeline. A successful rob records winner/source and keeps the original Peng and tile accounting; it does not complete the kong or draw a replacement.
 - `enable_added_kong=True` is the default. False disables added-kong candidates. Simulator `enable_rob_kong=False` remains the broad unsupported scope switch; setting it True does not enable Ming/An rob-kong.
-- Kong fan table is now the **current adopted engineering rule**, subject to revision if stronger direct video evidence conflicts: 大明杠/MING_GANG 普通牌2番、字牌3番；补杠/蓄杠/加杠 ADD_KONG 按同一明杠表（普通牌2番、字牌3番）；暗杠/AN_GANG 普通牌3番、字牌4番。普通牌 ADD_KONG=2番有 66fe863f 真实录像直接支持；其余格来自惠安游戏内规则页并按用户 2026-09-18 指示先采用。完成补杠后不再仅因“发生过补杠”阻断普通 simulation-only 行牌。仍 UNKNOWN 的是：抢杠胡结算 `ROB_KONG_SCORING_UNKNOWN`、杠上胡结算 `GANG_HU_SCORING_UNKNOWN`、独立即时杠费/流局杠费 `KONG_FEE_SETTLEMENT_UNKNOWN`。
+- Kong fan table is now the **current adopted engineering rule**, subject to revision if stronger direct video evidence conflicts: 大明杠/MING_GANG 普通牌2番、字牌3番；补杠/蓄杠/加杠 ADD_KONG 按同一明杠表（普通牌2番、字牌3番）；暗杠/AN_GANG 普通牌3番、字牌4番。普通牌 ADD_KONG=2番有 66fe863f 真实录像直接支持；其余格来自惠安游戏内规则页并按用户 2026-09-18 指示先采用。2026-09-18 玩家进一步确认：**不存在独立杠费**，大明杠/暗杠/补杠都不会在杠成立时另外即时收分，流局也没有需要保留或返还的杠费；杠只通过既有杠番进入最终胡牌番数。仍 UNKNOWN 的杠类计分仅剩：抢杠胡结算 `ROB_KONG_SCORING_UNKNOWN`、杠上胡结算 `GANG_HU_SCORING_UNKNOWN`。
 
 Remaining evidence gaps: actual-room added-kong (补/蓄/加杠) response/decline footage, independent kong fees, boundary settlement and all rob-kong/Gang-Hu scoring. Rob scope is no longer a gap: ADD_KONG is robbable; 大明杠/MING_GANG and 暗杠/AN_GANG are not. Implemented transitions and passing tests do not promote the remaining gaps to confirmed rules.
 
@@ -145,7 +145,7 @@ Archived frames and a full transcription are in
 
 For observed Pinghu and Zimo cases, the formula
 `(current dealer base + winner fan) × win-type multiplier` is now supported by
-multiple direct recordings, including the dealer Zimo +68/-68 above with no extra dealer factor. The direct non-dealer Youjin +100 and the ingested dealer Triple-You +608 are separate special examples that use the same formula; 抢金、三金倒、独立杠费 and complete special-outcome flows remain unresolved.
+multiple direct recordings, including the dealer Zimo +68/-68 above with no extra dealer factor. The direct non-dealer Youjin +100 and the ingested dealer Triple-You +608 are separate special examples that use the same formula; 抢金、三金倒 and complete special-outcome flows remain unresolved. Independent kong fees are explicitly confirmed absent.
 ## Dealer base — player confirmation and observed display values
 
 Player confirmation (2026-09-15), verbatim: “坐庄底分5分，连庄+5”. The +5 increment per repeat is confirmed. Preserve the stated sitting-dealer base of 5 as player feedback; its exact relationship to the observed dealer badge/displayed base must be reconciled against `a562bd213645d8d998e47bf62bdb45de.mp4`, which has not yet been reviewed. Do not overwrite the directly observed values below or infer a cap.
@@ -219,7 +219,7 @@ room. Flower fan is included before the Hu multiplier in the +608 recording and 
 
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options and settlement/dealer result. Current-player ownership and PASS-does-not-handoff are resolved; do not re-open them as UNKNOWN.
-2. Actual-room rob-kong evidence: only Added-Gang/ADD_KONG (补杠=蓄杠=加杠) can be robbed; 大明杠/MING_GANG and 暗杠/AN_GANG cannot. What remains UNKNOWN is the real response UI/decline footage, rob-kong scoring, independent kong fees and flow-hand kong settlement.
+2. Actual-room rob-kong evidence: only Added-Gang/ADD_KONG (补杠=蓄杠=加杠) can be robbed; 大明杠/MING_GANG and 暗杠/AN_GANG cannot. Player confirmation also resolves that there is no independent kong fee and no special kong-fee accounting at flow draw. What remains UNKNOWN is the real response UI/decline footage and rob-kong/Gang-Hu scoring.
 3. Sanjindao remaining gaps: non-flower base, payment, terminal settlement accounting and next dealer. Eligibility at three or more gold, immediate offer, declare/continue choice and ×3 multiplier are confirmed; declining Sanjindao simply resumes play and may lead to other hand types. Timing is no longer an UNKNOWN.
 4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16 and `(current dealer base + winner fan) × Hu multiplier` are confirmed by the ingested 7bc12fa dealer Triple-You +608. Sequential climb Youjin→Double→Triple and self-PASS while climbing are confirmed in that clip. Exact predicate for every upgrade discard, cancellation, opponent Hu windows on video, payer UI and next-dealer result remain UNKNOWN.
 5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
@@ -291,6 +291,6 @@ Conflicts and preserved decisions:
   two-player results. Extra Youjin-chain dealer ×2 is excluded by ordinary dealer Zimo +68 and by dealer Triple-You +608. The ingested +608 Triple-You confirms flowers are included in
   winner fan before ×16. Remaining special-outcome flows (抢金, 三金倒, 八花游, rob-kong fees) still need their own footage.
 
-Still missing after the 2026-09-18 clarification: real 补杠/蓄杠/加杠 (ADD_KONG) rob-kong response footage/scoring,
+Still missing after the 2026-09-18 clarification: real 补杠/蓄杠/加杠 (ADD_KONG) rob-kong response footage/scoring and Gang-Hu scoring,
 Tianhu/Tianting definitions, extended dealer base/cap and match ties. A listed
 multiplier does not establish a win type's eligibility or declaration timing.
