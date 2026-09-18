@@ -3,6 +3,7 @@ import unittest
 from huian import HuianRules
 from workspace.ai import (
     analyze_effective_tiles,
+    best_discard,
     ordinary_shanten,
     rank_discards,
 )
@@ -117,6 +118,26 @@ class HuianShantenTests(unittest.TestCase):
         self.assertEqual(ranked[0].shanten, 0)
         self.assertEqual(ranked[0].effective_tile_types, ("B",))
         self.assertEqual(ranked[0].total_live_copies, 3)
+
+    def test_best_discard_matches_full_ranking_top_choice(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        visible = ("N", "N", "N")
+        full = rank_discards(hand, visible_tiles=visible)[0]
+        fast = best_discard(hand, visible_tiles=visible)
+        self.assertEqual(fast, full)
+        restricted = best_discard(
+            hand,
+            visible_tiles=visible,
+            allowed_discards=("B", "N"),
+        )
+        self.assertEqual(restricted, full)
 
     def test_input_shape_and_public_overcount_are_rejected(self):
         with self.assertRaises(ValueError):
