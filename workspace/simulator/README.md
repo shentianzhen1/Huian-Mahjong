@@ -37,7 +37,7 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 
 `MatchScoreState` 负责1000/1000总账；`MatchProgressState` 在此基础上继续记录当前庄家和连续坐庄次数，并自动计算下一局庄底。庄赢或流局留庄并+5，庄输换庄且回到底5。两层都只消费已经结算的真实 rewards，不猜UNKNOWN单局结算。
 
-因此本文件下面的 `run_many_normal_hands`、单局胜率和±1/±2单位奖励都只是**单局诊断/开发基线**，不是最终AI目标。后续真实8局Simulator要把当前总分、剩余局数、庄位和连庄底传给AI；策略评估以最终分数/分差为主。
+因此 `run_many_normal_hands`、单局胜率和±1/±2单位奖励仍只是**单局诊断/开发基线**。`run_real_ordinary_match()` 已提供第一条整场真实计分路径：每局读取 MatchProgress 的 dealer/current_dealer_base，普通平胡/自摸走 FanAggregator+Settlement，再把真实 rewards 写回1000/1000总账；规则 UNKNOWN 会停在当前局。
 
 ## 普通真实结算 V0.1
 
@@ -48,6 +48,14 @@ Environment 已提供 `finalize_ordinary_outcome(current_dealer_base=...)`。在
 生成真实零和 `rewards`。点炮胡牌张仍留在牌河，只为结构和番数分析临时加入赢家手牌。多金、花组/拆解歧义、任何未解决杠费、抢杠胡或杠上胡都会安全停止，不制造真实分数。
 
 simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结算严格分离；下一阶段由8局 Match Simulator 消费真实结算结果。
+
+## Ordinary-real 8局基线
+
+2026-09-18 首次整场级回归使用10个match seed，并将 RandomAgent / BaselineAgent 交换座位，共20场；每场目标8局、1000/1000起分。
+
+结果：0/20场完整跑完8局；共真实结算23局，平均每场先完成1.15局。UNKNOWN累计为：`multi_gold_fan` 10、`KONG_FEE_SETTLEMENT_UNKNOWN` 9、`decomposition_scoring` 2、`exposed_triplet_fan` 1、`flower_groups` 1。最远样本完成7局后才因多金番未知停止。
+
+这说明 MatchRunner / dealer-base / 总账链路已经可运行，当前整场完成率主要受真实计分证据缺口限制，而不是8局状态机限制。未完成整场的部分比分只用于审计，不作为最终AI成绩。
 
 ## 模式与边界
 
