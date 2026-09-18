@@ -97,13 +97,13 @@ class EnvironmentTests(unittest.TestCase):
             self.assertEqual(final.last_action["metadata"]["drawn_tile"], "P8")
             self.assertTrue(HuContext.from_draw_metadata(final.last_action["metadata"]).is_gang_hu)
 
-    def test_default_kong_scope_blocks_declaration(self):
+    def test_default_ming_gang_is_confirmed_unrobbable(self):
         instance = game(scenario(discard="E"))
-        self.assertIn("rob_kong", instance.action_report().unresolved)
-        before = instance.state.state_hash()
-        with self.assertRaises(UnknownRuleError):
-            instance.step(env.Action(0, env.ActionType.MING_GANG, tile="E", tiles=("E",) * 4))
-        self.assertEqual(instance.state.state_hash(), before)
+        report = instance.action_report()
+        self.assertNotIn("rob_kong", report.unresolved)
+        action = next(a for a in report.known_actions if a.type == env.ActionType.MING_GANG)
+        after, _ = instance.step(action)
+        self.assertEqual(after.phase, "AFTER_MING_GANG")
 
     def test_resolved_kong_tail_draw_needs_no_experimental_override(self):
         experimental = game(scenario(discard="E"), experimental=True)
@@ -220,15 +220,19 @@ class EnvironmentTests(unittest.TestCase):
         with self.assertRaises(UnknownRuleError):
             instance.legal_actions()
 
-    def test_three_gold_reports_confirmed_decision_but_unknown_phase_timing(self):
-        for count, expected in (
-            (2, ("youjin_trigger",)),
-            (3, ("youjin_trigger", "sanjindao_timing")),
-        ):
-            instance = game(scenario(hand=["P9"] * count + HAND[count:]))
-            report = instance.action_report()
-            self.assertFalse(report.known_actions)
-            self.assertEqual(report.unresolved, expected)
+    def test_three_gold_immediately_offers_optional_sanjindao(self):
+        two_gold = game(scenario(hand=["P9"] * 2 + HAND[2:]))
+        self.assertEqual(two_gold.action_report().unresolved, ("youjin_trigger",))
+
+        instance = game(scenario(hand=["P9"] * 3 + HAND[3:]))
+        report = instance.action_report()
+        self.assertFalse(report.unresolved)
+        self.assertEqual(report.known_actions[0].metadata.get("special"), "SANJINDAO")
+        self.assertTrue(any(
+            action.type == env.ActionType.PASS_QIANGJIN
+            and action.metadata.get("continue_play")
+            for action in report.known_actions
+        ))
 
     def test_fifth_copy_rejected_even_when_total_remains_144(self):
         state = scenario()
