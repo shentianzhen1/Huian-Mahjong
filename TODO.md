@@ -15,8 +15,9 @@
 - 已完成：FanAggregator V0.1 已接入；b3892b34自动聚合4番、66fe863f自动聚合5番，金补刻不计暗刻番，点炮补成刻子也不计暗刻番；多金/花组/普通碰/拆牌歧义显式UNKNOWN。最新 Core regression 在 Python 3.10/3.11/3.12 均185项全通过。
 - 最终 AI 目标改为8局后总分最大化：双方1000起步。先补齐真实单局番数/结算，再实现连续8局 Match Simulator，把当前总分、剩余局数、庄位/连庄底传给AI；评估以最终分数/分差为主，单局胜率仅作辅助。
 - 已完成：`FanResult.complete=True` 的普通平胡/自摸已接入自动真实 Settlement；自动从 `HU_DECLARED` 重建结构、聚合番数并用 `(当前庄底+赢家番)×1/2` 结算，UNKNOWN 番项/杠费原子阻断。最新 Core regression 在 Python 3.10/3.11/3.12 均188项全通过。
-- 已完成：`MatchProgressState` 已把双方1000分总账、当前庄家、连续坐庄次数和下一局庄底串起来；庄赢/流局留庄+5，庄输换庄回5。最新 Core regression 在 Python 3.10/3.11/3.12 均190项全通过。
-- 下一步：实现完整8局 Match Runner，把每局真实 Environment/Settlement 的 `rewards` 自动喂给 `MatchProgressState`；每局开始从它读取 dealer/current_dealer_base，8局后直接输出最终比分。遇到特殊胡、杠费或番数 UNKNOWN 时保留整场未完成状态。
+- 已完成：`MatchRunner` 和 `run_real_ordinary_match()` 已接通真实普通单局→1000/1000总账→庄位/连庄底→下一局；UNKNOWN会在该局安全停止并保留部分比分。最新 Core regression 在 Python 3.10/3.11/3.12 均198项全通过。
+- 整场基线：20场 ordinary-real 尝试，0场完整8局；共真实结算23局，平均1.15局/场。UNKNOWN主因：多金番10、杠费9，其次拆解2、普通碰1、花组1。
+- 下一步证据优先级：① 双金/多金普通胡的实际番数；② 大明杠/暗杠/补杠是否有独立即时杠费、流局是否保留；③ 普通数牌碰牌番；④ 四花组额外番；⑤ 多拆解同手牌的取番规则。
 - 已完成：普通局固定牌墙自摸/点炮/16张流局、BaselineAgent、批量评估、完整配对统计、按局落盘及摘要校验重放；补杠候选→抢杠窗口→PASS成立/抢杠声明→尾摸补花，三个计分UNKNOWN分别记录。
 - 2026-09-18 采用杠番表并取消补杠总阻断后，同seed 100seed×换座=200局：195完成、5 UNKNOWN，剩余全部为 `KONG_FEE_SETTLEMENT_UNKNOWN`；0超步、0循环，完整配对95/100组。
 - 普通局固定seed基线已更新；下一步优先核验独立即时杠费和流局杠费，把剩余5局 `KONG_FEE_SETTLEMENT_UNKNOWN` 继续压低，同时补抢杠胡/杠胡结算。普通模拟对3+金固定走【过/继续】分支，不把三金倒收益计入普通单位奖励。
