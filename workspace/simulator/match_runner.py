@@ -7,6 +7,7 @@ return a settled zero-sum result or explicitly stop as UNKNOWN.
 This keeps the 8-hand objective real without pretending unresolved special
 settlements are known.
 """
+from copy import deepcopy
 from dataclasses import dataclass
 from numbers import Integral
 
@@ -213,8 +214,19 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
                 terminal_reason=result.terminal_reason,
             )
         if result.status == "STOPPED_UNKNOWN":
+            evidence = deepcopy(result.unknown_evidence)
+            if evidence is None:
+                evidence = {}
+            evidence["match_context"] = {
+                "hand_index": context.hand_index,
+                "dealer": context.dealer,
+                "current_dealer_base": context.current_dealer_base,
+                "scores": list(context.scores),
+                "hands_remaining": context.hands_remaining,
+                "hand_seed": hand_seed,
+            }
             return MatchHandResult.unknown(
-                *result.unresolved, evidence=result.unknown_evidence
+                *result.unresolved, evidence=evidence
             )
         raise RuntimeError(
             f"ordinary hand did not settle safely: {result.status} "
