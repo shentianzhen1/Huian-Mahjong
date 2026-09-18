@@ -92,11 +92,13 @@ class FanAggregator:
                 if core.is_honor(tile):
                     components.append(self._component(
                         "honor_peng", 1, f"{tile} honor Peng",
-                        EvidenceStatus.HIGH_CONFIDENCE,
-                        "Huian in-game rule page: honor Peng = 1 fan",
+                        EvidenceStatus.CONFIRMED,
+                        "Player confirmation 2026-09-18: exposed honor Peng = 1 fan; "
+                        "it never counts as a concealed triplet",
                     ))
-                else:
-                    unresolved.append("exposed_triplet_fan")
+                # Player confirmation 2026-09-18: exposed suited Peng scores
+                # zero fan. No component is emitted, and exposed melds are never
+                # part of the concealed-triplet decomposition count.
                 continue
             if kind in ("MING_GANG", "AN_GANG", "ADDED_GANG"):
                 if len(tiles) != 4 or len(set(tiles)) != 1:
