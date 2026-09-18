@@ -46,11 +46,11 @@
 
 本轮另已成功重放归档第25号记录（seed12、交换座位、232步），核对补杠计分UNKNOWN的状态、决策和事件摘要；输出为 `data/evaluations/added_kong_100_20260915_verified/replay_25.json`。
 
-2026-09-18 已通过针对性三金倒/普通模拟回归（7项三金倒窗口 + 11项普通模拟），并成功完成同seed 200局 benchmark。当前 GitHub Actions 全量 Core regression 仍未全绿：Python 3.11 本轮共171项，8失败、4错误；3.10/3.12同样失败。Legacy advisory 两套基线均通过。剩余失败包含部分已被新规则淘汰的旧断言（如“明/暗杠应触发 rob_kong UNKNOWN”“三金倒时机未知”“开局抢金必须统一STOPPED_UNKNOWN”），也包含补杠原子校验、普通胡声明/摸牌来源等需要单独修复的真实回归。因此当前不能声明“全量测试通过”。
+2026-09-18 最新 GitHub Actions 已全绿：Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过171项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| 项目根目录 | `python -B -m unittest discover -s tests -v` | 161 通过 |
+| GitHub Actions / 项目根目录 | `python -B -m unittest discover -s tests -v` | 171 通过 × Python 3.10/3.11/3.12 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过 |
@@ -73,7 +73,7 @@
 ## 下一步计划
 
 1. 继续分析新提供的 `a562bd213645d8d998e47bf62bdb45de.mp4` 并核对底分字段；此前抽帧被工具限制阻断，尚无该片的画面结论。`7bc12fa…mp4`仍缺原文件直接校验。b3892b34与66fe863f已完成原片校验、关键帧、转录与6项回归。
-2. 重新跑固定seed交换座位评估，量化“明杠/暗杠不可抢”修正后新的完成率与UNKNOWN构成；再基于新基线改进普通局弃牌/吃碰策略。模拟单位奖励与真实结算继续分离。
+2. 固定seed交换座位基线已更新为188/200完成、12 UNKNOWN。下一步优先补齐补杠真实结算/独立杠费/流局杠费，把这12局 `ADD_KONG_SCORING_UNKNOWN` 继续压低；之后再基于稳定基线改进普通局弃牌/吃碰策略。模拟单位奖励与真实结算继续分离。
 3. 抢金下一步只补仍缺的核心：精确胡型/资格判定、实际胡按钮后的终局、倍率/付款和下局庄位。三金倒不再追问“什么时候能选”：3+金即可立即选，且可过后继续；后续只补三金倒真实结算、付款/庄位，以及游金链升级/取消/付款。杠相关证据重点是补杠抢杠实录、抢杠胡/杠胡结算和独立杠费。
 4. 基于已完成的基础AI与批量评估建立稳定基准；更复杂AI、Vision集成和Executor留待后续独立范围。
 5. 从已抽取的 1108×690 Recorder 帧人工校准三块 ROI，标注首批万/筒/条/字/花样本并建立离线准确率基线；在准确率和多帧稳定性达标前不接 Executor。
