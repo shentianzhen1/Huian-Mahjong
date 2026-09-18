@@ -14,10 +14,7 @@ can run without inventing a decomposition.
 from huian._legacy import env
 from .phases import ActionReport, report as base_report, validate
 from .context import DrawSource, YoujinStage
-
-QIANGJIN_MULTIPLIER = 4
-SANJINDAO_MULTIPLIER = 3
-EIGHT_FLOWER_MULTIPLIER = 2  # Project provisional setting, not real-room evidence.
+from .special_outcomes import special_outcome_profile
 
 
 def _in_youjin(state, player):
@@ -81,10 +78,11 @@ def current_player_special_actions(adapter, state):
     if adapter.rules.can_sanjindao(
             state.hands[p], state.gold_tile,
             third_gold_just_received=third_gold):
+        profile = special_outcome_profile("SANJINDAO")
         return (
             A(p, T.HU, metadata={
-                "win_source": "sanjindao", "special": "SANJINDAO",
-                "multiplier": SANJINDAO_MULTIPLIER,
+                "win_source": "sanjindao",
+                **profile.action_metadata,
             }),
             A(p, T.PASS_QIANGJIN, metadata={
                 "window": "current_only", "declined": "SANJINDAO",
@@ -92,15 +90,17 @@ def current_player_special_actions(adapter, state):
             }),
         )
     if working_qiangjin_eligible(state, p):
+        profile = special_outcome_profile("QIANGJIN")
         actions.append(A(p, T.QIANGJIN, metadata={
-            "win_source": "qiangjin", "multiplier": QIANGJIN_MULTIPLIER,
+            "win_source": "qiangjin",
             "self_draw": True,
+            **profile.action_metadata,
         }))
     if _just_completed_eight_flowers(state, p):
+        profile = special_outcome_profile("EIGHT_FLOWER_YOU")
         actions.append(A(p, T.HU, metadata={
-            "win_source": "eight_flower_you", "special": "EIGHT_FLOWER_YOU",
-            "multiplier": EIGHT_FLOWER_MULTIPLIER,
-            "project_rule": True,
+            "win_source": "eight_flower_you",
+            **profile.action_metadata,
         }))
     actions.append(A(p, T.PASS_QIANGJIN, metadata={"window": "current_only"}))
     return tuple(actions)
