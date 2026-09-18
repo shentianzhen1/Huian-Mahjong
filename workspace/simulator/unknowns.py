@@ -103,6 +103,7 @@ def _ordinary_hu_audit(game, state):
         "fan": fan_result.fan,
         "accounted_fan": fan_result.accounted_fan,
         "candidate_fans": list(fan_result.candidate_fans),
+        "decomposition_fans": list(fan_result.decomposition_fans),
         "unresolved": list(fan_result.unresolved),
         "components": [
             _fan_component_record(component)
