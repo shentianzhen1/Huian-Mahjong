@@ -37,6 +37,7 @@ UNKNOWN_RULES = MappingProxyType({
     "match_tie": "Tie handling after eight hands",
     "dealer_base_extension": "Dealer third continuation onward and cap",
     "flower_groups": "Group totals and replacement versus stacking",
+    "multi_gold_fan": "How two or more gold tiles contribute to ordinary winner fan",
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
     "honor_peng_fan": "Whether exposed honor pung scores one fan",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
