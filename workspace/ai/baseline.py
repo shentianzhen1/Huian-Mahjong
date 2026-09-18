@@ -39,7 +39,8 @@ class PlayerObservation:
 class BaselineAgent:
     """HU first; retain gold, pairs and suited connections; otherwise PASS.
 
-    This is a deterministic heuristic, not EV or a special-rule strategy.
+    This is a deterministic single-hand heuristic, not EV, match-score-aware,
+    or a special-rule strategy. The project objective is final score after 8 hands.
     Reasons belong to the decision/log, never to executable action metadata.
     """
 
