@@ -509,6 +509,28 @@ class AddedKongTests(unittest.TestCase):
                 instance.step(env.Action(1, env.ActionType.PASS))
                 instance.step(action_of(instance, env.ActionType.DRAW))
 
+    def test_completed_added_kong_does_not_block_later_observed_ordinary_settlement(self):
+        instance = environment(added_kong_state())
+        self.declare(instance)
+        instance.step(env.Action(1, env.ActionType.PASS))
+        instance.step(action_of(instance, env.ActionType.DRAW))
+        discard = next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.DISCARD
+        )
+        instance.step(discard)
+        terminal, event = instance.finalize_observed_outcome(
+            winner=1, current_dealer_base=10, winner_fan=1,
+            win_type="PINGHU")
+        self.assertTrue(terminal.terminal)
+        self.assertEqual(terminal.terminal_reason, "OBSERVED_PINGHU")
+        self.assertEqual(terminal.rewards, [-11, 11])
+        self.assertEqual(event["action"]["metadata"]["winner_fan"], 1)
+        self.assertTrue(any(
+            meld.kind == "ADDED_GANG"
+            for melds in terminal.melds for meld in melds
+        ))
+
     def test_added_kong_at_16_tiles_is_normal_zero_score_draw(self):
         state = added_kong_state(wall_count=17)
         result = Simulator().run_normal_hand(
