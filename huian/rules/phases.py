@@ -24,10 +24,6 @@ PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "EIGHT_FLOWER_YOU_DECLARED"}
 
 
-def _has_added_kong(state):
-    return any(meld.kind == "ADDED_GANG" for melds in state.melds for meld in melds)
-
-
 def _validate_pending_kong(state):
     pending = getattr(state, "pending_kong", None)
     if state.phase not in ("ROB_KONG_WINDOW", "ROB_KONG_HU_DECLARED"):
