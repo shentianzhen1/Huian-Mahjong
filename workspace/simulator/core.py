@@ -224,6 +224,15 @@ class Simulator:
                 build_unknown_evidence(game, unresolved)
                 if unresolved else None
             )
+            if evidence is not None:
+                evidence["simulation"] = {
+                    "seed": seed,
+                    "dice_total": dice_total,
+                    "steps": steps,
+                    "initial_state_hash": initial_hash,
+                    "wall_hash": wall_hash,
+                    "stop_reason": stop_reason,
+                }
             return self._result(
                 game, seed=seed, status=status, dice_total=dice_total,
                 unresolved=unresolved, decisions=decisions, steps=steps,
