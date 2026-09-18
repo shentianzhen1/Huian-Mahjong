@@ -12,7 +12,7 @@ class EvidenceStatus(str, Enum):
 
 # Evidence authority: RULE_STATUS.md, not legacy KNOWN_RULES.md.
 UNKNOWN_RULES = MappingProxyType({
-    "ROB_KONG_SCORING_UNKNOWN": "Settlement for a declared added-kong robbery",
+    "ROB_KONG_SCORING_UNKNOWN": "Payment/dealer continuation and remaining settlement flow for a declared added-kong robbery; Hu multiplier x2 is confirmed",
     "GANG_HU_SCORING_UNKNOWN": "Settlement for a declared kong-tail win",
     # No independent kong fee: confirmed by player 2026-09-18.
     # Legacy ADD_KONG_SCORING_UNKNOWN retired 2026-09-18: completed added-kong
