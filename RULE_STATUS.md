@@ -17,6 +17,7 @@ Player confirmation also resolves the rob-kong scope for this target room:
 - **MING_GANG = 大明杠**：对手打出一张，自己手里有三张同牌，直接杠成四张；**不能被抢杠**。
 - **AN_GANG = 暗杠**：自己手里四张同牌直接暗杠；**不能被抢杠**。
 - Rob-kong scoring, added-kong independent fees, flow-hand kong settlement and direct video evidence of the response UI remain unresolved.
+- **点炮补成刻子不算暗刻番。** 玩家2026-09-18确认：如果胡牌张来自对手弃牌，而该牌只是把自己原有两张同牌补成三张，这一组不按自然暗刻计番。FanAggregator 对 `WinSource.DISCARD` 且胡牌张等于该刻子牌值时直接不给暗刻番；自摸形成的自然暗刻仍按现有普通1番/字牌2番规则计算。
 
 This file separates CONFIRMED / HIGH-CONFIDENCE / UNKNOWN rules.
 Do not silently promote UNKNOWN rules.
