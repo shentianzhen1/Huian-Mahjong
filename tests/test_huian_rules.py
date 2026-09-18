@@ -138,9 +138,11 @@ class HuianRulesTests(unittest.TestCase):
                 "source": "wall_head", "drawn_tile": "E", "kong_kind": "MING_GANG"
             })
 
-    def test_sanjindao_is_shape_independent_and_optional(self):
+    def test_sanjindao_is_one_shot_on_receiving_third_gold(self):
         hand = ["P9", "P9", "P9", "M1"]
-        result = self.rules.sanjindao_decision(hand, "P9")
+        self.assertFalse(self.rules.sanjindao_decision(hand, "P9").eligible)
+        result = self.rules.sanjindao_decision(
+            hand, "P9", third_gold_just_received=True)
         self.assertTrue(result.eligible)
         self.assertEqual(result.gold_count, 3)
         self.assertEqual(result.choices, (
@@ -148,7 +150,18 @@ class HuianRulesTests(unittest.TestCase):
             SanjindaoChoice.CONTINUE_PLAY,
         ))
         self.assertEqual(result.multiplier, 3)
-        self.assertFalse(self.rules.sanjindao_decision(["P9"] * 2, "P9").eligible)
+        self.assertFalse(self.rules.sanjindao_decision(
+            ["P9"] * 2, "P9", third_gold_just_received=True).eligible)
+        self.assertFalse(self.rules.sanjindao_decision(
+            ["P9"] * 4, "P9", third_gold_just_received=True).eligible)
+
+    def test_three_gold_can_continue_to_ordinary_self_draw(self):
+        hand = HAND[:-3] + ["P9", "P9", "P9"]
+        result = self.rules.analyze_hu(hand, gold_tile="P9")
+        self.assertTrue(result.legal)
+        with self.assertRaisesRegex(UnknownRuleError, "three_plus_gold_discard_hu"):
+            self.rules.analyze_hu(
+                hand, "P9", win_type="pinghu", winning_tile="E")
 
     def test_sanjinyou_is_the_triple_you_state_but_not_sanjindao(self):
         self.assertIs(YoujinStage.SANJIN_YOU, YoujinStage.TRIPLE_YOU)
