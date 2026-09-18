@@ -151,10 +151,11 @@ def validate(adapter, state):
         raise ValueError("Terminal flag and phase disagree")
     if not state.terminal and len(state.wall) < adapter.rules.DRAW_WALL_REMAINING:
         raise ValueError("Active wall cannot be below the 16-tile draw boundary")
-    observed_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
-        "OBSERVED_PINGHU", "OBSERVED_ZIMO", "SIMULATION_PINGHU", "SIMULATION_ZIMO"
+    scored_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
+        "OBSERVED_PINGHU", "OBSERVED_ZIMO", "AUTO_PINGHU", "AUTO_ZIMO",
+        "SIMULATION_PINGHU", "SIMULATION_ZIMO"
     )
-    if state.terminal_reason not in (None, "WALL_16") and not observed_reason:
+    if state.terminal_reason not in (None, "WALL_16") and not scored_reason:
         raise ValueError("Invalid terminal reason")
     if (state.terminal_reason in ("SIMULATION_PINGHU", "SIMULATION_ZIMO")
             and not adapter.rules.config.simulation_only_normal_hand):
@@ -168,8 +169,8 @@ def validate(adapter, state):
     if _has_added_kong(state) and state.terminal_reason in (
             "WALL_16", "OBSERVED_PINGHU", "OBSERVED_ZIMO"):
         raise ValueError("Real/flow settlement after a completed added kong requires explicit fee accounting")
-    if observed_reason and (not state.terminal or state.rewards == [0, 0]):
-        raise ValueError("Observed win requires a terminal non-zero settlement")
+    if scored_reason and (not state.terminal or state.rewards == [0, 0]):
+        raise ValueError("Scored win requires a terminal non-zero settlement")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
         nonnegative_int(value, "state integer")
     known_special_states = {stage.value for stage in YoujinStage}
