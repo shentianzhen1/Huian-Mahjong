@@ -156,7 +156,8 @@ class HuianRulesTests(unittest.TestCase):
         dealer = self.rules.youjin_score_terms(
             YoujinStage.YOUJIN, winner=0, dealer=0, winner_fan=3
         )
-        self.assertEqual(dealer.dealer_multiplier, 2)
+        self.assertEqual(dealer.dealer_multiplier, 1)
+        self.assertEqual(dealer.total_for_current_dealer_base(35), 152)
         with self.assertRaises(ValueError):
             self.rules.youjin_score_terms(
                 YoujinStage.NORMAL, winner=0, dealer=0, winner_fan=0
