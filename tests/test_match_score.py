@@ -1,6 +1,6 @@
 import unittest
 
-from workspace.simulator import MatchScoreState, score_eight_hand_match
+from workspace.simulator import MatchProgressState, MatchScoreState, score_eight_hand_match
 
 
 class MatchScoreTests(unittest.TestCase):
@@ -42,6 +42,49 @@ class MatchScoreTests(unittest.TestCase):
         b = score_eight_hand_match(((5, -5),) * 8)
         self.assertGreater(a.score_for(0), b.score_for(0))
         self.assertGreater(a.margin_for(0), b.margin_for(0))
+
+    def test_match_progress_updates_scores_dealer_and_next_base(self):
+        match = MatchProgressState.initial(dealer=0)
+        self.assertEqual(match.scores, (1000, 1000))
+        self.assertEqual(match.current_dealer_base, 5)
+        self.assertEqual(match.hand_index, 0)
+
+        # Dealer wins: keep dealer and increase next-hand base by 5.
+        match = match.apply_settled_hand((11, -11), winner=0)
+        self.assertEqual(match.scores, (1011, 989))
+        self.assertEqual(match.dealer, 0)
+        self.assertEqual(match.consecutive_dealer_hands, 2)
+        self.assertEqual(match.current_dealer_base, 10)
+
+        # Draw: same dealer keeps again and base increases again.
+        match = match.apply_settled_hand((0, 0), winner=None)
+        self.assertEqual(match.dealer, 0)
+        self.assertEqual(match.consecutive_dealer_hands, 3)
+        self.assertEqual(match.current_dealer_base, 15)
+
+        # Dealer loses: opponent becomes dealer and base resets to sitting 5.
+        match = match.apply_settled_hand((-16, 16), winner=1)
+        self.assertEqual(match.scores, (995, 1005))
+        self.assertEqual(match.dealer, 1)
+        self.assertEqual(match.consecutive_dealer_hands, 1)
+        self.assertEqual(match.current_dealer_base, 5)
+
+    def test_match_progress_finishes_after_exactly_eight_settled_hands(self):
+        match = MatchProgressState.initial(dealer=1)
+        for index in range(8):
+            winner = None if index % 3 == 0 else match.dealer
+            rewards = (0, 0) if winner is None else (
+                (5, -5) if winner == 0 else (-5, 5)
+            )
+            match = match.apply_settled_hand(rewards, winner=winner)
+        self.assertTrue(match.complete)
+        self.assertEqual(match.hand_index, 8)
+        self.assertEqual(match.hands_remaining, 0)
+        self.assertEqual(sum(match.scores), 2000)
+        with self.assertRaises(ValueError):
+            _ = match.current_dealer_base
+        with self.assertRaises(ValueError):
+            match.apply_settled_hand((1, -1), winner=0)
 
     def test_rejects_non_zero_sum_or_wrong_match_length(self):
         with self.assertRaises(ValueError):
