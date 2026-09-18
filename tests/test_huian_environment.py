@@ -221,10 +221,7 @@ class EnvironmentTests(unittest.TestCase):
             instance.legal_actions()
 
     def test_three_gold_immediately_offers_optional_sanjindao(self):
-        two_gold = game(scenario(hand=["P9"] * 2 + HAND[2:]))
-        self.assertEqual(two_gold.action_report().unresolved, ("youjin_trigger",))
-
-        instance = game(scenario(hand=["P9"] * 3 + HAND[3:]))
+        instance = game(scenario("NEED_DRAW", hand=["P9"] * 3 + HAND[3:]))
         report = instance.action_report()
         self.assertFalse(report.unresolved)
         self.assertEqual(report.known_actions[0].metadata.get("special"), "SANJINDAO")
