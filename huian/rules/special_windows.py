@@ -107,7 +107,7 @@ def report_with_specials(adapter, state):
     if state.phase in ("OPENING_QIANGJIN_CHECK", "QIANGJIN_WINDOW"):
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
-    if state.phase in ("NEED_DRAW", "AFTER_DRAW") and (
+    if state.phase in ("NEED_DRAW", "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG") and (
             adapter.rules.can_sanjindao(state.hands[p], state.gold_tile)
             or working_qiangjin_eligible(state, p)):
         validate(adapter, state)
