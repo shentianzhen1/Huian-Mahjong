@@ -20,8 +20,8 @@ class ActionReport:
 PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
           "OPENING_QIANGJIN_CHECK", "HU_DECLARED", "TERMINAL", "ROB_KONG_WINDOW",
-          "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG", "SANJINDAO_DECLARED",
-          "EIGHT_FLOWER_YOU_DECLARED"}
+          "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG", "QIANGJIN_DECLARED",
+          "SANJINDAO_DECLARED", "EIGHT_FLOWER_YOU_DECLARED"}
 
 
 def _validate_pending_kong(state):
@@ -80,6 +80,15 @@ def _validate_pending_hu(state):
     pending = state.pending_hu
     if state.phase == "ROB_KONG_HU_DECLARED":
         _validate_rob_kong_hu(state)
+        return
+    if state.phase == "QIANGJIN_DECLARED":
+        if (not isinstance(pending, dict)
+                or set(pending) != {"winner", "source"}
+                or pending["source"] != "qiangjin"
+                or type(pending["winner"]) is not int
+                or pending["winner"] not in (0, 1)
+                or pending["winner"] != state.current_player):
+            raise ValueError("QIANGJIN_DECLARED requires a valid current-player declaration")
         return
     if state.phase == "SANJINDAO_DECLARED":
         if (not isinstance(pending, dict)
@@ -222,7 +231,8 @@ def validate(adapter, state):
                     and state.pending_hu["source"] != WinSource.DISCARD.value):
                 expected += 1
             if p == state.current_player and state.phase in (
-                    "SANJINDAO_DECLARED", "EIGHT_FLOWER_YOU_DECLARED"):
+                    "QIANGJIN_DECLARED", "SANJINDAO_DECLARED",
+                    "EIGHT_FLOWER_YOU_DECLARED"):
                 if len(state.hands[p]) not in (expected, expected + 1):
                     raise ValueError(f"Invalid hand size for player {p} in {state.phase}")
                 continue
@@ -273,6 +283,8 @@ def report(adapter, state):
         return ActionReport((), ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
     if state.phase == "ROB_KONG_HU_DECLARED":
         return ActionReport((), ("ROB_KONG_SCORING_UNKNOWN",))
+    if state.phase == "QIANGJIN_DECLARED":
+        return ActionReport((), ("qiangjin_settlement",))
     if state.phase == "SANJINDAO_DECLARED":
         return ActionReport((), ("sanjindao_settlement",))
     if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
