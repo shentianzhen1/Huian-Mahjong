@@ -21,6 +21,7 @@
 - 杠类 UNKNOWN 已收窄：抢杠胡返回 `ROB_KONG_SCORING_UNKNOWN`；杠上胡返回 `GANG_HU_SCORING_UNKNOWN`；完成补杠后普通 simulation-only 继续行牌，不再仅因存在 `ADDED_GANG` 停止。只有到独立即时杠费/流局杠费边界时返回 `KONG_FEE_SETTLEMENT_UNKNOWN`。
 - 批量评估：`run_many_normal_hands` 输出胜负、流局、自摸/点炮、平均奖励、UNKNOWN原因、步数上限、循环停止及每seed摘要；可交换座位复用牌墙、骰子及Agent随机种子。均值只统计完成局，另报样本数，UNKNOWN不充作流局。
 - Match计分：`MatchScoreState` 固定2人8局、初始 `(1000, 1000)`；`MatchProgressState` 管当前庄家、连续坐庄次数和下一局庄底；`MatchRunner` 负责把最多8个真实单局结果串成整场。`run_real_ordinary_match()` 已把普通局 Simulator 的真实计分模式接入整场：每局读取当前 dealer/base，普通平胡/自摸用 FanAggregator+Settlement 结算后回写总账；任一局遇到 UNKNOWN，整场停在该局并保留已完成局比分。
+- UNKNOWN 证据链：每个 `STOPPED_UNKNOWN` 现自动保存规则ID、state hash、完整牌面/花/副露/弃牌、金牌、当前阶段、墙余量、pending Hu/Kong、最近动作；若是普通胡番数歧义，还保存每种合法拆解及对应番数。单局 seed/骰子/步数/哈希和8局中的 hand index、庄家、庄底、当时比分也会一起透传到 `MatchRunResult.stopped_evidence`。`summarize_match_rule_gaps()` 可按规则缺口统计次数并保留有限份可复现实例。
 - 评估归档与复现：新增按局写入的 `run.json` / `hands.jsonl` / `summary.json` / `completion.json`；中断时保留已写入记录，拒绝覆盖已有目录。配对统计只纳入正反座位均完成的种子；单局重放核对运行环境、源码、状态摘要与决策事件摘要。使用方法见 `workspace/simulator/README.md`。
 - AI：`BaselineAgent` 仍是单局启发式基线：优先合法胡牌，弃牌时依次保留金牌、对子和同花色搭子，优先弃孤张；可选吃碰先PASS。项目最终目标已改为8局总分最大化，因此后续 EV/搜索必须把当前总分、剩余局数、庄位/连庄底和可接受波动纳入状态；单局胜率与胡牌次数只作为辅助指标。
 - Vision 采集：Recorder V0.2 支持 WGC / PrintWindow / 屏幕区域、PNG、有限或无限手动 AVI，以及按局自动录像。自动模式使用固定 ROI 模板执行 `WAITING → OPENING → PLAYING → SETTLEMENT → WAITING`，保留开局前10秒并在结算后录5秒；每局独立保存 AVI/JSON/JSONL。黑屏、停帧、尺寸变化和处理落后保护继续生效。玩家确认界面没有明显逐张补花动画，因此未来补花识别以补完后的手牌数、花数、墙余量和开金阶段稳定状态为准，不依赖动画模板。
@@ -48,7 +49,7 @@
 
 本轮另已成功重放归档第25号记录（seed12、交换座位、232步），核对补杠计分UNKNOWN的状态、决策和事件摘要；输出为 `data/evaluations/added_kong_100_20260915_verified/replay_25.json`。
 
-2026-09-18 最新 GitHub Actions 已全绿：FanAggregator→普通真实Settlement V0.1、`MatchProgressState`、`MatchRunner` 和 ordinary-real 8局入口均已接通；Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过202项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
+2026-09-18 最新 GitHub Actions 已全绿：FanAggregator→普通真实Settlement V0.1、`MatchProgressState`、`MatchRunner` 和 ordinary-real 8局入口均已接通；新增 UNKNOWN 证据快照、拆牌逐解番数映射、Match 上下文透传和规则缺口汇总工具。Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过204项，0失败、0错误；Legacy baseline advisory 也通过。Vision V0.1 advisory 本轮未手动触发。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
