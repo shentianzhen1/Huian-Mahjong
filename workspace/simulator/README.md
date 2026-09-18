@@ -44,7 +44,7 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 - 无配置的 `Simulator.run()` 保留历史安全停止；`run_opening()` 始终停在抢金核验。
 - 显式调用 `run_normal_hand()` 或 `Simulator(config=SimulatorConfig()).run()` 才使用普通局模拟模式。开局跳过抢金，事件标记simulation-only。
 - config中的抢金、三金倒、游金链、八花游、广义抢杠和真实计分开关默认关闭；设置为True会返回 `STOPPED_UNKNOWN / unsupported_config`。
-- `enable_added_kong=True`默认开启补杠候选；设False可禁用。按用户本轮实现要求，补杠专用窗口支持 `ROB_KONG_HU` / PASS，与仍未支持的广义 `enable_rob_kong` 不同。原PENG与第4张保留至PASS，随后升级并必须尾摸、复用补花；不将此实现当作录像已验证的抢杠交互。
+- `enable_added_kong=True`默认开启补杠候选。这里的 `ADD_KONG` 就是补杠/蓄杠/加杠：已经碰过三张，自己再摸到第4张后升级成明杠；这是唯一允许抢杠的杠，窗口支持 `ROB_KONG_HU` / PASS。`MING_GANG` 在代码中专指大明杠（别人打来一张、自己三张直接杠），不可抢；`AN_GANG` 暗杠也不可抢。原PENG与第4张保留至PASS，随后升级并必须尾摸、复用补花。
 - 三张以上金不再因“时机未知”停止：玩家已确认三金倒可立即声明或选择继续，因此普通 simulation-only 基线固定走 CONTINUE 分支，并继续普通牌局；该模式不计三金倒收益，也不会据此推断游金状态。八花、显式游金状态及未解决补杠结算仍会停止并记录规则ID。
 - 普通局自摸使用“能胡即胡”的模拟策略；真实房间能否放弃自摸继续打仍未确认。
 - 平胡赢家+1/对手−1，自摸赢家+2/对手−2，流局[0,0]。均为simulation-only单位，不含真实花/金番、庄底或特殊胡计分。
