@@ -30,6 +30,7 @@ class FanResult:
     unresolved: tuple[str, ...]
     candidate_fans: tuple[int, ...]
     decomposition_count: int
+    decomposition_fans: tuple[int, ...]
 
     @property
     def complete(self):
@@ -201,4 +202,5 @@ class FanAggregator:
             unresolved=unresolved,
             candidate_fans=tuple(sorted(set(candidates))),
             decomposition_count=len(hu_result.decompositions),
+            decomposition_fans=tuple(candidates),
         )
