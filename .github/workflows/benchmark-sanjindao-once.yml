@@ -1,5 +1,5 @@
 name: One-time Sanjindao Benchmark
-# rerun after 16-tile fixture fix
+# rerun after loop-position fix
 
 on:
   push:
