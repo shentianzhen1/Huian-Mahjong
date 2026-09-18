@@ -240,8 +240,20 @@ class NormalSimulationTests(unittest.TestCase):
         self.assertGreater(audit["decomposition_count"], 1)
         self.assertIn("decomposition_scoring", audit["fan"]["unresolved"])
         self.assertGreater(len(audit["fan"]["candidate_fans"]), 1)
+        self.assertEqual(
+            len(audit["fan"]["decomposition_fans"]),
+            audit["decomposition_count"],
+        )
+        self.assertEqual(
+            sorted(set(audit["fan"]["decomposition_fans"])),
+            audit["fan"]["candidate_fans"],
+        )
         self.assertEqual(audit["winner"], 0)
         self.assertEqual(audit["source"], "self_draw")
+        self.assertEqual(
+            result.unknown_evidence["simulation"]["stop_reason"],
+            "unresolved_rule",
+        )
 
     def test_rules_unknown_and_dead_loop_are_recorded(self):
         state = scenario("AFTER_DRAW", hand=DEALER_HAND[:14] + ["N", "P6", "N"])
