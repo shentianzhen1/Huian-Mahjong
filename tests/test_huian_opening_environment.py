@@ -1,6 +1,6 @@
 import unittest
 
-from huian import HuianEnvironment, UnknownRuleError
+from huian import HuianEnvironment
 from huian._legacy import env
 
 
@@ -22,9 +22,11 @@ class OpeningEnvironmentTests(unittest.TestCase):
         self.assertEqual(sorted(state.physical_tiles()), sorted(env.full_wall()))
         self.assertEqual(first.events[0]["action"]["type"], "OPEN_GOLD")
         self.assertEqual(first.events[0]["action"]["metadata"]["dice_total"], 7)
-        with self.assertRaises(UnknownRuleError) as raised:
-            first.legal_actions()
-        self.assertEqual(raised.exception.rule_ids, ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
+        actions = first.legal_actions()
+        self.assertTrue(actions)
+        self.assertTrue(all(action.player == state.dealer for action in actions))
+        self.assertFalse(any(action.player == 1 - state.dealer for action in actions))
+        self.assertTrue(any(action.type == env.ActionType.PASS_QIANGJIN for action in actions))
 
     def test_begin_opening_rejects_duplicate_or_invalid_request(self):
         game = HuianEnvironment()
