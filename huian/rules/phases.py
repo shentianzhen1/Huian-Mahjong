@@ -173,7 +173,8 @@ def validate(adapter, state):
         raise ValueError("Active wall cannot be below the 16-tile draw boundary")
     scored_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
         "OBSERVED_PINGHU", "OBSERVED_ZIMO", "AUTO_PINGHU", "AUTO_ZIMO",
-        "SIMULATION_PINGHU", "SIMULATION_ZIMO", "PROJECT_EIGHT_FLOWER_YOU"
+        "SIMULATION_PINGHU", "SIMULATION_ZIMO", "PROJECT_EIGHT_FLOWER_YOU",
+        "OBSERVED_SPECIAL"
     )
     if state.terminal_reason not in (None, "WALL_16") and not scored_reason:
         raise ValueError("Invalid terminal reason")
