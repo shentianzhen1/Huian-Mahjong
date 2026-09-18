@@ -26,9 +26,27 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
         self.assertTrue(eight.settlement_ready)
         self.assertTrue(eight.project_rule)
 
-        self.assertEqual(special_outcome_profile("YOUJIN").multiplier, 4)
-        self.assertEqual(special_outcome_profile("DOUBLE_YOU").multiplier, 8)
-        self.assertEqual(special_outcome_profile("TRIPLE_YOU").multiplier, 16)
+        youjin = special_outcome_profile("YOUJIN")
+        self.assertEqual(youjin.multiplier, 4)
+        self.assertEqual(youjin.multiplier_status, EvidenceStatus.CONFIRMED)
+
+        double_you = special_outcome_profile("DOUBLE_YOU")
+        self.assertEqual(double_you.multiplier, 8)
+        self.assertEqual(
+            double_you.multiplier_status, EvidenceStatus.HIGH_CONFIDENCE
+        )
+        self.assertFalse(double_you.settlement_ready)
+
+        triple_you = special_outcome_profile("TRIPLE_YOU")
+        self.assertEqual(triple_you.multiplier, 16)
+        self.assertEqual(triple_you.multiplier_status, EvidenceStatus.CONFIRMED)
+
+        rob_kong = special_outcome_profile("ROB_KONG_HU")
+        self.assertEqual(rob_kong.multiplier, 2)
+        self.assertEqual(
+            rob_kong.multiplier_status, EvidenceStatus.HIGH_CONFIDENCE
+        )
+        self.assertFalse(rob_kong.settlement_ready)
 
     def test_phase_and_source_lookup_agree_for_declared_specials(self):
         self.assertEqual(
