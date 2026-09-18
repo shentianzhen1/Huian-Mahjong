@@ -384,14 +384,12 @@ class AddedKongTests(unittest.TestCase):
         self.assertEqual(replay.state.hands, original.hands)
         self.assert_conserved(replay.state)
 
-    def test_three_scoring_unknowns_keep_declaration_audit(self):
+    def test_two_special_scoring_unknowns_keep_declaration_audit(self):
         cases = (
             (added_kong_state(rob=True), True, "ROB_KONG_SCORING_UNKNOWN",
              "ROB_KONG_HU_DECLARED", 1, "rob_kong", 2),
             (added_kong_state(kong_hu=True, tail=("E",)), False,
              "GANG_HU_SCORING_UNKNOWN", "HU_DECLARED", 0, "kong_tail_draw", 4),
-            (added_kong_state(), False, "ADD_KONG_SCORING_UNKNOWN",
-             "AFTER_DRAW", None, None, 3),
         )
         for state, rob, reason, phase, winner, source, steps in cases:
             with self.subTest(reason=reason):
@@ -422,11 +420,21 @@ class AddedKongTests(unittest.TestCase):
                 self.assertEqual(previous_hash, result.state_hash)
                 self.assert_conserved(instances[0].state)
 
+    def test_completed_added_kong_no_longer_stops_ordinary_simulation(self):
+        result = Simulator().run_normal_hand(
+            seed=17, initial_state=added_kong_state(),
+            agent=AddedKongFixtureAgent(False), max_steps=3)
+        self.assertEqual(result.status, "MAX_STEPS")
+        self.assertEqual(result.unresolved, ())
+        self.assertEqual(result.steps, 3)
+        self.assertEqual(result.phase, "AFTER_DRAW")
+        self.assertIsNone(result.terminal_reason)
+
     def test_unknown_scores_cannot_be_finalized_as_observed_ordinary_wins(self):
         for branch, reason, winner, win_type in (
             ("rob", "ROB_KONG_SCORING_UNKNOWN", 1, "PINGHU"),
             ("gang_hu", "GANG_HU_SCORING_UNKNOWN", 0, "ZIMO"),
-            ("add", "ADD_KONG_SCORING_UNKNOWN", 0, "ZIMO"),
+            ("add", "KONG_FEE_SETTLEMENT_UNKNOWN", 0, "ZIMO"),
         ):
             with self.subTest(branch=branch):
                 instance = environment(added_kong_state(
@@ -506,7 +514,7 @@ class AddedKongTests(unittest.TestCase):
             max_steps=3)
         self.assertEqual(result.wall_remaining, 16)
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertEqual(result.unresolved, ("ADD_KONG_SCORING_UNKNOWN",))
+        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         self.assertEqual(result.steps, 3)
         self.assertIsNone(result.terminal_reason)
         self.assertEqual(result.rewards, (0, 0))
