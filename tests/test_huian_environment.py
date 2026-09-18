@@ -397,8 +397,7 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(metadata["multiplier"], 1)
         self.assertEqual(metadata["fan_components"], [])
 
-    def test_automatic_settlement_stays_atomic_when_fan_is_unknown(self):
-        # Multiple valid decompositions can score concealed triplets differently.
+    def test_automatic_settlement_uses_maximum_fan_decomposition(self):
         hand = [
             "M1", "M1", "M1",
             "M2", "M2", "M2",
@@ -413,13 +412,18 @@ class EnvironmentTests(unittest.TestCase):
             "kong_kind": None, "discard_player": None, "river_index": None,
         }
         instance = game(state)
-        before = instance.state.state_hash()
-        events = instance.events
-        with self.assertRaisesRegex(UnknownRuleError, "decomposition_concealed_triplet_choice"):
-            instance.finalize_ordinary_outcome(current_dealer_base=10)
-        self.assertEqual(instance.state.state_hash(), before)
-        self.assertEqual(instance.events, events)
-        self.assertFalse(instance.is_terminal())
+        terminal, event = instance.finalize_ordinary_outcome(
+            current_dealer_base=10)
+        metadata = event["action"]["metadata"]
+        self.assertTrue(terminal.terminal)
+        self.assertEqual(metadata["fan_selection_policy"], "MAX_TOTAL_FAN")
+        self.assertEqual(
+            metadata["winner_fan"], max(metadata["fan_candidate_fans"]))
+        self.assertEqual(
+            terminal.rewards,
+            [2 * (10 + metadata["winner_fan"]),
+             -2 * (10 + metadata["winner_fan"])],
+        )
 
     def test_flower_replacement_records_effective_self_draw_for_hu(self):
         complete = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
