@@ -90,12 +90,43 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(all(a.type == env.ActionType.DISCARD and a.player == 0
                             for a in actions))
 
-    def test_d_sanjindao_ranks_before_qiangjin(self):
+    def test_d_sanjindao_is_optional_and_suppresses_qiangjin_branch(self):
         state = two_seat_gold_state(current_gold=3, opponent_gold=0)
         self.assertTrue(HuianRules().can_sanjindao(state.hands[0], GOLD))
-        actions = env_of(state).legal_actions()
+        game = env_of(state)
+        actions = game.legal_actions()
         self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
-        self.assertTrue(any(a.type == env.ActionType.QIANGJIN for a in actions))
+        self.assertFalse(any(a.type == env.ActionType.QIANGJIN for a in actions))
+        pass_act = next(a for a in actions if a.type == env.ActionType.PASS_QIANGJIN)
+        self.assertTrue(pass_act.metadata.get("continue_play"))
+        game.step(pass_act)
+        after = game.legal_actions()
+        self.assertTrue(after)
+        self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
+
+    def test_sanjindao_declaration_stops_only_at_unknown_settlement(self):
+        state = two_seat_gold_state(current_gold=3, opponent_gold=0)
+        game = env_of(state)
+        declare = next(a for a in game.legal_actions()
+                       if a.metadata.get("special") == "SANJINDAO")
+        game.step(declare)
+        self.assertEqual(game.state.phase, "SANJINDAO_DECLARED")
+        with self.assertRaisesRegex(RuntimeError, "sanjindao_settlement"):
+            game.legal_actions()
+
+    def test_16_tile_sanjindao_can_pass_and_continue_to_draw(self):
+        state = two_seat_gold_state(
+            current=1, current_gold=3, opponent_gold=0, current_tiles=16,
+            phase="NEED_DRAW")
+        game = env_of(state)
+        actions = game.legal_actions()
+        self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
+        pass_act = next(a for a in actions if a.type == env.ActionType.PASS_QIANGJIN)
+        game.step(pass_act)
+        after = game.legal_actions()
+        self.assertEqual(len(after), 1)
+        self.assertEqual(after[0].type, env.ActionType.DRAW)
+        self.assertEqual(after[0].player, 1)
 
     def test_idle_16_tiles_can_be_eligible_on_own_node_only(self):
         state = two_seat_gold_state(
