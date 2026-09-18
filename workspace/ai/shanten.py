@@ -275,3 +275,61 @@ def rank_discards(hand, gold_tile=None, open_melds=0, visible_tiles=()):
             core.tile_index(item.discard),
         ),
     ))
+
+
+
+def best_discard(hand, gold_tile=None, open_melds=0, visible_tiles=(),
+                 allowed_discards=None):
+    """Return the best discard without fully expanding inferior-shanten options.
+
+    Ranking is identical to rank_discards()[0]: minimum shanten first, then
+    maximum live effective copies, then effective tile types, then tile order.
+    """
+    _, target = _validate_inputs(hand, gold_tile, open_melds)
+    if len(hand) != target:
+        raise ValueError("best_discard requires the post-draw hand size")
+
+    hand = list(hand)
+    if allowed_discards is None:
+        allowed = set(hand)
+    else:
+        allowed = set(allowed_discards)
+        if not allowed or any(tile not in hand for tile in allowed):
+            raise ValueError("allowed_discards must be non-empty tiles in hand")
+
+    reduced_by_discard = {}
+    min_shanten = None
+    for discard in sorted(allowed, key=core.tile_index):
+        reduced = hand[:]
+        reduced.remove(discard)
+        value = ordinary_shanten(reduced, gold_tile, open_melds)
+        reduced_by_discard[discard] = (reduced, value)
+        min_shanten = value if min_shanten is None else min(min_shanten, value)
+
+    visible_tiles = tuple(visible_tiles)
+    finalists = []
+    for discard, (reduced, value) in reduced_by_discard.items():
+        if value != min_shanten:
+            continue
+        analysis = analyze_effective_tiles(
+            reduced,
+            gold_tile=gold_tile,
+            open_melds=open_melds,
+            visible_tiles=(*visible_tiles, discard),
+        )
+        finalists.append(DiscardEfficiency(
+            discard=discard,
+            shanten=analysis.shanten,
+            effective_tiles=analysis.effective_tiles,
+            total_live_copies=analysis.total_live_copies,
+        ))
+
+    return min(
+        finalists,
+        key=lambda item: (
+            item.shanten,
+            -item.total_live_copies,
+            -len(item.effective_tiles),
+            core.tile_index(item.discard),
+        ),
+    )
