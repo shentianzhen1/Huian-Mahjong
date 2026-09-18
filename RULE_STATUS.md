@@ -99,7 +99,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 - Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
 - Direct replay `7bc12fa…mp4` (ingested 2026-09-18): target-room Youjin multipliers are Youjin ×4, Double-You ×8, and Triple-You/三金游 ×16. Dealer Triple-You settles +608/-608 with current dealer base 35 and winner fan 3 (gold 1 + two flowers 2): `(35 + 3) × 16 = 608`. Flower fan is inside the Hu multiplier. Extra Youjin-chain dealer ×2 is **not** applied on this dealer Triple-You (608, not 1216) and is not applied on ordinary dealer Zimo +68. Declaration-edge cases, cancellation and next dealer remain unresolved. See `references/gameplay/2026-09-15/7bc12fa_video_evidence.md`.
-- **八花游触发与结算已确认。** 玩家2026-09-18确认：只要集齐全部8张花牌，即具备八花游资格，不要求手牌满足普通胡结构，可直接作为特殊胡结束本局；玩家也可选择【过】不走八花游。若选择过，8张花牌按基础花番1番/张计算，共8番，之后继续普通牌局。若直接选择八花游胡，八花游本身**不额外加倍**，沿用正常结算规则，不增加专属乘数；庄位也按正常胜负流程处理。与其他特殊牌型发生并列/冲突时，八花游不设独立例外，按项目中其他特殊牌型的统一处理框架执行；不再单独维护一套八花游优先级或重复窗口规则。
+- **八花游触发已确认；倍率暂按项目规则×2。** 玩家确认：只要集齐全部8张花牌，即具备八花游资格，不要求普通胡结构，可直接作为特殊胡；也可选择【过】继续。PASS后8张花仍按1番/张，共8番进入普通牌局。2026-09-18 用户决定：鉴于八花游出现概率极低，项目实现中将八花游特殊胡**暂定为×2**；这一倍率属于项目人工设定，不标记为真实房间已验证规则。庄位仍按正常胜负流程处理；与其他特殊牌型并列/冲突时沿用特殊牌型通用处理框架。
 - Confirmed opponent permissions during the Youjin chain (player confirmation, 2026-09-14): while one player is in Youjin, the opponent may Hu; while one player is in Double-You, the opponent may self-draw Hu; while one player is in Triple-You, the opponent may Hu only through a kong-replacement self-draw (杠上自摸胡 / 杠胡).
 
 ## High-confidence settlement evidence from real Huian screenshots
@@ -244,7 +244,7 @@ No target-room rule was promoted to CONFIRMED in this review.
 Additional UNKNOWN questions exposed by the comparison:
 11. Whether a natural exposed suited triplet scores fan, and the exact honor Peng value in the target room.
 12. Whether added-kong fan is an incremental bonus or a total meld value.
-13. 八花游已确认：集齐8张花即可直接特殊胡，不要求普通牌型；可选择【过】继续，过后8花按1番/张计入普通胡，共8番。八花游本身不额外加倍，按正常结算规则处理，庄位也按正常流程变化。选择过后是否还会再次出现八花游窗口，仍不从现有信息外推。
+13. 八花游：真实触发规则已确认——集齐8张花即可直接特殊胡，不要求普通牌型；可选择【过】，过后8花按1番/张计入普通胡，共8番。特殊胡倍率在真实房间仍缺直接结算证据；项目当前人工暂定×2，后续若有真实结算图则以真实证据覆盖。庄位按正常流程。
 
 Before adopting new web claims, verify the mini-program identity, 惠安 two-player selection, room options and current in-game rules. General 泉州 rules and another provider's official page are lower-priority external evidence for this project.
 
