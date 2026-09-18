@@ -231,9 +231,10 @@ class HuianRulesTests(unittest.TestCase):
         for win_type in ("sanjindao", "youjin", "double_you", "triple_you", "qianggang"):
             with self.assertRaises(UnknownRuleError):
                 self.rules.can_win(HAND, win_type=win_type)
-        with self.assertRaises(UnknownRuleError):
+        self.assertFalse(
             self.rules.can_win(["P9"] * 3 + ["M1"], "P9", win_type="pinghu",
                                winning_tile="M1")
+        )
 
     def test_visible_fifth_copy_rejected(self):
         with self.assertRaises(ValueError):
