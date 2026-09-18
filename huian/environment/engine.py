@@ -336,6 +336,86 @@ class HuianEnvironment:
         self._seen.add(self._position(candidate))
         return self.state, deepcopy(event)
 
+    def finalize_observed_special_outcome(
+            self, *, winner, rewards, evidence_id, observed_fields=None):
+        """Record a directly observed special settlement without inferring a formula.
+
+        This evidence-ingestion API accepts the net score transfer visible in a
+        replay/screenshot. It does not derive rewards from a multiplier, fan,
+        dealer base, or payer hypothesis. Formula inference remains a separate
+        evidence task.
+        """
+        from huian.rules.special_outcomes import (
+            special_outcome_for_phase, special_outcome_for_source)
+
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        if type(winner) is not int or winner not in (0, 1):
+            raise ValueError("winner must be seat 0 or 1")
+        if (not isinstance(rewards, (list, tuple)) or len(rewards) != 2
+                or any(type(value) is not int for value in rewards)):
+            raise ValueError("rewards must be two integer net scores")
+        rewards = tuple(rewards)
+        if sum(rewards) != 0:
+            raise ValueError("Observed two-player settlement must be zero-sum")
+        if rewards[winner] <= 0 or rewards[1 - winner] >= 0:
+            raise ValueError("Observed winner must have the positive net reward")
+        if not isinstance(evidence_id, str) or not evidence_id.strip():
+            raise ValueError("evidence_id must be a non-empty string")
+        if observed_fields is None:
+            observed_fields = {}
+        if not isinstance(observed_fields, dict):
+            raise ValueError("observed_fields must be a dict")
+
+        declaration = deepcopy(self._state.pending_hu)
+        if not isinstance(declaration, dict) or declaration.get("winner") != winner:
+            raise ValueError("Observed special outcome requires its matching declaration")
+        phase_profile = special_outcome_for_phase(self._state.phase)
+        source_profile = special_outcome_for_source(declaration.get("source"))
+        if phase_profile.key != source_profile.key:
+            raise ValueError("Special declaration phase/source profile mismatch")
+        profile = phase_profile
+
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = list(rewards)
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "OBSERVED_SPECIAL"
+        candidate.pending_discard = None
+        candidate.pending_hu = None
+        candidate.pending_kong = None
+        self.rules.validate_state(candidate)
+
+        metadata = {
+            "source": "observed_special",
+            "special": profile.key,
+            "evidence_id": evidence_id.strip(),
+            "rewards": list(rewards),
+            "observed_fields": deepcopy(observed_fields),
+            "registered_multiplier": profile.multiplier,
+            "registered_multiplier_evidence": profile.multiplier_status.value,
+            "registered_settlement_rule_id": profile.settlement_rule_id,
+            "hu_declaration": declaration,
+        }
+        event = {
+            "seq": len(self._events),
+            "action": {
+                "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
+                "metadata": metadata,
+            },
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
+
     def finalize_observed_outcome(self, *, winner, current_dealer_base, winner_fan, win_type):
         """Record an externally verified ordinary outcome without inferring it.
 
