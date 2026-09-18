@@ -1,5 +1,21 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-19 special-multiplier evidence normalization
+
+A re-review of the archived Huian two-player replay evidence separates **direct target-room settlements** from **in-game rule-page multipliers**:
+
+- **Youjin ×4 — CONFIRMED by target two-player settlement.** Replay `66fe863f` settles `(current dealer base 20 + winner fan 5) × 4 = 100`.
+- **Double-You ×8 — HIGH_CONFIDENCE, not direct-settlement confirmed.** The Huian in-game rules page explicitly lists 双游 ×8 and the 7bc12fa/21d61237 replay visibly passes through a Double-You state, but the archived hand continues to Triple-You rather than ending on a ×8 settlement.
+- **Triple-You / 三游 ×16 — CONFIRMED by target two-player settlement.** The archived +608 hand settles `(current dealer base 35 + winner fan 3) × 16 = 608`.
+- **Sanjindao ×3 — confirmed as the adopted target-room multiplier from player confirmation plus the in-game page, but its direct settlement/payment/dealer flow is still unresolved.** Multiplier evidence and executable settlement readiness remain separate.
+- **Rob-Kong Hu ×2 — HIGH_CONFIDENCE candidate from the Huian in-game rules page only.** It is now published as evidence metadata, while `ROB_KONG_SCORING_UNKNOWN` remains active and executable settlement stays disabled until a target two-player rob-kong settlement is captured.
+- **Eight-Flower You:** collecting all eight flowers and the DECLARE/PASS window are confirmed; PASS keeps 8 ordinary flower fan. The page item “八花齐 16” is a **fan item**, not evidence that Eight-Flower-You has a ×16 Hu multiplier. The project's provisional ×2 remains WORKING only; the real-room special multiplier is UNKNOWN.
+- **Qiangjin and Gang-Hu multipliers remain UNKNOWN.** No archived target-room settlement or sufficiently scoped in-game multiplier rule closes those branches.
+- The in-game page also lists **Tianhu ×4** and **Tianting ×4**, but current two-player target-room enablement/trigger semantics are not confirmed, so they are evidence leads only and are not enabled as executable special outcomes.
+- The two ~57.47s Triple-You evidence records (`21d61237...` and `7bc12fa...`) are treated as likely duplicate representations of the same hand unless future source hashing proves otherwise; they must not be counted as two independent settlement samples.
+
+This normalization changes evidence labels, not the already observed numerical outcomes. Special branches with incomplete payment/dealer rules continue to stop safely rather than infer a final score.
+
 ## 2026-09-18 player-confirmed current-player qiangjin window
 
 The following interaction rules are now CONFIRMED from the player's real-game clarification and are implemented in the current code:
@@ -100,7 +116,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Player confirmation (2026-09-14): the target rules do not award complex combination fans such as 门清、碰碰胡、清一色、混一色 or similar pattern families. Such tile arrangements may still satisfy the standard Hu structure, but receive no special fan for those names.
 - Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 - Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
-- Direct replay `7bc12fa…mp4` (ingested 2026-09-18): target-room Youjin multipliers are Youjin ×4, Double-You ×8, and Triple-You/三金游 ×16. Dealer Triple-You settles +608/-608 with current dealer base 35 and winner fan 3 (gold 1 + two flowers 2): `(35 + 3) × 16 = 608`. Flower fan is inside the Hu multiplier. Extra Youjin-chain dealer ×2 is **not** applied on this dealer Triple-You (608, not 1216) and is not applied on ordinary dealer Zimo +68. Declaration-edge cases, cancellation and next dealer remain unresolved. See `references/gameplay/2026-09-15/7bc12fa_video_evidence.md`.
+- Direct replay `7bc12fa…mp4` (ingested 2026-09-18) directly confirms the Triple-You/三游 ×16 settlement and visibly passes through Double-You; Youjin ×4 is directly confirmed by `66fe863f`. Double-You ×8 remains HIGH_CONFIDENCE from the Huian in-game rules page because the archived replay does not end at the Double-You stage. Dealer Triple-You settles +608/-608 with current dealer base 35 and winner fan 3 (gold 1 + two flowers 2): `(35 + 3) × 16 = 608`. Flower fan is inside the Hu multiplier. Extra Youjin-chain dealer ×2 is **not** applied on this dealer Triple-You (608, not 1216) and is not applied on ordinary dealer Zimo +68. Declaration-edge cases, cancellation and next dealer remain unresolved. See `references/gameplay/2026-09-15/7bc12fa_video_evidence.md`.
 - **八花游触发已确认；倍率暂按项目规则×2。** 玩家确认：只要集齐全部8张花牌，即具备八花游资格，不要求普通胡结构，可直接作为特殊胡；也可选择【过】继续。PASS后8张花仍按1番/张，共8番进入普通牌局。2026-09-18 用户决定：鉴于八花游出现概率极低，项目实现中将八花游特殊胡**暂定为×2**；这一倍率属于项目人工设定，不标记为真实房间已验证规则。庄位仍按正常胜负流程处理；与其他特殊牌型并列/冲突时沿用特殊牌型通用处理框架。
 - Confirmed opponent permissions during the Youjin chain (player confirmation, 2026-09-14): while one player is in Youjin, the opponent may Hu; while one player is in Double-You, the opponent may self-draw Hu; while one player is in Triple-You, the opponent may Hu only through a kong-replacement self-draw (杠上自摸胡 / 杠胡).
 
