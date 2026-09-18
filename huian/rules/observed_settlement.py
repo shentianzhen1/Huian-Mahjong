@@ -1,8 +1,9 @@
-"""Evidence-scoped Huian two-player settlement plugin.
+"""Evidence-scoped Huian two-player ordinary settlement plugin.
 
-Only ordinary Pinghu and Zimo are enabled because direct WGC settlement frames
-cover those two outcomes.  Special wins, kong side payments and flow settlement
-remain outside this plugin until separately confirmed.
+Only ordinary Pinghu and Zimo are enabled because direct settlement evidence
+covers those two outcomes. The same confirmed formula serves both externally
+observed outcomes and FanAggregator-complete automatic ordinary settlement.
+Special wins, kong side payments and flow settlement remain outside this plugin.
 """
 from dataclasses import dataclass
 
@@ -23,7 +24,7 @@ class HuianObservedSettlement:
 
 
 class HuianObservedSettlementPlugin(MahjongSettlementPlugin):
-    """Settlement for directly observed normal Huian outcomes only."""
+    """Settlement formula for evidence-confirmed ordinary Pinghu/Zimo outcomes."""
 
     variant_id = "huian.two_player.v0_1"
     _MULTIPLIERS = {"PINGHU": 1, "ZIMO": 2}
