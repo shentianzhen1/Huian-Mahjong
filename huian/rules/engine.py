@@ -155,12 +155,12 @@ class HuianRules:
         return tuple(options)
 
     def can_sanjindao(self, hand, gold_tile):
-        """Confirmed eligibility only; phase timing and settlement remain separate."""
+        """Confirmed eligibility: 3+ golds immediately allow the optional Sanjindao choice."""
         self._validate_hand(hand, gold_tile)
         return gold_tile is not None and hand.count(gold_tile) >= 3
 
     def sanjindao_decision(self, hand, gold_tile):
-        """Return the confirmed declare/continue choice without inventing its phase."""
+        """Return the confirmed immediate declare/continue choice for 3+ golds."""
         eligible = self.can_sanjindao(hand, gold_tile)
         count = hand.count(gold_tile) if gold_tile is not None else 0
         choices = ((SanjindaoChoice.DECLARE_SANJINDAO,
