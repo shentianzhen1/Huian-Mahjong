@@ -20,7 +20,7 @@ UNKNOWN_RULES = MappingProxyType({
     "qiangjin_seat_priority": "Which eligible seat has priority if more than one can declare",
     "qiangjin_settlement": "Multiplier, payer and dealer continuation after a Qiangjin declaration",
     "sanjindao": "Legacy special-win entry; use the confirmed eligibility API separately",
-    "sanjindao_timing": "Exact phases in which the confirmed declare/continue choice is offered",
+    # "sanjindao_timing" resolved 2026-09-18: 3+ golds immediately offer declare/continue.
     "sanjindao_settlement": "Non-flower base, payment, terminal flow and dealer result after the confirmed x3 declaration",
     "sanjinyou_trigger": "Exact executable steps shared by Erjin-You and Sanjin-You",
     "gang_hu_scoring": "Fan, multiplier and stacking for a confirmed kong-tail Hu",
