@@ -2,7 +2,7 @@ from .state import HuianGameState
 from .engine import HuianEnvironment, DeadLoopError
 from .special_apply import apply_qiangjin_action
 
-_orig_apply = HuianEnvironment._apply.__func__
+_orig_apply = HuianEnvironment._apply
 
 @staticmethod
 def _apply_with_qiangjin(state, action):
