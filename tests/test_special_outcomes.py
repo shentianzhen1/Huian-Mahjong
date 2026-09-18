@@ -1,6 +1,7 @@
 import unittest
 
 from huian import SPECIAL_OUTCOMES, special_outcome_profile
+from huian.rules import special_outcome_for_phase, special_outcome_for_source
 from huian.rules import EvidenceStatus
 
 
@@ -28,6 +29,16 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
         self.assertEqual(special_outcome_profile("YOUJIN").multiplier, 4)
         self.assertEqual(special_outcome_profile("DOUBLE_YOU").multiplier, 8)
         self.assertEqual(special_outcome_profile("TRIPLE_YOU").multiplier, 16)
+
+    def test_phase_and_source_lookup_agree_for_declared_specials(self):
+        self.assertEqual(
+            special_outcome_for_phase("QIANGJIN_DECLARED").key, "QIANGJIN")
+        self.assertEqual(
+            special_outcome_for_source("qiangjin").key, "QIANGJIN")
+        self.assertEqual(
+            special_outcome_for_phase("SANJINDAO_DECLARED").key, "SANJINDAO")
+        self.assertEqual(
+            special_outcome_for_source("sanjindao").key, "SANJINDAO")
 
     def test_registry_is_read_only_and_rejects_unknown_keys(self):
         with self.assertRaises(TypeError):
