@@ -2,7 +2,8 @@ import unittest
 
 from huian import UnknownRuleError
 from workspace.simulator import (
-    MatchHandResult, MatchRunner, run_eight_hand_match,
+    MatchHandResult, MatchRunner, SimulationResult, run_eight_hand_match,
+    run_real_ordinary_match,
 )
 
 
@@ -74,6 +75,68 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(result.unresolved, ("multi_gold_fan",))
         self.assertEqual(result.progress.hand_index, 0)
         self.assertEqual(result.final_scores, (1000, 1000))
+
+    def test_real_ordinary_match_feeds_dealer_base_into_each_hand(self):
+        calls = []
+
+        class FakeSimulator:
+            def run_normal_hand(self, **kwargs):
+                calls.append(kwargs)
+                dealer = kwargs["dealer"]
+                base = kwargs["current_dealer_base"]
+                rewards = (base, -base) if dealer == 0 else (-base, base)
+                return SimulationResult(
+                    seed=kwargs["seed"], status="COMPLETED",
+                    rewards=rewards, winner=dealer, win_source="discard",
+                    terminal_reason="AUTO_PINGHU",
+                    simulation_only=True, real_scoring=True,
+                )
+
+        result = run_real_ordinary_match(
+            seed=7,
+            simulator=FakeSimulator(),
+            agent_factories=(lambda seed: object(), lambda seed: object()),
+            initial_dealer=0,
+        )
+        self.assertTrue(result.complete)
+        self.assertEqual(result.final_scores, (1180, 820))
+        self.assertEqual(
+            [call["current_dealer_base"] for call in calls],
+            [5, 10, 15, 20, 25, 30, 35, 40],
+        )
+        self.assertTrue(all(call["dealer"] == 0 for call in calls))
+        self.assertEqual([call["seed"] for call in calls],
+                         [7000 + i for i in range(8)])
+
+    def test_real_ordinary_match_stops_on_rule_unknown(self):
+        calls = []
+
+        class FakeSimulator:
+            def run_normal_hand(self, **kwargs):
+                calls.append(kwargs)
+                if len(calls) == 3:
+                    return SimulationResult(
+                        seed=kwargs["seed"], status="STOPPED_UNKNOWN",
+                        unresolved=("multi_gold_fan",),
+                        simulation_only=True, real_scoring=True,
+                    )
+                return SimulationResult(
+                    seed=kwargs["seed"], status="COMPLETED",
+                    rewards=(5, -5), winner=0, win_source="discard",
+                    terminal_reason="AUTO_PINGHU",
+                    simulation_only=True, real_scoring=True,
+                )
+
+        result = run_real_ordinary_match(
+            seed=1,
+            simulator=FakeSimulator(),
+            agent_factories=(lambda seed: object(), lambda seed: object()),
+        )
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertEqual(result.stopped_hand_index, 2)
+        self.assertEqual(result.unresolved, ("multi_gold_fan",))
+        self.assertEqual(result.final_scores, (1010, 990))
+        self.assertEqual(len(calls), 3)
 
     def test_runner_rejects_invalid_hand_result(self):
         with self.assertRaises(TypeError):
