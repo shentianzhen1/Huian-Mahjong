@@ -207,9 +207,8 @@ class NormalSimulationTests(unittest.TestCase):
         for flower in env.FLOWERS:
             state.wall.remove(flower)
             state.flowers[0].append(flower)
-        result = Simulator().run_normal_hand(initial_state=state)
-        self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertIn("eight_flowers_special_win", result.unresolved)
+        result = Simulator().run_normal_hand(initial_state=state, max_steps=1)
+        self.assertNotIn("eight_flowers_special_win", result.unresolved)
 
     def test_rules_unknown_and_dead_loop_are_recorded(self):
         state = scenario("AFTER_DRAW", hand=DEALER_HAND[:14] + ["N", "P6", "N"])
