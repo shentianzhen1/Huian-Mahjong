@@ -25,7 +25,9 @@ def two_seat_gold_state(*, current=0, current_gold=1, opponent_gold=1,
     state = HuianGameState(
         phase=phase, gold_tile=GOLD, dealer=0,
         current_player=current, special_states=["NORMAL", "NORMAL"])
-    other_tiles = 16 if current_tiles == 17 else 17
+    # At a normal NEED_DRAW node both players may be on 16 concealed tiles;
+    # only the opening dealer starts with 17.
+    other_tiles = 16
     if current == 0:
         n0, n1 = current_tiles, other_tiles
     else:
