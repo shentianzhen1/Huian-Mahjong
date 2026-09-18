@@ -278,6 +278,75 @@ class HuianEnvironment:
         self._seen.add(self._position(candidate))
         return self.state, deepcopy(event)
 
+    def finalize_eight_flower_outcome(self, *, current_dealer_base, winner_fan):
+        """Settle a declared eight-flower special win with project provisional x2.
+
+        Trigger/pass/dealer flow are player-confirmed. The x2 multiplier is a
+        project setting chosen 2026-09-18, not direct real-room evidence.
+        winner_fan remains explicit because eight-flower Hu does not require
+        an ordinary decomposition, so concealed structural fan cannot be safely
+        inferred from FanAggregator.
+        """
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        if (self._state.phase != "EIGHT_FLOWER_YOU_DECLARED"
+                or not isinstance(self._state.pending_hu, dict)):
+            raise ValueError("Eight-flower settlement requires its declaration phase")
+        if type(current_dealer_base) is not int or current_dealer_base < 0:
+            raise ValueError("current_dealer_base must be a nonnegative integer")
+        if type(winner_fan) is not int or winner_fan < 8:
+            raise ValueError("eight-flower winner_fan must include at least the 8 flower fan")
+        if any(meld.kind in ("MING_GANG", "AN_GANG", "ADDED_GANG")
+               for zone in self._state.melds for meld in zone):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
+
+        declaration = deepcopy(self._state.pending_hu)
+        winner = declaration["winner"]
+        multiplier = declaration["multiplier"]
+        if multiplier != 2 or declaration.get("project_rule") is not True:
+            raise ValueError("Eight-flower declaration must use the project provisional x2")
+        net = (current_dealer_base + winner_fan) * multiplier
+        rewards = [net, -net] if winner == 0 else [-net, net]
+
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = rewards
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "PROJECT_EIGHT_FLOWER_YOU"
+        candidate.pending_hu = None
+        candidate.pending_discard = None
+        self.rules.validate_state(candidate)
+
+        event = {
+            "seq": len(self._events),
+            "action": {
+                "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
+                "metadata": {
+                    "source": "project_provisional",
+                    "special": "EIGHT_FLOWER_YOU",
+                    "project_rule": True,
+                    "evidence_status": "WORKING",
+                    "current_dealer_base": current_dealer_base,
+                    "winner_fan": winner_fan,
+                    "multiplier": multiplier,
+                    "hu_declaration": declaration,
+                    "rewards": list(rewards),
+                },
+            },
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
+
     def finalize_observed_outcome(self, *, winner, current_dealer_base, winner_fan, win_type):
         """Record an externally verified ordinary outcome without inferring it.
 
