@@ -1,4 +1,4 @@
-name: Shanten Agent AB Benchmark Optimized
+name: Shanten Agent AB Benchmark SegmentDP
 
 on:
   push:
