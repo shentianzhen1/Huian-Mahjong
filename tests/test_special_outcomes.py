@@ -1,0 +1,40 @@
+import unittest
+
+from huian import SPECIAL_OUTCOMES, special_outcome_profile
+from huian.rules import EvidenceStatus
+
+
+class SpecialOutcomeRegistryTests(unittest.TestCase):
+    def test_qiangjin_does_not_publish_an_unverified_multiplier(self):
+        profile = special_outcome_profile("QIANGJIN")
+        self.assertIsNone(profile.multiplier)
+        self.assertEqual(profile.multiplier_status, EvidenceStatus.UNKNOWN)
+        self.assertFalse(profile.settlement_ready)
+        self.assertEqual(profile.settlement_rule_id, "qiangjin_settlement")
+        self.assertNotIn("multiplier", profile.action_metadata)
+
+    def test_confirmed_and_project_multipliers_are_distinguished(self):
+        sanjindao = special_outcome_profile("SANJINDAO")
+        self.assertEqual(sanjindao.multiplier, 3)
+        self.assertEqual(sanjindao.multiplier_status, EvidenceStatus.CONFIRMED)
+        self.assertFalse(sanjindao.settlement_ready)
+
+        eight = special_outcome_profile("EIGHT_FLOWER_YOU")
+        self.assertEqual(eight.multiplier, 2)
+        self.assertEqual(eight.multiplier_status, EvidenceStatus.WORKING)
+        self.assertTrue(eight.settlement_ready)
+        self.assertTrue(eight.project_rule)
+
+        self.assertEqual(special_outcome_profile("YOUJIN").multiplier, 4)
+        self.assertEqual(special_outcome_profile("DOUBLE_YOU").multiplier, 8)
+        self.assertEqual(special_outcome_profile("TRIPLE_YOU").multiplier, 16)
+
+    def test_registry_is_read_only_and_rejects_unknown_keys(self):
+        with self.assertRaises(TypeError):
+            SPECIAL_OUTCOMES["BAD"] = None
+        with self.assertRaises(ValueError):
+            special_outcome_profile("BAD")
+
+
+if __name__ == "__main__":
+    unittest.main()
