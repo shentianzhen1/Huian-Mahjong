@@ -15,15 +15,13 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(result.status, "UNRESOLVED")
         self.assertTrue(result.unresolved)
 
-    def test_opening_trace_is_reproducible_and_stops_at_qiangjin(self):
+    def test_opening_trace_is_reproducible_and_reaches_special_window(self):
         first = Simulator().run_opening(seed=42)
         second = Simulator().run_opening(seed=42)
         self.assertEqual(first, second)
-        self.assertEqual(first.status, "STOPPED_UNKNOWN")
+        self.assertEqual(first.status, "READY")
         self.assertEqual(first.phase, "OPENING_QIANGJIN_CHECK")
-        self.assertEqual(first.unresolved, (
-            "qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement",
-        ))
+        self.assertFalse(first.unresolved)
         self.assertEqual(len(first.events), 1)
         self.assertEqual(first.events[0]["action"]["type"], "OPEN_GOLD")
         self.assertIn(first.dice_total, range(2, 13))
