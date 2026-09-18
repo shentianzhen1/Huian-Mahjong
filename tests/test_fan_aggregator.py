@@ -1,0 +1,159 @@
+import json
+from pathlib import Path
+import unittest
+
+from huian import EvidenceStatus, HuianRules
+from huian._legacy import env
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_fixture(name):
+    return json.loads((ROOT / "tests" / "fixtures" / name).read_text(encoding="utf-8"))
+
+
+def melds_from_fixture(items):
+    result = []
+    for item in items:
+        kind = item["kind"]
+        source = None if kind == "AN_GANG" else 1
+        result.append(env.Meld(kind, list(item["tiles"]), source))
+    return result
+
+
+class FanAggregatorTests(unittest.TestCase):
+    def setUp(self):
+        self.rules = HuianRules()
+
+    def test_b3892b34_reproduces_observed_four_fan(self):
+        data = load_fixture("settlement_b3892b34.json")
+        result = self.rules.aggregate_fan(
+            data["winner_hand_after_draw"],
+            melds_from_fixture(data["winner_melds"]),
+            env.FLOWERS[:data["winner_flower_count"]],
+            data["gold_tile"],
+        )
+        self.assertTrue(result.complete)
+        self.assertEqual(result.fan, data["winner_fan"])
+        self.assertEqual(result.fan, 4)
+        self.assertEqual(
+            sorted((item.category, item.fan) for item in result.components),
+            [("concealed_triplet", 1), ("flowers", 2), ("gold", 1)],
+        )
+
+    def test_66fe863f_reproduces_observed_five_fan(self):
+        data = load_fixture("settlement_66fe863f.json")
+        result = self.rules.aggregate_fan(
+            data["winner_hand_after_final_draw"],
+            melds_from_fixture(data["winner_melds"]),
+            env.FLOWERS[:data["winner_flower_count"]],
+            data["gold_tile"],
+        )
+        self.assertTrue(result.complete)
+        self.assertEqual(result.fan, data["winner_fan"])
+        self.assertEqual(result.fan, 5)
+        kong = next(item for item in result.components if item.category == "kong")
+        self.assertEqual(kong.fan, 2)
+        self.assertEqual(kong.status, EvidenceStatus.CONFIRMED)
+
+    def test_gold_filled_triplet_is_not_natural_triplet_fan(self):
+        # Pair M1/M1; four natural sequences; NN+gold is the fifth group.
+        hand = [
+            "M1", "M1",
+            "M2", "M3", "M4",
+            "M5", "M6", "M7",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "N", "N", "P9",
+        ]
+        result = self.rules.aggregate_fan(hand, gold_tile="P9")
+        self.assertTrue(result.complete)
+        self.assertEqual(result.fan, 1)
+        self.assertEqual(
+            [(item.category, item.fan) for item in result.components],
+            [("gold", 1)],
+        )
+
+    def test_two_gold_fan_stays_unknown_instead_of_being_guessed(self):
+        hand = [
+            "P9", "P9",
+            "M1", "M2", "M3",
+            "M4", "M5", "M6",
+            "M7", "M8", "M9",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+        ]
+        result = self.rules.aggregate_fan(hand, gold_tile="P9")
+        self.assertFalse(result.complete)
+        self.assertIsNone(result.fan)
+        self.assertIn("multi_gold_fan", result.unresolved)
+        self.assertEqual(result.accounted_fan, 0)
+
+    def test_complete_flower_group_stays_unknown(self):
+        hand = [
+            "M1", "M1",
+            "M2", "M3", "M4",
+            "M5", "M6", "M7",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+        ]
+        result = self.rules.aggregate_fan(
+            hand, flowers=("F1", "F2", "F3", "F4")
+        )
+        self.assertFalse(result.complete)
+        self.assertIn("flower_groups", result.unresolved)
+        self.assertEqual(result.accounted_fan, 6)  # flowers4 + honor concealed triplet2
+
+    def test_honor_peng_is_high_confidence_but_suited_peng_stays_unknown(self):
+        concealed = [
+            "M1", "M1",
+            "M2", "M3", "M4",
+            "M5", "M6", "M7",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+        ]
+        honor = self.rules.aggregate_fan(
+            concealed, melds=(env.Meld("PENG", ["E"] * 3, 1),)
+        )
+        self.assertTrue(honor.complete)
+        component = next(item for item in honor.components if item.category == "honor_peng")
+        self.assertEqual(component.fan, 1)
+        self.assertEqual(component.status, EvidenceStatus.HIGH_CONFIDENCE)
+
+        suited = self.rules.aggregate_fan(
+            concealed, melds=(env.Meld("PENG", ["P9"] * 3, 1),)
+        )
+        self.assertFalse(suited.complete)
+        self.assertIn("exposed_triplet_fan", suited.unresolved)
+
+    def test_kong_table_works_inside_aggregator(self):
+        concealed = [
+            "M1", "M1",
+            "M2", "M3", "M4",
+            "M5", "M6", "M7",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+        ]
+        cases = (
+            ("MING_GANG", "P9", 2),
+            ("MING_GANG", "E", 3),
+            ("ADDED_GANG", "P9", 2),
+            ("ADDED_GANG", "E", 3),
+            ("AN_GANG", "P9", 3),
+            ("AN_GANG", "E", 4),
+        )
+        for kind, tile, expected in cases:
+            with self.subTest(kind=kind, tile=tile):
+                source = None if kind == "AN_GANG" else 1
+                result = self.rules.aggregate_fan(
+                    concealed, melds=(env.Meld(kind, [tile] * 4, source),)
+                )
+                self.assertTrue(result.complete)
+                kong = next(item for item in result.components if item.category == "kong")
+                self.assertEqual(kong.fan, expected)
+
+
+if __name__ == "__main__":
+    unittest.main()
