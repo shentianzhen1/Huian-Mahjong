@@ -47,11 +47,11 @@
 
 本轮另已成功重放归档第25号记录（seed12、交换座位、232步），核对补杠计分UNKNOWN的状态、决策和事件摘要；输出为 `data/evaluations/added_kong_100_20260915_verified/replay_25.json`。
 
-2026-09-18 最新 GitHub Actions 已全绿：Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过171项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
+2026-09-18 最新 GitHub Actions 已全绿：新增8局 Match 计分账本测试后，Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过175项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| GitHub Actions / 项目根目录 | `python -B -m unittest discover -s tests -v` | 171 通过 × Python 3.10/3.11/3.12 |
+| GitHub Actions / 项目根目录 | `python -B -m unittest discover -s tests -v` | 175 通过 × Python 3.10/3.11/3.12 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过 |
