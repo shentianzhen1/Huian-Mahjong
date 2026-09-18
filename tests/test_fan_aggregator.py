@@ -2,7 +2,8 @@ import json
 from pathlib import Path
 import unittest
 
-from huian import EvidenceStatus, HuianRules
+from huian import HuianRules
+from huian.rules import EvidenceStatus
 from huian._legacy import env
 
 
