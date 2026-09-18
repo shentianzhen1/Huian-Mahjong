@@ -489,10 +489,6 @@ class HuianEnvironment:
         self._seen.add(position)
         return self.state, deepcopy(event)
 
-    @staticmethod
-    def _has_added_kong(state):
-        return any(meld.kind == "ADDED_GANG" for zone in state.melds for meld in zone)
-
     @classmethod
     def _resolve_flowers(cls, state):
         """Apply the high-confidence dealer-first flower replacement rounds."""
