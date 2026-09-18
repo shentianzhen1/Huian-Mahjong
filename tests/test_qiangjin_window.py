@@ -48,6 +48,15 @@ def two_seat_gold_state(*, current=0, current_gold=1, opponent_gold=1,
     return _fill(state)
 
 
+def mark_third_gold_draw(state):
+    state.phase = "AFTER_DRAW"
+    state.last_action = env.Action(
+        state.current_player, env.ActionType.DRAW,
+        metadata={"source": "wall_head", "drawn_tile": GOLD},
+    ).to_dict()
+    return state
+
+
 def env_of(state):
     rules = HuianRulesAdapter(HuianRules(RulesConfig()))
     game = HuianEnvironment(rules=rules)
@@ -92,9 +101,11 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(all(a.type == env.ActionType.DISCARD and a.player == 0
                             for a in actions))
 
-    def test_d_sanjindao_is_optional_and_suppresses_qiangjin_branch(self):
-        state = two_seat_gold_state(current_gold=3, opponent_gold=0)
-        self.assertTrue(HuianRules().can_sanjindao(state.hands[0], GOLD))
+    def test_d_sanjindao_is_optional_only_on_third_gold_draw(self):
+        state = mark_third_gold_draw(two_seat_gold_state(
+            current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
+        self.assertTrue(HuianRules().can_sanjindao(
+            state.hands[0], GOLD, third_gold_just_received=True))
         game = env_of(state)
         actions = game.legal_actions()
         self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
@@ -107,7 +118,8 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
     def test_sanjindao_declaration_stops_only_at_unknown_settlement(self):
-        state = two_seat_gold_state(current_gold=3, opponent_gold=0)
+        state = mark_third_gold_draw(two_seat_gold_state(
+            current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
         game = env_of(state)
         declare = next(a for a in game.legal_actions()
                        if a.metadata.get("special") == "SANJINDAO")
@@ -116,19 +128,16 @@ class QiangjinWindowTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "sanjindao_settlement"):
             game.legal_actions()
 
-    def test_16_tile_sanjindao_can_pass_and_continue_to_draw(self):
+    def test_existing_three_gold_does_not_reopen_sanjindao(self):
         state = two_seat_gold_state(
             current=1, current_gold=3, opponent_gold=0, current_tiles=16,
             phase="NEED_DRAW")
         game = env_of(state)
         actions = game.legal_actions()
-        self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
-        pass_act = next(a for a in actions if a.type == env.ActionType.PASS_QIANGJIN)
-        game.step(pass_act)
-        after = game.legal_actions()
-        self.assertEqual(len(after), 1)
-        self.assertEqual(after[0].type, env.ActionType.DRAW)
-        self.assertEqual(after[0].player, 1)
+        self.assertFalse(any(
+            a.metadata.get("special") == "SANJINDAO" for a in actions
+        ))
+        self.assertTrue(any(a.type == env.ActionType.QIANGJIN for a in actions))
 
     def test_idle_16_tiles_can_be_eligible_on_own_node_only(self):
         state = two_seat_gold_state(
