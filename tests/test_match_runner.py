@@ -52,7 +52,7 @@ class MatchRunnerTests(unittest.TestCase):
             calls.append(context.hand_index)
             if context.hand_index == 2:
                 return MatchHandResult.unknown(
-                    "KONG_FEE_SETTLEMENT_UNKNOWN")
+                    "GANG_HU_SCORING_UNKNOWN")
             reward = (10, -10) if context.dealer == 0 else (-10, 10)
             return MatchHandResult.settled(reward, winner=context.dealer)
 
@@ -60,7 +60,7 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertFalse(result.complete)
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
         self.assertEqual(result.stopped_hand_index, 2)
-        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
+        self.assertEqual(result.unresolved, ("GANG_HU_SCORING_UNKNOWN",))
         self.assertEqual(result.progress.hand_index, 2)
         self.assertEqual(result.final_scores, (1020, 980))
         self.assertEqual(calls, [0, 1, 2])
@@ -68,11 +68,11 @@ class MatchRunnerTests(unittest.TestCase):
 
     def test_unknown_rule_exception_is_converted_to_safe_stop(self):
         def hand_runner(context):
-            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
+            raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
 
         result = MatchRunner(hand_runner).run()
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
+        self.assertEqual(result.unresolved, ("GANG_HU_SCORING_UNKNOWN",))
         self.assertEqual(result.progress.hand_index, 0)
         self.assertEqual(result.final_scores, (1000, 1000))
 
@@ -117,12 +117,12 @@ class MatchRunnerTests(unittest.TestCase):
                 if len(calls) == 3:
                     return SimulationResult(
                         seed=kwargs["seed"], status="STOPPED_UNKNOWN",
-                        unresolved=("KONG_FEE_SETTLEMENT_UNKNOWN",),
+                        unresolved=("GANG_HU_SCORING_UNKNOWN",),
                         simulation_only=True, real_scoring=True,
                         unknown_evidence={
-                            "rule_ids": ["KONG_FEE_SETTLEMENT_UNKNOWN"],
-                            "phase": "AFTER_ADDED_GANG",
-                            "completed_kongs": [{"player": 0, "kind": "ADDED_GANG"}],
+                            "rule_ids": ["GANG_HU_SCORING_UNKNOWN"],
+                            "phase": "HU_DECLARED",
+                            "completed_kongs": [{"player": 0, "kind": "AN_GANG"}],
                         },
                     )
                 return SimulationResult(
@@ -139,7 +139,7 @@ class MatchRunnerTests(unittest.TestCase):
         )
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
         self.assertEqual(result.stopped_hand_index, 2)
-        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
+        self.assertEqual(result.unresolved, ("GANG_HU_SCORING_UNKNOWN",))
         self.assertEqual(result.final_scores, (1010, 990))
         self.assertEqual(len(calls), 3)
         self.assertEqual(
@@ -168,9 +168,9 @@ class MatchRunnerTests(unittest.TestCase):
             )
         )
         report = summarize_match_rule_gaps([
-            stopped("KONG_FEE_SETTLEMENT_UNKNOWN", "a"),
+            stopped("GANG_HU_SCORING_UNKNOWN", "a"),
             stopped("decomposition_scoring", "b"),
-            stopped("KONG_FEE_SETTLEMENT_UNKNOWN", "c"),
+            stopped("GANG_HU_SCORING_UNKNOWN", "c"),
             complete,
         ], max_examples_per_rule=1)
 
@@ -181,12 +181,12 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(report["average_settled_hands"], 2.0)
         self.assertEqual(
             list(report["rules"]),
-            ["KONG_FEE_SETTLEMENT_UNKNOWN", "decomposition_scoring"],
+            ["GANG_HU_SCORING_UNKNOWN", "decomposition_scoring"],
         )
         self.assertEqual(
-            report["rules"]["KONG_FEE_SETTLEMENT_UNKNOWN"]["count"], 2)
+            report["rules"]["GANG_HU_SCORING_UNKNOWN"]["count"], 2)
         self.assertEqual(
-            report["rules"]["KONG_FEE_SETTLEMENT_UNKNOWN"]["examples"],
+            report["rules"]["GANG_HU_SCORING_UNKNOWN"]["examples"],
             [{"marker": "a"}],
         )
         with self.assertRaises(ValueError):
