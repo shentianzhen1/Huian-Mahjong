@@ -234,11 +234,11 @@ class NormalSimulationTests(unittest.TestCase):
             initial_state=state, current_dealer_base=10
         )
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertIn("decomposition_scoring", result.unresolved)
+        self.assertIn("decomposition_concealed_triplet_choice", result.unresolved)
         audit = result.unknown_evidence["ordinary_hu_audit"]
         self.assertTrue(audit["legal"])
         self.assertGreater(audit["decomposition_count"], 1)
-        self.assertIn("decomposition_scoring", audit["fan"]["unresolved"])
+        self.assertIn("decomposition_concealed_triplet_choice", audit["fan"]["unresolved"])
         self.assertGreater(len(audit["fan"]["candidate_fans"]), 1)
         self.assertEqual(
             len(audit["fan"]["decomposition_fans"]),
