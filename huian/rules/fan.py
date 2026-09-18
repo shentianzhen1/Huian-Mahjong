@@ -184,7 +184,12 @@ class FanAggregator:
             or len(set(candidates)) > 1
         )
         if decomposition_ambiguous:
-            unresolved.append("decomposition_scoring")
+            if hu_result.may_be_truncated:
+                unresolved.append("decomposition_scoring")
+            else:
+                # At present, all decomposition-dependent fan components are
+                # concealed triplets; base components are decomposition-invariant.
+                unresolved.append("decomposition_concealed_triplet_choice")
 
         if decomposition_ambiguous:
             components = tuple(base_components)
