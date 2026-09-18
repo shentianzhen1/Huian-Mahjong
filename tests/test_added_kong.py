@@ -2,7 +2,8 @@
 
 ADD_KONG means an existing Peng upgraded with a self-drawn fourth tile. It is
 robbable. MING_GANG means 大明杠 from an opponent discard and is not robbable;
-AN_GANG is concealed and is not robbable. Scoring remains independently unknown.
+AN_GANG is concealed and is not robbable. Kongs have no independent fee;
+only their fan contribution and still-unresolved special Hu scoring matter.
 """
 from collections import Counter
 from copy import deepcopy
@@ -430,11 +431,10 @@ class AddedKongTests(unittest.TestCase):
         self.assertEqual(result.phase, "AFTER_DRAW")
         self.assertIsNone(result.terminal_reason)
 
-    def test_unknown_scores_cannot_be_finalized_as_observed_ordinary_wins(self):
+    def test_special_kong_scores_cannot_be_finalized_as_observed_ordinary_wins(self):
         for branch, reason, winner, win_type in (
             ("rob", "ROB_KONG_SCORING_UNKNOWN", 1, "PINGHU"),
             ("gang_hu", "GANG_HU_SCORING_UNKNOWN", 0, "ZIMO"),
-            ("add", "KONG_FEE_SETTLEMENT_UNKNOWN", 0, "ZIMO"),
         ):
             with self.subTest(branch=branch):
                 instance = environment(added_kong_state(
@@ -489,34 +489,36 @@ class AddedKongTests(unittest.TestCase):
                 self.assertEqual(instance.events, events)
                 self.assert_conserved(instance.state)
 
-    def test_added_kong_cannot_be_imported_as_forged_observed_terminal(self):
+    def test_added_kong_does_not_make_observed_terminal_invalid_by_itself(self):
         instance = environment(added_kong_state())
         self.declare(instance)
         instance.step(env.Action(1, env.ActionType.PASS))
         instance.step(action_of(instance, env.ActionType.DRAW))
-        before, events = instance.state.state_hash(), instance.events
         for reason in ("OBSERVED_PINGHU", "OBSERVED_ZIMO"):
             with self.subTest(terminal_reason=reason):
-                forged = instance.state
-                forged.phase = "TERMINAL"
-                forged.terminal = True
-                forged.terminal_reason = reason
-                forged.rewards = [11, -11]
-                with self.assertRaises(ValueError):
-                    instance.set_state(forged)
-                self.assertEqual(instance.state.state_hash(), before)
-                self.assertEqual(instance.events, events)
+                observed = instance.state
+                observed.phase = "TERMINAL"
+                observed.terminal = True
+                observed.terminal_reason = reason
+                observed.rewards = [11, -11]
+                instance.set_state(observed)
+                self.assertEqual(instance.state.terminal_reason, reason)
+                self.assertEqual(instance.state.rewards, [11, -11])
+                instance = environment(added_kong_state())
+                self.declare(instance)
+                instance.step(env.Action(1, env.ActionType.PASS))
+                instance.step(action_of(instance, env.ActionType.DRAW))
 
-    def test_added_kong_at_16_tiles_does_not_fabricate_zero_score_draw(self):
+    def test_added_kong_at_16_tiles_is_normal_zero_score_draw(self):
         state = added_kong_state(wall_count=17)
         result = Simulator().run_normal_hand(
             seed=17, initial_state=state, agent=AddedKongFixtureAgent(False),
             max_steps=3)
         self.assertEqual(result.wall_remaining, 16)
-        self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.unresolved, ())
         self.assertEqual(result.steps, 3)
-        self.assertIsNone(result.terminal_reason)
+        self.assertEqual(result.terminal_reason, "WALL_16")
         self.assertEqual(result.rewards, (0, 0))
 
     def test_disabling_candidates_does_not_skip_an_existing_rob_window(self):
