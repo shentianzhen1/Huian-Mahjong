@@ -12,6 +12,7 @@ from huian.rules.adapter import HuianRulesAdapter
 from huian.rules.engine import HuianRules
 from huian.rules.config import RulesConfig
 from workspace.ai import AgentDecision, PlayerObservation
+from .unknowns import build_unknown_evidence
 
 
 def make_wall(seed=None):
@@ -56,6 +57,7 @@ class SimulationResult:
     config: dict | None = None
     initial_state_hash: str | None = None
     wall_hash: str | None = None
+    unknown_evidence: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -127,8 +129,11 @@ class Simulator:
         try:
             game.legal_actions()
         except UnknownRuleError as exc:
-            return self._result(game, seed=seed, status="UNRESOLVED",
-                                unresolved=exc.rule_ids)
+            return self._result(
+                game, seed=seed, status="UNRESOLVED",
+                unresolved=exc.rule_ids,
+                unknown_evidence=build_unknown_evidence(game, exc.rule_ids),
+            )
         return self._result(game, seed=seed, status="READY")
 
     def run_opening(self, seed=None, dice_total=None, max_steps=100):
@@ -141,8 +146,11 @@ class Simulator:
             game.begin_opening(dice_total)
             game.legal_actions()
         except UnknownRuleError as exc:
-            return self._result(game, seed=seed, status="STOPPED_UNKNOWN",
-                                dice_total=dice_total, unresolved=exc.rule_ids)
+            return self._result(
+                game, seed=seed, status="STOPPED_UNKNOWN",
+                dice_total=dice_total, unresolved=exc.rule_ids,
+                unknown_evidence=build_unknown_evidence(game, exc.rule_ids),
+            )
         return self._result(game, seed=seed, status="READY", dice_total=dice_total)
 
     @staticmethod
@@ -212,13 +220,17 @@ class Simulator:
         steps = 0
 
         def finish(status, unresolved=(), stop_reason=None):
+            evidence = (
+                build_unknown_evidence(game, unresolved)
+                if unresolved else None
+            )
             return self._result(
                 game, seed=seed, status=status, dice_total=dice_total,
                 unresolved=unresolved, decisions=decisions, steps=steps,
                 stop_reason=stop_reason, simulation_only=True,
                 real_scoring=profile.enable_real_scoring,
                 config=asdict(profile), initial_state_hash=initial_hash,
-                wall_hash=wall_hash,
+                wall_hash=wall_hash, unknown_evidence=evidence,
             )
 
         unsupported = profile.unsupported_rules()
