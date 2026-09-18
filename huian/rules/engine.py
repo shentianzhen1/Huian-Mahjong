@@ -142,7 +142,12 @@ class HuianRules:
         return tuple(t for t in core.BASE_TILES if can_an_gang(hand, t, gold_tile))
 
     def added_kong_options(self, hand, melds, gold_tile=None):
-        """Pure indexed candidates; never mutate the original pung or hand."""
+        """补杠/蓄杠/加杠 candidates: upgrade an existing Peng with a self-drawn fourth tile.
+
+        This is the robbable exposed-kong upgrade branch. It is distinct from
+        ``ming_gang`` (大明杠 from an opponent discard) and ``concealed_kongs``
+        (暗杠), neither of which is robbable in the target room.
+        """
         self._validate_hand(hand, gold_tile)
         self.validate_tiles([*hand, *(tile for meld in melds for tile in meld.tiles)])
         options = []
