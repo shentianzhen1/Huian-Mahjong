@@ -31,3 +31,17 @@ RandomAgent在 `workspace.simulator` 保留兼容入口；它的 `choose_decisio
 固定20个match seed、正反换座，共40场8局全部完成。结果：EfficiencyAgent 6胜，BaselineAgent 33胜，1平；平均最终分 Efficiency=925.125、Baseline=1074.875，平均分差 Efficiency-Baseline=-149.75。
 
 结论：V0.2没有通过晋级门槛，**不得替换BaselineAgent**。这说明“手工结构分+一摸改良潜力”会产生系统性错误弃牌。下一版优先做可验证的16/17张惠安牌型向听/有效牌，再考虑公开信息危险度和Monte Carlo/EV。
+
+
+## ShantenAgent V0.3（实验）
+
+`ShantenAgent` 使用新的惠安16/17张普通胡向听/有效牌引擎来排序弃牌。它仍保持：
+
+- 合法HU优先；
+- 可选吃碰先PASS；
+- 不读取对手暗牌或牌墙顺序；
+- 只把自己手牌、公开牌河、公开副露用于有效牌剩余张数。
+
+弃牌先比较普通胡向听数，再比较公开信息下的有效牌剩余张数和有效牌种类。特殊胡继续由特殊状态机处理，不混入普通向听层。
+
+该Agent暂不替换Baseline，必须通过固定seed、正反换座的8局A/B后才考虑晋级。
