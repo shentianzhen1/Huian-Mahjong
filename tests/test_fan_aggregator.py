@@ -182,7 +182,7 @@ class FanAggregatorTests(unittest.TestCase):
             result.fan,
         )
 
-    def test_honor_peng_is_high_confidence_but_suited_peng_stays_unknown(self):
+    def test_exposed_peng_scoring_is_confirmed(self):
         concealed = [
             "M1", "M1",
             "M2", "M3", "M4",
@@ -196,13 +196,15 @@ class FanAggregatorTests(unittest.TestCase):
         self.assertTrue(honor.complete)
         component = next(item for item in honor.components if item.category == "honor_peng")
         self.assertEqual(component.fan, 1)
-        self.assertEqual(component.status, EvidenceStatus.HIGH_CONFIDENCE)
+        self.assertEqual(component.status, EvidenceStatus.CONFIRMED)
 
         suited = self.rules.aggregate_fan(
             concealed, melds=(env.Meld("PENG", ["P9"] * 3, 1),)
         )
-        self.assertFalse(suited.complete)
-        self.assertIn("exposed_triplet_fan", suited.unresolved)
+        self.assertTrue(suited.complete)
+        self.assertEqual(suited.fan, 0)
+        self.assertEqual(suited.unresolved, ())
+        self.assertEqual(suited.components, ())
 
     def test_kong_table_works_inside_aggregator(self):
         concealed = [
