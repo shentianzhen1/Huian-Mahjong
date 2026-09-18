@@ -216,14 +216,18 @@ class HuianRules:
                     options.append((index, tile))
         return tuple(options)
 
-    def can_sanjindao(self, hand, gold_tile):
-        """Confirmed eligibility: 3+ golds immediately allow the optional Sanjindao choice."""
+    def can_sanjindao(self, hand, gold_tile, *, third_gold_just_received=False):
+        """Sanjindao is a one-shot choice when the third gold has just arrived."""
         self._validate_hand(hand, gold_tile)
-        return gold_tile is not None and hand.count(gold_tile) >= 3
+        if type(third_gold_just_received) is not bool:
+            raise ValueError("third_gold_just_received must be boolean")
+        return (third_gold_just_received and gold_tile is not None
+                and hand.count(gold_tile) == 3)
 
-    def sanjindao_decision(self, hand, gold_tile):
-        """Return the confirmed immediate declare/continue choice for 3+ golds."""
-        eligible = self.can_sanjindao(hand, gold_tile)
+    def sanjindao_decision(self, hand, gold_tile, *, third_gold_just_received=False):
+        """Return the third-gold-moment declare/continue choice."""
+        eligible = self.can_sanjindao(
+            hand, gold_tile, third_gold_just_received=third_gold_just_received)
         count = hand.count(gold_tile) if gold_tile is not None else 0
         choices = ((SanjindaoChoice.DECLARE_SANJINDAO,
                     SanjindaoChoice.CONTINUE_PLAY) if eligible else ())
@@ -302,8 +306,8 @@ class HuianRules:
                 return HuResult(False, (), gold_tile, open_melds, context)
             if gold_count == 2:
                 return HuResult(False, (), gold_tile, open_melds, context)
-        if gold_count >= 3:
-            raise UnknownRuleError("three_plus_gold_ordinary_hu")
+        # After declining the one-shot Sanjindao window, 3+ golds may continue
+        # to an ordinary self-draw. Discard/rob-kong restrictions above remain.
         raw_splits = winning_decompositions(
             hand, gold_tile, open_melds, max_solutions=max_decompositions + 1
         )
