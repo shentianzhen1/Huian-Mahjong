@@ -1,4 +1,9 @@
-"""Regression scenarios for confirmed added-kong transitions and unknown scores."""
+"""Regression scenarios for 补杠/蓄杠/加杠 (ADD_KONG) transitions.
+
+ADD_KONG means an existing Peng upgraded with a self-drawn fourth tile. It is
+robbable. MING_GANG means 大明杠 from an opponent discard and is not robbable;
+AN_GANG is concealed and is not robbable. Scoring remains independently unknown.
+"""
 from collections import Counter
 from copy import deepcopy
 import unittest
