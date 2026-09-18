@@ -142,9 +142,6 @@ class HuianEnvironment:
         if pending["source"] == WinSource.KONG_TAIL_DRAW.value:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
-        if self._has_added_kong(self._state):
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("ADD_KONG_SCORING_UNKNOWN")
         winner = pending["winner"]
         multiplier = 1 if pending["source"] == WinSource.DISCARD.value else 2
         candidate = deepcopy(self._state)
@@ -188,9 +185,12 @@ class HuianEnvironment:
             expected = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
             if win_type != expected:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
-        if self._state.pending_kong is not None or self._has_added_kong(self._state):
+        if self._state.pending_kong is not None:
             from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("ADD_KONG_SCORING_UNKNOWN")
+            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
+        if self._has_added_kong(self._state):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
         last = self._state.last_action
         if (self._state.phase in ("AFTER_DRAW", "NEED_FLOWER_REPLACE")
                 and isinstance(last, dict) and last.get("type") == env.ActionType.DRAW.value):
@@ -329,8 +329,9 @@ class HuianEnvironment:
         """Apply the high-confidence dealer-first flower replacement rounds."""
         if state.phase != "NEED_FLOWER_REPLACE":
             return None
-        # An added kong has unresolved accounting at a drawn-hand boundary.
-        # Stop replacement at 16 without manufacturing a zero-fee settlement.
+        # A completed added kong may continue ordinary play. At the 16-tile
+        # boundary, however, independent/flow kong-fee accounting is still
+        # unresolved, so replacement must not cross the boundary.
         boundary = 16 if cls._has_added_kong(state) else 0
         result = replace_flowers(state.hands, state.flowers, state.wall, state.dealer,
                                  minimum_wall_remaining=boundary)
@@ -342,8 +343,12 @@ class HuianEnvironment:
         ) else "AFTER_DRAW")
         return result
     def _resolve_wall_draw(self, state):
-        if state.pending_kong is not None or self._has_added_kong(state):
-            # Preserve the response/declaration first; scoring remains UNKNOWN.
+        if state.pending_kong is not None:
+            # Preserve the rob-kong response/declaration first.
+            return
+        if self._has_added_kong(state):
+            # Ordinary play may continue after a completed added kong, but a
+            # wall draw still needs the unresolved independent/flow kong-fee rule.
             return
         if not state.terminal and self.rules.rules.is_wall_draw(state):
             state.terminal = True
