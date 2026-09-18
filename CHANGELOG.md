@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-09-18 — UNKNOWN证据链与规则缺口报告优化
+
+- 新增结构化 `unknown_evidence`：UNKNOWN停止时自动保存规则ID、state hash、完整模拟牌面、花牌、副露、弃牌、金牌、墙余量、pending Hu/Kong和最近动作。
+- 普通胡若因 `decomposition_scoring` 停止，现保存全部合法拆解、候选番数及“每一种拆解→对应番数”的逐解映射，不再只留下一个规则ID。
+- 单局证据补充 seed、骰子、步数、初始状态hash、牌墙hash；进入8局后再附 hand index、庄家、庄底、当时比分、剩余局数和 hand seed，可精确复现。
+- `MatchRunResult.stopped_evidence` 直接暴露整场停止证据；新增 `summarize_match_rule_gaps()` 汇总UNKNOWN频次和有限份代表案例。
+- 新增 `python -m workspace.simulator.rule_gap_benchmark`，可直接运行交换座位的 ordinary-real 8局规则缺口基准。2个seed×换座的端到端smoke成功：4场全部正常产出证据报告，平均已结算2.75局，四个当前主要缺口各抓到1个可复现实例。
+- Core regression 在 Python 3.10 / 3.11 / 3.12 均204项全通过；Legacy baseline advisory通过。
+
 ## 2026-09-18 — 本批规则统一落地并完成回归
 
 - FanAggregator：金牌改为1台/张累计；金作万能不消耗/不额外加台；金补刻不计自然暗刻。花牌严格1番/张；四花组无额外；八花PASS后基础花番=8。multi_gold_fan 与 flower_groups 从执行路径移除。
