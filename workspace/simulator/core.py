@@ -232,12 +232,6 @@ class Simulator:
                     # Settlement is part of the declaring action, even on last step.
                     game.finalize_simulation_only_outcome()
                     continue
-                if any(meld.kind == "ADDED_GANG" for zone in state.melds for meld in zone):
-                    # Classify an already-reached scoring barrier before the
-                    # action budget; checking it does not execute another step.
-                    report = game.action_report()
-                    if "ADD_KONG_SCORING_UNKNOWN" in report.unresolved:
-                        return finish("STOPPED_UNKNOWN", report.unresolved, "unresolved_rule")
                 if steps >= max_steps:
                     return finish("MAX_STEPS", stop_reason="max_steps")
                 actions = game.legal_actions()
