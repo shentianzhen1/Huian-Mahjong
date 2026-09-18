@@ -177,6 +177,8 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(report["total_matches"], 4)
         self.assertEqual(report["complete_matches"], 1)
         self.assertEqual(report["stopped_unknown"], 3)
+        self.assertEqual(report["settled_hands_total"], 8)
+        self.assertEqual(report["average_settled_hands"], 2.0)
         self.assertEqual(
             list(report["rules"]),
             ["KONG_FEE_SETTLEMENT_UNKNOWN", "decomposition_scoring"],
