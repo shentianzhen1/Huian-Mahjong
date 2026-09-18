@@ -7,6 +7,7 @@ from qzcore.win_checker import winning_decompositions
 from .config import EvidenceStatus, RulesConfig, UnknownRuleError
 from .context import (HuContext, KongKind, SanjindaoChoice, SanjindaoDecision,
                       WinSource, YoujinStage)
+from .special_outcomes import special_outcome_profile
 from .dealer_base import (
     DEALER_WIN_MULTIPLIER,
     MATCH_HAND_COUNT,
@@ -100,13 +101,13 @@ class YoujinScoreTerms:
 
 class HuianRules:
     DRAW_WALL_REMAINING = 16
-    SANJINDAO_MULTIPLIER = 3
+    SANJINDAO_MULTIPLIER = special_outcome_profile("SANJINDAO").multiplier
     SITTING_DEALER_BASE = SITTING_DEALER_BASE
     MATCH_HAND_COUNT = MATCH_HAND_COUNT
     YOUJIN_MULTIPLIERS = {
-        YoujinStage.YOUJIN: 4,
-        YoujinStage.DOUBLE_YOU: 8,
-        YoujinStage.TRIPLE_YOU: 16,
+        YoujinStage.YOUJIN: special_outcome_profile("YOUJIN").multiplier,
+        YoujinStage.DOUBLE_YOU: special_outcome_profile("DOUBLE_YOU").multiplier,
+        YoujinStage.TRIPLE_YOU: special_outcome_profile("TRIPLE_YOU").multiplier,
     }
 
     def is_wall_draw(self, state):
