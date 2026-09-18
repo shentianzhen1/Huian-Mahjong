@@ -49,6 +49,7 @@ UNKNOWN_RULES = MappingProxyType({
     "added_kong_details": "Remaining added-kong UI/payment edge cases; fan table and rob scope are adopted",
     "decomposition_scoring": "Selection among multiple winning decompositions",
     # three_plus_gold_ordinary_hu resolved for self-draw after declining Sanjindao.
+    "three_plus_gold_discard_hu": "Whether 3+ golds may win from an opponent discard after Sanjindao was declined",
     "environment_phase": "Complete legal action set for unsupported legacy phases",
     "win_declaration_and_settlement": "Automatic fan aggregation and settlement after an audited Hu declaration",
     "self_draw_decline": "Whether an available ordinary self-draw Hu may be declined to continue play",
