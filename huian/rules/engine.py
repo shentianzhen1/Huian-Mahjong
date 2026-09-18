@@ -152,6 +152,14 @@ class HuianRules:
         self._validate_hand(hand, gold_tile)
         return tuple(t for t in core.BASE_TILES if can_an_gang(hand, t, gold_tile))
 
+    def aggregate_fan(self, hand, melds=(), flowers=(), gold_tile=None, *,
+                      hu_result=None):
+        """Run the evidence-aware FanAggregator V0.1."""
+        from .fan import FanAggregator
+        return FanAggregator(self).aggregate(
+            hand, melds, flowers, gold_tile, hu_result=hu_result
+        )
+
     def kong_fan(self, kind, tile):
         """Return the currently adopted target-room fan for a completed kong.
 
