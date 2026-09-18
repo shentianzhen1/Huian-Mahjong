@@ -42,6 +42,7 @@ class MatchHandResult:
     winner: int | None = None
     terminal_reason: str | None = None
     unresolved: tuple[str, ...] = ()
+    evidence: dict | None = None
 
     def __post_init__(self):
         if self.status not in ("SETTLED", "STOPPED_UNKNOWN"):
@@ -53,6 +54,8 @@ class MatchHandResult:
         if sum(self.rewards) != 0:
             raise ValueError("hand rewards must be zero-sum")
         _seat_or_none(self.winner, "winner")
+        if self.evidence is not None and not isinstance(self.evidence, dict):
+            raise ValueError("hand evidence must be a dict or None")
         if self.status == "SETTLED":
             if self.unresolved:
                 raise ValueError("settled hand cannot carry unresolved rules")
@@ -64,13 +67,17 @@ class MatchHandResult:
 
     @classmethod
     def settled(cls, rewards, *, winner, terminal_reason=None):
-        return cls("SETTLED", tuple(rewards), winner, terminal_reason, ())
+        return cls(
+            "SETTLED", tuple(rewards), winner, terminal_reason, (), None
+        )
 
     @classmethod
-    def unknown(cls, *rule_ids):
+    def unknown(cls, *rule_ids, evidence=None):
         if not rule_ids:
             raise ValueError("unknown result requires at least one rule id")
-        return cls("STOPPED_UNKNOWN", unresolved=tuple(rule_ids))
+        return cls(
+            "STOPPED_UNKNOWN", unresolved=tuple(rule_ids), evidence=evidence
+        )
 
 
 @dataclass(frozen=True)
@@ -97,6 +104,12 @@ class MatchRunResult:
     @property
     def complete(self):
         return self.status == "COMPLETED"
+
+    @property
+    def stopped_evidence(self):
+        if self.status != "STOPPED_UNKNOWN" or not self.hands:
+            return None
+        return self.hands[-1].result.evidence
 
 
 class MatchRunner:
@@ -200,7 +213,9 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
                 terminal_reason=result.terminal_reason,
             )
         if result.status == "STOPPED_UNKNOWN":
-            return MatchHandResult.unknown(*result.unresolved)
+            return MatchHandResult.unknown(
+                *result.unresolved, evidence=result.unknown_evidence
+            )
         raise RuntimeError(
             f"ordinary hand did not settle safely: {result.status} "
             f"({result.stop_reason or 'no stop reason'})"
