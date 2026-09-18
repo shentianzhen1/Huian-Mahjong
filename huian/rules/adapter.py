@@ -97,13 +97,12 @@ class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
 
     def authorize_action(self, state, action):
         result = self.action_report(state)
+        known = list(result.known_actions)
+        # A specifically known action may execute even when other alternatives
+        # remain unresolved. Match the full immutable Action, including metadata,
+        # so forged kong indices/draw sources cannot be silently accepted.
+        if action in known:
+            return None
         if result.unresolved:
             raise UnknownRuleError(*result.unresolved)
-        known = list(result.known_actions)
-        if action not in known:
-            # Compare by type/player/tile/metadata for newly added actions.
-            for candidate in known:
-                if (candidate.player == action.player and candidate.type == action.type
-                        and candidate.tile == action.tile and candidate.tiles == action.tiles):
-                    return None
-            raise ValueError("Illegal action")
+        raise ValueError("Illegal action")
