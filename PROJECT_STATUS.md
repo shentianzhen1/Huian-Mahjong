@@ -20,7 +20,7 @@
 - Simulator：默认真实规则路径已能经过“当前行动玩家独占”的抢金窗口；但抢金的精确胡型资格与真实结算仍未完成，现有 `working_qiangjin_eligible()` 仅是窗口工程门槛，不能视为正式规则。显式普通局模式继续用于已确认普通流程的模拟评估。`enable_added_kong=True` 默认启用补杠专用抢杠窗口；明杠/暗杠按 2026-09-18 玩家确认不进入抢杠窗口，只有补杠保留抢杠响应。
 - 杠类 UNKNOWN 已收窄：抢杠胡返回 `ROB_KONG_SCORING_UNKNOWN`；杠上胡返回 `GANG_HU_SCORING_UNKNOWN`；完成补杠后普通 simulation-only 继续行牌，不再仅因存在 `ADDED_GANG` 停止。只有到独立即时杠费/流局杠费边界时返回 `KONG_FEE_SETTLEMENT_UNKNOWN`。
 - 批量评估：`run_many_normal_hands` 输出胜负、流局、自摸/点炮、平均奖励、UNKNOWN原因、步数上限、循环停止及每seed摘要；可交换座位复用牌墙、骰子及Agent随机种子。均值只统计完成局，另报样本数，UNKNOWN不充作流局。
-- Match计分：`MatchScoreState` 固定2人8局、初始 `(1000, 1000)`，只接收已经结算的零和单局奖励并保持总分2000；提供已打局数、剩余局数、当前分数与分差。`score_eight_hand_match()` 可聚合恰好8局。该层只负责总分记账，不猜任何仍 UNKNOWN 的单局计分。
+- Match计分：`MatchScoreState` 固定2人8局、初始 `(1000, 1000)`，只接收已经结算的零和单局奖励并保持总分2000；`MatchProgressState` 进一步记录当前庄家与连续坐庄次数，并自动给出下一局庄底。庄赢或流局→原庄继续、连庄次数+1、下一局底+5；庄输→对手上庄、连续次数重置1、庄底回5。该层只消费已结算真实 rewards，不猜任何 UNKNOWN 单局计分。
 - 评估归档与复现：新增按局写入的 `run.json` / `hands.jsonl` / `summary.json` / `completion.json`；中断时保留已写入记录，拒绝覆盖已有目录。配对统计只纳入正反座位均完成的种子；单局重放核对运行环境、源码、状态摘要与决策事件摘要。使用方法见 `workspace/simulator/README.md`。
 - AI：`BaselineAgent` 仍是单局启发式基线：优先合法胡牌，弃牌时依次保留金牌、对子和同花色搭子，优先弃孤张；可选吃碰先PASS。项目最终目标已改为8局总分最大化，因此后续 EV/搜索必须把当前总分、剩余局数、庄位/连庄底和可接受波动纳入状态；单局胜率与胡牌次数只作为辅助指标。
 - Vision 采集：Recorder V0.2 支持 WGC / PrintWindow / 屏幕区域、PNG、有限或无限手动 AVI，以及按局自动录像。自动模式使用固定 ROI 模板执行 `WAITING → OPENING → PLAYING → SETTLEMENT → WAITING`，保留开局前10秒并在结算后录5秒；每局独立保存 AVI/JSON/JSONL。黑屏、停帧、尺寸变化和处理落后保护继续生效。玩家确认界面没有明显逐张补花动画，因此未来补花识别以补完后的手牌数、花数、墙余量和开金阶段稳定状态为准，不依赖动画模板。
@@ -48,7 +48,7 @@
 
 本轮另已成功重放归档第25号记录（seed12、交换座位、232步），核对补杠计分UNKNOWN的状态、决策和事件摘要；输出为 `data/evaluations/added_kong_100_20260915_verified/replay_25.json`。
 
-2026-09-18 最新 GitHub Actions 已全绿：FanAggregator 已接入自动普通真实结算，新增自摸自动结算、点炮自动结算、未知番项原子阻断回归后，Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过188项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
+2026-09-18 最新 GitHub Actions 已全绿：FanAggregator→普通真实Settlement V0.1 已完成，并新增 `MatchProgressState` 庄位/连庄底连续8局账本骨架；Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过190项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
@@ -75,7 +75,7 @@
 ## 下一步计划
 
 1. 继续分析新提供的 `a562bd213645d8d998e47bf62bdb45de.mp4` 并核对底分字段；此前抽帧被工具限制阻断，尚无该片的画面结论。`7bc12fa…mp4`仍缺原文件直接校验。b3892b34与66fe863f已完成原片校验、关键帧、转录与6项回归。
-2. FanAggregator → 普通真实 Settlement V0.1 已完成：`FanResult.complete=True` 的普通平胡/自摸可自动生成真实单局 `+X/-X`，UNKNOWN 番项与杠费仍安全停止。下一步把这条真实结算路径接入连续8局 Match Simulator，管理1000/1000总账、庄位/连庄底和逐局最终分数。
+2. FanAggregator → 普通真实 Settlement V0.1 已完成；`MatchProgressState` 也已能把已结算单局接入1000/1000总账并正确推进庄位/连庄底。下一步是实现真正的连续8局 Match Runner：每局自动创建牌局、把当前庄家与庄底传入普通真实结算、消费 rewards 后推进到下一局；遇到特殊胡/杠费 UNKNOWN 时整场标记为未完整结算。
 3. 抢金下一步只补仍缺的核心：精确胡型/资格判定、实际胡按钮后的终局、倍率/付款和下局庄位。三金倒不再追问“什么时候能选”：3+金即可立即选，且可过后继续；后续只补三金倒真实结算、付款/庄位，以及游金链升级/取消/付款。杠相关不再追问“哪种杠能抢”：仅补杠/蓄杠/加杠 `ADD_KONG` 可抢；后续只收集该窗口实录、抢杠胡/杠胡结算和独立杠费。
 4. 基于已完成的基础AI与批量评估建立稳定基准；更复杂AI、Vision集成和Executor留待后续独立范围。
 5. 从已抽取的 1108×690 Recorder 帧人工校准三块 ROI，标注首批万/筒/条/字/花样本并建立离线准确率基线；在准确率和多帧稳定性达标前不接 Executor。
