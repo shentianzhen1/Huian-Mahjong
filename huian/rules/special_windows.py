@@ -1,7 +1,9 @@
 """Current-player special declare windows.
 
 Player spec 2026-09-18:
-- Only added kongs are robbable; ming/an gangs are not.
+- ADD_KONG = 补杠/蓄杠/加杠: an existing Peng upgraded with a self-drawn fourth tile. It is an exposed-kong subtype and is the only robbable kong.
+- MING_GANG = 大明杠: opponent discard + three matching hand tiles; not robbable.
+- AN_GANG = 暗杠: four matching concealed tiles; not robbable.
 - Qiangjin belongs only to the acting player after draw / flower / kong.
 - Opening flip does not offer opponent qiangjin. PASS does not hand off.
 - Sanjindao outranks qiangjin at the same node. With 3+ golds the player may declare immediately or PASS and continue developing the hand.
@@ -92,7 +94,8 @@ def _strip_unrobbable_kong_unknown(adapter, state, result):
 
 def report_with_specials(adapter, state):
     # Simulation-only normal hands deliberately bypass all special Huian
-    # declaration windows; keep only the confirmed Ming/An non-robbable fix.
+    # declaration windows; keep only the confirmed big-Ming/An non-robbable fix.
+    # ADD_KONG (补/蓄/加杠) remains the only robbable kong branch.
     if adapter.rules.config.simulation_only_normal_hand:
         return _strip_unrobbable_kong_unknown(adapter, state, base_report(adapter, state))
     A, T = env.Action, env.ActionType
