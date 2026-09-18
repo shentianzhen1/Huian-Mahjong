@@ -172,10 +172,10 @@ class NormalSimulationTests(unittest.TestCase):
 
     def test_rules_unknown_and_dead_loop_are_recorded(self):
         state = scenario("AFTER_DRAW", hand=DEALER_HAND[:14] + ["N", "P6", "N"])
-        # Four N is an unresolved concealed-kong opportunity, not ignored.
+        # Ming/An kongs are confirmed unrobbable, so a concealed-kong opportunity
+        # must no longer censor ordinary simulation as a rob_kong UNKNOWN.
         result = Simulator().run_normal_hand(initial_state=state)
-        self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertTrue(result.unresolved)
+        self.assertNotIn("rob_kong", result.unresolved)
 
         class LoopEnvironment(HuianEnvironment):
             def step(self, action):
