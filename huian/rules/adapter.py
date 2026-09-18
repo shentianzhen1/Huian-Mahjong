@@ -96,6 +96,14 @@ class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
         return report_with_specials(self, state)
 
     def authorize_action(self, state, action):
+        if action.type in (env.ActionType.ADD_KONG, env.ActionType.ROB_KONG_HU):
+            metadata = action.metadata
+            if (not isinstance(metadata, dict)
+                    or type(metadata.get("meld_index")) is not int):
+                raise ValueError("A kong action requires an integer meld index")
+            if (action.type == env.ActionType.ROB_KONG_HU
+                    and type(metadata.get("kong_player")) is not int):
+                raise ValueError("A rob-kong action requires an integer kong player")
         result = self.action_report(state)
         known = list(result.known_actions)
         # A specifically known action may execute even when other alternatives
