@@ -214,7 +214,7 @@ class NormalSimulationTests(unittest.TestCase):
         result = Simulator().run_normal_hand(initial_state=state, max_steps=1)
         self.assertNotIn("eight_flowers_special_win", result.unresolved)
 
-    def test_decomposition_unknown_preserves_hu_audit_evidence(self):
+    def test_real_scoring_chooses_maximum_fan_decomposition(self):
         hand = [
             "M1", "M1", "M1",
             "M2", "M2", "M2",
@@ -233,27 +233,13 @@ class NormalSimulationTests(unittest.TestCase):
         ).run_normal_hand(
             initial_state=state, current_dealer_base=10
         )
-        self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertIn("decomposition_concealed_triplet_choice", result.unresolved)
-        audit = result.unknown_evidence["ordinary_hu_audit"]
-        self.assertTrue(audit["legal"])
-        self.assertGreater(audit["decomposition_count"], 1)
-        self.assertIn("decomposition_concealed_triplet_choice", audit["fan"]["unresolved"])
-        self.assertGreater(len(audit["fan"]["candidate_fans"]), 1)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.terminal_reason, "AUTO_ZIMO")
+        metadata = result.events[-1]["action"]["metadata"]
+        self.assertEqual(metadata["fan_selection_policy"], "MAX_TOTAL_FAN")
         self.assertEqual(
-            len(audit["fan"]["decomposition_fans"]),
-            audit["decomposition_count"],
-        )
-        self.assertEqual(
-            sorted(set(audit["fan"]["decomposition_fans"])),
-            audit["fan"]["candidate_fans"],
-        )
-        self.assertEqual(audit["winner"], 0)
-        self.assertEqual(audit["source"], "self_draw")
-        self.assertEqual(
-            result.unknown_evidence["simulation"]["stop_reason"],
-            "unresolved_rule",
-        )
+            metadata["winner_fan"], max(metadata["fan_candidate_fans"]))
+        self.assertIsNone(result.unknown_evidence)
 
     def test_rules_unknown_and_dead_loop_are_recorded(self):
         state = scenario("AFTER_DRAW", hand=DEALER_HAND[:14] + ["N", "P6", "N"])
