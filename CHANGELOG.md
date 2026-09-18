@@ -1,5 +1,15 @@
 # 重要变更记录
 
+## 2026-09-18 — 普通真实 Settlement V0.1
+
+- 新增 `HuianEnvironment.finalize_ordinary_outcome(current_dealer_base=...)`：只处理已声明的普通平胡/自摸。
+- 自动链路：`HU_DECLARED → HuResult → FanAggregator → HuianObservedSettlementPlugin → END_HAND`，不再要求调用方手填 `winner_fan`。
+- 点炮牌仍留在来源牌河以保持144张实体守恒；自动结算只在结构/番数分析时虚拟加入赢家手牌。
+- 普通平胡使用×1，自摸使用×2；终局记录为 `AUTO_PINGHU` / `AUTO_ZIMO`，END_HAND事件保留番数组件、证据等级、候选番数、胡牌声明和最终rewards。
+- 若 FanAggregator 返回多金、花组、拆解等 UNKNOWN，结算原子失败且不改变状态/事件；任何已完成杠也因独立即时/流局杠费尚未确认而返回 `KONG_FEE_SETTLEMENT_UNKNOWN`。抢杠胡、杠上胡继续使用各自UNKNOWN。
+- 新增3项自动结算回归：自然字牌暗刻自摸按2番得到 `(10+2)×2=24`；同一东刻由点炮补成不算暗刻番，得到 `(10+0)×1=10`；双金番数未知时保持原子阻断。
+- 最新 Core regression 在 Python 3.10/3.11/3.12 均188项全通过。
+
 ## 2026-09-18 — 点炮补成刻子不算暗刻番
 
 - 玩家确认：点炮胡牌时，如果胡牌张只是把自己原有两张相同牌补成三张，这一组不算自然暗刻番。
