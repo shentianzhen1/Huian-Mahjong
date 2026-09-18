@@ -165,10 +165,9 @@ class HuianEnvironment:
     def finalize_ordinary_outcome(self, *, current_dealer_base):
         """Automatically fan-count and settle a declared ordinary Pinghu/Zimo.
 
-        This is the first real-scoring path: it derives winner fan from the
-        current audited state instead of accepting caller-supplied fan. It only
-        closes a hand when FanAggregator is complete and no unresolved kong side
-        payment can affect the match score.
+        This real-scoring path derives winner fan from the current audited
+        state instead of accepting caller-supplied fan. Completed kongs affect
+        winner fan through FanAggregator only; there is no independent kong fee.
         """
         self._require_state()
         if self._state.terminal:
@@ -187,13 +186,6 @@ class HuianEnvironment:
         if source not in (WinSource.DISCARD, WinSource.SELF_DRAW):
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("win_declaration_and_settlement")
-
-        # Until independent kong payments/flow handling are confirmed, a real
-        # match score cannot be reconstructed if either seat completed any kong.
-        if any(meld.kind in ("MING_GANG", "AN_GANG", "ADDED_GANG")
-               for zone in self._state.melds for meld in zone):
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
 
         winner = declaration["winner"]
         winning_tile = declaration["winning_tile"]
@@ -297,11 +289,6 @@ class HuianEnvironment:
             raise ValueError("current_dealer_base must be a nonnegative integer")
         if type(winner_fan) is not int or winner_fan < 8:
             raise ValueError("eight-flower winner_fan must include at least the 8 flower fan")
-        if any(meld.kind in ("MING_GANG", "AN_GANG", "ADDED_GANG")
-               for zone in self._state.melds for meld in zone):
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
-
         declaration = deepcopy(self._state.pending_hu)
         winner = declaration["winner"]
         multiplier = declaration["multiplier"]
@@ -373,9 +360,6 @@ class HuianEnvironment:
         if self._state.pending_kong is not None:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
-        if self._has_added_kong(self._state):
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
         last = self._state.last_action
         if (self._state.phase in ("AFTER_DRAW", "NEED_FLOWER_REPLACE")
                 and isinstance(last, dict) and last.get("type") == env.ActionType.DRAW.value):
@@ -514,12 +498,9 @@ class HuianEnvironment:
         """Apply the high-confidence dealer-first flower replacement rounds."""
         if state.phase != "NEED_FLOWER_REPLACE":
             return None
-        # A completed added kong may continue ordinary play. At the 16-tile
-        # boundary, however, independent/flow kong-fee accounting is still
-        # unresolved, so replacement must not cross the boundary.
-        boundary = 16 if cls._has_added_kong(state) else 0
-        result = replace_flowers(state.hands, state.flowers, state.wall, state.dealer,
-                                 minimum_wall_remaining=boundary)
+        result = replace_flowers(
+            state.hands, state.flowers, state.wall, state.dealer,
+            minimum_wall_remaining=0)
         state.hands = [list(zone) for zone in result.hands]
         state.flowers = [list(zone) for zone in result.flowers]
         state.wall = list(result.wall)
@@ -530,10 +511,6 @@ class HuianEnvironment:
     def _resolve_wall_draw(self, state):
         if state.pending_kong is not None:
             # Preserve the rob-kong response/declaration first.
-            return
-        if self._has_added_kong(state):
-            # Ordinary play may continue after a completed added kong, but a
-            # wall draw still needs the unresolved independent/flow kong-fee rule.
             return
         if not state.terminal and self.rules.rules.is_wall_draw(state):
             state.terminal = True
