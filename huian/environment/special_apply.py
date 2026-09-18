@@ -1,4 +1,4 @@
-"""Transitions for current-player-only qiangjin actions."""
+"""Transitions for current-player special declarations and PASS windows."""
 from huian._legacy import env
 
 
