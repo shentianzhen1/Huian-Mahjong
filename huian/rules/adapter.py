@@ -75,7 +75,6 @@ class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
         if state.phase not in ("AFTER_CHI", "AFTER_PENG"):
             raise UnknownRuleError("environment_phase")
         p = state.current_player
-        # Legacy state has no per-player Youjin history. Do not infer gold actions.
         if state.gold_tile is None or state.gold_tile in state.hands[p]:
             raise UnknownRuleError("youjin_trigger", "youjin_permissions")
         if len(state.hands[p]) != (5 - len(state.melds[p])) * 3 + 2:
@@ -90,13 +89,21 @@ class HuianRulesAdapter(RulesAdapter, MahjongRulesPlugin):
         return list(state.rewards)
 
     def analyze_hu(self, hand, **context):
-        """Expose Huian structural analysis through the neutral plugin boundary."""
         return self.rules.analyze_hu(hand, **context)
 
     def action_report(self, state):
-        from .phases import report
-        return report(self, state)
+        from .special_windows import report_with_specials
+        return report_with_specials(self, state)
 
     def authorize_action(self, state, action):
-        from .phases import authorize
-        return authorize(self, state, action)
+        result = self.action_report(state)
+        if result.unresolved:
+            raise UnknownRuleError(*result.unresolved)
+        known = list(result.known_actions)
+        if action not in known:
+            # Compare by type/player/tile/metadata for newly added actions.
+            for candidate in known:
+                if (candidate.player == action.player and candidate.type == action.type
+                        and candidate.tile == action.tile and candidate.tiles == action.tiles):
+                    return None
+            raise ValueError("Illegal action")
