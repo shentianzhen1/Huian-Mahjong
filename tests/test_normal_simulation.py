@@ -156,10 +156,12 @@ class NormalSimulationTests(unittest.TestCase):
         self.assertEqual(result.steps, 0)
         state.special_states[0] = "NORMAL"
         # Three E already occur in our fixture; change the indicator, not inventory.
+        # Sanjindao is optional, so simulation-only may take the confirmed
+        # CONTINUE_PLAY branch instead of censoring the hand on timing.
         state.gold_tile = "E"
         result = Simulator().run_normal_hand(initial_state=state)
-        self.assertIn("sanjindao_timing", result.unresolved)
-        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertNotIn("sanjindao_timing", result.unresolved)
+        self.assertNotEqual(result.steps, 0)
         state = scenario("NEED_DRAW")
         for flower in env.FLOWERS:
             state.wall.remove(flower)
