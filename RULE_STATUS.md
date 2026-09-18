@@ -13,8 +13,9 @@ The following interaction rules are now CONFIRMED from the player's real-game cl
 
 Player confirmation also resolves the rob-kong scope for this target room:
 
-- **Ming-Gang and An-Gang are not robbable.**
-- **Only Added-Gang (补杠) keeps the rob-kong response path.**
+- **ADD_KONG = 补杠 / 蓄杠 / 加杠**：已经碰出三张后，自己摸到第4张再升级成杠。它属于明杠的一种升级形态，也是目标房**唯一可以被抢杠**的杠。
+- **MING_GANG = 大明杠**：对手打出一张，自己手里有三张同牌，直接杠成四张；**不能被抢杠**。
+- **AN_GANG = 暗杠**：自己手里四张同牌直接暗杠；**不能被抢杠**。
 - Rob-kong scoring, added-kong independent fees, flow-hand kong settlement and direct video evidence of the response UI remain unresolved.
 
 This file separates CONFIRMED / HIGH-CONFIDENCE / UNKNOWN rules.
@@ -30,7 +31,7 @@ The current implementation request defines an added-kong-only response path. Thi
 - `enable_added_kong=True` is the default. False disables added-kong candidates. Simulator `enable_rob_kong=False` remains the broad unsupported scope switch; setting it True does not enable Ming/An rob-kong.
 - Scoring remains UNKNOWN: successful rob → `ROB_KONG_SCORING_UNKNOWN`; declared kong-tail Hu → `GANG_HU_SCORING_UNKNOWN`; completed added-kong tail draw without Hu → `ADD_KONG_SCORING_UNKNOWN`. These paths do not receive ordinary simulation rewards or assumed zero-fee drawn-hand settlement. Flower replacement stops at the 16-tile boundary instead of crossing it.
 
-Remaining evidence gaps: actual-room added-kong response/decline footage, independent kong fees, boundary settlement and all rob-kong/Gang-Hu scoring. Ming-Gang/An-Gang rob permissions are no longer a gap: the player confirmed on 2026-09-18 that they are not robbable. Implemented transitions and passing tests do not promote the remaining gaps to confirmed rules.
+Remaining evidence gaps: actual-room added-kong (补/蓄/加杠) response/decline footage, independent kong fees, boundary settlement and all rob-kong/Gang-Hu scoring. Rob scope is no longer a gap: ADD_KONG is robbable; 大明杠/MING_GANG and 暗杠/AN_GANG are not. Implemented transitions and passing tests do not promote the remaining gaps to confirmed rules.
 
 ## Latest direct replay evidence — 66fe863f, 2026-09-15
 
@@ -75,7 +76,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Player confirmation (2026-09-14): after a completed Ming-Gang, An-Gang, or Added-Gang, the declarer draws from the wall tail. That draw follows the normal draw/flower-processing pipeline; its provenance must be recorded as `wall_tail` rather than modeled as a separate complex replacement flow.
 - Confirmed system interaction (player confirmation, 2026-09-15): flower replacement is dealt automatically by the mini-program and the interface has no obvious tile-by-tile dealing animation. Environment must model replacement as a system event rather than a player action. Vision/Recorder must infer it from the next stable state—hand count, flower count, wall remaining and opening-gold phase—not from animation presence. This observation rule does not change the confirmed wall-tail replacement source.
 - Added kong after Peng is allowed.
-- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). Rob-kong is a separate response path. Updated player confirmation (2026-09-18): Ming-Gang and An-Gang are not robbable; only Added-Gang keeps the rob-kong response path. Actual-room response footage and rob-kong scoring remain incomplete.
+- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). Rob-kong is a separate response path. Updated player confirmation (2026-09-18): Added-Gang/ADD_KONG (补杠=蓄杠=加杠, existing Peng + self-drawn fourth tile) is an exposed-kong upgrade and can be robbed. Big Ming-Gang/MING_GANG (opponent discard + three matching hand tiles) cannot be robbed; An-Gang/AN_GANG cannot be robbed. Actual-room response footage and rob-kong scoring remain incomplete.
 - Gold cannot participate in Chi/Peng/Ming-Gang/An-Gang.
 - If opponent discards the current gold tile, it cannot be Chi/Peng/Gang/Hu.
 - Gold is a wildcard in allowed hand/win composition.
@@ -214,7 +215,7 @@ room. Flower fan is included before the Hu multiplier in the +608 recording and 
 
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options and settlement/dealer result. Current-player ownership and PASS-does-not-handoff are resolved; do not re-open them as UNKNOWN.
-2. Actual-room rob-kong evidence: only Added-Gang can be robbed; Ming-Gang/An-Gang cannot. What remains UNKNOWN is the real response UI/decline footage, rob-kong scoring, independent kong fees and flow-hand kong settlement.
+2. Actual-room rob-kong evidence: only Added-Gang/ADD_KONG (补杠=蓄杠=加杠) can be robbed; 大明杠/MING_GANG and 暗杠/AN_GANG cannot. What remains UNKNOWN is the real response UI/decline footage, rob-kong scoring, independent kong fees and flow-hand kong settlement.
 3. Sanjindao remaining gaps: non-flower base, payment, terminal settlement accounting and next dealer. Eligibility at three or more gold, immediate offer, declare/continue choice and ×3 multiplier are confirmed; declining Sanjindao simply resumes play and may lead to other hand types. Timing is no longer an UNKNOWN.
 4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16 and `(current dealer base + winner fan) × Hu multiplier` are confirmed by the ingested 7bc12fa dealer Triple-You +608. Sequential climb Youjin→Double→Triple and self-PASS while climbing are confirmed in that clip. Exact predicate for every upgrade discard, cancellation, opponent Hu windows on video, payer UI and next-dealer result remain UNKNOWN.
 5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
@@ -286,6 +287,6 @@ Conflicts and preserved decisions:
   two-player results. Extra Youjin-chain dealer ×2 is excluded by ordinary dealer Zimo +68 and by dealer Triple-You +608. The ingested +608 Triple-You confirms flowers are included in
   winner fan before ×16. Remaining special-outcome flows (抢金, 三金倒, 八花游, rob-kong fees) still need their own footage.
 
-Still missing after the 2026-09-18 clarification: real Added-Gang rob-kong response footage/scoring,
+Still missing after the 2026-09-18 clarification: real 补杠/蓄杠/加杠 (ADD_KONG) rob-kong response footage/scoring,
 Tianhu/Tianting definitions, extended dealer base/cap and match ties. A listed
 multiplier does not establish a win type's eligibility or declaration timing.
