@@ -22,7 +22,7 @@ UNKNOWN_RULES = MappingProxyType({
     "qiangjin_seat_priority": "Which eligible seat has priority if more than one can declare",
     "qiangjin_settlement": "Multiplier, payer and dealer continuation after a Qiangjin declaration",
     "sanjindao": "Legacy special-win entry; use the confirmed eligibility API separately",
-    # "sanjindao_timing" resolved 2026-09-18: 3+ golds immediately offer declare/continue.
+    # Sanjindao timing resolved 2026-09-18: one-shot when the third gold is received.
     "sanjindao_settlement": "Non-flower base, payment, terminal flow and dealer result after the confirmed x3 declaration",
     "sanjinyou_trigger": "Exact executable steps shared by Erjin-You and Sanjin-You",
     "gang_hu_scoring": "Fan, multiplier and stacking for a confirmed kong-tail Hu",
@@ -36,18 +36,19 @@ UNKNOWN_RULES = MappingProxyType({
     "tianting": "Exact definition",
     "match_tie": "Tie handling after eight hands",
     "dealer_base_extension": "Dealer third continuation onward and cap",
-    "flower_groups": "Group totals and replacement versus stacking",
-    "multi_gold_fan": "How two or more gold tiles contribute to ordinary winner fan",
+    # flower_groups resolved: strictly 1 fan per flower, no four-flower bonus.
+    # multi_gold_fan resolved: strictly 1 fan per gold, cumulative.
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
     "honor_peng_fan": "Whether exposed honor pung scores one fan",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
     "exposed_triplet_fan": "Whether natural exposed suited triplets score in the target room",
-    "eight_flowers_special_win": "Whether eight flowers grant a special win; timing and multiplier",
+    # Eight-flower trigger/pass confirmed; project provisional multiplier is x2.
+    "eight_flower_real_multiplier": "Real-room multiplier for eight-flower win; project uses provisional x2",
     "open_gold_procedure": "Reveal location and physical tile accounting",
     "deal_replacement_order": "Dealing order, flower replacement order and source",
     "added_kong_details": "Remaining added-kong UI/payment edge cases; fan table and rob scope are adopted",
     "decomposition_scoring": "Selection among multiple winning decompositions",
-    "three_plus_gold_ordinary_hu": "Whether any ordinary Hu branch remains available with three or more golds",
+    # three_plus_gold_ordinary_hu resolved for self-draw after declining Sanjindao.
     "environment_phase": "Complete legal action set for unsupported legacy phases",
     "win_declaration_and_settlement": "Automatic fan aggregation and settlement after an audited Hu declaration",
     "self_draw_decline": "Whether an available ordinary self-draw Hu may be declined to continue play",
