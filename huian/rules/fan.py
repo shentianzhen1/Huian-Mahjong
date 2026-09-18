@@ -31,6 +31,8 @@ class FanResult:
     candidate_fans: tuple[int, ...]
     decomposition_count: int
     decomposition_fans: tuple[int, ...]
+    selected_decomposition_index: int | None
+    selection_policy: str | None
 
     @property
     def complete(self):
@@ -178,25 +180,24 @@ class FanAggregator:
             component_sets.append(components)
 
         unresolved = list(dict.fromkeys(base_unresolved))
-        decomposition_ambiguous = (
-            hu_result.may_be_truncated
-            or len(set(signatures)) > 1
-            or len(set(candidates)) > 1
-        )
-        if decomposition_ambiguous:
-            if hu_result.may_be_truncated:
-                unresolved.append("decomposition_scoring")
-            else:
-                # At present, all decomposition-dependent fan components are
-                # concealed triplets; base components are decomposition-invariant.
-                unresolved.append("decomposition_concealed_triplet_choice")
-
-        if decomposition_ambiguous:
+        selected_index = None
+        selection_policy = None
+        if hu_result.may_be_truncated:
+            # Never optimize over an incomplete decomposition set.
+            unresolved.append("decomposition_scoring")
             components = tuple(base_components)
             accounted = sum(item.fan for item in components)
         else:
-            components = component_sets[0]
-            accounted = candidates[0]
+            # Confirmed project rule 2026-09-18: after special-win checks,
+            # enumerate every legal ordinary Hu decomposition, score each one
+            # independently, then settle using the maximum total fan.
+            selected_index = max(
+                range(len(candidates)),
+                key=lambda index: candidates[index],
+            )
+            selection_policy = "MAX_TOTAL_FAN"
+            components = component_sets[selected_index]
+            accounted = candidates[selected_index]
 
         unresolved = tuple(dict.fromkeys(unresolved))
         fan = accounted if not unresolved else None
@@ -208,4 +209,6 @@ class FanAggregator:
             candidate_fans=tuple(sorted(set(candidates))),
             decomposition_count=len(hu_result.decompositions),
             decomposition_fans=tuple(candidates),
+            selected_decomposition_index=selected_index,
+            selection_policy=selection_policy,
         )
