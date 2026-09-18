@@ -18,6 +18,7 @@ Player confirmation also resolves the rob-kong scope for this target room:
 - **AN_GANG = 暗杠**：自己手里四张同牌直接暗杠；**不能被抢杠**。
 - Rob-kong scoring, added-kong independent fees, flow-hand kong settlement and direct video evidence of the response UI remain unresolved.
 - **点炮补成刻子不算暗刻番。** 玩家2026-09-18确认：如果胡牌张来自对手弃牌，而该牌只是把自己原有两张同牌补成三张，这一组不按自然暗刻计番。FanAggregator 对 `WinSource.DISCARD` 且胡牌张等于该刻子牌值时直接不给暗刻番；自摸形成的自然暗刻仍按现有普通1番/字牌2番规则计算。
+- **碰牌番已确认。** 玩家2026-09-18确认：普通数牌（万/筒/条）碰出的明刻计0番；字牌（东南西北中发白）碰出的明刻计+1番。所有碰出来的明刻都是公开副露，均不能计入自然暗刻、双暗刻或三暗刻统计。FanAggregator 因此只为字牌PENG添加1番，数牌PENG不添加番项。
 - **普通胡多拆法取最高总番。** 用户2026-09-18确认项目按此规则推进：特殊胡先判；若进入普通胡，则枚举全部合法普通胡拆分（含金牌万能替换的所有合法组合），每套独立计算完整番数，并选择总番最高的一套作为结算方案。门外已公开的吃/碰/杠副露固定，不参与重新拆分。若求解器明确提示拆分枚举被截断，则仍保持 UNKNOWN，不在不完整候选集上强行取最大值。
 - **金牌按张计台，逐张累加。** 玩家2026-09-18确认：每张金牌本身计1台，2张金=2台、3张金=3台，依此累加；金作为万能牌去补顺子、刻子或将时，不因“万能用途”额外加台。金代凑成的刻子不算自然暗刻，因此不能计入双暗刻/三暗刻等暗刻类台数。该规则已进入当前 FanAggregator，并由回归覆盖。
 - **花牌基础番按张线性累加，四花无额外叠加。** 玩家2026-09-18确认：每张花牌计1番，4张花=4番；即使凑齐春夏秋冬或梅兰竹菊一整组，也不因“四花成组”再额外加番。该规则现已进入 FanAggregator：四花组不再产生 `flower_groups` UNKNOWN；八花选择【过】后也按8个基础花番继续普通胡。
@@ -91,7 +92,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Player confirmation (2026-09-14): with exactly two gold tiles, Hu is allowed only by self-draw; the player cannot Hu on any opponent discard. This supersedes the older blanket statement that double gold could not Pinghu. The Rules API must carry the win source before this restriction can be implemented correctly.
 - Player confirmation (2026-09-14): ordinary Hu evaluation and Youjin evaluation are separate branches. Passing or failing an ordinary structural Hu check must not silently decide Youjin eligibility.
 - Player confirmation (2026-09-14): opening Qiangjin is checked after all opening flower replacement and opening gold are complete, before the first discard. A hand must already be a valid Hu after treating gold copies as wildcards, and holding three or more copies takes the Sanjindao branch first. Updated player confirmation (2026-09-18): the Qiangjin prompt at an applicable node belongs only to the current acting player; PASS closes the window for that turn and does not hand the opportunity to the opponent. The exact executable hand-shape predicate is still not fully encoded and remains a separate evidence task.
-- **三金倒仅在“刚摸进第3张金”的瞬间出现。** 玩家2026-09-18结合回放确认并修正此前“3+金任意行动节点均可再次选择”的口径：当手牌由2金变为3金时，系统当下提供【三金倒 / 过】；三金倒不是强制胡。若点【过】，该次三金倒机会立即消失，后续仍可继续普通行牌并发展为普通胡或游金，但不能仅因为手里仍持有3金而再次触发三金倒。普通完整胡型不是触发三金倒的前提。三金倒仍是独立×3结果，三金游/三游仍统一为 `TRIPLE_YOU` ×16。三金倒实际结算底数、付款、终局账务和下局庄位仍UNKNOWN；第4张金是否另有独立特殊窗口尚待单独证据，不从本条外推。
+- **三金倒仅在“刚摸进第3张金”的瞬间出现。** 玩家2026-09-18结合回放确认：当手牌由2金变为3金时，当下提供【三金倒 / 过】；三金倒不是强制胡。若点【过】，该次三金倒机会永久关闭，本局后续即使仍持3金或再摸到第4金，也不会重新打开三金倒窗口。过后3/4金仍保留全部普通胡权利：满足普通4面子+1将结构时既可以自摸，也可以胡对手打出的炮牌；同时仍可发展游金/双游/三游。每张金仍按1番累计，3金=3番、4金=4番，金作万能不影响自身番数，金补出的刻子不算自然暗刻。三金倒仍是独立×3结果，三金游/三游统一为 `TRIPLE_YOU` ×16。三金倒实际结算底数、付款、终局账务和下局庄位仍UNKNOWN。
 - Dealer win -> dealer stays.
 - Draw -> dealer stays.
 - Dealer loss -> other player becomes dealer.
