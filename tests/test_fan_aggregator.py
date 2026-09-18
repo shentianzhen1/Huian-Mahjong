@@ -160,6 +160,28 @@ class FanAggregatorTests(unittest.TestCase):
         self.assertIn(("flowers", 8),
                       [(item.category, item.fan) for item in result.components])
 
+    def test_multiple_legal_decompositions_choose_maximum_total_fan(self):
+        hand = [
+            "M1", "M1", "M1",
+            "M2", "M2", "M2",
+            "M3", "M3", "M3",
+            "M4", "M4", "M4",
+            "M5", "M5", "M5",
+            "M6", "M6",
+        ]
+        result = self.rules.aggregate_fan(hand)
+        self.assertTrue(result.complete)
+        self.assertGreater(result.decomposition_count, 1)
+        self.assertGreater(len(result.candidate_fans), 1)
+        self.assertEqual(result.fan, max(result.candidate_fans))
+        self.assertEqual(result.accounted_fan, result.fan)
+        self.assertEqual(result.selection_policy, "MAX_TOTAL_FAN")
+        self.assertIsNotNone(result.selected_decomposition_index)
+        self.assertEqual(
+            result.decomposition_fans[result.selected_decomposition_index],
+            result.fan,
+        )
+
     def test_honor_peng_is_high_confidence_but_suited_peng_stays_unknown(self):
         concealed = [
             "M1", "M1",
