@@ -17,6 +17,7 @@
 - 已完成：`FanResult.complete=True` 的普通平胡/自摸已接入自动真实 Settlement；自动从 `HU_DECLARED` 重建结构、聚合番数并用 `(当前庄底+赢家番)×1/2` 结算，UNKNOWN 番项/杠费原子阻断。最新 Core regression 在 Python 3.10/3.11/3.12 均188项全通过。
 - 已完成：`MatchRunner` 和 `run_real_ordinary_match()` 已接通真实普通单局→1000/1000总账→庄位/连庄底→下一局；UNKNOWN会在该局安全停止并保留部分比分。最新 Core regression 在 Python 3.10/3.11/3.12 均202项全通过。
 - 更新整场基线：20场 ordinary-real 尝试中3场完整8局；共真实结算52局，平均2.6局/场。UNKNOWN：杠费9、拆解4、普通碰2、3+金点炮2。`multi_gold_fan` 与 `flower_groups` 已从停止原因消失。
+- 已完成：UNKNOWN 证据包与规则缺口报告。停止现场会保存可复现 seed、局号、比分/庄底、牌面、花、副露、杠、pending 状态；`decomposition_scoring` 额外记录每一种拆解与对应番数。新增 `python -m workspace.simulator.rule_gap_benchmark` 可直接批量输出规则缺口次数、平均已结算局数和代表样例。
 - 已实现并测试：金牌按1台/张逐张累加；金作为万能牌补顺/刻/将不额外加台；金代凑刻子不算自然暗刻，也不计入双/三暗刻台。
 - 已实现并测试：花牌1番/张线性累加，四花无额外；八花游集齐8花即可 DECLARE/PASS，不要求普通牌型；PASS后8花=8番继续普通胡。项目暂定八花游特殊胡×2，独立声明/结算入口已实现，并在审计事件中标记为 WORKING/项目规则。
 - 下一步证据优先级：① 大明杠/暗杠/补杠是否有独立即时杠费、流局是否保留；② 多拆解同手牌的取番规则；③ 普通数牌碰牌番；④ 3+金是否允许点炮胡；⑤ 抢杠胡/杠胡等特殊结算。
