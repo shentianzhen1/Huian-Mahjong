@@ -152,3 +152,58 @@ class MatchRunner:
 def run_eight_hand_match(hand_runner, *, initial_dealer=0):
     """Convenience entry point for the default fixed eight-hand room."""
     return MatchRunner(hand_runner).run(initial_dealer=initial_dealer)
+
+
+def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
+                            initial_dealer=0, simulator=None):
+    """Run the eight-hand ordinary subset with real Pinghu/Zimo scoring.
+
+    This is not yet the full target-room simulator: Qiangjin/Youjin/special wins
+    remain outside this ordinary-subset runner. Every completed ordinary Hu uses
+    FanAggregator + real Settlement. Rule UNKNOWN stops the match at that hand.
+    Engineering limits/loops raise instead of being mislabeled as rule UNKNOWN.
+    """
+    if type(seed) is not int:
+        raise ValueError("seed must be an integer")
+    if type(max_steps) is not int or max_steps <= 0:
+        raise ValueError("max_steps must be a positive integer")
+    if type(initial_dealer) is not int or initial_dealer not in (0, 1):
+        raise ValueError("initial_dealer must be seat 0 or 1")
+
+    from .core import RandomAgent, Simulator, SimulatorConfig
+    factories = tuple(agent_factories) if agent_factories is not None else (
+        RandomAgent, RandomAgent)
+    if len(factories) != 2 or not all(callable(factory) for factory in factories):
+        raise ValueError("Two callable agent factories are required")
+    if simulator is None:
+        simulator = Simulator(config=SimulatorConfig(enable_real_scoring=True))
+
+    def run_hand(context):
+        hand_seed = seed * 1000 + context.hand_index
+        agents = tuple(
+            factory(seed=hand_seed * 2 + seat)
+            for seat, factory in enumerate(factories)
+        )
+        result = simulator.run_normal_hand(
+            seed=hand_seed,
+            agents=agents,
+            max_steps=max_steps,
+            dealer=context.dealer,
+            current_dealer_base=context.current_dealer_base,
+        )
+        if result.status == "COMPLETED":
+            if not getattr(result, "real_scoring", False):
+                raise ValueError("ordinary match requires real-scoring hand results")
+            return MatchHandResult.settled(
+                result.rewards,
+                winner=result.winner,
+                terminal_reason=result.terminal_reason,
+            )
+        if result.status == "STOPPED_UNKNOWN":
+            return MatchHandResult.unknown(*result.unresolved)
+        raise RuntimeError(
+            f"ordinary hand did not settle safely: {result.status} "
+            f"({result.stop_reason or 'no stop reason'})"
+        )
+
+    return MatchRunner(run_hand).run(initial_dealer=initial_dealer)
