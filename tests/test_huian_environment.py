@@ -415,7 +415,7 @@ class EnvironmentTests(unittest.TestCase):
         instance = game(state)
         before = instance.state.state_hash()
         events = instance.events
-        with self.assertRaisesRegex(UnknownRuleError, "decomposition_scoring"):
+        with self.assertRaisesRegex(UnknownRuleError, "decomposition_concealed_triplet_choice"):
             instance.finalize_ordinary_outcome(current_dealer_base=10)
         self.assertEqual(instance.state.state_hash(), before)
         self.assertEqual(instance.events, events)
