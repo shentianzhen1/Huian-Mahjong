@@ -69,7 +69,11 @@ _SPECIAL_OUTCOMES = {
         settlement_rule_id="eight_flower_real_multiplier",
         settlement_ready=True,
         project_rule=True,
-        note="Project provisional x2; real-room multiplier still awaits direct evidence.",
+        note=(
+            "Project provisional x2 only. The in-game page lists eight-flowers-together "
+            "as 16 fan, which is a fan item rather than proof of Eight-Flower-You x16. "
+            "Real-room Eight-Flower-You multiplier still awaits direct settlement evidence."
+        ),
     ),
     "YOUJIN": SpecialOutcomeProfile(
         key="YOUJIN",
@@ -84,10 +88,14 @@ _SPECIAL_OUTCOMES = {
         key="DOUBLE_YOU",
         declaration_phase=None,
         multiplier=8,
-        multiplier_status=EvidenceStatus.CONFIRMED,
+        multiplier_status=EvidenceStatus.HIGH_CONFIDENCE,
         settlement_rule_id="double_you_entry",
         settlement_ready=False,
-        note="x8 confirmed; executable entry/state-machine edge cases remain incomplete.",
+        note=(
+            "x8 is stated on the in-game Huian rules page and Double-You is visible "
+            "in replay, but no target two-player hand has been archived ending at "
+            "Double-You x8 settlement yet."
+        ),
     ),
     "TRIPLE_YOU": SpecialOutcomeProfile(
         key="TRIPLE_YOU",
@@ -101,10 +109,15 @@ _SPECIAL_OUTCOMES = {
     "ROB_KONG_HU": SpecialOutcomeProfile(
         key="ROB_KONG_HU",
         declaration_phase="ROB_KONG_HU_DECLARED",
-        multiplier=None,
-        multiplier_status=EvidenceStatus.UNKNOWN,
+        multiplier=2,
+        multiplier_status=EvidenceStatus.HIGH_CONFIDENCE,
         settlement_rule_id="ROB_KONG_SCORING_UNKNOWN",
         settlement_ready=False,
+        note=(
+            "The in-game Huian rules page lists rob-kong x2. Target two-player "
+            "direct settlement, payer/dealer flow and stacking are still missing, "
+            "so this multiplier is evidence metadata only and does not enable settlement."
+        ),
     ),
     "GANG_HU": SpecialOutcomeProfile(
         key="GANG_HU",
