@@ -68,11 +68,11 @@ class MatchRunnerTests(unittest.TestCase):
 
     def test_unknown_rule_exception_is_converted_to_safe_stop(self):
         def hand_runner(context):
-            raise UnknownRuleError("multi_gold_fan")
+            raise UnknownRuleError("KONG_FEE_SETTLEMENT_UNKNOWN")
 
         result = MatchRunner(hand_runner).run()
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertEqual(result.unresolved, ("multi_gold_fan",))
+        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         self.assertEqual(result.progress.hand_index, 0)
         self.assertEqual(result.final_scores, (1000, 1000))
 
@@ -117,8 +117,13 @@ class MatchRunnerTests(unittest.TestCase):
                 if len(calls) == 3:
                     return SimulationResult(
                         seed=kwargs["seed"], status="STOPPED_UNKNOWN",
-                        unresolved=("multi_gold_fan",),
+                        unresolved=("KONG_FEE_SETTLEMENT_UNKNOWN",),
                         simulation_only=True, real_scoring=True,
+                        unknown_evidence={
+                            "rule_ids": ["KONG_FEE_SETTLEMENT_UNKNOWN"],
+                            "phase": "AFTER_ADDED_GANG",
+                            "completed_kongs": [{"player": 0, "kind": "ADDED_GANG"}],
+                        },
                     )
                 return SimulationResult(
                     seed=kwargs["seed"], status="COMPLETED",
@@ -134,9 +139,14 @@ class MatchRunnerTests(unittest.TestCase):
         )
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
         self.assertEqual(result.stopped_hand_index, 2)
-        self.assertEqual(result.unresolved, ("multi_gold_fan",))
+        self.assertEqual(result.unresolved, ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         self.assertEqual(result.final_scores, (1010, 990))
         self.assertEqual(len(calls), 3)
+        self.assertEqual(
+            result.stopped_evidence["phase"], "AFTER_ADDED_GANG")
+        self.assertEqual(
+            result.hands[-1].result.evidence["completed_kongs"][0]["kind"],
+            "ADDED_GANG")
 
     def test_runner_rejects_invalid_hand_result(self):
         with self.assertRaises(TypeError):
