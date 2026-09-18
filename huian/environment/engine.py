@@ -48,8 +48,7 @@ class HuianEnvironment:
     def _position(state):
         data = state.canonical_dict()
         data.pop("turn_index")
-        # Legal actions depend on last_action (for example a declined current-player
-        # special window), so it is part of the logical position for loop detection.
+        data.pop("last_action")
         return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
 
     def set_state(self, state):
@@ -303,7 +302,10 @@ class HuianEnvironment:
         if sorted(candidate.physical_tiles()) != sorted(self._state.physical_tiles()):
             raise ValueError("Tile conservation failure")
         position = self._position(candidate)
-        if position in self._seen:
+        # PASS_QIANGJIN may intentionally keep every physical zone/phase unchanged
+        # while closing the current special window via last_action. Other actions
+        # must still make semantic progress.
+        if position in self._seen and action.type != env.ActionType.PASS_QIANGJIN:
             raise DeadLoopError("Repeated position; not a drawn hand")
         event = env.Event(len(self._events), action, before, candidate.state_hash(),
                           candidate.wall_remaining(), candidate.current_player, candidate.phase).to_dict()
