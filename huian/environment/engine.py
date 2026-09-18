@@ -250,6 +250,8 @@ class HuianEnvironment:
             "fan_components": fan_components,
             "fan_candidate_fans": list(fan_result.candidate_fans),
             "fan_decomposition_count": fan_result.decomposition_count,
+            "fan_selected_decomposition_index": fan_result.selected_decomposition_index,
+            "fan_selection_policy": fan_result.selection_policy,
             "hu_declaration": declaration,
             "rewards": list(result.rewards),
         }
