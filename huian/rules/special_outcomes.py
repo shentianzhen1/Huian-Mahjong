@@ -124,3 +124,29 @@ def special_outcome_profile(key):
         return SPECIAL_OUTCOMES[key]
     except KeyError as exc:
         raise ValueError(f"Unknown special outcome profile: {key}") from exc
+
+
+def special_outcome_for_phase(phase):
+    matches = tuple(
+        profile for profile in SPECIAL_OUTCOMES.values()
+        if profile.declaration_phase == phase
+    )
+    if not matches:
+        raise ValueError(f"No special outcome profile for phase: {phase}")
+    if len(matches) != 1:
+        raise ValueError(f"Ambiguous special outcome phase: {phase}")
+    return matches[0]
+
+
+def special_outcome_for_source(source):
+    mapping = {
+        "qiangjin": "QIANGJIN",
+        "sanjindao": "SANJINDAO",
+        "eight_flower_you": "EIGHT_FLOWER_YOU",
+        "rob_kong": "ROB_KONG_HU",
+        "kong_tail_draw": "GANG_HU",
+    }
+    try:
+        return special_outcome_profile(mapping[source])
+    except KeyError as exc:
+        raise ValueError(f"No special outcome profile for source: {source}") from exc
