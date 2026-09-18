@@ -14,7 +14,9 @@ class EvidenceStatus(str, Enum):
 UNKNOWN_RULES = MappingProxyType({
     "ROB_KONG_SCORING_UNKNOWN": "Settlement for a declared added-kong robbery",
     "GANG_HU_SCORING_UNKNOWN": "Settlement for a declared kong-tail win",
-    "ADD_KONG_SCORING_UNKNOWN": "Added-kong payments and remaining-hand settlement",
+    "KONG_FEE_SETTLEMENT_UNKNOWN": "Independent kong payment and flow-hand settlement after a completed kong",
+    # Legacy ADD_KONG_SCORING_UNKNOWN retired 2026-09-18: completed added-kong
+    # no longer blocks ordinary simulation merely because it occurred.
     "rob_kong": "Scope, response window and resolution for each kong kind",
     "qiangjin_hand_shape": "Exact effective Hu decomposition and room-option interaction at the opening check",
     "qiangjin_seat_priority": "Which eligible seat has priority if more than one can declare",
@@ -35,14 +37,14 @@ UNKNOWN_RULES = MappingProxyType({
     "match_tie": "Tie handling after eight hands",
     "dealer_base_extension": "Dealer third continuation onward and cap",
     "flower_groups": "Group totals and replacement versus stacking",
-    "fan_edge_cases": "Huian confirmation of gold/triplet/kong working values",
+    "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
     "honor_peng_fan": "Whether exposed honor pung scores one fan",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
     "exposed_triplet_fan": "Whether natural exposed suited triplets score in the target room",
     "eight_flowers_special_win": "Whether eight flowers grant a special win; timing and multiplier",
     "open_gold_procedure": "Reveal location and physical tile accounting",
     "deal_replacement_order": "Dealing order, flower replacement order and source",
-    "added_kong_details": "Response window, replacement and incremental versus total fan",
+    "added_kong_details": "Remaining added-kong UI/payment edge cases; fan table and rob scope are adopted",
     "decomposition_scoring": "Selection among multiple winning decompositions",
     "three_plus_gold_ordinary_hu": "Whether any ordinary Hu branch remains available with three or more golds",
     "environment_phase": "Complete legal action set for unsupported legacy phases",
