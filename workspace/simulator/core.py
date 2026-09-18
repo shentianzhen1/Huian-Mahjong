@@ -151,9 +151,6 @@ class Simulator:
         unknown = []
         if state.special_states != ["NORMAL", "NORMAL"]:
             unknown.append("youjin_permissions")
-        if any(state.gold_tile and hand.count(state.gold_tile) >= 3
-               for hand in state.hands):
-            unknown.append("sanjindao_timing")
         if any(len(flowers) == 8 for flowers in state.flowers):
             unknown.append("eight_flowers_special_win")
         return tuple(unknown)
