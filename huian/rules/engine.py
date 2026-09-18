@@ -7,6 +7,14 @@ from qzcore.win_checker import winning_decompositions
 from .config import EvidenceStatus, RulesConfig, UnknownRuleError
 from .context import (HuContext, SanjindaoChoice, SanjindaoDecision, WinSource,
                       YoujinStage)
+from .dealer_base import (
+    DEALER_WIN_MULTIPLIER,
+    MATCH_HAND_COUNT,
+    SITTING_DEALER_BASE,
+    dealer_base_for_consecutive_hands,
+    match_hand_in_range,
+    next_consecutive_dealer_hands,
+)
 
 
 def nonnegative_int(value, name):
@@ -82,6 +90,8 @@ class YoujinScoreTerms:
 class HuianRules:
     DRAW_WALL_REMAINING = 16
     SANJINDAO_MULTIPLIER = 3
+    SITTING_DEALER_BASE = SITTING_DEALER_BASE
+    MATCH_HAND_COUNT = MATCH_HAND_COUNT
     YOUJIN_MULTIPLIERS = {
         YoujinStage.YOUJIN: 4,
         YoujinStage.DOUBLE_YOU: 8,
@@ -99,6 +109,17 @@ class HuianRules:
         ok, message = core.validate_tile_multiset(tiles, include_flowers=False)
         if not ok:
             raise ValueError(message)
+
+    def dealer_base_for_consecutive_hands(self, consecutive_dealer_hands):
+        return dealer_base_for_consecutive_hands(consecutive_dealer_hands)
+
+    def next_consecutive_dealer_hands(self, consecutive_dealer_hands, *, dealer_stays):
+        return next_consecutive_dealer_hands(
+            consecutive_dealer_hands, dealer_stays=dealer_stays
+        )
+
+    def match_hand_in_range(self, hand_index):
+        return match_hand_in_range(hand_index)
 
     def _validate_hand(self, hand, gold_tile):
         self.validate_tiles(hand)
@@ -162,7 +183,7 @@ class HuianRules:
         return YoujinScoreTerms(
             stage=stage,
             youjin_multiplier=self.YOUJIN_MULTIPLIERS[stage],
-            dealer_multiplier=2 if winner == dealer else 1,
+            dealer_multiplier=DEALER_WIN_MULTIPLIER,
             winner_fan=winner_fan,
         )
 
