@@ -191,9 +191,9 @@ class EfficiencyAgent(BaselineAgent):
                     diagnostics[a.tile]["weighted_gain"],
                     diagnostics[a.tile]["live_improving_copies"],
                     diagnostics[a.tile]["improving_types"],
-                    tuple(-int(x) if isinstance(x, bool) else 0
+                    tuple(-int(x)
                           for x in diagnostics[a.tile]["discard_retention"]),
-                    tuple(ord(ch) for ch in a.tile),
+                    tuple(-ord(ch) for ch in a.tile),
                 ),
             )
             info = diagnostics[action.tile]
