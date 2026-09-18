@@ -155,13 +155,20 @@ class HuianRulesTests(unittest.TestCase):
         self.assertFalse(self.rules.sanjindao_decision(
             ["P9"] * 4, "P9", third_gold_just_received=True).eligible)
 
-    def test_three_gold_can_continue_to_ordinary_self_draw(self):
-        hand = HAND[:-3] + ["P9", "P9", "P9"]
-        result = self.rules.analyze_hu(hand, gold_tile="P9")
-        self.assertTrue(result.legal)
-        with self.assertRaisesRegex(UnknownRuleError, "three_plus_gold_discard_hu"):
-            self.rules.analyze_hu(
-                hand, "P9", win_type="pinghu", winning_tile="M1")
+    def test_three_or_four_gold_keep_ordinary_hu_rights_after_sanjindao_pass(self):
+        three_gold = HAND[:-3] + ["P9", "P9", "P9"]
+        self.assertTrue(self.rules.analyze_hu(
+            three_gold, gold_tile="P9").legal)
+        self.assertTrue(self.rules.analyze_hu(
+            three_gold, "P9", win_type="pinghu", winning_tile="M1").legal)
+
+        four_gold = HAND.copy()
+        for index in (4, 14, 15, 16):
+            four_gold[index] = "P9"
+        self.assertTrue(self.rules.analyze_hu(
+            four_gold, gold_tile="P9").legal)
+        self.assertTrue(self.rules.analyze_hu(
+            four_gold, "P9", win_type="pinghu", winning_tile="M1").legal)
 
     def test_sanjinyou_is_the_triple_you_state_but_not_sanjindao(self):
         self.assertIs(YoujinStage.SANJIN_YOU, YoujinStage.TRIPLE_YOU)
