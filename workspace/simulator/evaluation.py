@@ -1,4 +1,9 @@
-"""Reproducible, seat-aware summaries; censored hands are never scored as draws."""
+"""Reproducible hand-level diagnostics; not the final 8-hand match objective.
+
+Censored hands are never scored as draws. Real AI evaluation ultimately uses
+final match score after eight hands; these summaries remain useful for regression
+and policy diagnostics while full real settlement is incomplete.
+"""
 from collections import Counter
 from dataclasses import asdict, dataclass
 
