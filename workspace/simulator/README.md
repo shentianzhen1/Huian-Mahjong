@@ -57,6 +57,12 @@ simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结�
 
 这说明 MatchRunner / dealer-base / 总账链路已经可运行，当前整场完成率主要受真实计分证据缺口限制，而不是8局状态机限制。未完成整场的部分比分只用于审计，不作为最终AI成绩。
 
+### UNKNOWN 证据报告
+
+每次 `STOPPED_UNKNOWN` 现在都会生成结构化 `unknown_evidence`：包括规则ID、state hash、手牌、花牌、副露、牌河、金牌、墙余量、pending Hu/Kong、最近动作，以及可复现的 seed/骰子/步数。普通胡发生拆牌歧义时，还会记录全部合法拆解和逐解番数。进入8局 MatchRunner 后，还会附上当前第几局、庄家、庄底、比分和 hand seed。
+
+可直接运行 `python -m workspace.simulator.rule_gap_benchmark --count 10 --max-examples 2`，按交换座位的 ordinary-real 8局比赛统计各 UNKNOWN 次数、平均已结算局数，并为每个规则缺口保留代表证据。该工具只整理证据，不会替未知规则猜值。
+
 ## 模式与边界
 
 - 无配置的 `Simulator.run()` 保留历史安全停止；`run_opening()` 始终停在抢金核验。
