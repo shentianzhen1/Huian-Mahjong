@@ -181,9 +181,14 @@ def summarize_match_rule_gaps(results, *, max_examples_per_rule=2):
         "total_matches": len(results),
         "complete_matches": 0,
         "stopped_unknown": 0,
+        "settled_hands_total": 0,
+        "average_settled_hands": 0.0,
         "rules": {},
     }
     for result in results:
+        progress = getattr(result, "progress", None)
+        if progress is not None:
+            summary["settled_hands_total"] += getattr(progress, "hand_index", 0)
         if getattr(result, "complete", False):
             summary["complete_matches"] += 1
             continue
@@ -199,6 +204,10 @@ def summarize_match_rule_gaps(results, *, max_examples_per_rule=2):
             bucket["count"] += 1
             if evidence is not None and len(bucket["examples"]) < max_examples_per_rule:
                 bucket["examples"].append(deepcopy(evidence))
+    if results:
+        summary["average_settled_hands"] = (
+            summary["settled_hands_total"] / len(results)
+        )
     summary["rules"] = dict(sorted(
         summary["rules"].items(),
         key=lambda item: (-item[1]["count"], item[0]),
