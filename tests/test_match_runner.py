@@ -147,6 +147,14 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(
             result.hands[-1].result.evidence["completed_kongs"][0]["kind"],
             "ADDED_GANG")
+        self.assertEqual(result.stopped_evidence["match_context"], {
+            "hand_index": 2,
+            "dealer": 0,
+            "current_dealer_base": 15,
+            "scores": [1010, 990],
+            "hands_remaining": 6,
+            "hand_seed": 1002,
+        })
 
     def test_runner_rejects_invalid_hand_result(self):
         with self.assertRaises(TypeError):
