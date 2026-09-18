@@ -15,6 +15,7 @@
 - Opening：17/16 发牌、庄家优先分轮补花、骰子开金候选规划；`begin_opening()` 将结果写入 Environment 并进入 `OPENING_QIANGJIN_CHECK`。该节点现在按当前行动玩家生成抢金/放弃动作，不再把“抢金未知”作为整个开局的统一硬停止；补花仍按已确认系统交互建模为自动事件，不暴露玩家动作。
 - Environment：144张实体牌守恒、吃碰、PASS、头摸、明杠/暗杠/补杠后的尾摸、开局及中途补花、普通胡声明、普通局16张零分流局、原子提交、回滚/克隆、死循环保护和合法动作检查。新增 `QIANGJIN` / `PASS_QIANGJIN` 动作及当前行动玩家特殊窗口路由：放弃抢金后窗口直接关闭，不转交对手；开局有牌17张的行动方放弃后进入弃牌，16张行动节点放弃后继续正常摸牌。摸牌来源为 `wall_head` / `wall_tail`；杠后记录 `kong_kind`、`drawn_tile` 及补花后的有效摸牌。旧 `head` / `tail` 回放仍可迁移。
 - 补杠窗口：已有 `PENG` 加手牌第四张非金才提供 `ADD_KONG`；先进入 `ROB_KONG_WINDOW`，第四张留在手牌、原碰不变。对手可普通胡时提供 `ROB_KONG_HU`，否则仅 `PASS`；PASS 后原索引副露升级为 `ADDED_GANG`，再尾摸并复用补花。抢杠声明保留原碰及实体牌引用，记录 winner/loser/robbed_tile/kong_player/source，不复制赢家手牌或伪造弃牌。
+- FanAggregator V0.1：新增证据感知真实番数聚合器。当前可自动聚合：单金1番、每张花1番、普通自然暗刻1番、字牌自然暗刻2番、字牌碰1番（游戏内页HIGH_CONFIDENCE）、以及当前采用的三类杠番表；金补成的刻子不算自然暗刻番。它已直接复现 b3892b34 的4番和66fe863f的5番。遇到多金、完整四花组/八花、普通碰牌番、拆牌取番歧义时返回明确 UNKNOWN，不把未知项当0。输出 `FanResult` 同时保留已审计 subtotal、组件证据等级、候选番数与 unresolved。
 - 已观察结算：`HuianObservedSettlementPlugin` 仅支持录屏已证实的 `PINGHU`（×1）和 `ZIMO`（×2）。`finalize_observed_outcome()` 可写入由录屏或 Vision 已确认的终局；若已有 `HU_DECLARED`，会核对赢家及自摸/点炮来源并把声明写入 `END_HAND` 审计事件。它不会自动聚合番数，杠胡计分继续阻断。
 - Simulator：默认真实规则路径已能经过“当前行动玩家独占”的抢金窗口；但抢金的精确胡型资格与真实结算仍未完成，现有 `working_qiangjin_eligible()` 仅是窗口工程门槛，不能视为正式规则。显式普通局模式继续用于已确认普通流程的模拟评估。`enable_added_kong=True` 默认启用补杠专用抢杠窗口；明杠/暗杠按 2026-09-18 玩家确认不进入抢杠窗口，只有补杠保留抢杠响应。
 - 杠类 UNKNOWN 已收窄：抢杠胡返回 `ROB_KONG_SCORING_UNKNOWN`；杠上胡返回 `GANG_HU_SCORING_UNKNOWN`；完成补杠后普通 simulation-only 继续行牌，不再仅因存在 `ADDED_GANG` 停止。只有到独立即时杠费/流局杠费边界时返回 `KONG_FEE_SETTLEMENT_UNKNOWN`。
@@ -47,11 +48,11 @@
 
 本轮另已成功重放归档第25号记录（seed12、交换座位、232步），核对补杠计分UNKNOWN的状态、决策和事件摘要；输出为 `data/evaluations/added_kong_100_20260915_verified/replay_25.json`。
 
-2026-09-18 最新 GitHub Actions 已全绿：采用杠番表并收窄补杠 UNKNOWN 后，Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过177项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
+2026-09-18 最新 GitHub Actions 已全绿：新增 FanAggregator V0.1 及7项番数聚合回归后，Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过184项，0失败、0错误；Legacy Core 与 Legacy Environment advisory 也均通过。Vision V0.1 advisory 本轮未手动触发，因此不把它记作本轮 CI 覆盖。此前暴露的动作鉴权过宽、错误摸牌来源可被接受、布尔值冒充补杠索引等回归已修复；已被新规则淘汰的旧断言也已同步更新。
 
 | 工作目录 | 命令 | 结果 |
 |---|---|---:|
-| GitHub Actions / 项目根目录 | `python -B -m unittest discover -s tests -v` | 177 通过 × Python 3.10/3.11/3.12 |
+| GitHub Actions / 项目根目录 | `python -B -m unittest discover -s tests -v` | 184 通过 × Python 3.10/3.11/3.12 |
 | `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
 | 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过 |
@@ -65,7 +66,7 @@
 
 1. 开金候选的骰子定位与补花流程已实现，但翻出的金牌在真实牌墙中的精确实体归属仍未确认；当前 Environment 保留候选牌在墙内，录屏显示开金时可摸牌墙计数会变化，二者尚未完全对齐。
 2. 中途摸花与杠后摸花已接入庄家优先补花轮；系统自动派发且无明显逐张动画已获玩家确认。仍需用补花前后稳定状态覆盖连续花、翻花、墙边界和双人时序，不能以动画缺失判断流程未发生。
-3. 普通自摸/点炮的 `HU` 声明已接入，并在 `HU_DECLARED` 保存可复核来源；赢家番数仍不能自动聚合，自摸可否放弃继续打也未确认。普通胡与游金分支尚未打通，观察结算入口仍只接受外部已确认数据；杠胡只记录资格上下文，不会套用普通自摸结算。
+3. 普通自摸/点炮的 `HU` 声明已接入，并在 `HU_DECLARED` 保存可复核来源；赢家番数已由 FanAggregator V0.1 开始自动聚合，但只有 `FanResult.complete=True` 时才可进入真实普通结算。多金、花组、普通碰牌和拆牌取番歧义仍会阻断。自摸可否放弃继续打也未确认；杠胡只记录资格上下文，不会套用普通自摸结算。
 4. 三金倒资格、即时出现时机、×3倍率与“声明/继续”选择已确认并接入；声明后进入 `SANJINDAO_DECLARED`，只在真实结算未知处停止，选择继续则恢复正常发展。三金游已映射为`TRIPLE_YOU`；游金链4/8/16和`(庄底+赢家番)×倍率`已有+608回归。抢金窗口归属与PASS关闭规则已接入，但抢金精确胡型及结算仍未完成；八花游完整流程仍未完成。杠类抢杠范围已明确：只有补/蓄/加杠 `ADD_KONG` 可被抢，大明杠 `MING_GANG` 和暗杠 `AN_GANG` 不可抢；真实抢杠胡/杠胡/补杠及流局杠费结算继续安全停止。
 5. 普通局模式使用平胡±1、自摸±2模拟单位，不含真实番数/庄底。该模式的自摸采用能胡即胡策略；不推断游金入口。3+金时固定采用已确认的【过/继续】分支，因此不再因 `sanjindao_timing` 停止，也不会把三金倒×3收益混入普通局基线；八花、显式游金状态及未解决的补杠结算仍保持UNKNOWN。真实规则路径仍不能完整自动跑局。
 6. `HuianOnlineRoomV01` 的动态留牌开关是隔离的工作假设，不能覆盖 `RULE_STATUS.md` 的已确认规则。
@@ -74,7 +75,7 @@
 ## 下一步计划
 
 1. 继续分析新提供的 `a562bd213645d8d998e47bf62bdb45de.mp4` 并核对底分字段；此前抽帧被工具限制阻断，尚无该片的画面结论。`7bc12fa…mp4`仍缺原文件直接校验。b3892b34与66fe863f已完成原片校验、关键帧、转录与6项回归。
-2. 固定seed交换座位单局基线已更新为195/200完成、5 UNKNOWN。下一步只需重点补齐独立即时杠费/流局杠费这5个 `KONG_FEE_SETTLEMENT_UNKNOWN`，以及抢杠胡/杠胡真实结算；随后实现8局连续 Match Simulator（真实庄位/连庄底/双方1000分总账），评估指标以最终分数、最终分差和整场得分分布为主。
+2. FanAggregator V0.1 已完成。下一步把 `FanResult.complete=True` 的普通平胡/自摸接入真实 Settlement：自动使用 `(当前庄底 + 赢家番) × 平胡1/自摸2` 生成真实单局分数；仍 UNKNOWN 的番项继续安全停止。之后再把真实结算接入8局 Match Simulator。
 3. 抢金下一步只补仍缺的核心：精确胡型/资格判定、实际胡按钮后的终局、倍率/付款和下局庄位。三金倒不再追问“什么时候能选”：3+金即可立即选，且可过后继续；后续只补三金倒真实结算、付款/庄位，以及游金链升级/取消/付款。杠相关不再追问“哪种杠能抢”：仅补杠/蓄杠/加杠 `ADD_KONG` 可抢；后续只收集该窗口实录、抢杠胡/杠胡结算和独立杠费。
 4. 基于已完成的基础AI与批量评估建立稳定基准；更复杂AI、Vision集成和Executor留待后续独立范围。
 5. 从已抽取的 1108×690 Recorder 帧人工校准三块 ROI，标注首批万/筒/条/字/花样本并建立离线准确率基线；在准确率和多帧稳定性达标前不接 Executor。
