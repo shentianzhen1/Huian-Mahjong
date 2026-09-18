@@ -170,3 +170,37 @@ def build_unknown_evidence(game, rule_ids):
         evidence["ordinary_hu_audit"] = ordinary
 
     return evidence
+
+
+def summarize_match_rule_gaps(results, *, max_examples_per_rule=2):
+    """Aggregate stopped match results into a compact evidence-backed rule queue."""
+    if type(max_examples_per_rule) is not int or max_examples_per_rule < 0:
+        raise ValueError("max_examples_per_rule must be a nonnegative integer")
+    results = tuple(results)
+    summary = {
+        "total_matches": len(results),
+        "complete_matches": 0,
+        "stopped_unknown": 0,
+        "rules": {},
+    }
+    for result in results:
+        if getattr(result, "complete", False):
+            summary["complete_matches"] += 1
+            continue
+        if getattr(result, "status", None) != "STOPPED_UNKNOWN":
+            continue
+        summary["stopped_unknown"] += 1
+        evidence = deepcopy(getattr(result, "stopped_evidence", None))
+        for rule_id in getattr(result, "unresolved", ()):
+            bucket = summary["rules"].setdefault(rule_id, {
+                "count": 0,
+                "examples": [],
+            })
+            bucket["count"] += 1
+            if evidence is not None and len(bucket["examples"]) < max_examples_per_rule:
+                bucket["examples"].append(deepcopy(evidence))
+    summary["rules"] = dict(sorted(
+        summary["rules"].items(),
+        key=lambda item: (-item[1]["count"], item[0]),
+    ))
+    return summary
