@@ -81,98 +81,109 @@ def _counts_without_gold(hand, gold_tile):
 
 
 @lru_cache(maxsize=200000)
-def _max_natural_used(counts, groups_needed):
-    """Maximum natural tiles placeable into target meld/pair component slots."""
-    total_natural = sum(counts)
+def _segment_states(counts, suited):
+    """Return possible (melds, taatsu, pair_used) states for one tile segment.
 
+    Segment caching is the performance-critical part of V0.1: the same local
+    suit shape recurs across many candidate discards, draws, hands and matches.
+    """
     @lru_cache(maxsize=None)
-    def search(counts_t, melds, taatsu, pair):
+    def search(counts_t):
         try:
             index = next(i for i, value in enumerate(counts_t) if value)
         except StopIteration:
-            effective_taatsu = min(taatsu, groups_needed - melds)
-            extra_taatsu = taatsu - effective_taatsu
-            consumed = 3 * melds + 2 * taatsu + 2 * pair
-            skipped = total_natural - consumed
-            if skipped < 0:
-                return -1
-            single_pool = skipped + 2 * extra_taatsu
-            empty_components = (
-                groups_needed - melds - effective_taatsu + (1 - pair)
-            )
-            return (
-                3 * melds
-                + 2 * effective_taatsu
-                + 2 * pair
-                + min(single_pool, empty_components)
-            )
+            return ((0, 0, 0),)
 
         counts_l = list(counts_t)
-        best = -1
+        out = set()
 
+        # Leave one tile uncommitted as a single.
         counts_l[index] -= 1
-        best = max(best, search(tuple(counts_l), melds, taatsu, pair))
+        out.update(search(tuple(counts_l)))
         counts_l[index] += 1
 
-        if melds < groups_needed and counts_l[index] >= 3:
+        if counts_l[index] >= 3:
             next_counts = counts_l[:]
             next_counts[index] -= 3
-            best = max(
-                best,
-                search(tuple(next_counts), melds + 1, taatsu, pair),
-            )
+            for melds, taatsu, pair in search(tuple(next_counts)):
+                out.add((melds + 1, taatsu, pair))
 
-        tile = core.index_tile(index)
-        suited = core.suit_rank(tile)
-        if melds < groups_needed and suited is not None:
-            suit, rank = suited
-            if rank <= 7:
-                ids = tuple(core.tile_index(f"{suit}{rank + offset}")
-                            for offset in range(3))
-                if all(counts_l[i] for i in ids):
-                    next_counts = counts_l[:]
-                    for i in ids:
-                        next_counts[i] -= 1
-                    best = max(
-                        best,
-                        search(tuple(next_counts), melds + 1, taatsu, pair),
-                    )
+        if suited and index <= 6 and all(
+                counts_l[index + offset] for offset in (0, 1, 2)):
+            next_counts = counts_l[:]
+            for offset in (0, 1, 2):
+                next_counts[index + offset] -= 1
+            for melds, taatsu, pair in search(tuple(next_counts)):
+                out.add((melds + 1, taatsu, pair))
 
         if counts_l[index] >= 2:
-            if pair == 0:
-                next_counts = counts_l[:]
-                next_counts[index] -= 2
-                best = max(
-                    best,
-                    search(tuple(next_counts), melds, taatsu, 1),
-                )
-            if taatsu < groups_needed:
-                next_counts = counts_l[:]
-                next_counts[index] -= 2
-                best = max(
-                    best,
-                    search(tuple(next_counts), melds, taatsu + 1, pair),
-                )
+            next_counts = counts_l[:]
+            next_counts[index] -= 2
+            for melds, taatsu, pair in search(tuple(next_counts)):
+                if pair == 0:
+                    out.add((melds, taatsu, 1))
+                out.add((melds, taatsu + 1, pair))
 
-        if taatsu < groups_needed and suited is not None:
-            suit, rank = suited
+        if suited:
             for delta in (1, 2):
-                other_rank = rank + delta
-                if other_rank > 9:
+                other = index + delta
+                if other >= len(counts_l) or not counts_l[other]:
                     continue
-                other = core.tile_index(f"{suit}{other_rank}")
-                if counts_l[other]:
-                    next_counts = counts_l[:]
-                    next_counts[index] -= 1
-                    next_counts[other] -= 1
-                    best = max(
-                        best,
-                        search(tuple(next_counts), melds, taatsu + 1, pair),
-                    )
+                next_counts = counts_l[:]
+                next_counts[index] -= 1
+                next_counts[other] -= 1
+                for melds, taatsu, pair in search(tuple(next_counts)):
+                    out.add((melds, taatsu + 1, pair))
 
-        return best
+        return tuple(sorted(out))
 
-    return search(counts, 0, 0, 0)
+    return search(tuple(counts))
+
+
+@lru_cache(maxsize=200000)
+def _max_natural_used(counts, groups_needed):
+    """Maximum natural tiles usable in the target structure via segment DP."""
+    total_natural = sum(counts)
+    segments = (
+        _segment_states(counts[0:9], True),
+        _segment_states(counts[9:18], True),
+        _segment_states(counts[18:27], True),
+        _segment_states(counts[27:34], False),
+    )
+
+    combined = {(0, 0, 0)}
+    for segment in segments:
+        next_states = set()
+        for melds_a, taatsu_a, pair_a in combined:
+            for melds_b, taatsu_b, pair_b in segment:
+                melds = melds_a + melds_b
+                taatsu = taatsu_a + taatsu_b
+                pair = pair_a + pair_b
+                if melds > groups_needed or taatsu > groups_needed or pair > 1:
+                    continue
+                next_states.add((melds, taatsu, pair))
+        combined = next_states
+
+    best = 0
+    for melds, taatsu, pair in combined:
+        effective_taatsu = min(taatsu, groups_needed - melds)
+        extra_taatsu = taatsu - effective_taatsu
+        consumed = 3 * melds + 2 * taatsu + 2 * pair
+        skipped = total_natural - consumed
+        if skipped < 0:
+            continue
+        single_pool = skipped + 2 * extra_taatsu
+        empty_components = (
+            groups_needed - melds - effective_taatsu + (1 - pair)
+        )
+        used = (
+            3 * melds
+            + 2 * effective_taatsu
+            + 2 * pair
+            + min(single_pool, empty_components)
+        )
+        best = max(best, used)
+    return best
 
 
 @lru_cache(maxsize=200000)
