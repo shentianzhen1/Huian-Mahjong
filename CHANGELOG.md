@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-09-18 — 8局 MatchProgress 庄位与连庄底骨架
+
+- 新增 `MatchProgressState`：在 `MatchScoreState` 的1000/1000总账之上，记录当前庄家、连续坐庄次数、当前手数和下一局庄底。
+- 按已确认规则推进：庄家赢或流局 → 原庄继续，连续坐庄次数+1，下一局庄底+5；庄家输给闲家 → 闲家上庄，连续次数重置为1，庄底回到5。
+- `apply_settled_hand(rewards, winner=...)` 只接受已经结算的零和单局结果，不推断任何仍UNKNOWN的番数/特殊胡/杠费。
+- 新增2项MatchProgress回归：覆盖“庄赢→流局→庄输换庄”的连续变化，以及恰好8局后禁止继续结算。
+- 最新 Core regression 在 Python 3.10/3.11/3.12 均190项全通过。
+- 下一步实现真正的8局 Match Runner，让每局真实 Environment/Settlement 自动读取当前dealer/base并把rewards回写MatchProgress。
+
 ## 2026-09-18 — 普通真实 Settlement V0.1
 
 - 新增 `HuianEnvironment.finalize_ordinary_outcome(current_dealer_base=...)`：只处理已声明的普通平胡/自摸。
