@@ -104,6 +104,8 @@ def _ordinary_hu_audit(game, state):
         "accounted_fan": fan_result.accounted_fan,
         "candidate_fans": list(fan_result.candidate_fans),
         "decomposition_fans": list(fan_result.decomposition_fans),
+        "selected_decomposition_index": fan_result.selected_decomposition_index,
+        "selection_policy": fan_result.selection_policy,
         "unresolved": list(fan_result.unresolved),
         "components": [
             _fan_component_record(component)
