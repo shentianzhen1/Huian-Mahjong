@@ -83,6 +83,10 @@ def _strip_unrobbable_kong_unknown(adapter, state, result):
 
 
 def report_with_specials(adapter, state):
+    # Simulation-only normal hands deliberately bypass all special Huian
+    # declaration windows; keep only the confirmed Ming/An non-robbable fix.
+    if adapter.rules.config.simulation_only_normal_hand:
+        return _strip_unrobbable_kong_unknown(adapter, state, base_report(adapter, state))
     A, T = env.Action, env.ActionType
     p = state.current_player
     if _window_just_closed(state) and state.phase in ("AFTER_DRAW", "NEED_DRAW"):
