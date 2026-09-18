@@ -429,7 +429,15 @@ class HuianEnvironment:
         if declaration is not None:
             if winner != declaration["winner"]:
                 raise ValueError("Observed winner disagrees with the Hu declaration")
-            source = WinSource(declaration["source"])
+            try:
+                source = WinSource(declaration["source"])
+            except (TypeError, ValueError):
+                from huian.rules.config import UnknownRuleError
+                from huian.rules.special_outcomes import special_outcome_for_source
+                profile = special_outcome_for_source(declaration.get("source"))
+                if profile.settlement_rule_id is None:
+                    raise
+                raise UnknownRuleError(profile.settlement_rule_id)
             if source == WinSource.ROB_KONG:
                 from huian.rules.config import UnknownRuleError
                 raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
