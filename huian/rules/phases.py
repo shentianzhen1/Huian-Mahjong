@@ -166,9 +166,8 @@ def validate(adapter, state):
     ):
         raise ValueError("Wall draw requires terminal state, 16 tiles and zero rewards")
     if _has_added_kong(state) and state.terminal_reason in (
-            "WALL_16", "SIMULATION_PINGHU", "SIMULATION_ZIMO",
-            "OBSERVED_PINGHU", "OBSERVED_ZIMO"):
-        raise ValueError("An added-kong hand cannot receive an assumed normal settlement")
+            "WALL_16", "OBSERVED_PINGHU", "OBSERVED_ZIMO"):
+        raise ValueError("Real/flow settlement after a completed added kong requires explicit fee accounting")
     if observed_reason and (not state.terminal or state.rewards == [0, 0]):
         raise ValueError("Observed win requires a terminal non-zero settlement")
     for value in (state.players, state.dealer, state.current_player, state.turn_index):
@@ -267,14 +266,14 @@ def report(adapter, state):
     if state.phase == "SANJINDAO_DECLARED":
         return ActionReport((), ("sanjindao_settlement",))
     if state.phase == "NEED_FLOWER_REPLACE":
-        if _has_added_kong(state):
-            return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
+        if _has_added_kong(state) and len(state.wall) == adapter.rules.DRAW_WALL_REMAINING:
+            return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         return ActionReport((), ("deal_replacement_order",))
     if state.phase == "HU_DECLARED":
         if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
             return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
-        if _has_added_kong(state):
-            return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
+        if _has_added_kong(state) and not adapter.rules.config.simulation_only_normal_hand:
+            return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",))
         return ActionReport((), ("win_declaration_and_settlement",))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
@@ -300,15 +299,13 @@ def report(adapter, state):
         return ActionReport(tuple(actions))
     added_kong = _has_added_kong(state)
     if adapter.rules.is_wall_draw(state):
-        return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",) if added_kong else ())
+        return ActionReport((), ("KONG_FEE_SETTLEMENT_UNKNOWN",) if added_kong else ())
     if phase in ("AFTER_MING_GANG", "AFTER_AN_GANG", "AFTER_ADDED_GANG"):
         # Importing this phase explicitly means kong response resolution is over.
         return ActionReport((A(p, T.DRAW, metadata={
             "source": DrawSource.WALL_TAIL.value,
             "kong_kind": phase.removeprefix("AFTER_"),
         }),))
-    if added_kong and phase != "AFTER_DRAW":
-        return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
     if phase == "NEED_DRAW":
         return ActionReport((A(p, T.DRAW, metadata={"source": DrawSource.WALL_HEAD.value}),))
     gold_unresolved = []
@@ -345,14 +342,10 @@ def report(adapter, state):
             if draw_context.is_gang_hu:
                 # Audit the declaration before stopping at its unknown settlement.
                 return ActionReport(tuple(actions))
-            if added_kong:
-                return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
             unknown.extend(gold_unresolved)
             if not adapter.rules.config.simulation_only_normal_hand:
                 unknown.extend(("self_draw_decline", "win_declaration_and_settlement"))
             return ActionReport(tuple(actions), tuple(unknown))
-        if added_kong:
-            return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
         if (not simulation_declined_sanjindao
                 and draw_context is None
                 and adapter.rules.can_win(
