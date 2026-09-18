@@ -19,7 +19,7 @@ Player confirmation also resolves the rob-kong scope for this target room:
 - Rob-kong scoring, added-kong independent fees, flow-hand kong settlement and direct video evidence of the response UI remain unresolved.
 - **点炮补成刻子不算暗刻番。** 玩家2026-09-18确认：如果胡牌张来自对手弃牌，而该牌只是把自己原有两张同牌补成三张，这一组不按自然暗刻计番。FanAggregator 对 `WinSource.DISCARD` 且胡牌张等于该刻子牌值时直接不给暗刻番；自摸形成的自然暗刻仍按现有普通1番/字牌2番规则计算。
 - **金牌按张计台，逐张累加。** 玩家2026-09-18确认：每张金牌本身计1台，2张金=2台、3张金=3台，依此累加；金作为万能牌去补顺子、刻子或将时，不因“万能用途”额外加台。金代凑成的刻子不算自然暗刻，因此不能计入双暗刻/三暗刻等暗刻类台数。工程实现当前仍待批量规则补充后统一修改；本轮仅记录规则，不运行测试。
-- **花牌基础番按张线性累加，四花无额外叠加。** 玩家2026-09-18确认：每张花牌计1番，4张花=4番；即使凑齐春夏秋冬或梅兰竹菊一整组，也不因“四花成组”再额外加番。该结论只解决普通四花组额外番问题，不自行外推八花游的特殊触发、倍率或八花游是否另有特殊结算。执行代码中当前 `flower_groups` UNKNOWN 待本批规则结束后统一移除；本轮不测试。
+- **花牌基础番按张线性累加，四花无额外叠加。** 玩家2026-09-18确认：每张花牌计1番，4张花=4番；即使凑齐春夏秋冬或梅兰竹菊一整组，也不因“四花成组”再额外加番。该规则现已进入 FanAggregator：四花组不再产生 `flower_groups` UNKNOWN；八花选择【过】后也按8个基础花番继续普通胡。
 
 This file separates CONFIRMED / HIGH-CONFIDENCE / UNKNOWN rules.
 Do not silently promote UNKNOWN rules.
