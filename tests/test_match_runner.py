@@ -143,10 +143,10 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(result.final_scores, (1010, 990))
         self.assertEqual(len(calls), 3)
         self.assertEqual(
-            result.stopped_evidence["phase"], "AFTER_ADDED_GANG")
+            result.stopped_evidence["phase"], "HU_DECLARED")
         self.assertEqual(
             result.hands[-1].result.evidence["completed_kongs"][0]["kind"],
-            "ADDED_GANG")
+            "AN_GANG")
         self.assertEqual(result.stopped_evidence["match_context"], {
             "hand_index": 2,
             "dealer": 0,
