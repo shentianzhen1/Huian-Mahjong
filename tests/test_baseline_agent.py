@@ -3,7 +3,7 @@ from copy import deepcopy
 from dataclasses import FrozenInstanceError
 
 from huian._legacy import env
-from workspace.ai import BaselineAgent, PlayerObservation
+from workspace.ai import BaselineAgent, EfficiencyAgent, PlayerObservation
 from test_huian_environment import scenario
 
 
@@ -50,6 +50,28 @@ class BaselineAgentTests(unittest.TestCase):
         self.assertEqual(BaselineAgent().choose_action(observation([]), [draw]).action, draw)
         with self.assertRaises(ValueError):
             BaselineAgent().choose_action(observation([]), [])
+
+    def test_efficiency_agent_prefers_preserving_live_connected_side(self):
+        hand = ["M1", "M2", "M8", "M9"]
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("M3", "M3", "M3", "M3"), ()),
+            ((), ()), ((), ()),
+        )
+        decision = EfficiencyAgent().choose_decision(view, discards(hand))
+        self.assertIn(decision.action.tile, ("M1", "M2"))
+        self.assertIn("efficiency_v0.2", decision.reason)
+
+    def test_efficiency_agent_uses_only_public_observation_and_keeps_hu_priority(self):
+        view = observation(["M1", "M2", "E"])
+        actions = discards(list(view.hand)) + [
+            env.Action(0, env.ActionType.HU, metadata={"source": "self_draw"})
+        ]
+        decision = EfficiencyAgent().choose_decision(view, actions)
+        self.assertEqual(decision.action.type, env.ActionType.HU)
+        diagnostics = EfficiencyAgent.discard_diagnostics(view, "E")
+        self.assertIn("weighted_gain", diagnostics)
+        self.assertIn("live_improving_copies", diagnostics)
 
     def test_observation_has_only_private_hand_and_public_immutable_fields(self):
         state = scenario()
