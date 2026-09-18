@@ -19,7 +19,7 @@ UNKNOWN_RULES = MappingProxyType({
     # no longer blocks ordinary simulation merely because it occurred.
     "rob_kong": "Scope, response window and resolution for each kong kind",
     "qiangjin_hand_shape": "Exact effective Hu decomposition and room-option interaction at the opening check",
-    "qiangjin_seat_priority": "Which eligible seat has priority if more than one can declare",
+    # qiangjin_seat_priority resolved: only the acting player owns the window; PASS never hands it off.
     "qiangjin_settlement": "Multiplier, payer and dealer continuation after a Qiangjin declaration",
     "sanjindao": "Legacy special-win entry; use the confirmed eligibility API separately",
     # Sanjindao timing resolved 2026-09-18: one-shot when the third gold is received.
@@ -30,7 +30,7 @@ UNKNOWN_RULES = MappingProxyType({
     "double_you_entry": "Direct entry versus required prior Youjin",
     "triple_you_sequence": "Chronological upgrade sequence",
     "youjin_permissions": "Opponent rights and cancellation actions at every stage",
-    "room_multipliers": "Unconfirmed multipliers outside the confirmed Youjin 4/8/16 and dealer-win x2 factors",
+    "room_multipliers": "Unconfirmed multipliers outside the confirmed ordinary Pinghu/Zimo and Youjin 4/8/16 outcomes",
     "flower_open_gold": "Ownership, replacement and reopening after revealing a flower",
     "tianhu": "Timing relative to flower replacement and opening gold",
     "tianting": "Exact definition",
