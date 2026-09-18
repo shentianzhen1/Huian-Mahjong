@@ -90,6 +90,31 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(any(a.type == env.ActionType.PASS_QIANGJIN and a.player == 0
                             for a in actions))
 
+    def test_qiangjin_declaration_is_isolated_from_ordinary_hu(self):
+        state = two_seat_gold_state(current_gold=1, opponent_gold=0)
+        game = env_of(state)
+        action = next(
+            a for a in game.legal_actions()
+            if a.type == env.ActionType.QIANGJIN
+        )
+        self.assertEqual(action.metadata.get("special"), "QIANGJIN")
+        self.assertNotIn("multiplier", action.metadata)
+        self.assertEqual(
+            action.metadata.get("multiplier_evidence"), "UNKNOWN")
+        self.assertEqual(
+            action.metadata.get("settlement_rule_id"), "qiangjin_settlement")
+        declared, _ = game.step(action)
+        self.assertEqual(declared.phase, "QIANGJIN_DECLARED")
+        self.assertEqual(declared.pending_hu, {
+            "winner": 0,
+            "source": "qiangjin",
+        })
+        report = game.action_report()
+        self.assertEqual(report.known_actions, ())
+        self.assertEqual(report.unresolved, ("qiangjin_settlement",))
+        with self.assertRaisesRegex(RuntimeError, "qiangjin_settlement"):
+            game.legal_actions()
+
     def test_c_pass_qiangjin_requires_discard(self):
         state = two_seat_gold_state(current_gold=1, opponent_gold=0)
         game = env_of(state)
