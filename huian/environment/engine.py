@@ -48,7 +48,8 @@ class HuianEnvironment:
     def _position(state):
         data = state.canonical_dict()
         data.pop("turn_index")
-        data.pop("last_action")
+        # Legal actions depend on last_action (for example a declined current-player
+        # special window), so it is part of the logical position for loop detection.
         return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
 
     def set_state(self, state):
