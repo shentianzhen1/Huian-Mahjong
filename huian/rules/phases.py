@@ -312,11 +312,12 @@ def report(adapter, state):
     if phase == "NEED_DRAW":
         return ActionReport((A(p, T.DRAW, metadata={"source": DrawSource.WALL_HEAD.value}),))
     gold_unresolved = []
+    simulation_declined_sanjindao = (
+        adapter.rules.config.simulation_only_normal_hand
+        and adapter.rules.can_sanjindao(hand, state.gold_tile)
+    )
     if state.gold_tile in hand and not adapter.rules.config.simulation_only_normal_hand:
         gold_unresolved.append("youjin_trigger")
-        if adapter.rules.can_sanjindao(hand, state.gold_tile):
-            gold_unresolved.append("sanjindao_timing")
-            return ActionReport((), tuple(gold_unresolved))
     if phase in ("AFTER_CHI", "AFTER_PENG"):
         if gold_unresolved:
             return ActionReport((), tuple(gold_unresolved))
@@ -333,8 +334,10 @@ def report(adapter, state):
                 draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
             except ValueError:
                 draw_context = None
-        if draw_context is not None and adapter.rules.can_win(
-                hand, state.gold_tile, len(state.melds[p]), win_context=draw_context):
+        if (not simulation_declined_sanjindao
+                and draw_context is not None
+                and adapter.rules.can_win(
+                    hand, state.gold_tile, len(state.melds[p]), win_context=draw_context)):
             metadata = {"win_source": draw_context.source.value,
                         "kong_kind": (draw_context.kong_kind.value
                                       if draw_context.kong_kind else None)}
@@ -350,8 +353,10 @@ def report(adapter, state):
             return ActionReport(tuple(actions), tuple(unknown))
         if added_kong:
             return ActionReport((), ("ADD_KONG_SCORING_UNKNOWN",))
-        if draw_context is None and adapter.rules.can_win(
-                hand, state.gold_tile, len(state.melds[p])):
+        if (not simulation_declined_sanjindao
+                and draw_context is None
+                and adapter.rules.can_win(
+                    hand, state.gold_tile, len(state.melds[p]))):
             return ActionReport((), tuple(gold_unresolved + ["win_declaration_and_settlement"]))
         if gold_unresolved:
             return ActionReport((), tuple(gold_unresolved))
@@ -378,8 +383,10 @@ def report(adapter, state):
                 actions.append(A(p, T.MING_GANG, tile=tile, tiles=(tile,) * 4))
             else:
                 unknown.append("rob_kong")
-        if adapter.rules.can_win(hand + [tile], state.gold_tile, len(state.melds[p]),
-                                 "pinghu", winning_tile=tile):
+        if (not simulation_declined_sanjindao
+                and adapter.rules.can_win(
+                    hand + [tile], state.gold_tile, len(state.melds[p]),
+                    "pinghu", winning_tile=tile)):
             context = HuContext(WinSource.DISCARD, tile)
             actions.append(A(p, T.HU, tile=tile, metadata={
                 "win_source": context.source.value, "kong_kind": None,
