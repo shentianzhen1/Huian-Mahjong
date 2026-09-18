@@ -4,7 +4,7 @@ from collections import Counter
 from typing import Any
 
 from huian._legacy import env
-from .shanten import rank_discards
+from .shanten import best_discard
 
 
 @dataclass(frozen=True)
@@ -245,15 +245,13 @@ class ShantenAgent(BaselineAgent):
         discards = [a for a in actions if a.type.value == "DISCARD"]
         if discards:
             open_melds = len(observation.melds[observation.seat])
-            ranked = rank_discards(
+            legal_by_tile = {action.tile: action for action in discards}
+            choice = best_discard(
                 observation.hand,
                 gold_tile=observation.gold_tile,
                 open_melds=open_melds,
                 visible_tiles=self._public_tiles(observation),
-            )
-            legal_by_tile = {action.tile: action for action in discards}
-            choice = next(
-                item for item in ranked if item.discard in legal_by_tile
+                allowed_discards=tuple(legal_by_tile),
             )
             action = legal_by_tile[choice.discard]
             waits = ",".join(choice.effective_tile_types[:8])
