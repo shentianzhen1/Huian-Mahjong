@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from huian._legacy import core
 from .config import EvidenceStatus
-from .context import KongKind
+from .context import KongKind, WinSource
 
 
 @dataclass(frozen=True)
@@ -111,7 +111,7 @@ class FanAggregator:
 
         return components, unresolved
 
-    def _concealed_components(self, decomposition):
+    def _concealed_components(self, decomposition, hu_result):
         components = []
         for group in decomposition.groups:
             if len(group) != 3:
@@ -121,6 +121,12 @@ class FanAggregator:
             tile = group[0]
             if tile not in core.BASE_TILES:
                 raise ValueError("Invalid tile in Hu decomposition")
+            # Player confirmation 2026-09-18: when an opponent discard is the
+            # third matching tile that completes this triplet for Pinghu, that
+            # triplet is not an An-Ke and receives no concealed-triplet fan.
+            if (hu_result.context.source == WinSource.DISCARD
+                    and hu_result.context.winning_tile == tile):
+                continue
             fan = 2 if core.is_honor(tile) else 1
             components.append(self._component(
                 "concealed_triplet", fan,
@@ -167,7 +173,7 @@ class FanAggregator:
         signatures = []
         component_sets = []
         for decomposition in hu_result.decompositions:
-            components = tuple(base_components + self._concealed_components(decomposition))
+            components = tuple(base_components + self._concealed_components(decomposition, hu_result))
             candidate_fan = sum(item.fan for item in components)
             candidates.append(candidate_fan)
             signatures.append(self._component_signature(components))
