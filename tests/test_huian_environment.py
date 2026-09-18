@@ -220,8 +220,13 @@ class EnvironmentTests(unittest.TestCase):
         with self.assertRaises(UnknownRuleError):
             instance.legal_actions()
 
-    def test_three_gold_immediately_offers_optional_sanjindao(self):
-        instance = game(scenario("NEED_DRAW", hand=["P9"] * 3 + HAND[3:]))
+    def test_third_gold_draw_offers_one_shot_optional_sanjindao(self):
+        state = scenario("AFTER_DRAW", hand=["P9"] * 3 + HAND[2:])
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": "P9"},
+        ).to_dict()
+        instance = game(state)
         report = instance.action_report()
         self.assertFalse(report.unresolved)
         self.assertEqual(report.known_actions[0].metadata.get("special"), "SANJINDAO")
@@ -229,6 +234,59 @@ class EnvironmentTests(unittest.TestCase):
             action.type == env.ActionType.PASS_QIANGJIN
             and action.metadata.get("continue_play")
             for action in report.known_actions
+        ))
+        instance.step(next(
+            a for a in report.known_actions if a.type == env.ActionType.PASS_QIANGJIN
+        ))
+        self.assertFalse(any(
+            a.metadata.get("special") == "SANJINDAO"
+            for a in instance.action_report().known_actions
+        ))
+
+    def test_eight_flower_special_declares_and_project_x2_settles(self):
+        state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
+        for flower in env.FLOWERS:
+            state.wall.remove(flower)
+            state.flowers[0].append(flower)
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": "F8"},
+        ).to_dict()
+        instance = game(state)
+        actions = instance.legal_actions()
+        declare = next(
+            a for a in actions if a.metadata.get("special") == "EIGHT_FLOWER_YOU"
+        )
+        self.assertEqual(declare.metadata["multiplier"], 2)
+        self.assertTrue(declare.metadata["project_rule"])
+        instance.step(declare)
+        self.assertEqual(instance.state.phase, "EIGHT_FLOWER_YOU_DECLARED")
+        terminal, event = instance.finalize_eight_flower_outcome(
+            current_dealer_base=5, winner_fan=8)
+        self.assertTrue(terminal.terminal)
+        self.assertEqual(terminal.rewards, [26, -26])
+        self.assertEqual(terminal.terminal_reason, "PROJECT_EIGHT_FLOWER_YOU")
+        self.assertEqual(event["action"]["metadata"]["multiplier"], 2)
+        self.assertEqual(event["action"]["metadata"]["evidence_status"], "WORKING")
+
+    def test_eight_flower_pass_closes_window_and_keeps_eight_flowers(self):
+        state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
+        for flower in env.FLOWERS:
+            state.wall.remove(flower)
+            state.flowers[0].append(flower)
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": "F8"},
+        ).to_dict()
+        instance = game(state)
+        pass_action = next(
+            a for a in instance.legal_actions()
+            if a.type == env.ActionType.PASS_QIANGJIN
+        )
+        after, _ = instance.step(pass_action)
+        self.assertEqual(len(after.flowers[0]), 8)
+        self.assertTrue(all(
+            a.type == env.ActionType.DISCARD for a in instance.legal_actions()
         ))
 
     def test_fifth_copy_rejected_even_when_total_remains_144(self):
