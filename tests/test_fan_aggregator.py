@@ -108,7 +108,7 @@ class FanAggregatorTests(unittest.TestCase):
             for item in pinghu_fan.components
         ))
 
-    def test_two_gold_fan_stays_unknown_instead_of_being_guessed(self):
+    def test_two_gold_fan_is_cumulative_one_each(self):
         hand = [
             "P9", "P9",
             "M1", "M2", "M3",
@@ -118,12 +118,16 @@ class FanAggregatorTests(unittest.TestCase):
             "S1", "S2", "S3",
         ]
         result = self.rules.aggregate_fan(hand, gold_tile="P9")
-        self.assertFalse(result.complete)
-        self.assertIsNone(result.fan)
-        self.assertIn("multi_gold_fan", result.unresolved)
-        self.assertEqual(result.accounted_fan, 0)
+        self.assertTrue(result.complete)
+        self.assertEqual(result.fan, 2)
+        self.assertEqual(result.accounted_fan, 2)
+        self.assertEqual(result.unresolved, ())
+        self.assertEqual(
+            [(item.category, item.fan) for item in result.components],
+            [("gold", 2)],
+        )
 
-    def test_complete_flower_group_stays_unknown(self):
+    def test_complete_flower_group_has_no_extra_bonus(self):
         hand = [
             "M1", "M1",
             "M2", "M3", "M4",
@@ -135,9 +139,26 @@ class FanAggregatorTests(unittest.TestCase):
         result = self.rules.aggregate_fan(
             hand, flowers=("F1", "F2", "F3", "F4")
         )
-        self.assertFalse(result.complete)
-        self.assertIn("flower_groups", result.unresolved)
-        self.assertEqual(result.accounted_fan, 6)  # flowers4 + honor concealed triplet2
+        self.assertTrue(result.complete)
+        self.assertEqual(result.unresolved, ())
+        self.assertEqual(result.fan, 6)  # flowers4 + honor concealed triplet2
+        self.assertEqual(result.accounted_fan, 6)
+
+    def test_eight_flowers_are_eight_ordinary_fan_after_special_pass(self):
+        hand = [
+            "M1", "M1",
+            "M2", "M3", "M4",
+            "M5", "M6", "M7",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+        ]
+        result = self.rules.aggregate_fan(hand, flowers=tuple(env.FLOWERS))
+        self.assertTrue(result.complete)
+        self.assertEqual(result.unresolved, ())
+        self.assertEqual(result.fan, 10)  # 8 flowers + honor concealed triplet2
+        self.assertIn(("flowers", 8),
+                      [(item.category, item.fan) for item in result.components])
 
     def test_honor_peng_is_high_confidence_but_suited_peng_stays_unknown(self):
         concealed = [
