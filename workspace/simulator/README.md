@@ -53,7 +53,7 @@ simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结�
 
 2026-09-18 首次整场级回归使用10个match seed，并将 RandomAgent / BaselineAgent 交换座位，共20场；每场目标8局、1000/1000起分。
 
-确认无独立杠费后，同口径结果提升到：6/20场完整跑完8局；共真实结算87局，平均每场完成4.35局。UNKNOWN累计为：decomposition_scoring 9、three_plus_gold_discard_hu 3、exposed_triplet_fan 2。`KONG_FEE_SETTLEMENT_UNKNOWN` 已退役并从停止原因彻底消失。
+确认无独立杠费后，同口径结果提升到：6/20场完整跑完8局；共真实结算87局，平均每场完成4.35局。UNKNOWN累计为：decomposition_concealed_triplet_choice 9、three_plus_gold_discard_hu 3、exposed_triplet_fan 2。`KONG_FEE_SETTLEMENT_UNKNOWN` 已退役并从停止原因彻底消失。
 
 这说明 MatchRunner / dealer-base / 总账链路已经可运行，当前整场完成率主要受真实计分证据缺口限制，而不是8局状态机限制。未完成整场的部分比分只用于审计，不作为最终AI成绩。
 
