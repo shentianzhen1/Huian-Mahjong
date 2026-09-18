@@ -51,13 +51,13 @@ class FanAggregator:
         unresolved = []
 
         gold_count = hand.count(gold_tile) if gold_tile is not None else 0
-        if gold_count == 1:
+        if gold_count:
             components.append(self._component(
-                "gold", 1, f"{gold_tile} x1", EvidenceStatus.CONFIRMED,
-                "Direct target-room settlements: one gold displayed as 1 fan",
+                "gold", gold_count, f"{gold_tile} x{gold_count} @ 1 fan each",
+                EvidenceStatus.CONFIRMED,
+                "Player/replay confirmation 2026-09-18: every gold is 1 fan; "
+                "wildcard use does not consume or add fan",
             ))
-        elif gold_count > 1:
-            unresolved.append("multi_gold_fan")
 
         flowers = tuple(flowers)
         if any(tile not in core.FLOWERS for tile in flowers):
@@ -70,13 +70,10 @@ class FanAggregator:
                 EvidenceStatus.CONFIRMED,
                 "Direct target-room settlements and player confirmation: each flower is 1 fan",
             ))
-        seasonal = {"F1", "F2", "F3", "F4"}
-        floral = {"F5", "F6", "F7", "F8"}
-        flower_set = set(flowers)
-        if seasonal.issubset(flower_set) or floral.issubset(flower_set):
-            unresolved.append("flower_groups")
-        if len(flowers) == 8:
-            unresolved.append("eight_flowers_special_win")
+        # Player confirmation 2026-09-18: flowers are strictly linear at
+        # 1 fan each. Complete four-flower groups add nothing extra; if an
+        # eight-flower special win is declined, the ordinary fan remains 8.
+        # Special-win eligibility belongs to the state machine, not FanAggregator.
 
         for meld in melds:
             kind = getattr(meld, "kind", None)
