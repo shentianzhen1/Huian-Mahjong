@@ -14,6 +14,17 @@ def apply_qiangjin_action(state, action):
         state.current_player = p
         state.phase = "SANJINDAO_DECLARED"
         return True
+    if action.type == T.HU and action.metadata.get("special") == "EIGHT_FLOWER_YOU":
+        state.pending_hu = {
+            "winner": p,
+            "source": "eight_flower_you",
+            "flower_count": len(state.flowers[p]),
+            "multiplier": action.metadata.get("multiplier"),
+            "project_rule": bool(action.metadata.get("project_rule")),
+        }
+        state.current_player = p
+        state.phase = "EIGHT_FLOWER_YOU_DECLARED"
+        return True
     if action.type == T.PASS_QIANGJIN:
         expected = 16 - 3 * len(state.melds[p])
         state.phase = "AFTER_DRAW" if len(state.hands[p]) > expected else "NEED_DRAW"
