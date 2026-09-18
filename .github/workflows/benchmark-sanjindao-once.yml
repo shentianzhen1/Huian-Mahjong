@@ -1,5 +1,5 @@
 name: One-time Sanjindao Benchmark
-# rerun after loop-position fix
+# rerun after obsolete concealed-kong test fix
 
 on:
   push:
