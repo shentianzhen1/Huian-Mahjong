@@ -195,6 +195,10 @@ class NormalSimulationTests(unittest.TestCase):
         self.assertEqual(result.status, "STOPPED_UNKNOWN")
         self.assertEqual(result.unresolved, ("youjin_permissions",))
         self.assertEqual(result.steps, 0)
+        self.assertEqual(result.unknown_evidence["rule_ids"], ["youjin_permissions"])
+        self.assertEqual(result.unknown_evidence["state_hash"], result.state_hash)
+        self.assertEqual(result.unknown_evidence["phase"], "NEED_DRAW")
+        self.assertEqual(result.unknown_evidence["gold_tile"], state.gold_tile)
         state.special_states[0] = "NORMAL"
         # Three E already occur in our fixture; change the indicator, not inventory.
         # Sanjindao is optional, so simulation-only may take the confirmed
@@ -209,6 +213,35 @@ class NormalSimulationTests(unittest.TestCase):
             state.flowers[0].append(flower)
         result = Simulator().run_normal_hand(initial_state=state, max_steps=1)
         self.assertNotIn("eight_flowers_special_win", result.unresolved)
+
+    def test_decomposition_unknown_preserves_hu_audit_evidence(self):
+        hand = [
+            "M1", "M1", "M1",
+            "M2", "M2", "M2",
+            "M3", "M3", "M3",
+            "M4", "M4", "M4",
+            "M5", "M5", "M5",
+            "M6", "M6",
+        ]
+        state = scenario("HU_DECLARED", hand)
+        state.pending_hu = {
+            "winner": 0, "source": "self_draw", "winning_tile": "M6",
+            "kong_kind": None, "discard_player": None, "river_index": None,
+        }
+        result = Simulator(
+            config=SimulatorConfig(enable_real_scoring=True)
+        ).run_normal_hand(
+            initial_state=state, current_dealer_base=10
+        )
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertIn("decomposition_scoring", result.unresolved)
+        audit = result.unknown_evidence["ordinary_hu_audit"]
+        self.assertTrue(audit["legal"])
+        self.assertGreater(audit["decomposition_count"], 1)
+        self.assertIn("decomposition_scoring", audit["fan"]["unresolved"])
+        self.assertGreater(len(audit["fan"]["candidate_fans"]), 1)
+        self.assertEqual(audit["winner"], 0)
+        self.assertEqual(audit["source"], "self_draw")
 
     def test_rules_unknown_and_dead_loop_are_recorded(self):
         state = scenario("AFTER_DRAW", hand=DEALER_HAND[:14] + ["N", "P6", "N"])
