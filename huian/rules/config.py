@@ -30,7 +30,7 @@ UNKNOWN_RULES = MappingProxyType({
     "double_you_entry": "Direct entry versus required prior Youjin",
     "triple_you_sequence": "Chronological upgrade sequence",
     "youjin_permissions": "Opponent rights and cancellation actions at every stage",
-    "room_multipliers": "Unconfirmed multipliers outside the confirmed ordinary Pinghu/Zimo and Youjin 4/8/16 outcomes",
+    "room_multipliers": "Unconfirmed multipliers outside confirmed Pinghu/Zimo, Youjin x4 and Triple-You x16; Double-You x8 is high-confidence from the in-game page but still lacks a target two-player x8 settlement",
     "flower_open_gold": "Ownership, replacement and reopening after revealing a flower",
     "tianhu": "Timing relative to flower replacement and opening gold",
     "tianting": "Exact definition",
