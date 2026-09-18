@@ -1,6 +1,8 @@
 """Sitting dealer base and consecutive-dealer increment.
 
 Player confirmation 2026-09-15/18: sitting base 5, each keep +5.
+Match confirmation 2026-09-18: 2 players, 8 hands, each starts at 1000 points;
+settled hand transfers are accumulated into the final match scores.
 No cap inside the 8-hand match. Dealer-win extra ×2 is not used.
 """
 from numbers import Integral
@@ -8,6 +10,8 @@ from numbers import Integral
 SITTING_DEALER_BASE = 5
 REPEAT_DEALER_INCREMENT = 5
 MATCH_HAND_COUNT = 8
+MATCH_STARTING_SCORE = 1000
+MATCH_TOTAL_SCORE = MATCH_STARTING_SCORE * 2
 DEALER_WIN_MULTIPLIER = 1
 
 
