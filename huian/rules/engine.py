@@ -306,10 +306,10 @@ class HuianRules:
                 return HuResult(False, (), gold_tile, open_melds, context)
             if gold_count == 2:
                 return HuResult(False, (), gold_tile, open_melds, context)
-            if gold_count >= 3:
-                raise UnknownRuleError("three_plus_gold_discard_hu")
-        # After declining the one-shot Sanjindao window, 3+ golds may continue
-        # to an ordinary self-draw. Discard/rob-kong restrictions above remain.
+        # After declining the one-shot Sanjindao window, 3+ golds retain full
+        # ordinary Hu rights: self-draw and opponent-discard Hu. The special
+        # Sanjindao window itself is enforced by the state machine and does not
+        # reopen on a later fourth gold.
         raw_splits = winning_decompositions(
             hand, gold_tile, open_melds, max_solutions=max_decompositions + 1
         )
