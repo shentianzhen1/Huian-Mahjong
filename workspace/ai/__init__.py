@@ -2,7 +2,8 @@
 from .baseline import (AgentDecision, BaselineAgent, DangerAwareShantenAgent,
                        EfficiencyAgent, MatchAwareShantenAgent,
                        MatchObservationContext, PlayerObservation, ShantenAgent,
-                       TenpaiLossTieBreakAgent, TenpaiRiskTieBreakAgent)
+                       TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
+                       TenpaiRiskTieBreakAgent)
 from .danger import PublicDangerEstimate, estimate_discard_danger
 from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        TenpaiWaitRiskEstimate,
@@ -21,7 +22,8 @@ CURRENT_AGENT_NAME = "TenpaiRiskTieBreakAgent"
 
 __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "DangerAwareShantenAgent", "MatchAwareShantenAgent",
-           "TenpaiRiskTieBreakAgent", "TenpaiLossTieBreakAgent", "CurrentAgent",
+           "TenpaiRiskTieBreakAgent", "TenpaiLossTieBreakAgent",
+           "TenpaiRiskLossTieBreakAgent", "CurrentAgent",
            "CURRENT_AGENT_VERSION", "CURRENT_AGENT_NAME",
            "MatchObservationContext",
            "PlayerObservation",
