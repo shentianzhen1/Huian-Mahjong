@@ -5,6 +5,8 @@ from .match import MatchProgressState, MatchScoreState, score_eight_hand_match
 from .match_runner import (MatchHandContext, MatchHandRecord, MatchHandResult,
                            MatchRunResult, MatchRunner, run_eight_hand_match,
                            run_real_ordinary_match)
+from .match_evaluation import (MatchAttemptSummary, PairedMatchEvaluation,
+                               run_paired_real_matches)
 from .unknowns import summarize_match_rule_gaps
 
 __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "make_wall",
@@ -12,4 +14,6 @@ __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "m
            "MatchProgressState", "MatchScoreState", "score_eight_hand_match",
            "MatchHandContext", "MatchHandRecord", "MatchHandResult",
            "MatchRunResult", "MatchRunner", "run_eight_hand_match",
-           "run_real_ordinary_match", "summarize_match_rule_gaps"]
+           "run_real_ordinary_match", "MatchAttemptSummary",
+           "PairedMatchEvaluation", "run_paired_real_matches",
+           "summarize_match_rule_gaps"]
