@@ -1,0 +1,146 @@
+name: AI Paired Evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent_a:
+        description: Candidate / identity A
+        required: true
+        default: current_v010
+        type: choice
+        options:
+          - current_v010
+          - v06
+          - v03
+          - baseline
+      agent_b:
+        description: Comparison / identity B
+        required: true
+        default: v06
+        type: choice
+        options:
+          - current_v010
+          - v06
+          - v03
+          - baseline
+      start_seed:
+        description: First fresh match seed
+        required: true
+        default: "120000"
+        type: string
+      pair_count:
+        description: Number of seed pairs
+        required: true
+        default: "25"
+        type: string
+      max_steps:
+        description: Maximum simulator steps per hand
+        required: true
+        default: "1000"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    name: Paired 8-hand evaluation
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run fixed-wall seat-swapped evaluation
+        env:
+          AGENT_A: ${{ inputs.agent_a }}
+          AGENT_B: ${{ inputs.agent_b }}
+          START_SEED: ${{ inputs.start_seed }}
+          PAIR_COUNT: ${{ inputs.pair_count }}
+          MAX_STEPS: ${{ inputs.max_steps }}
+        run: |
+          python -B - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from time import perf_counter
+
+          from workspace.ai import (
+              BaselineAgent,
+              MeldAwareShantenAgent,
+              ShantenAgent,
+              TenpaiRiskTieBreakAgent,
+          )
+          from workspace.simulator import run_paired_real_matches
+
+          AGENTS = {
+              "current_v010": ("MeldAwareShantenAgent V0.10", MeldAwareShantenAgent),
+              "v06": ("TenpaiRiskTieBreakAgent V0.6", TenpaiRiskTieBreakAgent),
+              "v03": ("ShantenAgent V0.3", ShantenAgent),
+              "baseline": ("BaselineAgent", BaselineAgent),
+          }
+
+          agent_a = os.environ["AGENT_A"]
+          agent_b = os.environ["AGENT_B"]
+          start = int(os.environ["START_SEED"])
+          count = int(os.environ["PAIR_COUNT"])
+          max_steps = int(os.environ["MAX_STEPS"])
+          if count <= 0:
+              raise ValueError("pair_count must be positive")
+          if max_steps <= 0:
+              raise ValueError("max_steps must be positive")
+
+          name_a, factory_a = AGENTS[agent_a]
+          name_b, factory_b = AGENTS[agent_b]
+          seeds = range(start, start + count)
+
+          started = perf_counter()
+          report = run_paired_real_matches(
+              seeds,
+              agent_factories=(factory_a, factory_b),
+              agent_names=(name_a, name_b),
+              max_steps=max_steps,
+              initial_dealer=0,
+          )
+          payload = report.to_dict()
+          payload["evaluation_contract"] = {
+              "fixed_wall": True,
+              "seat_swap": True,
+              "identity_stable_rng": True,
+              "start_seed": start,
+              "pair_count": count,
+              "max_steps": max_steps,
+              "agent_a": name_a,
+              "agent_b": name_b,
+          }
+          payload["elapsed_seconds"] = perf_counter() - started
+
+          out = Path("data/evaluations/manual-ai-eval")
+          out.mkdir(parents=True, exist_ok=True)
+          (out / "report.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          summary = dict(payload)
+          summary.pop("attempts", None)
+          summary.pop("per_match", None)
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
+              fh.write(f"# AI paired evaluation\n\n")
+              fh.write(f"- A: **{name_a}**\n")
+              fh.write(f"- B: **{name_b}**\n")
+              fh.write(f"- seeds: **{start}..{start + count - 1}** ({count} pairs)\n")
+              fh.write("- contract: fixed wall + seat swap + identity-stable RNG\n")
+              fh.write(f"- elapsed: **{payload['elapsed_seconds']:.1f}s**\n")
+          PY
+
+      - name: Upload evaluation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-paired-eval-${{ inputs.agent_a }}-vs-${{ inputs.agent_b }}-${{ inputs.start_seed }}
+          path: data/evaluations/manual-ai-eval/report.json
+          if-no-files-found: error
