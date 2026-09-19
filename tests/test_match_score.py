@@ -46,7 +46,7 @@ class MatchScoreTests(unittest.TestCase):
     def test_match_progress_updates_scores_dealer_and_next_base(self):
         match = MatchProgressState.initial(dealer=0)
         self.assertEqual(match.scores, (1000, 1000))
-        self.assertEqual(match.current_dealer_base, 5)
+        self.assertEqual(match.current_dealer_base, 20)
         self.assertEqual(match.hand_index, 0)
 
         # Dealer wins: keep dealer and increase next-hand base by 5.
@@ -62,12 +62,29 @@ class MatchScoreTests(unittest.TestCase):
         self.assertEqual(match.consecutive_dealer_hands, 3)
         self.assertEqual(match.current_dealer_base, 15)
 
-        # Dealer loses: opponent becomes dealer and base resets to sitting 5.
+        # Dealer loses: opponent becomes dealer and settlement base resets to 10.
         match = match.apply_settled_hand((-16, 16), winner=1)
         self.assertEqual(match.scores, (995, 1005))
         self.assertEqual(match.dealer, 1)
         self.assertEqual(match.consecutive_dealer_hands, 1)
-        self.assertEqual(match.current_dealer_base, 5)
+        self.assertEqual(match.current_dealer_base, 10)
+
+    def test_room541913_observed_dealer_base_chain(self):
+        match = MatchProgressState.initial(dealer=0)
+        self.assertEqual((match.dealer, match.current_dealer_base), (0, 10))
+
+        match = match.apply_settled_hand((26, -26), winner=0)
+        self.assertEqual((match.dealer, match.current_dealer_base), (0, 15))
+
+        match = match.apply_settled_hand((-68, 68), winner=1)
+        self.assertEqual((match.dealer, match.current_dealer_base), (1, 10))
+
+        match = match.apply_settled_hand((22, -22), winner=0)
+        self.assertEqual((match.dealer, match.current_dealer_base), (0, 10))
+
+        for reward in ((24, -24), (76, -76), (25, -25)):
+            match = match.apply_settled_hand(reward, winner=0)
+        self.assertEqual((match.dealer, match.current_dealer_base), (0, 25))
 
     def test_match_progress_finishes_after_exactly_eight_settled_hands(self):
         match = MatchProgressState.initial(dealer=1)
