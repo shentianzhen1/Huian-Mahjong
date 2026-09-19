@@ -57,19 +57,17 @@
 
 ## 当前测试结果
 
-本轮另已成功重放归档第25号记录（seed12、交换座位、232步），核对补杠计分UNKNOWN的状态、决策和事件摘要；输出为 `data/evaluations/added_kong_100_20260915_verified/replay_25.json`。
+2026-09-19 当前主线 GitHub Actions 已全绿：
 
-2026-09-18 最新 GitHub Actions 已全绿：普通规则链、MatchRunner、特殊胡注册表、独立抢金声明、观察型特殊结算入口及 EfficiencyAgent 实验均已接入。Core regression 在 Python 3.10 / 3.11 / 3.12 三个版本均各通过216项，0失败、0错误；Legacy baseline advisory 也通过。Vision V0.1 advisory 本轮未手动触发。
+- Core regression：Python 3.10 / 3.11 / 3.12 **各230项通过，0失败、0错误**。
+- Legacy Core V0.1.1：9项通过。
+- Legacy Environment V0.1：9项通过。
+- Vision V0.1 advisory 为手动任务，本轮未触发；这不代表真实牌面识别准确率已经建立。
+- 最新规则/文档整理已覆盖：room541913完整8局回归、首庄结算底10、连庄无封顶至第8局、ShantenAgent V0.3基线、三金倒2→3一次性窗口、无独立杠费、特殊结果证据分级及当前Issue板。
 
-| 工作目录 | 命令 | 结果 |
-|---|---|---:|
-| GitHub Actions / 项目根目录 | `python -B -m unittest discover -s tests -v` | 184 通过 × Python 3.10/3.11/3.12 |
-| `legacy_code/core_v0.1.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
-| `legacy_code/environment_v0.1` | `python -B -m unittest discover -s tests -v` | 9 通过 |
-| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v` | 14 通过 |
-| 项目根目录 | `.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.tiles_v0_1.test_tiles_v0_1 -v` | 6 通过 |
+Core regression覆盖固定种子复现、144张守恒、第五张牌拒绝、非法动作拒绝、16张流局零和、开局回放、普通/观察结算、自摸/点炮声明、单/双/多金限制、弃金不可胡、三金倒一次性窗口、游金倍率与真实结算夹具、三类杠上下文、MatchRunner整场账本、room541913八局逐局比分/庄底回放、向听/有效牌引擎和AI配对评估基础设施。
 
-覆盖固定种子复现、144 张守恒、第五张牌拒绝、非法动作拒绝、16 张流局零和、开局回放、观察结算、自摸/点炮声明、声明来源与观察结果核对、补花后的有效胡牌张、单/双金限制、弃金不可胡、三金倒×3可选决策、三金游/三游状态别名、游金4/8/16与庄家/花水算术、三游608 夹具、三类杠胡上下文、规范/旧版摸牌来源回放、回滚、死循环、legacy 基线、AVI/PNG 编解码、长时/无限手动录制、环形缓存、ROI 模板检测、自动按局文件生命周期、关键帧抽取、三块固定 ROI 裁剪、人工标签模板、单图离线推理、视觉数量约束和多帧投票接口。没有完整小程序自动对局端到端测试，也没有真实牌面准确率基准。普通局AI对战评估已加入；UNKNOWN停止不计入胜负和奖励均值。
+仍然**没有**完整小程序自动对局端到端测试，也**没有**真实牌面识别准确率基准；这两项不能用“Core全绿”代替。
 
 ## 已知问题 / 安全停止点
 
