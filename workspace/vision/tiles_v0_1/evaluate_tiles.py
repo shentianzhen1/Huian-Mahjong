@@ -117,13 +117,94 @@ def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
             "for leakage-safe holdout evaluation"
         )
 
-    rows = []\n    unscorable = []\n    all_labels = tuple(labels)\n    for group_key, test_labels in sorted(groups.items()):\n        train_labels = tuple(\n            label for label in all_labels if _group_key(label) != group_key\n        )\n        if template_scope == "all_regions":\n            region_batches = ((None, tuple(test_labels), train_labels),)\n        else:\n            region_batches = tuple(\n                (\n                    region,\n                    tuple(label for label in test_labels\n                          if label["region"] == region),\n                    tuple(label for label in train_labels\n                          if label["region"] == region),\n                )\n                for region in sorted({label["region"] for label in test_labels})\n            )\n\n        for region, region_test_labels, region_train_labels in region_batches:\n            train_classes = {label["tile_id"] for label in region_train_labels}\n            eligible = [\n                label for label in region_test_labels\n                if label["tile_id"] in train_classes\n            ]\n            unscorable.extend(\n                {\n                    "group": group_key,\n                    "image": label["image"],\n                    "tile_id": label["tile_id"],\n                    "region": label["region"],\n                    "reason": (\n                        "true_class_missing_outside_holdout_group"\n                        if template_scope == "all_regions"\n                        else "true_class_missing_outside_holdout_group_in_region"\n                    ),\n                }\n                for label in region_test_labels\n                if label["tile_id"] not in train_classes\n            )\n            if not eligible:\n                continue\n            classifier = TemplateTileClassifier.from_labels(\n                root, region_train_labels)\n            for label in eligible:\n                prediction = classifier.classify(_crop_label(root, label))\n                true_tile = label["tile_id"]\n                predicted_tile = prediction.tile_id\n                rows.append({\n                    "group": group_key,\n                    "image": label["image"],\n                    "region": label["region"],\n                    "true_tile": true_tile,\n                    "predicted_tile": predicted_tile,\n                    "confidence": prediction.confidence,\n                    "correct": predicted_tile == true_tile,\n                    "true_category": category_for(true_tile),\n                    "predicted_category": category_for(predicted_tile),\n                    "category_correct": (\n                        category_for(predicted_tile) == category_for(true_tile)\n                    ),\n                })\n\n    report = summarize_predictions(
+    rows = []
+    unscorable = []
+    all_labels = tuple(labels)
+    for group_key, test_labels in sorted(groups.items()):
+        train_labels = tuple(
+            label for label in all_labels if _group_key(label) != group_key
+        )
+        if template_scope == "all_regions":
+            region_batches = ((None, tuple(test_labels), train_labels),)
+        else:
+            region_batches = tuple(
+                (
+                    region,
+                    tuple(
+                        label for label in test_labels
+                        if label["region"] == region
+                    ),
+                    tuple(
+                        label for label in train_labels
+                        if label["region"] == region
+                    ),
+                )
+                for region in sorted({
+                    label["region"] for label in test_labels
+                })
+            )
+
+        for region, region_test_labels, region_train_labels in region_batches:
+            train_classes = {
+                label["tile_id"] for label in region_train_labels
+            }
+            eligible = [
+                label for label in region_test_labels
+                if label["tile_id"] in train_classes
+            ]
+            unscorable.extend(
+                {
+                    "group": group_key,
+                    "image": label["image"],
+                    "tile_id": label["tile_id"],
+                    "region": label["region"],
+                    "reason": (
+                        "true_class_missing_outside_holdout_group"
+                        if template_scope == "all_regions"
+                        else
+                        "true_class_missing_outside_holdout_group_in_region"
+                    ),
+                }
+                for label in region_test_labels
+                if label["tile_id"] not in train_classes
+            )
+            if not eligible:
+                continue
+            classifier = TemplateTileClassifier.from_labels(
+                root, region_train_labels
+            )
+            for label in eligible:
+                prediction = classifier.classify(_crop_label(root, label))
+                true_tile = label["tile_id"]
+                predicted_tile = prediction.tile_id
+                rows.append({
+                    "group": group_key,
+                    "image": label["image"],
+                    "region": label["region"],
+                    "true_tile": true_tile,
+                    "predicted_tile": predicted_tile,
+                    "confidence": prediction.confidence,
+                    "correct": predicted_tile == true_tile,
+                    "true_category": category_for(true_tile),
+                    "predicted_category": category_for(predicted_tile),
+                    "category_correct": (
+                        category_for(predicted_tile)
+                        == category_for(true_tile)
+                    ),
+                })
+
+    report = summarize_predictions(
         rows,
         total_labels=len(labels),
         confidence_threshold=float(confidence_threshold),
     )
     report.update({
-        "method": "leave_source_group_out",
+        "method": (
+            "leave_source_group_out"
+            if template_scope == "all_regions"
+            else "leave_source_group_out_same_region"
+        ),
+        "template_scope": template_scope,
         "distinct_source_groups": len(groups),
         "unscorable": unscorable,
         "predictions": rows,
@@ -137,10 +218,18 @@ def main():
         description="Leakage-safe Tiles V0.1 offline accuracy report")
     parser.add_argument("--dataset", default="dataset/tiles_v0_1")
     parser.add_argument("--confidence", type=float, default=0.80)
+    parser.add_argument(
+        "--template-scope",
+        choices=("all_regions", "same_region"),
+        default="all_regions",
+    )
     parser.add_argument("--output")
     args = parser.parse_args()
     report = evaluate_template_dataset(
-        args.dataset, confidence_threshold=args.confidence)
+        args.dataset,
+        confidence_threshold=args.confidence,
+        template_scope=args.template_scope,
+    )
     payload = json.dumps(report, ensure_ascii=False, indent=2)
     if args.output:
         path = Path(args.output)
