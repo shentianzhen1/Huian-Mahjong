@@ -29,6 +29,10 @@ from .public_state_scores import (
     decode_score_candidates, prepare_score_crop, prepare_score_gray,
     read_score_pair,
 )
+from .public_state_status import (
+    infer_missing_hand_from_transition, parse_hand_progress,
+    parse_remaining_tiles, prepare_status_crop,
+)
 from .crop_rois import crop_regions
 from .roi import ROIProfile
 from .template_classifier import (
@@ -716,6 +720,38 @@ class TilesV01Tests(unittest.TestCase):
         self.assertEqual(read.confidence, 0.75)
         self.assertFalse(read.safe_for_executor)
 
+    def test_status_reader_corrects_target_font_seven_confusion(self) -> None:
+        self.assertEqual(parse_remaining_tiles("10/"), 107)
+        self.assertEqual(parse_remaining_tiles("105"), 105)
+        self.assertEqual(parse_hand_progress("7/8"), 7)
+        self.assertEqual(parse_hand_progress("//8"), 7)
+        self.assertEqual(parse_hand_progress("5/8"), 5)
+        self.assertIsNone(parse_hand_progress("0/8"))
+
+    def test_status_preprocessing_upscales_grayscale(self) -> None:
+        source = Image.new("RGB", (20, 10), (0, 35, 35))
+        draw = ImageDraw.Draw(source)
+        draw.rectangle((6, 2, 12, 7), fill=(210, 210, 90))
+        gray = prepare_status_crop(source, scale=4)
+        self.assertEqual(gray.shape, (40, 80))
+        self.assertGreater(int(gray.max()), int(gray.min()))
+
+    def test_missing_hand_can_only_advance_on_trusted_score_transition(self) -> None:
+        previous = PublicStateObservation(
+            980, 1020, 4, 105, 3, 3, 3, (), False
+        )
+        hand, inferred = infer_missing_hand_from_transition(
+            None, previous=previous, current_score_pair=(1004, 996)
+        )
+        self.assertEqual(hand, 5)
+        self.assertTrue(inferred)
+
+        same, inferred = infer_missing_hand_from_transition(
+            None, previous=previous, current_score_pair=(980, 1020)
+        )
+        self.assertIsNone(same)
+        self.assertFalse(inferred)
+
     def test_public_state_rois_scale_across_recording_sizes(self) -> None:
         profile = HuianPublicStateProfile()
         small = Image.new("RGB", (960, 448), "black")
@@ -723,7 +759,8 @@ class TilesV01Tests(unittest.TestCase):
         small_crops = profile.crops(small)
         large_crops = profile.crops(large)
         self.assertEqual(set(small_crops), {
-            "top_right_score", "bottom_left_score", "status_line"
+            "top_right_score", "bottom_left_score", "status_line",
+            "remaining_tiles", "hand_progress",
         })
         self.assertGreater(
             large_crops["top_right_score"].width,
