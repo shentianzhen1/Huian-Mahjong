@@ -64,8 +64,17 @@ class Classification:
 class TemplateTileClassifier:
     """NCC matching over reviewed label crops; intentionally not a trained model."""
 
-    def __init__(self, templates):
-        self.templates = {tile_id: tuple(values) for tile_id, values in templates.items()}
+    def __init__(self, templates, regional_templates=None):
+        self.templates = {
+            tile_id: tuple(values) for tile_id, values in templates.items()
+        }
+        self.regional_templates = {
+            region: {
+                tile_id: tuple(values)
+                for tile_id, values in region_templates.items()
+            }
+            for region, region_templates in (regional_templates or {}).items()
+        }
         if not self.templates:
             raise ValueError("No approved tile labels are available for offline inference")
 
@@ -73,6 +82,7 @@ class TemplateTileClassifier:
     def from_labels(cls, dataset_root, labels):
         root = Path(dataset_root)
         templates = {}
+        regional_templates = {}
         for label in labels:
             image_path = root / label["image"]
             if not image_path.exists():
@@ -82,18 +92,28 @@ class TemplateTileClassifier:
                 if x + width > source.width or y + height > source.height:
                     continue
                 crop = source.convert("RGB").crop((x, y, x + width, y + height))
-            templates.setdefault(label["tile_id"], []).append(_feature(crop))
-        return cls(templates)
+            value = _feature(crop)
+            templates.setdefault(label["tile_id"], []).append(value)
+            regional_templates.setdefault(
+                label["region"], {}
+            ).setdefault(label["tile_id"], []).append(value)
+        return cls(templates, regional_templates)
 
     @classmethod
     def from_dataset(cls, dataset_root):
         root = Path(dataset_root)
         return cls.from_labels(root, approved_labels(root))
 
-    def classify(self, image):
+    def classify(self, image, region=None):
         sample = _feature(image)
+        templates = (
+            self.regional_templates.get(region, {})
+            if region is not None else self.templates
+        )
+        if not templates:
+            raise ValueError(f"No approved templates are available for {region}")
         best_tile, best_score = None, float("-inf")
-        for tile_id, examples in self.templates.items():
+        for tile_id, examples in templates.items():
             score = max(float(cv2.matchTemplate(
                 sample, template, cv2.TM_CCOEFF_NORMED
             )[0, 0]) for template in examples)
@@ -116,7 +136,7 @@ class TemplateTileClassifier:
                                       local_x + width, local_y + height))
             if _tile_face_box(crop) is None:
                 continue
-            result = self.classify(crop)
+            result = self.classify(crop, region=region)
             results.append(TilePrediction(
                 result.tile_id, result.confidence, region,
                 (x + local_x, y + local_y, width, height), slot
