@@ -355,19 +355,19 @@
 - 规则变更：无。RULE_STATUS.md、RULE_EVIDENCE_MATRIX.md、PROJECT_STATUS.md 继续分别作为规则、证据和进度真相源。
 - 测试变化：未改业务代码；全量 128 项通过（项目 90、legacy Core 9、legacy Environment 9、Recorder 14、Vision 6），0 失败、0 跳过。
 
-## 2026-09-19 — Vision 8局真实录像首轮准确率/稳定性基线
+## 2026-09-19 — Vision 8局真实录像基线、空槽检测与Gold语义修正
 
-- 直接复用完整8局真实录像作为 Tiles V0.1 首批真实数据源；覆盖1046×480与960×448两种尺寸，自动筛出379个去重关键帧、1137个 hand/draw/gold ROI 裁剪。
-- 首批人工审核标签168个，来自8个独立录像 session，覆盖34/42个牌类。
-- 发现并修正评测泄漏风险：此前单帧 `source_frame` 留组会让同一录像的相邻帧分别进入训练与测试。标签新增 `source_session`，评测和 dataset_status 现按 `source_session > source_frame > image` 分组；同一录像应共享一个 session ID。
-- 正式首轮门槛口径改为 `same_region + leave-session-out`：151/168可评估（89.88%覆盖），overall 89.40%、类别准确率98.01%；hand 126样本/93.65%，draw 25样本/68.00%，gold因没有同一类别跨两个独立session重复而暂不可严格评估。
-- 置信阈值0.80时138/151被接受（91.39%），接受样本准确率94.20%；hand接受样本96.58%，draw接受样本80.95%。阈值0.90时100/151被接受，精确准确率98.00%。
-- 跨区域模板池只作域差异诊断：leave-session-out overall 81.33%、hand 92.91%、draw 54.84%、gold 0%，不作为Executor门槛。
-- 10连续帧稳定性：overall 98.61%、hand 99.22%、draw 87.50%、gold 100%。时间稳定性不能替代跨session准确率。
-- 当前未覆盖 F1/F3/F4/F5/F6/F8/S7/S9；F2/F7仅单session。下一轮优先改善draw、补gold同类跨session样本、补牌类覆盖与不同录屏条件。
-- 原始视频、关键帧与ROI图片不提交公开仓库，只保留匿名化统计报告：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。
-- Executor继续关闭，所有Tiles V0.1输出继续 `safe_for_executor=false`。
-- Vision Regression 已覆盖 source_session 留组行为；本轮未修改 Rules/Environment/Simulator/AI 业务逻辑。
+- 直接复用完整8局真实回放作为 Tiles V0.1 首批真实数据源；8段视频、两种尺寸（1046×480 / 960×448）、379个去重关键帧、1137个ROI裁剪、168个approved标签、8个独立source_session、34/42个牌类。
+- 评测泄漏已修正：真实门槛采用 `source_session > source_frame > image` 和 `same_region + leave-session-out`，同一录像相邻帧不得跨训练/测试。
+- 新增亮色牌面主体归一化：先找最大可信亮色连通块并裁去深色UI/桌面边缘，再统一48×72特征；同时复用同一几何门槛做牌面存在检测，空draw/hand槽不再被强行分类。
+- strict静态准确率由89.40%提升到**96.03%**：hand 95.24%（126样本）、draw 100%（25样本）、类别准确率98.68%；阈值0.80时127/151被接受，接受样本准确率98.43%。
+- presence-aware固定窗口稳定性：hand 127/128=99.22%；draw 2/2=100%但样本不足；tile槽合计129/130=99.23%。旧的“空槽也出预测”稳定性口径废弃。
+- Gold语义按真实回放修正：左上角为黄色牌背marker，不显示具体gold_id。ROI profile新增 `region_modes`（`tile` / `marker`）；marker只输出存在/不存在，不生成tile_id。真正gold_id必须在实时开金/翻金事件看到牌面时识别并写入会话状态。
+- `calibrate_rois` 新增 `--gold-mode marker`；`infer_tiles` 新增 marker observations；模板分类器拒绝对marker区域输出牌面。
+- Vision Regression / Tests 已覆盖 source_session 留组、亮色主体归一化、空槽跳过、ROI marker模式及gold marker不生成tile_id。
+- 当前缺口：F1/F3/F4/F5/F6/F8/S7/S9未覆盖，F2/F7仅单session；draw还需更多连续可见序列；gold需从开金前开始的实时录像；仍缺不同录屏批次、缩放/移动/遮挡外部验证。
+- 证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。原始视频、关键帧和ROI图片不提交公开仓库。
+- Executor继续关闭，所有Vision输出继续 `safe_for_executor=false`。
 
 
 按日期倒序维护。规则是否确认以 RULE_STATUS.md 为准；历史提交中的实现或注释不能自动提高规则证据等级。历史测试数量由提交差异中新增测试用例及现存记录核对，未保留的当时完整测试结果不补造。
