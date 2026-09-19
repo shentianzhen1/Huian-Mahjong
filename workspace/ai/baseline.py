@@ -791,6 +791,115 @@ class ScoreAwareMeldAgent(MeldAwareShantenAgent):
         )
 
 
+class ImmediateValueMeldAgent(MeldAwareShantenAgent):
+    """Experimental V0.12: one-draw confirmed ordinary score value in tenpai.
+
+    Unlike V0.11, this version does not require an exact V0.10 offense tie.
+    It still preserves minimum ordinary shanten as a hard constraint, but when
+    multiple shanten-0 discards remain it ranks them by the confirmed one-draw
+    ordinary self-draw value:
+
+        sum(remaining winning copies * confirmed net points)
+
+    Safety boundary:
+    - CHI/PENG behavior remains exactly V0.10;
+    - match context is required for the current dealer base;
+    - any gold already in hand falls back to V0.10;
+    - any candidate whose winning waits include gold falls back to V0.10;
+    - any unresolved fan/score input falls back to V0.10;
+    - this is immediate ordinary value only, not full EV.
+    """
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+
+        claims = [
+            action for action in actions
+            if action.type in (env.ActionType.CHI, env.ActionType.PENG)
+        ]
+        passes = [action for action in actions if action.type == env.ActionType.PASS]
+        if observation.phase == "AFTER_DISCARD" and claims and passes:
+            return super().choose_decision(observation, legal_actions)
+
+        discards = [
+            action for action in actions
+            if action.type == env.ActionType.DISCARD
+        ]
+        if not discards or observation.match_context is None:
+            return super().choose_decision(observation, legal_actions)
+        if (observation.gold_tile is not None
+                and observation.gold_tile in observation.hand):
+            return super().choose_decision(observation, legal_actions)
+
+        open_melds = len(observation.melds[observation.seat])
+        legal_by_tile = {action.tile: action for action in discards}
+        frontier = min_shanten_discards(
+            observation.hand,
+            gold_tile=observation.gold_tile,
+            open_melds=open_melds,
+            visible_tiles=self._public_tiles(observation),
+            allowed_discards=tuple(legal_by_tile),
+        )
+        if len(frontier) <= 1 or frontier[0].shanten != 0:
+            return super().choose_decision(observation, legal_actions)
+        if (observation.gold_tile is not None and any(
+                observation.gold_tile in item.effective_tile_types
+                for item in frontier)):
+            return super().choose_decision(observation, legal_actions)
+
+        public_tiles = self._public_tiles(observation)
+        own_melds = observation.melds[observation.seat]
+        own_flowers = observation.flowers[observation.seat]
+        values = {}
+        for item in frontier:
+            reduced = list(observation.hand)
+            reduced.remove(item.discard)
+            try:
+                value = evaluate_tenpai_ordinary_value(
+                    reduced,
+                    gold_tile=observation.gold_tile,
+                    melds=own_melds,
+                    flowers=own_flowers,
+                    current_dealer_base=(
+                        observation.match_context.current_dealer_base),
+                    visible_tiles=(*public_tiles, item.discard),
+                )
+            except (UnknownRuleError, RuntimeError, ValueError):
+                return super().choose_decision(observation, legal_actions)
+            if value.total_live_copies != item.total_live_copies:
+                return super().choose_decision(observation, legal_actions)
+            values[item.discard] = value
+
+        best_weight = max(
+            value.weighted_net_points for value in values.values())
+        winners = [
+            item for item in frontier
+            if values[item.discard].weighted_net_points == best_weight
+        ]
+        if len(winners) != 1:
+            return super().choose_decision(observation, legal_actions)
+
+        choice = winners[0]
+        value = values[choice.discard]
+        alternatives = ",".join(
+            f"{item.discard}:live={item.total_live_copies},"
+            f"points={values[item.discard].weighted_net_points}"
+            for item in frontier
+        )
+        return AgentDecision(
+            legal_by_tile[choice.discard],
+            f"DISCARD {choice.discard}: immediate_value_meld_v0.12 "
+            f"(minimum_shanten=0; weighted_points="
+            f"{value.weighted_net_points}, mean_if_win="
+            f"{value.mean_net_points_if_win:.2f}, "
+            f"live={value.total_live_copies}, "
+            f"base={value.current_dealer_base}; candidates=[{alternatives}]); "
+            f"confirmed ordinary one-draw value only, not full EV",
+        )
+
+
 class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
     """Experimental V0.7a: loss-index-first inside V0.6 offense ties.
 
