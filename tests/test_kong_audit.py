@@ -1,7 +1,8 @@
 import unittest
 
 from huian._legacy import env
-from workspace.ai import PlayerObservation, analyze_kong_actions
+from workspace.ai import (KongAwareMeldAgent, PlayerObservation,
+                           analyze_kong_actions)
 from workspace.simulator import KongAuditRecorder
 
 
@@ -15,6 +16,40 @@ def view(hand, *, phase="AFTER_DRAW", melds=((), ()), discards=((), ()), gold="P
 
 
 class KongAuditTests(unittest.TestCase):
+    def test_shadow_agent_takes_only_equal_unblocked_concealed_kong(self):
+        hand = [
+            "S4", "P4", "E", "P1", "S7", "G", "S5", "R", "S9",
+            "P1", "M5", "M6", "P2", "P3", "P1", "M3", "P1",
+        ]
+        observation = view(hand)
+        kong = env.Action(0, env.ActionType.AN_GANG, "P1", ("P1",) * 4)
+        legal = [kong] + [
+            env.Action(0, env.ActionType.DISCARD, tile=tile)
+            for tile in sorted(set(hand))
+        ]
+
+        decision = KongAwareMeldAgent().choose_decision(observation, legal)
+
+        self.assertEqual(decision.action, kong)
+        self.assertIn("kong_v0.13_shadow", decision.reason)
+
+    def test_shadow_agent_keeps_discard_when_kong_tail_hu_is_possible(self):
+        hand = [
+            "M1", "M1", "M1", "M1", "M2", "M3", "M4", "P1", "P2",
+            "P3", "S1", "S2", "S3", "E", "E", "R", "R",
+        ]
+        observation = view(hand)
+        kong = env.Action(0, env.ActionType.AN_GANG, "M1", ("M1",) * 4)
+        legal = [kong] + [
+            env.Action(0, env.ActionType.DISCARD, tile=tile)
+            for tile in sorted(set(hand))
+        ]
+
+        decision = KongAwareMeldAgent().choose_decision(observation, legal)
+
+        self.assertEqual(decision.action.type, env.ActionType.DISCARD)
+        self.assertNotIn("kong_v0.13_shadow", decision.reason)
+
     def test_concealed_kong_compares_tail_shape_with_best_discard(self):
         hand = [
             "M1", "M1", "M1", "M1", "M2", "M3", "M4", "P1", "P2",
