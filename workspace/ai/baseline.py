@@ -5,7 +5,8 @@ from typing import Any
 
 from huian._legacy import env
 from .danger import estimate_discard_danger
-from .opponent import estimate_tenpai_wait_risk_scores
+from .opponent import (estimate_tenpai_wait_loss_scores,
+                       estimate_tenpai_wait_risk_scores)
 from .shanten import best_discard, best_offense_ties, min_shanten_discards
 
 
@@ -538,6 +539,146 @@ class TenpaiRiskTieBreakAgent(ShantenAgent):
                 f"relative_risk={risk.risk_score:.3f}, "
                 f"templates={risk.templates_used}; candidates=[{alternatives}]); "
                 f"risk_score is relative tenpai-wait ranking, not a probability",
+            )
+
+        passes = [a for a in actions if a.type.value == "PASS"]
+        if passes:
+            return AgentDecision(
+                passes[0], "PASS: preserve the current hand over optional melds")
+        return AgentDecision(
+            actions[0], f"{actions[0].type.value}: take the required legal action")
+
+
+class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
+    """Experimental V0.7: confirmed score exposure only inside V0.6 ties.
+
+    Like V0.6, this policy may never trade away shanten, total live effective
+    copies or effective-tile type count. If all score inputs for every matching
+    synthetic ordinary-Ron template are CONFIRMED, it ranks tied discards by a
+    tenpai-conditioned loss index. That index is not an absolute EV because the
+    model is conditioned on the opponent already being in tenpai.
+
+    Missing match context, Jin in the tied candidates, template failure or any
+    unconfirmed/incomplete fan input falls back to V0.6 relative-risk ranking.
+    """
+
+    def _v06_risk_fallback(self, observation, ties, legal_by_tile, risk_seed,
+                           reason):
+        candidates = tuple(item.discard for item in ties)
+        try:
+            estimates = estimate_tenpai_wait_risk_scores(
+                observation, candidates, samples=self.template_samples,
+                seed=risk_seed)
+        except RuntimeError:
+            choice = ties[0]
+            return AgentDecision(
+                legal_by_tile[choice.discard],
+                f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                f"({reason}; V0.6 templates unavailable; preserve V0.3 tile-order choice)",
+            )
+        by_tile = {item.tile: item for item in estimates}
+        choice = min(
+            ties,
+            key=lambda item: (
+                by_tile[item.discard].risk_score,
+                self._tile_order(item.discard),
+            ),
+        )
+        risk = by_tile[choice.discard]
+        alternatives = ",".join(
+            f"{tile}:{by_tile[tile].risk_score:.3f}"
+            for tile in candidates)
+        return AgentDecision(
+            legal_by_tile[choice.discard],
+            f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+            f"({reason}; fallback=v0.6_relative_risk; "
+            f"relative_risk={risk.risk_score:.3f}, "
+            f"templates={risk.templates_used}; candidates=[{alternatives}]); "
+            f"risk_score is not a probability",
+        )
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
+        if wins:
+            return AgentDecision(
+                wins[0], f"{wins[0].type.value}: take the legal ordinary-shape win")
+
+        discards = [a for a in actions if a.type.value == "DISCARD"]
+        if discards:
+            open_melds = len(observation.melds[observation.seat])
+            legal_by_tile = {action.tile: action for action in discards}
+            ties = best_offense_ties(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=self._public_tiles(observation),
+                allowed_discards=tuple(legal_by_tile),
+            )
+            risk_seed = self._next_risk_seed()
+            if len(ties) == 1:
+                choice = ties[0]
+                return AgentDecision(
+                    legal_by_tile[choice.discard],
+                    f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                    f"(no exact offense tie; preserve V0.6/V0.3 choice)",
+                )
+
+            candidates = tuple(item.discard for item in ties)
+            if observation.gold_tile in candidates:
+                choice = ties[0]
+                return AgentDecision(
+                    legal_by_tile[choice.discard],
+                    f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                    f"(exact offense tie includes gold; preserve V0.3 tile-order "
+                    f"choice because special/gold EV is outside loss model)",
+                )
+
+            if observation.match_context is None:
+                return self._v06_risk_fallback(
+                    observation, ties, legal_by_tile, risk_seed,
+                    "match context unavailable")
+
+            try:
+                estimates = estimate_tenpai_wait_loss_scores(
+                    observation, candidates, samples=self.template_samples,
+                    seed=risk_seed)
+            except RuntimeError:
+                return self._v06_risk_fallback(
+                    observation, ties, legal_by_tile, risk_seed,
+                    "loss templates unavailable")
+
+            by_tile = {item.tile: item for item in estimates}
+            if any(not by_tile[tile].complete for tile in candidates):
+                return self._v06_risk_fallback(
+                    observation, ties, legal_by_tile, risk_seed,
+                    "ordinary score evidence incomplete")
+
+            choice = min(
+                ties,
+                key=lambda item: (
+                    by_tile[item.discard].loss_index,
+                    by_tile[item.discard].risk_score,
+                    self._tile_order(item.discard),
+                ),
+            )
+            loss = by_tile[choice.discard]
+            alternatives = ",".join(
+                f"{tile}:loss={by_tile[tile].loss_index:.3f}"
+                f"/risk={by_tile[tile].risk_score:.3f}"
+                for tile in candidates)
+            return AgentDecision(
+                legal_by_tile[choice.discard],
+                f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                f"(exact offense tie: shanten={choice.shanten}, "
+                f"live={choice.total_live_copies}, "
+                f"types={len(choice.effective_tiles)}; "
+                f"conditional_loss_index={loss.loss_index:.3f}, "
+                f"mean_loss_if_hit={loss.mean_loss_if_hit:.3f}, "
+                f"templates={loss.templates_used}; candidates=[{alternatives}]); "
+                f"loss_index is tenpai-conditioned relative score exposure, not absolute EV",
             )
 
         passes = [a for a in actions if a.type.value == "PASS"]
