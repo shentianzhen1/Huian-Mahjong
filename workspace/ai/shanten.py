@@ -289,6 +289,64 @@ def rank_discards(hand, gold_tile=None, open_melds=0, visible_tiles=()):
 
 
 
+def min_shanten_discards(hand, gold_tile=None, open_melds=0, visible_tiles=(),
+                         allowed_discards=None):
+    """Return all minimum-shanten discard candidates with live-tile metrics.
+
+    This preserves the two-stage performance strategy used by best_discard:
+    first discard candidates are filtered by ordinary shanten, then only the
+    minimum-shanten frontier expands effective tiles. Callers may apply an
+    additional risk/EV model without ever selecting a worse-shanten discard.
+    """
+    _, target = _validate_inputs(hand, gold_tile, open_melds)
+    if len(hand) != target:
+        raise ValueError("min_shanten_discards requires the post-draw hand size")
+
+    hand = list(hand)
+    if allowed_discards is None:
+        allowed = set(hand)
+    else:
+        allowed = set(allowed_discards)
+        if not allowed or any(tile not in hand for tile in allowed):
+            raise ValueError("allowed_discards must be non-empty tiles in hand")
+
+    reduced_by_discard = {}
+    min_value = None
+    for discard in sorted(allowed, key=core.tile_index):
+        reduced = hand[:]
+        reduced.remove(discard)
+        value = ordinary_shanten(reduced, gold_tile, open_melds)
+        reduced_by_discard[discard] = (reduced, value)
+        min_value = value if min_value is None else min(min_value, value)
+
+    visible_tiles = tuple(visible_tiles)
+    frontier = []
+    for discard, (reduced, value) in reduced_by_discard.items():
+        if value != min_value:
+            continue
+        analysis = analyze_effective_tiles(
+            reduced,
+            gold_tile=gold_tile,
+            open_melds=open_melds,
+            visible_tiles=(*visible_tiles, discard),
+        )
+        frontier.append(DiscardEfficiency(
+            discard=discard,
+            shanten=analysis.shanten,
+            effective_tiles=analysis.effective_tiles,
+            total_live_copies=analysis.total_live_copies,
+        ))
+
+    return tuple(sorted(
+        frontier,
+        key=lambda item: (
+            -item.total_live_copies,
+            -len(item.effective_tiles),
+            core.tile_index(item.discard),
+        ),
+    ))
+
+
 def best_discard(hand, gold_tile=None, open_melds=0, visible_tiles=(),
                  allowed_discards=None):
     """Return the best discard without fully expanding inferior-shanten options.
