@@ -72,7 +72,7 @@ class HuianShantenTests(unittest.TestCase):
         analysis = analyze_effective_tiles(hand, gold_tile=gold)
         self.assertEqual(analysis.shanten, 0)
         self.assertEqual(len(analysis.effective_tile_types), 34)
-        self.assertEqual(analysis.total_live_copies, 120)
+        self.assertEqual(analysis.total_live_copies, 119)
         self.assertTrue(all(item.winning for item in analysis.effective_tiles))
 
     def test_live_gold_is_effective_for_zero_shanten(self):
@@ -247,12 +247,14 @@ class HuianShantenTests(unittest.TestCase):
 
     def test_random_complete_structures_agree_with_legacy_exact_solver(self):
         rng = random.Random(20260919)
-        base_wall = [tile for tile in core.BASE_TILES for _ in range(4)]
         for gold_tile in (None, "P9", "E"):
+            base_wall = [
+                tile
+                for tile in core.BASE_TILES
+                for _ in range(3 if tile == gold_tile else 4)
+            ]
             for _ in range(120):
                 hand = rng.sample(base_wall, 17)
-                # sample() over duplicated values can still produce at most four
-                # copies because the source wall contains exactly four.
                 exact = bool(core.winning_decompositions(
                     hand, gold_tile=gold_tile, open_melds=0,
                     max_solutions=1,
@@ -265,14 +267,19 @@ class HuianShantenTests(unittest.TestCase):
 
     def test_random_tenpai_matches_existence_of_a_winning_next_draw(self):
         rng = random.Random(20260920)
-        base_wall = [tile for tile in core.BASE_TILES for _ in range(4)]
         for gold_tile in (None, "P9", "E"):
+            base_wall = [
+                tile
+                for tile in core.BASE_TILES
+                for _ in range(3 if tile == gold_tile else 4)
+            ]
             for _ in range(100):
                 hand = rng.sample(base_wall, 16)
                 counts = {tile: hand.count(tile) for tile in core.BASE_TILES}
                 exact_waits = []
                 for tile in core.BASE_TILES:
-                    if counts[tile] >= 4:
+                    capacity = 3 if tile == gold_tile else 4
+                    if counts[tile] >= capacity:
                         continue
                     if core.winning_decompositions(
                             [*hand, tile], gold_tile=gold_tile,
@@ -294,9 +301,13 @@ class HuianShantenTests(unittest.TestCase):
 
     def test_open_meld_tenpai_matches_exact_solver(self):
         rng = random.Random(20260921)
-        base_wall = [tile for tile in core.BASE_TILES for _ in range(4)]
         # One fixed exposed meld leaves 13 concealed tiles before the draw.
         for gold_tile in (None, "P9"):
+            base_wall = [
+                tile
+                for tile in core.BASE_TILES
+                for _ in range(3 if tile == gold_tile else 4)
+            ]
             for _ in range(80):
                 hand = rng.sample(base_wall, 13)
                 counts = {tile: hand.count(tile) for tile in core.BASE_TILES}
