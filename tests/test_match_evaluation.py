@@ -1,5 +1,6 @@
 import unittest
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from workspace.simulator import run_paired_real_matches
 
@@ -31,6 +32,26 @@ class FakeResult:
 
 
 class PairedMatchEvaluationTests(unittest.TestCase):
+    def test_default_real_runner_keeps_rng_seed_keys_with_agent_identity(self):
+        calls = []
+
+        def fake_real_runner(seed, *, agent_factories, max_steps,
+                             initial_dealer, agent_seed_keys):
+            calls.append((agent_factories, agent_seed_keys))
+            return FakeResult(scores=(1000, 1000))
+
+        with patch(
+                "workspace.simulator.match_evaluation.run_real_ordinary_match",
+                side_effect=fake_real_runner):
+            report = run_paired_real_matches(
+                [9], agent_factories=(factory_a, factory_b))
+
+        self.assertEqual(report.completed_pairs, 1)
+        self.assertEqual(calls[0][0], (factory_a, factory_b))
+        self.assertEqual(calls[0][1], (0, 1))
+        self.assertEqual(calls[1][0], (factory_b, factory_a))
+        self.assertEqual(calls[1][1], (1, 0))
+
     def test_agent_identity_follows_factory_across_swapped_seats(self):
         def runner(seed, *, agent_factories, **kwargs):
             original = agent_factories[0] is factory_a
