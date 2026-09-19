@@ -152,7 +152,11 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 - 异常读数只产生issues，不覆盖可信状态；
 - 永远 `safe_for_executor=false`。
 
-真实room541913八局稳定时点真值见 `references/vision/2026-09-19/room541913_public_state_seed.json`。下一步是在该约束层前接数字读取器，而不是让OCR结果直接进入AI。
+匿名证据场次 `match_evidence_001` 的八局稳定时点真值见 `references/vision/2026-09-19/match_evidence_001_public_state_seed.json`。
+
+`public_state_scores.py` 已接入第一版比分读取器。当前实现把OCR当作候选生成器而不是事实源：12×放大、70/80/90三阈值digits-only读取后，只接受双方和为2000的组合；若一侧完全没有候选，则只有另一侧恰好一个候选时才允许用2000守恒反推。现有8局64组时点中，单阈值裸OCR为125/128=97.66%，加入物理约束后比分对64/64正确。后者是当前同批录像系统级结果，不是OCR本身100%，也不是外部泛化率。
+
+当前OCR后端是可替换的 `TesseractCLIBackend`。运行该后端需要系统中存在 `tesseract` 可执行文件；状态融合层不依赖Tesseract，后续可替换为ONNX/专用数字模型。下一步优先接剩余牌数和第几局/8，而不是让任何单帧OCR直接进入AI。
 
 ### Executor 门槛
 
