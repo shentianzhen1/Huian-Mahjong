@@ -138,7 +138,7 @@ presence-aware 固定窗口复核：
 - 永远 `safe_for_executor=false`
 
 真实8局在约10秒稳定时点已建立 PublicState 真值夹具：
-`references/vision/2026-09-19/room541913_public_state_seed.json`
+`references/vision/2026-09-19/match_evidence_001_public_state_seed.json`
 
 其中包括每局：
 - 双方当前分数
