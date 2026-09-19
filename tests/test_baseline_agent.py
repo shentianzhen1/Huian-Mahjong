@@ -4,8 +4,8 @@ from dataclasses import FrozenInstanceError
 
 from huian._legacy import env
 from workspace.ai import (BaselineAgent, DangerAwareShantenAgent,
-                          EfficiencyAgent, MatchObservationContext,
-                          PlayerObservation, ShantenAgent,
+                          EfficiencyAgent, MatchAwareShantenAgent,
+                          MatchObservationContext, PlayerObservation, ShantenAgent,
                           estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
 
@@ -194,6 +194,45 @@ class BaselineAgentTests(unittest.TestCase):
         decision = DangerAwareShantenAgent().choose_decision(
             view, discards(["M1"]) + [hu])
         self.assertIs(decision.action, hu)
+
+    def test_match_aware_v05_risk_gate_uses_only_late_lead(self):
+        agent = MatchAwareShantenAgent(late_lead_weight=0.25, late_hands=3)
+        base = dict(
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=3)
+
+        early = MatchObservationContext(
+            scores=(1100, 900), hand_index=4, hands_remaining=4, **base)
+        late_lead = MatchObservationContext(
+            scores=(1100, 900), hand_index=5, hands_remaining=3, **base)
+        late_tied = MatchObservationContext(
+            scores=(1000, 1000), hand_index=5, hands_remaining=3, **base)
+        late_behind = MatchObservationContext(
+            scores=(900, 1100), hand_index=5, hands_remaining=3, **base)
+
+        hand = ("M1",)
+        for context, expected in (
+                (early, 0.0),
+                (late_lead, 0.25),
+                (late_tied, 0.0),
+                (late_behind, 0.0)):
+            view = PlayerObservation(
+                0, hand, "P9", "AFTER_DRAW", 0, 40,
+                ((), ()), ((), ()), ((), ()), context)
+            self.assertEqual(agent._danger_weight_for(view), expected)
+        no_context = observation(["M1"])
+        self.assertEqual(agent._danger_weight_for(no_context), 0.0)
+
+        seat1_lead = MatchObservationContext(
+            scores=(900, 1100), hand_index=5, hands_remaining=3, **base)
+        seat1_view = PlayerObservation(
+            1, hand, "P9", "AFTER_DRAW", 0, 40,
+            ((), ()), ((), ()), ((), ()), seat1_lead)
+        self.assertEqual(agent._danger_weight_for(seat1_view), 0.25)
+
+    def test_match_aware_v05_validates_late_window(self):
+        for value in (0, 9, True):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                MatchAwareShantenAgent(late_hands=value)
 
     def test_match_context_is_public_immutable_and_seat_relative(self):
         context = MatchObservationContext(
