@@ -26,8 +26,8 @@ Confirmed target scope:
 - every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong is a separate response path, with an added-kong-only implementation contract and unresolved actual-room response evidence/scoring
 - completed Ming/An/Added Kong draws reuse the normal draw pipeline and record their source as `wall_tail`
 - each flower has a confirmed base value of 1 fan
-- player confirmation: “坐庄底分5分，连庄+5”; repeat increment +5 is confirmed. Keep the starting-base wording and observed dealer badge/base values as separately sourced facts until their field mapping is reconciled; a cap remains UNKNOWN
-- Youjin/Double-You/Triple-You multipliers are 4/8/16; winner fan, including one fan per flower, is added to current dealer base before the Hu multiplier. An extra Youjin-chain dealer-winner ×2 remains player feedback awaiting a direct dealer-Youjin settlement; this is not a universal ordinary-Hu factor. Recorded Triple-You: `(35 + gold 1 + flowers 2) × 16 = 608`
+- room541913 complete-match evidence reconciles “坐庄底分5分，连庄+5”: non-dealer own display base is 5, a newly sitting dealer's current settlement base is 10, each repeat adds +5, and a dealer change resets the new dealer to 10. Upper cap remains UNKNOWN
+- Youjin/Double-You/Triple-You multipliers are 4/8/16; winner fan, including one fan per flower, is added to current dealer base before the Hu multiplier. No extra Youjin-chain dealer-winner ×2 applies in the target room: room541913 hand5 dealer Youjin settles `(15+4)×4=76`, and the earlier dealer Triple-You settles `(35+3)×16=608`. Recorded Triple-You: `(35 + gold 1 + flowers 2) × 16 = 608`
 - direct 66fe863f replay adds a P1 Peng→added-kong sequence and Chi→discard S1→opponent turn→M7→Youjin example. Its non-dealer winner has fan5 (gold1/flower1/triplet1/kong2), own-base display40, and current-dealer-base net100: `(20+5)×4`; it does not establish rob-kong windows or the full Youjin state machine
 - no extra fan families for Menqing, Pengpenghu, Qingyise, Hunyise, or similar complex combinations
 - when a discard has multiple legal Chi sequences, Rules exposes every sequence and the player/AI selects one exact option
@@ -41,7 +41,7 @@ Current Rules API boundary:
 - discard-Hu analysis requires the winning tile, so an opponent-discarded gold cannot be silently accepted
 - `SanjindaoDecision` exposes eligibility, confirmed multiplier 3, and `DECLARE_SANJINDAO` / `CONTINUE_PLAY`; phase timing and full settlement stay outside the pure eligibility service
 - `YoujinStage.SANJIN_YOU` is an alias of `YoujinStage.TRIPLE_YOU`; it must not create a second state, while Sanjindao remains independent
-- `YoujinScoreTerms` accepts the externally audited current dealer base and winner fan, then applies confirmed Youjin factors and the existing player-feedback dealer factor, which still needs direct verification; it does not decide payer or automatically aggregate unresolved fan categories
+- `YoujinScoreTerms` accepts the externally audited current dealer base and winner fan, then applies confirmed Youjin factors with dealer multiplier fixed at 1 by direct dealer-Youjin and dealer-Triple-You settlements; it does not decide payer or automatically aggregate unresolved fan categories
 - `DrawSource` emits `wall_head` / `wall_tail`; old `head` / `tail` replay values are accepted only as migration aliases and new events are canonical
 
 Confirmed Chi interaction boundary:
