@@ -257,6 +257,26 @@ class NormalSimulationTests(unittest.TestCase):
         self.assertEqual(result.stop_reason, "fixture repeated position")
         self.assertIsNone(result.terminal_reason)
 
+    def test_decision_observer_gets_truth_copy_without_mutating_game(self):
+        state = boundary_state()
+        seen = []
+
+        def observer(truth, observation, legal_actions):
+            seen.append((truth.state_hash(), observation.seat, len(legal_actions)))
+            truth.hands[observation.seat].clear()
+            legal_actions.clear()
+
+        result = Simulator().run_normal_hand(
+            initial_state=state, max_steps=1, decision_observer=observer)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.terminal_reason, "WALL_16")
+        self.assertTrue(seen)
+        self.assertEqual(len(state.hands[0]), len(scenario("NEED_DRAW").hands[0]))
+
+        with self.assertRaises(TypeError):
+            Simulator().run_normal_hand(
+                initial_state=boundary_state(), decision_observer=object())
+
     def test_illegal_agent_and_bad_inputs_are_errors(self):
         class BadAgent:
             def choose_action(self, state, legal_actions):
