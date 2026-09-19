@@ -16,4 +16,14 @@ __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "m
            "MatchRunResult", "MatchRunner", "run_eight_hand_match",
            "run_real_ordinary_match", "MatchAttemptSummary",
            "PairedMatchEvaluation", "run_paired_real_matches",
-           "summarize_match_rule_gaps"]
+           "summarize_match_rule_gaps", "CalibratingShantenAgent",
+           "DealInCalibrationBin", "DealInCalibrationRecorder",
+           "DealInCalibrationReport", "DealInCalibrationSample",
+           "run_ordinary_deal_in_calibration",
+           "summarize_deal_in_calibration"]
+
+from .opponent_calibration import (CalibratingShantenAgent, DealInCalibrationBin,
+                                   DealInCalibrationRecorder, DealInCalibrationReport,
+                                   DealInCalibrationSample,
+                                   run_ordinary_deal_in_calibration,
+                                   summarize_deal_in_calibration)
