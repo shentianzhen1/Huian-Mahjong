@@ -20,10 +20,20 @@ __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "m
            "DealInCalibrationBin", "DealInCalibrationRecorder",
            "DealInCalibrationReport", "DealInCalibrationSample",
            "run_ordinary_deal_in_calibration",
-           "summarize_deal_in_calibration"]
+           "summarize_deal_in_calibration",
+           "CalibratingTenpaiRiskShantenAgent", "TenpaiRiskBin",
+           "TenpaiRiskCalibrationRecorder", "TenpaiRiskCalibrationReport",
+           "TenpaiRiskCalibrationSample", "run_tenpai_risk_calibration",
+           "summarize_tenpai_risk_calibration"]
 
-from .opponent_calibration import (CalibratingShantenAgent, DealInCalibrationBin,
-                                   DealInCalibrationRecorder, DealInCalibrationReport,
-                                   DealInCalibrationSample,
+from .opponent_calibration import (CalibratingShantenAgent,
+                                   CalibratingTenpaiRiskShantenAgent,
+                                   DealInCalibrationBin, DealInCalibrationRecorder,
+                                   DealInCalibrationReport, DealInCalibrationSample,
+                                   TenpaiRiskBin, TenpaiRiskCalibrationRecorder,
+                                   TenpaiRiskCalibrationReport,
+                                   TenpaiRiskCalibrationSample,
                                    run_ordinary_deal_in_calibration,
-                                   summarize_deal_in_calibration)
+                                   run_tenpai_risk_calibration,
+                                   summarize_deal_in_calibration,
+                                   summarize_tenpai_risk_calibration)
