@@ -46,7 +46,7 @@ class MatchScoreTests(unittest.TestCase):
     def test_match_progress_updates_scores_dealer_and_next_base(self):
         match = MatchProgressState.initial(dealer=0)
         self.assertEqual(match.scores, (1000, 1000))
-        self.assertEqual(match.current_dealer_base, 20)
+        self.assertEqual(match.current_dealer_base, 10)
         self.assertEqual(match.hand_index, 0)
 
         # Dealer wins: keep dealer and increase next-hand base by 5.
@@ -54,13 +54,13 @@ class MatchScoreTests(unittest.TestCase):
         self.assertEqual(match.scores, (1011, 989))
         self.assertEqual(match.dealer, 0)
         self.assertEqual(match.consecutive_dealer_hands, 2)
-        self.assertEqual(match.current_dealer_base, 10)
+        self.assertEqual(match.current_dealer_base, 15)
 
         # Draw: same dealer keeps again and base increases again.
         match = match.apply_settled_hand((0, 0), winner=None)
         self.assertEqual(match.dealer, 0)
         self.assertEqual(match.consecutive_dealer_hands, 3)
-        self.assertEqual(match.current_dealer_base, 15)
+        self.assertEqual(match.current_dealer_base, 20)
 
         # Dealer loses: opponent becomes dealer and settlement base resets to 10.
         match = match.apply_settled_hand((-16, 16), winner=1)
