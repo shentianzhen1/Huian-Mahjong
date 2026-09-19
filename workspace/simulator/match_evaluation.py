@@ -6,6 +6,7 @@ eight-hand matches complete, so incomplete/UNKNOWN pairs are never imputed.
 """
 from collections import Counter
 from dataclasses import asdict, dataclass
+from math import sqrt
 
 from .match_runner import run_real_ordinary_match
 
@@ -36,6 +37,12 @@ class PairedMatchEvaluation:
     ties: int
     average_final_score_by_agent: dict[str, float | None]
     average_score_delta_a_minus_b: float | None
+    paired_score_delta_mean: float | None
+    paired_score_delta_sd: float | None
+    paired_score_delta_se: float | None
+    paired_score_delta_ci95_low: float | None
+    paired_score_delta_ci95_high: float | None
+    paired_deal_in_delta_mean: float | None
     deal_ins_by_agent: dict[str, int]
     average_deal_ins_per_match_by_agent: dict[str, float | None]
     win_source_counts: dict[str, int]
@@ -45,6 +52,13 @@ class PairedMatchEvaluation:
     def to_dict(self):
         return asdict(self)
 
+
+def _sample_sd(values):
+    values = tuple(values)
+    if len(values) < 2:
+        return None
+    mean = sum(values) / len(values)
+    return sqrt(sum((value - mean) ** 2 for value in values) / (len(values) - 1))
 
 def _factory_name(factory):
     name = getattr(factory, "__name__", None)
@@ -132,6 +146,8 @@ def run_paired_real_matches(
     deal_in_sums = [0, 0]
     source_counts = Counter()
     completed_pairs = 0
+    pair_score_deltas = []
+    pair_deal_in_deltas = []
 
     for pair_index in sorted(pair_attempts):
         pair = pair_attempts[pair_index]
@@ -141,12 +157,18 @@ def run_paired_real_matches(
         if not (first.status == "COMPLETED" and swapped.status == "COMPLETED"):
             continue
         completed_pairs += 1
+        local_score_deltas = []
+        local_deal_in_deltas = []
         for attempt in (first, swapped):
             a_score, b_score = attempt.agent_scores
             score_sums[0] += a_score
             score_sums[1] += b_score
             deal_in_sums[0] += attempt.deal_ins_by_agent[0]
             deal_in_sums[1] += attempt.deal_ins_by_agent[1]
+            local_score_deltas.append(a_score - b_score)
+            local_deal_in_deltas.append(
+                attempt.deal_ins_by_agent[0] - attempt.deal_ins_by_agent[1]
+            )
             source_counts.update(dict(attempt.win_source_counts))
             if a_score > b_score:
                 wins["A"] += 1
@@ -154,6 +176,8 @@ def run_paired_real_matches(
                 wins["B"] += 1
             else:
                 ties += 1
+        pair_score_deltas.append(sum(local_score_deltas) / 2)
+        pair_deal_in_deltas.append(sum(local_deal_in_deltas) / 2)
 
     samples = 2 * completed_pairs
     avg_scores = {
@@ -168,6 +192,27 @@ def run_paired_real_matches(
         (score_sums[0] - score_sums[1]) / samples
         if samples else None
     )
+    pair_delta_mean = (
+        sum(pair_score_deltas) / len(pair_score_deltas)
+        if pair_score_deltas else None
+    )
+    pair_delta_sd = _sample_sd(pair_score_deltas)
+    pair_delta_se = (
+        pair_delta_sd / sqrt(len(pair_score_deltas))
+        if pair_delta_sd is not None and pair_score_deltas else None
+    )
+    ci95_low = (
+        pair_delta_mean - 1.96 * pair_delta_se
+        if pair_delta_mean is not None and pair_delta_se is not None else None
+    )
+    ci95_high = (
+        pair_delta_mean + 1.96 * pair_delta_se
+        if pair_delta_mean is not None and pair_delta_se is not None else None
+    )
+    pair_deal_in_delta_mean = (
+        sum(pair_deal_in_deltas) / len(pair_deal_in_deltas)
+        if pair_deal_in_deltas else None
+    )
     return PairedMatchEvaluation(
         agent_names=names,
         total_pairs=len(seeds),
@@ -179,6 +224,12 @@ def run_paired_real_matches(
         ties=ties,
         average_final_score_by_agent=avg_scores,
         average_score_delta_a_minus_b=delta,
+        paired_score_delta_mean=pair_delta_mean,
+        paired_score_delta_sd=pair_delta_sd,
+        paired_score_delta_se=pair_delta_se,
+        paired_score_delta_ci95_low=ci95_low,
+        paired_score_delta_ci95_high=ci95_high,
+        paired_deal_in_delta_mean=pair_deal_in_delta_mean,
         deal_ins_by_agent={"A": deal_in_sums[0], "B": deal_in_sums[1]},
         average_deal_ins_per_match_by_agent=avg_deal_ins,
         win_source_counts=dict(sorted(source_counts.items())),
