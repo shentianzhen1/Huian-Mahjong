@@ -76,6 +76,17 @@ print(report.unknown_reasons)
 
 旧37:3、+228.25属于历史代码快照，不能再作为当前晋级门槛。
 
+### 当前晋级基线：TenpaiRisk V0.6
+
+项目当前正式策略入口为 `workspace.ai.CurrentAgent`，等价于 `TenpaiRiskTieBreakAgent V0.6`；`ShantenAgent V0.3`保留为对照基线。
+
+V0.6晋级使用300个互不重叠seed pair、每个seed原座位+换座两场，共600场完整8局。A/B随机seed已改为跟Agent身份走，避免换座时改变随机策略内部采样流。合并结果：V0.6 322胜、V0.3 275胜、3平；平均配对最终分差+18.9633，约95% CI +2.3881～+35.5385；点炮319 vs 350。
+
+后续策略晋级应以 `CurrentAgent` 为主对照，并继续保留V0.3消融结果。证据见 `references/ai/2026-09-19/v06_promotion.md`。
+
+保存型单局评估现可使用 `--agent-a current` 或 `--agent-a shanten_v03` 显式选择当前策略或旧基线。
+
+
 ## 普通点炮概率离线校准
 
 `estimate_ordinary_deal_in_probabilities()` 只从玩家可见信息构造实体未见牌池并抽样可能的对手暗手。它不读取真实对手暗牌或未来牌墙，当前只估计普通点炮胡，不包含游金、三金倒、抢金等特殊状态。
@@ -173,7 +184,7 @@ python -B -m workspace.simulator.replay data/evaluations/run_001 --hand-index 1 
 
 ## 当前基线（2026-09-19）
 
-ordinary-real规则链路基线仍保持：10个match seed×交换座位共20场，20/20场完整8局、160/160局全部真实结算、平均8局/场、普通规则UNKNOWN=0。AI当前正式比较基线另见上方“标准8局 AI A/B”：ShantenAgent V0.3 对 BaselineAgent 为38:2，平均分差+301.5，点炮12:43。
+ordinary-real规则链路基线仍保持：10个match seed×交换座位共20场，20/20场完整8局、160/160局全部真实结算、平均8局/场、普通规则UNKNOWN=0。AI当前正式晋级基线为上方的 CurrentAgent / TenpaiRisk V0.6；V0.3对Baseline的38:2结果继续保留为基础牌效能力记录。
 
 历史 simulation-only 100seed×换座曾在旧“杠费未知”版本得到195/200完成、5个 `KONG_FEE_SETTLEMENT_UNKNOWN`；该规则ID已退役，不能再视为当前基线。simulation-only结果仍只用于策略回归，不能解释为真实房胜率或真实8局最终得分。
 
