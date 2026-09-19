@@ -1,4 +1,5 @@
 name: TenpaiLoss V07 Pilot
+# retry after synthetic-template scoring fallback
 
 on:
   push:
