@@ -15,6 +15,7 @@ from .dataset_status import dataset_readiness
 from .evaluate_tiles import evaluate_template_dataset, summarize_predictions
 from .infer_tiles import infer_screenshot
 from .labels import append_label
+from .mine_stability_sequences import mine_presence_sequences
 from .postprocess import (MultiFrameVoter, ObservationConstraints,
                           TilePrediction, evaluate_temporal_stability,
                           validate_observation)
@@ -381,6 +382,71 @@ class TilesV01Tests(unittest.TestCase):
                 set(report["next_data_priority"]["empty_regions"]),
                 {"hand_region", "draw_region", "gold_region"},
             )
+
+    def test_presence_sequence_miner_splits_on_empty_draw_slot(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            template_path = root / "images" / "rois" / "template.png"
+            template_path.parent.mkdir(parents=True)
+
+            template = Image.new("RGB", (20, 40), "white")
+            template_draw = ImageDraw.Draw(template)
+            template_draw.rectangle((7, 4, 12, 35), fill="black")
+            template.save(template_path)
+            append_label(
+                root, image="images/rois/template.png",
+                bbox=[0, 0, 20, 40], tile_id="M1",
+                region="draw_region", source_session="template",
+            )
+
+            profile = ROIProfile(
+                source_size=(80, 60),
+                regions={
+                    "hand_region": (0, 0, 25, 50),
+                    "draw_region": (25, 0, 25, 50),
+                    "gold_region": (50, 0, 25, 50),
+                },
+                slots={
+                    "hand_region": [(0, 0, 25, 50)],
+                    "draw_region": [(0, 0, 25, 50)],
+                    "gold_region": [(0, 0, 25, 50)],
+                },
+                calibrated=True,
+                region_modes={"gold_region": "marker"},
+            )
+            profile_path = root / "meta" / "roi_profiles" / "test.json"
+            profile.save(profile_path)
+
+            video = Path(temp) / "sequence.avi"
+            writer = cv2.VideoWriter(
+                str(video), cv2.VideoWriter_fourcc(*"MJPG"),
+                5.0, (80, 60),
+            )
+            for occupied in (True, True, True, False, True, True, True):
+                frame = np.zeros((60, 80, 3), dtype=np.uint8)
+                frame[:] = (45, 45, 0)
+                if occupied:
+                    cv2.rectangle(frame, (28, 4), (47, 43),
+                                  (255, 255, 255), -1)
+                    cv2.rectangle(frame, (35, 8), (40, 38),
+                                  (0, 0, 0), -1)
+                writer.write(frame)
+            writer.release()
+
+            report = mine_presence_sequences(
+                video, root, profile_path,
+                region="draw_region", interval_seconds=0.2,
+                minimum_frames=3, minimum_similarity=0.80,
+                minimum_agreement=0.80,
+            )
+            self.assertEqual(report["sequence_count"], 2)
+            self.assertEqual(report["stable_sequence_count"], 2)
+            self.assertEqual(report["stable_sequence_fraction"], 1.0)
+            self.assertTrue(all(
+                sequence["stability"]["stable_fraction"] == 1.0
+                for sequence in report["sequences"]
+            ))
+            self.assertFalse(report["safe_for_executor"])
 
     def test_multiframe_voting_prefers_repeat_observation(self) -> None:
         voter = MultiFrameVoter()
