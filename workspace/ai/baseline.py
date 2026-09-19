@@ -550,7 +550,7 @@ class TenpaiRiskTieBreakAgent(ShantenAgent):
 
 
 class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
-    """Experimental V0.7: confirmed score exposure only inside V0.6 ties.
+    """Experimental V0.7a: loss-index-first inside V0.6 offense ties.
 
     Like V0.6, this policy may never trade away shanten, total live effective
     copies or effective-tile type count. If all score inputs for every matching
@@ -561,6 +561,16 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
     Missing match context, Jin in the tied candidates, template failure or any
     unconfirmed/incomplete fan input falls back to V0.6 relative-risk ranking.
     """
+
+    def _policy_label(self):
+        return "{self._policy_label()}a"
+
+    def _loss_sort_key(self, item, estimate):
+        return (
+            estimate.loss_index,
+            estimate.risk_score,
+            self._tile_order(item.discard),
+        )
 
     def _v06_risk_fallback(self, observation, ties, legal_by_tile, risk_seed,
                            reason):
@@ -573,7 +583,7 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
             choice = ties[0]
             return AgentDecision(
                 legal_by_tile[choice.discard],
-                f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                f"DISCARD {choice.discard}: {self._policy_label()} "
                 f"({reason}; V0.6 templates unavailable; preserve V0.3 tile-order choice)",
             )
         by_tile = {item.tile: item for item in estimates}
@@ -590,7 +600,7 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
             for tile in candidates)
         return AgentDecision(
             legal_by_tile[choice.discard],
-            f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+            f"DISCARD {choice.discard}: {self._policy_label()} "
             f"({reason}; fallback=v0.6_relative_risk; "
             f"relative_risk={risk.risk_score:.3f}, "
             f"templates={risk.templates_used}; candidates=[{alternatives}]); "
@@ -622,7 +632,7 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
                 choice = ties[0]
                 return AgentDecision(
                     legal_by_tile[choice.discard],
-                    f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                    f"DISCARD {choice.discard}: {self._policy_label()} "
                     f"(no exact offense tie; preserve V0.6/V0.3 choice)",
                 )
 
@@ -631,7 +641,7 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
                 choice = ties[0]
                 return AgentDecision(
                     legal_by_tile[choice.discard],
-                    f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                    f"DISCARD {choice.discard}: {self._policy_label()} "
                     f"(exact offense tie includes gold; preserve V0.3 tile-order "
                     f"choice because special/gold EV is outside loss model)",
                 )
@@ -658,11 +668,8 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
 
             choice = min(
                 ties,
-                key=lambda item: (
-                    by_tile[item.discard].loss_index,
-                    by_tile[item.discard].risk_score,
-                    self._tile_order(item.discard),
-                ),
+                key=lambda item: self._loss_sort_key(
+                    item, by_tile[item.discard]),
             )
             loss = by_tile[choice.discard]
             alternatives = ",".join(
@@ -671,7 +678,7 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
                 for tile in candidates)
             return AgentDecision(
                 legal_by_tile[choice.discard],
-                f"DISCARD {choice.discard}: tenpai_loss_tiebreak_v0.7 "
+                f"DISCARD {choice.discard}: {self._policy_label()} "
                 f"(exact offense tie: shanten={choice.shanten}, "
                 f"live={choice.total_live_copies}, "
                 f"types={len(choice.effective_tiles)}; "
@@ -687,3 +694,23 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
                 passes[0], "PASS: preserve the current hand over optional melds")
         return AgentDecision(
             actions[0], f"{actions[0].type.value}: take the required legal action")
+
+
+class TenpaiRiskLossTieBreakAgent(TenpaiLossTieBreakAgent):
+    """Experimental V0.7b: V0.6 risk first, loss severity second.
+
+    This is a strict refinement of the promoted V0.6 tie-break: shanten/live
+    offense remains unchanged, and among exact offense ties a lower relative
+    tenpai-wait risk always wins. Confirmed conditional loss is consulted only
+    when the V0.6 risk score itself is tied.
+    """
+
+    def _policy_label(self):
+        return "tenpai_risk_loss_tiebreak_v0.7b"
+
+    def _loss_sort_key(self, item, estimate):
+        return (
+            estimate.risk_score,
+            estimate.loss_index,
+            self._tile_order(item.discard),
+        )
