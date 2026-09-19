@@ -11,6 +11,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .extract_frames import extract_key_frames
+from .dataset_status import dataset_readiness
 from .evaluate_tiles import evaluate_template_dataset, summarize_predictions
 from .infer_tiles import infer_screenshot
 from .labels import append_label
@@ -192,6 +193,52 @@ class TilesV01Tests(unittest.TestCase):
         self.assertEqual(report["accepted_labels"], 1)
         self.assertEqual(report["accepted_accuracy"], 1.0)
         self.assertEqual(report["accepted_fraction_of_scorable"], 0.5)
+
+    def test_dataset_readiness_prioritizes_cross_frame_replication(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+            for name in ("a", "b", "c"):
+                Image.new("RGB", (20, 40), "white").save(
+                    image_dir / f"{name}.png")
+
+            append_label(
+                root, image="images/rois/a.png", bbox=[0, 0, 20, 40],
+                tile_id="M1", region="hand_region", source_frame="a")
+            append_label(
+                root, image="images/rois/b.png", bbox=[0, 0, 20, 40],
+                tile_id="M1", region="draw_region", source_frame="b")
+            append_label(
+                root, image="images/rois/c.png", bbox=[0, 0, 20, 40],
+                tile_id="P1", region="gold_region", source_frame="c")
+
+            report = dataset_readiness(root)
+            self.assertEqual(report["approved_labels"], 3)
+            self.assertEqual(report["source_groups"], 3)
+            self.assertEqual(report["replicated_classes"], ["M1"])
+            self.assertEqual(report["single_group_classes"], ["P1"])
+            self.assertEqual(report["scorable_labels_for_group_holdout"], 2)
+            self.assertTrue(report["can_run_leakage_safe_accuracy"])
+            self.assertTrue(report["all_three_regions_labelled"])
+            self.assertFalse(report["all_observed_classes_replicated"])
+            self.assertIn(
+                "P1",
+                report["next_data_priority"]["replicate_across_source_groups"],
+            )
+            self.assertFalse(report["safe_for_executor"])
+
+    def test_empty_dataset_is_explicitly_not_accuracy_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            report = dataset_readiness(Path(temp))
+            self.assertEqual(report["approved_labels"], 0)
+            self.assertEqual(report["scorable_fraction"], 0.0)
+            self.assertFalse(report["can_run_leakage_safe_accuracy"])
+            self.assertFalse(report["all_three_regions_labelled"])
+            self.assertEqual(
+                set(report["next_data_priority"]["empty_regions"]),
+                {"hand_region", "draw_region", "gold_region"},
+            )
 
     def test_multiframe_voting_prefers_repeat_observation(self) -> None:
         voter = MultiFrameVoter()
