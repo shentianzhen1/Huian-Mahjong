@@ -5,7 +5,8 @@ from typing import Any
 
 from huian._legacy import env
 from .danger import estimate_discard_danger
-from .shanten import best_discard, min_shanten_discards
+from .opponent import estimate_tenpai_wait_risk_scores
+from .shanten import best_discard, best_offense_ties, min_shanten_discards
 
 
 @dataclass(frozen=True)
@@ -430,3 +431,98 @@ class MatchAwareShantenAgent(DangerAwareShantenAgent):
 
     def _policy_label(self):
         return "match_aware_shanten_v0.5"
+
+
+class TenpaiRiskTieBreakAgent(ShantenAgent):
+    """Experimental V0.6: risk only breaks exact V0.3 offense ties.
+
+    The policy may never trade away shanten, total live effective copies or
+    effective-tile type count. Tenpai-conditioned risk replaces only V0.3's
+    final canonical tile-order tie break. risk_score is explicitly not an
+    absolute deal-in probability.
+    """
+
+    def __init__(self, seed=None, template_samples=32):
+        if seed is not None and (type(seed) is not int):
+            raise ValueError("seed must be an integer or None")
+        if type(template_samples) is not int or template_samples <= 0:
+            raise ValueError("template_samples must be a positive integer")
+        self.seed = 0 if seed is None else seed
+        self.template_samples = template_samples
+        self._discard_index = 0
+
+    @staticmethod
+    def _tile_order(tile):
+        return env.BASE_TILES.index(tile)
+
+    def _next_risk_seed(self):
+        value = self.seed * 1_000_003 + self._discard_index
+        self._discard_index += 1
+        return value
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
+        if wins:
+            return AgentDecision(
+                wins[0], f"{wins[0].type.value}: take the legal ordinary-shape win")
+
+        discards = [a for a in actions if a.type.value == "DISCARD"]
+        if discards:
+            open_melds = len(observation.melds[observation.seat])
+            legal_by_tile = {action.tile: action for action in discards}
+            ties = best_offense_ties(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=self._public_tiles(observation),
+                allowed_discards=tuple(legal_by_tile),
+            )
+            risk_seed = self._next_risk_seed()
+            if len(ties) == 1:
+                choice = ties[0]
+                action = legal_by_tile[choice.discard]
+                return AgentDecision(
+                    action,
+                    f"DISCARD {choice.discard}: tenpai_risk_tiebreak_v0.6 "
+                    f"(no exact offense tie; shanten={choice.shanten}, "
+                    f"live={choice.total_live_copies}, "
+                    f"types={len(choice.effective_tiles)}); preserve V0.3 choice",
+                )
+
+            candidates = tuple(item.discard for item in ties)
+            estimates = estimate_tenpai_wait_risk_scores(
+                observation, candidates, samples=self.template_samples,
+                seed=risk_seed)
+            by_tile = {item.tile: item for item in estimates}
+            choice = min(
+                ties,
+                key=lambda item: (
+                    by_tile[item.discard].risk_score,
+                    self._tile_order(item.discard),
+                ),
+            )
+            risk = by_tile[choice.discard]
+            action = legal_by_tile[choice.discard]
+            alternatives = ",".join(
+                f"{tile}:{by_tile[tile].risk_score:.3f}"
+                for tile in candidates)
+            return AgentDecision(
+                action,
+                f"DISCARD {choice.discard}: tenpai_risk_tiebreak_v0.6 "
+                f"(exact offense tie: shanten={choice.shanten}, "
+                f"live={choice.total_live_copies}, "
+                f"types={len(choice.effective_tiles)}; "
+                f"relative_risk={risk.risk_score:.3f}, "
+                f"templates={risk.templates_used}; candidates=[{alternatives}]); "
+                f"risk_score is relative tenpai-wait ranking, not a probability",
+            )
+
+        passes = [a for a in actions if a.type.value == "PASS"]
+        if passes:
+            return AgentDecision(
+                passes[0], "PASS: preserve the current hand over optional melds")
+        return AgentDecision(
+            actions[0], f"{actions[0].type.value}: take the required legal action")
