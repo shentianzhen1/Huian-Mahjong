@@ -22,13 +22,19 @@ vision = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = [
+    ".",
+    "legacy_code/core_v0.1.1",
+    "legacy_code/environment_v0.1",
+]
 include = [
     "huian*",
     "mahjong_framework*",
     "workspace.ai*",
     "workspace.simulator*",
     "workspace.vision*",
+    "qzcore*",
+    "qzenv*",
 ]
 exclude = [
     "tests*",
