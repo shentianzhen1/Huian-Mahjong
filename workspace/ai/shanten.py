@@ -49,6 +49,35 @@ class DiscardEfficiency:
         return tuple(item.tile for item in self.effective_tiles)
 
 
+@dataclass(frozen=True)
+class TwoPlyOffense:
+    """Deterministic next-draw / next-discard ordinary offense quality.
+
+    All weighted fields use physical remaining base-tile copies as weights.
+    This is an ordinary-hand lookahead signal, not score EV and not a special
+    win model.
+    """
+
+    discard: str
+    draw_copies: int
+    terminal_win_copies: int
+    weighted_post_shanten: int
+    weighted_post_live_copies: int
+    weighted_post_effective_types: int
+
+    @property
+    def expected_post_shanten(self):
+        return self.weighted_post_shanten / self.draw_copies
+
+    @property
+    def expected_post_live_copies(self):
+        return self.weighted_post_live_copies / self.draw_copies
+
+    @property
+    def expected_post_effective_types(self):
+        return self.weighted_post_effective_types / self.draw_copies
+
+
 def _validate_inputs(hand, gold_tile, open_melds):
     if isinstance(open_melds, bool) or not isinstance(open_melds, int):
         raise ValueError("open_melds must be an integer")
@@ -368,6 +397,91 @@ def best_offense_ties(hand, gold_tile=None, open_melds=0, visible_tiles=(),
         and item.total_live_copies == best.total_live_copies
         and len(item.effective_tiles) == len(best.effective_tiles)
     )
+
+
+def analyze_two_ply_offense(
+        hand, candidate_discards, gold_tile=None, open_melds=0,
+        visible_tiles=()):
+    """Evaluate exact-offense-tie discards one ordinary draw further.
+
+    For every physically possible next base-tile draw, terminal ordinary Hu is
+    recorded directly. Otherwise the existing V0.3 policy chooses the best next
+    discard, and the resulting shanten/live-copy/type metrics are accumulated.
+
+    The caller should only compare candidates already tied on V0.3's current
+    shanten/live-copy/type metrics. This function deliberately does not model
+    opponent claims, special wins or settlement EV.
+    """
+    _, target = _validate_inputs(hand, gold_tile, open_melds)
+    if len(hand) != target:
+        raise ValueError("two-ply offense requires the post-draw hand size")
+    hand = list(hand)
+    candidates = tuple(dict.fromkeys(candidate_discards))
+    if not candidates or any(tile not in hand for tile in candidates):
+        raise ValueError("candidate_discards must be non-empty tiles in hand")
+
+    visible_tiles = tuple(visible_tiles)
+    results = []
+    expected_draw_copies = None
+    for discard in candidates:
+        reduced = hand[:]
+        reduced.remove(discard)
+        visible_after_discard = (*visible_tiles, discard)
+        public = _public_counter(visible_after_discard)
+        own = Counter(reduced)
+        if any(own[tile] + public[tile] > 4 for tile in core.BASE_TILES):
+            raise ValueError("own concealed plus public visible copies exceed four")
+
+        draw_copies = 0
+        terminal_win_copies = 0
+        weighted_post_shanten = 0
+        weighted_post_live = 0
+        weighted_post_types = 0
+
+        for tile in core.BASE_TILES:
+            remaining = 4 - own[tile] - public[tile]
+            if remaining <= 0:
+                continue
+            draw_copies += remaining
+            drawn = (*reduced, tile)
+            drawn_shanten = ordinary_shanten(
+                drawn, gold_tile=gold_tile, open_melds=open_melds)
+            if drawn_shanten == -1:
+                terminal_win_copies += remaining
+                post_shanten = -1
+                post_live = 0
+                post_types = 0
+            else:
+                next_choice = best_discard(
+                    drawn,
+                    gold_tile=gold_tile,
+                    open_melds=open_melds,
+                    visible_tiles=visible_after_discard,
+                )
+                post_shanten = next_choice.shanten
+                post_live = next_choice.total_live_copies
+                post_types = len(next_choice.effective_tiles)
+
+            weighted_post_shanten += remaining * post_shanten
+            weighted_post_live += remaining * post_live
+            weighted_post_types += remaining * post_types
+
+        if draw_copies <= 0:
+            raise ValueError("public state leaves no possible next base-tile draw")
+        if expected_draw_copies is None:
+            expected_draw_copies = draw_copies
+        elif draw_copies != expected_draw_copies:
+            raise ValueError("candidate discards must preserve the same unseen draw count")
+
+        results.append(TwoPlyOffense(
+            discard=discard,
+            draw_copies=draw_copies,
+            terminal_win_copies=terminal_win_copies,
+            weighted_post_shanten=weighted_post_shanten,
+            weighted_post_live_copies=weighted_post_live,
+            weighted_post_effective_types=weighted_post_types,
+        ))
+    return tuple(results)
 
 
 def best_discard(hand, gold_tile=None, open_melds=0, visible_tiles=(),
