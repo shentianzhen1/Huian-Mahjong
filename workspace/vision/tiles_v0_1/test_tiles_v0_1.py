@@ -25,6 +25,9 @@ from .public_state import (
     HuianPublicStateProfile, PublicStateCandidate, PublicStateObservation,
     fuse_public_state,
 )
+from .public_state_scores import (
+    decode_score_candidates, prepare_score_crop, read_score_pair,
+)
 from .crop_rois import crop_regions
 from .roi import ROIProfile
 from .template_classifier import (
@@ -605,6 +608,85 @@ class TilesV01Tests(unittest.TestCase):
                 for sequence in report["sequences"]
             ))
             self.assertFalse(report["safe_for_executor"])
+
+    def test_score_preprocessing_upscales_to_binary_image(self) -> None:
+        source = Image.new("RGB", (20, 10), (0, 35, 35))
+        draw = ImageDraw.Draw(source)
+        draw.rectangle((6, 2, 12, 7), fill=(210, 210, 90))
+        binary = prepare_score_crop(
+            source, threshold=80, scale=4, border=3
+        )
+        self.assertEqual(binary.ndim, 2)
+        self.assertEqual(
+            set(np.unique(binary).tolist()).issubset({0, 255}), True
+        )
+        self.assertGreater(binary.shape[0], source.height)
+        self.assertGreater(binary.shape[1], source.width)
+
+    def test_score_candidate_decoder_prefers_2000_point_pair(self) -> None:
+        self.assertEqual(
+            decode_score_candidates(
+                (1072, 1077), (928, 923)
+            ),
+            (1072, 928, "direct"),
+        )
+        self.assertEqual(
+            decode_score_candidates((1105,), ()),
+            (1105, 895, "inferred_bottom"),
+        )
+        self.assertEqual(
+            decode_score_candidates((), (923,)),
+            (1077, 923, "inferred_top"),
+        )
+        self.assertEqual(
+            decode_score_candidates((1077, 1072), (925,)),
+            (None, None, "invalid"),
+        )
+
+    def test_score_reader_uses_multi_threshold_candidates_before_total_guard(self) -> None:
+        class FakeOCR:
+            def __init__(self, outputs):
+                self.outputs = iter(outputs)
+
+            def __call__(self, _binary):
+                return next(self.outputs)
+
+        # Three top attempts, followed by three bottom attempts.
+        backend = FakeOCR([
+            "1072", "1077", "1077",
+            "928", "923", "923",
+        ])
+        frame = Image.new("RGB", (1000, 500), "black")
+        read = read_score_pair(
+            frame,
+            backend=backend,
+            thresholds=(70, 80, 90),
+            source_frame="synthetic",
+        )
+        self.assertEqual(read.score_pair, (1077, 923))
+        self.assertEqual(read.mode, "direct")
+        self.assertEqual(read.confidence, 1.0)
+        self.assertFalse(read.safe_for_executor)
+        self.assertEqual(read.to_candidate().score_pair, (1077, 923))
+
+    def test_score_reader_only_infers_missing_side_from_unique_candidate(self) -> None:
+        class FakeOCR:
+            def __init__(self, outputs):
+                self.outputs = iter(outputs)
+
+            def __call__(self, _binary):
+                return next(self.outputs)
+
+        backend = FakeOCR([
+            "1105", "1105", "1105",
+            "", "", "",
+        ])
+        frame = Image.new("RGB", (1000, 500), "black")
+        read = read_score_pair(frame, backend=backend)
+        self.assertEqual(read.score_pair, (1105, 895))
+        self.assertEqual(read.mode, "inferred_bottom")
+        self.assertEqual(read.confidence, 0.75)
+        self.assertFalse(read.safe_for_executor)
 
     def test_public_state_rois_scale_across_recording_sizes(self) -> None:
         profile = HuianPublicStateProfile()
