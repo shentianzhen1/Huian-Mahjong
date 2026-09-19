@@ -2,7 +2,7 @@
 
 以真实对局证据驱动的惠安双人麻将工程。Rules、Environment、Simulator、AI、Vision 与 Executor 分层；UNKNOWN 规则不会被硬编码。
 
-仓库私有：`git clone` 需要已登录且有访问权限的 GitHub 账号。旧名 `Maj` 仍会重定向到现仓库。
+仓库当前为公开仓库，可直接 `git clone`。旧名 `Maj` 仍会重定向到现仓库。
 
 ## 5 分钟上手
 
@@ -24,13 +24,13 @@ python -B -m unittest discover -s tests -v
 - Settlement / Match：普通平胡×1、自摸×2使用真实番数和当前庄底结算；8局从1000/1000开始累积零和分数，room541913完整8局fixture可逐局回放到1113/887。
 - 庄底：新庄当前结算底10；同一庄家连庄每局+5且不上封顶直到第8局；庄输换庄后新庄重置10。
 - Simulator：固定牌墙/seed、交换座位、UNKNOWN证据包、8局真实普通规则MatchRunner，以及统一的整场A/B评估（最终分、分差、点炮、自摸/点炮来源、UNKNOWN）。
-- AI：Baseline/Random保留；当前正式前沿仍为 **ShantenAgent V0.3**。现代码标准20 seed×换座40场8局A/B中对Baseline为38胜2负、平均终分1150.75 vs 849.25、平均分差+301.5；点炮12 vs 43。V0.4/V0.5风险启发式均已A/B淘汰。
+- AI：Baseline/Random与 `ShantenAgent V0.3` 都保留；当前正式前沿为 **`CurrentAgent` = TenpaiRiskTieBreakAgent V0.6**。V0.6 只在V0.3向听/有效牌总张数/有效牌种类数完全相同时用听牌条件相对风险打破最终牌序平局。300个独立seed pair / 600场8局晋级评估中，V0.6为322胜、V0.3为275胜、3平，平均配对分差+18.9633，95%区间约+2.3881～+35.5385；点炮319 vs 350。
 - Recorder / Vision：Recorder V0.2按局录像；Vision已有固定ROI抽帧、人工标签、模板推理、多帧投票和合法状态约束原型。
 
 ## 当前还不能做什么
 
 - 抢金的精确资格/真实结算、三金倒真实终局、游金链完整状态机、抢杠胡完整结算、杠胡倍率、八花游真实倍率仍未全部闭环；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
-- AI已经接通公开8局比赛上下文（当前比分、剩余局数、庄位、庄底、连庄次数）和点炮统计，但还没有通过验证的EV策略。均匀未见牌蒙特卡洛“点炮概率”已校准失败（AUC≈0.499，实际点炮样本平均预测0%），不得使用；当前正在验证明确标记为“非概率”的听牌条件相对风险模型。下一阶段见 Issue #6。
+- AI已经接通公开8局比赛上下文（当前比分、剩余局数、庄位、庄底、连庄次数）和点炮统计。听牌条件相对风险模型已经通过保守tie-break方式进入V0.6，但它仍不是绝对放铳概率；更广泛的“风险×预计损失 + 进攻EV + 比分/庄底”策略尚未完成。下一阶段见 Issue #6。
 - Vision 尚未建立真实牌面准确率基线；ROI/数据集/稳定性门槛见 Issue #7。
 - Executor 未接入。Vision达到量化准确率、置信度和多帧稳定性门槛之前，不启用自动点击。
 - 开金实体牌墙记账及少数低频规则（天胡/天听/8局平分）仍保留为P2证据任务。
@@ -42,7 +42,7 @@ python -B -m unittest discover -s tests -v
 | Rules | 合法性、胡牌结构、番项、结算 | 普通规则基本闭环；特殊规则仍有P0缺口 |
 | Environment | GameState 与确定性状态转移 | M2可用；特殊窗口逐步补齐 |
 | Simulator | 单局/8局、固定牌墙、评估 | ordinary-real 8局可完整运行；特殊结算安全停止 |
-| AI | 选择动作、EV与风险 | ShantenAgent V0.3为当前前沿；8局上下文已接通，危险度模型正在校准，尚未形成可晋级EV策略 |
+| AI | 选择动作、EV与风险 | CurrentAgent / TenpaiRisk V0.6为当前前沿；V0.3保留为对照，下一步进入真实EV与比赛上下文权衡 |
 | Vision | 画面转GameState | 离线原型；待真实准确率基线 |
 | Executor | UI执行 | 未接入，等待Vision门槛 |
 
