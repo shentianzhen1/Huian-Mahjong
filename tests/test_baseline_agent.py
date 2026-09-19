@@ -5,7 +5,8 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from huian._legacy import env
-from workspace.ai import (BaselineAgent, DangerAwareShantenAgent,
+from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
+                          CurrentAgent, BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, PlayerObservation, ShantenAgent,
                           TenpaiRiskTieBreakAgent, best_offense_ties,
@@ -23,6 +24,12 @@ def discards(hand):
 
 
 class BaselineAgentTests(unittest.TestCase):
+    def test_current_agent_points_to_promoted_v0_6(self):
+        self.assertIs(CurrentAgent, TenpaiRiskTieBreakAgent)
+        self.assertEqual(CURRENT_AGENT_VERSION, "v0.6")
+        self.assertEqual(CURRENT_AGENT_NAME, "TenpaiRiskTieBreakAgent")
+        self.assertEqual(CurrentAgent(seed=7).template_samples, 32)
+
     def test_hu_first_with_reason_and_unchanged_action(self):
         actions = discards(["M1"]) + [env.Action(0, env.ActionType.HU, metadata={"source": "self_draw"})]
         original = deepcopy(actions)
