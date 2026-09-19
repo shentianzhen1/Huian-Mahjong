@@ -74,9 +74,11 @@ Runs full games and batches. Must support deterministic fixed walls/seeds and pa
 Roadmap:
 Baseline heuristics -> Monte Carlo EV -> opponent/danger model -> optional RL/NN later.
 
-Current AI frontier is `ShantenAgent V0.3`: Huian 16/17-tile ordinary shanten + live effective-tile counts, using only own hand and public information. In the fixed 20-seed × seat-swap benchmark (40 complete 8-hand matches), ShantenAgent beat BaselineAgent 37-3 with 0 ties; average final score was 1114.125 vs 885.875 (average delta +228.25). EfficiencyAgent V0.2 is retained only as a rejected experiment.
+Current AI frontier remains `ShantenAgent V0.3`: Huian 16/17-tile ordinary shanten + live effective-tile counts, using only own hand and public information. Under the current standardized `run_paired_real_matches()` benchmark (20 seeds × seat swap = 40 complete 8-hand matches), V0.3 beats BaselineAgent 38-2 with 0 ties; average final score is 1150.75 vs 849.25 (average delta +301.5), and deal-ins are 12 vs 43 (0.300 vs 1.075 per match). The older 37-3 / +228.25 result is a historical code snapshot only.
 
-Next AI work should add expected-score evaluation, public-information danger/opponent modeling, and 8-hand match context (current score, dealer streak/base, hands remaining) on top of ShantenAgent V0.3. Special-result EV must remain separated where settlement is still unresolved. It should not optimize toward Menqing, Pengpenghu, Qingyise, Hunyise or other excluded complex fan patterns.
+`PlayerObservation.match_context` now carries only public eight-hand context: scores, hand index/hands remaining, dealer, current dealer base and consecutive dealer hands. Match evaluation also records discard/self-draw sources and deal-in counts. V0.4 (static unseen-copy risk) and V0.5 (late-lead-only risk) both failed to outperform V0.3 and must not become defaults.
+
+A public-information Monte Carlo ordinary deal-in estimator now exists as research infrastructure. It samples plausible opponent concealed base-tile hands from the physically unseen pool and evaluates ordinary discard-Hu under the target gold restrictions without reading the actual opponent hand or wall order. It excludes Youjin/Sanjindao/Qiangjin and other special states and is not yet a decision policy. Next AI work is to calibrate this probability and runtime, then combine validated immediate-loss probability with expected score, dealer base and match context. Special-result EV must remain separated where settlement is still unresolved.
 
 Decision output should distinguish:
 - Win Probability
