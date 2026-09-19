@@ -53,8 +53,7 @@ This match resolves it operationally:
 - consecutive dealer hands add **+5**: 10 → 15 → 20 → 25 in this match;
 - when the dealer loses, the opponent becomes dealer and resets to **10**, not 5.
 
-Therefore simulator settlement must use 10 for the first sitting dealer. The upper cap beyond
-the observed range is still not proved by this match. Older target evidence reaches dealer base 35.
+Therefore simulator settlement must use 10 for the first sitting dealer. This replay by itself does not reach the end of a maximum dealer streak; older target evidence reaches dealer base 35. Player confirmation on 2026-09-19 later resolves that boundary: while the same dealer keeps the seat, there is no cap and each continuation adds +5 until the fixed 8-hand match ends; if the dealer loses, the new dealer resets to 10.
 
 ### Youjin ×4 with two gold tiles
 
@@ -83,6 +82,6 @@ Hands 7/8 also display 3-fan kong components, but hand 6 is the clearest action-
 
 No Qiangjin, Sanjindao declaration, Double-You final settlement, Triple-You final settlement,
 Eight-Flower-You declaration, Rob-Kong Hu, or Gang-Hu occurs in these eight hands.
-Dealer-base upper cap is also not established.
+This replay alone does not establish the dealer-base cap, but the later 2026-09-19 player confirmation does: no cap during a continuous dealer streak, +5 per keep until hand 8; dealer change resets to 10.
 
 Structured regression data: `tests/fixtures/settlement_room541913_8hands.json`.
