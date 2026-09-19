@@ -73,8 +73,11 @@ def run_paired_real_matches(
     """Run original+swapped eight-hand matches and summarize complete pairs.
 
     Identity A is agent_factories[0] and identity B is agent_factories[1].
-    A/B follow the factory across seats. Score/deal-in comparison excludes an
-    entire seed pair unless both seat orders complete.
+    A/B follow the factory across seats. For the real ordinary runner, each
+    agent identity also keeps the same per-hand RNG seed across seat swaps;
+    swapping seats must not silently change a stochastic policy's sample stream.
+    Score/deal-in comparison excludes an entire seed pair unless both seat
+    orders complete.
     """
     seeds = tuple(seeds)
     if not seeds or any(type(seed) is not int for seed in seeds):
@@ -105,9 +108,16 @@ def run_paired_real_matches(
         pair_attempts[pair_index] = {}
         for swapped in (False, True):
             seat_factories = factories if not swapped else factories[::-1]
-            result = match_runner(
-                seed=seed, agent_factories=seat_factories,
-                max_steps=max_steps, initial_dealer=initial_dealer)
+            if match_runner is run_real_ordinary_match:
+                seed_keys = (0, 1) if not swapped else (1, 0)
+                result = match_runner(
+                    seed=seed, agent_factories=seat_factories,
+                    max_steps=max_steps, initial_dealer=initial_dealer,
+                    agent_seed_keys=seed_keys)
+            else:
+                result = match_runner(
+                    seed=seed, agent_factories=seat_factories,
+                    max_steps=max_steps, initial_dealer=initial_dealer)
             status = result.status
             if status not in ("COMPLETED", "STOPPED_UNKNOWN"):
                 raise ValueError(f"Unsupported match status: {status}")
