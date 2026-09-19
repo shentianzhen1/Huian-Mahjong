@@ -25,7 +25,13 @@ def one_unknown_m1_observation(gold_tile=None, *, with_match_context=False):
 
     river = []
     for tile in env.BASE_TILES:
-        target = 3 if tile == "M1" else 4
+        if tile == "M1":
+            # Leave exactly one *playable* M1 unseen. When M1 is gold, its
+            # fourth physical copy is already the non-drawable opened indicator,
+            # so only three playable copies exist and only two may be known here.
+            target = 2 if gold_tile == "M1" else 3
+        else:
+            target = 4
         river.extend([tile] * (target - known[tile]))
 
     match_context = (
@@ -64,8 +70,9 @@ class OpponentModelTests(unittest.TestCase):
             view, ("M1", "P1"), samples=8, seed=2)
         by_tile = {item.tile: item for item in estimates}
         self.assertEqual(by_tile["M1"].probability, 0.0)
-        # Sampled opponent holds the only unseen M1 gold. P1 could be used
-        # structurally with that wildcard, but target-room single-gold Ron is blocked.
+        # Sampled opponent holds the only unseen playable M1 gold; the fourth
+        # physical M1 is the opened indicator and is not drawable. P1 could be
+        # used structurally with that wildcard, but single-gold Ron is blocked.
         self.assertEqual(by_tile["P1"].probability, 0.0)
 
     def test_estimate_is_deterministic_for_seed_and_uses_common_sample_count(self):
