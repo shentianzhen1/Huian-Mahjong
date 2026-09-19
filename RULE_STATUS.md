@@ -1,8 +1,8 @@
 # Huian Two-Player Rules Status
 
-## 2026-09-19 room541913 complete eight-hand replay
+## 2026-09-19 match_evidence_001 complete eight-hand replay
 
-A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/room541913_full_8hand/README.md`.
+A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/match_evidence_001_full_8hand/README.md`.
 
 Direct conclusions:
 
@@ -190,7 +190,7 @@ For observed Pinghu and Zimo cases, the formula
 multiple direct recordings, including the dealer Zimo +68/-68 above with no extra dealer factor. The direct non-dealer Youjin +100 and the ingested dealer Triple-You +608 are separate special examples that use the same formula; 抢金、三金倒 and complete special-outcome flows remain unresolved. Independent kong fees are explicitly confirmed absent.
 ## Dealer base — complete-match mapping
 
-The 2026-09-19 room541913 complete 8-hand replay resolves the earlier field-mapping ambiguity.
+The 2026-09-19 match_evidence_001 complete 8-hand replay resolves the earlier field-mapping ambiguity.
 
 Confirmed target-room mapping:
 - non-dealer own displayed base: **5**
@@ -224,7 +224,7 @@ External Quanzhou-family sources and prior rules are broadly consistent with:
 - honor exposed kong: 3
 - normal concealed kong: 3
 - honor concealed kong: 4
-Direct b3892b34 evidence supports gold 1 and the natural S999/WWW concealed-triplet examples at 1/2 fan. The direct 66fe863f sequence confirms a suited added-kong at 2 fan. Room541913 hand 6 directly confirms a suited concealed kong at 3 fan. Honor-kong cells and suited big-Ming-kong remain HIGH_CONFIDENCE from the in-game rule page unless stronger target-room evidence appears. Independent kong fees are confirmed absent.
+Direct b3892b34 evidence supports gold 1 and the natural S999/WWW concealed-triplet examples at 1/2 fan. The direct 66fe863f sequence confirms a suited added-kong at 2 fan. Match evidence 001 hand 6 directly confirms a suited concealed kong at 3 fan. Honor-kong cells and suited big-Ming-kong remain HIGH_CONFIDENCE from the in-game rule page unless stronger target-room evidence appears. Independent kong fees are confirmed absent.
 
 ## Youjin chain
 Confirmed from 66fe863f and 7bc12fa (target room):
@@ -232,7 +232,7 @@ Confirmed from 66fe863f and 7bc12fa (target room):
 - Entry does not require discarding gold. After tenpai, discarding a waste tile can enter Youjin (7bc12fa: 一条 or 二条 while gold remains 一筒; 66fe863f: discard S1, retain gold M1).
 - Chi then Youjin is allowed.
 - Upgrades are sequential in the ingested clip: Youjin → Double-You → Triple-You. Double-You / Triple-You are not “further gold actions”; gold stayed in hand while waste tiles were discarded and 八万 was drawn.
-- Multipliers: Youjin ×4 is direct-settlement CONFIRMED; Double-You ×8 remains HIGH_CONFIDENCE pending a hand that ends at that stage; Triple-You ×16 is direct-settlement CONFIRMED. Dealer Youjin hand 5 in room541913 and the earlier dealer Triple-You +608 both prove there is no extra dealer ×2.
+- Multipliers: Youjin ×4 is direct-settlement CONFIRMED; Double-You ×8 remains HIGH_CONFIDENCE pending a hand that ends at that stage; Triple-You ×16 is direct-settlement CONFIRMED. Dealer Youjin hand 5 in match_evidence_001 and the earlier dealer Triple-You +608 both prove there is no extra dealer ×2.
 - The Youjin-side player may PASS opponent discards while climbing the chain.
 
 Still UNKNOWN programmatically:
@@ -241,7 +241,7 @@ Still UNKNOWN programmatically:
 - which actions cancel the state in every case
 - opponent Hu sources during Youjin / Double-You / Triple-You beyond the 2026-09-14 oral permissions (this clip does not show the opponent winning)
 
-The 66fe863f replay remains one Youjin ×4 path after Chi. Room541913 adds a second Youjin ×4 settlement and, crucially, a dealer Youjin with two gold tiles settling +76 without extra dealer ×2. 7bc12fa adds the climb to Triple-You ×16 and dealer-winner settlement +608.
+The 66fe863f replay remains one Youjin ×4 path after Chi. Match evidence 001 adds a second Youjin ×4 settlement and, crucially, a dealer Youjin with two gold tiles settling +76 without extra dealer ×2. 7bc12fa adds the climb to Triple-You ×16 and dealer-winner settlement +608.
 
 ## Multipliers
 Real Huian screenshot confirms:
@@ -255,7 +255,7 @@ These historical external alternatives must not override the now-confirmed targe
 
 The user-supplied 惠安 tab lists Youjin/Double/Triple as **4/8/16**, not 4/8/12.
 The 2026-09-15 player confirmation now applies 4/8/16 to the target two-player
-room. Flower fan is included before the Hu multiplier in the +608 recording and ordinary direct recordings. Extra Youjin-chain dealer ×2 is now directly rejected for the target room: room541913 hand 5 is dealer Youjin and settles +76 as `(15+4)×4`, while the earlier dealer Triple-You settles +608 as `(35+3)×16`. The page's outer ×3 must not be applied to the verified two-player calculation.
+room. Flower fan is included before the Hu multiplier in the +608 recording and ordinary direct recordings. Extra Youjin-chain dealer ×2 is now directly rejected for the target room: match_evidence_001 hand 5 is dealer Youjin and settles +76 as `(15+4)×4`, while the earlier dealer Triple-You settles +608 as `(35+3)×16`. The page's outer ×3 must not be applied to the verified two-player calculation.
 
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options and settlement/dealer result. Current-player ownership and PASS-does-not-handoff are resolved; do not re-open them as UNKNOWN.
