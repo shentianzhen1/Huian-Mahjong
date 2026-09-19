@@ -43,6 +43,16 @@ class MatchObservationContext:
                 or self.consecutive_dealer_hands < 1):
             raise ValueError("consecutive_dealer_hands must be >= 1")
 
+    @property
+    def margin(self):
+        """Seat-0 score minus seat-1 score."""
+        return self.scores[0] - self.scores[1]
+
+    def margin_for(self, seat):
+        if type(seat) is not int or seat not in (0, 1):
+            raise ValueError("seat must be 0 or 1")
+        return self.margin if seat == 0 else -self.margin
+
 @dataclass(frozen=True)
 class PlayerObservation:
     seat: int
