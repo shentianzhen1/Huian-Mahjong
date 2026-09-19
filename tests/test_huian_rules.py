@@ -138,7 +138,7 @@ class HuianRulesTests(unittest.TestCase):
                 "source": "wall_head", "drawn_tile": "E", "kong_kind": "MING_GANG"
             })
 
-    def test_sanjindao_is_one_shot_on_opening_or_receiving_third_gold(self):
+    def test_sanjindao_opening_third_gold_and_later_draw_checks(self):
         hand = ["P9", "P9", "P9", "M1"]
         self.assertFalse(self.rules.sanjindao_decision(hand, "P9").eligible)
 
@@ -157,10 +157,18 @@ class HuianRulesTests(unittest.TestCase):
         received = self.rules.sanjindao_decision(
             hand, "P9", third_gold_just_received=True)
         self.assertTrue(received.eligible)
+
+        later = self.rules.sanjindao_decision(
+            hand, "P9", later_draw_check=True)
+        self.assertTrue(later.eligible)
+        self.assertEqual(later.multiplier, 3)
+
         self.assertFalse(self.rules.sanjindao_decision(
             ["P9"] * 2, "P9", third_gold_just_received=True).eligible)
         self.assertFalse(self.rules.sanjindao_decision(
             ["P9"] * 4, "P9", third_gold_just_received=True).eligible)
+        self.assertFalse(self.rules.sanjindao_decision(
+            ["P9"] * 4, "P9", later_draw_check=True).eligible)
 
     def test_three_or_four_gold_keep_ordinary_hu_rights_after_sanjindao_pass(self):
         three_gold = HAND[:-3] + ["P9", "P9", "P9"]
