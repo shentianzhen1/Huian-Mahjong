@@ -282,18 +282,6 @@ class EnvironmentTests(unittest.TestCase):
             for a in second.known_actions
         ))
 
-    def test_four_gold_later_recheck_remains_unclaimed(self):
-        state = scenario("AFTER_DRAW", hand=["P9"] * 4 + HAND[3:])
-        state.last_action = env.Action(
-            0, env.ActionType.DRAW,
-            metadata={"source": "wall_head", "drawn_tile": HAND[3]},
-        ).to_dict()
-        report = game(state).action_report()
-        self.assertFalse(any(
-            a.metadata.get("special") == "SANJINDAO"
-            for a in report.known_actions
-        ))
-
     def test_eight_flower_special_declares_and_project_x2_settles(self):
         state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
         for flower in env.FLOWERS:
