@@ -1,13 +1,18 @@
 """Sitting dealer base and consecutive-dealer increment.
 
-Player confirmation 2026-09-15/18: sitting base 5, each keep +5.
-Match confirmation 2026-09-18: 2 players, 8 hands, each starts at 1000 points;
-settled hand transfers are accumulated into the final match scores.
-No cap inside the 8-hand match. Dealer-win extra ×2 is not used.
+Player wording 2026-09-15/18: "sitting dealer base +5, each keep +5".
+Direct full-match replay room 541913 (2026-09-19) resolves the screen/settlement
+mapping: non-dealer own base is 5, while the first sitting dealer's CURRENT
+SETTLEMENT BASE is 10; every consecutive dealer hand adds another 5.
+The observed chain is 10 -> 15 -> 20 -> 25, and a dealer change resets the new
+dealer's settlement base to 10. The upper cap beyond observed evidence remains
+unverified. Dealer-win extra ×2 is not used.
 """
 from numbers import Integral
 
-SITTING_DEALER_BASE = 5
+NON_DEALER_BASE = 5
+DEALER_ENTRY_INCREMENT = 5
+SITTING_DEALER_BASE = NON_DEALER_BASE + DEALER_ENTRY_INCREMENT  # 10
 REPEAT_DEALER_INCREMENT = 5
 MATCH_HAND_COUNT = 8
 MATCH_STARTING_SCORE = 1000
@@ -24,7 +29,9 @@ def dealer_base_for_consecutive_hands(consecutive_dealer_hands):
     """Base for the hand about to be played.
 
     ``consecutive_dealer_hands`` is 1 on first sit, 2 after one keep, ...
-    Eighth consecutive hand in one match is 5 + 5*7 = 40. No cap.
+    Direct room541913 evidence gives 10, 15, 20, 25 for consecutive counts
+    1..4. The function continues +5 arithmetically beyond the observed range;
+    that extension is an engineering continuation, not evidence of an upper cap.
     """
     _nonneg(consecutive_dealer_hands, "consecutive_dealer_hands")
     if consecutive_dealer_hands < 1:
@@ -33,7 +40,11 @@ def dealer_base_for_consecutive_hands(consecutive_dealer_hands):
 
 
 def next_consecutive_dealer_hands(consecutive_dealer_hands, *, dealer_stays):
-    """Dealer stays on win or draw; loser of a dealer loss sits at 1."""
+    """Dealer stays on win or draw; after a dealer loss the opponent sits at 1.
+
+    A new dealer at count 1 settles with current dealer base 10 in the target
+    room; the other player's own displayed base remains 5.
+    """
     _nonneg(consecutive_dealer_hands, "consecutive_dealer_hands")
     if dealer_stays:
         return consecutive_dealer_hands + 1
