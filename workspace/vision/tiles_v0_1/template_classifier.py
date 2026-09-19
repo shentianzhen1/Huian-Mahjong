@@ -10,8 +10,38 @@ from .labels import approved_labels
 from .postprocess import TilePrediction
 
 
+def _normalize_tile_face(image, brightness_threshold=100):
+    """Crop the dominant bright tile face before template comparison.
+
+    Recorder ROIs can include dark green table/UI margins, especially in
+    draw_region. Matching those margins directly makes otherwise identical tile
+    faces look different across regions and window geometries. This keeps the
+    largest bright connected component when it plausibly occupies the tile crop,
+    and otherwise falls back to the original image.
+    """
+    rgb = np.asarray(image.convert("RGB"))
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    mask = (gray > brightness_threshold).astype(np.uint8) * 255
+    mask = cv2.morphologyEx(
+        mask, cv2.MORPH_CLOSE, np.ones((3, 3), dtype=np.uint8)
+    )
+    count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    if count <= 1:
+        return image.convert("RGB")
+
+    index = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+    x, y, width, height, area = (
+        int(value) for value in stats[index]
+    )
+    minimum_area = 0.25 * rgb.shape[0] * rgb.shape[1]
+    if area < minimum_area or width < 8 or height < 12:
+        return image.convert("RGB")
+    return Image.fromarray(rgb[y:y + height, x:x + width])
+
+
 def _feature(image):
-    rgb = np.asarray(image.convert("RGB").resize((48, 72)))
+    normalized = _normalize_tile_face(image)
+    rgb = np.asarray(normalized.convert("RGB").resize((48, 72)))
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
     return cv2.equalizeHist(gray)
 
