@@ -20,7 +20,9 @@ from .postprocess import (MultiFrameVoter, ObservationConstraints,
                           validate_observation)
 from .crop_rois import crop_regions
 from .roi import ROIProfile
-from .template_classifier import TemplateTileClassifier, _normalize_tile_face
+from .template_classifier import (
+    TemplateTileClassifier, _normalize_tile_face, _tile_face_box
+)
 
 
 class TilesV01Tests(unittest.TestCase):
@@ -50,6 +52,62 @@ class TilesV01Tests(unittest.TestCase):
         self.assertLess(normalized.height, framed.height)
         self.assertGreaterEqual(normalized.width, 20)
         self.assertGreaterEqual(normalized.height, 36)
+
+
+    def test_tile_face_presence_rejects_empty_dark_slot(self) -> None:
+        empty = Image.new("RGB", (44, 68), (0, 45, 45))
+        self.assertIsNone(_tile_face_box(empty))
+
+        occupied = Image.new("RGB", (44, 68), (0, 45, 45))
+        draw = ImageDraw.Draw(occupied)
+        draw.rectangle((5, 3, 38, 65), fill="white")
+        draw.rectangle((18, 12, 24, 52), fill="black")
+        self.assertIsNotNone(_tile_face_box(occupied))
+
+    def test_classifier_skips_empty_slot_instead_of_inventing_tile(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+
+            template = Image.new("RGB", (20, 40), "white")
+            template_draw = ImageDraw.Draw(template)
+            template_draw.rectangle((7, 4, 12, 35), fill="black")
+            template.save(image_dir / "template.png")
+            append_label(
+                root, image="images/rois/template.png",
+                bbox=[0, 0, 20, 40], tile_id="M1",
+                region="hand_region", source_session="template_session",
+            )
+            classifier = TemplateTileClassifier.from_dataset(root)
+
+            frame = Image.new("RGB", (80, 60), (0, 45, 45))
+            frame_draw = ImageDraw.Draw(frame)
+            frame_draw.rectangle((3, 7, 22, 46), fill="white")
+            frame_draw.rectangle((10, 11, 15, 41), fill="black")
+            profile = ROIProfile(
+                source_size=(80, 60),
+                regions={
+                    "hand_region": (0, 0, 25, 50),
+                    "draw_region": (25, 0, 25, 50),
+                    "gold_region": (50, 0, 25, 50),
+                },
+                slots={
+                    "hand_region": [(0, 0, 25, 50)],
+                    "draw_region": [(0, 0, 25, 50)],
+                    "gold_region": [(0, 0, 25, 50)],
+                },
+                calibrated=True,
+            )
+            self.assertEqual(
+                len(classifier.classify_slots(frame, profile, "hand_region")), 1
+            )
+            self.assertEqual(
+                classifier.classify_slots(frame, profile, "draw_region"), ()
+            )
+            self.assertEqual(
+                classifier.classify_slots(frame, profile, "gold_region"), ()
+            )
 
 
     def test_calibrated_roi_crop_writes_all_three_regions(self) -> None:
