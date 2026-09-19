@@ -75,12 +75,16 @@ class HuianPublicStateProfile:
     top_right_score: NormalizedBox = NormalizedBox(0.665, 0.160, 0.745, 0.188)
     bottom_left_score: NormalizedBox = NormalizedBox(0.080, 0.812, 0.170, 0.840)
     status_line: NormalizedBox = NormalizedBox(0.400, 0.780, 0.620, 0.845)
+    remaining_tiles: NormalizedBox = NormalizedBox(0.442, 0.780, 0.478, 0.845)
+    hand_progress: NormalizedBox = NormalizedBox(0.528, 0.780, 0.562, 0.845)
 
     def crops(self, image):
         return {
             "top_right_score": self.top_right_score.crop(image),
             "bottom_left_score": self.bottom_left_score.crop(image),
             "status_line": self.status_line.crop(image),
+            "remaining_tiles": self.remaining_tiles.crop(image),
+            "hand_progress": self.hand_progress.crop(image),
         }
 
 
