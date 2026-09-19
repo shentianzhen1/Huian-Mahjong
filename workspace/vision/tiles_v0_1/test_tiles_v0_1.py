@@ -22,7 +22,8 @@ from .postprocess import (MultiFrameVoter, ObservationConstraints,
 from .crop_rois import crop_regions
 from .roi import ROIProfile
 from .template_classifier import (
-    TemplateTileClassifier, _normalize_tile_face, _tile_face_box
+    TemplateTileClassifier, _normalize_gold_face,
+    _normalize_tile_face, _tile_face_box
 )
 
 
@@ -54,6 +55,58 @@ class TilesV01Tests(unittest.TestCase):
         self.assertGreaterEqual(normalized.width, 20)
         self.assertGreaterEqual(normalized.height, 36)
 
+
+    def test_gold_skin_normalization_trims_outer_rim(self) -> None:
+        image = Image.new("RGB", (50, 70), (90, 20, 20))
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((4, 3, 45, 65), fill=(215, 185, 75))
+        draw.rectangle((18, 15, 23, 55), fill="black")
+        normalized = _normalize_gold_face(image)
+        self.assertLess(normalized.width, image.width)
+        self.assertLess(normalized.height, image.height)
+        self.assertGreater(normalized.width, 30)
+        self.assertGreater(normalized.height, 50)
+
+    def test_gold_badge_does_not_override_base_tile_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+
+            def gold_tile(path, horizontal=False, badge_fill="red"):
+                image = Image.new("RGB", (50, 70), (80, 15, 15))
+                draw = ImageDraw.Draw(image)
+                draw.rectangle((4, 3, 45, 65), fill=(215, 185, 75))
+                if horizontal:
+                    draw.rectangle((10, 32, 38, 38), fill="black")
+                else:
+                    draw.rectangle((22, 12, 28, 56), fill="black")
+                draw.rectangle((35, 5, 46, 18), fill=badge_fill)
+                image.save(path)
+                return image
+
+            gold_tile(image_dir / "m1.png", horizontal=False)
+            gold_tile(image_dir / "p1.png", horizontal=True)
+            append_label(
+                root, image="images/rois/m1.png",
+                bbox=[0, 0, 50, 70], tile_id="M1",
+                region="gold_region", source_session="seed_a",
+            )
+            append_label(
+                root, image="images/rois/p1.png",
+                bbox=[0, 0, 50, 70], tile_id="P1",
+                region="gold_region", source_session="seed_b",
+            )
+            classifier = TemplateTileClassifier.from_dataset(root)
+
+            query = gold_tile(
+                image_dir / "query.png",
+                horizontal=False, badge_fill="blue"
+            )
+            prediction = classifier.classify(
+                query, region="gold_region"
+            )
+            self.assertEqual(prediction.tile_id, "M1")
 
     def test_tile_face_presence_rejects_empty_dark_slot(self) -> None:
         empty = Image.new("RGB", (44, 68), (0, 45, 45))
@@ -574,6 +627,7 @@ class TilesV01Tests(unittest.TestCase):
             self.assertFalse(result["safe_for_executor"])
             self.assertIn("predictions", result)
             self.assertIn("category", result["predictions"][0])
+            self.assertIn("is_gold", result["predictions"][0])
             self.assertFalse(any(
                 item["region"] == "gold_region"
                 for item in result["predictions"]
