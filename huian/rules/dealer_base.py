@@ -5,8 +5,11 @@ Direct full-match replay room 541913 (2026-09-19) resolves the screen/settlement
 mapping: non-dealer own base is 5, while the first sitting dealer's CURRENT
 SETTLEMENT BASE is 10; every consecutive dealer hand adds another 5.
 The observed chain is 10 -> 15 -> 20 -> 25, and a dealer change resets the new
-dealer's settlement base to 10. The upper cap beyond observed evidence remains
-unverified. Dealer-win extra ×2 is not used.
+dealer's settlement base to 10. Player confirmation 2026-09-19 resolves the
+remaining boundary: while the SAME dealer keeps the dealer seat, there is no
+dealer-base cap; each consecutive dealer hand adds +5 until the fixed 8-hand
+match ends. If the dealer loses, the chain ends and the new dealer resets to 10.
+Dealer-win extra ×2 is not used.
 """
 from numbers import Integral
 
@@ -30,8 +33,9 @@ def dealer_base_for_consecutive_hands(consecutive_dealer_hands):
 
     ``consecutive_dealer_hands`` is 1 on first sit, 2 after one keep, ...
     Direct room541913 evidence gives 10, 15, 20, 25 for consecutive counts
-    1..4. The function continues +5 arithmetically beyond the observed range;
-    that extension is an engineering continuation, not evidence of an upper cap.
+    1..4. Player confirmation 2026-09-19 confirms no cap while the same dealer
+    continues: counts 1..8 are 10,15,20,25,30,35,40,45. If the dealer loses,
+    the consecutive count resets to 1, so the new dealer starts again at 10.
     """
     _nonneg(consecutive_dealer_hands, "consecutive_dealer_hands")
     if consecutive_dealer_hands < 1:
