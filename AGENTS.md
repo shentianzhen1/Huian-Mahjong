@@ -30,7 +30,7 @@ The Executor performs optional UI actions only after validation.
 ## Development priorities
 1. Close remaining special-result evidence/settlement gaps: Qiangjin exact eligibility+settlement, Sanjindao real settlement, Youjin/Double/Triple executable state machine, Rob-Kong/Gang-Hu settlement, Eight-Flower-You real multiplier/priority.
 2. Preserve the now-confirmed ordinary settlement/dealer-base/full-match regression chain; do not reopen solved rules unless higher-priority evidence conflicts.
-3. Treat ShantenAgent V0.3 as the current AI frontier. Next strategy work is EV + public-information danger/opponent modeling + 8-hand score/dealer context; new AI must beat V0.3 in fixed-wall paired evaluation.
+3. Treat `CurrentAgent` / TenpaiRiskTieBreakAgent V0.6 as the current AI frontier. Keep ShantenAgent V0.3 as an explicit comparison/ablation baseline. Next strategy work is EV + public-information danger/opponent modeling + 8-hand score/dealer context; new AI must beat CurrentAgent V0.6 in fixed-wall paired evaluation.
 4. Resolve opening-gold physical accounting as a lower-frequency Rules/Environment evidence task without inventing tile ownership.
 5. Calibrate offline Vision ROIs, build a labeled real-tile dataset, and establish a measured accuracy/stability baseline.
 6. Integrate Vision with Rules validation only after the offline accuracy gate is defined.
