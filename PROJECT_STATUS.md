@@ -64,15 +64,16 @@
 
 2026-09-19 当前主线 GitHub Actions 已全绿：
 
-- Core regression：Python 3.10 / 3.11 / 3.12 **各306项通过，0失败、0错误**。Legacy Core V0.1.1与Legacy Environment V0.1同样通过。向听引擎继续覆盖随机结构交叉验证；Vision新增真实标签数据就绪审计、防泄漏准确率评估与多帧稳定性回归。
+- Core regression：Python 3.10 / 3.11 / 3.12 **各306项通过，0失败、0错误**。Legacy Core V0.1.1与Legacy Environment V0.1同样通过。
 - Legacy Core V0.1.1：9项通过。
 - Legacy Environment V0.1：9项通过。
-- Vision V0.1 advisory 为手动任务，本轮未触发；Core中的Vision评测器/数据审计单测继续只验证工具正确性。另已用8局真实录像建立首轮离线识别基线（overall 84.34%，hand 92.91%，draw 70.97%，gold 0%）；该基线是手动离线评测结果，不等同于CI通过，也未达到Executor门槛。
+- 新增独立自动 **Vision Regression**：Python 3.11、Pillow + OpenCV headless 环境，`workspace.vision.tiles_v0_1.test_tiles_v0_1` **14项通过**。该工作流在 Vision 代码/数据结构相关路径变更时自动触发，不再只依赖手动 advisory；新增回归明确验证 same-region holdout 不会跨 hand/draw/gold UI 渲染域取模板。
+- 真实8局录像首轮离线基线采用 same-region leave-source-group-out：168个一轮视觉复核标签中151个可严格评分，精确牌面准确率92.72%；hand 93.65%，draw 88.00%，gold因缺同区域同牌类跨来源重复样本而 **not scorable / UNKNOWN**。6段稳定连续手牌片段的96个槽位时间一致率100%，但多数票仅92/96与复核牌面一致，继续证明“稳定不等于准确”。这些数字仍不是生产准确率，也不构成Executor门槛。
 - 最新主线还覆盖：标准8局A/B评估器、公开比赛上下文、点炮/胡牌来源统计、V0.4/V0.5淘汰实验，以及尚未接管决策的普通点炮蒙特卡洛估计器。
 
 Core regression覆盖固定种子复现、144张守恒、第五张牌拒绝、非法动作拒绝、16张流局零和、开局回放、普通/观察结算、自摸/点炮声明、单/双/多金限制、弃金不可胡、三金倒一次性窗口、游金倍率与真实结算夹具、三类杠上下文、MatchRunner整场账本、room541913八局逐局比分/庄底回放、向听/有效牌引擎、公开比赛上下文、整场配对评估、点炮统计与普通点炮蒙特卡洛模型。
 
-仍然**没有**完整小程序自动对局端到端测试。真实牌面识别已经有首轮离线基线，但gold/draw尚明显不达标，且数据主要来自同一场8局；不能把该基线或“Core全绿”解释为端到端可用。
+仍然**没有**完整小程序自动对局端到端测试。真实牌面识别已经有首轮可复现离线基线，但gold覆盖、副露后布局、跨录屏条件和标签二次复核仍未完成；不能把离线基线、时间稳定率或CI全绿解释为Executor可用。
 
 ## 已知问题 / 安全停止点
 
