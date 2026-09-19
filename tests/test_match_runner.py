@@ -123,6 +123,41 @@ class MatchRunnerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             result.deal_in_count_for(2)
 
+    def test_real_ordinary_match_can_seed_agents_by_identity_not_seat(self):
+        seen = []
+
+        class SeedAgent:
+            def __init__(self, seed):
+                self.seed = seed
+
+        class FakeSimulator:
+            def run_normal_hand(self, **kwargs):
+                seen.append(tuple(agent.seed for agent in kwargs["agents"]))
+                return SimulationResult(
+                    seed=kwargs["seed"], status="COMPLETED",
+                    rewards=(0, 0), winner=None, win_source=None,
+                    terminal_reason="WALL_16",
+                    simulation_only=True, real_scoring=True,
+                )
+
+        result = run_real_ordinary_match(
+            seed=7,
+            simulator=FakeSimulator(),
+            agent_factories=(SeedAgent, SeedAgent),
+            agent_seed_keys=(1, 0),
+        )
+        self.assertTrue(result.complete)
+        self.assertEqual(seen[0], (14001, 14000))
+        self.assertEqual(seen[1], (14003, 14002))
+        self.assertEqual(seen[-1], (14015, 14014))
+
+        for bad in ((0, 0), (1, 1), (0,), (0, 2), (False, 1)):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                run_real_ordinary_match(
+                    seed=7, simulator=FakeSimulator(),
+                    agent_factories=(SeedAgent, SeedAgent),
+                    agent_seed_keys=bad)
+
     def test_real_ordinary_match_stops_on_rule_unknown(self):
         calls = []
 
