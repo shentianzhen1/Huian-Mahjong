@@ -240,7 +240,7 @@ def read_score_pair(
     backend=None,
     thresholds=DEFAULT_THRESHOLDS,
     source_frame=None,
-    gray_first=True,
+    gray_first=False,
 ):
     """Read both visible scores from one PIL frame."""
     profile = profile or HuianPublicStateProfile()
@@ -346,7 +346,7 @@ def read_score_window(
             backend=backend,
             thresholds=thresholds,
             source_frame=str(index),
-            gray_first=True,
+            gray_first=False,
         )
         for index, image in enumerate(images)
     )
