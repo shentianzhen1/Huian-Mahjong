@@ -17,11 +17,10 @@ UNKNOWN_RULES = MappingProxyType({
     # No independent kong fee: confirmed by player 2026-09-18.
     # Legacy ADD_KONG_SCORING_UNKNOWN retired 2026-09-18: completed added-kong
     # no longer blocks ordinary simulation merely because it occurred.
-    "rob_kong": "Scope, response window and resolution for each kong kind",
+    "rob_kong": "Direct target-room response UI and remaining resolution details for the confirmed added-kong-only rob window",
     "qiangjin_hand_shape": "Exact effective Hu decomposition and room-option interaction at the opening check",
     # qiangjin_seat_priority resolved: only the acting player owns the window; PASS never hands it off.
     "qiangjin_settlement": "Multiplier, payer and dealer continuation after a Qiangjin declaration",
-    "sanjindao": "Legacy special-win entry; use the confirmed eligibility API separately",
     # Sanjindao timing resolved 2026-09-18: one-shot when the third gold is received.
     "sanjindao_settlement": "Non-flower base, payment, terminal flow and dealer result after the confirmed x3 declaration",
     "sanjinyou_trigger": "Exact executable steps shared by Erjin-You and Sanjin-You",
@@ -39,7 +38,6 @@ UNKNOWN_RULES = MappingProxyType({
     # flower_groups resolved: strictly 1 fan per flower, no four-flower bonus.
     # multi_gold_fan resolved: strictly 1 fan per gold, cumulative.
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
-    "honor_peng_fan": "Whether exposed honor pung scores one fan",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
     # exposed_triplet_fan resolved 2026-09-18: suited exposed Peng=0, honor Peng=1.
     # Eight-flower trigger/pass confirmed; project provisional multiplier is x2.
