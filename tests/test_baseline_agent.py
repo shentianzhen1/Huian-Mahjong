@@ -8,8 +8,8 @@ from huian._legacy import env
 from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           CurrentAgent, BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
-                          MatchObservationContext, OneShantenTwoPlyRiskAgent,
-                          PlayerObservation, ShantenAgent,
+                          MatchObservationContext, MeldAwareShantenAgent,
+                          OneShantenTwoPlyRiskAgent, PlayerObservation, ShantenAgent,
                           TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
                           TenpaiRiskTieBreakAgent, TwoPlyShantenRiskAgent,
                           best_offense_ties,
@@ -662,6 +662,137 @@ class BaselineAgentTests(unittest.TestCase):
             lookahead.assert_not_called()
             self.assertIn(
                 f"gated_off_at_shanten={shanten}", decision.reason)
+
+    def test_v10_claims_only_for_strict_post_discard_offense_gain(self):
+        hand = (
+            "M1","M2","M4","M5","M6","M7","M8","M9",
+            "P1","P2","P3","S1","S2","S3","E","E",
+        )
+        view = PlayerObservation(
+            0, hand, "P9", "AFTER_DISCARD", 0, 60,
+            ((), ("M3",)), ((), ()), ((), ()),
+        )
+        claim = env.Action(
+            0, env.ActionType.CHI, tile="M3", tiles=("M1","M2","M3"))
+        actions = [claim, env.Action(0, env.ActionType.PASS)]
+
+        pass_state = SimpleNamespace(
+            shanten=2, total_live_copies=20, effective_tiles=(1, 2, 3))
+        projected = SimpleNamespace(
+            discard="E", shanten=1, total_live_copies=12,
+            effective_tiles=(1, 2))
+
+        captured = {}
+        def fake_best(post_claim, **kwargs):
+            captured["hand"] = tuple(post_claim)
+            captured.update(kwargs)
+            return projected
+
+        with patch(
+                "workspace.ai.baseline.analyze_effective_tiles",
+                return_value=pass_state), patch(
+                "workspace.ai.baseline.best_discard",
+                side_effect=fake_best):
+            decision = MeldAwareShantenAgent(seed=5).choose_decision(
+                view, actions)
+
+        self.assertEqual(decision.action, claim)
+        self.assertIn("strict offense gain", decision.reason)
+        self.assertEqual(len(captured["hand"]), 14)
+        self.assertNotIn("M1", captured["hand"])
+        self.assertNotIn("M2", captured["hand"])
+        self.assertEqual(captured["open_melds"], 1)
+        visible = captured["visible_tiles"]
+        self.assertEqual(visible.count("M3"), 1)
+        self.assertEqual(visible.count("M1"), 1)
+        self.assertEqual(visible.count("M2"), 1)
+
+    def test_v10_passes_when_claim_does_not_strictly_improve_offense(self):
+        hand = (
+            "M1","M2","M4","M5","M6","M7","M8","M9",
+            "P1","P2","P3","S1","S2","S3","E","E",
+        )
+        view = PlayerObservation(
+            0, hand, "P9", "AFTER_DISCARD", 0, 60,
+            ((), ("M3",)), ((), ()), ((), ()),
+        )
+        claim = env.Action(
+            0, env.ActionType.CHI, tile="M3", tiles=("M1","M2","M3"))
+        passed = env.Action(0, env.ActionType.PASS)
+        pass_state = SimpleNamespace(
+            shanten=1, total_live_copies=20, effective_tiles=(1, 2, 3))
+        projected = SimpleNamespace(
+            discard="E", shanten=1, total_live_copies=20,
+            effective_tiles=(1, 2, 3))
+
+        with patch(
+                "workspace.ai.baseline.analyze_effective_tiles",
+                return_value=pass_state), patch(
+                "workspace.ai.baseline.best_discard",
+                return_value=projected):
+            decision = MeldAwareShantenAgent(seed=7).choose_decision(
+                view, [claim, passed])
+        self.assertEqual(decision.action, passed)
+        self.assertIn("no strict Chi/Peng offense gain", decision.reason)
+
+    def test_v10_gold_in_hand_guard_preserves_pass_without_projection(self):
+        hand = (
+            "M1","M2","M4","M5","M6","M7","M8","M9",
+            "P1","P2","P3","S1","S2","S3","E","E",
+        )
+        view = PlayerObservation(
+            0, hand, "M9", "AFTER_DISCARD", 0, 60,
+            ((), ("M3",)), ((), ()), ((), ()),
+        )
+        claim = env.Action(
+            0, env.ActionType.CHI, tile="M3", tiles=("M1","M2","M3"))
+        passed = env.Action(0, env.ActionType.PASS)
+        with patch(
+                "workspace.ai.baseline.analyze_effective_tiles"
+        ) as pass_eval, patch(
+                "workspace.ai.baseline.best_discard"
+        ) as claim_eval:
+            decision = MeldAwareShantenAgent(seed=11).choose_decision(
+                view, [claim, passed])
+        self.assertEqual(decision.action, passed)
+        self.assertIn("gold-in-hand guard", decision.reason)
+        pass_eval.assert_not_called()
+        claim_eval.assert_not_called()
+
+    def test_v10_selects_best_of_multiple_claims(self):
+        hand = (
+            "M1","M2","M4","M5","M6","M7","M8","M9",
+            "P1","P2","P3","S1","S2","S3","E","E",
+        )
+        view = PlayerObservation(
+            0, hand, "P9", "AFTER_DISCARD", 0, 60,
+            ((), ("M3",)), ((), ()), ((), ()),
+        )
+        chi12 = env.Action(
+            0, env.ActionType.CHI, tile="M3", tiles=("M1","M2","M3"))
+        chi45 = env.Action(
+            0, env.ActionType.CHI, tile="M3", tiles=("M3","M4","M5"))
+        passed = env.Action(0, env.ActionType.PASS)
+        pass_state = SimpleNamespace(
+            shanten=3, total_live_copies=25, effective_tiles=(1, 2, 3))
+
+        def fake_best(post_claim, **kwargs):
+            if "M1" not in post_claim and "M2" not in post_claim:
+                return SimpleNamespace(
+                    discard="E", shanten=2, total_live_copies=14,
+                    effective_tiles=(1, 2))
+            return SimpleNamespace(
+                discard="E", shanten=1, total_live_copies=10,
+                effective_tiles=(1,))
+
+        with patch(
+                "workspace.ai.baseline.analyze_effective_tiles",
+                return_value=pass_state), patch(
+                "workspace.ai.baseline.best_discard",
+                side_effect=fake_best):
+            decision = MeldAwareShantenAgent(seed=13).choose_decision(
+                view, [chi12, chi45, passed])
+        self.assertEqual(decision.action, chi45)
 
     def test_v06_validates_sampling_configuration(self):
         for value in (0, -1, True):
