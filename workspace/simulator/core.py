@@ -11,7 +11,7 @@ from huian.rules import UnknownRuleError
 from huian.rules.adapter import HuianRulesAdapter
 from huian.rules.engine import HuianRules
 from huian.rules.config import RulesConfig
-from workspace.ai import AgentDecision, PlayerObservation
+from workspace.ai import AgentDecision, MatchObservationContext, PlayerObservation
 from .unknowns import build_unknown_evidence
 
 
@@ -167,7 +167,7 @@ class Simulator:
 
     def run_normal_hand(self, seed=None, agent=None, dice_total=None, max_steps=1000,
                         *, agents=None, wall=None, initial_state=None, dealer=0,
-                        current_dealer_base=None):
+                        current_dealer_base=None, match_context=None):
         """Run the confirmed ordinary subset with unit or real ordinary scoring.
 
         enable_real_scoring keeps the ordinary-only special-rule bypass but
@@ -176,7 +176,8 @@ class Simulator:
 
         wall is a complete 144-tile opening wall. initial_state is a validated
         mid-hand fixture with its wall and reserved tiles explicitly accounted.
-        Agents receive only their own hand plus public information.
+        Agents receive only their own hand plus public information. Optional
+        match_context contains only public eight-hand score/dealer context.
         """
         if type(max_steps) is not int or max_steps <= 0:
             raise ValueError("max_steps must be a positive integer")
@@ -190,6 +191,8 @@ class Simulator:
             raise ValueError("Use agent or two seat agents, not both")
         if agents is not None and len(agents) != 2:
             raise ValueError("Exactly two seat agents are required")
+        if match_context is not None and not isinstance(match_context, MatchObservationContext):
+            raise TypeError("match_context must be MatchObservationContext or None")
         profile = self.config if self.config is not None else SimulatorConfig()
         if not profile.normal_hand_mode:
             raise ValueError("run_normal_hand requires normal_hand_mode")
@@ -277,7 +280,8 @@ class Simulator:
                     return finish("STOPPED_UNKNOWN", ("environment_phase",),
                                   "no_legal_actions")
                 actor = seats[state.current_player]
-                observation = PlayerObservation.from_state(state)
+                observation = PlayerObservation.from_state(
+                    state, match_context=match_context)
                 chooser = getattr(actor, "choose_decision", None)
                 if chooser is None:
                     chooser = actor.choose_action
