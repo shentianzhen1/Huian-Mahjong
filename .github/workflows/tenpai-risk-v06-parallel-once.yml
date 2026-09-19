@@ -1,0 +1,65 @@
+name: TenpaiRisk V06 Parallel Validation
+
+on:
+  push:
+    paths:
+      - ".github/workflows/tenpai-risk-v06-parallel-once.yml"
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - block: seeds_11000_11024
+            start: 11000
+            stop: 11025
+          - block: seeds_13000_13024
+            start: 13000
+            stop: 13025
+          - block: seeds_15000_15024
+            start: 15000
+            stop: 15025
+          - block: seeds_17000_17024
+            start: 17000
+            stop: 17025
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run identity-stable V0.6 block
+        env:
+          BLOCK: ${{ matrix.block }}
+          START: ${{ matrix.start }}
+          STOP: ${{ matrix.stop }}
+        run: |
+          python -B - <<'PY'
+          import json, os
+          from time import perf_counter
+          from workspace.ai import ShantenAgent, TenpaiRiskTieBreakAgent
+          from workspace.simulator import run_paired_real_matches
+
+          def v06_factory(seed=None):
+              return TenpaiRiskTieBreakAgent(seed=seed, template_samples=32)
+
+          start = int(os.environ["START"])
+          stop = int(os.environ["STOP"])
+          started = perf_counter()
+          report = run_paired_real_matches(
+              range(start, stop),
+              agent_factories=(v06_factory, ShantenAgent),
+              agent_names=("TenpaiRiskV06", "ShantenV03"),
+              max_steps=1000,
+              initial_dealer=0,
+          )
+          payload = report.to_dict()
+          payload.pop("per_match", None)
+          payload["block"] = os.environ["BLOCK"]
+          payload["elapsed_seconds"] = perf_counter() - started
+          print("V06_PARALLEL_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("V06_PARALLEL_END")
+          PY
