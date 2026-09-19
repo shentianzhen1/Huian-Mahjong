@@ -28,14 +28,13 @@ The Vision layer converts screen frames into GameState observations.
 The Executor performs optional UI actions only after validation.
 
 ## Development priorities
-1. Close remaining UNKNOWN evidence: gold reveal ownership, qiangjin window, youjin state machine, added/robbed kong, dealer-base fields
-2. Keep simulation-only unit rewards separate from evidence-backed settlement
-3. Analyze UNKNOWN stops from batch evaluation and improve Baseline discard/chi heuristics on completed hands only
-4. Calibrate offline Vision ROIs and build an accuracy baseline
-5. Monte Carlo / EV AI after ordinary-hand evaluation is stable
-6. Opponent + danger model
-7. Vision integration
-8. Executor last; never click the live applet until validation is sufficient
+1. Close remaining special-result evidence/settlement gaps: Qiangjin exact eligibility+settlement, Sanjindao real settlement, Youjin/Double/Triple executable state machine, Rob-Kong/Gang-Hu settlement, Eight-Flower-You real multiplier/priority.
+2. Preserve the now-confirmed ordinary settlement/dealer-base/full-match regression chain; do not reopen solved rules unless higher-priority evidence conflicts.
+3. Treat ShantenAgent V0.3 as the current AI frontier. Next strategy work is EV + public-information danger/opponent modeling + 8-hand score/dealer context; new AI must beat V0.3 in fixed-wall paired evaluation.
+4. Resolve opening-gold physical accounting as a lower-frequency Rules/Environment evidence task without inventing tile ownership.
+5. Calibrate offline Vision ROIs, build a labeled real-tile dataset, and establish a measured accuracy/stability baseline.
+6. Integrate Vision with Rules validation only after the offline accuracy gate is defined.
+7. Executor last; never click the live applet until Vision confidence, multi-frame stability, and post-action validation are sufficient.
 
 Do not spend major effort on UI before evaluation reports are reproducible.
 Do not rewrite Rules, Environment, or Simulator control flow for hygiene-only work.
