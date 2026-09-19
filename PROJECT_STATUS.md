@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新日期：2026-09-18（Asia/Shanghai）。本文件只描述当前真实状态；规则证据唯一依据为 [RULE_STATUS.md](RULE_STATUS.md)；实施缺口与录像登记见 [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)。实现存在或测试通过不等于规则已确认。
+更新日期：2026-09-19（Asia/Shanghai）。本文件只描述当前真实状态；规则证据唯一依据为 [RULE_STATUS.md](RULE_STATUS.md)；实施缺口与录像登记见 [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)。实现存在或测试通过不等于规则已确认。
 
 ## 当前版本 / 里程碑
 
@@ -23,8 +23,8 @@
 - Match计分：`MatchScoreState` 固定2人8局、初始 `(1000, 1000)`；`MatchProgressState` 管当前庄家、连续坐庄次数和下一局庄底；`MatchRunner` 负责把最多8个真实单局结果串成整场。`run_real_ordinary_match()` 已把普通局 Simulator 的真实计分模式接入整场：每局读取当前 dealer/base，普通平胡/自摸用 FanAggregator+Settlement 结算后回写总账；任一局遇到 UNKNOWN，整场停在该局并保留已完成局比分。
 - UNKNOWN 证据链：每个 `STOPPED_UNKNOWN` 现自动保存规则ID、state hash、完整牌面/花/副露/弃牌、金牌、当前阶段、墙余量、pending Hu/Kong、最近动作；若是普通胡番数歧义，还保存每种合法拆解及对应番数。单局 seed/骰子/步数/哈希和8局中的 hand index、庄家、庄底、当时比分也会一起透传到 `MatchRunResult.stopped_evidence`。`summarize_match_rule_gaps()` 可按规则缺口统计次数并保留有限份可复现实例。
 - 评估归档与复现：新增按局写入的 `run.json` / `hands.jsonl` / `summary.json` / `completion.json`；中断时保留已写入记录，拒绝覆盖已有目录。配对统计只纳入正反座位均完成的种子；单局重放核对运行环境、源码、状态摘要与决策事件摘要。使用方法见 `workspace/simulator/README.md`。
-- AI：`BaselineAgent` 仍是单局启发式基线：优先合法胡牌，弃牌时依次保留金牌、对子和同花色搭子，优先弃孤张；可选吃碰先PASS。项目最终目标已改为8局总分最大化，因此后续 EV/搜索必须把当前总分、剩余局数、庄位/连庄底和可接受波动纳入状态；单局胜率与胡牌次数只作为辅助指标。
-- AI实验：新增 `EfficiencyAgent` V0.2，仅使用自己手牌+公开牌河/副露估计结构与一摸改良潜力，不读取对手暗牌。固定20 seed×换座共40场8局A/B全部完成，但 Efficiency 仅6胜、Baseline 33胜、1平；平均最终分925.125 vs 1074.875，平均分差-149.75。因此 **不升级默认策略**，Baseline继续作为稳定基线；V0.2只保留为反例，下一版必须使用更可靠的向听/有效牌或EV方法。
+- AI：旧 `BaselineAgent` 保留为稳定对照；`EfficiencyAgent V0.2` 已因固定20 seed×换座40场A/B中仅6胜/33负/1平、平均终分925.125 vs 1074.875而淘汰，不再作为当前前沿。
+- AI当前前沿：`ShantenAgent V0.3` 已实现惠安16/17张普通胡向听、有效牌、公开剩余张数与两阶段弃牌排序，不读取对手暗牌或未来牌墙。固定20 seed×换座共40场8局全部完成：ShantenAgent 37胜、Baseline 3胜、0平；平均最终分1114.125 vs 885.875，平均分差+228.25。后续AI必须以V0.3为比较基线，重点转向EV、公开信息危险度/对手模型，以及当前比分/剩余局数/庄位/连庄底的8局上下文。
 - Vision 采集：Recorder V0.2 支持 WGC / PrintWindow / 屏幕区域、PNG、有限或无限手动 AVI，以及按局自动录像。自动模式使用固定 ROI 模板执行 `WAITING → OPENING → PLAYING → SETTLEMENT → WAITING`，保留开局前10秒并在结算后录5秒；每局独立保存 AVI/JSON/JSONL。黑屏、停帧、尺寸变化和处理落后保护继续生效。玩家确认界面没有明显逐张补花动画，因此未来补花识别以补完后的手牌数、花数、墙余量和开金阶段稳定状态为准，不依赖动画模板。
 - Vision 牌面原型：`tiles_v0_1` 可从 Recorder AVI 按固定时间间隔抽帧，人工校准 `hand_region` / `draw_region` / `gold_region` 和牌槽，写入可审计 JSONL 标签，并用本地已确认牌块模板对单张截图离线推理。后处理覆盖低置信过滤、牌数上限、实体同牌最多四张和多帧投票接口；输出固定禁止 Executor 使用。
 
@@ -85,12 +85,20 @@
 6. `HuianOnlineRoomV01` 的动态留牌开关是隔离的工作假设，不能覆盖 `RULE_STATUS.md` 的已确认规则。
 7. Recorder V0.2 的开局/结算模板来自既有归档画面，仍需在当前小程序窗口实测误检和漏检。Vision V0.1 只有本地模板分类原型，尚未人工校准当前窗口 ROI、建立足量真实标签或测量准确率；不识别按钮和结算字段，Executor 未接入任何自动点击。
 
+## 当前执行问题板
+
+GitHub Issues #1–#9 已建立，TODO.md 只保留未完成工作：
+- P0：#1 抢金、#2 三金倒终局、#3 游金链状态机、#4 抢杠胡/杠胡、#5 八花游真实倍率/优先级。
+- P1：#6 ShantenAgent V0.3 上的EV/危险度/8局上下文；#7 Vision ROI与真实准确率基线。
+- P2：#8 开金实体牌墙记账；#9 天胡/天听/8局平分等低频规则。
+- Executor不进入当前开发票：Vision未达到可量化置信度与多帧稳定性门槛前保持关闭。
+
 ## 下一步计划
 
 1. 庄底字段已由room541913完整8局解决，不再等待a562bd21：新庄当前结算底10、连庄+5、换庄重置10，闲家自身底5；庄底上限已解决：连续坐庄不上封顶、+5到8局结束；后续不再追问此项。`7bc12fa…mp4`的三游证据仍保留既有归档口径。
 2. 普通真实 Settlement + MatchRunner 已接通。3+金普通点炮和PENG番规则落地后，同口径20场中20/20完整跑完8局；160个单局全部真实结算，平均8局/场，普通规则UNKNOWN=0。后续重点转为抢杠胡/杠胡、抢金、三金倒、游金链等特殊结算与AI策略。
 3. 抢金下一步只补仍缺的核心：精确胡型/资格判定、实际胡按钮后的终局、倍率/付款和下局庄位。三金倒后续只补真实结算、付款/庄位和游金链细节；第4张金不重开三金倒窗口已经确认。杠相关不再追问杠费；只收集补杠真实响应窗口、抢杠胡结算和杠上胡结算。
-4. 基于已完成的基础AI与批量评估建立稳定基准；更复杂AI、Vision集成和Executor留待后续独立范围。
+4. AI基准已升级到ShantenAgent V0.3；下一步按Issue #6做EV/危险度/8局上下文，所有新AI直接对V0.3做固定牌墙换座A/B。
 5. 从已抽取的 1108×690 Recorder 帧人工校准三块 ROI，标注首批万/筒/条/字/花样本并建立离线准确率基线；在准确率和多帧稳定性达标前不接 Executor。
 
 ## 维护约定
