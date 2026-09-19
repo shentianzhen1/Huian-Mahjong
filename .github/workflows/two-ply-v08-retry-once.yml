@@ -1,0 +1,71 @@
+name: TwoPly V08 Retry Missing Blocks
+
+on:
+  push:
+    paths:
+      - ".github/workflows/two-ply-v08-retry-once.yml"
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { block: seeds_62000_62004, start: 62000, stop: 62005 }
+          - { block: seeds_62005_62009, start: 62005, stop: 62010 }
+          - { block: seeds_62010_62014, start: 62010, stop: 62015 }
+          - { block: seeds_62015_62019, start: 62015, stop: 62020 }
+          - { block: seeds_62020_62024, start: 62020, stop: 62025 }
+          - { block: seeds_66000_66004, start: 66000, stop: 66005 }
+          - { block: seeds_66005_66009, start: 66005, stop: 66010 }
+          - { block: seeds_66010_66014, start: 66010, stop: 66015 }
+          - { block: seeds_66015_66019, start: 66015, stop: 66020 }
+          - { block: seeds_66020_66024, start: 66020, stop: 66025 }
+          - { block: seeds_68000_68004, start: 68000, stop: 68005 }
+          - { block: seeds_68005_68009, start: 68005, stop: 68010 }
+          - { block: seeds_68010_68014, start: 68010, stop: 68015 }
+          - { block: seeds_68015_68019, start: 68015, stop: 68020 }
+          - { block: seeds_68020_68024, start: 68020, stop: 68025 }
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run missing V0.8 block
+        env:
+          BLOCK: ${{ matrix.block }}
+          START: ${{ matrix.start }}
+          STOP: ${{ matrix.stop }}
+        run: |
+          python -B - <<'PY'
+          import json, os
+          from time import perf_counter
+          from workspace.ai import TwoPlyShantenRiskAgent, TenpaiRiskTieBreakAgent
+          from workspace.simulator import run_paired_real_matches
+
+          def v08(seed=None):
+              return TwoPlyShantenRiskAgent(seed=seed, template_samples=32)
+
+          def v06(seed=None):
+              return TenpaiRiskTieBreakAgent(seed=seed, template_samples=32)
+
+          start = int(os.environ["START"])
+          stop = int(os.environ["STOP"])
+          started = perf_counter()
+          report = run_paired_real_matches(
+              range(start, stop),
+              agent_factories=(v08, v06),
+              agent_names=("TwoPlyV08", "CurrentV06"),
+              max_steps=1000,
+              initial_dealer=0,
+          )
+          payload = report.to_dict()
+          payload.pop("per_match", None)
+          payload["block"] = os.environ["BLOCK"]
+          payload["elapsed_seconds"] = perf_counter() - started
+          print("V08_RETRY_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("V08_RETRY_END")
+          PY
