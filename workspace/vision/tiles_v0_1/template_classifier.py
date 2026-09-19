@@ -10,14 +10,13 @@ from .labels import approved_labels
 from .postprocess import TilePrediction
 
 
-def _normalize_tile_face(image, brightness_threshold=100):
-    """Crop the dominant bright tile face before template comparison.
+def _tile_face_box(image, brightness_threshold=100):
+    """Return the dominant plausible bright tile-face box, or None.
 
-    Recorder ROIs can include dark green table/UI margins, especially in
-    draw_region. Matching those margins directly makes otherwise identical tile
-    faces look different across regions and window geometries. This keeps the
-    largest bright connected component when it plausibly occupies the tile crop,
-    and otherwise falls back to the original image.
+    Empty slots are mostly dark table/UI pixels. Real Huian mini-program tile
+    faces form a large bright connected component. The same geometry gate is
+    used both for normalization and slot-presence detection so inference does
+    not invent a tile for an empty draw/hand slot.
     """
     rgb = np.asarray(image.convert("RGB"))
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
@@ -27,7 +26,7 @@ def _normalize_tile_face(image, brightness_threshold=100):
     )
     count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
     if count <= 1:
-        return image.convert("RGB")
+        return None
 
     index = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
     x, y, width, height, area = (
@@ -35,7 +34,17 @@ def _normalize_tile_face(image, brightness_threshold=100):
     )
     minimum_area = 0.25 * rgb.shape[0] * rgb.shape[1]
     if area < minimum_area or width < 8 or height < 12:
+        return None
+    return x, y, width, height
+
+
+def _normalize_tile_face(image, brightness_threshold=100):
+    """Crop the dominant bright tile face before template comparison."""
+    rgb = np.asarray(image.convert("RGB"))
+    box = _tile_face_box(image, brightness_threshold=brightness_threshold)
+    if box is None:
         return image.convert("RGB")
+    x, y, width, height = box
     return Image.fromarray(rgb[y:y + height, x:x + width])
 
 
@@ -103,6 +112,8 @@ class TemplateTileClassifier:
         for slot, (local_x, local_y, width, height) in enumerate(profile.slots[region]):
             crop = region_image.crop((local_x, local_y,
                                       local_x + width, local_y + height))
+            if _tile_face_box(crop) is None:
+                continue
             result = self.classify(crop)
             results.append(TilePrediction(
                 result.tile_id, result.confidence, region,
