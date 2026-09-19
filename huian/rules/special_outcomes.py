@@ -88,13 +88,14 @@ _SPECIAL_OUTCOMES = {
         key="DOUBLE_YOU",
         declaration_phase=None,
         multiplier=8,
-        multiplier_status=EvidenceStatus.HIGH_CONFIDENCE,
+        multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="double_you_entry",
         settlement_ready=False,
         note=(
-            "x8 is stated on the in-game Huian rules page and Double-You is visible "
-            "in replay, but no target two-player hand has been archived ending at "
-            "Double-You x8 settlement yet."
+            "Target-room terminal settlement directly confirms Double-You x8: "
+            "(dealer base 30 + gold 2 + flower 1) x8 = 264. Trigger/upgrade "
+            "state-machine edges remain incomplete, so automatic settlement is "
+            "still not enabled from inferred state alone."
         ),
     ),
     "TRIPLE_YOU": SpecialOutcomeProfile(
