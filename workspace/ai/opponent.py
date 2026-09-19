@@ -38,8 +38,9 @@ def _base_public_counter(observation):
         for _, tiles in melds:
             known.update(tile for tile in tiles if tile in env.BASE_TILES)
     for tile in env.BASE_TILES:
-        if known[tile] > 4:
-            raise ValueError("known physical copies of a base tile cannot exceed four")
+        capacity = 3 if tile == observation.gold_tile else 4
+        if known[tile] > capacity:
+            raise ValueError("known playable copies exceed physical tile capacity")
     return known
 
 
@@ -104,7 +105,8 @@ def estimate_ordinary_deal_in_probabilities(
     known = _base_public_counter(observation)
     unseen_pool = []
     for tile in env.BASE_TILES:
-        unseen_pool.extend([tile] * (4 - known[tile]))
+        capacity = 3 if tile == observation.gold_tile else 4
+        unseen_pool.extend([tile] * (capacity - known[tile]))
     if concealed_count > len(unseen_pool):
         raise ValueError("public state leaves too few unseen tiles for opponent hand")
 
@@ -252,7 +254,8 @@ def estimate_tenpai_wait_risk_scores(
 
     known = _base_public_counter(observation)
     unseen_counts = Counter({
-        tile: 4 - known[tile] for tile in env.BASE_TILES
+        tile: (3 if tile == observation.gold_tile else 4) - known[tile]
+        for tile in env.BASE_TILES
     })
     if sum(unseen_counts.values()) < concealed_count:
         raise ValueError("public state leaves too few unseen tiles for opponent hand")
