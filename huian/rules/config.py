@@ -21,7 +21,7 @@ UNKNOWN_RULES = MappingProxyType({
     "qiangjin_hand_shape": "Exact effective Hu decomposition and room-option interaction at the opening check",
     # qiangjin_seat_priority resolved: only the acting player owns the window; PASS never hands it off.
     "qiangjin_settlement": "Multiplier, payer and dealer continuation after a Qiangjin declaration",
-    # Sanjindao timing resolved 2026-09-18: one-shot when the third gold is received.
+    # Sanjindao timing: one-shot opening 3+ gold check or mid-hand 2->3 gold arrival; PASS closes it.
     "sanjindao_settlement": "Non-flower base, payment, terminal flow and dealer result after the confirmed x3 declaration",
     "sanjinyou_trigger": "Exact executable steps shared by Erjin-You and Sanjin-You",
     "gang_hu_scoring": "Fan, multiplier and stacking for a confirmed kong-tail Hu",
@@ -29,7 +29,7 @@ UNKNOWN_RULES = MappingProxyType({
     "double_you_entry": "Direct entry versus required prior Youjin",
     "triple_you_sequence": "Chronological upgrade sequence",
     "youjin_permissions": "Opponent rights and cancellation actions at every stage",
-    "room_multipliers": "Unconfirmed multipliers outside confirmed Pinghu/Zimo, Youjin x4 and Triple-You x16; Double-You x8 is high-confidence from the in-game page but still lacks a target two-player x8 settlement",
+    "room_multipliers": "Unconfirmed multipliers outside confirmed Pinghu/Zimo, Youjin x4, Double-You x8 and Triple-You x16",
     "flower_open_gold": "Ownership, replacement and reopening after revealing a flower",
     "tianhu": "Timing relative to flower replacement and opening gold",
     "tianting": "Exact definition",
