@@ -16,7 +16,7 @@ def _choose_boxes(image, title):
     return tuple(tuple(int(value) for value in box) for box in boxes)
 
 
-def calibrate(image_path, output_path, slots=False):
+def calibrate(image_path, output_path, slots=False, gold_mode="tile"):
     with Image.open(image_path) as source:
         image = source.convert("RGB")
     regions = {}
@@ -30,8 +30,15 @@ def calibrate(image_path, output_path, slots=False):
         for region, (x, y, width, height) in regions.items():
             crop = image.crop((x, y, x + width, y + height))
             profile_slots[region] = _choose_boxes(crop, f"Select tile slots: {region}")
-    profile = ROIProfile(image.size, regions, profile_slots, calibrated=True,
-                         name=Path(output_path).stem)
+    profile = ROIProfile(
+        image.size, regions, profile_slots, calibrated=True,
+        name=Path(output_path).stem,
+        region_modes={
+            "hand_region": "tile",
+            "draw_region": "tile",
+            "gold_region": gold_mode,
+        },
+    )
     profile.save(output_path)
     return profile
 
@@ -42,8 +49,15 @@ def main():
     parser.add_argument("--output", required=True)
     parser.add_argument("--slots", action="store_true",
                         help="Also select tile slots inside each ROI")
+    parser.add_argument(
+        "--gold-mode", choices=("tile", "marker"), default="tile",
+        help=(
+            "Use marker for replay/live layouts where gold_region is a "
+            "face-down state marker rather than a visible tile face"
+        ),
+    )
     args = parser.parse_args()
-    calibrate(args.image, args.output, args.slots)
+    calibrate(args.image, args.output, args.slots, args.gold_mode)
     print(f"Saved calibrated ROI profile: {args.output}")
 
 
