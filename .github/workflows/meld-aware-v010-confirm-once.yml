@@ -1,0 +1,78 @@
+name: MeldAware V010 Confirmatory
+
+on:
+  push:
+    paths:
+      - ".github/workflows/meld-aware-v010-confirm-once.yml"
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { block: seeds_168000_168024, start: 168000, stop: 168025 }
+          - { block: seeds_170000_170024, start: 170000, stop: 170025 }
+          - { block: seeds_172000_172024, start: 172000, stop: 172025 }
+          - { block: seeds_174000_174024, start: 174000, stop: 174025 }
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Confirm MeldAware V0.10 versus CurrentAgent V0.6
+        env:
+          BLOCK: ${{ matrix.block }}
+          START: ${{ matrix.start }}
+          STOP: ${{ matrix.stop }}
+        run: |
+          python -B - <<'PY'
+          import json, os
+          from collections import Counter
+          from huian._legacy import env
+          from workspace.ai import MeldAwareShantenAgent, TenpaiRiskTieBreakAgent
+          from workspace.simulator import run_paired_real_matches
+
+          counters = Counter()
+
+          class CountingMeldAgent(MeldAwareShantenAgent):
+              def choose_decision(self, observation, legal_actions):
+                  claims = [a for a in legal_actions
+                            if a.type in (env.ActionType.CHI, env.ActionType.PENG)]
+                  if claims:
+                      counters["claim_opportunities"] += 1
+                  decision = super().choose_decision(observation, legal_actions)
+                  if claims:
+                      if decision.action.type == env.ActionType.CHI:
+                          counters["chi_taken"] += 1
+                      elif decision.action.type == env.ActionType.PENG:
+                          counters["peng_taken"] += 1
+                      elif decision.action.type == env.ActionType.PASS:
+                          counters["claim_passed"] += 1
+                          if "gold-in-hand guard" in decision.reason:
+                              counters["gold_guard_pass"] += 1
+                  return decision
+
+          def v10(seed=None):
+              return CountingMeldAgent(seed=seed, template_samples=32)
+
+          def v06(seed=None):
+              return TenpaiRiskTieBreakAgent(seed=seed, template_samples=32)
+
+          report = run_paired_real_matches(
+              range(int(os.environ["START"]), int(os.environ["STOP"])),
+              agent_factories=(v10, v06),
+              agent_names=("MeldAwareV010", "CurrentV06"),
+              max_steps=1000,
+              initial_dealer=0,
+          )
+          payload = report.to_dict()
+          payload.pop("per_match", None)
+          payload["block"] = os.environ["BLOCK"]
+          payload["claim_counts"] = dict(counters)
+          print("V010_CONFIRM_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("V010_CONFIRM_END")
+          PY
