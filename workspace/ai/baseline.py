@@ -337,6 +337,12 @@ class DangerAwareShantenAgent(ShantenAgent):
     def _tile_order(tile):
         return env.BASE_TILES.index(tile)
 
+    def _danger_weight_for(self, observation):
+        return self.danger_weight
+
+    def _policy_label(self):
+        return "danger_shanten_v0.4"
+
     def choose_decision(self, observation, legal_actions):
         if not legal_actions:
             raise ValueError("No legal actions")
@@ -357,11 +363,12 @@ class DangerAwareShantenAgent(ShantenAgent):
                 visible_tiles=self._public_tiles(observation),
                 allowed_discards=tuple(legal_by_tile),
             )
+            danger_weight = self._danger_weight_for(observation)
             diagnostics = {}
             for item in frontier:
                 danger = estimate_discard_danger(observation, item.discard)
                 offense = float(item.total_live_copies)
-                adjusted = offense - self.danger_weight * danger.risk_units
+                adjusted = offense - danger_weight * danger.risk_units
                 diagnostics[item.discard] = (item, danger, offense, adjusted)
 
             choice = max(
@@ -370,7 +377,6 @@ class DangerAwareShantenAgent(ShantenAgent):
                     diagnostics[item.discard][3],
                     item.total_live_copies,
                     len(item.effective_tiles),
-                    -diagnostics[item.discard][1].risk_units,
                     -self._tile_order(item.discard),
                 ),
             )
@@ -381,10 +387,10 @@ class DangerAwareShantenAgent(ShantenAgent):
                 waits += ",..."
             return AgentDecision(
                 action,
-                f"DISCARD {choice.discard}: danger_shanten_v0.4 "
+                f"DISCARD {choice.discard}: {self._policy_label()} "
                 f"(shanten={item.shanten}, live={item.total_live_copies}, "
                 f"types={len(item.effective_tiles)}, offense={offense:.2f}, "
-                f"risk_units={danger.risk_units}, weight={self.danger_weight:.2f}, "
+                f"risk_units={danger.risk_units}, weight={danger_weight:.2f}, "
                 f"adjusted={adjusted:.2f}, effective=[{waits}]); "
                 f"risk_units is public exposure, not a probability",
             )
@@ -395,3 +401,32 @@ class DangerAwareShantenAgent(ShantenAgent):
                 passes[0], "PASS: preserve the current hand over optional melds")
         return AgentDecision(
             actions[0], f"{actions[0].type.value}: take the required legal action")
+
+
+class MatchAwareShantenAgent(DangerAwareShantenAgent):
+    """Experimental V0.5: use risk only to protect a late-match lead.
+
+    Ordinary shanten remains a hard constraint. Before the final late_hands
+    or whenever the acting player is tied/behind, this policy is exactly the
+    V0.3 live-effective-tile policy. A small public-risk penalty is enabled
+    only while leading late in the fixed eight-hand match.
+    """
+
+    def __init__(self, seed=None, late_lead_weight=0.25, late_hands=3):
+        super().__init__(seed=seed, danger_weight=late_lead_weight)
+        if type(late_hands) is not int or not 1 <= late_hands <= 8:
+            raise ValueError("late_hands must be an integer between 1 and 8")
+        self.late_hands = late_hands
+
+    def _danger_weight_for(self, observation):
+        context = observation.match_context
+        if context is None:
+            return 0.0
+        if context.hands_remaining > self.late_hands:
+            return 0.0
+        if context.margin_for(observation.seat) <= 0:
+            return 0.0
+        return self.danger_weight
+
+    def _policy_label(self):
+        return "match_aware_shanten_v0.5"
