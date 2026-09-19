@@ -11,18 +11,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - block: seeds_11000_11024
-            start: 11000
-            stop: 11025
-          - block: seeds_13000_13024
-            start: 13000
-            stop: 13025
-          - block: seeds_15000_15024
-            start: 15000
-            stop: 15025
-          - block: seeds_17000_17024
-            start: 17000
-            stop: 17025
+          - block: seeds_19000_19024
+            start: 19000
+            stop: 19025
+          - block: seeds_21000_21024
+            start: 21000
+            stop: 21025
+          - block: seeds_23000_23024
+            start: 23000
+            stop: 23025
+          - block: seeds_25000_25024
+            start: 25000
+            stop: 25025
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
