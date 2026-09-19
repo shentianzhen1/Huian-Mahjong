@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Compare V0.6 against V0.3 on two independent seed blocks
+      - name: Large held-out V0.6 versus V0.3 confirmation
         run: |
           python -B - <<'PY'
           import json
@@ -40,10 +40,10 @@ jobs:
               return {"block": name, "elapsed_seconds": elapsed, **payload}
 
           output = [
-              run_block("seeds_200_219", range(200, 220)),
-              run_block("seeds_1200_1219", range(1200, 1220)),
+              run_block("seeds_3000_3049", range(3000, 3050)),
+              run_block("seeds_5000_5049", range(5000, 5050)),
           ]
-          print("V06_AB_START")
+          print("V06_CONFIRM_START")
           print(json.dumps(output, ensure_ascii=False, indent=2))
-          print("V06_AB_END")
+          print("V06_CONFIRM_END")
           PY
