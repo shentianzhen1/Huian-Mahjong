@@ -138,18 +138,25 @@ class HuianRulesTests(unittest.TestCase):
                 "source": "wall_head", "drawn_tile": "E", "kong_kind": "MING_GANG"
             })
 
-    def test_sanjindao_is_one_shot_on_receiving_third_gold(self):
+    def test_sanjindao_is_one_shot_on_opening_or_receiving_third_gold(self):
         hand = ["P9", "P9", "P9", "M1"]
         self.assertFalse(self.rules.sanjindao_decision(hand, "P9").eligible)
-        result = self.rules.sanjindao_decision(
-            hand, "P9", third_gold_just_received=True)
-        self.assertTrue(result.eligible)
-        self.assertEqual(result.gold_count, 3)
-        self.assertEqual(result.choices, (
+
+        opening = self.rules.sanjindao_decision(
+            hand, "P9", opening_check=True)
+        self.assertTrue(opening.eligible)
+        self.assertEqual(opening.gold_count, 3)
+        self.assertEqual(opening.choices, (
             SanjindaoChoice.DECLARE_SANJINDAO,
             SanjindaoChoice.CONTINUE_PLAY,
         ))
-        self.assertEqual(result.multiplier, 3)
+        self.assertEqual(opening.multiplier, 3)
+        self.assertTrue(self.rules.sanjindao_decision(
+            ["P9"] * 4, "P9", opening_check=True).eligible)
+
+        received = self.rules.sanjindao_decision(
+            hand, "P9", third_gold_just_received=True)
+        self.assertTrue(received.eligible)
         self.assertFalse(self.rules.sanjindao_decision(
             ["P9"] * 2, "P9", third_gold_just_received=True).eligible)
         self.assertFalse(self.rules.sanjindao_decision(
