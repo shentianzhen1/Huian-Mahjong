@@ -493,9 +493,29 @@ class TenpaiRiskTieBreakAgent(ShantenAgent):
                 )
 
             candidates = tuple(item.discard for item in ties)
-            estimates = estimate_tenpai_wait_risk_scores(
-                observation, candidates, samples=self.template_samples,
-                seed=risk_seed)
+            # Risk currently models ordinary Ron only. Never let it learn that
+            # discarding Jin is "safe" and thereby override Jin fan/Youjin value.
+            if observation.gold_tile in candidates:
+                choice = ties[0]
+                action = legal_by_tile[choice.discard]
+                return AgentDecision(
+                    action,
+                    f"DISCARD {choice.discard}: tenpai_risk_tiebreak_v0.6 "
+                    f"(exact offense tie includes gold; preserve V0.3 tile-order "
+                    f"choice because special/gold EV is outside risk model)",
+                )
+            try:
+                estimates = estimate_tenpai_wait_risk_scores(
+                    observation, candidates, samples=self.template_samples,
+                    seed=risk_seed)
+            except RuntimeError:
+                choice = ties[0]
+                action = legal_by_tile[choice.discard]
+                return AgentDecision(
+                    action,
+                    f"DISCARD {choice.discard}: tenpai_risk_tiebreak_v0.6 "
+                    f"(risk templates unavailable; preserve V0.3 tile-order choice)",
+                )
             by_tile = {item.tile: item for item in estimates}
             choice = min(
                 ties,
