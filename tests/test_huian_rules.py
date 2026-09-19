@@ -102,7 +102,7 @@ class HuianRulesTests(unittest.TestCase):
             (KongKind.MING_GANG, "E", 3, EvidenceStatus.HIGH_CONFIDENCE),
             (KongKind.ADDED_GANG, "P1", 2, EvidenceStatus.CONFIRMED),
             (KongKind.ADDED_GANG, "E", 3, EvidenceStatus.HIGH_CONFIDENCE),
-            (KongKind.AN_GANG, "P1", 3, EvidenceStatus.HIGH_CONFIDENCE),
+            (KongKind.AN_GANG, "P1", 3, EvidenceStatus.CONFIRMED),
             (KongKind.AN_GANG, "E", 4, EvidenceStatus.HIGH_CONFIDENCE),
         )
         for kind, tile, fan, status in cases:
