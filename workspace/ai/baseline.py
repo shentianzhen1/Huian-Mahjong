@@ -15,6 +15,35 @@ class AgentDecision:
 
 
 @dataclass(frozen=True)
+class MatchObservationContext:
+    """Public eight-hand match context available to the acting player."""
+
+    scores: tuple[int, int]
+    hand_index: int
+    hands_remaining: int
+    dealer: int
+    current_dealer_base: int
+    consecutive_dealer_hands: int
+
+    def __post_init__(self):
+        if (not isinstance(self.scores, tuple) or len(self.scores) != 2
+                or any(type(value) is not int for value in self.scores)):
+            raise ValueError("scores must be a two-integer tuple")
+        if type(self.hand_index) is not int or not 0 <= self.hand_index <= 7:
+            raise ValueError("hand_index must be between 0 and 7")
+        if type(self.hands_remaining) is not int or not 1 <= self.hands_remaining <= 8:
+            raise ValueError("hands_remaining must be between 1 and 8")
+        if self.hand_index + self.hands_remaining != 8:
+            raise ValueError("hand_index + hands_remaining must equal 8")
+        if type(self.dealer) is not int or self.dealer not in (0, 1):
+            raise ValueError("dealer must be seat 0 or 1")
+        if type(self.current_dealer_base) is not int or self.current_dealer_base < 0:
+            raise ValueError("current_dealer_base must be a nonnegative integer")
+        if (type(self.consecutive_dealer_hands) is not int
+                or self.consecutive_dealer_hands < 1):
+            raise ValueError("consecutive_dealer_hands must be >= 1")
+
+@dataclass(frozen=True)
 class PlayerObservation:
     seat: int
     hand: tuple[str, ...]
@@ -25,10 +54,13 @@ class PlayerObservation:
     discards: tuple[tuple[str, ...], ...]
     flowers: tuple[tuple[str, ...], ...]
     melds: tuple[tuple[tuple[str, tuple[str, ...]], ...], ...]
+    match_context: MatchObservationContext | None = None
 
     @classmethod
-    def from_state(cls, state):
+    def from_state(cls, state, match_context=None):
         """Never expose the opponent hand, wall order, or reserved tiles."""
+        if match_context is not None and not isinstance(match_context, MatchObservationContext):
+            raise TypeError("match_context must be MatchObservationContext or None")
         seat = state.current_player
         return cls(
             seat, tuple(state.hands[seat]), state.gold_tile, state.phase,
@@ -37,6 +69,7 @@ class PlayerObservation:
             tuple(tuple(flowers) for flowers in state.flowers),
             tuple(tuple((meld.kind, tuple(meld.tiles)) for meld in melds)
                   for melds in state.melds),
+            match_context,
         )
 
 
