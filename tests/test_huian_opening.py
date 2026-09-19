@@ -28,7 +28,16 @@ class OpeningTests(unittest.TestCase):
         self.assertEqual(len(plan.hands[0]), 17)
         self.assertEqual(len(plan.hands[1]), 16)
         self.assertTrue(plan.gold_indicator.tile in env.BASE_TILES)
-        self.assertEqual(len(plan.wall) + sum(map(len, plan.hands)) + sum(map(len, plan.flowers)), 144)
+        self.assertEqual(
+            len(plan.wall) + sum(map(len, plan.hands))
+            + sum(map(len, plan.flowers)) + 1,
+            144,
+        )
+        self.assertEqual(
+            plan.wall.count(plan.gold_indicator.tile)
+            + sum(hand.count(plan.gold_indicator.tile) for hand in plan.hands),
+            3,
+        )
 
     def test_invalid_dice_and_short_wall_are_rejected(self):
         with self.assertRaises(ValueError):
