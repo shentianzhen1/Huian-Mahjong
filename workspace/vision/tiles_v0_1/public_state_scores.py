@@ -133,9 +133,17 @@ def prepare_score_crop(image, *, threshold=80, scale=12, border=30):
 class TesseractCLIBackend:
     """Digits-only wrapper around an installed tesseract executable."""
 
-    def __init__(self, command="tesseract", timeout_seconds=3.0):
+    def __init__(
+        self,
+        command="tesseract",
+        timeout_seconds=3.0,
+        whitelist="0123456789",
+    ):
         self.command = command
         self.timeout_seconds = float(timeout_seconds)
+        self.whitelist = str(whitelist)
+        if not self.whitelist:
+            raise ValueError("whitelist must not be empty")
 
     def available(self):
         return shutil.which(self.command) is not None
@@ -158,7 +166,7 @@ class TesseractCLIBackend:
             "--oem",
             "3",
             "-c",
-            "tessedit_char_whitelist=0123456789",
+            f"tessedit_char_whitelist={self.whitelist}",
             "-c",
             "user_defined_dpi=300",
         ]
