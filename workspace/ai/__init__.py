@@ -19,10 +19,11 @@ from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
                       min_shanten_discards, ordinary_shanten, rank_discards)
 
 # Stable entry point for the currently promoted AI policy.
-# Keep ShantenAgent available explicitly as the V0.3 comparison baseline.
-CurrentAgent = TenpaiRiskTieBreakAgent
-CURRENT_AGENT_VERSION = "v0.6"
-CURRENT_AGENT_NAME = "TenpaiRiskTieBreakAgent"
+# Keep TenpaiRiskTieBreakAgent V0.6 and ShantenAgent V0.3 available explicitly
+# as fixed comparison/ablation baselines.
+CurrentAgent = MeldAwareShantenAgent
+CURRENT_AGENT_VERSION = "v0.10"
+CURRENT_AGENT_NAME = "MeldAwareShantenAgent"
 
 __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "DangerAwareShantenAgent", "MatchAwareShantenAgent",
