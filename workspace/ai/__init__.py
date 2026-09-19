@@ -11,7 +11,8 @@ from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        estimate_tenpai_wait_loss_scores,
                        estimate_tenpai_wait_risk_scores)
 from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
-                      analyze_effective_tiles, best_discard, best_offense_ties,
+                      TwoPlyOffense, analyze_effective_tiles,
+                      analyze_two_ply_offense, best_discard, best_offense_ties,
                       min_shanten_discards, ordinary_shanten, rank_discards)
 
 # Stable entry point for the currently promoted AI policy.
@@ -27,8 +28,9 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "CURRENT_AGENT_VERSION", "CURRENT_AGENT_NAME",
            "MatchObservationContext",
            "PlayerObservation",
-           "DiscardEfficiency", "EffectiveTile", "HandEfficiency",
-           "ordinary_shanten", "analyze_effective_tiles", "rank_discards",
+           "DiscardEfficiency", "EffectiveTile", "HandEfficiency", "TwoPlyOffense",
+           "ordinary_shanten", "analyze_effective_tiles",
+           "analyze_two_ply_offense", "rank_discards",
            "best_discard", "best_offense_ties", "min_shanten_discards",
            "PublicDangerEstimate", "estimate_discard_danger",
            "OrdinaryDealInEstimate", "TenpaiWaitRiskEstimate",
