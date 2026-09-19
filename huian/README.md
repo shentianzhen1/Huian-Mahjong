@@ -60,7 +60,7 @@ decision = rules.sanjindao_decision(hand, gold_tile)
 ```
 
 `sanjindao_decision` exposes the current declare/continue choice and confirmed ×3 multiplier.
-Phase timing is now partially confirmed by target-room evidence: opening 3+ gold, the 2→3
+Phase timing is now partially confirmed by target-room evidence: opening with all 3 playable golds, the 2→3
 gold arrival, and a later own-draw re-check while exactly 3 gold remain after a prior PASS.
 PASS closes only the current prompt; it does not permanently disable later Sanjindao,
 ordinary Hu, or the Youjin family. Direct terminal Sanjindao settlement is still unresolved.
@@ -84,7 +84,7 @@ Terminal states return no actions. Always use the default `step(..., strict=True
 
 This is partial-state validation, not complete 144-tile conservation: the legacy
 state cannot yet represent opened indicator ownership and all claim history.
-It also lacks per-player Youjin history. Unknown phases must not be caught and
+The opened gold indicator is now physically accounted outside the drawable wall; it still lacks per-player Youjin history. Unknown phases must not be caught and
 converted into PASS, an empty legal-action list, or an artificial drawn hand.
 Complete phase transitions, atomic failure handling and full-game loop guards
 belong to M2/M3. Legacy `strict=False` remains an unsafe testing escape hatch.
@@ -97,7 +97,7 @@ Sanjindao settlement and the 4-gold later-draw recheck remain unresolved. The re
 includes rob-kong, Youjin entry/upgrades,
 opponent permissions/cancellation, room multipliers, flower-open-gold, Tianhu,
 Tianting, PASS, match ties, extended dealer bases, flower groups, fan edge cases,
-honor pung fan, indicator accounting, deal/replacement order, added-kong details,
+honor pung fan, deal/replacement order, flower-on-open-gold details, added-kong details,
 decomposition scoring and ordinary-Hu handling with three or more golds.
 Configuration does not promote an uncertain rule to confirmed evidence.
 
