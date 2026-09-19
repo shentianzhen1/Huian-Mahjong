@@ -35,7 +35,7 @@ python -B -m unittest discover -s tests -v
 - Settlement / Match：普通平胡×1、自摸×2使用真实番数和当前庄底结算；8局从1000/1000开始累积零和分数，match_evidence_001完整8局fixture可逐局回放到1113/887。
 - 庄底：新庄当前结算底10；同一庄家连庄每局+5且不上封顶直到第8局；庄输换庄后新庄重置10。
 - Simulator：固定牌墙/seed、交换座位、UNKNOWN证据包、8局真实普通规则MatchRunner，以及统一的整场A/B评估（最终分、分差、点炮、自摸/点炮来源、UNKNOWN）。
-- AI：当前正式前沿为 **`CurrentAgent = MeldAwareShantenAgent V0.10`**；`TenpaiRiskTieBreakAgent V0.6` 保留为固定主对照，`ShantenAgent V0.3` 保留为牌效消融基线。V0.10继承V0.6弃牌策略，只在CHI/PENG窗口比较PASS与副露后的最优强制弃牌，并且只有普通进攻元组严格改善时才副露。两批独立评估合计200个seed pair / 400场完整8局：V0.10为239胜、V0.6为159胜、2平，平均配对最终分差+54.805。新策略必须使用固定牌墙+正反换座+Agent身份稳定RNG，直接击败V0.10才能晋级。
+- AI：当前正式前沿为 **`CurrentAgent = MeldAwareShantenAgent V0.10`**；`TenpaiRiskTieBreakAgent V0.6` 保留为固定主对照，`ShantenAgent V0.3` 保留为牌效消融基线。V0.10继承V0.6弃牌策略，只在CHI/PENG窗口比较PASS与副露后的最优强制弃牌，并且只有普通进攻元组严格改善时才副露。两批独立评估合计200个seed pair / 400场完整8局：V0.10为239胜、V0.6为159胜、2平，平均配对最终分差+54.805。KONG已接入只读影子审计，显式标注抢杠/杠胡未知项，不改变当前策略。新策略必须使用固定牌墙+正反换座+Agent身份稳定RNG，直接击败V0.10才能晋级。
 - Recorder / Vision：Recorder V0.2按局录像。Vision已用8局真实回放建立严格 `same_region + leave-session-out` 基线；修正1条人工错标后，hand+draw为147/149=**98.66%**，置信度≥0.80的127个样本为127/127正确。Gold V0.1在当前8局196个可检测帧中193帧正确=**98.47%**，8/8局多数票正确，但这仍是同批录像时序结果，不是外部泛化率。PublicState V0.1已实现比分/局数/剩余牌的多帧融合与物理约束。
 
 ## 当前还不能做什么
