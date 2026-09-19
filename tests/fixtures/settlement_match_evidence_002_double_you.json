@@ -1,0 +1,33 @@
+{
+  "evidence_id": "match_evidence_002_double_you",
+  "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+  "stage": "DOUBLE_YOU",
+  "winner": 0,
+  "dealer": 0,
+  "current_dealer_base": 30,
+  "fan_breakdown": {
+    "gold": 2,
+    "flowers": 1
+  },
+  "winner_fan": 3,
+  "youjin_multiplier": 8,
+  "dealer_multiplier": 1,
+  "net": 264,
+  "rewards": [
+    264,
+    -264
+  ],
+  "observed_path": {
+    "opening_visible_gold_count": 3,
+    "youjin_visible_gold_count": 3,
+    "pre_double_you_visible_gold_count": 3,
+    "terminal_visible_gold_count": 2
+  },
+  "evidence_notes": [
+    "Replay begins with three visible gold SOUTH tiles and play continues.",
+    "Youjin animation is visible while all three gold tiles remain.",
+    "Double-You animation is followed by a hand with two visible gold tiles.",
+    "Settlement directly shows gold 2 fan, flower 1 fan, Double-You x8 and +264/-264.",
+    "Exact upgrade predicate remains unresolved; do not derive Youjin stage from gold count."
+  ]
+}
