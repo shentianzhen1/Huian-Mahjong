@@ -4,7 +4,8 @@ from collections import Counter
 from typing import Any
 
 from huian._legacy import env
-from .shanten import best_discard
+from .danger import estimate_discard_danger
+from .shanten import best_discard, min_shanten_discards
 
 
 @dataclass(frozen=True)
@@ -263,6 +264,86 @@ class ShantenAgent(BaselineAgent):
                 f"(shanten={choice.shanten}, live={choice.total_live_copies}, "
                 f"types={len(choice.effective_tiles)}, effective=[{waits}]); "
                 f"use private hand + public table only",
+            )
+
+        passes = [a for a in actions if a.type.value == "PASS"]
+        if passes:
+            return AgentDecision(
+                passes[0], "PASS: preserve the current hand over optional melds")
+        return AgentDecision(
+            actions[0], f"{actions[0].type.value}: take the required legal action")
+
+
+class DangerAwareShantenAgent(ShantenAgent):
+    """Experimental V0.4: shanten offense plus public exposure risk.
+
+    Shanten is a hard constraint: the agent never chooses a discard from a
+    worse shanten layer for safety. Inside the minimum-shanten frontier it
+    balances live effective copies/types against an auditable public risk
+    proxy. risk_units is not a deal-in probability.
+    """
+
+    def __init__(self, seed=None, danger_weight=0.5):
+        if isinstance(danger_weight, bool) or not isinstance(danger_weight, (int, float)):
+            raise ValueError("danger_weight must be a non-negative number")
+        if danger_weight < 0:
+            raise ValueError("danger_weight must be a non-negative number")
+        self.danger_weight = float(danger_weight)
+
+    @staticmethod
+    def _tile_order(tile):
+        return env.BASE_TILES.index(tile)
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
+        if wins:
+            return AgentDecision(
+                wins[0], f"{wins[0].type.value}: take the legal ordinary-shape win")
+
+        discards = [a for a in actions if a.type.value == "DISCARD"]
+        if discards:
+            open_melds = len(observation.melds[observation.seat])
+            legal_by_tile = {action.tile: action for action in discards}
+            frontier = min_shanten_discards(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=self._public_tiles(observation),
+                allowed_discards=tuple(legal_by_tile),
+            )
+            diagnostics = {}
+            for item in frontier:
+                danger = estimate_discard_danger(observation, item.discard)
+                offense = item.total_live_copies + 0.25 * len(item.effective_tiles)
+                adjusted = offense - self.danger_weight * danger.risk_units
+                diagnostics[item.discard] = (item, danger, offense, adjusted)
+
+            choice = max(
+                frontier,
+                key=lambda item: (
+                    diagnostics[item.discard][3],
+                    item.total_live_copies,
+                    len(item.effective_tiles),
+                    -diagnostics[item.discard][1].risk_units,
+                    -self._tile_order(item.discard),
+                ),
+            )
+            item, danger, offense, adjusted = diagnostics[choice.discard]
+            action = legal_by_tile[choice.discard]
+            waits = ",".join(item.effective_tile_types[:8])
+            if len(item.effective_tile_types) > 8:
+                waits += ",..."
+            return AgentDecision(
+                action,
+                f"DISCARD {choice.discard}: danger_shanten_v0.4 "
+                f"(shanten={item.shanten}, live={item.total_live_copies}, "
+                f"types={len(item.effective_tiles)}, offense={offense:.2f}, "
+                f"risk_units={danger.risk_units}, weight={self.danger_weight:.2f}, "
+                f"adjusted={adjusted:.2f}, effective=[{waits}]); "
+                f"risk_units is public exposure, not a probability",
             )
 
         passes = [a for a in actions if a.type.value == "PASS"]
