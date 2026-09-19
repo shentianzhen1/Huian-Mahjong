@@ -852,3 +852,46 @@ class TwoPlyShantenRiskAgent(TenpaiRiskTieBreakAgent):
                 passes[0], "PASS: preserve the current hand over optional melds")
         return AgentDecision(
             actions[0], f"{actions[0].type.value}: take the required legal action")
+
+
+class OneShantenTwoPlyRiskAgent(TwoPlyShantenRiskAgent):
+    """Experimental V0.9: use two-ply only for exact ties at shanten 1.
+
+    Shadow diagnostics showed V0.8 changed V0.6 most aggressively at shanten
+    2-4, where a draw+discard horizon is structurally short. V0.9 therefore
+    keeps the promoted V0.6 policy unchanged at shanten 0 and shanten >=2.
+    Only exact V0.3 offense ties at shanten 1 may enter deterministic two-ply
+    lookahead before the usual V0.6 relative-risk fallback.
+    """
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+
+        discards = [a for a in legal_actions if a.type.value == "DISCARD"]
+        if discards:
+            legal_by_tile = {action.tile: action for action in discards}
+            ties = best_offense_ties(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=len(observation.melds[observation.seat]),
+                visible_tiles=self._public_tiles(observation),
+                allowed_discards=tuple(legal_by_tile),
+            )
+            if len(ties) > 1 and ties[0].shanten != 1:
+                decision = TenpaiRiskTieBreakAgent.choose_decision(
+                    self, observation, legal_actions)
+                return AgentDecision(
+                    decision.action,
+                    f"{decision.reason}; one_shanten_two_ply_v0.9 "
+                    f"gated_off_at_shanten={ties[0].shanten}",
+                )
+
+        decision = TwoPlyShantenRiskAgent.choose_decision(
+            self, observation, legal_actions)
+        if discards:
+            return AgentDecision(
+                decision.action,
+                f"{decision.reason}; one_shanten_two_ply_v0.9",
+            )
+        return decision
