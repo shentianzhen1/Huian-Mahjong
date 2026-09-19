@@ -137,6 +137,10 @@ class HuianRules:
         self.validate_tiles(hand)
         if gold_tile is not None and gold_tile not in core.BASE_TILES:
             raise ValueError("Gold must be a normal tile")
+        if gold_tile is not None and hand.count(gold_tile) > 3:
+            raise ValueError(
+                "Opened gold indicator is non-drawable; a hand can contain at most three gold copies"
+            )
 
     def meld_options(self, hand, discard, gold_tile=None):
         """Local composition candidates, NOT a complete phase-aware action set."""
@@ -391,7 +395,8 @@ class HuianRules:
             raise ValueError("Ting context must not preselect a winning tile")
         waits = []
         for tile in core.BASE_TILES:
-            remaining = 4 - hand.count(tile) - visible_tiles.count(tile)
+            physical_copies = 3 if tile == gold_tile else 4
+            remaining = physical_copies - hand.count(tile) - visible_tiles.count(tile)
             context = win_context.with_winning_tile(tile) if win_context is not None else None
             kwargs = {"win_context": context} if context is not None else {}
             if win_type in ("pinghu", "discard", "rob_kong"):
