@@ -18,6 +18,7 @@ import subprocess
 
 import cv2
 import numpy as np
+from PIL import Image, ImageOps
 
 from huian.rules.dealer_base import MATCH_TOTAL_SCORE
 
@@ -81,6 +82,18 @@ def _parse_digits(text):
     if not digits:
         return None
     return int(digits)
+
+
+def prepare_score_gray(image, *, scale=8):
+    """Return the grayscale/autocontrast score image used by the fast OCR pass."""
+    if isinstance(scale, bool) or int(scale) <= 0:
+        raise ValueError("scale must be a positive integer")
+    gray = ImageOps.grayscale(image)
+    gray = gray.resize(
+        (gray.width * int(scale), gray.height * int(scale)),
+        Image.Resampling.LANCZOS,
+    )
+    return np.asarray(ImageOps.autocontrast(gray))
 
 
 def prepare_score_crop(image, *, threshold=80, scale=12, border=30):
@@ -227,11 +240,62 @@ def read_score_pair(
     backend=None,
     thresholds=DEFAULT_THRESHOLDS,
     source_frame=None,
+    gray_first=True,
 ):
     """Read both visible scores from one PIL frame."""
     profile = profile or HuianPublicStateProfile()
     backend = backend or TesseractCLIBackend()
     crops = profile.crops(image)
+
+    if gray_first:
+        raw_top_gray = backend(prepare_score_gray(crops["top_right_score"]))
+        raw_bottom_gray = backend(prepare_score_gray(crops["bottom_left_score"]))
+        top_gray = _parse_digits(raw_top_gray)
+        bottom_gray = _parse_digits(raw_bottom_gray)
+        if top_gray is not None and not 0 <= top_gray <= MATCH_TOTAL_SCORE:
+            top_gray = None
+        if bottom_gray is not None and not 0 <= bottom_gray <= MATCH_TOTAL_SCORE:
+            bottom_gray = None
+
+        if (
+            top_gray is not None
+            and bottom_gray is not None
+            and top_gray + bottom_gray == MATCH_TOTAL_SCORE
+        ):
+            return ScorePairRead(
+                top_right_score=top_gray,
+                bottom_left_score=bottom_gray,
+                mode="gray_direct",
+                top_attempts=(OCRAttempt(-1, raw_top_gray, top_gray),),
+                bottom_attempts=(OCRAttempt(-1, raw_bottom_gray, bottom_gray),),
+                confidence=1.0,
+                source_frame=source_frame,
+                safe_for_executor=False,
+            )
+        if top_gray is not None and bottom_gray is None:
+            inferred = MATCH_TOTAL_SCORE - top_gray
+            return ScorePairRead(
+                top_right_score=top_gray,
+                bottom_left_score=inferred,
+                mode="gray_inferred_bottom",
+                top_attempts=(OCRAttempt(-1, raw_top_gray, top_gray),),
+                bottom_attempts=(OCRAttempt(-1, raw_bottom_gray, None),),
+                confidence=0.75,
+                source_frame=source_frame,
+                safe_for_executor=False,
+            )
+        if bottom_gray is not None and top_gray is None:
+            inferred = MATCH_TOTAL_SCORE - bottom_gray
+            return ScorePairRead(
+                top_right_score=inferred,
+                bottom_left_score=bottom_gray,
+                mode="gray_inferred_top",
+                top_attempts=(OCRAttempt(-1, raw_top_gray, None),),
+                bottom_attempts=(OCRAttempt(-1, raw_bottom_gray, bottom_gray),),
+                confidence=0.75,
+                source_frame=source_frame,
+                safe_for_executor=False,
+            )
 
     top_attempts = _attempts(
         crops["top_right_score"], backend, thresholds
@@ -282,6 +346,7 @@ def read_score_window(
             backend=backend,
             thresholds=thresholds,
             source_frame=str(index),
+            gray_first=True,
         )
         for index, image in enumerate(images)
     )
