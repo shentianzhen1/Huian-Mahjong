@@ -349,10 +349,11 @@ class HuianRules:
                 return HuResult(False, (), gold_tile, open_melds, context)
             if gold_count == 2:
                 return HuResult(False, (), gold_tile, open_melds, context)
-        # After declining the one-shot Sanjindao window, 3+ golds retain full
-        # ordinary Hu rights: self-draw and opponent-discard Hu. The special
-        # Sanjindao window itself is enforced by the state machine and does not
-        # reopen on a later fourth gold.
+        # Declining Sanjindao closes only that prompt. Ordinary Hu rights stay
+        # independent, and later eligible Sanjindao prompts are handled by the
+        # state machine. match_evidence_002 directly confirms a later own-draw
+        # re-prompt while exactly three gold remain; the four-gold recheck is
+        # still evidence-UNKNOWN rather than hard-coded false.
         raw_splits = winning_decompositions(
             hand, gold_tile, open_melds, max_solutions=max_decompositions + 1
         )
