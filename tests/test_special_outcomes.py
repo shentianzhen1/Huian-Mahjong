@@ -33,7 +33,7 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
         double_you = special_outcome_profile("DOUBLE_YOU")
         self.assertEqual(double_you.multiplier, 8)
         self.assertEqual(
-            double_you.multiplier_status, EvidenceStatus.HIGH_CONFIDENCE
+            double_you.multiplier_status, EvidenceStatus.CONFIRMED
         )
         self.assertFalse(double_you.settlement_ready)
 
