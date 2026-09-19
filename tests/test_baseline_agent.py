@@ -251,6 +251,46 @@ class BaselineAgentTests(unittest.TestCase):
         self.assertIn("exact offense tie", decision.reason)
         self.assertIn("not a probability", decision.reason)
 
+    def test_v06_preserves_v03_when_exact_tie_contains_gold(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        # Make one exact-tie candidate the current Jin.
+        view = observation(hand, gold="B")
+        actions = discards(hand)
+        expected = ShantenAgent().choose_decision(view, actions)
+        ties = best_offense_ties(
+            hand, gold_tile=view.gold_tile,
+            visible_tiles=ShantenAgent._public_tiles(view),
+            allowed_discards=tuple(sorted(set(hand))),
+        )
+        if view.gold_tile in {item.discard for item in ties}:
+            with patch(
+                    "workspace.ai.baseline.estimate_tenpai_wait_risk_scores"
+            ) as mocked:
+                actual = TenpaiRiskTieBreakAgent(
+                    seed=5, template_samples=32).choose_decision(view, actions)
+            self.assertEqual(actual.action, expected.action)
+            mocked.assert_not_called()
+            self.assertIn("includes gold", actual.reason)
+
+    def test_v06_falls_back_to_v03_if_tenpai_templates_unavailable(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = observation(hand)
+        actions = discards(hand)
+        expected = ShantenAgent().choose_decision(view, actions)
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores",
+                side_effect=RuntimeError("no templates")):
+            actual = TenpaiRiskTieBreakAgent(
+                seed=5, template_samples=32).choose_decision(view, actions)
+        self.assertEqual(actual.action, expected.action)
+        self.assertIn("templates unavailable", actual.reason)
+
     def test_v06_validates_sampling_configuration(self):
         for value in (0, -1, True):
             with self.subTest(value=value), self.assertRaises(ValueError):
