@@ -5,8 +5,9 @@ import shutil
 from tempfile import TemporaryDirectory
 import unittest
 
+from workspace.ai import CurrentAgent, ShantenAgent
 from workspace.simulator.artifacts import (
-    event_digest, replay_saved_hand, run_saved_evaluation, save_replay,
+    AGENTS, event_digest, replay_saved_hand, run_saved_evaluation, save_replay,
 )
 
 
@@ -19,6 +20,10 @@ def write_json(path, value):
 
 
 class SimulatorArtifactsTests(unittest.TestCase):
+    def test_promoted_and_v03_agents_are_registered(self):
+        self.assertIs(AGENTS["current"], CurrentAgent)
+        self.assertIs(AGENTS["shanten_v03"], ShantenAgent)
+
     @classmethod
     def setUpClass(cls):
         cls.fixture_temp = TemporaryDirectory()
