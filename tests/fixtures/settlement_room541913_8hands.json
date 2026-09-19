@@ -215,6 +215,6 @@
     "Hand 5 is ordinary Youjin x4 with two gold tiles in the winner fan breakdown; Youjin stage is not equal to gold-tile count.",
     "Hand 6 replay shows a suited concealed kong and the settlement lists kong 3 fan.",
     "New dealer settlement base is 10; repeat dealer adds 5: observed 10,15,20,25; dealer change resets to 10.",
-    "Upper cap beyond observed dealer base remains unverified."
+    "This replay directly reaches dealer base 25; later player confirmation 2026-09-19 establishes no cap during a continuous dealer streak, +5 per keep until the fixed 8-hand match ends; dealer change resets the new dealer to 10."
   ]
 }
