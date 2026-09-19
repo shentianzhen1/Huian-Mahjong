@@ -133,7 +133,8 @@ class MatchRunResult:
             counts[source] = counts.get(source, 0) + 1
         return counts
 
-    @property    def stopped_evidence(self):
+    @property
+    def stopped_evidence(self):
         if self.status != "STOPPED_UNKNOWN" or not self.hands:
             return None
         return self.hands[-1].result.evidence
