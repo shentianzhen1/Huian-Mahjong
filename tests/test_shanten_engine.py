@@ -4,6 +4,7 @@ from huian import HuianRules
 from workspace.ai import (
     analyze_effective_tiles,
     best_discard,
+    min_shanten_discards,
     ordinary_shanten,
     rank_discards,
 )
@@ -138,6 +139,26 @@ class HuianShantenTests(unittest.TestCase):
             allowed_discards=("B", "N"),
         )
         self.assertEqual(restricted, full)
+
+    def test_min_shanten_frontier_matches_best_discard_shanten(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        visible = ("N", "N")
+        best = best_discard(hand, visible_tiles=visible)
+        frontier = min_shanten_discards(hand, visible_tiles=visible)
+        self.assertTrue(frontier)
+        self.assertEqual(frontier[0].shanten, best.shanten)
+        self.assertTrue(all(item.shanten == best.shanten for item in frontier))
+        self.assertEqual(
+            max(item.total_live_copies for item in frontier),
+            best.total_live_copies,
+        )
 
     def test_input_shape_and_public_overcount_are_rejected(self):
         with self.assertRaises(ValueError):
