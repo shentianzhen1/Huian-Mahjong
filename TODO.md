@@ -39,15 +39,15 @@
 
 ## P1：Vision
 
-7. **#7 ROI校准 + 真实牌识别准确率基线**
-   - 8局真实回放已作为首批数据源：8段视频、两种尺寸（1046×480 / 960×448），379个去重关键帧、1137个ROI裁剪、168个approved标签、8个独立source_session、34/42个牌类。
-   - 评测门槛固定为 `same_region + leave-session-out`；同一录像相邻帧不得跨训练/测试。空槽先做牌面存在检测，不再硬猜牌。
-   - 亮色牌面主体归一化后，当前可评分 hand+draw strict静态基线为 **96.03%**：hand 95.24%（126样本），draw 100%（25样本）；类别准确率98.68%。阈值0.80时127/151被接受，接受样本准确率98.43%。
-   - presence-aware固定窗口稳定性：hand 127/128=99.22%；draw 2/2=100%但样本过少。继续用 sequence miner 自动扩充真正“持续可见”的draw序列。
-   - **Gold纠正**：当前目标房左侧黄色高亮牌是正面可见的金牌（用户截图可直接读出4筒），当前 `gold_region` 必须按 `tile` 识别具体 `gold_id`；此前marker判断作废。已有8个gold标签，但同一gold类别尚未跨两个独立session重复，因此严格gold泛化准确率暂不可测。下一步继续积累回放，直到gold同类跨session重复。
-   - **公开比分ROI**：两侧玩家面板都是头像+头像下方当前分数；头像/昵称不识别，仅作为定位锚点。新增双方score ROI，读取当前分数并与MatchScoreState交叉校验（目标房双方总分2000守恒）；同时逐步接剩余牌数、第几局/8等公开状态。
-   - 仍缺 F1/F3/F4/F5/F6/F8/S7/S9，F2/F7仅单session；还需不同录屏批次、缩放/移动/遮挡。
-   - Executor继续关闭。下一步优先：① 扩大draw连续可见稳定性样本；② 获得gold同类跨session重复并建立gold准确率；③ 补牌类覆盖；④ 加入score/剩余牌数/局数PublicState识别；⑤ 压力测试。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。
+7. **#7 Vision真实识别 + PublicState**
+   - 8局真实回放：379个去重关键帧、1137个ROI、168个approved标签、8个独立source_session、34/42个牌类；严格门槛固定为 `same_region + leave-session-out`。
+   - 数据审计已进入主流程：发现并人工修正1条4筒→2筒错标；新增 `audit_labels.py`，自动列出低置信、模型分歧和缺跨session覆盖样本，但禁止自动改真值。
+   - 修正真值后，当前可评分hand+draw严格静态基线：**147/149=98.66%**；hand 122/124=98.39%，draw 25/25=100%，大类100%。阈值0.80时127/149被接受，**127/127=100%**；当前2个残余错牌都低于0.80。OpenCV线性SVM对照97.99%，不晋级。
+   - Gold V0.1：底层牌面 + 金色皮肤 + 右上角金字；SIFT屏蔽角标，筒子加圆点计数。单种子8/8；同批录像196帧中193帧正确=**98.47%**，8/8局多数票正确；P2/P4/P5圆点计数72/73=98.63%。仍需新批次/同类gold跨独立session建立真正泛化率。
+   - presence-aware固定窗口：hand 127/128=99.22%，draw 2/2=100%但样本太少；继续用 sequence miner 扩大draw连续可见序列。
+   - PublicState V0.1约束层已实现：归一化ROI覆盖两种分辨率；比分必须A+B=2000；多帧多数票；可与MatchScoreState交叉校验；同局分数不得变化、局数不得倒退/跳跃、同局剩余牌不得增加。真实8局的比分/局数/剩余牌/gold稳定时点真值已归档。
+   - 当前缺口：① 具体数字读取器（双方分数、剩余牌数、第几局/8）；② gold新批次泛化；③ draw时间稳定性样本量；④ F1/F3/F4/F5/F6/F8/S7/S9覆盖，F2/F7跨session；⑤ 缩放/移动/遮挡压力测试。
+   - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/room541913_public_state_seed.json`。
 
 ## P2：低频规则
 
