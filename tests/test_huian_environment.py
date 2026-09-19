@@ -220,7 +220,7 @@ class EnvironmentTests(unittest.TestCase):
         with self.assertRaises(UnknownRuleError):
             instance.legal_actions()
 
-    def test_third_gold_draw_offers_one_shot_optional_sanjindao(self):
+    def test_sanjindao_pass_closes_current_prompt_but_later_draw_reopens(self):
         state = scenario("AFTER_DRAW", hand=["P9"] * 3 + HAND[2:])
         state.last_action = env.Action(
             0, env.ActionType.DRAW,
@@ -235,12 +235,27 @@ class EnvironmentTests(unittest.TestCase):
             and action.metadata.get("continue_play")
             for action in report.known_actions
         ))
+
+        # PASS closes this exact decision node; it must not immediately loop.
         instance.step(next(
             a for a in report.known_actions if a.type == env.ActionType.PASS_QIANGJIN
         ))
         self.assertFalse(any(
             a.metadata.get("special") == "SANJINDAO"
             for a in instance.action_report().known_actions
+        ))
+
+        # match_evidence_002/player clarification: a later own draw while the
+        # same three golds remain can offer Sanjindao again.
+        later_state = scenario("AFTER_DRAW", hand=["P9"] * 3 + HAND[2:])
+        later_state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": HAND[2]},
+        ).to_dict()
+        later = game(later_state).action_report()
+        self.assertTrue(any(
+            a.metadata.get("special") == "SANJINDAO"
+            for a in later.known_actions
         ))
 
     def test_eight_flower_special_declares_and_project_x2_settles(self):
