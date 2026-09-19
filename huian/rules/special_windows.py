@@ -6,7 +6,7 @@ Player spec 2026-09-18:
 - AN_GANG = 暗杠: four matching concealed tiles; not robbable.
 - Qiangjin belongs only to the acting player after draw / flower / kong.
 - Opening flip does not offer opponent qiangjin. PASS does not hand off.
-- Sanjindao outranks qiangjin at an eligible current-player prompt. Opening 3+ gold and the first 2->3 gold draw are confirmed entry forms. New replay evidence shows PASS closes only the current prompt: a later own draw while still holding exactly 3 gold can offer Sanjindao again.
+- Sanjindao outranks qiangjin at an eligible current-player prompt. The opened gold indicator consumes one physical copy, so three playable golds is the maximum. Opening 3 gold and the first 2->3 gold draw are confirmed entry forms. New replay evidence shows PASS closes only the current prompt: a later own draw while still holding all 3 playable golds can offer Sanjindao again.
 Hand-shape details for qiangjin remain UNKNOWN; eligibility here is the
 working gate "gold in hand, not in Youjin" so the window ownership tests
 can run without inventing a decomposition.
@@ -60,7 +60,7 @@ def _opening_sanjindao_check(state, player):
     return (
         state.phase == "OPENING_QIANGJIN_CHECK"
         and gold is not None
-        and state.hands[player].count(gold) >= 3
+        and state.hands[player].count(gold) == 3
     )
 
 
@@ -68,8 +68,8 @@ def _later_sanjindao_draw_check(state, player):
     """Later own-draw re-check after a prior Sanjindao PASS.
 
     match_evidence_002/player clarification shows repeated optional prompts while
-    exactly three golds remain. Current evidence does not extend this mid-hand
-    re-check to four golds, so keep that boundary explicit.
+    all three playable golds remain. A fourth playable gold is physically
+    impossible because the opened indicator is the fourth copy.
     """
     gold = state.gold_tile
     last = state.last_action
