@@ -1,3 +1,5 @@
+> **历史口径 / 已被后续方法修正。** 本文使用早期 `all_regions` 模板池，把 hand/draw/gold 三种不同 UI 渲染域混在一起比较，因此本文的 overall 84.34%、draw 70.97%、gold 0% 不再作为当前识别准确率。当前正式口径为 `same_region leave-source-group-out`：见 [room541913_region_aware_baseline.md](room541913_region_aware_baseline.md)。其中 gold 当前是 **not scorable / UNKNOWN**，不是0%。本文保留仅用于记录方法演变。
+
 # Vision V0.1 — 8局真实录像首轮基线
 
 日期：2026-09-19（Asia/Shanghai）
