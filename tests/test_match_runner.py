@@ -107,6 +107,21 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertTrue(all(call["dealer"] == 0 for call in calls))
         self.assertEqual([call["seed"] for call in calls],
                          [7000 + i for i in range(8)])
+        contexts = [call["match_context"] for call in calls]
+        self.assertEqual(contexts[0].scores, (1000, 1000))
+        self.assertEqual(contexts[0].hand_index, 0)
+        self.assertEqual(contexts[0].hands_remaining, 8)
+        self.assertEqual(contexts[0].current_dealer_base, 10)
+        self.assertEqual(contexts[0].consecutive_dealer_hands, 1)
+        self.assertEqual(contexts[-1].hand_index, 7)
+        self.assertEqual(contexts[-1].hands_remaining, 1)
+        self.assertEqual(contexts[-1].current_dealer_base, 45)
+        self.assertEqual(contexts[-1].consecutive_dealer_hands, 8)
+        self.assertEqual(result.win_source_counts, {"discard": 8})
+        self.assertEqual(result.deal_in_count_for(0), 0)
+        self.assertEqual(result.deal_in_count_for(1), 8)
+        with self.assertRaises(ValueError):
+            result.deal_in_count_for(2)
 
     def test_real_ordinary_match_stops_on_rule_unknown(self):
         calls = []
@@ -153,6 +168,7 @@ class MatchRunnerTests(unittest.TestCase):
             "current_dealer_base": 20,
             "scores": [1010, 990],
             "hands_remaining": 6,
+            "consecutive_dealer_hands": 3,
             "hand_seed": 1002,
         })
 
@@ -192,6 +208,34 @@ class MatchRunnerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             summarize_match_rule_gaps([], max_examples_per_rule=-1)
 
+    def test_match_win_source_diagnostics_count_discard_losses(self):
+        sources = iter([
+            ("discard", 0),
+            ("self_draw", 1),
+            ("discard", 1),
+            (None, None),
+            ("discard", 0),
+            ("self_draw", 0),
+            ("discard", 1),
+            (None, None),
+        ])
+
+        def hand_runner(context):
+            source, winner = next(sources)
+            if winner is None:
+                return MatchHandResult.settled(
+                    (0, 0), winner=None, terminal_reason="WALL_16")
+            rewards = (5, -5) if winner == 0 else (-5, 5)
+            return MatchHandResult.settled(
+                rewards, winner=winner, terminal_reason="AUTO",
+                win_source=source)
+
+        result = run_eight_hand_match(hand_runner)
+        self.assertEqual(result.win_source_counts, {
+            "discard": 4, "self_draw": 2})
+        self.assertEqual(result.deal_in_count_for(0), 2)
+        self.assertEqual(result.deal_in_count_for(1), 2)
+
     def test_runner_rejects_invalid_hand_result(self):
         with self.assertRaises(TypeError):
             MatchRunner(lambda context: (1, -1)).run()
@@ -199,6 +243,8 @@ class MatchRunnerTests(unittest.TestCase):
             MatchHandResult.settled((1, 0), winner=0)
         with self.assertRaises(ValueError):
             MatchHandResult.unknown()
+        with self.assertRaises(ValueError):
+            MatchHandResult.settled((1, -1), winner=0, win_source=123)
 
 
 if __name__ == "__main__":
