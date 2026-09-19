@@ -1,0 +1,112 @@
+{
+  "evidence_id": "match_evidence_001_public_state_t10_v1",
+  "sampling_note": "Stable replay frame near 10 seconds in each hand video; player panels are anonymized as top_right / bottom_left.",
+  "score_invariant": "top_right_score + bottom_left_score = 2000",
+  "samples": [
+    {
+      "video": "session_01",
+      "hand": 1,
+      "source_time_seconds": 10,
+      "size": [
+        1046,
+        480
+      ],
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 107,
+      "gold_id": "S8"
+    },
+    {
+      "video": "session_02",
+      "hand": 2,
+      "source_time_seconds": 10,
+      "size": [
+        960,
+        448
+      ],
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 108,
+      "gold_id": "M8"
+    },
+    {
+      "video": "session_03",
+      "hand": 3,
+      "source_time_seconds": 10,
+      "size": [
+        960,
+        448
+      ],
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 107,
+      "gold_id": "P5"
+    },
+    {
+      "video": "session_04",
+      "hand": 4,
+      "source_time_seconds": 10,
+      "size": [
+        1046,
+        480
+      ],
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 105,
+      "gold_id": "M3"
+    },
+    {
+      "video": "session_05",
+      "hand": 5,
+      "source_time_seconds": 10,
+      "size": [
+        960,
+        448
+      ],
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 106,
+      "gold_id": "P2"
+    },
+    {
+      "video": "session_06",
+      "hand": 6,
+      "source_time_seconds": 10,
+      "size": [
+        1046,
+        480
+      ],
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 105,
+      "gold_id": "M7"
+    },
+    {
+      "video": "session_07",
+      "hand": 7,
+      "source_time_seconds": 10,
+      "size": [
+        960,
+        448
+      ],
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 105,
+      "gold_id": "B"
+    },
+    {
+      "video": "session_08",
+      "hand": 8,
+      "source_time_seconds": 10,
+      "size": [
+        1046,
+        480
+      ],
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 105,
+      "gold_id": "P4"
+    }
+  ],
+  "safety_note": "This fixture is observational truth for offline Vision regression only; safe_for_executor remains false."
+}
