@@ -8,6 +8,9 @@ from workspace.simulator import (CalibratingShantenAgent,
                                  DealInCalibrationSample,
                                  TenpaiRiskCalibrationRecorder,
                                  TenpaiRiskCalibrationSample,
+                                 TenpaiStateCalibrationSample,
+                                 evaluate_public_tenpai_probability_model,
+                                 fit_public_tenpai_probability_model,
                                  summarize_deal_in_calibration,
                                  summarize_tenpai_risk_calibration)
 
@@ -137,6 +140,35 @@ class DealInCalibrationTests(unittest.TestCase):
         self.assertEqual(report.auc, 1.0)
         self.assertAlmostEqual(report.mean_generation_attempts, 11.5)
         self.assertFalse(hasattr(report, "brier_score"))
+
+    def test_public_tenpai_probability_table_is_held_out_and_calibrated(self):
+        def row(seed, wall, melds, label):
+            return TenpaiStateCalibrationSample(
+                seed, 0, 0, label, wall, 2, 2, 4, melds, 0, True)
+
+        train = (
+            row(1, 112, 0, False), row(2, 110, 0, False),
+            row(3, 96, 0, False), row(4, 94, 0, False),
+            row(5, 32, 0, True), row(6, 30, 0, True),
+            row(7, 28, 1, True), row(8, 26, 1, True),
+        )
+        model = fit_public_tenpai_probability_model(
+            train, wall_bucket_size=16, prior_strength=2.0,
+            min_cell_count=1)
+        self.assertGreater(
+            model.predict(wall_remaining=28, opponent_open_melds=1),
+            model.predict(wall_remaining=112, opponent_open_melds=0),
+        )
+
+        test = (
+            row(101, 108, 0, False), row(102, 92, 0, False),
+            row(103, 34, 0, True), row(104, 24, 1, True),
+        )
+        report = evaluate_public_tenpai_probability_model(model, test)
+        self.assertEqual(report.test_samples, 4)
+        self.assertEqual(report.test_prevalence, 0.5)
+        self.assertEqual(report.auc, 1.0)
+        self.assertLess(report.brier_score, report.constant_train_rate_brier)
 
     def test_invalid_recorder_inputs_are_rejected(self):
         for value in (0, -1, True):
