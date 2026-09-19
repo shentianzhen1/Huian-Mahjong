@@ -6,6 +6,7 @@ on:
       - "workspace/vision/**"
       - "dataset/tiles_v0_1/**"
       - ".github/workflows/vision-tests.yml"
+      - "pyproject.toml"
   pull_request:
     paths:
       - "workspace/vision/**"
