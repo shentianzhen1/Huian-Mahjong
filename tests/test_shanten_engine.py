@@ -75,6 +75,16 @@ class HuianShantenTests(unittest.TestCase):
         self.assertEqual(analysis.total_live_copies, 120)
         self.assertTrue(all(item.winning for item in analysis.effective_tiles))
 
+    def test_live_gold_is_effective_for_zero_shanten(self):
+        hand = WIN[:-1]
+        analysis = analyze_effective_tiles(hand, gold_tile="P9")
+        self.assertEqual(analysis.shanten, 0)
+        self.assertIn("P9", analysis.effective_tile_types)
+        gold = next(
+            item for item in analysis.effective_tiles if item.tile == "P9")
+        self.assertTrue(gold.winning)
+        self.assertGreater(gold.remaining, 0)
+
     def test_gold_complete_hands_agree_with_rules_solver(self):
         for hand in (
             ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
