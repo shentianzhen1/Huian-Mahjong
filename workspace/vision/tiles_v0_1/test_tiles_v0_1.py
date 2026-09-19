@@ -11,6 +11,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .extract_frames import extract_key_frames
+from .evaluate_tiles import evaluate_template_dataset, summarize_predictions
 from .infer_tiles import infer_screenshot
 from .labels import append_label
 from .postprocess import MultiFrameVoter, ObservationConstraints, TilePrediction, validate_observation
@@ -103,6 +104,92 @@ class TilesV01Tests(unittest.TestCase):
             self.assertTrue(any("M1 appears 5" in issue for issue in result.issues))
             self.assertEqual(len(result.rejected), 1)
             self.assertEqual(result.accepted[0].category, "wan")
+
+    def test_holdout_evaluation_never_tests_on_its_own_template_group(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+
+            for frame_name in ("frame_a", "frame_b"):
+                image = Image.new("RGB", (40, 40), "black")
+                draw = ImageDraw.Draw(image)
+                # M1 template: vertical stroke. P1 template: horizontal stroke.
+                draw.rectangle((7, 3, 11, 36), fill="white")
+                draw.rectangle((23, 17, 36, 21), fill="white")
+                image_path = image_dir / f"{frame_name}.png"
+                image.save(image_path)
+                append_label(
+                    root, image=f"images/rois/{frame_name}.png",
+                    bbox=[0, 0, 20, 40], tile_id="M1",
+                    region="hand_region", source_frame=frame_name,
+                )
+                append_label(
+                    root, image=f"images/rois/{frame_name}.png",
+                    bbox=[20, 0, 20, 40], tile_id="P1",
+                    region="hand_region", source_frame=frame_name,
+                )
+
+            report = evaluate_template_dataset(
+                root, confidence_threshold=0.50)
+            self.assertEqual(report["method"], "leave_source_group_out")
+            self.assertEqual(report["distinct_source_groups"], 2)
+            self.assertEqual(report["total_approved_labels"], 4)
+            self.assertEqual(report["scorable_labels"], 4)
+            self.assertEqual(report["unscorable_labels"], 0)
+            self.assertEqual(report["scorable_coverage"], 1.0)
+            self.assertEqual(report["exact_accuracy"], 1.0)
+            self.assertEqual(report["category_accuracy"], 1.0)
+            self.assertFalse(report["safe_for_executor"])
+            self.assertEqual(
+                {row["group"] for row in report["predictions"]},
+                {"frame_a", "frame_b"},
+            )
+
+    def test_holdout_evaluation_exposes_missing_cross_group_class_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+            for frame_name, tile_id in (("frame_a", "M1"), ("frame_b", "P1")):
+                image = Image.new("RGB", (20, 40), "black")
+                draw = ImageDraw.Draw(image)
+                draw.rectangle((6, 4, 13, 35), fill="white")
+                image.save(image_dir / f"{frame_name}.png")
+                append_label(
+                    root, image=f"images/rois/{frame_name}.png",
+                    bbox=[0, 0, 20, 40], tile_id=tile_id,
+                    region="hand_region", source_frame=frame_name,
+                )
+            report = evaluate_template_dataset(root)
+            self.assertEqual(report["scorable_labels"], 0)
+            self.assertEqual(report["unscorable_labels"], 2)
+            self.assertEqual(report["scorable_coverage"], 0.0)
+            self.assertIsNone(report["exact_accuracy"])
+            self.assertEqual(len(report["unscorable"]), 2)
+
+    def test_accuracy_summary_separates_low_confidence_acceptance(self) -> None:
+        rows = [
+            {
+                "true_tile": "M1", "predicted_tile": "M1",
+                "confidence": 0.95, "correct": True,
+                "true_category": "wan", "predicted_category": "wan",
+                "category_correct": True, "region": "hand_region",
+            },
+            {
+                "true_tile": "P1", "predicted_tile": "P2",
+                "confidence": 0.40, "correct": False,
+                "true_category": "tong", "predicted_category": "tong",
+                "category_correct": True, "region": "draw_region",
+            },
+        ]
+        report = summarize_predictions(
+            rows, total_labels=2, confidence_threshold=0.80)
+        self.assertEqual(report["exact_accuracy"], 0.5)
+        self.assertEqual(report["category_accuracy"], 1.0)
+        self.assertEqual(report["accepted_labels"], 1)
+        self.assertEqual(report["accepted_accuracy"], 1.0)
+        self.assertEqual(report["accepted_fraction_of_scorable"], 0.5)
 
     def test_multiframe_voting_prefers_repeat_observation(self) -> None:
         voter = MultiFrameVoter()
