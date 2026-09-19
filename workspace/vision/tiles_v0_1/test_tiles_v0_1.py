@@ -182,6 +182,36 @@ class TilesV01Tests(unittest.TestCase):
             self.assertEqual(len(result.rejected), 1)
             self.assertEqual(result.accepted[0].category, "wan")
 
+    def test_operational_classifier_uses_same_region_templates(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+            sample = Image.new("RGB", (20, 40), "white")
+            draw = ImageDraw.Draw(sample)
+            draw.rectangle((7, 4, 12, 35), fill="black")
+            sample.save(image_dir / "same.png")
+
+            append_label(
+                root, image="images/rois/same.png",
+                bbox=[0, 0, 20, 40], tile_id="M1",
+                region="hand_region", source_session="hand_source",
+            )
+            append_label(
+                root, image="images/rois/same.png",
+                bbox=[0, 0, 20, 40], tile_id="P1",
+                region="draw_region", source_session="draw_source",
+            )
+            classifier = TemplateTileClassifier.from_dataset(root)
+            self.assertEqual(
+                classifier.classify(sample, region="hand_region").tile_id,
+                "M1",
+            )
+            self.assertEqual(
+                classifier.classify(sample, region="draw_region").tile_id,
+                "P1",
+            )
+
     def test_holdout_evaluation_never_tests_on_its_own_template_group(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp) / "dataset"
