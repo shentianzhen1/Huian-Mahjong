@@ -11,7 +11,8 @@ from .taxonomy import TILE_CLASSES
 from .template_classifier import TemplateTileClassifier
 
 
-def annotate(image_path, dataset_root, region, *, suggestions=False):
+def annotate(image_path, dataset_root, region, *, suggestions=False,
+             source_session=None):
     root = Path(dataset_root)
     image_path = Path(image_path)
     with Image.open(image_path) as source:
@@ -43,6 +44,7 @@ def annotate(image_path, dataset_root, region, *, suggestions=False):
         rows.append(append_label(
             root, image=image_ref, bbox=(x, y, width, height),
             tile_id=tile_id, region=region,
+            source_session=source_session,
         ))
     return rows
 
@@ -55,8 +57,18 @@ def main():
                         choices=("hand_region", "draw_region", "gold_region"))
     parser.add_argument("--suggest", action="store_true",
                         help="Offer a local template-match suggestion when labels exist")
+    parser.add_argument(
+        "--source-session",
+        help=(
+            "Stable recording/session ID shared by all frames from the same "
+            "video; used to prevent train/test leakage"
+        ),
+    )
     args = parser.parse_args()
-    rows = annotate(args.image, args.dataset, args.region, suggestions=args.suggest)
+    rows = annotate(
+        args.image, args.dataset, args.region,
+        suggestions=args.suggest, source_session=args.source_session,
+    )
     print(f"Saved {len(rows)} labels")
 
 
