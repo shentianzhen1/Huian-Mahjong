@@ -10,6 +10,12 @@ from .roi import ROIProfile
 from .template_classifier import TemplateTileClassifier, _tile_face_box
 
 
+def _prediction_payload(item):
+    payload = dict(item.__dict__)
+    payload["is_gold"] = item.region == "gold_region"
+    return payload
+
+
 def infer_screenshot(image_path, dataset_root, profile_path, constraints=ObservationConstraints()):
     profile = ROIProfile.load(profile_path)
     if not profile.calibrated:
@@ -42,8 +48,10 @@ def infer_screenshot(image_path, dataset_root, profile_path, constraints=Observa
     return {
         "image": str(Path(image_path)), "profile": profile.name,
         "valid": not result.issues and not result.rejected,
-        "predictions": [item.__dict__ for item in result.accepted],
-        "rejected_low_confidence": [item.__dict__ for item in result.rejected],
+        "predictions": [_prediction_payload(item) for item in result.accepted],
+        "rejected_low_confidence": [
+            _prediction_payload(item) for item in result.rejected
+        ],
         "issues": list(result.issues),
         "markers": markers,
         "safe_for_executor": False,
