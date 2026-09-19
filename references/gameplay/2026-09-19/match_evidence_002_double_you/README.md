@@ -43,7 +43,7 @@ Confirmed behavior now is:
 4. A later own draw while the player still holds the same **3 gold** can offer Sanjindao again. The replay contains repeated PASS nodes while the same three highlighted SOUTH tiles remain visible.
 5. Passing Sanjindao does not remove ordinary Hu or the Youjin-family branch; this same hand later enters Youjin and terminates as Double-You.
 
-The current evidence does **not** yet claim that a later own-draw check with four gold must behave the same way. Keep that edge explicit until directly observed.
+Player clarification on 2026-09-20 closes the former four-gold edge: the opened gold indicator is itself one of the four physical copies and stays in the public indicator area, so it cannot later be drawn. Only three playable gold copies exist; four playable golds are physically impossible.
 
 Multiplier evidence is separate from terminal-settlement evidence:
 - Sanjindao multiplier = **×3** is confirmed/adopted from player confirmation plus the in-game rule page.
