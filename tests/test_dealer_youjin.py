@@ -11,13 +11,15 @@ from huian.rules.dealer_base import (
 
 
 class DealerBaseTests(unittest.TestCase):
-    def test_sitting_and_repeats_have_no_cap_inside_eight_hands(self):
-        expected = [5, 10, 15, 20, 25, 30, 35, 40]
+    def test_engineering_repeat_sequence_starts_at_confirmed_ten(self):
+        # Direct target evidence confirms first sit=10 and +5 through at least 35.
+        # 40/45 are arithmetic simulator continuation, not proof of a real-room cap.
+        expected = [10, 15, 20, 25, 30, 35, 40, 45]
         for n, base in enumerate(expected, start=1):
             self.assertEqual(dealer_base_for_consecutive_hands(n), base)
             self.assertTrue(match_hand_in_range(n - 1))
         self.assertEqual(MATCH_HAND_COUNT, 8)
-        self.assertEqual(expected[-1], 5 + 5 * 7)
+        self.assertEqual(expected[-1], 10 + 5 * 7)
         with self.assertRaises(ValueError):
             match_hand_in_range(8)
         with self.assertRaises(ValueError):
