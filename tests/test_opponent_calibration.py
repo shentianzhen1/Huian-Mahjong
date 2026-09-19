@@ -4,7 +4,10 @@ from huian._legacy import env
 from workspace.ai import PlayerObservation
 from workspace.simulator import (DealInCalibrationRecorder,
                                  DealInCalibrationSample,
-                                 summarize_deal_in_calibration)
+                                 TenpaiRiskCalibrationRecorder,
+                                 TenpaiRiskCalibrationSample,
+                                 summarize_deal_in_calibration,
+                                 summarize_tenpai_risk_calibration)
 
 
 def observation(seat=0, phase="AFTER_DRAW"):
@@ -81,12 +84,45 @@ class DealInCalibrationTests(unittest.TestCase):
         self.assertIsNone(report.auc)
         self.assertTrue(all(item.count == 0 for item in report.bins))
 
+    def test_tenpai_risk_recorder_uses_same_environment_label_boundary(self):
+        recorder = TenpaiRiskCalibrationRecorder(
+            hand_seed=11, template_samples=2)
+        recorder.record_discard(observation(0), "M1")
+        hu = env.Action(1, env.ActionType.HU, tile="M1")
+        recorder.observe_turn(observation(1, "AFTER_DISCARD"), [hu])
+        self.assertEqual(len(recorder.samples), 1)
+        row = recorder.samples[0]
+        self.assertTrue(row.actual_deal_in)
+        self.assertTrue(0.0 <= row.risk_score <= 1.0)
+        self.assertEqual(row.template_samples, 2)
+        self.assertGreaterEqual(row.generation_attempts, 2)
+
+    def test_tenpai_risk_summary_reports_ranking_not_brier(self):
+        rows = (
+            TenpaiRiskCalibrationSample(1,0,0,"M1",0.8,True,10,8,12,0,16,50),
+            TenpaiRiskCalibrationSample(1,1,1,"M2",0.6,True,10,6,13,0,16,49),
+            TenpaiRiskCalibrationSample(1,2,0,"M3",0.2,False,10,2,11,0,16,48),
+            TenpaiRiskCalibrationSample(1,3,1,"M4",0.1,False,10,1,10,0,16,47),
+        )
+        report = summarize_tenpai_risk_calibration(
+            rows, hands_attempted=2,
+            hand_status_counts={"COMPLETED": 2})
+        self.assertEqual(report.labelled_discards, 4)
+        self.assertEqual(report.positive_deal_ins, 2)
+        self.assertAlmostEqual(report.mean_score_positive, 0.7)
+        self.assertAlmostEqual(report.mean_score_negative, 0.15)
+        self.assertEqual(report.auc, 1.0)
+        self.assertAlmostEqual(report.mean_generation_attempts, 11.5)
+        self.assertFalse(hasattr(report, "brier_score"))
+
     def test_invalid_recorder_inputs_are_rejected(self):
         for value in (0, -1, True):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 DealInCalibrationRecorder(hand_seed=1, mc_samples=value)
         with self.assertRaises(ValueError):
             DealInCalibrationRecorder(hand_seed=True, mc_samples=4)
+        with self.assertRaises(ValueError):
+            TenpaiRiskCalibrationRecorder(hand_seed=1, template_samples=0)
 
 
 if __name__ == "__main__":
