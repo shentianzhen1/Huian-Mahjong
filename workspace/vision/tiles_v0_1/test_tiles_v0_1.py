@@ -648,7 +648,9 @@ class TilesV01Tests(unittest.TestCase):
         # Gray pass: top is unreadable, bottom is a clean 923.
         backend = FakeOCR(["", "923"])
         frame = Image.new("RGB", (1000, 500), "black")
-        read = read_score_pair(frame, backend=backend)
+        read = read_score_pair(
+            frame, backend=backend, gray_first=True
+        )
         self.assertEqual(read.score_pair, (1077, 923))
         self.assertEqual(read.mode, "gray_inferred_top")
         self.assertEqual(read.confidence, 0.75)
