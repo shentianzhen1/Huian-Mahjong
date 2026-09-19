@@ -105,3 +105,126 @@ def estimate_ordinary_deal_in_probabilities(
             opponent_open_melds=open_melds,
         ))
     return tuple(estimates)
+
+
+@dataclass(frozen=True)
+class TenpaiWaitRiskEstimate:
+    """Relative wait danger under an explicit tenpai-template prior.
+
+    ``risk_score`` is NOT an absolute deal-in probability. It is the fraction
+    of accepted synthetic tenpai templates that can ordinary-Ron the candidate.
+    """
+
+    tile: str
+    risk_score: float
+    matching_templates: int
+    templates_used: int
+    generation_attempts: int
+    opponent_concealed_count: int
+    opponent_open_melds: int
+
+    @property
+    def is_deal_in_probability(self):
+        return False
+
+
+_MELD_TEMPLATES = tuple(
+    [(tile, tile, tile) for tile in env.BASE_TILES]
+    + [
+        (f"{suit}{start}", f"{suit}{start + 1}", f"{suit}{start + 2}")
+        for suit in "MPS"
+        for start in range(1, 8)
+    ]
+)
+
+
+def _sample_tenpai_template(rng, unseen_counts, gold_tile, open_melds):
+    concealed_melds = 5 - open_melds
+    pair_tile = rng.choice(env.BASE_TILES)
+    completed = [pair_tile, pair_tile]
+    for _ in range(concealed_melds):
+        completed.extend(rng.choice(_MELD_TEMPLATES))
+    counts = Counter(completed)
+    if any(count > 4 for count in counts.values()):
+        return None
+
+    removed_index = rng.randrange(len(completed))
+    completed.pop(removed_index)
+    prehand = tuple(completed)
+    pre_counts = Counter(prehand)
+    if any(pre_counts[tile] > unseen_counts[tile] for tile in pre_counts):
+        return None
+    if ordinary_shanten(prehand, gold_tile=gold_tile, open_melds=open_melds) != 0:
+        return None
+    return prehand
+
+
+def estimate_tenpai_wait_risk_scores(
+        observation, candidate_tiles, *, samples=32, seed=0,
+        max_attempt_factor=200):
+    """Score candidate discards against public-info-compatible tenpai templates.
+
+    This intentionally conditions on the opponent already being in ordinary
+    tenpai. It therefore fixes the fatal prior of uniform unseen-hand sampling
+    but does not estimate how likely the opponent is to be tenpai. The returned
+    value is a relative risk feature and must not be called a deal-in probability.
+    """
+    if type(samples) is not int or samples <= 0:
+        raise ValueError("samples must be a positive integer")
+    if type(seed) is not int:
+        raise ValueError("seed must be an integer")
+    if type(max_attempt_factor) is not int or max_attempt_factor <= 0:
+        raise ValueError("max_attempt_factor must be a positive integer")
+    candidates = tuple(dict.fromkeys(candidate_tiles))
+    if not candidates:
+        raise ValueError("candidate_tiles must be nonempty")
+    own = Counter(observation.hand)
+    for tile in candidates:
+        if tile not in env.BASE_TILES:
+            raise ValueError("risk candidates must be base tiles")
+        if own[tile] <= 0:
+            raise ValueError("risk candidate must be in the acting hand")
+
+    opponent = 1 - observation.seat
+    open_melds = len(observation.melds[opponent])
+    if not 0 <= open_melds <= 5:
+        raise ValueError("opponent open meld count must be between zero and five")
+    concealed_count = (5 - open_melds) * 3 + 1
+
+    known = _base_public_counter(observation)
+    unseen_counts = Counter({
+        tile: 4 - known[tile] for tile in env.BASE_TILES
+    })
+    if sum(unseen_counts.values()) < concealed_count:
+        raise ValueError("public state leaves too few unseen tiles for opponent hand")
+
+    rng = Random(seed)
+    accepted = []
+    attempts = 0
+    max_attempts = samples * max_attempt_factor
+    while len(accepted) < samples and attempts < max_attempts:
+        attempts += 1
+        hand = _sample_tenpai_template(
+            rng, unseen_counts, observation.gold_tile, open_melds)
+        if hand is not None:
+            accepted.append(hand)
+    if not accepted:
+        raise RuntimeError("could not generate a public-compatible tenpai template")
+
+    estimates = []
+    for tile in candidates:
+        matches = sum(
+            _ordinary_discard_hu(
+                hand, tile, observation.gold_tile, open_melds)
+            for hand in accepted
+        )
+        estimates.append(TenpaiWaitRiskEstimate(
+            tile=tile,
+            risk_score=matches / len(accepted),
+            matching_templates=matches,
+            templates_used=len(accepted),
+            generation_attempts=attempts,
+            opponent_concealed_count=concealed_count,
+            opponent_open_melds=open_melds,
+        ))
+    return tuple(estimates)
