@@ -1,0 +1,36 @@
+name: Tenpai Risk Calibration Pilot
+
+on:
+  push:
+    paths:
+      - ".github/workflows/tenpai-risk-calibration-pilot-once.yml"
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run 100-hand tenpai-risk calibration
+        run: |
+          python -B - <<'PY'
+          import json
+          from time import perf_counter
+          from workspace.simulator import run_tenpai_risk_calibration
+
+          started = perf_counter()
+          report = run_tenpai_risk_calibration(
+              range(100), template_samples=16, max_steps=1000)
+          elapsed = perf_counter() - started
+          payload = report.to_dict()
+          payload.pop("samples", None)
+          payload["elapsed_seconds"] = elapsed
+          payload["labelled_discards_per_second"] = (
+              report.labelled_discards / elapsed if elapsed else None)
+          print("TENPAI_RISK_CALIBRATION_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("TENPAI_RISK_CALIBRATION_END")
+          PY
