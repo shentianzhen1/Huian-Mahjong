@@ -11,9 +11,9 @@ from huian.rules.dealer_base import (
 
 
 class DealerBaseTests(unittest.TestCase):
-    def test_engineering_repeat_sequence_starts_at_confirmed_ten(self):
-        # Direct target evidence confirms first sit=10 and +5 through at least 35.
-        # 40/45 are arithmetic simulator continuation, not proof of a real-room cap.
+    def test_uncapped_repeat_sequence_runs_through_all_eight_hands(self):
+        # Player confirmation 2026-09-19: if the same dealer keeps the seat,
+        # dealer base has no cap inside the fixed eight-hand match.
         expected = [10, 15, 20, 25, 30, 35, 40, 45]
         for n, base in enumerate(expected, start=1):
             self.assertEqual(dealer_base_for_consecutive_hands(n), base)
