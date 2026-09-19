@@ -140,7 +140,7 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 牌面识别之外，目标房还公开显示两侧当前分数、剩余牌数和第几局/8。头像/昵称不做身份识别，只作为固定UI锚点。
 
-`public_state.py` 当前先实现“读数后的可信融合层”，不绑定某一种OCR：
+`public_state.py` 负责“读数后的可信融合层”：
 
 - `HuianPublicStateProfile` 使用归一化ROI，覆盖当前960×448与1046×480录像；
 - 双方分数必须满足总和2000；
@@ -154,9 +154,31 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 匿名证据场次 `match_evidence_001` 的八局稳定时点真值见 `references/vision/2026-09-19/match_evidence_001_public_state_seed.json`。
 
-`public_state_scores.py` 已接入第一版比分读取器。当前实现把OCR当作候选生成器而不是事实源：12×放大、70/80/90三阈值digits-only读取后，只接受双方和为2000的组合；若一侧完全没有候选，则只有另一侧恰好一个候选时才允许用2000守恒反推。现有8局64组时点中，单阈值裸OCR为125/128=97.66%，加入物理约束后比分对64/64正确。后者是当前同批录像系统级结果，不是OCR本身100%，也不是外部泛化率。
+### 比分读取
 
-当前OCR后端是可替换的 `TesseractCLIBackend`。运行该后端需要系统中存在 `tesseract` 可执行文件；状态融合层不依赖Tesseract，后续可替换为ONNX/专用数字模型。下一步优先接剩余牌数和第几局/8，而不是让任何单帧OCR直接进入AI。
+`public_state_scores.py` 把OCR当候选生成器而不是事实源：12×放大、70/80/90三阈值digits-only读取后，只接受双方和为2000的组合；一侧完全缺失时，仅当另一侧只有唯一可信候选才允许反推。现有8局在5/10/15/20/25/30/40/50秒共64组画面上：
+
+- 单阈值80裸OCR：125/128 = **97.66%**
+- 物理约束后的比分对：64/64正确（63直接，1次唯一侧反推）
+
+当前默认仍是这条已验证路径。另保留灰度/autocontrast单通道作为显式诊断选项，不取代主门槛。
+
+### 剩余牌数 / 第几局
+
+`public_state_status.py` 新增两个独立ROI：`remaining_tiles` 与 `hand_progress`。目标UI数字7经常被Tesseract识别为 `/`，所以只在紧裁数字字段中做结构化 `/ -> 7` 纠错。
+
+8局约10秒稳定帧首轮结果：
+
+- 剩余牌数：**8/8正确**
+- 直接局号：**7/8正确**
+- 第5局 `5/8` 被读成 `0/8` 时保持unreadable，不直接猜5
+- 若上一局已可信、双方2000守恒比分发生真实变化，且只允许进入上一局+1，则可把该缺失局号安全恢复；顺序处理后8局为 **8/8完整PublicState种子**
+
+`public_state_reader.py` 已把比分、剩余牌数、局号和 `fuse_public_state()` 合成统一帧/窗口读取接口。详细基线：`references/vision/2026-09-19/public_state_v01_baseline.md`。
+
+当前OCR后端是可替换的 `TesseractCLIBackend`。运行数字读取需要系统存在 `tesseract` 可执行文件；CI会显式安装它。Windows机器后续只需安装Tesseract并加入PATH，或向读取器传入 `tesseract.exe` 路径。状态融合层不依赖Tesseract，将来可替换为ONNX/专用数字模型。
+
+下一步优先做：剩余牌/局号的多时点统计、新独立录像PublicState泛化，以及缩放/移动/遮挡压力测试。
 
 ### Executor 门槛
 
