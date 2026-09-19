@@ -31,10 +31,10 @@ class TemplateTileClassifier:
             raise ValueError("No approved tile labels are available for offline inference")
 
     @classmethod
-    def from_dataset(cls, dataset_root):
+    def from_labels(cls, dataset_root, labels):
         root = Path(dataset_root)
         templates = {}
-        for label in approved_labels(root):
+        for label in labels:
             image_path = root / label["image"]
             if not image_path.exists():
                 continue
@@ -45,6 +45,11 @@ class TemplateTileClassifier:
                 crop = source.convert("RGB").crop((x, y, x + width, y + height))
             templates.setdefault(label["tile_id"], []).append(_feature(crop))
         return cls(templates)
+
+    @classmethod
+    def from_dataset(cls, dataset_root):
+        root = Path(dataset_root)
+        return cls.from_labels(root, approved_labels(root))
 
     def classify(self, image):
         sample = _feature(image)
