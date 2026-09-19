@@ -11,6 +11,7 @@ All player/room identifiers are intentionally omitted.
 ## Direct observations
 
 - ~0 s: hand 8/8 replay begins with the bottom player visibly holding **three gold tiles** (three highlighted SOUTH tiles). Play continues.
+- ~43.7 s and again ~51.7 s: while those same **three gold tiles** remain visible, the replay shows an optional-action node with a visible **PASS / 过** button. The replay controller partly covers the declaration button text, so the button label itself is not independently readable from the recording; the player clarification identifies these repeated nodes as Sanjindao choices. This is the key correction: passing one Sanjindao prompt does **not** permanently close Sanjindao for the hand.
 - ~81.5 s: a **You / 游** animation appears while those **three gold tiles are still visibly in hand**.
 - ~83.9 s: immediately before the next upgrade, the hand still visibly contains the three gold tiles.
 - ~84.5–85.5 s: **Double-You / 双游** animation appears; after the transition the visible hand contains **two gold tiles**.
@@ -32,24 +33,27 @@ The arithmetic is exact:
 
 ### Sanjindao / 三金倒
 
-This replay is consistent with the already documented opening branch: a hand may begin the first actionable state with three golds and continue after declining the optional Sanjindao result.
+This replay plus the player's clarification corrects the previous "one-shot for the whole hand" model.
 
-Therefore the project must not encode Sanjindao as *only* "a normal in-hand draw changed 2 gold -> 3 gold".
+Confirmed behavior now is:
 
-The one-shot entry has two evidence-backed forms:
+1. **Opening check** after opening flower replacement/open-gold is complete can offer Sanjindao when the current actor already has **3+ gold**.
+2. A normal mid-hand **2 gold -> 3 gold** arrival can offer Sanjindao.
+3. Choosing **PASS / 过 closes only that current prompt**. It does **not** permanently disable Sanjindao for the rest of the hand.
+4. A later own draw while the player still holds the same **3 gold** can offer Sanjindao again. The replay contains repeated PASS nodes while the same three highlighted SOUTH tiles remain visible.
+5. Passing Sanjindao does not remove ordinary Hu or the Youjin-family branch; this same hand later enters Youjin and terminates as Double-You.
 
-1. **opening check** after opening flower replacement/open-gold is complete, when the current acting player already has **3+ gold**;
-2. **mid-hand third-gold arrival**, when a valid draw changes the player from 2 gold to exactly 3.
+The current evidence does **not** yet claim that a later own-draw check with four gold must behave the same way. Keep that edge explicit until directly observed.
 
-PASS/continue permanently closes Sanjindao for that hand. Merely still holding 3 gold later, or later reaching a fourth gold, must not reopen it.
-
-The replay UI does not preserve the original Sanjindao prompt, so it is evidence for the continued-play state, not a direct screenshot of the DECLARE/PASS popup.
+Multiplier evidence is separate from terminal-settlement evidence:
+- Sanjindao multiplier = **×3** is confirmed/adopted from player confirmation plus the in-game rule page.
+- This replay does **not** contain a terminal Sanjindao settlement page, so payer/base/fan/dealer-flow details remain unresolved.
 
 ### Youjin / 游金 chain
 
 The Youjin stage is **not determined by current gold count**.
 
-This replay directly shows **Youjin while three gold tiles remain in hand**. It then reaches Double-You and terminates with two gold tiles.
+This replay directly shows **Youjin while three gold tiles remain in hand**. It then reaches Double-You and terminates with two gold tiles. Because the player had already passed Sanjindao earlier, it also directly supports that a Sanjindao PASS does not block the later Youjin/Double-You route.
 
 Therefore these old simplifications are invalid:
 
