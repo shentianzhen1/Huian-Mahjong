@@ -8,6 +8,7 @@ from workspace.simulator import MatchProgressState
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "settlement_7bc12fa.json"
 MATCH_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "settlement_match_evidence_001_8hands.json"
+DOUBLE_YOU_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "settlement_match_evidence_002_double_you.json"
 
 
 class SettlementFixtureTests(unittest.TestCase):
@@ -31,6 +32,41 @@ class SettlementFixtureTests(unittest.TestCase):
             data["net"],
         )
 
+
+    def test_match_evidence_002_directly_confirms_double_you_x8(self):
+        data = json.loads(DOUBLE_YOU_FIXTURE.read_text(encoding="utf-8"))
+        self.assertEqual(data["stage"], "DOUBLE_YOU")
+        self.assertEqual(data["youjin_multiplier"], 8)
+        self.assertEqual(
+            data["winner_fan"],
+            data["fan_breakdown"]["gold"] + data["fan_breakdown"]["flowers"],
+        )
+        self.assertEqual(
+            (data["current_dealer_base"] + data["winner_fan"])
+            * data["youjin_multiplier"],
+            data["net"],
+        )
+        self.assertEqual(data["net"], 264)
+        self.assertEqual(data["rewards"], [264, -264])
+        self.assertEqual(
+            data["observed_path"]["youjin_visible_gold_count"], 3
+        )
+        self.assertEqual(
+            data["observed_path"]["terminal_visible_gold_count"], 2
+        )
+
+        terms = HuianRules().youjin_score_terms(
+            YoujinStage.DOUBLE_YOU,
+            winner=data["winner"],
+            dealer=data["dealer"],
+            winner_fan=data["winner_fan"],
+        )
+        self.assertEqual(terms.youjin_multiplier, 8)
+        self.assertEqual(terms.dealer_multiplier, 1)
+        self.assertEqual(
+            terms.total_for_current_dealer_base(data["current_dealer_base"]),
+            264,
+        )
 
     def test_match_evidence_001_full_match_fixture_replays_scores_and_dealer_bases(self):
         data = json.loads(MATCH_FIXTURE.read_text(encoding="utf-8"))
