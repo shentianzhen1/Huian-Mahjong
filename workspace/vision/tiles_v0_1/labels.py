@@ -6,7 +6,7 @@ from .taxonomy import category_for
 
 
 def append_label(dataset_root, *, image, bbox, tile_id, region, status="approved",
-                 source_frame=None, annotator="manual"):
+                 source_frame=None, source_session=None, annotator="manual"):
     if region not in ("hand_region", "draw_region", "gold_region"):
         raise ValueError(f"Unknown region: {region}")
     if status not in ("approved", "review", "rejected"):
@@ -20,7 +20,8 @@ def append_label(dataset_root, *, image, bbox, tile_id, region, status="approved
     row = {
         "image": str(image).replace("\\", "/"), "bbox": list(bbox),
         "tile_id": tile_id, "category": category_for(tile_id), "region": region,
-        "status": status, "source_frame": source_frame, "annotator": annotator,
+        "status": status, "source_frame": source_frame,
+        "source_session": source_session, "annotator": annotator,
     }
     path = root / "labels" / "tiles.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
