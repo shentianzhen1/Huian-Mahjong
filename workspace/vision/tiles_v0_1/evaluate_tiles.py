@@ -89,7 +89,8 @@ def summarize_predictions(rows, *, total_labels, confidence_threshold):
     }
 
 
-def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,\n                              template_scope="all_regions"):
+def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
+                              template_scope="all_regions"):
     """Leave one source-frame/image group out and report exact tile accuracy.
 
     A test label is scored only if its true tile class has at least one approved
