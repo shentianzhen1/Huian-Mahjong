@@ -1,5 +1,29 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-19 room541913 complete eight-hand replay
+
+A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/room541913_full_8hand/README.md`.
+
+Direct conclusions:
+
+- **First sitting dealer current settlement base = 10.** The non-dealer own displayed base is 5. The earlier player wording “坐庄底分5分，连庄+5” is now reconciled with the UI: becoming dealer adds the dealer +5 on top of the ordinary 5-base display, so the first dealer settlement base is 10, not 5.
+- **Repeat dealer adds +5 each hand.** This match directly shows dealer settlement bases 10 → 15 → 20 → 25, and after the dealer loses the new dealer resets to 10. The upper cap beyond observed evidence remains UNKNOWN; older direct target evidence reaches base35.
+- **All 8 hands satisfy the same net formula:** `(current dealer settlement base + winner fan) × Hu-method multiplier`. The loser fan is not subtracted.
+- **Dealer Youjin has no extra dealer ×2.** Hand 5 is a dealer Youjin with gold2 + flowers2 = 4 fan and settles exactly `(15+4)×4 = 76`, not 152. Together with the earlier dealer Triple-You +608, this closes the old extra-dealer-multiplier hypothesis for the target room.
+- **Simple Youjin can coexist with two gold tiles.** Hand 5 ends as `游金×4` while the settlement explicitly lists `金牌2番`; both golds count +1 fan. Therefore Youjin/Double/Triple stage is not the same thing as current gold-tile count.
+- **Ordinary self-draw with two gold is directly reconfirmed.** Hand 1: gold2 + flower1, `(10+3)×2=26`.
+- **Suited concealed kong = 3 fan is directly confirmed.** Hand 6 shows the fourth suited tile being drawn into three concealed copies, a concealed-kong declaration, and settlement `杠牌3番`. This upgrades that kong-table cell from rule-page-only evidence to target-room CONFIRMED.
+
+Observed hand formulas:
+1. Zimo: `(10+3)×2=26`
+2. Youjin: `(15+2)×4=68`
+3. Zimo: `(10+1)×2=22`
+4. Zimo: `(10+2)×2=24`
+5. Dealer Youjin: `(15+4)×4=76`
+6. Pinghu: `(20+5)×1=25`
+7. Pinghu: `(25+3)×1=28`
+8. Zimo: `(10+8)×2=36`
+
 ## 2026-09-19 special-multiplier evidence normalization
 
 A re-review of the archived Huian two-player replay evidence separates **direct target-room settlements** from **in-game rule-page multipliers**:
@@ -164,34 +188,32 @@ Archived frames and a full transcription are in
 For observed Pinghu and Zimo cases, the formula
 `(current dealer base + winner fan) × win-type multiplier` is now supported by
 multiple direct recordings, including the dealer Zimo +68/-68 above with no extra dealer factor. The direct non-dealer Youjin +100 and the ingested dealer Triple-You +608 are separate special examples that use the same formula; 抢金、三金倒 and complete special-outcome flows remain unresolved. Independent kong fees are explicitly confirmed absent.
-## Dealer base — player confirmation and observed display values
+## Dealer base — complete-match mapping
 
-Player confirmation (2026-09-15), verbatim: “坐庄底分5分，连庄+5”. The +5 increment per repeat is confirmed. Preserve the stated sitting-dealer base of 5 as player feedback; its exact relationship to the observed dealer badge/displayed base must be reconciled against `a562bd213645d8d998e47bf62bdb45de.mp4`, which has not yet been reviewed. Do not overwrite the directly observed values below or infer a cap.
-Observed:
-- non-dealer: 5 base
-- dealer: 10 base
-- 庄2: 15 base
-- 庄3: 20 base (direct 66fe863f settlement)
-- 庄5: 30 base (direct b3892b34 settlement)
-- current dealer base 35 (direct 7bc12fa Triple-You +608; winner badge 5庄, winner is dealer)
-Each repeat adds +5 according to the player confirmation. The first dealer-label/display mapping and any cap remain UNKNOWN. Do not merge 7bc12fa's 5庄/base35 with b3892b34's 庄5/base30; the badge strings look similar and the bases differ.
+The 2026-09-19 room541913 complete 8-hand replay resolves the earlier field-mapping ambiguity.
+
+Confirmed target-room mapping:
+- non-dealer own displayed base: **5**
+- newly sitting dealer current settlement base: **10**
+- second consecutive dealer hand: **15**
+- third consecutive dealer hand: **20**
+- fourth consecutive dealer hand: **25**
+- dealer loss: opponent becomes dealer and resets to **10**
+- each additional consecutive dealer hand adds **+5**
+
+This directly reconciles the earlier player wording “坐庄底分5分，连庄+5”: the ordinary player base is 5 and sitting dealer contributes another +5 to the settlement base. The simulator must therefore use 10, not 5, for the first dealer hand.
+
+Older direct target evidence also reaches dealer base 30 and 35. The cap beyond the directly observed range remains UNKNOWN. Do not infer 40/45 as confirmed merely because the arithmetic continuation is convenient for simulation.
 
 ## Flower scoring
-Confirmed by player feedback, with supporting real screenshot evidence:
-- each flower has a base value of 1 fan
 
-Additional real screenshot evidence:
-- three ordinary flowers can show 3 fan
-- six flowers have shown 10 fan
+CONFIRMED for the target room:
+- each flower = **1 fan**
+- flower fan is strictly linear
+- 4 flowers = 4 fan; completing 春夏秋冬 or 梅兰竹菊 does **not** add a separate four-flower group bonus
+- after declining Eight-Flower-You, all 8 flowers remain **8 ordinary fan**
 
-A strong working explanation is:
-- each ungrouped flower: 1 fan
-- complete 春夏秋冬 set: likely 8 total fan for those four
-- complete 梅兰竹菊 set: likely 8 total fan for those four
-- all eight flowers: likely 16 total fan
-This explains six flowers containing one complete set: 8 + 2 = 10.
-
-External sources conflict (some say a four-flower set is 6). Real Huian screenshots take priority.
+The game-internal generic page item “八花齐16番” is retained only as a separate evidence lead for the special eight-flower context; it must not override the player-confirmed linear ordinary flower fan and must not be read as “Eight-Flower-You ×16”.
 
 ## Gold / triplet / kong working values
 External Quanzhou-family sources and prior rules are broadly consistent with:
@@ -202,7 +224,7 @@ External Quanzhou-family sources and prior rules are broadly consistent with:
 - honor exposed kong: 3
 - normal concealed kong: 3
 - honor concealed kong: 4
-Direct b3892b34 evidence supports gold 1 and the natural S999/WWW concealed-triplet examples at 1/2 fan. The direct 66fe863f sequence adds a suited P1 added-kong example contributing 2 fan. Uncovered aggregation edge cases, other kong categories and independent kong fees still need their own evidence.
+Direct b3892b34 evidence supports gold 1 and the natural S999/WWW concealed-triplet examples at 1/2 fan. The direct 66fe863f sequence confirms a suited added-kong at 2 fan. Room541913 hand 6 directly confirms a suited concealed kong at 3 fan. Honor-kong cells and suited big-Ming-kong remain HIGH_CONFIDENCE from the in-game rule page unless stronger target-room evidence appears. Independent kong fees are confirmed absent.
 
 ## Youjin chain
 Confirmed from 66fe863f and 7bc12fa (target room):
@@ -210,7 +232,7 @@ Confirmed from 66fe863f and 7bc12fa (target room):
 - Entry does not require discarding gold. After tenpai, discarding a waste tile can enter Youjin (7bc12fa: 一条 or 二条 while gold remains 一筒; 66fe863f: discard S1, retain gold M1).
 - Chi then Youjin is allowed.
 - Upgrades are sequential in the ingested clip: Youjin → Double-You → Triple-You. Double-You / Triple-You are not “further gold actions”; gold stayed in hand while waste tiles were discarded and 八万 was drawn.
-- Multipliers: 4 / 8 / 16. Dealer Triple-You uses the same formula with no extra dealer ×2.
+- Multipliers: Youjin ×4 is direct-settlement CONFIRMED; Double-You ×8 remains HIGH_CONFIDENCE pending a hand that ends at that stage; Triple-You ×16 is direct-settlement CONFIRMED. Dealer Youjin hand 5 in room541913 and the earlier dealer Triple-You +608 both prove there is no extra dealer ×2.
 - The Youjin-side player may PASS opponent discards while climbing the chain.
 
 Still UNKNOWN programmatically:
@@ -219,7 +241,7 @@ Still UNKNOWN programmatically:
 - which actions cancel the state in every case
 - opponent Hu sources during Youjin / Double-You / Triple-You beyond the 2026-09-14 oral permissions (this clip does not show the opponent winning)
 
-The 66fe863f replay remains one Youjin ×4 path after Chi. 7bc12fa adds the climb to Triple-You ×16 and dealer-winner settlement +608.
+The 66fe863f replay remains one Youjin ×4 path after Chi. Room541913 adds a second Youjin ×4 settlement and, crucially, a dealer Youjin with two gold tiles settling +76 without extra dealer ×2. 7bc12fa adds the climb to Triple-You ×16 and dealer-winner settlement +608.
 
 ## Multipliers
 Real Huian screenshot confirms:
@@ -233,7 +255,7 @@ These historical external alternatives must not override the now-confirmed targe
 
 The user-supplied 惠安 tab lists Youjin/Double/Triple as **4/8/16**, not 4/8/12.
 The 2026-09-15 player confirmation now applies 4/8/16 to the target two-player
-room. Flower fan is included before the Hu multiplier in the +608 recording and ordinary direct recordings. Extra Youjin-chain dealer ×2 is withdrawn from the default formula: ordinary dealer Zimo +68 and dealer Triple-You +608 both omit it. The page's outer ×3 must not be applied to the verified two-player calculation.
+room. Flower fan is included before the Hu multiplier in the +608 recording and ordinary direct recordings. Extra Youjin-chain dealer ×2 is now directly rejected for the target room: room541913 hand 5 is dealer Youjin and settles +76 as `(15+4)×4`, while the earlier dealer Triple-You settles +608 as `(35+3)×16`. The page's outer ×3 must not be applied to the verified two-player calculation.
 
 ## Still important UNKNOWN questions
 1. 抢金 remaining gaps: the exact effective Hu decomposition/options and settlement/dealer result. Current-player ownership and PASS-does-not-handoff are resolved; do not re-open them as UNKNOWN.
@@ -242,7 +264,7 @@ room. Flower fan is included before the Hu multiplier in the +608 recording and 
 4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin 4/8/16 and `(current dealer base + winner fan) × Hu multiplier` are confirmed by the ingested 7bc12fa dealer Triple-You +608. Sequential climb Youjin→Double→Triple and self-PASS while climbing are confirmed in that clip. Exact predicate for every upgrade discard, cancellation, opponent Hu windows on video, payer UI and next-dealer result remain UNKNOWN.
 5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
 6. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
-7. Remaining room multipliers outside ordinary Pinghu/Zimo 1/2, Sanjindao ×3 and Youjin 4/8/16. Extra Youjin-chain dealer ×2 is not used in ingested dealer Zimo +68 or dealer Triple-You +608; do not implement it until a new settlement shows it.
+7. Remaining room multipliers outside ordinary Pinghu/Zimo 1/2, Sanjindao ×3, Youjin ×4, and Triple-You ×16. Double-You ×8 remains HIGH_CONFIDENCE pending a direct terminal ×8 settlement. The extra Youjin-chain dealer ×2 hypothesis is closed as false for the target room by dealer Youjin +76 and dealer Triple-You +608.
 8. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
 9. Exact Tianhu timing relative to flower replacement/open-gold.
 10. Exact Tianting definition.
