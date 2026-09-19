@@ -14,7 +14,7 @@
   "hands": [
     {
       "hand": 1,
-      "settlement_time": "2026-09-19 01:10:02",
+      "settlement_time": "2026-09-18 22:17",
       "dealer": 0,
       "dealer_streak": 1,
       "current_dealer_base": 10,
@@ -38,7 +38,7 @@
     },
     {
       "hand": 2,
-      "settlement_time": "2026-09-19 01:13:00",
+      "settlement_time": "2026-09-18 22:18",
       "dealer": 0,
       "dealer_streak": 2,
       "current_dealer_base": 15,
@@ -62,7 +62,7 @@
     },
     {
       "hand": 3,
-      "settlement_time": "2026-09-19 01:16:41",
+      "settlement_time": "2026-09-18 22:20",
       "dealer": 1,
       "dealer_streak": 1,
       "current_dealer_base": 10,
@@ -85,7 +85,7 @@
     },
     {
       "hand": 4,
-      "settlement_time": "2026-09-19 01:18:51",
+      "settlement_time": "2026-09-18 22:21",
       "dealer": 0,
       "dealer_streak": 1,
       "current_dealer_base": 10,
@@ -108,7 +108,7 @@
     },
     {
       "hand": 5,
-      "settlement_time": "2026-09-19 01:21:33",
+      "settlement_time": "2026-09-18 22:22",
       "dealer": 0,
       "dealer_streak": 2,
       "current_dealer_base": 15,
@@ -132,7 +132,7 @@
     },
     {
       "hand": 6,
-      "settlement_time": "2026-09-19 01:23:21",
+      "settlement_time": "2026-09-18 22:23",
       "dealer": 0,
       "dealer_streak": 3,
       "current_dealer_base": 20,
@@ -157,7 +157,7 @@
     },
     {
       "hand": 7,
-      "settlement_time": "2026-09-19 01:25:56",
+      "settlement_time": "2026-09-18 22:25",
       "dealer": 0,
       "dealer_streak": 4,
       "current_dealer_base": 25,
@@ -181,7 +181,7 @@
     },
     {
       "hand": 8,
-      "settlement_time": "2026-09-19 01:27:38",
+      "settlement_time": "2026-09-18 22:25",
       "dealer": 1,
       "dealer_streak": 1,
       "current_dealer_base": 10,
@@ -215,6 +215,7 @@
     "Hand 5 is ordinary Youjin x4 with two gold tiles in the winner fan breakdown; Youjin stage is not equal to gold-tile count.",
     "Hand 6 replay shows a suited concealed kong and the settlement lists kong 3 fan.",
     "New dealer settlement base is 10; repeat dealer adds 5: observed 10,15,20,25; dealer change resets to 10.",
-    "This replay directly reaches dealer base 25; later player confirmation 2026-09-19 establishes no cap during a continuous dealer streak, +5 per keep until the fixed 8-hand match ends; dealer change resets the new dealer to 10."
+    "This replay directly reaches dealer base 25; later player confirmation 2026-09-19 establishes no cap during a continuous dealer streak, +5 per keep until the fixed 8-hand match ends; dealer change resets the new dealer to 10.",
+    "Official battle-history screenshots supplied 2026-09-19 confirm hand times 09-18 22:17, 22:18, 22:20, 22:21, 22:22, 22:23, 22:25, 22:25 and the same per-hand net scores."
   ]
 }
