@@ -1,5 +1,17 @@
 # 重要变更记录
 
+## 2026-09-19 — 仓库真相源、CI与公开证据治理
+
+- README / AGENTS / workspace/ai README / Issue #6 全部对齐到当前前沿：`CurrentAgent = MeldAwareShantenAgent V0.10`；V0.6固定主对照，V0.3消融基线。V0.11/V0.12“排除金等待后做即时score-aware”明确记为结构性不可触发，不再作为默认路线。
+- README同步当前Vision事实：hand+draw严格基线98.66%，0.80阈值通过样本127/127正确；Gold当前同批录像196帧中193帧正确=98.47%；PublicState约束层已实现，但这些指标都不等于Executor可用。
+- `pyproject.toml` 正式声明 `vision` 可选依赖（OpenCV headless / Pillow）；Vision CI改为 `pip install -e ".[vision]"`，消除CI与本地依赖口径漂移。
+- `tests.yml` 删除重复手动Vision advisory；独立 `vision-tests.yml` 继续按Vision/dataset变更自动回归。
+- 新增通用 `ai-paired-eval.yml` 手动评估workflow：支持V0.10/V0.6/V0.3/Baseline，固定牌墙、正反换座、Agent身份稳定RNG，并输出可下载JSON报告。
+- 13个已经结案的 `*-once.yml` 一次性AI workflow 原样归档到 `references/ci-archive/once-workflows.md` 后从Actions目录移除。当前 `.github/workflows/` 仅保留 `tests.yml`、`vision-tests.yml`、`ai-paired-eval.yml`。
+- 公开8局证据脱敏为 `match_evidence_001`：真实房号从文件路径/当前文档中移除，玩家显示名改为 `seat_0/seat_1`；比分、番数、庄底、公式和回归语义保持不变。结构化fixture改为 `settlement_match_evidence_001_8hands.json`。
+- 文档真相源顺序固定：Issues/TODO用于执行，RULE_STATUS用于规则事实，RULE_EVIDENCE_MATRIX用于证据缺口，PROJECT_STATUS用于总体快照，CHANGELOG仅追历史。
+
+
 ## 2026-09-19 — Vision标签审计、98.66%严格基线、Gold多帧与PublicState
 
 - 对8局真实标签执行严格留组混淆审计，发现1条人工错标：5.mp4中的4筒被标为2筒；回看ROI后修正真值。新增 `audit_labels.py` 生成低置信/模型分歧/缺独立来源覆盖的人工复核队列，禁止自动改真值。
