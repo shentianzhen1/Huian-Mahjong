@@ -4,7 +4,8 @@ from dataclasses import FrozenInstanceError
 
 from huian._legacy import env
 from workspace.ai import (BaselineAgent, DangerAwareShantenAgent,
-                          EfficiencyAgent, PlayerObservation, ShantenAgent,
+                          EfficiencyAgent, MatchObservationContext,
+                          PlayerObservation, ShantenAgent,
                           estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
 
@@ -193,6 +194,31 @@ class BaselineAgentTests(unittest.TestCase):
         decision = DangerAwareShantenAgent().choose_decision(
             view, discards(["M1"]) + [hu])
         self.assertIs(decision.action, hu)
+
+    def test_match_context_is_public_immutable_and_seat_relative(self):
+        context = MatchObservationContext(
+            scores=(1120, 880),
+            hand_index=5,
+            hands_remaining=3,
+            dealer=0,
+            current_dealer_base=25,
+            consecutive_dealer_hands=4,
+        )
+        self.assertEqual(context.margin, 240)
+        self.assertEqual(context.margin_for(0), 240)
+        self.assertEqual(context.margin_for(1), -240)
+        with self.assertRaises(ValueError):
+            context.margin_for(2)
+        with self.assertRaises(ValueError):
+            MatchObservationContext((1000, 1000), 5, 2, 0, 10, 1)
+
+        state = scenario()
+        view = PlayerObservation.from_state(state, match_context=context)
+        self.assertIs(view.match_context, context)
+        self.assertFalse(hasattr(view, "hands"))
+        self.assertFalse(hasattr(view, "wall"))
+        with self.assertRaises(FrozenInstanceError):
+            context.scores = (1000, 1000)
 
     def test_observation_has_only_private_hand_and_public_immutable_fields(self):
         state = scenario()
