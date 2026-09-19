@@ -1,0 +1,81 @@
+name: ImmediateValue V012 Pilot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/immediate-value-v012-pilot-once.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - block: seeds_186000_186024
+            start: 186000
+            stop: 186025
+          - block: seeds_188000_188024
+            start: 188000
+            stop: 188025
+          - block: seeds_190000_190024
+            start: 190000
+            stop: 190025
+          - block: seeds_192000_192024
+            start: 192000
+            stop: 192025
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run paired V0.12 vs Current V0.10
+        env:
+          BLOCK: ${{ matrix.block }}
+          START: ${{ matrix.start }}
+          STOP: ${{ matrix.stop }}
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import json, os
+          from collections import Counter
+          from workspace.ai import ImmediateValueMeldAgent, MeldAwareShantenAgent
+          from workspace.simulator import run_paired_real_matches
+
+          counters = Counter()
+
+          class CountingV012(ImmediateValueMeldAgent):
+              def choose_decision(self, observation, legal_actions):
+                  decision = super().choose_decision(observation, legal_actions)
+                  counters["decisions"] += 1
+                  if "immediate_value_meld_v0.12" in decision.reason:
+                      counters["score_interventions"] += 1
+                  if "meld_aware_v0.10" in decision.reason:
+                      counters["meld_decisions"] += 1
+                  return decision
+
+          def v12(seed=None):
+              return CountingV012(seed=seed, template_samples=32)
+
+          def v10(seed=None):
+              return MeldAwareShantenAgent(seed=seed, template_samples=32)
+
+          report = run_paired_real_matches(
+              range(int(os.environ["START"]), int(os.environ["STOP"])),
+              agent_factories=(v12, v10),
+              agent_names=("ImmediateValueV012", "CurrentV010"),
+              max_steps=1000,
+              initial_dealer=0,
+          )
+          payload = report.to_dict()
+          payload.pop("per_match", None)
+          payload["block"] = os.environ["BLOCK"]
+          payload["decision_counts"] = dict(counters)
+          print("V012_PILOT_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("V012_PILOT_END")
+          PY
