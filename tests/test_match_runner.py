@@ -37,7 +37,7 @@ class MatchRunnerTests(unittest.TestCase):
 
         self.assertEqual(
             [(c.hand_index, c.dealer, c.current_dealer_base) for c in seen[:4]],
-            [(0, 0, 5), (1, 0, 10), (2, 0, 15), (3, 1, 5)],
+            [(0, 0, 10), (1, 0, 15), (2, 0, 20), (3, 1, 10)],
         )
         self.assertEqual(seen[0].scores, (1000, 1000))
         self.assertEqual(seen[1].scores, (1011, 989))
@@ -99,10 +99,10 @@ class MatchRunnerTests(unittest.TestCase):
             initial_dealer=0,
         )
         self.assertTrue(result.complete)
-        self.assertEqual(result.final_scores, (1180, 820))
+        self.assertEqual(result.final_scores, (1220, 780))
         self.assertEqual(
             [call["current_dealer_base"] for call in calls],
-            [5, 10, 15, 20, 25, 30, 35, 40],
+            [10, 15, 20, 25, 30, 35, 40, 45],
         )
         self.assertTrue(all(call["dealer"] == 0 for call in calls))
         self.assertEqual([call["seed"] for call in calls],
@@ -150,7 +150,7 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(result.stopped_evidence["match_context"], {
             "hand_index": 2,
             "dealer": 0,
-            "current_dealer_base": 15,
+            "current_dealer_base": 20,
             "scores": [1010, 990],
             "hands_remaining": 6,
             "hand_seed": 1002,
