@@ -62,6 +62,17 @@ class SettlementFixtureTests(unittest.TestCase):
         self.assertEqual(hand5["multiplier"], 4)
         self.assertEqual(hand5["fan_breakdown"]["gold"], 2)
         self.assertEqual(hand5["net"], 76)
+        terms = HuianRules().youjin_score_terms(
+            YoujinStage.YOUJIN,
+            winner=hand5["winner"],
+            dealer=hand5["dealer"],
+            winner_fan=hand5["winner_fan"],
+        )
+        self.assertEqual(terms.dealer_multiplier, 1)
+        self.assertEqual(
+            terms.total_for_current_dealer_base(hand5["current_dealer_base"]),
+            76,
+        )
 
 
 
