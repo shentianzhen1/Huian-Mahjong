@@ -88,6 +88,8 @@ def _validate_inputs(hand, gold_tile, open_melds):
         raise ValueError(message)
     if gold_tile is not None and gold_tile not in core.BASE_TILES:
         raise ValueError("gold_tile must be a base tile or None")
+    if gold_tile is not None and tuple(hand).count(gold_tile) > 3:
+        raise ValueError("opened gold is non-drawable; concealed hand cannot contain four gold copies")
     groups_needed = 5 - open_melds
     target = groups_needed * 3 + 2
     if len(hand) not in (target - 1, target):
@@ -253,12 +255,16 @@ def analyze_effective_tiles(
     current = ordinary_shanten(hand, gold_tile, open_melds)
     public = _public_counter(tuple(visible_tiles))
     own = Counter(hand)
-    if any(own[tile] + public[tile] > 4 for tile in core.BASE_TILES):
-        raise ValueError("own concealed plus public visible copies exceed four")
+    if any(
+        own[tile] + public[tile] > (3 if tile == gold_tile else 4)
+        for tile in core.BASE_TILES
+    ):
+        raise ValueError("own concealed plus public visible copies exceed physical capacity")
 
     effective = []
     for tile in core.BASE_TILES:
-        remaining = 4 - own[tile] - public[tile]
+        capacity = 3 if tile == gold_tile else 4
+        remaining = capacity - own[tile] - public[tile]
         if remaining <= 0:
             continue
         next_value = ordinary_shanten(
@@ -429,8 +435,11 @@ def analyze_two_ply_offense(
         visible_after_discard = (*visible_tiles, discard)
         public = _public_counter(visible_after_discard)
         own = Counter(reduced)
-        if any(own[tile] + public[tile] > 4 for tile in core.BASE_TILES):
-            raise ValueError("own concealed plus public visible copies exceed four")
+        if any(
+            own[tile] + public[tile] > (3 if tile == gold_tile else 4)
+            for tile in core.BASE_TILES
+        ):
+            raise ValueError("own concealed plus public visible copies exceed physical capacity")
 
         draw_copies = 0
         terminal_win_copies = 0
@@ -439,7 +448,8 @@ def analyze_two_ply_offense(
         weighted_post_types = 0
 
         for tile in core.BASE_TILES:
-            remaining = 4 - own[tile] - public[tile]
+            capacity = 3 if tile == gold_tile else 4
+            remaining = capacity - own[tile] - public[tile]
             if remaining <= 0:
                 continue
             draw_copies += remaining
