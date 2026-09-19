@@ -1,7 +1,8 @@
 """Lightweight agents operating on private-hand/public-table observations."""
 from .baseline import (AgentDecision, BaselineAgent, DangerAwareShantenAgent,
                        EfficiencyAgent, MatchAwareShantenAgent,
-                       MatchObservationContext, PlayerObservation, ShantenAgent)
+                       MatchObservationContext, PlayerObservation, ShantenAgent,
+                       TenpaiRiskTieBreakAgent)
 from .danger import PublicDangerEstimate, estimate_discard_danger
 from .opponent import (OrdinaryDealInEstimate, TenpaiWaitRiskEstimate,
                        estimate_ordinary_deal_in_probabilities,
@@ -12,6 +13,7 @@ from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
 
 __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "DangerAwareShantenAgent", "MatchAwareShantenAgent",
+           "TenpaiRiskTieBreakAgent",
            "MatchObservationContext",
            "PlayerObservation",
            "DiscardEfficiency", "EffectiveTile", "HandEfficiency",
