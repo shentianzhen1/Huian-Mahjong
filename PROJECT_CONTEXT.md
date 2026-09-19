@@ -86,6 +86,8 @@ Decision output should distinguish:
 - Expected Score / EV
 Never label arbitrary model value as a probability.
 
+AI/Vision architecture is hardware-agnostic by design. Do not reduce model class, search depth, training method, simulation scale, or strategy complexity because of the user's current computer. Measure compute cost, but optimize deployment separately after the strongest validated approach is identified.
+
 ### Vision
 Preferred future route:
 Android -> USB scrcpy -> window/frame capture -> OpenCV -> YOLO -> post-processing -> Rules validator -> GameState
