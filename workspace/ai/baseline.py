@@ -7,8 +7,8 @@ from huian._legacy import env
 from .danger import estimate_discard_danger
 from .opponent import (estimate_tenpai_wait_loss_scores,
                        estimate_tenpai_wait_risk_scores)
-from .shanten import (analyze_two_ply_offense, best_discard,
-                      best_offense_ties, min_shanten_discards)
+from .shanten import (analyze_effective_tiles, analyze_two_ply_offense,
+                      best_discard, best_offense_ties, min_shanten_discards)
 
 
 @dataclass(frozen=True)
@@ -549,6 +549,143 @@ class TenpaiRiskTieBreakAgent(ShantenAgent):
         return AgentDecision(
             actions[0], f"{actions[0].type.value}: take the required legal action")
 
+
+
+class MeldAwareShantenAgent(TenpaiRiskTieBreakAgent):
+    """Experimental V0.10: auditable Chi/Peng claims before V0.6 play.
+
+    CurrentAgent V0.6 always passes optional meld claims. V0.10 changes only
+    AFTER_DISCARD CHI/PENG decisions. It compares the current PASS pre-draw
+    offense state with each claim followed by its best mandatory discard.
+
+    A claim is allowed only when the resulting ordinary offense tuple is
+    strictly better lexicographically: lower shanten, then more live effective
+    copies, then more effective tile types. Gold-in-hand claims are guarded
+    because Youjin/special EV is outside this ordinary model.
+
+    Kongs are deliberately not evaluated here.
+    """
+
+    @staticmethod
+    def _offense_key(shanten, live, types):
+        return (shanten, -live, -types)
+
+    @staticmethod
+    def _claim_consumed_from_hand(action):
+        consumed = list(action.tiles)
+        try:
+            consumed.remove(action.tile)
+        except ValueError as exc:
+            raise ValueError("claim tiles must include the pending discard") from exc
+        if len(consumed) != 2:
+            raise ValueError("Chi/Peng claim must consume exactly two hand tiles")
+        return tuple(consumed)
+
+    def _project_claim(self, observation, action, public_tiles):
+        if action.type not in (env.ActionType.CHI, env.ActionType.PENG):
+            raise ValueError("claim projection supports only Chi/Peng")
+        consumed = self._claim_consumed_from_hand(action)
+        post_claim = list(observation.hand)
+        for tile in consumed:
+            try:
+                post_claim.remove(tile)
+            except ValueError as exc:
+                raise ValueError("claim consumes a tile absent from acting hand") from exc
+
+        open_melds = len(observation.melds[observation.seat]) + 1
+        # The opponent discard is already public in the river. Only the two
+        # concealed tiles moved into the new exposed meld need to be added.
+        public_after_claim = (*public_tiles, *consumed)
+        best = best_discard(
+            post_claim,
+            gold_tile=observation.gold_tile,
+            open_melds=open_melds,
+            visible_tiles=public_after_claim,
+        )
+        return consumed, best
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
+        if wins:
+            return super().choose_decision(observation, legal_actions)
+
+        claims = [
+            a for a in actions
+            if a.type in (env.ActionType.CHI, env.ActionType.PENG)
+        ]
+        passes = [a for a in actions if a.type == env.ActionType.PASS]
+        if observation.phase == "AFTER_DISCARD" and claims and passes:
+            if (observation.gold_tile is not None
+                    and observation.gold_tile in observation.hand):
+                return AgentDecision(
+                    passes[0],
+                    "PASS: meld_aware_v0.10 gold-in-hand guard; "
+                    "Youjin/special EV is outside ordinary claim evaluation",
+                )
+
+            public_tiles = self._public_tiles(observation)
+            open_melds = len(observation.melds[observation.seat])
+            pass_state = analyze_effective_tiles(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=public_tiles,
+            )
+            pass_key = self._offense_key(
+                pass_state.shanten,
+                pass_state.total_live_copies,
+                len(pass_state.effective_tiles),
+            )
+
+            projections = []
+            for action in claims:
+                consumed, best = self._project_claim(
+                    observation, action, public_tiles)
+                projections.append((action, consumed, best))
+            action, consumed, best = min(
+                projections,
+                key=lambda item: (
+                    self._offense_key(
+                        item[2].shanten,
+                        item[2].total_live_copies,
+                        len(item[2].effective_tiles),
+                    ),
+                    self._key(item[0]),
+                ),
+            )
+            claim_key = self._offense_key(
+                best.shanten,
+                best.total_live_copies,
+                len(best.effective_tiles),
+            )
+            if claim_key < pass_key:
+                return AgentDecision(
+                    action,
+                    f"{action.type.value}: meld_aware_v0.10 strict offense gain "
+                    f"(PASS shanten={pass_state.shanten},"
+                    f"live={pass_state.total_live_copies},"
+                    f"types={len(pass_state.effective_tiles)} -> "
+                    f"claim consumes={list(consumed)}, projected_discard={best.discard},"
+                    f"shanten={best.shanten},live={best.total_live_copies},"
+                    f"types={len(best.effective_tiles)}); "
+                    f"ordinary public-information projection only",
+                )
+            return AgentDecision(
+                passes[0],
+                f"PASS: meld_aware_v0.10 no strict Chi/Peng offense gain "
+                f"(PASS shanten={pass_state.shanten},"
+                f"live={pass_state.total_live_copies},"
+                f"types={len(pass_state.effective_tiles)}; "
+                f"best_claim={action.type.value},projected_discard={best.discard},"
+                f"shanten={best.shanten},live={best.total_live_copies},"
+                f"types={len(best.effective_tiles)})",
+            )
+
+        return super().choose_decision(observation, legal_actions)
 
 class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
     """Experimental V0.7a: loss-index-first inside V0.6 offense ties.
