@@ -6,7 +6,8 @@ from huian._legacy import env
 from workspace.ai import (MatchObservationContext, PlayerObservation,
                           estimate_ordinary_deal_in_probabilities,
                           estimate_tenpai_wait_loss_scores,
-                          estimate_tenpai_wait_risk_scores)
+                          estimate_tenpai_wait_risk_scores,
+                          is_ordinary_ron_tenpai)
 
 
 def one_unknown_m1_observation(gold_tile=None, *, with_match_context=False):
@@ -82,6 +83,12 @@ class OpponentModelTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertTrue(all(item.samples == 12 for item in first))
         self.assertTrue(all(0.0 <= item.probability <= 1.0 for item in first))
+
+    def test_ordinary_ron_tenpai_truth_helper_respects_gold_block(self):
+        self.assertTrue(
+            is_ordinary_ron_tenpai(("M1",), gold_tile=None, open_melds=5))
+        self.assertFalse(
+            is_ordinary_ron_tenpai(("M1",), gold_tile="M1", open_melds=5))
 
     def test_tenpai_conditioned_score_is_exact_when_only_one_prehard_tile_is_possible(self):
         view = one_unknown_m1_observation()
