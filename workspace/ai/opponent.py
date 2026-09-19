@@ -296,13 +296,20 @@ def _confirmed_ordinary_ron_loss(observation, sampled_hand, discard):
     )
     if not hu_result.legal:
         return None
-    fan_result = rules.aggregate_fan(
-        completed,
-        melds=melds,
-        flowers=observation.flowers[opponent],
-        gold_tile=observation.gold_tile,
-        hu_result=hu_result,
-    )
+    try:
+        fan_result = rules.aggregate_fan(
+            completed,
+            melds=melds,
+            flowers=observation.flowers[opponent],
+            gold_tile=observation.gold_tile,
+            hu_result=hu_result,
+        )
+    except ValueError:
+        # Synthetic tenpai templates can occasionally produce solver
+        # decompositions outside FanAggregator's auditable scoring shape.
+        # Never relax Rules/FanAggregator to accommodate model-generated data;
+        # mark this template unscored so V0.7 falls back to V0.6.
+        return None
     if not fan_result.complete:
         return None
     if any(component.status != EvidenceStatus.CONFIRMED
