@@ -362,10 +362,11 @@
 - 新增亮色牌面主体归一化：先找最大可信亮色连通块并裁去深色UI/桌面边缘，再统一48×72特征；同时复用同一几何门槛做牌面存在检测，空draw/hand槽不再被强行分类。
 - strict静态准确率由89.40%提升到**96.03%**：hand 95.24%（126样本）、draw 100%（25样本）、类别准确率98.68%；阈值0.80时127/151被接受，接受样本准确率98.43%。
 - presence-aware固定窗口稳定性：hand 127/128=99.22%；draw 2/2=100%但样本不足；tile槽合计129/130=99.23%。旧的“空槽也出预测”稳定性口径废弃。
-- Gold语义按真实回放修正：左上角为黄色牌背marker，不显示具体gold_id。ROI profile新增 `region_modes`（`tile` / `marker`）；marker只输出存在/不存在，不生成tile_id。真正gold_id必须在实时开金/翻金事件看到牌面时识别并写入会话状态。
-- `calibrate_rois` 新增 `--gold-mode marker`；`infer_tiles` 新增 marker observations；模板分类器拒绝对marker区域输出牌面。
-- Vision Regression / Tests 已覆盖 source_session 留组、亮色主体归一化、空槽跳过、ROI marker模式及gold marker不生成tile_id。
-- 当前缺口：F1/F3/F4/F5/F6/F8/S7/S9未覆盖，F2/F7仅单session；draw还需更多连续可见序列；gold需从开金前开始的实时录像；仍缺不同录屏批次、缩放/移动/遮挡外部验证。
+- Gold语义再次按用户截图纠正：当前目标房左侧黄色高亮牌是**正面可见的金牌**，可直接读出具体牌面（示例截图为4筒）；此前“黄色牌背marker”判断作废。当前 `gold_region` 必须按 `tile` 处理并输出 `gold_id`。`region_modes` 中的 `marker` 能力仅保留给未来其他确实只有状态图标/牌背的布局。
+- 现有8个gold标签继续有效；但同一gold类别尚未跨两个独立source_session重复，所以严格 same-region + leave-session-out 下gold泛化准确率暂不可评估。后续继续积累完整回放即可，不要求必须录到开金瞬间。
+- 用户进一步确认两侧玩家面板均为“头像 + 头像下方当前分数”。后续 PublicState V0.1 将头像仅作为定位锚点，不识别头像/昵称；读取双方当前分数并与 `MatchScoreState` 做总分2000守恒校验，同时接入剩余牌数和第几局/8。
+- Vision Regression / Tests 已覆盖 source_session 留组、亮色主体归一化、空槽跳过、region-specific实际推理；marker模式测试仅作为通用兼容能力，不代表当前惠安目标房配置。
+- 当前缺口：F1/F3/F4/F5/F6/F8/S7/S9未覆盖，F2/F7仅单session；draw还需更多连续可见序列；gold需同类跨session重复；PublicState尚未建立比分/剩余牌数/局数自动识别；仍缺不同录屏批次、缩放/移动/遮挡外部验证。
 - 证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。原始视频、关键帧和ROI图片不提交公开仓库。
 - Executor继续关闭，所有Vision输出继续 `safe_for_executor=false`。
 
