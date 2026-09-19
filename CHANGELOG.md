@@ -358,13 +358,17 @@
 ## 2026-09-19 — Vision 8局真实录像首轮准确率/稳定性基线
 
 - 直接复用完整8局真实录像作为 Tiles V0.1 首批真实数据源；覆盖1046×480与960×448两种尺寸，自动筛出379个去重关键帧、1137个 hand/draw/gold ROI 裁剪。
-- 首批人工审核标签168个、40个来源组、34/42个牌类；166/168样本可进入防泄漏 leave-source-group-out 评估。
-- 首轮精确牌面准确率：overall 84.34%、hand_region 92.91%、draw_region 70.97%、gold_region 0%；类别准确率94.58%。置信阈值0.80下整体接受率92.77%、接受样本准确率87.66%，hand接受样本准确率96.58%。
-- 10连续帧稳定性：overall 98.61%、hand 99.22%、draw 87.50%、gold 100%。gold稳定率100%但准确率0%，直接证明多帧稳定性不能替代人工标签准确率。
-- 当前未覆盖 F1/F3/F4/F5/F6/F8/S7/S9；F2/F7仅单来源。下一轮优先处理gold/draw视觉域差异、补牌类覆盖与不同录屏条件。
+- 首批人工审核标签168个，来自8个独立录像 session，覆盖34/42个牌类。
+- 发现并修正评测泄漏风险：此前单帧 `source_frame` 留组会让同一录像的相邻帧分别进入训练与测试。标签新增 `source_session`，评测和 dataset_status 现按 `source_session > source_frame > image` 分组；同一录像应共享一个 session ID。
+- 正式首轮门槛口径改为 `same_region + leave-session-out`：151/168可评估（89.88%覆盖），overall 89.40%、类别准确率98.01%；hand 126样本/93.65%，draw 25样本/68.00%，gold因没有同一类别跨两个独立session重复而暂不可严格评估。
+- 置信阈值0.80时138/151被接受（91.39%），接受样本准确率94.20%；hand接受样本96.58%，draw接受样本80.95%。阈值0.90时100/151被接受，精确准确率98.00%。
+- 跨区域模板池只作域差异诊断：leave-session-out overall 81.33%、hand 92.91%、draw 54.84%、gold 0%，不作为Executor门槛。
+- 10连续帧稳定性：overall 98.61%、hand 99.22%、draw 87.50%、gold 100%。时间稳定性不能替代跨session准确率。
+- 当前未覆盖 F1/F3/F4/F5/F6/F8/S7/S9；F2/F7仅单session。下一轮优先改善draw、补gold同类跨session样本、补牌类覆盖与不同录屏条件。
 - 原始视频、关键帧与ROI图片不提交公开仓库，只保留匿名化统计报告：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。
 - Executor继续关闭，所有Tiles V0.1输出继续 `safe_for_executor=false`。
-- 本轮只新增真实数据分析与文档同步，未修改Rules/Environment/Simulator/AI业务逻辑，也未把本地离线评测冒充为GitHub Actions测试结果。
+- Vision Regression 已覆盖 source_session 留组行为；本轮未修改 Rules/Environment/Simulator/AI 业务逻辑。
+
 
 按日期倒序维护。规则是否确认以 RULE_STATUS.md 为准；历史提交中的实现或注释不能自动提高规则证据等级。历史测试数量由提交差异中新增测试用例及现存记录核对，未保留的当时完整测试结果不补造。
 
