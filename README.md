@@ -32,7 +32,7 @@ python -B -m unittest discover -s tests -v
 
 - Rules：144张实体牌校验、惠安16/17张普通胡拆解、金牌限制、多拆法最高番、全部合法吃牌方案、PENG/杠番及证据感知FanAggregator。
 - Environment：确定性执行发牌、补花、吃、碰、PASS、头摸、三类杠后尾摸、补杠专用抢杠窗口、普通胡声明、三金倒一次性窗口、抢金窗口骨架、16张流局。
-- Settlement / Match：普通平胡×1、自摸×2使用真实番数和当前庄底结算；8局从1000/1000开始累积零和分数，room541913完整8局fixture可逐局回放到1113/887。
+- Settlement / Match：普通平胡×1、自摸×2使用真实番数和当前庄底结算；8局从1000/1000开始累积零和分数，match_evidence_001完整8局fixture可逐局回放到1113/887。
 - 庄底：新庄当前结算底10；同一庄家连庄每局+5且不上封顶直到第8局；庄输换庄后新庄重置10。
 - Simulator：固定牌墙/seed、交换座位、UNKNOWN证据包、8局真实普通规则MatchRunner，以及统一的整场A/B评估（最终分、分差、点炮、自摸/点炮来源、UNKNOWN）。
 - AI：当前正式前沿为 **`CurrentAgent = MeldAwareShantenAgent V0.10`**；`TenpaiRiskTieBreakAgent V0.6` 保留为固定主对照，`ShantenAgent V0.3` 保留为牌效消融基线。V0.10继承V0.6弃牌策略，只在CHI/PENG窗口比较PASS与副露后的最优强制弃牌，并且只有普通进攻元组严格改善时才副露。两批独立评估合计200个seed pair / 400场完整8局：V0.10为239胜、V0.6为159胜、2平，平均配对最终分差+54.805。新策略必须使用固定牌墙+正反换座+Agent身份稳定RNG，直接击败V0.10才能晋级。
