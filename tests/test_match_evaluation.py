@@ -50,6 +50,12 @@ class PairedMatchEvaluationTests(unittest.TestCase):
         self.assertEqual(report.ties, 0)
         self.assertEqual(report.average_final_score_by_agent, {"A": 1075.0, "B": 925.0})
         self.assertEqual(report.average_score_delta_a_minus_b, 150.0)
+        self.assertEqual(report.paired_score_delta_mean, 150.0)
+        self.assertIsNone(report.paired_score_delta_sd)
+        self.assertIsNone(report.paired_score_delta_se)
+        self.assertIsNone(report.paired_score_delta_ci95_low)
+        self.assertIsNone(report.paired_score_delta_ci95_high)
+        self.assertEqual(report.paired_deal_in_delta_mean, -1.5)
         self.assertEqual(report.deal_ins_by_agent, {"A": 0, "B": 3})
         self.assertEqual(report.average_deal_ins_per_match_by_agent, {"A": 0.0, "B": 1.5})
         self.assertEqual(report.win_source_counts, {"discard": 5, "self_draw": 2})
@@ -78,8 +84,42 @@ class PairedMatchEvaluationTests(unittest.TestCase):
         self.assertEqual(report.incomplete_pairs, 1)
         self.assertEqual(report.average_final_score_by_agent, {"A": None, "B": None})
         self.assertIsNone(report.average_score_delta_a_minus_b)
+        self.assertIsNone(report.paired_score_delta_mean)
+        self.assertIsNone(report.paired_score_delta_sd)
+        self.assertIsNone(report.paired_score_delta_se)
+        self.assertIsNone(report.paired_score_delta_ci95_low)
+        self.assertIsNone(report.paired_score_delta_ci95_high)
+        self.assertIsNone(report.paired_deal_in_delta_mean)
         self.assertEqual(report.deal_ins_by_agent, {"A": 0, "B": 0})
         self.assertEqual(report.unknown_reasons, {"QIANGJIN_SETTLEMENT_UNKNOWN": 1})
+
+    def test_paired_uncertainty_uses_seed_pair_deltas(self):
+        calls = {}
+
+        def runner(seed, *, agent_factories, **kwargs):
+            swapped = agent_factories[0] is factory_b
+            key = (seed, swapped)
+            calls[key] = calls.get(key, 0) + 1
+            if seed == 1:
+                return (FakeResult(scores=(1100, 900), deal_ins=(0, 2))
+                        if not swapped else
+                        FakeResult(scores=(950, 1050), deal_ins=(1, 0)))
+            return (FakeResult(scores=(1000, 1000), deal_ins=(1, 1))
+                    if not swapped else
+                    FakeResult(scores=(900, 1100), deal_ins=(2, 0)))
+
+        report = run_paired_real_matches(
+            [1, 2], agent_factories=(factory_a, factory_b), match_runner=runner)
+        # Pair 1 A-B deltas: +200, +100 -> pair mean +150.
+        # Pair 2 A-B deltas: 0, +200 -> pair mean +100.
+        # Overall paired mean = 125; sample SD = sqrt(1250) ~= 35.355.
+        self.assertAlmostEqual(report.paired_score_delta_mean, 125.0)
+        self.assertAlmostEqual(report.paired_score_delta_sd, 35.3553390593)
+        self.assertAlmostEqual(report.paired_score_delta_se, 25.0)
+        self.assertAlmostEqual(report.paired_score_delta_ci95_low, 76.0)
+        self.assertAlmostEqual(report.paired_score_delta_ci95_high, 174.0)
+        # Deal-in pair means: -1.5 and +1.0 -> overall -0.25.
+        self.assertAlmostEqual(report.paired_deal_in_delta_mean, -0.25)
 
     def test_duplicate_seed_positions_remain_distinct_pairs(self):
         def runner(seed, *, agent_factories, **kwargs):
