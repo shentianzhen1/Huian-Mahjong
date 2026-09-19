@@ -165,7 +165,7 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(all(a.type == env.ActionType.DISCARD and a.player == 0
                             for a in actions))
 
-    def test_d_sanjindao_is_optional_only_on_third_gold_draw(self):
+    def test_d_sanjindao_is_optional_on_third_gold_draw(self):
         state = mark_third_gold_draw(two_seat_gold_state(
             current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
         self.assertTrue(HuianRules().can_sanjindao(
@@ -180,6 +180,34 @@ class QiangjinWindowTests(unittest.TestCase):
         after = game.legal_actions()
         self.assertTrue(after)
         self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
+
+    def test_opening_three_gold_offers_sanjindao_before_qiangjin(self):
+        state = two_seat_gold_state(
+            current=0, current_gold=3, opponent_gold=0,
+            current_tiles=17, phase="OPENING_QIANGJIN_CHECK")
+        game = env_of(state)
+        actions = game.legal_actions()
+        self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
+        self.assertFalse(any(
+            a.type == env.ActionType.QIANGJIN for a in actions
+        ))
+        pass_act = next(
+            a for a in actions if a.type == env.ActionType.PASS_QIANGJIN
+        )
+        game.step(pass_act)
+        after = game.legal_actions()
+        self.assertTrue(after)
+        self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
+
+    def test_opening_four_gold_also_uses_the_one_shot_sanjindao_branch(self):
+        state = two_seat_gold_state(
+            current=0, current_gold=4, opponent_gold=0,
+            current_tiles=17, phase="OPENING_QIANGJIN_CHECK")
+        actions = env_of(state).legal_actions()
+        self.assertTrue(any(
+            a.metadata.get("special") == "SANJINDAO" for a in actions
+        ))
+        self.assertFalse(any(a.type == env.ActionType.QIANGJIN for a in actions))
 
     def test_sanjindao_declaration_stops_only_at_unknown_settlement(self):
         state = mark_third_gold_draw(two_seat_gold_state(
