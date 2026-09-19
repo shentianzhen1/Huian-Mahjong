@@ -101,6 +101,19 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 若没有人工 approved 标签，或真实来源组少于2组，评测器直接拒绝生成准确率，不允许用空数据或同图模板冒充真实基线。某一区域缺少跨来源同类样本时，该区域样本应报告为不可评估，而不是强行记为识别错误。
 
+### 标签审计
+
+人工审核标签仍可能出现误标。使用严格留组结果生成复核队列：
+
+```powershell
+.\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.audit_labels `
+  --dataset dataset/tiles_v0_1 `
+  --confidence 0.80 `
+  --output dataset/tiles_v0_1/meta/label_audit.json
+```
+
+复核队列包含：模型与标签不一致、严格留组置信低于阈值、以及缺独立source_session覆盖的样本。工具**只列候选，不自动改标签**；任何真值修改必须回看原始ROI/录像后人工确认。
+
 ### 2. 连续帧稳定性
 
 将连续、槽位对齐的推理结果写成 JSONL，每行包含 `predictions` 数组，然后运行：
@@ -122,6 +135,24 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 - 整体稳定槽位比例。
 
 **稳定不等于准确。** 一套模型可以连续多帧稳定地认错，所以稳定性报告必须和人工标签留组准确率一起看。
+
+## PublicState V0.1
+
+牌面识别之外，目标房还公开显示两侧当前分数、剩余牌数和第几局/8。头像/昵称不做身份识别，只作为固定UI锚点。
+
+`public_state.py` 当前先实现“读数后的可信融合层”，不绑定某一种OCR：
+
+- `HuianPublicStateProfile` 使用归一化ROI，覆盖当前960×448与1046×480录像；
+- 双方分数必须满足总和2000；
+- 多帧短窗口多数票；
+- 可与Simulator的 `MatchScoreState` 当前分数交叉校验；
+- 同一局内分数不得变化；
+- 局号只允许1..8且不得倒退或一次跳过多局；
+- 同一局内剩余牌数不得增加；
+- 异常读数只产生issues，不覆盖可信状态；
+- 永远 `safe_for_executor=false`。
+
+真实room541913八局稳定时点真值见 `references/vision/2026-09-19/room541913_public_state_seed.json`。下一步是在该约束层前接数字读取器，而不是让OCR结果直接进入AI。
 
 ### Executor 门槛
 
