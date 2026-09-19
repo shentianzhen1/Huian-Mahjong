@@ -2,12 +2,13 @@ import unittest
 from collections import Counter
 
 from huian._legacy import env
-from workspace.ai import (PlayerObservation,
+from workspace.ai import (MatchObservationContext, PlayerObservation,
                           estimate_ordinary_deal_in_probabilities,
+                          estimate_tenpai_wait_loss_scores,
                           estimate_tenpai_wait_risk_scores)
 
 
-def one_unknown_m1_observation(gold_tile=None):
+def one_unknown_m1_observation(gold_tile=None, *, with_match_context=False):
     own = ("M1", "P1")
     opponent_melds = (
         ("PENG", ("M2", "M2", "M2")),
@@ -25,12 +26,20 @@ def one_unknown_m1_observation(gold_tile=None):
         target = 3 if tile == "M1" else 4
         river.extend([tile] * (target - known[tile]))
 
+    match_context = (
+        MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=3,
+        )
+        if with_match_context else None
+    )
     return PlayerObservation(
         seat=0, hand=own, gold_tile=gold_tile, phase="AFTER_DRAW",
         dealer=0, wall_remaining=1,
         discards=(tuple(river), ()),
         flowers=((), ()),
         melds=((), opponent_melds),
+        match_context=match_context,
     )
 
 
@@ -108,6 +117,27 @@ class OpponentModelTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertTrue(all(0.0 <= item.risk_score <= 1.0 for item in first))
         self.assertTrue(all(item.templates_used == 12 for item in first))
+
+    def test_tenpai_conditioned_loss_uses_confirmed_pinghu_score(self):
+        view = one_unknown_m1_observation(with_match_context=True)
+        estimates = estimate_tenpai_wait_loss_scores(
+            view, ("M1", "P1"), samples=8, seed=4)
+        by_tile = {item.tile: item for item in estimates}
+        self.assertTrue(by_tile["M1"].complete)
+        self.assertEqual(by_tile["M1"].risk_score, 1.0)
+        self.assertEqual(by_tile["M1"].loss_index, 20.0)
+        self.assertEqual(by_tile["M1"].mean_loss_if_hit, 20.0)
+        self.assertEqual(by_tile["M1"].scored_matching_templates, 8)
+        self.assertFalse(by_tile["M1"].is_absolute_ev)
+        self.assertTrue(by_tile["P1"].complete)
+        self.assertEqual(by_tile["P1"].risk_score, 0.0)
+        self.assertEqual(by_tile["P1"].loss_index, 0.0)
+        self.assertEqual(by_tile["P1"].mean_loss_if_hit, 0.0)
+
+    def test_tenpai_conditioned_loss_requires_match_context(self):
+        with self.assertRaisesRegex(ValueError, "match_context"):
+            estimate_tenpai_wait_loss_scores(
+                one_unknown_m1_observation(), ("M1",), samples=4, seed=1)
 
     def test_invalid_inputs_and_impossible_public_counts_are_rejected(self):
         view = PlayerObservation(
