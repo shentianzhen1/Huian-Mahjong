@@ -1,0 +1,75 @@
+name: Public Tenpai Probability Final Calibration
+
+on:
+  push:
+    paths:
+      - ".github/workflows/public-tenpai-final-calibration-once.yml"
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Train validate and final-test public tenpai model
+        run: |
+          python -B - <<'PY'
+          import json
+          from workspace.simulator import (
+              collect_tenpai_state_samples,
+              evaluate_public_tenpai_probability_model,
+              fit_public_tenpai_probability_model,
+          )
+
+          train, train_status = collect_tenpai_state_samples(range(150000, 150150))
+          valid, valid_status = collect_tenpai_state_samples(range(151000, 151100))
+          test, test_status = collect_tenpai_state_samples(range(152000, 152150))
+
+          candidates = []
+          for bucket in (8, 12, 16, 24):
+              for prior in (8.0, 24.0, 64.0):
+                  model = fit_public_tenpai_probability_model(
+                      train, wall_bucket_size=bucket,
+                      prior_strength=prior, min_cell_count=30)
+                  report = evaluate_public_tenpai_probability_model(
+                      model, valid,
+                      train_hands_attempted=150, test_hands_attempted=100,
+                      train_status_counts=train_status,
+                      test_status_counts=valid_status)
+                  candidates.append({
+                      "bucket": bucket,
+                      "prior": prior,
+                      "brier": report.brier_score,
+                      "base_brier": report.constant_train_rate_brier,
+                      "auc": report.auc,
+                      "mean_prediction": report.mean_prediction,
+                      "test_prevalence": report.test_prevalence,
+                  })
+
+          chosen = min(candidates, key=lambda x: (x["brier"], -(x["auc"] or 0.0)))
+          model = fit_public_tenpai_probability_model(
+              train, wall_bucket_size=chosen["bucket"],
+              prior_strength=chosen["prior"], min_cell_count=30)
+          final = evaluate_public_tenpai_probability_model(
+              model, test,
+              train_hands_attempted=150, test_hands_attempted=150,
+              train_status_counts=train_status, test_status_counts=test_status)
+
+          payload = {
+              "train_samples": len(train),
+              "validation_samples": len(valid),
+              "final_test_samples": len(test),
+              "train_status": train_status,
+              "validation_status": valid_status,
+              "final_test_status": test_status,
+              "validation_candidates": candidates,
+              "chosen": chosen,
+              "final_test": final.to_dict(),
+          }
+          print("TENPAI_FINAL_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("TENPAI_FINAL_END")
+          PY
