@@ -18,11 +18,12 @@ Confirmed target scope:
 - single gold cannot Pinghu in the selected room
 - exactly one gold may self-draw Hu when the standard structure is valid
 - exactly two gold tiles can Hu only by self-draw, never from an opponent discard
+- the opened gold indicator is itself one physical copy and stays outside the drawable wall; therefore only three playable gold copies can exist
 - ordinary Hu and Youjin are evaluated as separate branches
 - direct replay b3892b34 confirms one-gold ordinary self-draw with all three suits present; do not impose a missing-suit requirement
 - the same recording shows 庄5/base30 and gold1 + flowers2 + triplet1: ordinary Zimo `(30+4)×2=68`, without extra dealer ×2 or subtraction of the loser’s fan; see `references/gameplay/2026-09-15/b3892b34_zimo68/README.md`
 - retained Hu/scoring categories: Pinghu, Zimo, Sanjindao, Gang-Hu, Youjin, Double-You, Triple-You, Eight-Flower You, flowers, repeat-dealer/base scoring
-- Sanjindao is an optional current-player special window. Confirmed prompts include opening 3+ gold, a valid 2→3 gold draw, and—after an earlier PASS—a later own draw while exactly 3 gold still remain. PASS closes only the current prompt; it does not permanently disable later Sanjindao, ordinary Hu, or Youjin-family play. The four-gold later-draw recheck remains UNKNOWN. Sanjindao multiplier ×3 is confirmed/adopted, while direct target-room payment/dealer continuation/full settlement remain unresolved. 三金游 is the same state as Triple-You/三游 and is canonicalized as `TRIPLE_YOU` ×16
+- Sanjindao is an optional current-player special window. Confirmed prompts include opening with all 3 playable golds, a valid 2→3 gold draw, and—after an earlier PASS—a later own draw while exactly 3 gold still remain. PASS closes only the current prompt; it does not permanently disable later Sanjindao, ordinary Hu, or Youjin-family play. Player clarification on 2026-09-20 confirms the opened gold indicator is the fourth physical copy and is non-drawable, so 3 playable golds is the physical maximum; there is no four-gold recheck state. Sanjindao multiplier ×3 is confirmed/adopted, while direct target-room payment/dealer continuation/full settlement remain unresolved. 三金游 is the same state as Triple-You/三游 and is canonicalized as `TRIPLE_YOU` ×16
 - every Hu by the kong declarer after a completed Ming/An/Added Kong tail draw is Gang-Hu; rob-kong is a separate response path, with an added-kong-only implementation contract and unresolved actual-room response evidence/scoring
 - completed Ming/An/Added Kong draws reuse the normal draw pipeline and record their source as `wall_tail`
 - each flower has a confirmed base value of 1 fan
