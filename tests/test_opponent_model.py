@@ -3,7 +3,8 @@ from collections import Counter
 
 from huian._legacy import env
 from workspace.ai import (PlayerObservation,
-                          estimate_ordinary_deal_in_probabilities)
+                          estimate_ordinary_deal_in_probabilities,
+                          estimate_tenpai_wait_risk_scores)
 
 
 def one_unknown_m1_observation(gold_tile=None):
@@ -72,6 +73,42 @@ class OpponentModelTests(unittest.TestCase):
         self.assertTrue(all(item.samples == 12 for item in first))
         self.assertTrue(all(0.0 <= item.probability <= 1.0 for item in first))
 
+    def test_tenpai_conditioned_score_is_exact_when_only_one_prehard_tile_is_possible(self):
+        view = one_unknown_m1_observation()
+        scores = estimate_tenpai_wait_risk_scores(
+            view, ("M1", "P1"), samples=8, seed=4)
+        by_tile = {item.tile: item for item in scores}
+        self.assertEqual(by_tile["M1"].risk_score, 1.0)
+        self.assertEqual(by_tile["M1"].matching_templates, 8)
+        self.assertEqual(by_tile["M1"].templates_used, 8)
+        self.assertEqual(by_tile["P1"].risk_score, 0.0)
+        self.assertFalse(by_tile["M1"].is_deal_in_probability)
+        self.assertGreaterEqual(by_tile["M1"].generation_attempts, 8)
+
+    def test_tenpai_conditioned_score_respects_gold_ron_blocks(self):
+        view = one_unknown_m1_observation(gold_tile="M1")
+        scores = estimate_tenpai_wait_risk_scores(
+            view, ("M1", "P1"), samples=6, seed=5)
+        by_tile = {item.tile: item for item in scores}
+        self.assertEqual(by_tile["M1"].risk_score, 0.0)
+        self.assertEqual(by_tile["P1"].risk_score, 0.0)
+
+    def test_tenpai_conditioned_score_is_seed_deterministic(self):
+        view = PlayerObservation(
+            seat=0,
+            hand=("M1","M2","M3","M4","M5","M6","P1","P2","P3",
+                  "P4","P5","S1","S2","S3","E","E","R"),
+            gold_tile="P9", phase="AFTER_DRAW", dealer=0, wall_remaining=60,
+            discards=(("N",), ("W",)), flowers=((), ()), melds=((), ()),
+        )
+        first = estimate_tenpai_wait_risk_scores(
+            view, ("M1", "R"), samples=12, seed=19)
+        second = estimate_tenpai_wait_risk_scores(
+            view, ("M1", "R"), samples=12, seed=19)
+        self.assertEqual(first, second)
+        self.assertTrue(all(0.0 <= item.risk_score <= 1.0 for item in first))
+        self.assertTrue(all(item.templates_used == 12 for item in first))
+
     def test_invalid_inputs_and_impossible_public_counts_are_rejected(self):
         view = PlayerObservation(
             0, ("M1",), None, "AFTER_DRAW", 0, 40,
@@ -91,6 +128,12 @@ class OpponentModelTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             estimate_ordinary_deal_in_probabilities(
                 clean, ("P1",), samples=4, seed=1)
+        with self.assertRaises(ValueError):
+            estimate_tenpai_wait_risk_scores(
+                clean, ("P1",), samples=4, seed=1)
+        with self.assertRaises(ValueError):
+            estimate_tenpai_wait_risk_scores(
+                clean, ("M1",), samples=0, seed=1)
 
 
 if __name__ == "__main__":
