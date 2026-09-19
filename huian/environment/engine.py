@@ -72,11 +72,11 @@ class HuianEnvironment:
                                            current_player=dealer, phase="READY"))
 
     def begin_opening(self, dice_total):
-        """Apply the V0.1 opening planner and stop for the unresolved 抢金 check.
+        """Apply opening and stop for the current-player special check.
 
-        This is an explicit simulator setup operation, not an automatic game
-        action.  It preserves the selected indicator in the wall until the
-        real room's physical accounting is observed.
+        The opened gold indicator is a physical tile but is not drawable. It is
+        moved into reserved_tiles so all 144 tiles remain accounted for while
+        only the other three copies can enter playable zones.
         """
         self._require_state()
         if self._state.phase != "READY":
@@ -88,6 +88,8 @@ class HuianEnvironment:
         candidate.flowers = [list(zone) for zone in opening.flowers]
         candidate.wall = list(opening.wall)
         candidate.gold_tile = opening.gold_indicator.tile
+        candidate.reserved_tiles = list(candidate.reserved_tiles)
+        candidate.reserved_tiles.append(opening.gold_indicator.tile)
         candidate.current_player = candidate.dealer
         candidate.phase = "OPENING_QIANGJIN_CHECK"
         self.rules.validate_state(candidate)
@@ -98,6 +100,7 @@ class HuianEnvironment:
                        "tile": candidate.gold_tile, "tiles": [],
                        "metadata": {"dice_total": dice_total,
                                     "indicator_wall_index": opening.gold_indicator.wall_index,
+                                    "indicator_removed_from_drawable_wall": True,
                                     "skipped_flowers": list(opening.gold_indicator.skipped_flowers)}},
             "before_hash": before,
             "after_hash": candidate.state_hash(),
