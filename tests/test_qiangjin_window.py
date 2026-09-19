@@ -199,7 +199,7 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(after)
         self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
-    def test_opening_four_gold_also_uses_the_one_shot_sanjindao_branch(self):
+    def test_opening_four_gold_still_prioritizes_sanjindao(self):
         state = two_seat_gold_state(
             current=0, current_gold=4, opponent_gold=0,
             current_tiles=17, phase="OPENING_QIANGJIN_CHECK")
@@ -220,7 +220,7 @@ class QiangjinWindowTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "sanjindao_settlement"):
             game.legal_actions()
 
-    def test_existing_three_gold_does_not_reopen_sanjindao(self):
+    def test_existing_three_gold_without_new_own_draw_does_not_reopen(self):
         state = two_seat_gold_state(
             current=1, current_gold=3, opponent_gold=0, current_tiles=16,
             phase="NEED_DRAW")
@@ -231,7 +231,7 @@ class QiangjinWindowTests(unittest.TestCase):
         ))
         self.assertTrue(any(a.type == env.ActionType.QIANGJIN for a in actions))
 
-    def test_fourth_gold_never_reopens_sanjindao(self):
+    def test_fourth_gold_later_recheck_stays_disabled_pending_evidence(self):
         state = two_seat_gold_state(
             current=0, current_gold=4, opponent_gold=0, current_tiles=17,
             phase="AFTER_DRAW")
