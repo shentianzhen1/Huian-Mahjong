@@ -1,7 +1,8 @@
 """Lightweight agents operating on private-hand/public-table observations."""
 from .baseline import (AgentDecision, BaselineAgent, DangerAwareShantenAgent,
                        EfficiencyAgent, MatchAwareShantenAgent,
-                       MatchObservationContext, PlayerObservation, ShantenAgent,
+                       MatchObservationContext, MeldAwareShantenAgent,
+                       PlayerObservation, ShantenAgent,
                        TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
                        OneShantenTwoPlyRiskAgent, TenpaiRiskTieBreakAgent,
                        TwoPlyShantenRiskAgent)
@@ -25,6 +26,7 @@ CURRENT_AGENT_NAME = "TenpaiRiskTieBreakAgent"
 
 __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "DangerAwareShantenAgent", "MatchAwareShantenAgent",
+           "MeldAwareShantenAgent",
            "TenpaiRiskTieBreakAgent", "TenpaiLossTieBreakAgent",
            "TenpaiRiskLossTieBreakAgent", "TwoPlyShantenRiskAgent",
            "OneShantenTwoPlyRiskAgent", "CurrentAgent",
