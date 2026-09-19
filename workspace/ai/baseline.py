@@ -198,7 +198,8 @@ class EfficiencyAgent(BaselineAgent):
         live_improving_copies = 0
         improving_types = 0
         for draw in env.BASE_TILES:
-            live = max(0, 4 - own[draw] - public[draw])
+            capacity = 3 if draw == observation.gold_tile else 4
+            live = max(0, capacity - own[draw] - public[draw])
             if not live:
                 continue
             gain = cls._shape_value(
