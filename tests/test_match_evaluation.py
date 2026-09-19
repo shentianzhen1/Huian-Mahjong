@@ -118,8 +118,8 @@ class PairedMatchEvaluationTests(unittest.TestCase):
         self.assertAlmostEqual(report.paired_score_delta_se, 25.0)
         self.assertAlmostEqual(report.paired_score_delta_ci95_low, 76.0)
         self.assertAlmostEqual(report.paired_score_delta_ci95_high, 174.0)
-        # Deal-in pair means: -1.5 and +1.0 -> overall -0.25.
-        self.assertAlmostEqual(report.paired_deal_in_delta_mean, -0.25)
+        # Deal-in pair means: -1.5 and -1.0 -> overall -1.25.
+        self.assertAlmostEqual(report.paired_deal_in_delta_mean, -1.25)
 
     def test_duplicate_seed_positions_remain_distinct_pairs(self):
         def runner(seed, *, agent_factories, **kwargs):
