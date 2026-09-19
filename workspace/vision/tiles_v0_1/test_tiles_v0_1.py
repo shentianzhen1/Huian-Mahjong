@@ -464,13 +464,27 @@ class TilesV01Tests(unittest.TestCase):
                     "gold_region": [(0, 0, 25, 30)],
                 },
                 calibrated=True,
+                region_modes={
+                    "hand_region": "tile",
+                    "draw_region": "tile",
+                    "gold_region": "marker",
+                },
             )
             profile_path = root / "meta" / "roi_profiles" / "test.json"
             profile.save(profile_path)
+            loaded = ROIProfile.load(profile_path)
+            self.assertEqual(loaded.region_mode("gold_region"), "marker")
             result = infer_screenshot(source, root, profile_path)
             self.assertFalse(result["safe_for_executor"])
             self.assertIn("predictions", result)
             self.assertIn("category", result["predictions"][0])
+            self.assertFalse(any(
+                item["region"] == "gold_region"
+                for item in result["predictions"]
+            ))
+            self.assertEqual(len(result["markers"]), 1)
+            self.assertEqual(result["markers"][0]["region"], "gold_region")
+            self.assertTrue(result["markers"][0]["present"])
 
 
 if __name__ == "__main__":
