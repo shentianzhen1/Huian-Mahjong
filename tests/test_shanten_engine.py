@@ -3,6 +3,7 @@ import unittest
 from huian import HuianRules
 from workspace.ai import (
     analyze_effective_tiles,
+    analyze_two_ply_offense,
     best_discard,
     best_offense_ties,
     min_shanten_discards,
@@ -190,6 +191,46 @@ class HuianShantenTests(unittest.TestCase):
             max(item.total_live_copies for item in frontier),
             best.total_live_copies,
         )
+
+    def test_two_ply_offense_is_deterministic_inside_exact_tie(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        ties = best_offense_ties(hand)
+        candidates = tuple(item.discard for item in ties)
+        first = analyze_two_ply_offense(hand, candidates)
+        second = analyze_two_ply_offense(hand, candidates)
+        self.assertEqual(first, second)
+        self.assertEqual({item.discard for item in first}, {"B", "N"})
+        self.assertTrue(all(item.draw_copies == 119 for item in first))
+        self.assertTrue(all(item.terminal_win_copies == 3 for item in first))
+        self.assertTrue(all(
+            isinstance(item.weighted_post_shanten, int)
+            and isinstance(item.weighted_post_live_copies, int)
+            and isinstance(item.weighted_post_effective_types, int)
+            for item in first
+        ))
+
+    def test_two_ply_offense_respects_public_physical_counts(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        result = analyze_two_ply_offense(
+            hand, ("N",), visible_tiles=("B", "B"))
+        self.assertEqual(len(result), 1)
+        # 17 known base tiles in hand/discard plus two public B copies.
+        self.assertEqual(result[0].draw_copies, 117)
+        self.assertEqual(result[0].terminal_win_copies, 1)
 
     def test_input_shape_and_public_overcount_are_rejected(self):
         with self.assertRaises(ValueError):
