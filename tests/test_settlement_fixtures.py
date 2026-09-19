@@ -7,7 +7,7 @@ from workspace.simulator import MatchProgressState
 
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "settlement_7bc12fa.json"
-MATCH_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "settlement_room541913_8hands.json"
+MATCH_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "settlement_match_evidence_001_8hands.json"
 
 
 class SettlementFixtureTests(unittest.TestCase):
@@ -32,7 +32,7 @@ class SettlementFixtureTests(unittest.TestCase):
         )
 
 
-    def test_room541913_full_match_fixture_replays_scores_and_dealer_bases(self):
+    def test_match_evidence_001_full_match_fixture_replays_scores_and_dealer_bases(self):
         data = json.loads(MATCH_FIXTURE.read_text(encoding="utf-8"))
         state = MatchProgressState.initial(dealer=data["initial_dealer"])
         self.assertEqual(list(state.scores), data["starting_scores"])
@@ -55,7 +55,7 @@ class SettlementFixtureTests(unittest.TestCase):
         self.assertEqual(list(state.scores), data["final_scores"])
         self.assertEqual(sum(state.scores), 2000)
 
-    def test_room541913_hand5_proves_youjin_can_settle_with_two_gold_fan(self):
+    def test_match_evidence_001_hand5_proves_youjin_can_settle_with_two_gold_fan(self):
         data = json.loads(MATCH_FIXTURE.read_text(encoding="utf-8"))
         hand5 = data["hands"][4]
         self.assertEqual(hand5["method"], "YOUJIN")
