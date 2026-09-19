@@ -26,13 +26,14 @@ from .public_state import (
     fuse_public_state,
 )
 from .public_state_scores import (
-    decode_score_candidates, prepare_score_crop, prepare_score_gray,
-    read_score_pair,
+    ScorePairRead, decode_score_candidates, prepare_score_crop,
+    prepare_score_gray, read_score_pair,
 )
 from .public_state_status import (
-    infer_missing_hand_from_transition, parse_hand_progress,
+    StatusLineRead, infer_missing_hand_from_transition, parse_hand_progress,
     parse_remaining_tiles, prepare_status_crop,
 )
+from .public_state_reader import compose_public_candidate
 from .crop_rois import crop_regions
 from .roi import ROIProfile
 from .template_classifier import (
@@ -753,6 +754,31 @@ class TilesV01Tests(unittest.TestCase):
         )
         self.assertIsNone(same)
         self.assertFalse(inferred)
+
+    def test_unified_public_state_composes_missing_hand_from_score_transition(self) -> None:
+        previous = PublicStateObservation(
+            980, 1020, 4, 105, 3, 3, 3, (), False
+        )
+        score = ScorePairRead(
+            1004, 996, "direct", (), (), 1.0,
+            source_frame="hand5", safe_for_executor=False,
+        )
+        status = StatusLineRead(
+            remaining_tiles=106,
+            hand_number=None,
+            raw_remaining="106",
+            raw_hand_progress="0/8",
+            issues=("hand_unreadable",),
+            safe_for_executor=False,
+        )
+        candidate, issues = compose_public_candidate(
+            score, status, previous=previous, source_frame="hand5"
+        )
+        self.assertEqual(candidate.score_pair, (1004, 996))
+        self.assertEqual(candidate.hand_number, 5)
+        self.assertEqual(candidate.remaining_tiles, 106)
+        self.assertIn("hand_inferred_from_score_transition", issues)
+        self.assertFalse(candidate.confidence == 0)
 
     def test_public_state_rois_scale_across_recording_sizes(self) -> None:
         profile = HuianPublicStateProfile()
