@@ -228,18 +228,39 @@ class HuianRules:
                     options.append((index, tile))
         return tuple(options)
 
-    def can_sanjindao(self, hand, gold_tile, *, third_gold_just_received=False):
-        """Sanjindao is a one-shot choice when the third gold has just arrived."""
+    def can_sanjindao(
+            self, hand, gold_tile, *,
+            third_gold_just_received=False,
+            opening_check=False):
+        """Return whether the one-shot Sanjindao choice is open.
+
+        Confirmed entry forms:
+        - opening check: after opening replacement/open-gold, current actor has
+          three or more gold tiles;
+        - mid-hand: a valid draw has just changed 2 gold -> exactly 3 gold.
+
+        Existing 3/4 gold later in the hand is not enough by itself.
+        """
         self._validate_hand(hand, gold_tile)
         if type(third_gold_just_received) is not bool:
             raise ValueError("third_gold_just_received must be boolean")
-        return (third_gold_just_received and gold_tile is not None
-                and hand.count(gold_tile) == 3)
+        if type(opening_check) is not bool:
+            raise ValueError("opening_check must be boolean")
+        if gold_tile is None:
+            return False
+        count = hand.count(gold_tile)
+        return ((opening_check and count >= 3)
+                or (third_gold_just_received and count == 3))
 
-    def sanjindao_decision(self, hand, gold_tile, *, third_gold_just_received=False):
-        """Return the third-gold-moment declare/continue choice."""
+    def sanjindao_decision(
+            self, hand, gold_tile, *,
+            third_gold_just_received=False,
+            opening_check=False):
+        """Return the one-shot opening/third-gold declare-or-continue choice."""
         eligible = self.can_sanjindao(
-            hand, gold_tile, third_gold_just_received=third_gold_just_received)
+            hand, gold_tile,
+            third_gold_just_received=third_gold_just_received,
+            opening_check=opening_check)
         count = hand.count(gold_tile) if gold_tile is not None else 0
         choices = ((SanjindaoChoice.DECLARE_SANJINDAO,
                     SanjindaoChoice.CONTINUE_PLAY) if eligible else ())
