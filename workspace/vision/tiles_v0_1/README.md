@@ -52,3 +52,64 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 `infer_tiles` 输出 JSON，含整体 `valid`、每个槽位的 `tile_id`、`category`、`confidence`、`region`、`slot`，以及被低置信过滤的候选和约束问题。后处理会：过滤低置信候选，限制手牌最多 17 张、摸牌和金牌展示各最多 1 张，拒绝物理手牌区出现第 5 张同牌，并预留多帧投票接口。
 
 输出永远带有 `safe_for_executor: false`。V0.1 没有自动点击接口。
+
+
+## 准确率与稳定性评测
+
+真实识别基线必须同时报告**准确率**和**多帧稳定性**，两者不能互相替代。
+
+### 1. 人工标签留组准确率
+
+`evaluate_tiles` 按 `source_frame`（缺失时按图片路径）整组留出测试；测试组绝不会进入模板库，避免“拿同一张牌截图训练又测试”造成数据泄漏。
+
+```powershell
+.\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.evaluate_tiles `
+  --dataset dataset/tiles_v0_1 `
+  --confidence 0.80 `
+  --output dataset/tiles_v0_1/meta/accuracy_report.json
+```
+
+输出包括：
+- approved 标签总量；
+- 可评估 / 不可评估样本数和覆盖率；
+- 精确牌面准确率；
+- 万/筒/条/字/花类别准确率；
+- 置信阈值过滤后的覆盖率和准确率；
+- 每牌类、每区域准确率；
+- 混淆矩阵；
+- 因“该牌类只出现在测试组、训练组没有第二份真实样本”而不可评估的明细。
+
+若没有人工 approved 标签，或真实来源组少于2组，评测器直接拒绝生成准确率，不允许用空数据或同图模板冒充真实基线。
+
+### 2. 连续帧稳定性
+
+将连续、槽位对齐的推理结果写成 JSONL，每行包含 `predictions` 数组，然后运行：
+
+```powershell
+.\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.evaluate_stability `
+  dataset/tiles_v0_1/meta/predictions_sequence.jsonl `
+  --agreement 0.80 `
+  --minimum-frames 3 `
+  --output dataset/tiles_v0_1/meta/stability_report.json
+```
+
+它按 `region + slot` 报告：
+- 连续可见帧数；
+- 多数票牌面；
+- 一致率；
+- 多数牌平均置信度；
+- 是否达到稳定门槛；
+- 整体稳定槽位比例。
+
+**稳定不等于准确。** 一套模型可以连续多帧稳定地认错，所以稳定性报告必须和人工标签留组准确率一起看。
+
+### Executor 门槛
+
+Tiles V0.1 的所有输出仍固定 `safe_for_executor: false`。当前阶段不因为某一项指标看起来好就开启自动点击；至少要先有目标小程序真实录像上的：
+1. 经人工确认的 ROI；
+2. 跨来源人工标签准确率；
+3. 连续帧稳定性；
+4. 典型错牌/混淆报告；
+5. 手牌张数和物理同牌最多4张等后处理约束回归。
+
+在这些指标可复现之前，Vision只提供观察结果，不向 Executor 发动作。
