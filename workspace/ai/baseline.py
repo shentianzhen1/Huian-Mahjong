@@ -556,7 +556,8 @@ class TenpaiRiskTieBreakAgent(ShantenAgent):
 class MeldAwareShantenAgent(TenpaiRiskTieBreakAgent):
     """Experimental V0.10: auditable Chi/Peng claims before V0.6 play.
 
-    CurrentAgent V0.6 always passes optional meld claims. V0.10 changes only
+    The fixed V0.6 comparison baseline always passes optional meld claims.
+    V0.10 changes only
     AFTER_DISCARD CHI/PENG decisions. It compares the current PASS pre-draw
     offense state with each claim followed by its best mandatory discard.
 
