@@ -25,6 +25,7 @@ class ROIProfile:
     slots: dict[str, tuple[tuple[int, int, int, int], ...]] = field(default_factory=dict)
     calibrated: bool = False
     name: str = "unnamed"
+    region_modes: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
         width, height = _box((0, 0, *self.source_size), "source_size")[-2:]
@@ -48,6 +49,20 @@ class ROIProfile:
                 raise ValueError(f"{region} slot exceeds its region")
             normalized_slots[region] = slots
         object.__setattr__(self, "slots", normalized_slots)
+        normalized_modes = {}
+        for region in REGION_NAMES:
+            mode = self.region_modes.get(region, "tile")
+            if mode not in ("tile", "marker"):
+                raise ValueError(
+                    f"{region} mode must be 'tile' or 'marker', got {mode!r}"
+                )
+            normalized_modes[region] = mode
+        unknown_modes = set(self.region_modes) - set(REGION_NAMES)
+        if unknown_modes:
+            raise ValueError(
+                f"Unknown region mode keys: {sorted(unknown_modes)}"
+            )
+        object.__setattr__(self, "region_modes", normalized_modes)
 
     @classmethod
     def load(cls, path):
@@ -59,6 +74,7 @@ class ROIProfile:
                    for name, values in data.get("slots", {}).items()},
             calibrated=bool(data.get("calibrated", False)),
             name=data.get("name", Path(path).stem),
+            region_modes=data.get("region_modes", {}),
         )
 
     def save(self, path):
@@ -68,9 +84,15 @@ class ROIProfile:
             "regions": {name: list(value) for name, value in self.regions.items()},
             "slots": {name: [list(slot) for slot in values]
                       for name, values in self.slots.items()},
+            "region_modes": dict(self.region_modes),
         }
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         Path(path).write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    def region_mode(self, region):
+        if region not in REGION_NAMES:
+            raise ValueError(f"Unknown region: {region}")
+        return self.region_modes[region]
 
     def crop(self, image, region):
         if not self.calibrated:
