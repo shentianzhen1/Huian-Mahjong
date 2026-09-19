@@ -10,8 +10,13 @@ Huian Mahjong — 当前入口
   PROJECT_STATUS.md
   TODO.md
 
-当前已有：已确认普通流程的 Rules/Environment、simulation-only 普通局闭环、BaselineAgent 批量评估、Vision 离线原型。
-不要一开始重写整个项目。先跑核心测试，再按模块推进。
+当前已有：普通规则真实结算与8局MatchRunner、room541913完整8局回归、ShantenAgent V0.3、固定牌墙评估、Recorder/Vision离线原型。
+
+当前主问题板：GitHub Issues #1–#9；TODO.md只保留未完成项。
+AI继续开发时以ShantenAgent V0.3为基线，不回退到EfficiencyAgent或只对Baseline做晋级判断。
+Executor最后做；Vision真实准确率与多帧稳定性未达门槛前不自动点击。
+
+不要一开始重写整个项目。先跑核心测试，再按Issue依赖推进。
 
 legacy_code/ 仍含泉州命名和过时计分假设，只当基线，不当现行惠安规则。
 
