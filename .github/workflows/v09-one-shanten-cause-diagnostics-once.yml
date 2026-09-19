@@ -1,0 +1,165 @@
+name: V09 OneShanten Cause Diagnostics
+
+on:
+  push:
+    paths:
+      - ".github/workflows/v09-one-shanten-cause-diagnostics-once.yml"
+
+jobs:
+  diagnose:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { block: diag_112000_112004, start: 112000, stop: 112005 }
+          - { block: diag_114000_114004, start: 114000, stop: 114005 }
+          - { block: diag_116000_116004, start: 116000, stop: 116005 }
+          - { block: diag_118000_118004, start: 118000, stop: 118005 }
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Classify shanten-1 two-ply overrides on V0.6 trajectories
+        env:
+          BLOCK: ${{ matrix.block }}
+          START: ${{ matrix.start }}
+          STOP: ${{ matrix.stop }}
+        run: |
+          python -B - <<'PY'
+          import json, os
+          from collections import Counter
+          from workspace.ai import (TenpaiRiskTieBreakAgent,
+                                    analyze_two_ply_offense, best_offense_ties)
+          from workspace.simulator import run_real_ordinary_match
+
+          stats = Counter()
+          cause_changed = Counter()
+          cause_all = Counter()
+          gap_sums = Counter()
+          gap_max = Counter()
+          samples = []
+
+          def classify(estimates):
+              pool = list(estimates)
+              best = min(x.weighted_post_shanten for x in pool)
+              pool2 = [x for x in pool if x.weighted_post_shanten == best]
+              if len(pool2) == 1:
+                  return "post_shanten", pool2
+              best = max(x.terminal_win_copies for x in pool2)
+              pool3 = [x for x in pool2 if x.terminal_win_copies == best]
+              if len(pool3) == 1:
+                  return "terminal_wins", pool3
+              best = max(x.weighted_post_live_copies for x in pool3)
+              pool4 = [x for x in pool3 if x.weighted_post_live_copies == best]
+              if len(pool4) == 1:
+                  return "post_live", pool4
+              best = max(x.weighted_post_effective_types for x in pool4)
+              pool5 = [x for x in pool4 if x.weighted_post_effective_types == best]
+              if len(pool5) == 1:
+                  return "post_types", pool5
+              return "two_ply_tie", pool5
+
+          class DiagnosticAgent:
+              def __init__(self, seed=None):
+                  self.live = TenpaiRiskTieBreakAgent(seed=seed, template_samples=32)
+
+              def choose_decision(self, observation, legal_actions):
+                  live = self.live.choose_decision(observation, legal_actions)
+                  discards = [a for a in legal_actions if a.type.value == "DISCARD"]
+                  if not discards:
+                      return live
+                  stats["discard_decisions"] += 1
+                  legal_by_tile = {a.tile: a for a in discards}
+                  public = self.live._public_tiles(observation)
+                  ties = best_offense_ties(
+                      observation.hand, gold_tile=observation.gold_tile,
+                      open_melds=len(observation.melds[observation.seat]),
+                      visible_tiles=public, allowed_discards=tuple(legal_by_tile))
+                  if len(ties) <= 1 or ties[0].shanten != 1:
+                      return live
+                  stats["shanten1_exact_tie"] += 1
+                  candidates = tuple(x.discard for x in ties)
+                  if observation.gold_tile in candidates:
+                      stats["gold_guard"] += 1
+                      return live
+                  estimates = analyze_two_ply_offense(
+                      observation.hand, candidates,
+                      gold_tile=observation.gold_tile,
+                      open_melds=len(observation.melds[observation.seat]),
+                      visible_tiles=public)
+                  cause, finalists = classify(estimates)
+                  cause_all[cause] += 1
+                  if cause == "two_ply_tie":
+                      return live
+                  shadow_tile = finalists[0].discard
+                  changed = shadow_tile != live.action.tile
+                  if changed:
+                      stats["changed"] += 1
+                      cause_changed[cause] += 1
+
+                  by = {x.discard:x for x in estimates}
+                  v06 = by[live.action.tile]
+                  shadow = by[shadow_tile]
+                  if cause == "post_shanten":
+                      gap = v06.weighted_post_shanten - shadow.weighted_post_shanten
+                  elif cause == "terminal_wins":
+                      gap = shadow.terminal_win_copies - v06.terminal_win_copies
+                  elif cause == "post_live":
+                      gap = shadow.weighted_post_live_copies - v06.weighted_post_live_copies
+                  else:
+                      gap = shadow.weighted_post_effective_types - v06.weighted_post_effective_types
+                  if changed:
+                      gap_sums[cause] += gap
+                      gap_max[cause] = max(gap_max[cause], gap)
+                      if len(samples) < 32:
+                          ctx = observation.match_context
+                          samples.append({
+                              "cause": cause,
+                              "gap": gap,
+                              "v06": live.action.tile,
+                              "shadow": shadow_tile,
+                              "tie_count": len(ties),
+                              "hand_index": None if ctx is None else ctx.hand_index,
+                              "margin": None if ctx is None else ctx.margin_for(observation.seat),
+                              "v06_metrics": {
+                                  "post_s": v06.weighted_post_shanten,
+                                  "wins": v06.terminal_win_copies,
+                                  "live": v06.weighted_post_live_copies,
+                                  "types": v06.weighted_post_effective_types,
+                              },
+                              "shadow_metrics": {
+                                  "post_s": shadow.weighted_post_shanten,
+                                  "wins": shadow.terminal_win_copies,
+                                  "live": shadow.weighted_post_live_copies,
+                                  "types": shadow.weighted_post_effective_types,
+                              },
+                          })
+                  return live
+
+          completed=0
+          stopped=Counter()
+          for seed in range(int(os.environ["START"]), int(os.environ["STOP"])):
+              result=run_real_ordinary_match(
+                  seed=seed, agent_factories=(DiagnosticAgent, DiagnosticAgent),
+                  max_steps=1000, initial_dealer=0)
+              if result.complete: completed += 1
+              else: stopped[result.status] += 1
+
+          out={
+              "block":os.environ["BLOCK"],
+              "matches_completed":completed,
+              "stopped":dict(stopped),
+              "stats":dict(stats),
+              "cause_all":dict(cause_all),
+              "cause_changed":dict(cause_changed),
+              "gap_sums_changed":dict(gap_sums),
+              "gap_max_changed":dict(gap_max),
+              "samples":samples,
+          }
+          print("V09_CAUSE_START")
+          print(json.dumps(out,ensure_ascii=False,indent=2))
+          print("V09_CAUSE_END")
+          PY
