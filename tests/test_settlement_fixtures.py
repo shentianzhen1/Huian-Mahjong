@@ -54,6 +54,13 @@ class SettlementFixtureTests(unittest.TestCase):
         self.assertEqual(
             data["observed_path"]["terminal_visible_gold_count"], 2
         )
+        self.assertTrue(
+            data["observed_path"]["sanjindao_pass_reopens_later"]
+        )
+        self.assertEqual(
+            data["observed_path"]["sanjindao_pass_nodes_seconds"],
+            [43.7, 51.7],
+        )
 
         terms = HuianRules().youjin_score_terms(
             YoujinStage.DOUBLE_YOU,
