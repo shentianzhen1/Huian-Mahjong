@@ -12,7 +12,17 @@ from .template_classifier import TemplateTileClassifier
 
 
 def _group_key(label):
-    return str(label.get("source_frame") or label["image"])
+    """Return the coarsest available independent source group.
+
+    source_session should identify one recording/session (for example one video).
+    Holding out only source_frame can leak adjacent frames from the same recording
+    into both template training and evaluation, so source_session takes priority.
+    """
+    return str(
+        label.get("source_session")
+        or label.get("source_frame")
+        or label["image"]
+    )
 
 
 def _crop_label(root, label):
@@ -91,11 +101,14 @@ def summarize_predictions(rows, *, total_labels, confidence_threshold):
 
 def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
                               template_scope="all_regions"):
-    """Leave one source-frame/image group out and report exact tile accuracy.
+    """Leave one independent source group out and report exact tile accuracy.
 
-    A test label is scored only if its true tile class has at least one approved
-    training example outside the held-out group. Missing cross-group class
-    coverage is reported as unscorable instead of being hidden inside accuracy.
+    Labels should set source_session to the recording/session ID whenever several
+    frames come from the same video. source_session is preferred over
+    source_frame so adjacent frames cannot leak across train/test. A test label is
+    scored only if its true tile class has at least one approved training example
+    outside the held-out group. Missing cross-group class coverage is reported as
+    unscorable instead of being hidden inside accuracy.
     """
     if isinstance(confidence_threshold, bool) or not isinstance(
             confidence_threshold, (int, float)):
@@ -113,7 +126,7 @@ def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
         groups[_group_key(label)].append(label)
     if len(groups) < 2:
         raise ValueError(
-            "Need approved labels from at least two source frames/images "
+            "Need approved labels from at least two independent source groups "
             "for leakage-safe holdout evaluation"
         )
 
@@ -200,9 +213,9 @@ def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
     )
     report.update({
         "method": (
-            "leave_source_group_out"
+            "leave_source_session_or_group_out"
             if template_scope == "all_regions"
-            else "leave_source_group_out_same_region"
+            else "leave_source_session_or_group_out_same_region"
         ),
         "template_scope": template_scope,
         "distinct_source_groups": len(groups),
