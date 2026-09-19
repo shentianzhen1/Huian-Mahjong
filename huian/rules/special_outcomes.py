@@ -59,7 +59,12 @@ _SPECIAL_OUTCOMES = {
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="sanjindao_settlement",
         settlement_ready=False,
-        note="One-shot third-gold trigger and x3 are confirmed; payment/dealer flow remain unknown.",
+        note=(
+            "x3 is confirmed. Opening/third-gold prompts are optional, and new "
+            "target-room replay/player evidence shows PASS closes only the current "
+            "prompt: a later own draw while still holding three gold can offer "
+            "Sanjindao again. Payment/dealer flow remain unknown."
+        ),
     ),
     "EIGHT_FLOWER_YOU": SpecialOutcomeProfile(
         key="EIGHT_FLOWER_YOU",
