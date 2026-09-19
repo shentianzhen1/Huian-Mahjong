@@ -347,6 +347,29 @@ def min_shanten_discards(hand, gold_tile=None, open_melds=0, visible_tiles=(),
     ))
 
 
+def best_offense_ties(hand, gold_tile=None, open_melds=0, visible_tiles=(),
+                      allowed_discards=None):
+    """Return candidates tied on every meaningful V0.3 offense metric.
+
+    Candidates must share minimum shanten, maximum live effective copies and
+    maximum effective-tile type count. The historical final tile-order tie
+    break is intentionally omitted so a later model may choose only within a
+    set that V0.3 considers offensively equivalent.
+    """
+    frontier = min_shanten_discards(
+        hand, gold_tile=gold_tile, open_melds=open_melds,
+        visible_tiles=visible_tiles, allowed_discards=allowed_discards)
+    if not frontier:
+        return ()
+    best = frontier[0]
+    return tuple(
+        item for item in frontier
+        if item.shanten == best.shanten
+        and item.total_live_copies == best.total_live_copies
+        and len(item.effective_tiles) == len(best.effective_tiles)
+    )
+
+
 def best_discard(hand, gold_tile=None, open_melds=0, visible_tiles=(),
                  allowed_discards=None):
     """Return the best discard without fully expanding inferior-shanten options.
