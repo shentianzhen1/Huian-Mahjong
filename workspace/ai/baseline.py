@@ -317,7 +317,7 @@ class DangerAwareShantenAgent(ShantenAgent):
             diagnostics = {}
             for item in frontier:
                 danger = estimate_discard_danger(observation, item.discard)
-                offense = item.total_live_copies + 0.25 * len(item.effective_tiles)
+                offense = float(item.total_live_copies)
                 adjusted = offense - self.danger_weight * danger.risk_units
                 diagnostics[item.discard] = (item, danger, offense, adjusted)
 
