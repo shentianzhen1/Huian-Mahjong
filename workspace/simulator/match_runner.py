@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from numbers import Integral
 
 from huian.rules import UnknownRuleError
+from workspace.ai import MatchObservationContext
 from .match import MatchProgressState
 
 
@@ -27,6 +28,7 @@ class MatchHandContext:
     current_dealer_base: int
     scores: tuple[int, int]
     hands_remaining: int
+    consecutive_dealer_hands: int
 
 
 @dataclass(frozen=True)
@@ -44,6 +46,7 @@ class MatchHandResult:
     terminal_reason: str | None = None
     unresolved: tuple[str, ...] = ()
     evidence: dict | None = None
+    win_source: str | None = None
 
     def __post_init__(self):
         if self.status not in ("SETTLED", "STOPPED_UNKNOWN"):
@@ -67,9 +70,12 @@ class MatchHandResult:
                 raise ValueError("unknown hand cannot mutate scores or declare a winner")
 
     @classmethod
-    def settled(cls, rewards, *, winner, terminal_reason=None):
+    def settled(cls, rewards, *, winner, terminal_reason=None, win_source=None):
+        if win_source is not None and not isinstance(win_source, str):
+            raise ValueError("win_source must be a string or None")
         return cls(
-            "SETTLED", tuple(rewards), winner, terminal_reason, (), None
+            "SETTLED", tuple(rewards), winner, terminal_reason, (), None,
+            win_source
         )
 
     @classmethod
@@ -106,8 +112,28 @@ class MatchRunResult:
     def complete(self):
         return self.status == "COMPLETED"
 
+    def deal_in_count_for(self, seat):
+        """Count ordinary discard wins paid by seat in settled match hands."""
+        if type(seat) is not int or seat not in (0, 1):
+            raise ValueError("seat must be 0 or 1")
+        return sum(
+            1 for record in self.hands
+            if record.result.status == "SETTLED"
+            and record.result.win_source == "discard"
+            and record.result.winner == 1 - seat
+        )
+
     @property
-    def stopped_evidence(self):
+    def win_source_counts(self):
+        counts = {}
+        for record in self.hands:
+            source = record.result.win_source
+            if record.result.status != "SETTLED" or source is None:
+                continue
+            counts[source] = counts.get(source, 0) + 1
+        return counts
+
+    @property    def stopped_evidence(self):
         if self.status != "STOPPED_UNKNOWN" or not self.hands:
             return None
         return self.hands[-1].result.evidence
@@ -129,6 +155,7 @@ class MatchRunner:
             current_dealer_base=progress.current_dealer_base,
             scores=progress.scores,
             hands_remaining=progress.hands_remaining,
+            consecutive_dealer_hands=progress.consecutive_dealer_hands,
         )
 
     def run(self, *, initial_dealer=0):
@@ -198,12 +225,21 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
             factory(seed=hand_seed * 2 + seat)
             for seat, factory in enumerate(factories)
         )
+        observation_context = MatchObservationContext(
+            scores=context.scores,
+            hand_index=context.hand_index,
+            hands_remaining=context.hands_remaining,
+            dealer=context.dealer,
+            current_dealer_base=context.current_dealer_base,
+            consecutive_dealer_hands=context.consecutive_dealer_hands,
+        )
         result = simulator.run_normal_hand(
             seed=hand_seed,
             agents=agents,
             max_steps=max_steps,
             dealer=context.dealer,
             current_dealer_base=context.current_dealer_base,
+            match_context=observation_context,
         )
         if result.status == "COMPLETED":
             if not getattr(result, "real_scoring", False):
@@ -212,6 +248,7 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
                 result.rewards,
                 winner=result.winner,
                 terminal_reason=result.terminal_reason,
+                win_source=result.win_source,
             )
         if result.status == "STOPPED_UNKNOWN":
             evidence = deepcopy(result.unknown_evidence)
@@ -223,6 +260,7 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
                 "current_dealer_base": context.current_dealer_base,
                 "scores": list(context.scores),
                 "hands_remaining": context.hands_remaining,
+                "consecutive_dealer_hands": context.consecutive_dealer_hands,
                 "hand_seed": hand_seed,
             }
             return MatchHandResult.unknown(
