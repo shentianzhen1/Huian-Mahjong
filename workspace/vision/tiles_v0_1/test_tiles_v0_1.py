@@ -135,7 +135,7 @@ class TilesV01Tests(unittest.TestCase):
 
             report = evaluate_template_dataset(
                 root, confidence_threshold=0.50)
-            self.assertEqual(report["method"], "leave_source_group_out")
+            self.assertEqual(report["method"], "leave_source_session_or_group_out")
             self.assertEqual(report["distinct_source_groups"], 2)
             self.assertEqual(report["total_approved_labels"], 4)
             self.assertEqual(report["scorable_labels"], 4)
@@ -147,6 +147,41 @@ class TilesV01Tests(unittest.TestCase):
             self.assertEqual(
                 {row["group"] for row in report["predictions"]},
                 {"frame_a", "frame_b"},
+            )
+
+    def test_holdout_prefers_source_session_over_individual_frames(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+
+            samples = (
+                ("a1", "session_a", "M1"),
+                ("a2", "session_a", "M1"),
+                ("b1", "session_b", "M1"),
+            )
+            for name, session, tile_id in samples:
+                image = Image.new("RGB", (20, 40), "black")
+                draw = ImageDraw.Draw(image)
+                draw.rectangle((6, 4, 13, 35), fill="white")
+                image.save(image_dir / f"{name}.png")
+                append_label(
+                    root, image=f"images/rois/{name}.png",
+                    bbox=[0, 0, 20, 40], tile_id=tile_id,
+                    region="hand_region", source_frame=name,
+                    source_session=session,
+                )
+
+            report = evaluate_template_dataset(root, confidence_threshold=0.50)
+            self.assertEqual(report["distinct_source_groups"], 2)
+            self.assertEqual(
+                {row["group"] for row in report["predictions"]},
+                {"session_a", "session_b"},
+            )
+            readiness = dataset_readiness(root)
+            self.assertEqual(readiness["source_groups"], 2)
+            self.assertEqual(
+                readiness["class_source_group_counts"]["M1"], 2
             )
 
     def test_same_region_holdout_does_not_cross_ui_render_domains(self) -> None:
@@ -173,7 +208,7 @@ class TilesV01Tests(unittest.TestCase):
             same_region = evaluate_template_dataset(
                 root, template_scope="same_region")
             self.assertEqual(
-                same_region["method"], "leave_source_group_out_same_region")
+                same_region["method"], "leave_source_session_or_group_out_same_region")
             self.assertEqual(same_region["template_scope"], "same_region")
             self.assertEqual(same_region["scorable_labels"], 0)
             self.assertEqual(same_region["unscorable_labels"], 2)
