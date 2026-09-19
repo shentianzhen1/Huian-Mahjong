@@ -228,7 +228,8 @@ class HuianRulesTests(unittest.TestCase):
     def test_discarded_gold_cannot_be_claimed_for_meld(self):
         result = self.rules.meld_options(["M2"] * 3, "M2", "M2")
         self.assertEqual(result, {"chi": [], "peng": False, "ming_gang": False})
-        self.assertEqual(self.rules.concealed_kongs(["M2"] * 4, "M2"), ())
+        with self.assertRaisesRegex(ValueError, "at most three gold copies"):
+            self.rules.concealed_kongs(["M2"] * 4, "M2")
 
     def test_normal_melds(self):
         result = self.rules.meld_options(["M2"] * 3, "M2", "P9")
