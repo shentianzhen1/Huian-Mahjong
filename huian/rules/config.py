@@ -35,7 +35,7 @@ UNKNOWN_RULES = MappingProxyType({
     "tianhu": "Timing relative to flower replacement and opening gold",
     "tianting": "Exact definition",
     "match_tie": "Tie handling after eight hands",
-    "dealer_base_extension": "Dealer third continuation onward and cap",
+    "dealer_base_extension": "Dealer-base upper cap and behavior beyond directly observed base35; first dealer settlement base=10, repeat +5 and reset-to-10 on dealer change are confirmed",
     # flower_groups resolved: strictly 1 fan per flower, no four-flower bonus.
     # multi_gold_fan resolved: strictly 1 fan per gold, cumulative.
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
