@@ -48,7 +48,7 @@ def two_seat_gold_state(*, current=0, current_gold=1, opponent_gold=1,
     return _fill(state)
 
 
-def mark_third_gold_draw(state):
+def mark_gold_draw(state):
     state.phase = "AFTER_DRAW"
     state.last_action = env.Action(
         state.current_player, env.ActionType.DRAW,
@@ -166,7 +166,7 @@ class QiangjinWindowTests(unittest.TestCase):
                             for a in actions))
 
     def test_d_sanjindao_is_optional_on_third_gold_draw(self):
-        state = mark_third_gold_draw(two_seat_gold_state(
+        state = mark_gold_draw(two_seat_gold_state(
             current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
         self.assertTrue(HuianRules().can_sanjindao(
             state.hands[0], GOLD, third_gold_just_received=True))
@@ -200,7 +200,7 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
     def test_sanjindao_declaration_stops_only_at_unknown_settlement(self):
-        state = mark_third_gold_draw(two_seat_gold_state(
+        state = mark_gold_draw(two_seat_gold_state(
             current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
         game = env_of(state)
         declare = next(a for a in game.legal_actions()
@@ -219,7 +219,7 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertFalse(any(
             a.metadata.get("special") == "SANJINDAO" for a in actions
         ))
-        self.assertTrue(any(a.type == env.ActionType.QIANGJIN for a in actions))
+        self.assertEqual([a.type for a in actions], [env.ActionType.DRAW])
 
     def test_four_playable_gold_copies_are_physically_invalid(self):
         state = two_seat_gold_state(
@@ -230,13 +230,24 @@ class QiangjinWindowTests(unittest.TestCase):
         ):
             env_of(state)
 
-    def test_idle_16_tiles_can_be_eligible_on_own_node_only(self):
+    def test_idle_16_tiles_draw_before_any_qiangjin_check(self):
         state = two_seat_gold_state(
             current=1, current_gold=1, opponent_gold=1, current_tiles=16,
             phase="NEED_DRAW")
         self.assertEqual(len(state.hands[1]), 16)
         self.assertTrue(working_qiangjin_eligible(state, 1))
         actions = env_of(state).legal_actions()
-        self.assertTrue(any(a.type == env.ActionType.QIANGJIN and a.player == 1
-                            for a in actions))
-        self.assertFalse(any(a.player == 0 for a in actions))
+        self.assertEqual(len(actions), 1)
+        self.assertEqual(actions[0].type, env.ActionType.DRAW)
+        self.assertEqual(actions[0].player, 1)
+
+    def test_completed_own_draw_can_open_qiangjin_window(self):
+        state = mark_gold_draw(two_seat_gold_state(
+            current=0, current_gold=1, opponent_gold=1, current_tiles=17,
+            phase="AFTER_DRAW"))
+        actions = env_of(state).legal_actions()
+        self.assertTrue(any(
+            a.type == env.ActionType.QIANGJIN and a.player == 0
+            for a in actions
+        ))
+        self.assertFalse(any(a.player == 1 for a in actions))

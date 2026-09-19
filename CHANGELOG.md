@@ -1,5 +1,12 @@
 # 重要变更记录
 
+## 2026-09-20 — 抢金触发门控与仓库状态清理
+
+- 修复抢金中途窗口门控：普通 `NEED_DRAW`、吃后和碰后节点不再仅因手里有金就提前弹窗；只有当前玩家完成真实摸牌后才检查，补花有效摸牌与三类杠后尾摸继续复用该路径。开局仍由独立 `OPENING_QIANGJIN_CHECK` 处理。
+- 回归测试改为明确验证“16张先摸牌、完成自己的摸牌后才可出现抢金”，项目核心310项全部通过。
+- `PROJECT_CONTEXT.md`、`START_HERE.txt` 与 `CODEX_FIRST_PROMPT.txt` 对齐到 `CurrentAgent = MeldAwareShantenAgent V0.10`；PROJECT_STATUS / README 同步 Vision 98.66% 与已落地的 Score Reader / Status Reader V0.1。
+- CI 的 `push` 只在 `main` 运行，功能分支由 `pull_request` 运行，避免 Dependabot 分支 push 与 PR 重复触发。Python声明收敛为3.10–3.14，并将3.13/3.14加入核心测试矩阵。
+
 ## 2026-09-20 — 开出的金固定占1张实体牌，可操作金上限改为3
 
 - 玩家确认：最终开出的普通金牌本身就是4张同牌中的1张实体牌，并固定留在开金区，**不能再进入摸牌区**。因此牌局中最多只有另外3张可操作金。

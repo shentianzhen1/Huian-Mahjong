@@ -1,13 +1,21 @@
-Read AGENTS.md, PROJECT_CONTEXT.md, RULE_STATUS.md, TODO.md, and the code under legacy_code/.
+Continue the existing Huian Mahjong project; do not restart the migration.
 
-Do not modify files yet.
+Read in this order:
+1. AGENTS.md
+2. GitHub Issues / TODO.md for current execution work
+3. RULE_STATUS.md and RULE_EVIDENCE_MATRIX.md for rule truth and evidence gaps
+4. PROJECT_STATUS.md for the integrated snapshot
+5. PROJECT_CONTEXT.md for architecture boundaries
 
-First do the following:
-1. Summarize the existing architecture and code baseline.
-2. Identify which legacy rules/scoring assumptions conflict with RULE_STATUS.md.
-3. Run the existing Core and Environment tests and report results.
-4. Propose a minimal migration plan that preserves working code while introducing HuianRules / HuianRulesAdapter.
-5. Propose Simulator V0.1 interfaces and file structure.
-6. List every rule that is still UNKNOWN and ensure none is silently guessed.
+Then run:
+  python -B -m unittest discover -s tests -v
 
-After I approve the plan, implement only the first milestone.
+Current baseline:
+- Rules / Environment / Simulator / 8-hand MatchRunner are already implemented.
+- CurrentAgent = MeldAwareShantenAgent V0.10.
+- TenpaiRiskTieBreakAgent V0.6 is the fixed main comparison baseline.
+- ShantenAgent V0.3 is the offense ablation baseline.
+- Vision hand+draw strict holdout is 98.66%; Score Reader and Status Reader V0.1 exist.
+- Executor remains disabled until Vision confidence, multi-frame stability, and post-action validation are sufficient.
+
+Work only on the selected open Issue. Preserve existing layers and tests, do not rewrite stable control flow for cleanup, and never infer an UNKNOWN Mahjong rule. Any new AI candidate must beat V0.10 under fixed-wall, seat-swapped, identity-stable-RNG paired evaluation.

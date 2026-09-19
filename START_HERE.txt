@@ -10,10 +10,10 @@ Huian Mahjong — 当前入口
   PROJECT_STATUS.md
   TODO.md
 
-当前已有：普通规则真实结算与8局MatchRunner、room541913完整8局回归、ShantenAgent V0.3、固定牌墙评估、Recorder/Vision离线原型。
+当前已有：普通规则真实结算与8局MatchRunner、match_evidence_001完整8局回归、CurrentAgent = MeldAwareShantenAgent V0.10、固定牌墙评估、Recorder/Vision/PublicState离线原型。
 
 当前主问题板：GitHub Issues #1–#9；TODO.md只保留未完成项。
-AI继续开发时以ShantenAgent V0.3为基线，不回退到EfficiencyAgent或只对Baseline做晋级判断。
+AI继续开发时必须直接对比CurrentAgent V0.10；TenpaiRiskTieBreakAgent V0.6保留为固定主对照，ShantenAgent V0.3保留为消融基线。不要回退到EfficiencyAgent，也不要只对Baseline做晋级判断。
 Executor最后做；Vision真实准确率与多帧稳定性未达门槛前不自动点击。
 
 不要一开始重写整个项目。先跑核心测试，再按Issue依赖推进。

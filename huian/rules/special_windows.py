@@ -173,12 +173,16 @@ def report_with_specials(adapter, state):
                 "source": DrawSource.WALL_HEAD.value}),))
         return ActionReport(tuple(
             A(p, T.DISCARD, tile=tile) for tile in sorted(set(state.hands[p]))))
-    if state.phase in ("OPENING_QIANGJIN_CHECK", "QIANGJIN_WINDOW"):
+    if state.phase == "OPENING_QIANGJIN_CHECK":
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))
-    if state.phase in ("NEED_DRAW", "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG") and (
+    # Mid-hand special windows exist only after the acting player has completed
+    # a real draw. Flower replacement and all three kong replacement draws are
+    # recorded as that same DRAW event (with effective_drawn_tile / wall_tail
+    # metadata), so they pass this gate without making NEED_DRAW, CHI, or PENG
+    # nodes spuriously eligible.
+    if state.phase == "AFTER_DRAW" and _last_effective_draw(state, p) is not None and (
             _just_received_third_gold(state, p)
-            or _opening_sanjindao_check(state, p)
             or _later_sanjindao_draw_check(state, p)
             or _just_completed_eight_flowers(state, p)
             or working_qiangjin_eligible(state, p)):
