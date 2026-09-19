@@ -7,7 +7,7 @@ A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / �
 Direct conclusions:
 
 - **First sitting dealer current settlement base = 10.** The non-dealer own displayed base is 5. The earlier player wording “坐庄底分5分，连庄+5” is now reconciled with the UI: becoming dealer adds the dealer +5 on top of the ordinary 5-base display, so the first dealer settlement base is 10, not 5.
-- **Repeat dealer adds +5 each hand.** This match directly shows dealer settlement bases 10 → 15 → 20 → 25, and after the dealer loses the new dealer resets to 10. The upper cap beyond observed evidence remains UNKNOWN; older direct target evidence reaches base35.
+- **Repeat dealer adds +5 each hand, with no cap while the same dealer keeps the seat.** This match directly shows 10 → 15 → 20 → 25; older direct target evidence reaches 30/35. Player confirmation 2026-09-19 closes the remaining boundary: if the same dealer continues through later hands, the sequence keeps rising by +5 (40, 45, ... as applicable) until the fixed 8-hand match ends. Once the dealer loses, that chain ends and the new dealer resets to 10.
 - **All 8 hands satisfy the same net formula:** `(current dealer settlement base + winner fan) × Hu-method multiplier`. The loser fan is not subtracted.
 - **Dealer Youjin has no extra dealer ×2.** Hand 5 is a dealer Youjin with gold2 + flowers2 = 4 fan and settles exactly `(15+4)×4 = 76`, not 152. Together with the earlier dealer Triple-You +608, this closes the old extra-dealer-multiplier hypothesis for the target room.
 - **Simple Youjin can coexist with two gold tiles.** Hand 5 ends as `游金×4` while the settlement explicitly lists `金牌2番`; both golds count +1 fan. Therefore Youjin/Double/Triple stage is not the same thing as current gold-tile count.
@@ -203,7 +203,7 @@ Confirmed target-room mapping:
 
 This directly reconciles the earlier player wording “坐庄底分5分，连庄+5”: the ordinary player base is 5 and sitting dealer contributes another +5 to the settlement base. The simulator must therefore use 10, not 5, for the first dealer hand.
 
-Older direct target evidence also reaches dealer base 30 and 35. The cap beyond the directly observed range remains UNKNOWN. Do not infer 40/45 as confirmed merely because the arithmetic continuation is convenient for simulation.
+Older direct target evidence also reaches dealer base 30 and 35. Player confirmation 2026-09-19 confirms there is **no cap during a continuous dealer streak**: every retained-dealer hand adds +5 until the 8-hand match ends. Thus a dealer who keeps all eight hands follows 10→15→20→25→30→35→40→45. If the dealer loses at any point, the new dealer starts a new streak at 10.
 
 ## Flower scoring
 
