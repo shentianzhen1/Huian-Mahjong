@@ -9,7 +9,8 @@ from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           CurrentAgent, BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, MeldAwareShantenAgent,
-                          OneShantenTwoPlyRiskAgent, PlayerObservation, ShantenAgent,
+                          OneShantenTwoPlyRiskAgent, PlayerObservation,
+                          ScoreAwareMeldAgent, ShantenAgent,
                           TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
                           TenpaiRiskTieBreakAgent, TwoPlyShantenRiskAgent,
                           best_offense_ties,
@@ -27,6 +28,71 @@ def discards(hand):
 
 
 class BaselineAgentTests(unittest.TestCase):
+    def test_v011_uses_known_score_only_inside_exact_tenpai_offense_tie(self):
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=2,
+        )
+        view = PlayerObservation(
+            0, ("M1", "M2"), "P9", "AFTER_DRAW", 0, 40,
+            ((), ()), ((), ()), ((), ()), context,
+        )
+        actions = discards(list(view.hand))
+        ties = (
+            SimpleNamespace(
+                discard="M1", shanten=0, total_live_copies=4,
+                effective_tile_types=("B",),
+                effective_tiles=(object(),),
+            ),
+            SimpleNamespace(
+                discard="M2", shanten=0, total_live_copies=4,
+                effective_tile_types=("R",),
+                effective_tiles=(object(),),
+            ),
+        )
+
+        def fake_value(hand, **kwargs):
+            discarded = "M2" if tuple(hand) == ("M1",) else "M1"
+            weighted = 160 if discarded == "M1" else 120
+            return SimpleNamespace(
+                total_live_copies=4,
+                weighted_net_points=weighted,
+                mean_net_points_if_win=weighted / 4,
+                current_dealer_base=20,
+            )
+
+        with patch(
+                "workspace.ai.baseline.best_offense_ties",
+                return_value=ties), patch(
+                "workspace.ai.baseline.evaluate_tenpai_ordinary_value",
+                side_effect=fake_value):
+            decision = ScoreAwareMeldAgent(
+                seed=7, template_samples=32).choose_decision(view, actions)
+
+        self.assertEqual(decision.action.tile, "M1")
+        self.assertIn("score_aware_meld_v0.11", decision.reason)
+        self.assertIn("not full EV", decision.reason)
+
+    def test_v011_falls_back_to_v010_without_match_context(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            ((), ()), ((), ()), ((), ()), None,
+        )
+        actions = discards(hand)
+        expected = MeldAwareShantenAgent(
+            seed=9, template_samples=32).choose_decision(view, actions)
+        with patch(
+                "workspace.ai.baseline.evaluate_tenpai_ordinary_value"
+        ) as mocked:
+            actual = ScoreAwareMeldAgent(
+                seed=9, template_samples=32).choose_decision(view, actions)
+        self.assertEqual(actual.action, expected.action)
+        mocked.assert_not_called()
+
     def test_current_agent_points_to_promoted_v0_10(self):
         self.assertIs(CurrentAgent, MeldAwareShantenAgent)
         self.assertEqual(CURRENT_AGENT_VERSION, "v0.10")
