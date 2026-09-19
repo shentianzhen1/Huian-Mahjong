@@ -72,12 +72,17 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 `evaluate_tiles` 按 `source_frame`（缺失时按图片路径）整组留出测试；测试组绝不会进入模板库，避免“拿同一张牌截图训练又测试”造成数据泄漏。
 
+真实小程序界面优先使用 `same_region`：手牌、摸牌、金牌展示的底色、边框和缩放可能不同，测试牌只和同一区域的训练模板比较，避免把 UI 渲染域差异误算成牌面分类能力。
+
 ```powershell
 .\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.evaluate_tiles `
   --dataset dataset/tiles_v0_1 `
   --confidence 0.80 `
+  --template-scope same_region `
   --output dataset/tiles_v0_1/meta/accuracy_report.json
 ```
+
+`--template-scope all_regions` 保留原始跨区域模板池行为，只适合兼容和域差异诊断，不建议作为真实 Executor 门槛。
 
 输出包括：
 - approved 标签总量；
@@ -87,9 +92,9 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 - 置信阈值过滤后的覆盖率和准确率；
 - 每牌类、每区域准确率；
 - 混淆矩阵；
-- 因“该牌类只出现在测试组、训练组没有第二份真实样本”而不可评估的明细。
+- 因“该牌类只出现在测试组、训练组没有同区域第二份真实样本”而不可评估的明细。
 
-若没有人工 approved 标签，或真实来源组少于2组，评测器直接拒绝生成准确率，不允许用空数据或同图模板冒充真实基线。
+若没有人工 approved 标签，或真实来源组少于2组，评测器直接拒绝生成准确率，不允许用空数据或同图模板冒充真实基线。某一区域缺少跨来源同类样本时，该区域样本应报告为不可评估，而不是强行记为识别错误。
 
 ### 2. 连续帧稳定性
 
