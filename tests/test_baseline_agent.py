@@ -165,6 +165,24 @@ class BaselineAgentTests(unittest.TestCase):
         self.assertIn("risk_units=", decision.reason)
         self.assertIn("not a probability", decision.reason)
 
+    def test_zero_danger_weight_reproduces_shanten_v0_3_choice(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("N",), ()), ((), ()), ((), ()),
+        )
+        actions = discards(hand)
+        old = ShantenAgent().choose_decision(view, actions)
+        new = DangerAwareShantenAgent(danger_weight=0).choose_decision(view, actions)
+        self.assertEqual(new.action, old.action)
+
     def test_danger_aware_agent_validates_weight_and_keeps_hu_priority(self):
         with self.assertRaises(ValueError):
             DangerAwareShantenAgent(danger_weight=-0.1)
