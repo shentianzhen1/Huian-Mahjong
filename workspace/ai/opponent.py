@@ -13,6 +13,10 @@ from dataclasses import dataclass
 from random import Random
 
 from huian._legacy import env
+from huian.rules import HuianRules
+from huian.rules.config import EvidenceStatus
+from huian.rules.context import HuContext, WinSource
+from huian.rules.observed_settlement import HuianObservedSettlementPlugin
 from .shanten import ordinary_shanten
 
 
@@ -128,6 +132,43 @@ class TenpaiWaitRiskEstimate:
         return False
 
 
+@dataclass(frozen=True)
+class TenpaiWaitLossEstimate:
+    """Score-aware relative loss under the same tenpai-template prior.
+
+    ``loss_index`` averages confirmed ordinary-Ron loss across every accepted
+    synthetic tenpai template, counting non-matching templates as zero loss.
+    It is conditional on the opponent already being in tenpai and therefore is
+    NOT an absolute expected loss / EV.
+    """
+
+    tile: str
+    risk_score: float
+    loss_index: float | None
+    mean_loss_if_hit: float | None
+    matching_templates: int
+    scored_matching_templates: int
+    templates_used: int
+    generation_attempts: int
+    opponent_concealed_count: int
+    opponent_open_melds: int
+    unresolved_reason: str | None = None
+
+    @property
+    def is_absolute_ev(self):
+        return False
+
+    @property
+    def complete(self):
+        return self.loss_index is not None and self.unresolved_reason is None
+
+
+@dataclass(frozen=True)
+class _PublicMeld:
+    kind: str
+    tiles: tuple[str, ...]
+
+
 _MELD_TEMPLATES = tuple(
     [(tile, tile, tile) for tile in env.BASE_TILES]
     + [
@@ -226,5 +267,153 @@ def estimate_tenpai_wait_risk_scores(
             generation_attempts=attempts,
             opponent_concealed_count=concealed_count,
             opponent_open_melds=open_melds,
+        ))
+    return tuple(estimates)
+
+
+def _confirmed_ordinary_ron_loss(observation, sampled_hand, discard):
+    """Return acting player's positive loss for one synthetic ordinary Ron.
+
+    None means the structural win exists but some score input is not backed by
+    CONFIRMED evidence or match dealer-base context is unavailable.
+    """
+    context = observation.match_context
+    if context is None:
+        return None
+    opponent = 1 - observation.seat
+    melds = tuple(
+        _PublicMeld(kind, tuple(tiles))
+        for kind, tiles in observation.melds[opponent]
+    )
+    completed = [*sampled_hand, discard]
+    rules = HuianRules()
+    hu_context = HuContext(WinSource.DISCARD, winning_tile=discard)
+    hu_result = rules.analyze_hu(
+        completed,
+        observation.gold_tile,
+        open_melds=len(melds),
+        win_context=hu_context,
+    )
+    if not hu_result.legal:
+        return None
+    fan_result = rules.aggregate_fan(
+        completed,
+        melds=melds,
+        flowers=observation.flowers[opponent],
+        gold_tile=observation.gold_tile,
+        hu_result=hu_result,
+    )
+    if not fan_result.complete:
+        return None
+    if any(component.status != EvidenceStatus.CONFIRMED
+           for component in fan_result.components):
+        return None
+    settlement = HuianObservedSettlementPlugin().settle(
+        winner=opponent,
+        current_dealer_base=context.current_dealer_base,
+        winner_fan=fan_result.fan,
+        win_type="PINGHU",
+    )
+    loss = -settlement.rewards[observation.seat]
+    if loss < 0:
+        raise ValueError("ordinary Ron loss must be nonnegative for the discarder")
+    return loss
+
+
+def estimate_tenpai_wait_loss_scores(
+        observation, candidate_tiles, *, samples=32, seed=0,
+        max_attempt_factor=200):
+    """Rank exact-offense-tie discards by tenpai-conditioned score exposure.
+
+    This reuses the public-information tenpai-template prior, but for each
+    matching ordinary-Ron template it computes the confirmed target-room Pinghu
+    loss from the current dealer base and the sampled winner's auditable fan.
+
+    The returned ``loss_index`` is conditional on a tenpai-template prior.
+    It must not be displayed or consumed as an absolute expected loss.
+    """
+    if observation.match_context is None:
+        raise ValueError("score-aware tenpai loss requires match_context")
+    if type(samples) is not int or samples <= 0:
+        raise ValueError("samples must be a positive integer")
+    if type(seed) is not int:
+        raise ValueError("seed must be an integer")
+    if type(max_attempt_factor) is not int or max_attempt_factor <= 0:
+        raise ValueError("max_attempt_factor must be a positive integer")
+    candidates = tuple(dict.fromkeys(candidate_tiles))
+    if not candidates:
+        raise ValueError("candidate_tiles must be nonempty")
+    own = Counter(observation.hand)
+    for tile in candidates:
+        if tile not in env.BASE_TILES:
+            raise ValueError("loss candidates must be base tiles")
+        if own[tile] <= 0:
+            raise ValueError("loss candidate must be in the acting hand")
+
+    opponent = 1 - observation.seat
+    open_melds = len(observation.melds[opponent])
+    if not 0 <= open_melds <= 5:
+        raise ValueError("opponent open meld count must be between zero and five")
+    concealed_count = (5 - open_melds) * 3 + 1
+
+    known = _base_public_counter(observation)
+    unseen_counts = Counter({
+        tile: 4 - known[tile] for tile in env.BASE_TILES
+    })
+    if sum(unseen_counts.values()) < concealed_count:
+        raise ValueError("public state leaves too few unseen tiles for opponent hand")
+
+    rng = Random(seed)
+    accepted = []
+    attempts = 0
+    max_attempts = samples * max_attempt_factor
+    while len(accepted) < samples and attempts < max_attempts:
+        attempts += 1
+        hand = _sample_tenpai_template(
+            rng, unseen_counts, observation.gold_tile, open_melds)
+        if hand is not None:
+            accepted.append(hand)
+    if not accepted:
+        raise RuntimeError("could not generate a public-compatible tenpai template")
+
+    estimates = []
+    for tile in candidates:
+        matches = 0
+        scored = 0
+        total_loss = 0
+        unresolved = None
+        for hand in accepted:
+            if not _ordinary_discard_hu(
+                    hand, tile, observation.gold_tile, open_melds):
+                continue
+            matches += 1
+            loss = _confirmed_ordinary_ron_loss(observation, hand, tile)
+            if loss is None:
+                unresolved = "unconfirmed_or_incomplete_ordinary_score"
+                continue
+            scored += 1
+            total_loss += loss
+
+        complete = scored == matches
+        loss_index = (
+            total_loss / len(accepted)
+            if complete else None
+        )
+        mean_loss_if_hit = (
+            total_loss / matches
+            if complete and matches else (0.0 if complete else None)
+        )
+        estimates.append(TenpaiWaitLossEstimate(
+            tile=tile,
+            risk_score=matches / len(accepted),
+            loss_index=loss_index,
+            mean_loss_if_hit=mean_loss_if_hit,
+            matching_templates=matches,
+            scored_matching_templates=scored,
+            templates_used=len(accepted),
+            generation_attempts=attempts,
+            opponent_concealed_count=concealed_count,
+            opponent_open_melds=open_melds,
+            unresolved_reason=(None if complete else unresolved),
         ))
     return tuple(estimates)
