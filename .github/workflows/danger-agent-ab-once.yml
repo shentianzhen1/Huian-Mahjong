@@ -1,0 +1,87 @@
+name: Danger Agent AB Pilot
+
+on:
+  push:
+    paths:
+      - ".github/workflows/danger-agent-ab-once.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run danger-weight pilot and confirmation
+        run: |
+          python -B - <<'PY'
+          import json
+          from workspace.ai import DangerAwareShantenAgent, ShantenAgent
+          from workspace.simulator import run_real_ordinary_match
+
+          def danger_factory(weight):
+              def factory(seed=None):
+                  return DangerAwareShantenAgent(seed=seed, danger_weight=weight)
+              return factory
+
+          def compare(weight, seeds):
+              names = ("DangerV04", "ShantenV03")
+              wins = {names[0]: 0, names[1]: 0, "ties": 0}
+              totals = {names[0]: 0, names[1]: 0}
+              completed = 0
+              stopped = 0
+              rows = []
+              for seed in seeds:
+                  for swapped in (False, True):
+                      factories = ((danger_factory(weight), ShantenAgent)
+                                   if not swapped else
+                                   (ShantenAgent, danger_factory(weight)))
+                      seat_names = (names if not swapped else names[::-1])
+                      result = run_real_ordinary_match(
+                          seed=seed, agent_factories=factories, max_steps=1000,
+                          initial_dealer=0)
+                      if not result.complete:
+                          stopped += 1
+                          rows.append({"seed": seed, "swapped": swapped,
+                                       "status": result.status,
+                                       "unresolved": list(result.unresolved)})
+                          continue
+                      completed += 1
+                      for seat, name in enumerate(seat_names):
+                          totals[name] += result.final_scores[seat]
+                      if result.final_scores[0] == result.final_scores[1]:
+                          wins["ties"] += 1
+                      else:
+                          seat = 0 if result.final_scores[0] > result.final_scores[1] else 1
+                          wins[seat_names[seat]] += 1
+                      rows.append({"seed": seed, "swapped": swapped,
+                                   "status": result.status,
+                                   "scores": list(result.final_scores)})
+              avg = {name: totals[name] / completed if completed else None
+                     for name in names}
+              delta = ((totals[names[0]] - totals[names[1]]) / completed
+                       if completed else None)
+              return {
+                  "weight": weight,
+                  "attempts": len(rows),
+                  "completed": completed,
+                  "stopped": stopped,
+                  "wins": wins,
+                  "average_final_score": avg,
+                  "average_delta_danger_minus_shanten": delta,
+              }
+
+          pilot = [compare(weight, range(20, 30))
+                   for weight in (0.25, 0.5, 0.75, 1.0)]
+          eligible = [row for row in pilot if row["stopped"] == 0]
+          best = max(eligible, key=lambda row: row["average_delta_danger_minus_shanten"])
+          confirmation = compare(best["weight"], range(100, 120))
+          output = {"pilot": pilot, "selected_weight": best["weight"],
+                    "confirmation": confirmation}
+          print("DANGER_AB_START")
+          print(json.dumps(output, ensure_ascii=False, indent=2))
+          print("DANGER_AB_END")
+          PY
