@@ -8,7 +8,8 @@ from huian._legacy import env
 from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           CurrentAgent, BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
-                          MatchObservationContext, PlayerObservation, ShantenAgent,
+                          MatchObservationContext, OneShantenTwoPlyRiskAgent,
+                          PlayerObservation, ShantenAgent,
                           TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
                           TenpaiRiskTieBreakAgent, TwoPlyShantenRiskAgent,
                           best_offense_ties,
@@ -580,6 +581,87 @@ class BaselineAgentTests(unittest.TestCase):
                     view, discards(hand))
         self.assertEqual(actual.action, expected.action)
         lookahead.assert_not_called()
+
+    def test_v09_uses_two_ply_at_one_shanten_exact_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = observation(hand)
+        ties = tuple(
+            SimpleNamespace(
+                discard=tile, shanten=1, total_live_copies=20,
+                effective_tiles=(1, 2, 3))
+            for tile in ("B", "N")
+        )
+
+        def fake_two_ply(_hand, candidates, **kwargs):
+            return tuple(
+                SimpleNamespace(
+                    discard=tile,
+                    weighted_post_shanten=10 if tile == "N" else 20,
+                    terminal_win_copies=0,
+                    weighted_post_live_copies=100,
+                    weighted_post_effective_types=50,
+                    expected_post_shanten=(10 if tile == "N" else 20) / 100,
+                    expected_post_live_copies=1.0,
+                    expected_post_effective_types=0.5,
+                )
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.best_offense_ties",
+                return_value=ties), patch(
+                "workspace.ai.baseline.analyze_two_ply_offense",
+                side_effect=fake_two_ply), patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores"
+        ) as risk_model:
+            decision = OneShantenTwoPlyRiskAgent(
+                seed=37, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        risk_model.assert_not_called()
+        self.assertIn("one_shanten_two_ply_v0.9", decision.reason)
+        self.assertIn("deterministic two-ply", decision.reason)
+
+    def test_v09_gates_two_ply_off_outside_one_shanten(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = observation(hand)
+
+        def fake_risk(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(
+                    tile=tile,
+                    risk_score=0.1 if tile == "B" else 0.5,
+                    templates_used=samples)
+                for tile in candidates
+            )
+
+        for shanten in (0, 2, 3, 4):
+            ties = tuple(
+                SimpleNamespace(
+                    discard=tile, shanten=shanten, total_live_copies=20,
+                    effective_tiles=(1, 2, 3))
+                for tile in ("B", "N")
+            )
+            with self.subTest(shanten=shanten), patch(
+                    "workspace.ai.baseline.best_offense_ties",
+                    return_value=ties), patch(
+                    "workspace.ai.baseline.analyze_two_ply_offense"
+            ) as lookahead, patch(
+                    "workspace.ai.baseline.estimate_tenpai_wait_risk_scores",
+                    side_effect=fake_risk):
+                decision = OneShantenTwoPlyRiskAgent(
+                    seed=41, template_samples=32).choose_decision(
+                        view, discards(hand))
+            self.assertEqual(decision.action.tile, "B")
+            lookahead.assert_not_called()
+            self.assertIn(
+                f"gated_off_at_shanten={shanten}", decision.reason)
 
     def test_v06_validates_sampling_configuration(self):
         for value in (0, -1, True):
