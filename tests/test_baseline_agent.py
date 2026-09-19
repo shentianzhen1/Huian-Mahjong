@@ -10,7 +10,7 @@ from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, PlayerObservation, ShantenAgent,
                           TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
-                          TenpaiRiskTieBreakAgent,
+                          TenpaiRiskTieBreakAgent, TwoPlyShantenRiskAgent,
                           best_offense_ties,
                           estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
@@ -478,6 +478,108 @@ class BaselineAgentTests(unittest.TestCase):
                     view, discards(hand))
         self.assertEqual(decision.action.tile, "N")
         self.assertIn("conditional_loss_index=5.000", decision.reason)
+
+    def test_v07a_policy_label_is_auditable(self):
+        self.assertEqual(
+            TenpaiLossTieBreakAgent()._policy_label(),
+            "tenpai_loss_tiebreak_v0.7a")
+
+    def test_v08_two_ply_resolves_exact_offense_tie_before_risk(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = observation(hand)
+
+        def fake_two_ply(_hand, candidates, **kwargs):
+            return tuple(
+                SimpleNamespace(
+                    discard=tile,
+                    weighted_post_shanten=10 if tile == "N" else 20,
+                    terminal_win_copies=0,
+                    weighted_post_live_copies=100,
+                    weighted_post_effective_types=50,
+                    expected_post_shanten=(10 if tile == "N" else 20) / 100,
+                    expected_post_live_copies=1.0,
+                    expected_post_effective_types=0.5,
+                )
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.analyze_two_ply_offense",
+                side_effect=fake_two_ply), patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores"
+        ) as risk_model:
+            decision = TwoPlyShantenRiskAgent(
+                seed=29, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        risk_model.assert_not_called()
+        self.assertIn("deterministic two-ply", decision.reason)
+
+    def test_v08_uses_v06_risk_only_after_two_ply_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = observation(hand)
+
+        def tied_two_ply(_hand, candidates, **kwargs):
+            return tuple(
+                SimpleNamespace(
+                    discard=tile,
+                    weighted_post_shanten=10,
+                    terminal_win_copies=0,
+                    weighted_post_live_copies=100,
+                    weighted_post_effective_types=50,
+                    expected_post_shanten=0.1,
+                    expected_post_live_copies=1.0,
+                    expected_post_effective_types=0.5,
+                )
+                for tile in candidates
+            )
+
+        def fake_risk(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(
+                    tile=tile,
+                    risk_score=0.1 if tile == "B" else 0.4,
+                    templates_used=samples,
+                )
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.analyze_two_ply_offense",
+                side_effect=tied_two_ply), patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores",
+                side_effect=fake_risk):
+            decision = TwoPlyShantenRiskAgent(
+                seed=31, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "B")
+        self.assertIn("two-ply offense still tied", decision.reason)
+        self.assertIn("relative_risk=0.100", decision.reason)
+
+    def test_v08_preserves_v03_when_no_exact_offense_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("N", "N"), ()), ((), ()), ((), ()),
+        )
+        expected = ShantenAgent().choose_decision(view, discards(hand))
+        with patch(
+                "workspace.ai.baseline.analyze_two_ply_offense"
+        ) as lookahead:
+            actual = TwoPlyShantenRiskAgent(
+                seed=7, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(actual.action, expected.action)
+        lookahead.assert_not_called()
 
     def test_v06_validates_sampling_configuration(self):
         for value in (0, -1, True):
