@@ -7,12 +7,13 @@ from pathlib import Path
 import platform
 import sys
 
-from workspace.ai import BaselineAgent
+from workspace.ai import BaselineAgent, CurrentAgent, ShantenAgent
 from .core import RandomAgent, Simulator, SimulatorConfig
 from .evaluation import make_hand_summary, run_many_normal_hands
 
 
-AGENTS = {"random": RandomAgent, "baseline": BaselineAgent}
+AGENTS = {"random": RandomAgent, "baseline": BaselineAgent,
+          "shanten_v03": ShantenAgent, "current": CurrentAgent}
 SCHEMA_VERSION = 1
 
 
@@ -56,7 +57,7 @@ def _validate_parameters(seeds, agent_names, max_steps, swap_seats, dealer):
     if not seeds or any(type(seed) is not int for seed in seeds):
         raise ValueError("seeds must be a nonempty list of integers")
     if len(agent_names) != 2 or any(name not in AGENTS for name in agent_names):
-        raise ValueError("Use two registered agents: random / baseline")
+        raise ValueError("Use two registered agents: " + " / ".join(sorted(AGENTS)))
     if type(max_steps) is not int or max_steps <= 0:
         raise ValueError("max_steps must be a positive integer")
     if type(swap_seats) is not bool:
