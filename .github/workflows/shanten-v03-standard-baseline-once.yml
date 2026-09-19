@@ -1,0 +1,36 @@
+name: Shanten V03 Standard Match Baseline
+
+on:
+  push:
+    paths:
+      - ".github/workflows/shanten-v03-standard-baseline-once.yml"
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run standardized paired eight-hand baseline
+        run: |
+          python -B - <<'PY'
+          import json
+          from workspace.ai import BaselineAgent, ShantenAgent
+          from workspace.simulator import run_paired_real_matches
+
+          report = run_paired_real_matches(
+              range(20),
+              agent_factories=(ShantenAgent, BaselineAgent),
+              agent_names=("ShantenAgentV03", "BaselineAgent"),
+              max_steps=1000,
+              initial_dealer=0,
+          )
+          payload = report.to_dict()
+          payload.pop("per_match", None)
+          print("STANDARD_MATCH_BASELINE_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("STANDARD_MATCH_BASELINE_END")
+          PY
