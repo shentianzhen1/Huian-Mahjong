@@ -47,8 +47,10 @@
    - presence-aware固定窗口：hand 127/128=99.22%，draw 2/2=100%但样本太少；继续用 sequence miner 扩大draw连续可见序列。
    - PublicState V0.1约束层已实现：归一化ROI覆盖两种分辨率；比分必须A+B=2000；多帧多数票；可与MatchScoreState交叉校验；同局分数不得变化、局数不得倒退/跳跃、同局剩余牌不得增加。真实8局的比分/局数/剩余牌/gold稳定时点真值已归档。
    - Score Reader V0.1已落地：裸OCR 125/128=97.66%；三阈值候选+2000分守恒后，当前同批8局64/64比分对正确（63直接，1次唯一侧反推）。代码严格区分裸OCR准确率与约束后系统结果，且保持 `safe_for_executor=false`。
-   - 当前缺口：① 剩余牌数与第几局/8数字读取；② 新独立录像上的比分/gold泛化；③ draw时间稳定性样本量；④ F1/F3/F4/F5/F6/F8/S7/S9覆盖，F2/F7跨session；⑤ 缩放/移动/遮挡压力测试。
-   - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/match_evidence_001_public_state_seed.json`。
+   - Status Reader V0.1已落地：`remaining_tiles` / `hand_progress` 独立ROI；目标字体7常被OCR成`/`，只在结构化数字字段内纠错。8局约10秒稳定帧：剩余牌数8/8正确、局号直接7/8正确；第5局`5/8→0/8`不硬猜，只有上一局已可信且2000守恒比分发生真实变化时才推为上一局+1，顺序处理后8/8种子PublicState完整。
+   - 新增 `public_state_reader.py`，统一比分、剩余牌、局号的帧/窗口读取，并继续由 `fuse_public_state()` 做多帧共识与物理约束。Tesseract由Vision CI显式安装；灰度/autocontrast比分通道仅保留为显式诊断，默认仍使用已验证的三阈值比分路径。
+   - 当前缺口：① 把剩余牌/局号从8个种子扩展到整段多时点统计；② 新独立录像上的PublicState/比分/gold泛化；③ draw时间稳定性样本量；④ F1/F3/F4/F5/F6/F8/S7/S9覆盖，F2/F7跨session；⑤ 缩放/移动/遮挡与开局/结算切换压力测试。
+   - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/match_evidence_001_public_state_seed.json`、`references/vision/2026-09-19/public_state_v01_baseline.md`。
 
 ## P2：低频规则
 
