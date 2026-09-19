@@ -14,7 +14,9 @@ from .extract_frames import extract_key_frames
 from .evaluate_tiles import evaluate_template_dataset, summarize_predictions
 from .infer_tiles import infer_screenshot
 from .labels import append_label
-from .postprocess import MultiFrameVoter, ObservationConstraints, TilePrediction, validate_observation
+from .postprocess import (MultiFrameVoter, ObservationConstraints,
+                          TilePrediction, evaluate_temporal_stability,
+                          validate_observation)
 from .crop_rois import crop_regions
 from .roi import ROIProfile
 from .template_classifier import TemplateTileClassifier
@@ -200,6 +202,53 @@ class TilesV01Tests(unittest.TestCase):
         ])
         self.assertEqual(voted[0].tile_id, "M1")
         self.assertAlmostEqual(voted[0].confidence, 0.85)
+
+    def test_temporal_stability_reports_agreement_without_calling_it_accuracy(self) -> None:
+        frames = [
+            [
+                TilePrediction("M1", 0.90, "hand_region", (0, 0, 20, 40), slot=0),
+                TilePrediction("P1", 0.90, "hand_region", (20, 0, 20, 40), slot=1),
+            ],
+            [
+                TilePrediction("M1", 0.80, "hand_region", (0, 0, 20, 40), slot=0),
+                TilePrediction("P2", 0.95, "hand_region", (20, 0, 20, 40), slot=1),
+            ],
+            [
+                TilePrediction("M1", 0.85, "hand_region", (0, 0, 20, 40), slot=0),
+                TilePrediction("P1", 0.88, "hand_region", (20, 0, 20, 40), slot=1),
+            ],
+            [
+                TilePrediction("M1", 0.92, "hand_region", (0, 0, 20, 40), slot=0),
+                TilePrediction("P2", 0.91, "hand_region", (20, 0, 20, 40), slot=1),
+            ],
+        ]
+        report = evaluate_temporal_stability(
+            frames, minimum_agreement=0.75, minimum_frames=3)
+        self.assertEqual(report.total_slots, 2)
+        self.assertEqual(report.stable_slots, 1)
+        self.assertEqual(report.stable_fraction, 0.5)
+        first, second = report.slots
+        self.assertEqual(first.voted_tile, "M1")
+        self.assertEqual(first.agreement, 1.0)
+        self.assertTrue(first.stable)
+        self.assertEqual(second.agreement, 0.5)
+        self.assertFalse(second.stable)
+        self.assertFalse(report.safe_for_executor)
+
+    def test_temporal_stability_requires_aligned_unique_slots(self) -> None:
+        with self.assertRaisesRegex(ValueError, "explicit aligned slot"):
+            evaluate_temporal_stability([
+                [TilePrediction(
+                    "M1", 0.9, "hand_region", (0, 0, 20, 40))]
+            ])
+        duplicate = TilePrediction(
+            "M1", 0.9, "hand_region", (0, 0, 20, 40), slot=0)
+        with self.assertRaisesRegex(ValueError, "duplicate prediction"):
+            evaluate_temporal_stability([[duplicate, duplicate]])
+        with self.assertRaises(ValueError):
+            evaluate_temporal_stability([], minimum_agreement=1.1)
+        with self.assertRaises(ValueError):
+            evaluate_temporal_stability([], minimum_frames=0)
 
     def test_infer_screenshot_is_offline_and_never_executor_safe(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
