@@ -26,7 +26,8 @@ from .public_state import (
     fuse_public_state,
 )
 from .public_state_scores import (
-    decode_score_candidates, prepare_score_crop, read_score_pair,
+    decode_score_candidates, prepare_score_crop, prepare_score_gray,
+    read_score_pair,
 )
 from .crop_rois import crop_regions
 from .roi import ROIProfile
@@ -623,6 +624,32 @@ class TilesV01Tests(unittest.TestCase):
         self.assertGreater(binary.shape[0], source.height)
         self.assertGreater(binary.shape[1], source.width)
 
+    def test_score_gray_preprocessing_preserves_grayscale_shape(self) -> None:
+        source = Image.new("RGB", (20, 10), (0, 35, 35))
+        draw = ImageDraw.Draw(source)
+        draw.rectangle((6, 2, 12, 7), fill=(210, 210, 90))
+        gray = prepare_score_gray(source, scale=4)
+        self.assertEqual(gray.ndim, 2)
+        self.assertEqual(gray.shape, (40, 80))
+        self.assertGreater(int(gray.max()), int(gray.min()))
+
+    def test_score_reader_gray_first_can_infer_missing_side(self) -> None:
+        class FakeOCR:
+            def __init__(self, outputs):
+                self.outputs = iter(outputs)
+
+            def __call__(self, _image):
+                return next(self.outputs)
+
+        # Gray pass: top is unreadable, bottom is a clean 923.
+        backend = FakeOCR(["", "923"])
+        frame = Image.new("RGB", (1000, 500), "black")
+        read = read_score_pair(frame, backend=backend)
+        self.assertEqual(read.score_pair, (1077, 923))
+        self.assertEqual(read.mode, "gray_inferred_top")
+        self.assertEqual(read.confidence, 0.75)
+        self.assertFalse(read.safe_for_executor)
+
     def test_score_candidate_decoder_prefers_2000_point_pair(self) -> None:
         self.assertEqual(
             decode_score_candidates(
@@ -662,6 +689,7 @@ class TilesV01Tests(unittest.TestCase):
             backend=backend,
             thresholds=(70, 80, 90),
             source_frame="synthetic",
+            gray_first=False,
         )
         self.assertEqual(read.score_pair, (1077, 923))
         self.assertEqual(read.mode, "direct")
@@ -682,7 +710,7 @@ class TilesV01Tests(unittest.TestCase):
             "", "", "",
         ])
         frame = Image.new("RGB", (1000, 500), "black")
-        read = read_score_pair(frame, backend=backend)
+        read = read_score_pair(frame, backend=backend, gray_first=False)
         self.assertEqual(read.score_pair, (1105, 895))
         self.assertEqual(read.mode, "inferred_bottom")
         self.assertEqual(read.confidence, 0.75)
