@@ -19,9 +19,17 @@ class OpeningEnvironmentTests(unittest.TestCase):
         self.assertEqual(len(state.hands[state.dealer]), 17)
         self.assertEqual(len(state.hands[1 - state.dealer]), 16)
         self.assertIn(state.gold_tile, env.BASE_TILES)
+        self.assertGreaterEqual(state.reserved_tiles.count(state.gold_tile), 1)
+        playable_gold = state.wall.count(state.gold_tile)
+        playable_gold += sum(hand.count(state.gold_tile) for hand in state.hands)
+        playable_gold += sum(river.count(state.gold_tile) for river in state.discards)
+        self.assertLessEqual(playable_gold, 3)
         self.assertEqual(sorted(state.physical_tiles()), sorted(env.full_wall()))
         self.assertEqual(first.events[0]["action"]["type"], "OPEN_GOLD")
         self.assertEqual(first.events[0]["action"]["metadata"]["dice_total"], 7)
+        self.assertTrue(
+            first.events[0]["action"]["metadata"]["indicator_removed_from_drawable_wall"]
+        )
         actions = first.legal_actions()
         self.assertTrue(actions)
         self.assertTrue(all(action.player == state.dealer for action in actions))
