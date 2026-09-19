@@ -9,7 +9,8 @@ from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           CurrentAgent, BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, PlayerObservation, ShantenAgent,
-                          TenpaiLossTieBreakAgent, TenpaiRiskTieBreakAgent,
+                          TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
+                          TenpaiRiskTieBreakAgent,
                           best_offense_ties,
                           estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
@@ -404,6 +405,79 @@ class BaselineAgentTests(unittest.TestCase):
         self.assertEqual(decision.action.tile, "N")
         self.assertIn("ordinary score evidence incomplete", decision.reason)
         self.assertIn("fallback=v0.6_relative_risk", decision.reason)
+
+    def test_v07b_keeps_v06_risk_ahead_of_loss(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        base_view = observation(hand)
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=3)
+        view = PlayerObservation(
+            base_view.seat, base_view.hand, base_view.gold_tile,
+            base_view.phase, base_view.dealer, base_view.wall_remaining,
+            base_view.discards, base_view.flowers, base_view.melds, context)
+
+        def fake_loss(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(
+                    tile=tile,
+                    # N is cheaper if hit but has twice the V0.6 relative risk.
+                    loss_index=4.0 if tile == "N" else 8.0,
+                    risk_score=0.4 if tile == "N" else 0.2,
+                    mean_loss_if_hit=10.0 if tile == "N" else 40.0,
+                    templates_used=samples,
+                    complete=True,
+                )
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_loss_scores",
+                side_effect=fake_loss):
+            decision = TenpaiRiskLossTieBreakAgent(
+                seed=19, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "B")
+        self.assertIn("tenpai_risk_loss_tiebreak_v0.7b", decision.reason)
+
+    def test_v07b_uses_loss_only_when_relative_risk_is_tied(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        base_view = observation(hand)
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=3)
+        view = PlayerObservation(
+            base_view.seat, base_view.hand, base_view.gold_tile,
+            base_view.phase, base_view.dealer, base_view.wall_remaining,
+            base_view.discards, base_view.flowers, base_view.melds, context)
+
+        def fake_loss(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(
+                    tile=tile,
+                    loss_index=5.0 if tile == "N" else 9.0,
+                    risk_score=0.25,
+                    mean_loss_if_hit=20.0 if tile == "N" else 36.0,
+                    templates_used=samples,
+                    complete=True,
+                )
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_loss_scores",
+                side_effect=fake_loss):
+            decision = TenpaiRiskLossTieBreakAgent(
+                seed=23, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        self.assertIn("conditional_loss_index=5.000", decision.reason)
 
     def test_v06_validates_sampling_configuration(self):
         for value in (0, -1, True):
