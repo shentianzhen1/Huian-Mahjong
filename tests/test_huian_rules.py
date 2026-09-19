@@ -151,8 +151,9 @@ class HuianRulesTests(unittest.TestCase):
             SanjindaoChoice.CONTINUE_PLAY,
         ))
         self.assertEqual(opening.multiplier, 3)
-        self.assertTrue(self.rules.sanjindao_decision(
-            ["P9"] * 4, "P9", opening_check=True).eligible)
+        with self.assertRaisesRegex(ValueError, "at most three gold copies"):
+            self.rules.sanjindao_decision(
+                ["P9"] * 4, "P9", opening_check=True)
 
         received = self.rules.sanjindao_decision(
             hand, "P9", third_gold_just_received=True)
@@ -165,12 +166,14 @@ class HuianRulesTests(unittest.TestCase):
 
         self.assertFalse(self.rules.sanjindao_decision(
             ["P9"] * 2, "P9", third_gold_just_received=True).eligible)
-        self.assertFalse(self.rules.sanjindao_decision(
-            ["P9"] * 4, "P9", third_gold_just_received=True).eligible)
-        self.assertFalse(self.rules.sanjindao_decision(
-            ["P9"] * 4, "P9", later_draw_check=True).eligible)
+        with self.assertRaisesRegex(ValueError, "at most three gold copies"):
+            self.rules.sanjindao_decision(
+                ["P9"] * 4, "P9", third_gold_just_received=True)
+        with self.assertRaisesRegex(ValueError, "at most three gold copies"):
+            self.rules.sanjindao_decision(
+                ["P9"] * 4, "P9", later_draw_check=True)
 
-    def test_three_or_four_gold_keep_ordinary_hu_rights_after_sanjindao_pass(self):
+    def test_three_gold_keeps_ordinary_hu_rights_after_sanjindao_pass(self):
         three_gold = HAND[:-3] + ["P9", "P9", "P9"]
         self.assertTrue(self.rules.analyze_hu(
             three_gold, gold_tile="P9").legal)
@@ -180,10 +183,8 @@ class HuianRulesTests(unittest.TestCase):
         four_gold = HAND.copy()
         for index in (4, 14, 15, 16):
             four_gold[index] = "P9"
-        self.assertTrue(self.rules.analyze_hu(
-            four_gold, gold_tile="P9").legal)
-        self.assertTrue(self.rules.analyze_hu(
-            four_gold, "P9", win_type="pinghu", winning_tile="M1").legal)
+        with self.assertRaisesRegex(ValueError, "at most three gold copies"):
+            self.rules.analyze_hu(four_gold, gold_tile="P9")
 
     def test_sanjinyou_is_the_triple_you_state_but_not_sanjindao(self):
         self.assertIs(YoujinStage.SANJIN_YOU, YoujinStage.TRIPLE_YOU)
