@@ -7,7 +7,8 @@ from huian._legacy import env
 from .danger import estimate_discard_danger
 from .opponent import (estimate_tenpai_wait_loss_scores,
                        estimate_tenpai_wait_risk_scores)
-from .shanten import best_discard, best_offense_ties, min_shanten_discards
+from .shanten import (analyze_two_ply_offense, best_discard,
+                      best_offense_ties, min_shanten_discards)
 
 
 @dataclass(frozen=True)
@@ -563,7 +564,7 @@ class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
     """
 
     def _policy_label(self):
-        return "{self._policy_label()}a"
+        return "tenpai_loss_tiebreak_v0.7a"
 
     def _loss_sort_key(self, item, estimate):
         return (
@@ -714,3 +715,140 @@ class TenpaiRiskLossTieBreakAgent(TenpaiLossTieBreakAgent):
             estimate.loss_index,
             self._tile_order(item.discard),
         )
+
+
+class TwoPlyShantenRiskAgent(TenpaiRiskTieBreakAgent):
+    """Experimental V0.8: deterministic two-ply offense before V0.6 risk.
+
+    The policy cannot leave V0.3's exact offense-tie frontier. Inside that
+    frontier it compares the next-draw / next-best-discard ordinary state using
+    only own hand and public tile counts. If multiple candidates remain tied on
+    the two-ply metrics, the promoted V0.6 32-template relative risk is the
+    final tie-break.
+
+    This remains ordinary-hand lookahead, not score EV and not a special-win
+    model.
+    """
+
+    @staticmethod
+    def _two_ply_key(estimate):
+        return (
+            estimate.weighted_post_shanten,
+            -estimate.terminal_win_copies,
+            -estimate.weighted_post_live_copies,
+            -estimate.weighted_post_effective_types,
+        )
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+        wins = [a for a in actions if a.type.value in ("HU", "ROB_KONG_HU")]
+        if wins:
+            return AgentDecision(
+                wins[0], f"{wins[0].type.value}: take the legal ordinary-shape win")
+
+        discards = [a for a in actions if a.type.value == "DISCARD"]
+        if discards:
+            open_melds = len(observation.melds[observation.seat])
+            legal_by_tile = {action.tile: action for action in discards}
+            public_tiles = self._public_tiles(observation)
+            ties = best_offense_ties(
+                observation.hand,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=public_tiles,
+                allowed_discards=tuple(legal_by_tile),
+            )
+            # Advance the stochastic stream at the same decision point as V0.6
+            # so paired comparisons keep identity-stable risk seeds aligned.
+            risk_seed = self._next_risk_seed()
+            if len(ties) == 1:
+                choice = ties[0]
+                return AgentDecision(
+                    legal_by_tile[choice.discard],
+                    f"DISCARD {choice.discard}: two_ply_shanten_risk_v0.8 "
+                    f"(no exact offense tie; preserve V0.6/V0.3 choice)",
+                )
+
+            candidates = tuple(item.discard for item in ties)
+            if observation.gold_tile in candidates:
+                choice = ties[0]
+                return AgentDecision(
+                    legal_by_tile[choice.discard],
+                    f"DISCARD {choice.discard}: two_ply_shanten_risk_v0.8 "
+                    f"(exact offense tie includes gold; preserve V0.3 tile-order "
+                    f"choice because special/gold EV is outside ordinary lookahead)",
+                )
+
+            estimates = analyze_two_ply_offense(
+                observation.hand,
+                candidates,
+                gold_tile=observation.gold_tile,
+                open_melds=open_melds,
+                visible_tiles=public_tiles,
+            )
+            by_tile = {item.discard: item for item in estimates}
+            best_key = min(self._two_ply_key(by_tile[tile]) for tile in candidates)
+            finalists = tuple(
+                item for item in ties
+                if self._two_ply_key(by_tile[item.discard]) == best_key
+            )
+
+            if len(finalists) == 1:
+                choice = finalists[0]
+                look = by_tile[choice.discard]
+                alternatives = ",".join(
+                    f"{tile}:s={by_tile[tile].expected_post_shanten:.3f}"
+                    f"/live={by_tile[tile].expected_post_live_copies:.2f}"
+                    f"/types={by_tile[tile].expected_post_effective_types:.2f}"
+                    for tile in candidates
+                )
+                return AgentDecision(
+                    legal_by_tile[choice.discard],
+                    f"DISCARD {choice.discard}: two_ply_shanten_risk_v0.8 "
+                    f"(exact V0.3 offense tie resolved by deterministic two-ply "
+                    f"ordinary offense; candidates=[{alternatives}]); "
+                    f"no opponent concealed tiles or future wall order used",
+                )
+
+            risk_candidates = tuple(item.discard for item in finalists)
+            try:
+                risk_estimates = estimate_tenpai_wait_risk_scores(
+                    observation, risk_candidates,
+                    samples=self.template_samples, seed=risk_seed)
+            except RuntimeError:
+                choice = min(
+                    finalists,
+                    key=lambda item: self._tile_order(item.discard),
+                )
+                return AgentDecision(
+                    legal_by_tile[choice.discard],
+                    f"DISCARD {choice.discard}: two_ply_shanten_risk_v0.8 "
+                    f"(two-ply tie; V0.6 risk templates unavailable; "
+                    f"preserve canonical tile order within two-ply finalists)",
+                )
+
+            risk_by_tile = {item.tile: item for item in risk_estimates}
+            choice = min(
+                finalists,
+                key=lambda item: (
+                    risk_by_tile[item.discard].risk_score,
+                    self._tile_order(item.discard),
+                ),
+            )
+            risk = risk_by_tile[choice.discard]
+            return AgentDecision(
+                legal_by_tile[choice.discard],
+                f"DISCARD {choice.discard}: two_ply_shanten_risk_v0.8 "
+                f"(two-ply offense still tied; V0.6 relative_risk="
+                f"{risk.risk_score:.3f}, templates={risk.templates_used}); "
+                f"risk_score is relative tenpai-wait ranking, not a probability",
+            )
+
+        passes = [a for a in actions if a.type.value == "PASS"]
+        if passes:
+            return AgentDecision(
+                passes[0], "PASS: preserve the current hand over optional melds")
+        return AgentDecision(
+            actions[0], f"{actions[0].type.value}: take the required legal action")
