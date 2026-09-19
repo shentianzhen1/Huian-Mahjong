@@ -59,8 +59,11 @@ decision = rules.sanjindao_decision(hand, gold_tile)
 # Eligible decisions contain DECLARE_SANJINDAO and CONTINUE_PLAY.
 ```
 
-`sanjindao_decision` confirms only the three-or-more-gold eligibility and the two
-player choices. It does not choose a phase, calculate Sanjin-You, or settle scores.
+`sanjindao_decision` exposes the current declare/continue choice and confirmed ×3 multiplier.
+Phase timing is now partially confirmed by target-room evidence: opening 3+ gold, the 2→3
+gold arrival, and a later own-draw re-check while exactly 3 gold remain after a prior PASS.
+PASS closes only the current prompt; it does not permanently disable later Sanjindao,
+ordinary Hu, or the Youjin family. Direct terminal Sanjindao settlement is still unresolved.
 
 Player clarification (2026-09-13): single-gold Pinghu is configurable and usually
 disabled. Use `RulesConfig(single_gold_can_pinghu=True)` only for a room explicitly
@@ -89,8 +92,9 @@ belong to M2/M3. Legacy `strict=False` remains an unsafe testing escape hatch.
 ## Uncertainty registry
 
 `rules/config.py:UNKNOWN_RULES` tracks the unresolved questions from RULE_STATUS
-and the migration audit. Sanjindao eligibility is implemented; its phase timing,
-settlement and Sanjin-You continuation remain unresolved. The registry also includes rob-kong, Youjin entry/upgrades,
+and the migration audit. Sanjindao eligibility and the confirmed repeatable-PASS timing are implemented; terminal
+Sanjindao settlement and the 4-gold later-draw recheck remain unresolved. The registry also
+includes rob-kong, Youjin entry/upgrades,
 opponent permissions/cancellation, room multipliers, flower-open-gold, Tianhu,
 Tianting, PASS, match ties, extended dealer bases, flower groups, fan edge cases,
 honor pung fan, indicator accounting, deal/replacement order, added-kong details,
