@@ -197,7 +197,8 @@ def run_eight_hand_match(hand_runner, *, initial_dealer=0):
 
 
 def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
-                            initial_dealer=0, simulator=None):
+                            initial_dealer=0, simulator=None,
+                            agent_seed_keys=(0, 1)):
     """Run the eight-hand ordinary subset with real Pinghu/Zimo scoring.
 
     This is not yet the full target-room simulator: Qiangjin/Youjin/special wins
@@ -211,6 +212,12 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
         raise ValueError("max_steps must be a positive integer")
     if type(initial_dealer) is not int or initial_dealer not in (0, 1):
         raise ValueError("initial_dealer must be seat 0 or 1")
+    agent_seed_keys = tuple(agent_seed_keys)
+    if (len(agent_seed_keys) != 2
+            or any(type(key) is not int or key not in (0, 1)
+                   for key in agent_seed_keys)
+            or set(agent_seed_keys) != {0, 1}):
+        raise ValueError("agent_seed_keys must be a permutation of (0, 1)")
 
     from .core import RandomAgent, Simulator, SimulatorConfig
     factories = tuple(agent_factories) if agent_factories is not None else (
@@ -223,7 +230,7 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
     def run_hand(context):
         hand_seed = seed * 1000 + context.hand_index
         agents = tuple(
-            factory(seed=hand_seed * 2 + seat)
+            factory(seed=hand_seed * 2 + agent_seed_keys[seat])
             for seat, factory in enumerate(factories)
         )
         observation_context = MatchObservationContext(
