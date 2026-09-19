@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from collections import Counter
 
 from huian._legacy import env
@@ -133,6 +134,22 @@ class OpponentModelTests(unittest.TestCase):
         self.assertEqual(by_tile["P1"].risk_score, 0.0)
         self.assertEqual(by_tile["P1"].loss_index, 0.0)
         self.assertEqual(by_tile["P1"].mean_loss_if_hit, 0.0)
+
+    def test_tenpai_conditioned_loss_marks_unscorable_template_incomplete(self):
+        view = one_unknown_m1_observation(with_match_context=True)
+        with patch(
+                "workspace.ai.opponent.HuianRules.aggregate_fan",
+                side_effect=ValueError("synthetic decomposition unsupported")):
+            estimates = estimate_tenpai_wait_loss_scores(
+                view, ("M1",), samples=4, seed=4)
+        estimate = estimates[0]
+        self.assertEqual(estimate.matching_templates, 4)
+        self.assertEqual(estimate.scored_matching_templates, 0)
+        self.assertFalse(estimate.complete)
+        self.assertIsNone(estimate.loss_index)
+        self.assertEqual(
+            estimate.unresolved_reason,
+            "unconfirmed_or_incomplete_ordinary_score")
 
     def test_tenpai_conditioned_loss_requires_match_context(self):
         with self.assertRaisesRegex(ValueError, "match_context"):
