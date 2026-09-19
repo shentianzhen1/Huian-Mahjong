@@ -8,6 +8,7 @@ from .match_runner import (MatchHandContext, MatchHandRecord, MatchHandResult,
 from .match_evaluation import (MatchAttemptSummary, PairedMatchEvaluation,
                                run_paired_real_matches)
 from .unknowns import summarize_match_rule_gaps
+from .kong_audit import KongAuditRecorder, KongAuditSummary
 
 __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "make_wall",
            "BatchEvaluation", "HandSummary", "run_many_normal_hands",
@@ -31,6 +32,7 @@ __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "m
            "fit_public_tenpai_probability_model",
            "evaluate_public_tenpai_probability_model",
            "run_public_tenpai_probability_calibration"]
+__all__.extend(["KongAuditRecorder", "KongAuditSummary"])
 
 from .opponent_calibration import (CalibratingShantenAgent,
                                    CalibratingTenpaiRiskShantenAgent,

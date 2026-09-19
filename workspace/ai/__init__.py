@@ -16,6 +16,7 @@ from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        is_ordinary_ron_tenpai)
 from .score_ev import (OrdinaryImmediateValue, OrdinaryWinningDrawValue,
                        evaluate_tenpai_ordinary_value)
+from .kong import KongOpportunity, analyze_kong_actions
 from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
                       TwoPlyOffense, analyze_effective_tiles,
                       analyze_two_ply_offense, best_discard, best_offense_ties,
@@ -49,4 +50,5 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "estimate_tenpai_wait_risk_scores",
            "estimate_tenpai_wait_loss_scores", "is_ordinary_ron_tenpai",
            "OrdinaryImmediateValue", "OrdinaryWinningDrawValue",
-           "evaluate_tenpai_ordinary_value"]
+           "evaluate_tenpai_ordinary_value", "KongOpportunity",
+           "analyze_kong_actions"]
