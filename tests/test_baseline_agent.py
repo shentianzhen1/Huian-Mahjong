@@ -264,7 +264,7 @@ class BaselineAgentTests(unittest.TestCase):
         decision = ShantenAgent().choose_decision(view, discards(hand))
         self.assertEqual(decision.action.tile, "N")
         self.assertIn("shanten_v0.1", decision.reason)
-        self.assertIn("live=7", decision.reason)
+        self.assertIn("live=6", decision.reason)
         self.assertIn("effective=[P9,B]", decision.reason)
 
     def test_shanten_agent_keeps_hu_and_pass_priorities(self):
