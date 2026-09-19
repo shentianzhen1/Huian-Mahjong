@@ -1,5 +1,15 @@
 # 重要变更记录
 
+## 2026-09-19 — Vision真实评测基础设施与GitHub进度同步
+
+- `tiles_v0_1` 新增 holdout 模板训练子集，真实准确率评估按 `source_frame` / 图片来源整组留出，测试组不进入模板库，避免同图模板训练-测试泄漏。
+- 新增 `evaluate_tiles`：输出精确牌面准确率、万/筒/条/字/花类别准确率、置信阈值后的覆盖率/准确率、每牌类/每区域指标、混淆矩阵和不可评估样本明细。
+- 新增多帧稳定性指标与CLI：按 `region+slot` 统计连续可见帧、多数牌、一致率、平均置信度和是否达到稳定门槛；明确“稳定≠准确”。
+- 新增 `dataset_status`：先审计 approved 标签、独立来源组、牌类覆盖、跨来源重复牌类、三个ROI覆盖和可进入留组评测的样本比例；数据不足时不允许生成伪准确率。
+- 当前Vision瓶颈由“缺评测工具”转为“缺足量真实人工标注数据”。所有Vision输出继续 `safe_for_executor=false`，Executor保持关闭。
+- 最新主线GitHub Actions全绿：Python 3.10 / 3.11 / 3.12 Core regression **各306项通过**；Legacy baseline通过；Vision advisory本轮未手动触发。
+- `PROJECT_STATUS.md` / `TODO.md` 已同步到上述最新状态；AI当前前沿仍为 `MeldAwareShantenAgent V0.10`，特殊规则P0顺序不变。
+
 ## 2026-09-19 — MeldAware V0.10 正式晋级为 CurrentAgent
 
 - `CurrentAgent` 从 `TenpaiRiskTieBreakAgent V0.6` 晋级为 `MeldAwareShantenAgent V0.10`；V0.6保留为固定主对照，V0.3保留为牌效消融基线。
