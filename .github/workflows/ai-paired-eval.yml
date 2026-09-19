@@ -139,7 +139,7 @@ jobs:
           PY
 
       - name: Upload evaluation report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ai-paired-eval-${{ inputs.agent_a }}-vs-${{ inputs.agent_b }}-${{ inputs.start_seed }}
           path: data/evaluations/manual-ai-eval/report.json
