@@ -11,6 +11,15 @@ Do not invent Mahjong rules. If a rule is uncertain, mark it as UNKNOWN/TODO/con
 
 Never let lower-priority evidence overwrite higher-priority evidence.
 
+## Source-of-truth order
+1. GitHub Issues / TODO.md for current execution work.
+2. RULE_STATUS.md for confirmed/unknown Mahjong rules.
+3. RULE_EVIDENCE_MATRIX.md for evidence and state-machine gaps.
+4. PROJECT_STATUS.md for the current integrated snapshot.
+5. CHANGELOG.md only for history; do not treat older entries as current state.
+
+If these disagree, do not average them. Prefer the higher-priority current source and fix the stale document.
+
 ## Architecture
 Keep these layers independent:
 - Rules
@@ -30,10 +39,10 @@ The Executor performs optional UI actions only after validation.
 ## Development priorities
 1. Close remaining special-result evidence/settlement gaps: Qiangjin exact eligibility+settlement, Sanjindao real settlement, Youjin/Double/Triple executable state machine, Rob-Kong/Gang-Hu settlement, Eight-Flower-You real multiplier/priority.
 2. Preserve the now-confirmed ordinary settlement/dealer-base/full-match regression chain; do not reopen solved rules unless higher-priority evidence conflicts.
-3. Treat `CurrentAgent` / TenpaiRiskTieBreakAgent V0.6 as the current AI frontier. Keep ShantenAgent V0.3 as an explicit comparison/ablation baseline. Next strategy work is EV + public-information danger/opponent modeling + 8-hand score/dealer context; new AI must beat CurrentAgent V0.6 in fixed-wall paired evaluation.
+3. Treat `CurrentAgent = MeldAwareShantenAgent V0.10` as the current AI frontier. Keep TenpaiRiskTieBreakAgent V0.6 as the fixed main comparison baseline and ShantenAgent V0.3 as the explicit offense ablation baseline. V0.11/V0.12's "exclude Jin waits, then apply immediate score-aware value" path was structurally non-triggering and must not be revived without new evidence. Next strategy work should focus on Jin-aware meld/special-state EV, KONG as a separate decision, or multi-step/full-match EV. Any promoted strategy must beat V0.10 in fixed-wall, seat-swapped, identity-stable-RNG paired evaluation.
 4. Resolve opening-gold physical accounting as a lower-frequency Rules/Environment evidence task without inventing tile ownership.
-5. Calibrate offline Vision ROIs, build a labeled real-tile dataset, and establish a measured accuracy/stability baseline.
-6. Integrate Vision with Rules validation only after the offline accuracy gate is defined.
+5. Preserve the measured Vision baseline instead of chasing tiny static-template gains: hand+draw strict holdout is currently 98.66%, while Gold has same-batch temporal evidence but still needs independent-session generalization. Prioritize PublicState digit reading (scores / remaining tiles / hand index), label audit, new-session Gold/Draw validation, and scale/move/occlusion stress tests.
+6. Integrate Vision observations with Rules/Match validation only through conservative state fusion. Score observations must conserve 2000 in the target two-player room; inconsistent or low-confidence reads must stop state updates.
 7. Executor last; never click the live applet until Vision confidence, multi-frame stability, and post-action validation are sufficient.
 
 Do not spend major effort on UI before evaluation reports are reproducible.
