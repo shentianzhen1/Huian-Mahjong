@@ -15,6 +15,7 @@ from .dataset_status import dataset_readiness
 from .evaluate_tiles import evaluate_template_dataset, summarize_predictions
 from .infer_tiles import infer_screenshot
 from .labels import append_label
+from .gold_classifier import count_tong_pips
 from .mine_stability_sequences import mine_presence_sequences
 from .postprocess import (MultiFrameVoter, ObservationConstraints,
                           TilePrediction, evaluate_temporal_stability,
@@ -107,6 +108,19 @@ class TilesV01Tests(unittest.TestCase):
                 query, region="gold_region"
             )
             self.assertEqual(prediction.tile_id, "M1")
+
+    def test_gold_tong_pip_counter_ignores_top_right_badge(self) -> None:
+        tile = Image.new("RGB", (44, 64), (222, 205, 102))
+        draw = ImageDraw.Draw(tile)
+        for cx, cy in ((13, 22), (31, 22), (13, 46), (31, 46)):
+            draw.ellipse((cx - 5, cy - 5, cx + 5, cy + 5),
+                         outline=(0, 90, 70), width=2)
+            draw.ellipse((cx - 2, cy - 2, cx + 2, cy + 2),
+                         fill=(0, 70, 60))
+        # Gold badge-like clutter in the area the counter deliberately masks.
+        draw.rectangle((31, 0, 43, 17), fill=(230, 150, 30))
+        draw.line((33, 2, 42, 15), fill=(130, 60, 20), width=2)
+        self.assertEqual(count_tong_pips(tile), 4)
 
     def test_tile_face_presence_rejects_empty_dark_slot(self) -> None:
         empty = Image.new("RGB", (44, 68), (0, 45, 45))
