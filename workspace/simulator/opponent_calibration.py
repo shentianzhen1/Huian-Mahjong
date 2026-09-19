@@ -10,7 +10,8 @@ from dataclasses import asdict, dataclass
 
 from huian._legacy import env
 from workspace.ai import (AgentDecision, ShantenAgent,
-                          estimate_ordinary_deal_in_probabilities)
+                          estimate_ordinary_deal_in_probabilities,
+                          estimate_tenpai_wait_risk_scores)
 from .core import Simulator
 
 
@@ -261,5 +262,248 @@ def run_ordinary_deal_in_calibration(
         all_samples.extend(recorder.samples)
         censored += recorder.censored_discards
     return summarize_deal_in_calibration(
+        all_samples, hands_attempted=len(seeds),
+        hand_status_counts=status_counts, censored_discards=censored)
+
+
+@dataclass(frozen=True)
+class TenpaiRiskCalibrationSample:
+    hand_seed: int
+    decision_index: int
+    actor_seat: int
+    tile: str
+    risk_score: float
+    actual_deal_in: bool
+    template_samples: int
+    matching_templates: int
+    generation_attempts: int
+    opponent_open_melds: int
+    opponent_concealed_count: int
+    wall_remaining: int
+
+
+@dataclass(frozen=True)
+class TenpaiRiskBin:
+    lower: float
+    upper: float
+    count: int
+    mean_score: float | None
+    observed_deal_in_rate: float | None
+
+
+@dataclass(frozen=True)
+class TenpaiRiskCalibrationReport:
+    hands_attempted: int
+    hand_status_counts: dict[str, int]
+    labelled_discards: int
+    positive_deal_ins: int
+    censored_discards: int
+    prevalence: float | None
+    mean_score: float | None
+    mean_score_positive: float | None
+    mean_score_negative: float | None
+    auc: float | None
+    mean_generation_attempts: float | None
+    bins: tuple[TenpaiRiskBin, ...]
+    samples: tuple[TenpaiRiskCalibrationSample, ...]
+
+    def to_dict(self):
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class _PendingRiskScore:
+    hand_seed: int
+    decision_index: int
+    actor_seat: int
+    tile: str
+    risk_score: float
+    template_samples: int
+    matching_templates: int
+    generation_attempts: int
+    opponent_open_melds: int
+    opponent_concealed_count: int
+    wall_remaining: int
+
+
+class TenpaiRiskCalibrationRecorder:
+    """Passive recorder for a non-probabilistic tenpai-conditioned risk score."""
+
+    def __init__(self, *, hand_seed, template_samples=16):
+        if type(hand_seed) is not int:
+            raise ValueError("hand_seed must be an integer")
+        if type(template_samples) is not int or template_samples <= 0:
+            raise ValueError("template_samples must be a positive integer")
+        self.hand_seed = hand_seed
+        self.template_samples = template_samples
+        self.samples = []
+        self.pending = None
+        self.decision_index = 0
+        self.censored_discards = 0
+
+    def observe_turn(self, observation, legal_actions):
+        pending = self.pending
+        if pending is None or observation.seat == pending.actor_seat:
+            return
+        actual = (
+            observation.phase == "AFTER_DISCARD"
+            and any(action.type == env.ActionType.HU for action in legal_actions)
+        )
+        self.samples.append(TenpaiRiskCalibrationSample(
+            hand_seed=pending.hand_seed,
+            decision_index=pending.decision_index,
+            actor_seat=pending.actor_seat,
+            tile=pending.tile,
+            risk_score=pending.risk_score,
+            actual_deal_in=actual,
+            template_samples=pending.template_samples,
+            matching_templates=pending.matching_templates,
+            generation_attempts=pending.generation_attempts,
+            opponent_open_melds=pending.opponent_open_melds,
+            opponent_concealed_count=pending.opponent_concealed_count,
+            wall_remaining=pending.wall_remaining,
+        ))
+        self.pending = None
+
+    def record_discard(self, observation, tile):
+        if self.pending is not None:
+            raise RuntimeError("previous risk score has not been labelled")
+        model_seed = (
+            self.hand_seed * 1_000_033
+            + self.decision_index * 2
+            + observation.seat
+        )
+        estimate = estimate_tenpai_wait_risk_scores(
+            observation, (tile,), samples=self.template_samples,
+            seed=model_seed)[0]
+        self.pending = _PendingRiskScore(
+            hand_seed=self.hand_seed,
+            decision_index=self.decision_index,
+            actor_seat=observation.seat,
+            tile=tile,
+            risk_score=estimate.risk_score,
+            template_samples=estimate.templates_used,
+            matching_templates=estimate.matching_templates,
+            generation_attempts=estimate.generation_attempts,
+            opponent_open_melds=estimate.opponent_open_melds,
+            opponent_concealed_count=estimate.opponent_concealed_count,
+            wall_remaining=observation.wall_remaining,
+        )
+        self.decision_index += 1
+
+    def finish_hand(self):
+        if self.pending is not None:
+            self.censored_discards += 1
+            self.pending = None
+
+
+class CalibratingTenpaiRiskShantenAgent:
+    """Unchanged V0.3 decisions plus passive tenpai-risk scoring."""
+
+    def __init__(self, recorder, *, seed=None):
+        if not isinstance(recorder, TenpaiRiskCalibrationRecorder):
+            raise TypeError("recorder must be TenpaiRiskCalibrationRecorder")
+        self.recorder = recorder
+        self.policy = ShantenAgent(seed=seed)
+
+    def choose_decision(self, observation, legal_actions):
+        self.recorder.observe_turn(observation, legal_actions)
+        decision = self.policy.choose_decision(observation, legal_actions)
+        if decision.action.type == env.ActionType.DISCARD:
+            self.recorder.record_discard(observation, decision.action.tile)
+        return decision
+
+
+def _auc_risk(samples):
+    positives = [item.risk_score for item in samples if item.actual_deal_in]
+    negatives = [item.risk_score for item in samples if not item.actual_deal_in]
+    if not positives or not negatives:
+        return None
+    score = 0.0
+    for positive in positives:
+        for negative in negatives:
+            if positive > negative:
+                score += 1.0
+            elif positive == negative:
+                score += 0.5
+    return score / (len(positives) * len(negatives))
+
+
+def summarize_tenpai_risk_calibration(
+        samples, *, hands_attempted=0, hand_status_counts=None,
+        censored_discards=0):
+    samples = tuple(samples)
+    if type(hands_attempted) is not int or hands_attempted < 0:
+        raise ValueError("hands_attempted must be a nonnegative integer")
+    if type(censored_discards) is not int or censored_discards < 0:
+        raise ValueError("censored_discards must be a nonnegative integer")
+    for item in samples:
+        if not isinstance(item, TenpaiRiskCalibrationSample):
+            raise TypeError("samples must contain TenpaiRiskCalibrationSample")
+        if not 0.0 <= item.risk_score <= 1.0:
+            raise ValueError("risk scores must be in [0, 1]")
+    positives = sum(item.actual_deal_in for item in samples)
+    prevalence = positives / len(samples) if samples else None
+
+    edges = (0.0, 0.01, 0.05, 0.10, 0.25, 0.50, 1.0000001)
+    bins = []
+    for lower, upper in zip(edges, edges[1:]):
+        members = [item for item in samples
+                   if lower <= item.risk_score < upper]
+        bins.append(TenpaiRiskBin(
+            lower=lower, upper=min(upper, 1.0), count=len(members),
+            mean_score=_mean(item.risk_score for item in members),
+            observed_deal_in_rate=_mean(
+                1.0 if item.actual_deal_in else 0.0 for item in members),
+        ))
+
+    return TenpaiRiskCalibrationReport(
+        hands_attempted=hands_attempted,
+        hand_status_counts=dict(sorted((hand_status_counts or {}).items())),
+        labelled_discards=len(samples),
+        positive_deal_ins=int(positives),
+        censored_discards=censored_discards,
+        prevalence=prevalence,
+        mean_score=_mean(item.risk_score for item in samples),
+        mean_score_positive=_mean(
+            item.risk_score for item in samples if item.actual_deal_in),
+        mean_score_negative=_mean(
+            item.risk_score for item in samples if not item.actual_deal_in),
+        auc=_auc_risk(samples),
+        mean_generation_attempts=_mean(
+            item.generation_attempts for item in samples),
+        bins=tuple(bins),
+        samples=samples,
+    )
+
+
+def run_tenpai_risk_calibration(
+        seeds=range(20), *, template_samples=16, max_steps=1000, simulator=None):
+    """Run unchanged V0.3-vs-V0.3 hands and evaluate relative wait-risk ranking."""
+    seeds = tuple(seeds)
+    if not seeds or any(type(seed) is not int for seed in seeds):
+        raise ValueError("seeds must be a nonempty iterable of integers")
+    if type(max_steps) is not int or max_steps <= 0:
+        raise ValueError("max_steps must be a positive integer")
+    if type(template_samples) is not int or template_samples <= 0:
+        raise ValueError("template_samples must be a positive integer")
+    simulator = simulator if simulator is not None else Simulator()
+    status_counts = Counter()
+    all_samples = []
+    censored = 0
+    for seed in seeds:
+        recorder = TenpaiRiskCalibrationRecorder(
+            hand_seed=seed, template_samples=template_samples)
+        agents = (
+            CalibratingTenpaiRiskShantenAgent(recorder, seed=seed * 2),
+            CalibratingTenpaiRiskShantenAgent(recorder, seed=seed * 2 + 1),
+        )
+        result = simulator.run_normal_hand(
+            seed=seed, agents=agents, max_steps=max_steps)
+        recorder.finish_hand()
+        status_counts[result.status] += 1
+        all_samples.extend(recorder.samples)
+        censored += recorder.censored_discards
+    return summarize_tenpai_risk_calibration(
         all_samples, hands_attempted=len(seeds),
         hand_status_counts=status_counts, censored_discards=censored)
