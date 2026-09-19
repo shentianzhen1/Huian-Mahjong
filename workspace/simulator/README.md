@@ -35,7 +35,7 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 
 真实目标房按玩家确认：2人、默认8局、双方开局各1000分。每局结算的零和净得失累加到总分，第8局结束后的最终分数才是项目真正要优化的结果。
 
-`MatchScoreState` 负责1000/1000总账；`MatchProgressState` 在此基础上继续记录当前庄家和连续坐庄次数，并自动计算下一局庄底。庄赢或流局留庄并+5，庄输换庄且回到底5。两层都只消费已经结算的真实 rewards，不猜UNKNOWN单局结算。
+`MatchScoreState` 负责1000/1000总账；`MatchProgressState` 在此基础上继续记录当前庄家和连续坐庄次数，并自动计算下一局庄底。庄赢或流局留庄并使下一局当前庄底+5；庄输换庄后，新庄当前结算底重置为10。闲家自身显示底仍为5。两层都只消费已经结算的真实 rewards，不猜UNKNOWN单局结算。
 
 因此 `run_many_normal_hands`、单局胜率和±1/±2单位奖励仍只是**单局诊断/开发基线**。`run_real_ordinary_match()` 已提供第一条整场真实计分路径：每局读取 MatchProgress 的 dealer/current_dealer_base，普通平胡/自摸走 FanAggregator+Settlement，再把真实 rewards 写回1000/1000总账；规则 UNKNOWN 会停在当前局。
 
@@ -48,6 +48,12 @@ Environment 已提供 `finalize_ordinary_outcome(current_dealer_base=...)`。在
 生成真实零和 `rewards`。点炮胡牌张仍留在牌河，只为结构和番数分析临时加入赢家手牌。多金和普通花组已解决；玩家确认不存在独立杠费，因此完成过杠不会额外阻断普通结算。普通多拆法已改为枚举全部合法拆分并取最高总番，不再因此停止；普通数牌PENG=0番、字牌PENG=+1番、3+金点炮均已解决；普通路径当前不再因这些规则停止。抢杠胡、杠上胡等特殊结算仍会安全停止。
 
 simulation-only 的 ±1/±2 仍保留为策略回归基线，与上述真实结算严格分离；下一阶段由8局 Match Simulator 消费真实结算结果。
+
+## room541913 真实完整8局校验
+
+2026-09-19完整目标房录像直接校验了 MatchProgress 的庄底与总账语义：新庄当前结算底10、连庄+5、换庄重置10；8局从1000/1000累加到1113/887，且每局均满足真实公式。结构化回归夹具位于 `tests/fixtures/settlement_room541913_8hands.json`。
+
+需要注意：代码在第5次及更高连续坐庄时继续按+5外推，但直接目标房证据目前最高到庄底35；更高庄底和封顶仍属于证据缺口，不能把模拟器的40/45视为真实房已确认。
 
 ## Ordinary-real 8局基线
 
