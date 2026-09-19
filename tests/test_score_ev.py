@@ -19,7 +19,7 @@ class OrdinaryScoreValueTests(unittest.TestCase):
             hand,
             gold_tile="M9",
             current_dealer_base=10,
-            visible_tiles=("M9", "M9", "M9", "M9"),
+            visible_tiles=("M9", "M9", "M9"),
         )
         self.assertFalse(value.is_full_ev)
         self.assertEqual(value.winning_tile_types, ("B",))
@@ -44,7 +44,7 @@ class OrdinaryScoreValueTests(unittest.TestCase):
             melds=(("PENG", ("E", "E", "E")),),
             flowers=("F1", "F2"),
             current_dealer_base=15,
-            visible_tiles=("M9", "M9", "M9", "M9"),
+            visible_tiles=("M9", "M9", "M9"),
         )
         # Concealed: 3 suited triplets + R honor triplet = 5 fan.
         # Exposed E Peng = 1, flowers = 2 => 8 fan.
