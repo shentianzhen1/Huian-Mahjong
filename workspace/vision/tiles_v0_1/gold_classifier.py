@@ -64,6 +64,10 @@ def count_tong_pips(image):
 
     Returns 0 when no plausible circles are found. This is intentionally a
     narrow helper for P1..P9 and should not be used for other suits.
+
+    The distance/accumulator thresholds are deliberately conservative. They were
+    tightened after replay-temporal diagnostics showed compressed P4 frames could
+    otherwise invent a fifth circle from badge/edge texture.
     """
     rgb = np.asarray(image.convert("RGB"))
     enlarged = cv2.resize(
@@ -84,9 +88,9 @@ def count_tong_pips(image):
         gray,
         cv2.HOUGH_GRADIENT,
         dp=1.1,
-        minDist=height * 0.15,
+        minDist=height * 0.16,
         param1=100,
-        param2=20,
+        param2=26,
         minRadius=int(height * 0.05),
         maxRadius=int(height * 0.15),
     )
