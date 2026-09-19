@@ -167,7 +167,8 @@ class Simulator:
 
     def run_normal_hand(self, seed=None, agent=None, dice_total=None, max_steps=1000,
                         *, agents=None, wall=None, initial_state=None, dealer=0,
-                        current_dealer_base=None, match_context=None):
+                        current_dealer_base=None, match_context=None,
+                        decision_observer=None):
         """Run the confirmed ordinary subset with unit or real ordinary scoring.
 
         enable_real_scoring keeps the ordinary-only special-rule bypass but
@@ -193,6 +194,8 @@ class Simulator:
             raise ValueError("Exactly two seat agents are required")
         if match_context is not None and not isinstance(match_context, MatchObservationContext):
             raise TypeError("match_context must be MatchObservationContext or None")
+        if decision_observer is not None and not callable(decision_observer):
+            raise TypeError("decision_observer must be callable or None")
         profile = self.config if self.config is not None else SimulatorConfig()
         if not profile.normal_hand_mode:
             raise ValueError("run_normal_hand requires normal_hand_mode")
@@ -282,6 +285,12 @@ class Simulator:
                 actor = seats[state.current_player]
                 observation = PlayerObservation.from_state(
                     state, match_context=match_context)
+                if decision_observer is not None:
+                    # Offline diagnostics may inspect simulator truth, but only
+                    # through an explicit deep copy. The live agent still gets
+                    # PlayerObservation and cannot see opponent hand/wall truth.
+                    decision_observer(
+                        deepcopy(state), observation, deepcopy(actions))
                 chooser = getattr(actor, "choose_decision", None)
                 if chooser is None:
                     chooser = actor.choose_action
