@@ -1,6 +1,6 @@
 # Vision Tiles V0.1
 
-离线原型只识别三个固定区域：自己的 `hand_region`、新摸牌 `draw_region`、金牌展示 `gold_region`。它不推断整桌状态，不调用 Rules、Environment、Simulator 或 Executor，也不会点击小程序。
+离线原型处理三个固定区域：自己的 `hand_region`、新摸牌 `draw_region`、金状态区域 `gold_region`。ROI profile 可把区域声明成 `tile` 或 `marker`。当前8局回放中左上角 gold 只是一张黄色牌背标记，不显示具体金牌牌面，因此回放 profile 应使用 `gold_region=marker`，不能把它当牌面分类。它不推断整桌状态，不调用 Rules、Environment、Simulator 或 Executor，也不会点击小程序。
 
 ## 数据集
 
@@ -27,7 +27,7 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 .\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.calibrate_rois `
   dataset/tiles_v0_1/images/frames/frame_000000.png `
-  --output dataset/tiles_v0_1/meta/roi_profiles/huian_1108x690.json --slots
+  --output dataset/tiles_v0_1/meta/roi_profiles/huian_1108x690.json --slots --gold-mode marker
 
 .\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.crop_rois `
   --dataset dataset/tiles_v0_1 `
@@ -49,10 +49,15 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 ## 输出与约束
 
-`infer_tiles` 输出 JSON，含整体 `valid`、每个槽位的 `tile_id`、`category`、`confidence`、`region`、`slot`，以及被低置信过滤的候选和约束问题。后处理会：过滤低置信候选，限制手牌最多 17 张、摸牌和金牌展示各最多 1 张，拒绝物理手牌区出现第 5 张同牌，并预留多帧投票接口。
+`infer_tiles` 输出 JSON，牌面区域包含 `tile_id`、`category`、`confidence`、`region`、`slot`；marker 区域单独输出 `markers` 的存在/不存在，不生成 `tile_id`。分类前先做亮色牌面主体存在检测，空槽会被跳过而不是硬猜一张牌。后处理会过滤低置信候选、限制手牌最多17张和摸牌最多1张、拒绝物理手牌区出现第5张同牌，并预留多帧投票接口。
 
 输出永远带有 `safe_for_executor: false`。V0.1 没有自动点击接口。
 
+
+
+### Gold 的正确观测方式
+
+当前8局回放在对局开始后只保留左上角黄色牌背标记；该标记能证明“金状态UI存在”，但不能证明具体哪一张是金。真实运行时应在**开金/翻金事件**直接识别可见牌面并把 `gold_id` 写入会话状态，后续帧只用 marker 检查UI仍处于预期状态。若录像没有录到翻金事件，则该录像不能提供 gold_id 的视觉真值。
 
 ## 准确率与稳定性评测
 
@@ -72,7 +77,7 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 `evaluate_tiles` 优先按 `source_session`（整段录像/录屏会话）留出测试；没有 `source_session` 时才回退到 `source_frame`，再缺失才按图片路径。来自同一录像的相邻帧必须共享同一个 `source_session`，否则会形成“同录像帧一边训练、一边测试”的泄漏。
 
-真实小程序界面优先使用 `same_region`：手牌、摸牌、金牌展示的底色、边框和缩放可能不同，测试牌只和同一区域的训练模板比较，避免把 UI 渲染域差异误算成牌面分类能力。
+真实小程序界面优先使用 `same_region`：手牌和摸牌的底色、边框和缩放可能不同，测试牌只和同一区域的训练模板比较。`marker` 区域不进入牌面准确率；若要评估 gold_id，必须使用真正看到金牌牌面的开金/翻金事件样本。
 
 ```powershell
 .\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.evaluate_tiles `
