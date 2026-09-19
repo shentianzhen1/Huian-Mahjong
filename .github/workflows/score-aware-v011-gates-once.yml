@@ -1,0 +1,132 @@
+name: ScoreAware V011 Gate Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/score-aware-v011-gates-once.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Diagnose V0.11 gate frequency
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import json
+          from collections import Counter
+          from huian._legacy import env
+          from huian.rules.config import UnknownRuleError
+          from workspace.ai import MeldAwareShantenAgent, ScoreAwareMeldAgent
+          from workspace.ai.shanten import best_offense_ties
+          from workspace.ai.score_ev import evaluate_tenpai_ordinary_value
+          from workspace.simulator import run_paired_real_matches
+
+          counters = Counter()
+
+          class DiagnosticScoreAgent(ScoreAwareMeldAgent):
+              def choose_decision(self, observation, legal_actions):
+                  actions = sorted(legal_actions, key=self._key)
+                  discards = [a for a in actions if a.type == env.ActionType.DISCARD]
+                  if not discards:
+                      counters["no_discard_turn"] += 1
+                  elif observation.match_context is None:
+                      counters["no_match_context"] += 1
+                  elif observation.gold_tile is not None and observation.gold_tile in observation.hand:
+                      counters["gold_in_hand"] += 1
+                  else:
+                      counters["eligible_discard_turn"] += 1
+                      open_melds = len(observation.melds[observation.seat])
+                      legal_by_tile = {a.tile:a for a in discards}
+                      ties = best_offense_ties(
+                          observation.hand,
+                          gold_tile=observation.gold_tile,
+                          open_melds=open_melds,
+                          visible_tiles=self._public_tiles(observation),
+                          allowed_discards=tuple(legal_by_tile),
+                      )
+                      counters[f"tie_count_{min(len(ties),4)}"] += 1
+                      if len(ties) <= 1:
+                          counters["no_exact_offense_tie"] += 1
+                      elif ties[0].shanten != 0:
+                          counters[f"tie_shanten_{ties[0].shanten}"] += 1
+                      elif observation.gold_tile is not None and any(
+                              observation.gold_tile in item.effective_tile_types
+                              for item in ties):
+                          counters["gold_in_waits"] += 1
+                      else:
+                          counters["score_gate_reached"] += 1
+                          values = {}
+                          public_tiles = self._public_tiles(observation)
+                          own_melds = observation.melds[observation.seat]
+                          own_flowers = observation.flowers[observation.seat]
+                          failed = False
+                          for item in ties:
+                              reduced = list(observation.hand)
+                              reduced.remove(item.discard)
+                              try:
+                                  value = evaluate_tenpai_ordinary_value(
+                                      reduced,
+                                      gold_tile=observation.gold_tile,
+                                      melds=own_melds,
+                                      flowers=own_flowers,
+                                      current_dealer_base=(
+                                          observation.match_context.current_dealer_base),
+                                      visible_tiles=(*public_tiles, item.discard),
+                                  )
+                              except UnknownRuleError:
+                                  counters["score_unknown"] += 1
+                                  failed = True
+                                  break
+                              except (RuntimeError, ValueError):
+                                  counters["score_error"] += 1
+                                  failed = True
+                                  break
+                              if value.total_live_copies != item.total_live_copies:
+                                  counters["live_mismatch"] += 1
+                                  failed = True
+                                  break
+                              values[item.discard] = value
+                          if not failed:
+                              weights = [v.weighted_net_points for v in values.values()]
+                              if len(set(weights)) == 1:
+                                  counters["score_tie"] += 1
+                              else:
+                                  counters["score_unique"] += 1
+
+                  decision = super().choose_decision(observation, legal_actions)
+                  counters["decisions"] += 1
+                  if "score_aware_meld_v0.11" in decision.reason:
+                      counters["actual_interventions"] += 1
+                  return decision
+
+          def v11(seed=None):
+              return DiagnosticScoreAgent(seed=seed, template_samples=32)
+
+          def v10(seed=None):
+              return MeldAwareShantenAgent(seed=seed, template_samples=32)
+
+          report = run_paired_real_matches(
+              range(184000, 184025),
+              agent_factories=(v11, v10),
+              agent_names=("DiagnosticV011", "CurrentV010"),
+              max_steps=1000,
+              initial_dealer=0,
+          )
+          payload = {
+              "completed_pairs": report.completed_pairs,
+              "incomplete_pairs": report.incomplete_pairs,
+              "counters": dict(counters),
+          }
+          print("V011_GATE_DIAG_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("V011_GATE_DIAG_END")
+          PY
