@@ -1,0 +1,43 @@
+name: Tenpai Risk Heldout Validation
+
+on:
+  push:
+    paths:
+      - ".github/workflows/tenpai-risk-heldout-once.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate 16 vs 32 templates on independent seeds
+        run: |
+          python -B - <<'PY'
+          import json
+          from time import perf_counter
+          from workspace.simulator import run_tenpai_risk_calibration
+
+          output = []
+          for templates in (16, 32):
+              started = perf_counter()
+              report = run_tenpai_risk_calibration(
+                  range(1000, 1200),
+                  template_samples=templates,
+                  max_steps=1000)
+              elapsed = perf_counter() - started
+              payload = report.to_dict()
+              payload.pop("samples", None)
+              payload["template_samples_requested"] = templates
+              payload["elapsed_seconds"] = elapsed
+              payload["ms_per_labelled_discard"] = (
+                  elapsed * 1000 / report.labelled_discards
+                  if report.labelled_discards else None)
+              output.append(payload)
+          print("TENPAI_RISK_HELDOUT_START")
+          print(json.dumps(output, ensure_ascii=False, indent=2))
+          print("TENPAI_RISK_HELDOUT_END")
+          PY
