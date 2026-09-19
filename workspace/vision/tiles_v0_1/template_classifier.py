@@ -104,6 +104,8 @@ class TemplateTileClassifier:
         return Classification(best_tile, max(0.0, best_score))
 
     def classify_slots(self, image, profile, region):
+        if profile.region_mode(region) != "tile":
+            return ()
         if not profile.slots.get(region):
             raise ValueError(f"No calibrated tile slots for {region}")
         x, y, _, _ = profile.regions[region]
