@@ -7,7 +7,7 @@ from PIL import Image
 
 from .postprocess import ObservationConstraints, validate_observation
 from .roi import ROIProfile
-from .template_classifier import TemplateTileClassifier
+from .template_classifier import TemplateTileClassifier, _tile_face_box
 
 
 def infer_screenshot(image_path, dataset_root, profile_path, constraints=ObservationConstraints()):
@@ -20,7 +20,23 @@ def infer_screenshot(image_path, dataset_root, profile_path, constraints=Observa
     if image.size != profile.source_size:
         raise ValueError(f"ROI profile requires {profile.source_size}, got {image.size}")
     predictions = []
+    markers = []
     for region in profile.regions:
+        if profile.region_mode(region) == "marker":
+            region_image = profile.crop(image, region)
+            x0, y0, _, _ = profile.regions[region]
+            slots = profile.slots.get(region) or (
+                (0, 0, region_image.width, region_image.height),
+            )
+            for slot, (x, y, width, height) in enumerate(slots):
+                crop = region_image.crop((x, y, x + width, y + height))
+                markers.append({
+                    "region": region,
+                    "slot": slot,
+                    "present": _tile_face_box(crop) is not None,
+                    "bbox": (x0 + x, y0 + y, width, height),
+                })
+            continue
         predictions.extend(classifier.classify_slots(image, profile, region))
     result = validate_observation(predictions, constraints)
     return {
@@ -29,6 +45,7 @@ def infer_screenshot(image_path, dataset_root, profile_path, constraints=Observa
         "predictions": [item.__dict__ for item in result.accepted],
         "rejected_low_confidence": [item.__dict__ for item in result.rejected],
         "issues": list(result.issues),
+        "markers": markers,
         "safe_for_executor": False,
     }
 
