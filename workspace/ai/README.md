@@ -33,9 +33,9 @@ RandomAgent在 `workspace.simulator` 保留兼容入口；它的 `choose_decisio
 结论：V0.2没有通过晋级门槛，**不得替换BaselineAgent**。这说明“手工结构分+一摸改良潜力”会产生系统性错误弃牌。下一版优先做可验证的16/17张惠安牌型向听/有效牌，再考虑公开信息危险度和Monte Carlo/EV。
 
 
-## ShantenAgent V0.3（实验）
+## ShantenAgent V0.3（当前AI前沿）
 
-`ShantenAgent` 使用新的惠安16/17张普通胡向听/有效牌引擎来排序弃牌。它仍保持：
+`ShantenAgent` 使用惠安16/17张普通胡向听/有效牌引擎来排序弃牌。它保持：
 
 - 合法HU优先；
 - 可选吃碰先PASS；
@@ -44,4 +44,20 @@ RandomAgent在 `workspace.simulator` 保留兼容入口；它的 `choose_decisio
 
 弃牌先比较普通胡向听数，再比较公开信息下的有效牌剩余张数和有效牌种类。特殊胡继续由特殊状态机处理，不混入普通向听层。
 
-该Agent暂不替换Baseline，必须通过固定seed、正反换座的8局A/B后才考虑晋级。
+### V0.3 A/B结果
+
+固定20个match seed、正反换座，共40场8局，40/40完整完成：
+
+- ShantenAgent：37胜
+- BaselineAgent：3胜
+- 平局：0
+- 平均最终分：1114.125 vs 885.875
+- 平均分差：+228.25
+
+因此，后续AI开发不再以旧Baseline或EfficiencyAgent作为晋级门槛，**新的策略必须与ShantenAgent V0.3直接做固定牌墙+换座A/B**。
+
+下一阶段不是继续堆手工向听启发，而是在V0.3之上增加：
+1. 公开信息危险度 / 对手模型；
+2. 期望得分EV；
+3. 当前总分、剩余局数、庄位和连庄底的8局比赛上下文；
+4. 特殊胡收益只在结算规则闭环后接入，不用猜测倍率。
