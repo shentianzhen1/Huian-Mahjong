@@ -130,7 +130,7 @@ def mine_presence_sequences(
                     )
                     sequence["last_feature"] = visual
 
-                prediction = classifier.classify(crop)
+                prediction = classifier.classify(crop, region=region)
                 sequence["end_seconds"] = seconds
                 sequence["frames"].append({
                     "video_seconds": seconds,
