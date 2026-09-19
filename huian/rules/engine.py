@@ -170,9 +170,13 @@ class HuianRules:
         - 补杠/蓄杠/加杠 / ADDED_GANG: same exposed-kong table, suited 2, honor 3.
         - 暗杠 / AN_GANG: suited 3, honor 4.
 
-        The suited ADD_KONG=2 value is directly confirmed by replay 66fe863f.
-        The remaining cells are adopted from the in-game Huian rule page and
-        therefore retain HIGH_CONFIDENCE provenance.
+        Direct target-room confirmations:
+        - suited ADD_KONG=2: replay 66fe863f.
+        - suited AN_GANG=3: room541913 hand 6 (2026-09-19), where the player
+          draws the fourth suited tile, declares a concealed kong, and the
+          settlement explicitly lists 杠牌3番.
+        Remaining cells are adopted from the in-game Huian rule page and retain
+        HIGH_CONFIDENCE provenance.
         """
         try:
             kind = kind if isinstance(kind, KongKind) else KongKind(kind)
@@ -186,17 +190,24 @@ class HuianRules:
         else:
             fan = 3 if honor else 2
         direct_added_suited = kind == KongKind.ADDED_GANG and not honor
+        direct_concealed_suited = kind == KongKind.AN_GANG and not honor
+        direct_confirmed = direct_added_suited or direct_concealed_suited
+        if direct_added_suited:
+            evidence = "66fe863f replay: suited added kong displayed as 2 fan"
+        elif direct_concealed_suited:
+            evidence = (
+                "room541913 hand 6 replay 2026-09-19: suited concealed kong "
+                "followed by settlement 杠牌3番"
+            )
+        else:
+            evidence = "Huian in-game rule page fan table; adopted pending contrary video"
         return KongFanResult(
             kind=kind,
             tile=tile,
             fan=fan,
-            status=(EvidenceStatus.CONFIRMED if direct_added_suited
+            status=(EvidenceStatus.CONFIRMED if direct_confirmed
                     else EvidenceStatus.HIGH_CONFIDENCE),
-            evidence=(
-                "66fe863f replay: suited added kong displayed as 2 fan"
-                if direct_added_suited
-                else "Huian in-game rule page fan table; adopted pending contrary video"
-            ),
+            evidence=evidence,
         )
 
     def added_kong_options(self, hand, melds, gold_tile=None):
