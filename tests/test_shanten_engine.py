@@ -4,6 +4,7 @@ from huian import HuianRules
 from workspace.ai import (
     analyze_effective_tiles,
     best_discard,
+    best_offense_ties,
     min_shanten_discards,
     ordinary_shanten,
     rank_discards,
@@ -139,6 +140,36 @@ class HuianShantenTests(unittest.TestCase):
             allowed_discards=("B", "N"),
         )
         self.assertEqual(restricted, full)
+
+    def test_best_offense_ties_remove_only_tile_order_tiebreak(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        ties = best_offense_ties(hand)
+        self.assertEqual({item.discard for item in ties}, {"B", "N"})
+        self.assertEqual(len({item.shanten for item in ties}), 1)
+        self.assertEqual(len({item.total_live_copies for item in ties}), 1)
+        self.assertEqual(len({len(item.effective_tiles) for item in ties}), 1)
+        # V0.3 still resolves the exact tie by canonical tile order.
+        self.assertIn(best_discard(hand), ties)
+
+    def test_best_offense_ties_exclude_weaker_live_copy_candidate(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        ties = best_offense_ties(hand, visible_tiles=("N", "N"))
+        self.assertEqual(tuple(item.discard for item in ties), ("N",))
+        self.assertEqual(ties[0], best_discard(hand, visible_tiles=("N", "N")))
 
     def test_min_shanten_frontier_matches_best_discard_shanten(self):
         hand = (
