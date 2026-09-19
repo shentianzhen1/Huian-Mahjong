@@ -187,7 +187,9 @@ def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
                 root, region_train_labels
             )
             for label in eligible:
-                prediction = classifier.classify(_crop_label(root, label))
+                prediction = classifier.classify(
+                    _crop_label(root, label), region=label["region"]
+                )
                 true_tile = label["tile_id"]
                 predicted_tile = prediction.tile_id
                 rows.append({
