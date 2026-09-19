@@ -1,8 +1,8 @@
 """Deterministic opening planner for the Huian online-room V0.1 profile.
 
-The planner exposes the selected indicator position instead of deciding whether
-the visible indicator is removed from the physical wall; that target-room
-accounting detail still needs a direct observation.
+The opened gold indicator is a physical tile and is removed from the drawable
+wall. One of the four copies therefore remains permanently in the public
+indicator zone, leaving at most three playable copies of the gold tile.
 """
 from copy import deepcopy
 from dataclasses import dataclass
@@ -78,9 +78,19 @@ def locate_gold_indicator(wall, dice_total):
 
 
 def plan_opening(wall, dealer, dice_total):
-    """Build opening zones through dealer-first flower replacement and gold lookup."""
+    """Build opening zones and remove the opened gold from the drawable wall."""
     hands, remaining = deal_initial_hands(deepcopy(wall), dealer)
     replacement = replace_flowers(hands, [[], []], remaining, dealer)
     indicator = locate_gold_indicator(replacement.wall, dice_total)
-    return OpeningPlan(dealer, replacement.hands, replacement.flowers,
-                       replacement.wall, replacement, indicator)
+    drawable_wall = list(replacement.wall)
+    opened = drawable_wall.pop(indicator.wall_index)
+    if opened != indicator.tile:
+        raise RuntimeError("Gold indicator index no longer matches the wall")
+    return OpeningPlan(
+        dealer,
+        replacement.hands,
+        replacement.flowers,
+        tuple(drawable_wall),
+        replacement,
+        indicator,
+    )
