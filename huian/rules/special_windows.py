@@ -6,7 +6,7 @@ Player spec 2026-09-18:
 - AN_GANG = 暗杠: four matching concealed tiles; not robbable.
 - Qiangjin belongs only to the acting player after draw / flower / kong.
 - Opening flip does not offer opponent qiangjin. PASS does not hand off.
-- Sanjindao outranks qiangjin only at the one-shot node where a draw has just changed 2 golds to exactly 3. PASS closes that Sanjindao chance.
+- Sanjindao outranks qiangjin at its one-shot opening/third-gold node: opening check with 3+ gold, or a mid-hand draw that just changed 2 golds to exactly 3. PASS closes that Sanjindao chance.
 Hand-shape details for qiangjin remain UNKNOWN; eligibility here is the
 working gate "gold in hand, not in Youjin" so the window ownership tests
 can run without inventing a decomposition.
@@ -55,6 +55,15 @@ def _just_received_third_gold(state, player):
             and _last_effective_draw(state, player) == gold)
 
 
+def _opening_sanjindao_check(state, player):
+    gold = state.gold_tile
+    return (
+        state.phase == "OPENING_QIANGJIN_CHECK"
+        and gold is not None
+        and state.hands[player].count(gold) >= 3
+    )
+
+
 def _just_completed_eight_flowers(state, player):
     if len(state.flowers[player]) != 8:
         return False
@@ -73,11 +82,13 @@ def current_player_special_actions(adapter, state):
     p = state.current_player
     A, T = env.Action, env.ActionType
     actions = []
-    # Sanjindao is a one-shot window only when the third gold has just arrived.
+    # Sanjindao is a one-shot opening/third-gold window.
     third_gold = _just_received_third_gold(state, p)
+    opening_check = _opening_sanjindao_check(state, p)
     if adapter.rules.can_sanjindao(
             state.hands[p], state.gold_tile,
-            third_gold_just_received=third_gold):
+            third_gold_just_received=third_gold,
+            opening_check=opening_check):
         profile = special_outcome_profile("SANJINDAO")
         return (
             A(p, T.HU, metadata={
@@ -146,6 +157,7 @@ def report_with_specials(adapter, state):
         return ActionReport(current_player_special_actions(adapter, state))
     if state.phase in ("NEED_DRAW", "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG") and (
             _just_received_third_gold(state, p)
+            or _opening_sanjindao_check(state, p)
             or _just_completed_eight_flowers(state, p)
             or working_qiangjin_eligible(state, p)):
         validate(adapter, state)
