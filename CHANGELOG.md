@@ -1,5 +1,17 @@
 # 重要变更记录
 
+## 2026-09-19 — MeldAware V0.10 正式晋级为 CurrentAgent
+
+- `CurrentAgent` 从 `TenpaiRiskTieBreakAgent V0.6` 晋级为 `MeldAwareShantenAgent V0.10`；V0.6保留为固定主对照，V0.3保留为牌效消融基线。
+- V0.10完整继承V0.6弃牌策略，仅改变AFTER_DISCARD的CHI/PENG：比较PASS与每个合法副露后的最优强制弃牌，只有普通进攻元组严格改善时才吃/碰。
+- 当前金牌在手时副露策略保守PASS，因为游金/特殊胡EV尚未完整进入该模型；KONG继续独立处理。
+- 首轮100 pair / 200场：V0.10 121胜、V0.6 78胜、1平，平均配对分差+67.32。
+- 独立确认100 pair / 200场：V0.10 118胜、V0.6 81胜、1平，平均+42.29，约95% CI +10.99～+73.59，平均点炮差约-0.48/配对。
+- 两轮合计200 pair / 400场：239胜、159负、2平，平均配对最终分差+54.805。
+- 晋级证据归档：`references/ai/2026-09-19/meld_aware_v010_promotion.md`。
+- 向听/有效牌核心同时新增随机交叉验证：17张完整结构、16张听牌、金万能、固定1副露均与精确Hu求解器一致。
+- 下一步AI从V0.10进入score-aware EV；未来策略必须直接击败V0.10，不得仅相对V0.6/V0.3改善。
+
 ## 2026-09-19 — TenpaiRisk V0.6 正式晋级为 CurrentAgent
 
 - `TenpaiRiskTieBreakAgent V0.6` 正式晋级，新增稳定入口 `workspace.ai.CurrentAgent`；`ShantenAgent V0.3` 不删除，继续作为显式对照/消融基线。
