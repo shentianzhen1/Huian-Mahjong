@@ -16,8 +16,10 @@ dev = [
     "ruff>=0.6",
     "black>=24.0",
 ]
-# Vision dependencies remain unpinned until the capture environment is verified.
-vision = []
+vision = [
+    "opencv-python-headless>=4.10,<5",
+    "Pillow>=10,<13",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
