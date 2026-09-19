@@ -11,6 +11,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .extract_frames import extract_key_frames
+from .audit_labels import audit_labels
 from .dataset_status import dataset_readiness
 from .evaluate_tiles import evaluate_template_dataset, summarize_predictions
 from .infer_tiles import infer_screenshot
@@ -477,6 +478,55 @@ class TilesV01Tests(unittest.TestCase):
                 "P1",
                 report["next_data_priority"]["replicate_across_source_groups"],
             )
+            self.assertFalse(report["safe_for_executor"])
+
+    def test_label_audit_surfaces_disagreement_without_rewriting_labels(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            image_dir = root / "images" / "rois"
+            image_dir.mkdir(parents=True)
+
+            def write_pattern(name, horizontal=False):
+                image = Image.new("RGB", (20, 40), "white")
+                draw = ImageDraw.Draw(image)
+                if horizontal:
+                    draw.rectangle((2, 17, 17, 22), fill="black")
+                else:
+                    draw.rectangle((7, 3, 12, 36), fill="black")
+                image.save(image_dir / f"{name}.png")
+
+            write_pattern("a1")
+            write_pattern("b1")
+            write_pattern("a2", horizontal=True)
+            write_pattern("b2", horizontal=True)
+
+            append_label(
+                root, image="images/rois/a1.png",
+                bbox=[0, 0, 20, 40], tile_id="M1",
+                region="hand_region", source_session="a",
+            )
+            append_label(
+                root, image="images/rois/b1.png",
+                bbox=[0, 0, 20, 40], tile_id="M1",
+                region="hand_region", source_session="b",
+            )
+            append_label(
+                root, image="images/rois/a2.png",
+                bbox=[0, 0, 20, 40], tile_id="P1",
+                region="hand_region", source_session="a",
+            )
+            # Deliberately wrong reviewed label: horizontal P1-looking sample
+            # is entered as M1. The audit must flag it, never auto-correct it.
+            append_label(
+                root, image="images/rois/b2.png",
+                bbox=[0, 0, 20, 40], tile_id="M1",
+                region="hand_region", source_session="b",
+            )
+
+            report = audit_labels(root, review_confidence=0.80)
+            self.assertGreaterEqual(report["review_queue_size"], 1)
+            self.assertGreaterEqual(report["model_disagreements"], 1)
+            self.assertEqual(report["auto_corrections"], 0)
             self.assertFalse(report["safe_for_executor"])
 
     def test_empty_dataset_is_explicitly_not_accuracy_ready(self) -> None:
