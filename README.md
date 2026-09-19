@@ -19,29 +19,32 @@ python -B -m unittest discover -s tests -v
 
 ## 当前能做什么
 
-- 校验 144 张实体牌、普通结构胡拆解、金牌限制和所有合法吃牌方案。
-- 确定性执行发牌、补花、吃、碰、PASS、头摸、已确认杠后尾摸、普通胡声明和 16 张流局。
-- 补杠专用响应窗口、PASS后尾摸及抢杠胡来源审计；相关计分继续明确停止为UNKNOWN。
-- 审计已观察的平胡/自摸结算；固定种子重放开局并在未知规则处停止。
-- 用 simulation-only 普通局模式验证完整摸打和终局；运行 RandomAgent / BaselineAgent 批量对战与交换座位评估，保留每步决策理由。操作见 [Simulator说明](workspace/simulator/README.md)。
-- Recorder V0.2 录制对局；Vision V0.1 对固定 ROI 离线抽帧、标注和模板推理。
+- Rules：144张实体牌校验、惠安16/17张普通胡拆解、金牌限制、多拆法最高番、全部合法吃牌方案、PENG/杠番及证据感知FanAggregator。
+- Environment：确定性执行发牌、补花、吃、碰、PASS、头摸、三类杠后尾摸、补杠专用抢杠窗口、普通胡声明、三金倒一次性窗口、抢金窗口骨架、16张流局。
+- Settlement / Match：普通平胡×1、自摸×2使用真实番数和当前庄底结算；8局从1000/1000开始累积零和分数，room541913完整8局fixture可逐局回放到1113/887。
+- 庄底：新庄当前结算底10；同一庄家连庄每局+5且不上封顶直到第8局；庄输换庄后新庄重置10。
+- Simulator：固定牌墙/seed、交换座位、UNKNOWN证据包、8局真实普通规则MatchRunner及批量评估。
+- AI：Baseline/Random保留；当前实验前沿为 **ShantenAgent V0.3**，已实现惠安向听+有效牌。40场8局固定seed换座A/B中对Baseline为37胜3负、平均终分1114.125 vs 885.875。
+- Recorder / Vision：Recorder V0.2按局录像；Vision已有固定ROI抽帧、人工标签、模板推理、多帧投票和合法状态约束原型。
 
-## 当前不能做什么
+## 当前还不能做什么
 
-- 真实规则路径仍受抢金、游金链、明暗杠抢杠范围、补杠/抢杠/杠胡计分等 UNKNOWN 限制；普通局模拟奖励不能代表真实最终计分。
-- 没有EV决策、特殊胡AI策略或整桌实时识别。
-- Executor 未接入，项目不会自动点击小程序。
+- 抢金的精确资格/真实结算、三金倒真实终局、游金链完整状态机、抢杠胡完整结算、杠胡倍率、八花游真实倍率仍未全部闭环；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
+- ShantenAgent V0.3 还没有EV、公开信息危险度/对手模型和8局比分自适应；下一阶段见 Issue #6。
+- Vision 尚未建立真实牌面准确率基线；ROI/数据集/稳定性门槛见 Issue #7。
+- Executor 未接入。Vision达到量化准确率、置信度和多帧稳定性门槛之前，不启用自动点击。
+- 开金实体牌墙记账及少数低频规则（天胡/天听/8局平分）仍保留为P2证据任务。
 
 ## 架构
 
-| 层 | 责任 | 状态 |
+| 层 | 责任 | 当前状态 |
 | --- | --- | --- |
-| Rules | 合法性、胡牌结构、番项、结算 | 仅实现已确认部分 |
-| Environment | GameState 与可复现状态转移 | M2 可用 |
-| Simulator | Agent 驱动牌局 | 普通局闭环、批量评估；特殊规则UNKNOWN |
-| AI | 选择合法动作与风险评估 | 可解释Baseline与Random对战；尚无风险模型 |
-| Vision | 画面转局面观察 | V0.1 离线 ROI 原型 |
-| Executor | 验证通过后执行界面操作 | 未接入 |
+| Rules | 合法性、胡牌结构、番项、结算 | 普通规则基本闭环；特殊规则仍有P0缺口 |
+| Environment | GameState 与确定性状态转移 | M2可用；特殊窗口逐步补齐 |
+| Simulator | 单局/8局、固定牌墙、评估 | ordinary-real 8局可完整运行；特殊结算安全停止 |
+| AI | 选择动作、EV与风险 | ShantenAgent V0.3为当前前沿；下一步EV/危险度/比赛上下文 |
+| Vision | 画面转GameState | 离线原型；待真实准确率基线 |
+| Executor | UI执行 | 未接入，等待Vision门槛 |
 
 ## 测试
 
