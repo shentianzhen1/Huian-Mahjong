@@ -63,7 +63,7 @@
 
 2026-09-19 当前主线 GitHub Actions 已全绿：
 
-- Core regression：Python 3.10 / 3.11 / 3.12 **各270项通过，0失败、0错误**。V0.6晋级后的新增默认入口/评估注册测试正在继续扩展该计数，以最新Actions为准。
+- Core regression：Python 3.10 / 3.11 / 3.12 **各272项通过，0失败、0错误**。Legacy Core V0.1.1与Legacy Environment V0.1同样通过。
 - Legacy Core V0.1.1：9项通过。
 - Legacy Environment V0.1：9项通过。
 - Vision V0.1 advisory 为手动任务，本轮未触发；这不代表真实牌面识别准确率已经建立。
