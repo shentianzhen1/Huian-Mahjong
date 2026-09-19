@@ -1,5 +1,17 @@
 # 重要变更记录
 
+## 2026-09-19 — match_evidence_002：三金倒时机修正 + 双游×8直接结算确认
+
+- 用户新增 `14.mp4` 作为重要实战证据；二进制不提交公开仓，登记 SHA256：`f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d`，匿名证据ID为 `match_evidence_002`。
+- 三金倒一次性窗口从“仅刚摸进第3金”修正为两类入口：①开局补花/开金完成后的首次当前玩家检查，若已持3+金；②对局中有效摸牌使2金→恰好3金。PASS后永久关闭，后续3/4金和第4金都不重开。
+- `HuianRules.can_sanjindao()` / `sanjindao_decision()` 新增 opening check 语义；`special_windows.py` 在 `OPENING_QIANGJIN_CHECK` 的3+金场景让三金倒优先于抢金。新增开局3金/4金回归测试。
+- 新录像从首个动作起可见3张金，随后仍进入游金；“游”动画出现时3金仍在手。项目明确禁止用当前金牌数量定义游金阶段。
+- 同一录像随后进入双游并以2张金终局，说明升级路径不能再被概括为“永远不涉及金牌离手”；但3→2是否为双游升级的必要条件仍保持UNKNOWN。
+- 终局结算页直接显示：庄底30、金牌2番、花牌1番、**双游×8**、+264/-264；严格满足 `(30+2+1)×8=264`。双游倍率证据从 HIGH_CONFIDENCE 升级为 **CONFIRMED**。
+- 新增结构化夹具 `tests/fixtures/settlement_match_evidence_002_double_you.json` 和 +264 回归；`SPECIAL_OUTCOMES["DOUBLE_YOU"]` multiplier status 改为 CONFIRMED。由于统一入口/升级状态机仍未闭环，`settlement_ready` 继续保持 false。
+- Issue #2/#3、RULE_STATUS、RULE_EVIDENCE_MATRIX、TODO、PROJECT_STATUS 已同步；双游终局倍率缺口关闭，P0 #3 继续只追精确状态机与响应窗口。
+
+
 ## 2026-09-19 — PublicState Score Reader V0.1
 
 - 新增 `public_state_scores.py`：两侧比分ROI先做12×放大和灰度二值化，再以70/80/90三个阈值产生digits-only OCR候选；OCR后端通过接口隔离，当前实验后端为Tesseract CLI。
