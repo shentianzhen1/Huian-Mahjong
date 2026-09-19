@@ -1,0 +1,107 @@
+"""Public-information Monte Carlo opponent model for ordinary discard Hu.
+
+The estimator never reads the real opponent concealed hand or future wall order.
+It samples plausible concealed base-tile hands from the physically unseen tile
+pool implied by the acting player hand plus public rivers/melds, then evaluates
+ordinary discard-Hu structure under the target single-gold/two-gold limits.
+
+This models only the ordinary subset. Youjin/Sanjindao/Qiangjin and other
+special-state permissions are deliberately outside this probability.
+"""
+from collections import Counter
+from dataclasses import dataclass
+from random import Random
+
+from huian._legacy import env
+from .shanten import ordinary_shanten
+
+
+@dataclass(frozen=True)
+class OrdinaryDealInEstimate:
+    tile: str
+    samples: int
+    winning_samples: int
+    probability: float
+    opponent_concealed_count: int
+    opponent_open_melds: int
+
+
+def _base_public_counter(observation):
+    known = Counter(tile for tile in observation.hand if tile in env.BASE_TILES)
+    for river in observation.discards:
+        known.update(tile for tile in river if tile in env.BASE_TILES)
+    for melds in observation.melds:
+        for _, tiles in melds:
+            known.update(tile for tile in tiles if tile in env.BASE_TILES)
+    for tile in env.BASE_TILES:
+        if known[tile] > 4:
+            raise ValueError("known physical copies of a base tile cannot exceed four")
+    return known
+
+
+def _ordinary_discard_hu(sampled_hand, discard, gold_tile, open_melds):
+    if discard == gold_tile:
+        return False
+    completed = (*sampled_hand, discard)
+    gold_count = completed.count(gold_tile) if gold_tile is not None else 0
+    # Target-room ordinary discard-Hu restrictions.
+    if gold_count in (1, 2):
+        return False
+    return ordinary_shanten(
+        completed, gold_tile=gold_tile, open_melds=open_melds) == -1
+
+
+def estimate_ordinary_deal_in_probabilities(
+        observation, candidate_tiles, *, samples=64, seed=0):
+    """Estimate immediate ordinary discard-Hu probability for candidates.
+
+    One common set of sampled opponent hands is reused for every candidate to
+    reduce comparison noise. The probability is conditional on a simple
+    uniform unseen-tile prior, not a claim about the real opponent strategy.
+    """
+    if type(samples) is not int or samples <= 0:
+        raise ValueError("samples must be a positive integer")
+    if type(seed) is not int:
+        raise ValueError("seed must be an integer")
+    candidates = tuple(dict.fromkeys(candidate_tiles))
+    if not candidates:
+        raise ValueError("candidate_tiles must be nonempty")
+    own = Counter(observation.hand)
+    for tile in candidates:
+        if tile not in env.BASE_TILES:
+            raise ValueError("deal-in candidates must be base tiles")
+        if own[tile] <= 0:
+            raise ValueError("deal-in candidate must be in the acting hand")
+
+    opponent = 1 - observation.seat
+    open_melds = len(observation.melds[opponent])
+    if not 0 <= open_melds <= 5:
+        raise ValueError("opponent open meld count must be between zero and five")
+    concealed_count = (5 - open_melds) * 3 + 1
+
+    known = _base_public_counter(observation)
+    unseen_pool = []
+    for tile in env.BASE_TILES:
+        unseen_pool.extend([tile] * (4 - known[tile]))
+    if concealed_count > len(unseen_pool):
+        raise ValueError("public state leaves too few unseen tiles for opponent hand")
+
+    rng = Random(seed)
+    sampled_hands = tuple(
+        tuple(rng.sample(unseen_pool, concealed_count))
+        for _ in range(samples)
+    )
+    estimates = []
+    for tile in candidates:
+        wins = sum(
+            _ordinary_discard_hu(
+                hand, tile, observation.gold_tile, open_melds)
+            for hand in sampled_hands
+        )
+        estimates.append(OrdinaryDealInEstimate(
+            tile=tile, samples=samples, winning_samples=wins,
+            probability=wins / samples,
+            opponent_concealed_count=concealed_count,
+            opponent_open_melds=open_melds,
+        ))
+    return tuple(estimates)
