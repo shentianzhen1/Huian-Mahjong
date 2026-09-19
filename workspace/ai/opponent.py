@@ -55,6 +55,24 @@ def _ordinary_discard_hu(sampled_hand, discard, gold_tile, open_melds):
         completed, gold_tile=gold_tile, open_melds=open_melds) == -1
 
 
+
+def is_ordinary_ron_tenpai(hand, *, gold_tile, open_melds):
+    """Return whether a concealed hand has any legal ordinary Ron wait.
+
+    This is a structural truth helper used by offline calibration/tests. It is
+    not called by production agents with hidden opponent information.
+    """
+    hand = tuple(hand)
+    if type(open_melds) is not int or not 0 <= open_melds <= 5:
+        raise ValueError("open_melds must be an integer between zero and five")
+    counts = Counter(hand)
+    return any(
+        counts[tile] < 4
+        and _ordinary_discard_hu(hand, tile, gold_tile, open_melds)
+        for tile in env.BASE_TILES
+        if tile != gold_tile
+    )
+
 def estimate_ordinary_deal_in_probabilities(
         observation, candidate_tiles, *, samples=64, seed=0):
     """Estimate immediate ordinary discard-Hu probability for candidates.
