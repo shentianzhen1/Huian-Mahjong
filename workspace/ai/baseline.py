@@ -4,11 +4,13 @@ from collections import Counter
 from typing import Any
 
 from huian._legacy import env
+from huian.rules.config import UnknownRuleError
 from .danger import estimate_discard_danger
 from .opponent import (estimate_tenpai_wait_loss_scores,
                        estimate_tenpai_wait_risk_scores)
 from .shanten import (analyze_effective_tiles, analyze_two_ply_offense,
                       best_discard, best_offense_ties, min_shanten_discards)
+from .score_ev import evaluate_tenpai_ordinary_value
 
 
 @dataclass(frozen=True)
@@ -686,6 +688,108 @@ class MeldAwareShantenAgent(TenpaiRiskTieBreakAgent):
             )
 
         return super().choose_decision(observation, legal_actions)
+
+class ScoreAwareMeldAgent(MeldAwareShantenAgent):
+    """Experimental V0.11: known ordinary score value inside exact offense ties.
+
+    V0.10 CHI/PENG behavior is preserved unchanged. On ordinary discard turns,
+    V0.11 only intervenes when V0.6/V0.10 already have an exact offense tie:
+    same shanten, same live effective copies and same effective-tile type count.
+
+    The first version is intentionally narrow:
+    - only shanten-0 candidates;
+    - requires match context for current dealer base;
+    - no Jin in hand;
+    - Jin may not be one of the winning effective tiles;
+    - only confirmed ordinary self-draw settlement is valued.
+
+    Any unsupported/UNKNOWN case falls back to V0.10.
+    """
+
+    def choose_decision(self, observation, legal_actions):
+        if not legal_actions:
+            raise ValueError("No legal actions")
+        actions = sorted(legal_actions, key=self._key)
+
+        claims = [
+            action for action in actions
+            if action.type in (env.ActionType.CHI, env.ActionType.PENG)
+        ]
+        passes = [action for action in actions if action.type == env.ActionType.PASS]
+        if observation.phase == "AFTER_DISCARD" and claims and passes:
+            return super().choose_decision(observation, legal_actions)
+
+        discards = [action for action in actions
+                    if action.type == env.ActionType.DISCARD]
+        if not discards or observation.match_context is None:
+            return super().choose_decision(observation, legal_actions)
+        if (observation.gold_tile is not None
+                and observation.gold_tile in observation.hand):
+            return super().choose_decision(observation, legal_actions)
+
+        open_melds = len(observation.melds[observation.seat])
+        legal_by_tile = {action.tile: action for action in discards}
+        ties = best_offense_ties(
+            observation.hand,
+            gold_tile=observation.gold_tile,
+            open_melds=open_melds,
+            visible_tiles=self._public_tiles(observation),
+            allowed_discards=tuple(legal_by_tile),
+        )
+        if len(ties) <= 1 or ties[0].shanten != 0:
+            return super().choose_decision(observation, legal_actions)
+        if (observation.gold_tile is not None and any(
+                observation.gold_tile in item.effective_tile_types
+                for item in ties)):
+            return super().choose_decision(observation, legal_actions)
+
+        values = {}
+        public_tiles = self._public_tiles(observation)
+        own_melds = observation.melds[observation.seat]
+        own_flowers = observation.flowers[observation.seat]
+        for item in ties:
+            reduced = list(observation.hand)
+            reduced.remove(item.discard)
+            try:
+                value = evaluate_tenpai_ordinary_value(
+                    reduced,
+                    gold_tile=observation.gold_tile,
+                    melds=own_melds,
+                    flowers=own_flowers,
+                    current_dealer_base=(
+                        observation.match_context.current_dealer_base),
+                    visible_tiles=(*public_tiles, item.discard),
+                )
+            except (UnknownRuleError, RuntimeError, ValueError):
+                return super().choose_decision(observation, legal_actions)
+            if value.total_live_copies != item.total_live_copies:
+                return super().choose_decision(observation, legal_actions)
+            values[item.discard] = value
+
+        best_weight = max(
+            value.weighted_net_points for value in values.values())
+        winners = [
+            item for item in ties
+            if values[item.discard].weighted_net_points == best_weight
+        ]
+        if len(winners) != 1:
+            return super().choose_decision(observation, legal_actions)
+
+        choice = winners[0]
+        value = values[choice.discard]
+        alternatives = ",".join(
+            f"{item.discard}:{values[item.discard].weighted_net_points}"
+            for item in ties)
+        return AgentDecision(
+            legal_by_tile[choice.discard],
+            f"DISCARD {choice.discard}: score_aware_meld_v0.11 "
+            f"(exact offense tie; ordinary weighted_points="
+            f"{value.weighted_net_points}, mean_if_win="
+            f"{value.mean_net_points_if_win:.2f}, "
+            f"base={value.current_dealer_base}; candidates=[{alternatives}]); "
+            f"known ordinary self-draw value only, not full EV",
+        )
+
 
 class TenpaiLossTieBreakAgent(TenpaiRiskTieBreakAgent):
     """Experimental V0.7a: loss-index-first inside V0.6 offense ties.
