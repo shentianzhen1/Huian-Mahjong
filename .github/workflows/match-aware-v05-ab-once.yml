@@ -1,0 +1,47 @@
+name: MatchAware V05 AB
+
+on:
+  push:
+    paths:
+      - ".github/workflows/match-aware-v05-ab-once.yml"
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compare V0.5 against V0.3 on two independent seed blocks
+        run: |
+          python -B - <<'PY'
+          import json
+          from workspace.ai import MatchAwareShantenAgent, ShantenAgent
+          from workspace.simulator import run_paired_real_matches
+
+          def match_aware_factory(seed=None):
+              return MatchAwareShantenAgent(
+                  seed=seed, late_lead_weight=0.25, late_hands=3)
+
+          def run_block(name, seeds):
+              report = run_paired_real_matches(
+                  seeds,
+                  agent_factories=(match_aware_factory, ShantenAgent),
+                  agent_names=("MatchAwareV05", "ShantenV03"),
+                  max_steps=1000,
+                  initial_dealer=0,
+              )
+              payload = report.to_dict()
+              payload.pop("per_match", None)
+              return {"block": name, **payload}
+
+          output = [
+              run_block("seeds_20_39", range(20, 40)),
+              run_block("seeds_100_119", range(100, 120)),
+          ]
+          print("MATCH_AWARE_AB_START")
+          print(json.dumps(output, ensure_ascii=False, indent=2))
+          print("MATCH_AWARE_AB_END")
+          PY
