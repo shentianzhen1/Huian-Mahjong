@@ -229,6 +229,12 @@ V0.10 不重写 V0.6 的弃牌层，只新增 AFTER_DISCARD 的 CHI/PENG 决策�
 
 完整记录：`references/ai/2026-09-19/kong_shadow_audit.md`。
 
+### V0.13 KONG 候选：未晋级
+
+V0.13-shadow 只尝试普通结构不变、没有 `rob_kong`/`gang_hu_scoring` 阻断、且未持有金牌时的暗杠/大明杠；补杠仍不尝试。全新 seed `300000..300024` 的 25 个配对、正反换座共 50 场八局比赛全部完成：候选对 V0.10 的平均配对分差为 **-4.88**，95% CI **-75.61～+65.85**，胜场 26:24，平均点炮 0.86 vs 0.68。该结果不能证明收益，V0.13 保留为实验代码，不替换 `CurrentAgent V0.10`。
+
+完整记录：`references/ai/2026-09-19/v013_kong_shadow.md`。
+
 ### 下一步
 
 不继续盲调吃碰阈值。下一层优先做可审计的 score-aware EV：
