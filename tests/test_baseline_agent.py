@@ -3,8 +3,9 @@ from copy import deepcopy
 from dataclasses import FrozenInstanceError
 
 from huian._legacy import env
-from workspace.ai import (BaselineAgent, EfficiencyAgent, PlayerObservation,
-                          ShantenAgent)
+from workspace.ai import (BaselineAgent, DangerAwareShantenAgent,
+                          EfficiencyAgent, PlayerObservation, ShantenAgent,
+                          estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
 
 
@@ -109,6 +110,71 @@ class BaselineAgentTests(unittest.TestCase):
             ShantenAgent().choose_decision(observation([]), claim).action,
             claim[1],
         )
+
+    def test_public_danger_estimate_uses_only_exposure_not_safe_tile_rules(self):
+        view = PlayerObservation(
+            0, ("M1", "M1", "P1"), "P9", "AFTER_DRAW", 0, 40,
+            ((), ("M1",)),
+            ((), ()),
+            ((), ()),
+        )
+        info = estimate_discard_danger(view, "M1")
+        self.assertEqual(info.own_copies, 2)
+        self.assertEqual(info.public_copies, 1)
+        self.assertEqual(info.unseen_copies, 1)
+        self.assertEqual(info.risk_units, 1)
+        self.assertEqual(info.opponent_discard_copies, 1)
+        self.assertFalse(info.is_probability)
+        with self.assertRaises(ValueError):
+            estimate_discard_danger(view, "S9")
+
+    def test_public_danger_rejects_impossible_fifth_copy(self):
+        view = PlayerObservation(
+            0, ("M1", "M1"), "P9", "AFTER_DRAW", 0, 40,
+            (("M1",), ("M1", "M1")),
+            ((), ()),
+            ((), ()),
+        )
+        with self.assertRaises(ValueError):
+            estimate_discard_danger(view, "M1")
+
+    def test_danger_aware_agent_never_leaves_minimum_shanten_frontier(self):
+        hand = (
+            ["M1"] * 3
+            + ["P1"] * 3
+            + ["S1"] * 3
+            + ["E"] * 3
+            + ["R"] * 3
+            + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("N",), ()), ((), ()), ((), ()),
+        )
+        agent = DangerAwareShantenAgent(danger_weight=1.0)
+        decision = agent.choose_decision(view, discards(hand))
+        frontier = min_shanten_discards(
+            hand, gold_tile="P9",
+            visible_tiles=ShantenAgent._public_tiles(view),
+            allowed_discards=tuple(sorted(set(hand))),
+        )
+        min_shanten = frontier[0].shanten
+        selected = next(item for item in frontier if item.discard == decision.action.tile)
+        self.assertEqual(selected.shanten, min_shanten)
+        self.assertIn("danger_shanten_v0.4", decision.reason)
+        self.assertIn("risk_units=", decision.reason)
+        self.assertIn("not a probability", decision.reason)
+
+    def test_danger_aware_agent_validates_weight_and_keeps_hu_priority(self):
+        with self.assertRaises(ValueError):
+            DangerAwareShantenAgent(danger_weight=-0.1)
+        with self.assertRaises(ValueError):
+            DangerAwareShantenAgent(danger_weight=True)
+        view = observation(["M1"])
+        hu = env.Action(0, env.ActionType.HU, metadata={"source": "self_draw"})
+        decision = DangerAwareShantenAgent().choose_decision(
+            view, discards(["M1"]) + [hu])
+        self.assertIs(decision.action, hu)
 
     def test_observation_has_only_private_hand_and_public_immutable_fields(self):
         state = scenario()
