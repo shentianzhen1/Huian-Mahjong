@@ -10,7 +10,8 @@ from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, MeldAwareShantenAgent,
                           OneShantenTwoPlyRiskAgent, PlayerObservation,
-                          ScoreAwareMeldAgent, ShantenAgent,
+                          ScoreAwareMeldAgent, ImmediateValueMeldAgent,
+                          ShantenAgent,
                           TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
                           TenpaiRiskTieBreakAgent, TwoPlyShantenRiskAgent,
                           best_offense_ties,
@@ -72,6 +73,95 @@ class BaselineAgentTests(unittest.TestCase):
         self.assertEqual(decision.action.tile, "M1")
         self.assertIn("score_aware_meld_v0.11", decision.reason)
         self.assertIn("not full EV", decision.reason)
+
+    def test_v012_uses_weighted_immediate_value_across_tenpai_frontier(self):
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=2,
+        )
+        view = PlayerObservation(
+            0, ("M1", "M2"), "P9", "AFTER_DRAW", 0, 40,
+            ((), ()), ((), ()), ((), ()), context,
+        )
+        actions = discards(list(view.hand))
+        frontier = (
+            SimpleNamespace(
+                discard="M1", shanten=0, total_live_copies=3,
+                effective_tile_types=("B",),
+                effective_tiles=(object(),),
+            ),
+            SimpleNamespace(
+                discard="M2", shanten=0, total_live_copies=5,
+                effective_tile_types=("R",),
+                effective_tiles=(object(),),
+            ),
+        )
+
+        def fake_value(hand, **kwargs):
+            discarded = "M2" if tuple(hand) == ("M1",) else "M1"
+            if discarded == "M1":
+                return SimpleNamespace(
+                    total_live_copies=3,
+                    weighted_net_points=180,
+                    mean_net_points_if_win=60.0,
+                    current_dealer_base=20,
+                )
+            return SimpleNamespace(
+                total_live_copies=5,
+                weighted_net_points=150,
+                mean_net_points_if_win=30.0,
+                current_dealer_base=20,
+            )
+
+        with patch(
+                "workspace.ai.baseline.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.baseline.evaluate_tenpai_ordinary_value",
+                side_effect=fake_value):
+            decision = ImmediateValueMeldAgent(
+                seed=7, template_samples=32).choose_decision(view, actions)
+
+        self.assertEqual(decision.action.tile, "M1")
+        self.assertIn("immediate_value_meld_v0.12", decision.reason)
+        self.assertIn("not full EV", decision.reason)
+
+    def test_v012_preserves_v010_when_wait_contains_gold(self):
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=2,
+        )
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            ((), ()), ((), ()), ((), ()), context,
+        )
+        actions = discards(hand)
+        fake_frontier = (
+            SimpleNamespace(
+                discard="B", shanten=0, total_live_copies=4,
+                effective_tile_types=("P9",),
+                effective_tiles=(object(),),
+            ),
+            SimpleNamespace(
+                discard="N", shanten=0, total_live_copies=4,
+                effective_tile_types=("M9",),
+                effective_tiles=(object(),),
+            ),
+        )
+        expected = MeldAwareShantenAgent(
+            seed=9, template_samples=32).choose_decision(view, actions)
+        with patch(
+                "workspace.ai.baseline.min_shanten_discards",
+                return_value=fake_frontier), patch(
+                "workspace.ai.baseline.evaluate_tenpai_ordinary_value"
+        ) as mocked:
+            actual = ImmediateValueMeldAgent(
+                seed=9, template_samples=32).choose_decision(view, actions)
+        self.assertEqual(actual.action, expected.action)
+        mocked.assert_not_called()
 
     def test_v011_falls_back_to_v010_without_match_context(self):
         hand = (
