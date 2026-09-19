@@ -434,7 +434,7 @@ class MatchAwareShantenAgent(DangerAwareShantenAgent):
 
 
 class TenpaiRiskTieBreakAgent(ShantenAgent):
-    """Experimental V0.6: risk only breaks exact V0.3 offense ties.
+    """Promoted V0.6: risk only breaks exact V0.3 offense ties.
 
     The policy may never trade away shanten, total live effective copies or
     effective-tile type count. Tenpai-conditioned risk replaces only V0.3's
