@@ -47,7 +47,7 @@
    - presence-aware固定窗口：hand 127/128=99.22%，draw 2/2=100%但样本太少；继续用 sequence miner 扩大draw连续可见序列。
    - PublicState V0.1约束层已实现：归一化ROI覆盖两种分辨率；比分必须A+B=2000；多帧多数票；可与MatchScoreState交叉校验；同局分数不得变化、局数不得倒退/跳跃、同局剩余牌不得增加。真实8局的比分/局数/剩余牌/gold稳定时点真值已归档。
    - 当前缺口：① 具体数字读取器（双方分数、剩余牌数、第几局/8）；② gold新批次泛化；③ draw时间稳定性样本量；④ F1/F3/F4/F5/F6/F8/S7/S9覆盖，F2/F7跨session；⑤ 缩放/移动/遮挡压力测试。
-   - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/room541913_public_state_seed.json`。
+   - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/match_evidence_001_public_state_seed.json`。
 
 ## P2：低频规则
 
