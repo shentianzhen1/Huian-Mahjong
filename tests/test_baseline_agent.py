@@ -9,7 +9,8 @@ from workspace.ai import (CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION,
                           CurrentAgent, BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, PlayerObservation, ShantenAgent,
-                          TenpaiRiskTieBreakAgent, best_offense_ties,
+                          TenpaiLossTieBreakAgent, TenpaiRiskTieBreakAgent,
+                          best_offense_ties,
                           estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
 
@@ -299,6 +300,110 @@ class BaselineAgentTests(unittest.TestCase):
                 seed=5, template_samples=32).choose_decision(view, actions)
         self.assertEqual(actual.action, expected.action)
         self.assertIn("templates unavailable", actual.reason)
+
+    def test_v07_uses_confirmed_loss_only_inside_exact_offense_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=3)
+        base_view = observation(hand)
+        view = PlayerObservation(
+            base_view.seat, base_view.hand, base_view.gold_tile,
+            base_view.phase, base_view.dealer, base_view.wall_remaining,
+            base_view.discards, base_view.flowers, base_view.melds, context)
+
+        def fake_loss(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(
+                    tile=tile,
+                    loss_index=5.0 if tile == "N" else 20.0,
+                    risk_score=0.4 if tile == "N" else 0.2,
+                    mean_loss_if_hit=12.5 if tile == "N" else 100.0,
+                    templates_used=samples,
+                    complete=True,
+                )
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_loss_scores",
+                side_effect=fake_loss), patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores"
+        ) as fallback:
+            decision = TenpaiLossTieBreakAgent(
+                seed=13, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        fallback.assert_not_called()
+        self.assertIn("conditional_loss_index=5.000", decision.reason)
+        self.assertIn("not absolute EV", decision.reason)
+
+    def test_v07_preserves_v06_boundary_when_no_exact_offense_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("N", "N"), ()), ((), ()), ((), ()),
+            MatchObservationContext(
+                scores=(1000, 1000), hand_index=2, hands_remaining=6,
+                dealer=0, current_dealer_base=20,
+                consecutive_dealer_hands=3),
+        )
+        expected = ShantenAgent().choose_decision(view, discards(hand))
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_loss_scores"
+        ) as loss_model:
+            actual = TenpaiLossTieBreakAgent(
+                seed=7, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(actual.action, expected.action)
+        loss_model.assert_not_called()
+        self.assertIn("no exact offense tie", actual.reason)
+
+    def test_v07_falls_back_to_v06_if_score_evidence_is_incomplete(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        base_view = observation(hand)
+        context = MatchObservationContext(
+            scores=(1000, 1000), hand_index=2, hands_remaining=6,
+            dealer=0, current_dealer_base=20, consecutive_dealer_hands=3)
+        view = PlayerObservation(
+            base_view.seat, base_view.hand, base_view.gold_tile,
+            base_view.phase, base_view.dealer, base_view.wall_remaining,
+            base_view.discards, base_view.flowers, base_view.melds, context)
+
+        def incomplete_loss(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(tile=tile, complete=False)
+                for tile in candidates
+            )
+
+        def fake_risk(_observation, candidates, *, samples, seed):
+            return tuple(
+                SimpleNamespace(
+                    tile=tile, risk_score=0.1 if tile == "N" else 0.9,
+                    templates_used=samples)
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_loss_scores",
+                side_effect=incomplete_loss), patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores",
+                side_effect=fake_risk):
+            decision = TenpaiLossTieBreakAgent(
+                seed=17, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        self.assertIn("ordinary score evidence incomplete", decision.reason)
+        self.assertIn("fallback=v0.6_relative_risk", decision.reason)
 
     def test_v06_validates_sampling_configuration(self):
         for value in (0, -1, True):
