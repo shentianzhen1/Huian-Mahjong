@@ -4,8 +4,8 @@ from .baseline import (AgentDecision, BaselineAgent, DangerAwareShantenAgent,
                        MatchObservationContext, MeldAwareShantenAgent,
                        PlayerObservation, ShantenAgent,
                        TenpaiLossTieBreakAgent, TenpaiRiskLossTieBreakAgent,
-                       OneShantenTwoPlyRiskAgent, TenpaiRiskTieBreakAgent,
-                       TwoPlyShantenRiskAgent)
+                       OneShantenTwoPlyRiskAgent, ScoreAwareMeldAgent,
+                       TenpaiRiskTieBreakAgent, TwoPlyShantenRiskAgent)
 from .danger import PublicDangerEstimate, estimate_discard_danger
 from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        TenpaiWaitRiskEstimate,
@@ -13,6 +13,8 @@ from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        estimate_tenpai_wait_loss_scores,
                        estimate_tenpai_wait_risk_scores,
                        is_ordinary_ron_tenpai)
+from .score_ev import (OrdinaryImmediateValue, OrdinaryWinningDrawValue,
+                       evaluate_tenpai_ordinary_value)
 from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
                       TwoPlyOffense, analyze_effective_tiles,
                       analyze_two_ply_offense, best_discard, best_offense_ties,
@@ -30,7 +32,7 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "MeldAwareShantenAgent",
            "TenpaiRiskTieBreakAgent", "TenpaiLossTieBreakAgent",
            "TenpaiRiskLossTieBreakAgent", "TwoPlyShantenRiskAgent",
-           "OneShantenTwoPlyRiskAgent", "CurrentAgent",
+           "OneShantenTwoPlyRiskAgent", "ScoreAwareMeldAgent", "CurrentAgent",
            "CURRENT_AGENT_VERSION", "CURRENT_AGENT_NAME",
            "MatchObservationContext",
            "PlayerObservation",
@@ -43,4 +45,6 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "TenpaiWaitLossEstimate",
            "estimate_ordinary_deal_in_probabilities",
            "estimate_tenpai_wait_risk_scores",
-           "estimate_tenpai_wait_loss_scores", "is_ordinary_ron_tenpai"]
+           "estimate_tenpai_wait_loss_scores", "is_ordinary_ron_tenpai",
+           "OrdinaryImmediateValue", "OrdinaryWinningDrawValue",
+           "evaluate_tenpai_ordinary_value"]
