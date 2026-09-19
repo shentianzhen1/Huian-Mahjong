@@ -210,6 +210,25 @@ def validate(adapter, state):
         return
     if state.gold_tile is None:
         raise ValueError("An imported active scenario must specify its gold tile")
+
+    # The opened gold indicator is one physical copy kept outside the drawable
+    # wall. Therefore at most three copies of the gold tile may exist in
+    # playable zones (wall / hands / rivers / melds). With exact 144-tile
+    # conservation above, at least one copy must consequently be reserved.
+    playable_gold = state.wall.count(state.gold_tile)
+    playable_gold += sum(hand.count(state.gold_tile) for hand in state.hands)
+    playable_gold += sum(river.count(state.gold_tile) for river in state.discards)
+    playable_gold += sum(
+        meld.tiles.count(state.gold_tile)
+        for melds in state.melds for meld in melds
+    )
+    if playable_gold > 3:
+        raise ValueError(
+            "Opened gold indicator is non-drawable; at most three playable gold copies"
+        )
+    if state.reserved_tiles.count(state.gold_tile) < 1:
+        raise ValueError("Active state must account for the opened gold indicator")
+
     for p, melds in enumerate(state.melds):
         if len(melds) > 5:
             raise ValueError("At most five melds")
