@@ -56,10 +56,17 @@ New code should prefer `Huian_*` or neutral `Mahjong_*` naming.
 Do not waste time renaming stable legacy internals unless needed for integration.
 
 ## Performance
-Final Windows machine may be a ThinkPad X13-class laptop.
-Runtime should remain lightweight.
-Prefer ONNX Runtime for deployed vision inference.
-Heavy YOLO training or large-scale RL can be done on a stronger GPU machine/cloud later.
+Do not constrain algorithm, model, architecture, search depth, training method, or evaluation design around the user's current computer model or hardware.
+
+Design priority is:
+1. strategy strength / accuracy / correctness;
+2. reproducible evaluation;
+3. architecture extensibility;
+4. then deployment optimization.
+
+Runtime, memory, model size, and latency must still be measured as engineering metrics, but they are **not promotion gates unless a specific deployment target is explicitly defined later**.
+
+It is acceptable to use GPU machines, cloud compute, larger models, deeper search, RL/NN training, or heavier offline analysis when they improve the project. Deployment optimization (ONNX Runtime, pruning, quantization, caching, batching, model distillation, smaller fallback models, etc.) should be treated as a separate implementation stage rather than an upfront design constraint.
 
 ## Safety / fail-safe for future automation
 Vision uncertainty or inconsistent state must stop execution.
