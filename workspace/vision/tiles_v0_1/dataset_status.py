@@ -21,7 +21,11 @@ def dataset_readiness(dataset_root):
     group_counts = Counter()
     for label in labels:
         tile_id = label["tile_id"]
-        group = str(label.get("source_frame") or label["image"])
+        group = str(
+            label.get("source_session")
+            or label.get("source_frame")
+            or label["image"]
+        )
         class_counts[tile_id] += 1
         class_groups[tile_id].add(group)
         region_counts[label["region"]] += 1
