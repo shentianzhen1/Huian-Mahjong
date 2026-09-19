@@ -258,6 +258,42 @@ class EnvironmentTests(unittest.TestCase):
             for a in later.known_actions
         ))
 
+    def test_sanjindao_can_reopen_more_than_once_after_separate_passes(self):
+        def later_report(draw_tile):
+            state = scenario("AFTER_DRAW", hand=["P9"] * 3 + HAND[2:])
+            state.last_action = env.Action(
+                0, env.ActionType.DRAW,
+                metadata={"source": "wall_head", "drawn_tile": draw_tile},
+            ).to_dict()
+            return game(state).action_report()
+
+        first = later_report(HAND[2])
+        self.assertTrue(any(
+            a.metadata.get("special") == "SANJINDAO"
+            for a in first.known_actions
+        ))
+
+        # A later, separate own-draw node is still eligible even though an
+        # earlier Sanjindao prompt was passed. match_evidence_002 shows repeated
+        # PASS nodes while the same three gold tiles remain visible.
+        second = later_report(HAND[3])
+        self.assertTrue(any(
+            a.metadata.get("special") == "SANJINDAO"
+            for a in second.known_actions
+        ))
+
+    def test_four_gold_later_recheck_remains_unclaimed(self):
+        state = scenario("AFTER_DRAW", hand=["P9"] * 4 + HAND[3:])
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": HAND[3]},
+        ).to_dict()
+        report = game(state).action_report()
+        self.assertFalse(any(
+            a.metadata.get("special") == "SANJINDAO"
+            for a in report.known_actions
+        ))
+
     def test_eight_flower_special_declares_and_project_x2_settles(self):
         state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
         for flower in env.FLOWERS:
