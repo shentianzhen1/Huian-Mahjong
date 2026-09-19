@@ -237,14 +237,15 @@ class HuianRules:
 
         Confirmed target-room forms:
         - opening check: after opening replacement/open-gold, current actor has
-          three or more gold tiles;
+          all three playable gold tiles;
         - first mid-hand arrival: a valid draw has just changed 2 gold -> 3 gold;
         - later own-draw re-check: after previously passing, a later draw while
           the player still holds exactly 3 gold can offer Sanjindao again.
 
         PASS closes only the *current* prompt. It does not permanently disable
         Sanjindao for the hand, and ordinary/Youjin-family play remains available.
-        The 4-gold later-draw re-check is still not claimed by current evidence.
+        Four playable golds are physically impossible because the opened
+        indicator is the fourth copy and never enters the drawable wall.
         """
         self._validate_hand(hand, gold_tile)
         for name, value in (
@@ -256,7 +257,7 @@ class HuianRules:
         if gold_tile is None:
             return False
         count = hand.count(gold_tile)
-        return ((opening_check and count >= 3)
+        return ((opening_check and count == 3)
                 or (third_gold_just_received and count == 3)
                 or (later_draw_check and count == 3))
 
@@ -352,8 +353,8 @@ class HuianRules:
         # Declining Sanjindao closes only that prompt. Ordinary Hu rights stay
         # independent, and later eligible Sanjindao prompts are handled by the
         # state machine. match_evidence_002 directly confirms a later own-draw
-        # re-prompt while exactly three gold remain; the four-gold recheck is
-        # still evidence-UNKNOWN rather than hard-coded false.
+        # re-prompt while all three playable golds remain. A fourth playable
+        # copy cannot exist because the opened indicator is non-drawable.
         raw_splits = winning_decompositions(
             hand, gold_tile, open_melds, max_solutions=max_decompositions + 1
         )
