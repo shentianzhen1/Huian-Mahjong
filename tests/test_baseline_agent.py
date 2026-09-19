@@ -1,11 +1,14 @@
 import unittest
 from copy import deepcopy
 from dataclasses import FrozenInstanceError
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from huian._legacy import env
 from workspace.ai import (BaselineAgent, DangerAwareShantenAgent,
                           EfficiencyAgent, MatchAwareShantenAgent,
                           MatchObservationContext, PlayerObservation, ShantenAgent,
+                          TenpaiRiskTieBreakAgent, best_offense_ties,
                           estimate_discard_danger, min_shanten_discards)
 from test_huian_environment import scenario
 
@@ -194,6 +197,66 @@ class BaselineAgentTests(unittest.TestCase):
         decision = DangerAwareShantenAgent().choose_decision(
             view, discards(["M1"]) + [hu])
         self.assertIs(decision.action, hu)
+
+    def test_v06_preserves_v03_when_no_exact_offense_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = PlayerObservation(
+            0, tuple(hand), "P9", "AFTER_DRAW", 0, 40,
+            (("N", "N"), ()), ((), ()), ((), ()),
+        )
+        actions = discards(hand)
+        expected = ShantenAgent().choose_decision(view, actions)
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores"
+        ) as mocked:
+            actual = TenpaiRiskTieBreakAgent(
+                seed=7, template_samples=32).choose_decision(view, actions)
+        self.assertEqual(actual.action, expected.action)
+        mocked.assert_not_called()
+        self.assertIn("preserve V0.3 choice", actual.reason)
+
+    def test_v06_uses_relative_risk_only_inside_exact_offense_tie(self):
+        hand = (
+            ["M1"] * 3 + ["P1"] * 3 + ["S1"] * 3
+            + ["E"] * 3 + ["R"] * 3 + ["B", "N"]
+        )
+        view = observation(hand)
+        ties = best_offense_ties(
+            hand, gold_tile=view.gold_tile,
+            visible_tiles=ShantenAgent._public_tiles(view),
+            allowed_discards=tuple(sorted(set(hand))),
+        )
+        self.assertEqual({item.discard for item in ties}, {"B", "N"})
+
+        def fake_risk(_observation, candidates, *, samples, seed):
+            self.assertEqual(set(candidates), {"B", "N"})
+            self.assertEqual(samples, 32)
+            return tuple(
+                SimpleNamespace(
+                    tile=tile, risk_score=0.1 if tile == "N" else 0.9,
+                    templates_used=samples)
+                for tile in candidates
+            )
+
+        with patch(
+                "workspace.ai.baseline.estimate_tenpai_wait_risk_scores",
+                side_effect=fake_risk):
+            decision = TenpaiRiskTieBreakAgent(
+                seed=11, template_samples=32).choose_decision(
+                    view, discards(hand))
+        self.assertEqual(decision.action.tile, "N")
+        self.assertIn("exact offense tie", decision.reason)
+        self.assertIn("not a probability", decision.reason)
+
+    def test_v06_validates_sampling_configuration(self):
+        for value in (0, -1, True):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                TenpaiRiskTieBreakAgent(template_samples=value)
+        with self.assertRaises(ValueError):
+            TenpaiRiskTieBreakAgent(seed=True)
 
     def test_match_aware_v05_risk_gate_uses_only_late_lead(self):
         agent = MatchAwareShantenAgent(late_lead_weight=0.25, late_hands=3)
