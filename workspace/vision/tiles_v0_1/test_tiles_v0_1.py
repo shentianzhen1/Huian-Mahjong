@@ -20,6 +20,10 @@ from .mine_stability_sequences import mine_presence_sequences
 from .postprocess import (MultiFrameVoter, ObservationConstraints,
                           TilePrediction, evaluate_temporal_stability,
                           validate_observation)
+from .public_state import (
+    HuianPublicStateProfile, PublicStateCandidate, PublicStateObservation,
+    fuse_public_state,
+)
 from .crop_rois import crop_regions
 from .roi import ROIProfile
 from .template_classifier import (
@@ -544,6 +548,106 @@ class TilesV01Tests(unittest.TestCase):
                 for sequence in report["sequences"]
             ))
             self.assertFalse(report["safe_for_executor"])
+
+    def test_public_state_rois_scale_across_recording_sizes(self) -> None:
+        profile = HuianPublicStateProfile()
+        small = Image.new("RGB", (960, 448), "black")
+        large = Image.new("RGB", (1046, 480), "black")
+        small_crops = profile.crops(small)
+        large_crops = profile.crops(large)
+        self.assertEqual(set(small_crops), {
+            "top_right_score", "bottom_left_score", "status_line"
+        })
+        self.assertGreater(
+            large_crops["top_right_score"].width,
+            small_crops["top_right_score"].width,
+        )
+        self.assertGreater(
+            large_crops["status_line"].height,
+            small_crops["status_line"].height,
+        )
+
+    def test_public_state_consensus_rejects_single_frame_score_noise(self) -> None:
+        candidates = [
+            PublicStateCandidate(1077, 923, 8, 105, 0.95),
+            PublicStateCandidate(1077, 923, 8, 105, 0.96),
+            PublicStateCandidate(1072, 928, 8, 105, 0.99),
+        ]
+        observed = fuse_public_state(candidates, minimum_votes=2)
+        self.assertEqual(observed.score_pair, (1077, 923))
+        self.assertEqual(observed.hand_number, 8)
+        self.assertEqual(observed.remaining_tiles, 105)
+        self.assertEqual(observed.score_votes, 2)
+        self.assertTrue(observed.valid)
+        self.assertFalse(observed.safe_for_executor)
+
+    def test_public_state_discards_non_conserving_score_pairs_before_vote(self) -> None:
+        candidates = [
+            PublicStateCandidate(1077, 923, 8, 105),
+            PublicStateCandidate(1077, 923, 8, 105),
+            PublicStateCandidate(1077, 928, 8, 105),
+            PublicStateCandidate(1077, 928, 8, 105),
+            PublicStateCandidate(1077, 928, 8, 105),
+        ]
+        observed = fuse_public_state(candidates, minimum_votes=2)
+        self.assertEqual(observed.score_pair, (1077, 923))
+        self.assertTrue(observed.valid)
+
+    def test_public_state_blocks_score_change_inside_same_hand(self) -> None:
+        previous = PublicStateObservation(
+            1077, 923, 8, 105, 3, 3, 3, (), False
+        )
+        candidates = [
+            PublicStateCandidate(1113, 887, 8, 104),
+            PublicStateCandidate(1113, 887, 8, 104),
+        ]
+        observed = fuse_public_state(
+            candidates, previous=previous, minimum_votes=2
+        )
+        self.assertIn("score_changed_inside_hand", observed.issues)
+
+    def test_public_state_allows_score_change_at_next_hand_boundary(self) -> None:
+        previous = PublicStateObservation(
+            1105, 895, 7, 40, 3, 3, 3, (), False
+        )
+        candidates = [
+            PublicStateCandidate(1077, 923, 8, 108),
+            PublicStateCandidate(1077, 923, 8, 108),
+        ]
+        observed = fuse_public_state(
+            candidates, previous=previous, minimum_votes=2
+        )
+        self.assertEqual(observed.score_pair, (1077, 923))
+        self.assertEqual(observed.hand_number, 8)
+        self.assertEqual(observed.remaining_tiles, 108)
+        self.assertTrue(observed.valid)
+
+    def test_public_state_blocks_remaining_count_increase_inside_hand(self) -> None:
+        previous = PublicStateObservation(
+            1077, 923, 8, 80, 3, 3, 3, (), False
+        )
+        candidates = [
+            PublicStateCandidate(1077, 923, 8, 81),
+            PublicStateCandidate(1077, 923, 8, 81),
+        ]
+        observed = fuse_public_state(
+            candidates, previous=previous, minimum_votes=2
+        )
+        self.assertIn("remaining_increased_inside_hand", observed.issues)
+
+    def test_public_state_can_cross_check_engine_match_score(self) -> None:
+        candidates = [
+            PublicStateCandidate(1077, 923, 8, 105),
+            PublicStateCandidate(1077, 923, 8, 105),
+        ]
+        ok = fuse_public_state(
+            candidates, expected_scores=(1077, 923), minimum_votes=2
+        )
+        self.assertNotIn("engine_score_mismatch", ok.issues)
+        mismatch = fuse_public_state(
+            candidates, expected_scores=(1105, 895), minimum_votes=2
+        )
+        self.assertIn("engine_score_mismatch", mismatch.issues)
 
     def test_multiframe_voting_prefers_repeat_observation(self) -> None:
         voter = MultiFrameVoter()
