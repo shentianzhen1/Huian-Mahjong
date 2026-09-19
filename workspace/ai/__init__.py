@@ -10,7 +10,8 @@ from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        TenpaiWaitRiskEstimate,
                        estimate_ordinary_deal_in_probabilities,
                        estimate_tenpai_wait_loss_scores,
-                       estimate_tenpai_wait_risk_scores)
+                       estimate_tenpai_wait_risk_scores,
+                       is_ordinary_ron_tenpai)
 from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
                       TwoPlyOffense, analyze_effective_tiles,
                       analyze_two_ply_offense, best_discard, best_offense_ties,
@@ -39,4 +40,4 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "TenpaiWaitLossEstimate",
            "estimate_ordinary_deal_in_probabilities",
            "estimate_tenpai_wait_risk_scores",
-           "estimate_tenpai_wait_loss_scores"]
+           "estimate_tenpai_wait_loss_scores", "is_ordinary_ron_tenpai"]
