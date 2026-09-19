@@ -199,16 +199,6 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(after)
         self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
-    def test_opening_four_gold_still_prioritizes_sanjindao(self):
-        state = two_seat_gold_state(
-            current=0, current_gold=4, opponent_gold=0,
-            current_tiles=17, phase="OPENING_QIANGJIN_CHECK")
-        actions = env_of(state).legal_actions()
-        self.assertTrue(any(
-            a.metadata.get("special") == "SANJINDAO" for a in actions
-        ))
-        self.assertFalse(any(a.type == env.ActionType.QIANGJIN for a in actions))
-
     def test_sanjindao_declaration_stops_only_at_unknown_settlement(self):
         state = mark_third_gold_draw(two_seat_gold_state(
             current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
@@ -231,19 +221,14 @@ class QiangjinWindowTests(unittest.TestCase):
         ))
         self.assertTrue(any(a.type == env.ActionType.QIANGJIN for a in actions))
 
-    def test_fourth_gold_later_recheck_stays_disabled_pending_evidence(self):
+    def test_four_playable_gold_copies_are_physically_invalid(self):
         state = two_seat_gold_state(
-            current=0, current_gold=4, opponent_gold=0, current_tiles=17,
-            phase="AFTER_DRAW")
-        state.last_action = env.Action(
-            0, env.ActionType.DRAW,
-            metadata={"source": "wall_head", "drawn_tile": GOLD},
-        ).to_dict()
-        game = env_of(state)
-        actions = game.legal_actions()
-        self.assertFalse(any(
-            a.metadata.get("special") == "SANJINDAO" for a in actions
-        ))
+            current=0, current_gold=4, opponent_gold=0,
+            current_tiles=17, phase="AFTER_DRAW")
+        with self.assertRaisesRegex(
+            ValueError, "at most three playable gold copies"
+        ):
+            env_of(state)
 
     def test_idle_16_tiles_can_be_eligible_on_own_node_only(self):
         state = two_seat_gold_state(
