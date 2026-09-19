@@ -39,6 +39,63 @@ python -B -m workspace.simulator.benchmark --count 100 --swap-seats --max-steps 
 
 因此 `run_many_normal_hands`、单局胜率和±1/±2单位奖励仍只是**单局诊断/开发基线**。`run_real_ordinary_match()` 已提供第一条整场真实计分路径：每局读取 MatchProgress 的 dealer/current_dealer_base，普通平胡/自摸走 FanAggregator+Settlement，再把真实 rewards 写回1000/1000总账；规则 UNKNOWN 会停在当前局。
 
+## 标准8局 AI A/B
+
+AI晋级不再使用单局 `run_many_normal_hands()` 的±1/±2统计，而使用 `run_paired_real_matches()`：
+
+```python
+from workspace.ai import ShantenAgent, BaselineAgent
+from workspace.simulator import run_paired_real_matches
+
+report = run_paired_real_matches(
+    range(20),
+    agent_factories=(ShantenAgent, BaselineAgent),
+    agent_names=("ShantenV03", "Baseline"),
+    max_steps=1000,
+    initial_dealer=0,
+)
+print(report.average_final_score_by_agent)
+print(report.average_score_delta_a_minus_b)
+print(report.match_wins_by_agent, report.ties)
+print(report.deal_ins_by_agent)
+print(report.average_deal_ins_per_match_by_agent)
+print(report.win_source_counts)
+print(report.unknown_reasons)
+```
+
+每个seed固定跑原座位和交换座位两场8局比赛；Agent身份跟factory走，不跟座位走。只有同seed两个座位顺序都完整结束的pair才进入最终分/点炮比较，不完整pair只计入完成率与UNKNOWN，不补成0分或平局。
+
+2026-09-19 当前标准基线（20 seed×换座=40场完整8局）：
+
+- ShantenAgent V0.3：38胜 / BaselineAgent：2胜 / 0平；
+- 平均最终分：1150.75 vs 849.25；
+- 平均分差：+301.5；
+- 点炮：12 vs 43，即0.300 vs 1.075次/场；
+- 320个单局的胡牌来源：自摸265、点炮胡55；
+- UNKNOWN=0。
+
+旧37:3、+228.25属于历史代码快照，不能再作为当前晋级门槛。
+
+## 普通点炮概率离线校准
+
+`estimate_ordinary_deal_in_probabilities()` 只从玩家可见信息构造实体未见牌池并抽样可能的对手暗手。它不读取真实对手暗牌或未来牌墙，当前只估计普通点炮胡，不包含游金、三金倒、抢金等特殊状态。
+
+`run_ordinary_deal_in_calibration()` 用双方ShantenAgent V0.3跑普通局。出牌方仅用公开信息记录预测；下一次对手响应时，Environment若在 `AFTER_DISCARD` 提供合法HU，就将上一张弃牌标为真实点炮，否则标为非点炮。校准器本身同样不读取隐藏手牌。
+
+```python
+from workspace.simulator import run_ordinary_deal_in_calibration
+
+report = run_ordinary_deal_in_calibration(
+    range(100), mc_samples=16, max_steps=1000)
+print(report.auc)
+print(report.brier_score, report.constant_base_rate_brier)
+print(report.mean_prediction_positive, report.mean_prediction_negative)
+for bucket in report.bins:
+    print(bucket)
+```
+
+校准通过前，该概率只属于研究特征，**不得直接解释为真实房间放铳率，也不得接管默认AI**。至少应检查AUC是否明显高于0.5、Brier是否优于常数基础率、正样本预测均值是否高于负样本，以及风险分档是否大体随预测值上升。
+
 ## 普通真实结算 V0.1
 
 Environment 已提供 `finalize_ordinary_outcome(current_dealer_base=...)`。在普通 `HU_DECLARED` 后，它会自动重建胡牌手牌、调用 `FanAggregator`，并仅在 `FanResult.complete=True` 时使用已确认公式：
@@ -114,9 +171,9 @@ python -B -m workspace.simulator.replay data/evaluations/run_001 --hand-index 1 
 
 `paired`只统计同一输入序号的正反座位均完成的组合；重复seed仍按输入序号区分。不完整配对单独计数，无完整配对时均值为null。`paired_average_reward_by_agent`按原Agent身份给出两局平均模拟收益，不能与按座位统计混用。
 
-## 当前基线（2026-09-18）
+## 当前基线（2026-09-19）
 
-ordinary-real 8局：10个match seed×交换座位共20场，20/20场完整8局、160/160局全部真实结算、平均8局/场、普通规则UNKNOWN=0。无独立杠费、最高番拆法、3+金普通点炮和PENG番规则均已落地。
+ordinary-real规则链路基线仍保持：10个match seed×交换座位共20场，20/20场完整8局、160/160局全部真实结算、平均8局/场、普通规则UNKNOWN=0。AI当前正式比较基线另见上方“标准8局 AI A/B”：ShantenAgent V0.3 对 BaselineAgent 为38:2，平均分差+301.5，点炮12:43。
 
 历史 simulation-only 100seed×换座曾在旧“杠费未知”版本得到195/200完成、5个 `KONG_FEE_SETTLEMENT_UNKNOWN`；该规则ID已退役，不能再视为当前基线。simulation-only结果仍只用于策略回归，不能解释为真实房胜率或真实8局最终得分。
 
