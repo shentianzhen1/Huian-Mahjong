@@ -1,8 +1,10 @@
 import unittest
 
 from huian._legacy import env
-from workspace.ai import PlayerObservation
-from workspace.simulator import (DealInCalibrationRecorder,
+from workspace.ai import PlayerObservation, ShantenAgent
+from workspace.simulator import (CalibratingShantenAgent,
+                                 CalibratingTenpaiRiskShantenAgent,
+                                 DealInCalibrationRecorder,
                                  DealInCalibrationSample,
                                  TenpaiRiskCalibrationRecorder,
                                  TenpaiRiskCalibrationSample,
@@ -24,6 +26,27 @@ def observation(seat=0, phase="AFTER_DRAW"):
 
 
 class DealInCalibrationTests(unittest.TestCase):
+    def test_passive_calibration_wrappers_preserve_v03_decision(self):
+        view = observation(0)
+        actions = [
+            env.Action(0, env.ActionType.DISCARD, tile=tile)
+            for tile in sorted(set(view.hand))
+        ]
+        baseline = ShantenAgent(seed=3).choose_decision(view, actions)
+
+        recorder = DealInCalibrationRecorder(hand_seed=3, mc_samples=2)
+        calibrated = CalibratingShantenAgent(
+            recorder, seed=3).choose_decision(view, actions)
+        self.assertEqual(calibrated.action, baseline.action)
+        self.assertEqual(calibrated.reason, baseline.reason)
+
+        risk_recorder = TenpaiRiskCalibrationRecorder(
+            hand_seed=3, template_samples=2)
+        risk_calibrated = CalibratingTenpaiRiskShantenAgent(
+            risk_recorder, seed=3).choose_decision(view, actions)
+        self.assertEqual(risk_calibrated.action, baseline.action)
+        self.assertEqual(risk_calibrated.reason, baseline.reason)
+
     def test_recorder_labels_only_after_discard_hu_response(self):
         recorder = DealInCalibrationRecorder(hand_seed=7, mc_samples=4)
         recorder.record_discard(observation(0), "M1")
