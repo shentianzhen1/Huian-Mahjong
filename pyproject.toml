@@ -23,9 +23,22 @@ vision = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["huian*", "mahjong_framework*"]
-exclude = ["tests*", "legacy_code*", "workspace*", "dataset*", "references*"]
-namespaces = false
+include = [
+    "huian*",
+    "mahjong_framework*",
+    "workspace.ai*",
+    "workspace.simulator*",
+    "workspace.vision*",
+]
+exclude = [
+    "tests*",
+    "legacy_code*",
+    "workspace.tests*",
+    "workspace.data*",
+    "dataset*",
+    "references*",
+]
+namespaces = true
 
 [tool.ruff]
 line-length = 100
