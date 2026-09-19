@@ -58,6 +58,16 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 真实识别基线必须同时报告**准确率**和**多帧稳定性**，两者不能互相替代。
 
+### 0. 先检查真实数据是否够测
+
+```powershell
+.\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.dataset_status `
+  --dataset dataset/tiles_v0_1 `
+  --output dataset/tiles_v0_1/meta/dataset_status.json
+```
+
+该报告先回答“数据够不够测”，而不是直接给准确率。重点字段包括：已审核标签数、真实来源组数、已覆盖牌类、跨来源重复牌类、可进入留组评测的样本比例、三个ROI区域是否都有标签，以及下一批最应该补哪些牌类。只有同一牌类至少出现在两个不同来源帧/图片中，才能在“测试图不进模板库”的前提下评估该类。
+
 ### 1. 人工标签留组准确率
 
 `evaluate_tiles` 按 `source_frame`（缺失时按图片路径）整组留出测试；测试组绝不会进入模板库，避免“拿同一张牌截图训练又测试”造成数据泄漏。
