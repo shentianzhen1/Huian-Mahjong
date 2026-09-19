@@ -1,0 +1,220 @@
+{
+  "evidence_id": "match_evidence_001_full8",
+  "room_rule": "惠安2人 单金不平胡 无托管",
+  "players": [
+    "seat_0",
+    "seat_1"
+  ],
+  "starting_scores": [
+    1000,
+    1000
+  ],
+  "initial_dealer": 0,
+  "hands": [
+    {
+      "hand": 1,
+      "settlement_time": "2026-09-18 22:17",
+      "dealer": 0,
+      "dealer_streak": 1,
+      "current_dealer_base": 10,
+      "winner": 0,
+      "method": "ZIMO",
+      "multiplier": 2,
+      "winner_fan": 3,
+      "fan_breakdown": {
+        "gold": 2,
+        "flowers": 1
+      },
+      "net": 26,
+      "rewards": [
+        26,
+        -26
+      ],
+      "scores_after": [
+        1026,
+        974
+      ]
+    },
+    {
+      "hand": 2,
+      "settlement_time": "2026-09-18 22:18",
+      "dealer": 0,
+      "dealer_streak": 2,
+      "current_dealer_base": 15,
+      "winner": 1,
+      "method": "YOUJIN",
+      "multiplier": 4,
+      "winner_fan": 2,
+      "fan_breakdown": {
+        "gold": 1,
+        "flowers": 1
+      },
+      "net": 68,
+      "rewards": [
+        -68,
+        68
+      ],
+      "scores_after": [
+        958,
+        1042
+      ]
+    },
+    {
+      "hand": 3,
+      "settlement_time": "2026-09-18 22:20",
+      "dealer": 1,
+      "dealer_streak": 1,
+      "current_dealer_base": 10,
+      "winner": 0,
+      "method": "ZIMO",
+      "multiplier": 2,
+      "winner_fan": 1,
+      "fan_breakdown": {
+        "flowers": 1
+      },
+      "net": 22,
+      "rewards": [
+        22,
+        -22
+      ],
+      "scores_after": [
+        980,
+        1020
+      ]
+    },
+    {
+      "hand": 4,
+      "settlement_time": "2026-09-18 22:21",
+      "dealer": 0,
+      "dealer_streak": 1,
+      "current_dealer_base": 10,
+      "winner": 0,
+      "method": "ZIMO",
+      "multiplier": 2,
+      "winner_fan": 2,
+      "fan_breakdown": {
+        "flowers": 2
+      },
+      "net": 24,
+      "rewards": [
+        24,
+        -24
+      ],
+      "scores_after": [
+        1004,
+        996
+      ]
+    },
+    {
+      "hand": 5,
+      "settlement_time": "2026-09-18 22:22",
+      "dealer": 0,
+      "dealer_streak": 2,
+      "current_dealer_base": 15,
+      "winner": 0,
+      "method": "YOUJIN",
+      "multiplier": 4,
+      "winner_fan": 4,
+      "fan_breakdown": {
+        "gold": 2,
+        "flowers": 2
+      },
+      "net": 76,
+      "rewards": [
+        76,
+        -76
+      ],
+      "scores_after": [
+        1080,
+        920
+      ]
+    },
+    {
+      "hand": 6,
+      "settlement_time": "2026-09-18 22:23",
+      "dealer": 0,
+      "dealer_streak": 3,
+      "current_dealer_base": 20,
+      "winner": 0,
+      "method": "PINGHU",
+      "multiplier": 1,
+      "winner_fan": 5,
+      "fan_breakdown": {
+        "flowers": 1,
+        "triplet": 1,
+        "kong": 3
+      },
+      "net": 25,
+      "rewards": [
+        25,
+        -25
+      ],
+      "scores_after": [
+        1105,
+        895
+      ]
+    },
+    {
+      "hand": 7,
+      "settlement_time": "2026-09-18 22:25",
+      "dealer": 0,
+      "dealer_streak": 4,
+      "current_dealer_base": 25,
+      "winner": 1,
+      "method": "PINGHU",
+      "multiplier": 1,
+      "winner_fan": 3,
+      "fan_breakdown": {
+        "flowers": 2,
+        "triplet": 1
+      },
+      "net": 28,
+      "rewards": [
+        -28,
+        28
+      ],
+      "scores_after": [
+        1077,
+        923
+      ]
+    },
+    {
+      "hand": 8,
+      "settlement_time": "2026-09-18 22:25",
+      "dealer": 1,
+      "dealer_streak": 1,
+      "current_dealer_base": 10,
+      "winner": 0,
+      "method": "ZIMO",
+      "multiplier": 2,
+      "winner_fan": 8,
+      "fan_breakdown": {
+        "gold": 1,
+        "flowers": 3,
+        "triplet": 1,
+        "kong": 3
+      },
+      "net": 36,
+      "rewards": [
+        36,
+        -36
+      ],
+      "scores_after": [
+        1113,
+        887
+      ]
+    }
+  ],
+  "final_scores": [
+    1113,
+    887
+  ],
+  "notes": [
+    "Every hand exactly matches (current_dealer_base + winner_fan) * method_multiplier = net.",
+    "Hand 5 is ordinary Youjin x4 with two gold tiles in the winner fan breakdown; Youjin stage is not equal to gold-tile count.",
+    "Hand 6 replay shows a suited concealed kong and the settlement lists kong 3 fan.",
+    "New dealer settlement base is 10; repeat dealer adds 5: observed 10,15,20,25; dealer change resets to 10.",
+    "This replay directly reaches dealer base 25; later player confirmation 2026-09-19 establishes no cap during a continuous dealer streak, +5 per keep until the fixed 8-hand match ends; dealer change resets the new dealer to 10.",
+    "Official battle-history screenshots supplied 2026-09-19 confirm hand times 09-18 22:17, 22:18, 22:20, 22:21, 22:22, 22:23, 22:25, 22:25 and the same per-hand net scores."
+  ]
+}
