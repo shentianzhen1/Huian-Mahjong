@@ -42,11 +42,12 @@
 7. **#7 ROI校准 + 真实牌识别准确率基线**
    - 8局真实回放已作为首批数据源：8段视频、两种尺寸（1046×480 / 960×448），379个去重关键帧、1137个ROI裁剪、168个approved标签、8个独立source_session、34/42个牌类。
    - 评测门槛固定为 `same_region + leave-session-out`；同一录像相邻帧不得跨训练/测试。空槽先做牌面存在检测，不再硬猜牌。
-   - 新增亮色牌面主体归一化后，strict静态基线从89.40%提升到 **96.03%**：hand 95.24%（126样本），draw 100%（25样本）；类别准确率98.68%。阈值0.80时127/151被接受，接受样本准确率98.43%。
-   - presence-aware固定窗口稳定性：hand 127/128=99.22%；draw 2/2=100%但样本过少；tile槽合计129/130=99.23%。下一步必须自动扩充真正“持续可见”的draw序列，而不是只看固定时刻。
-   - **Gold口径已修正**：当前8局回放左上角只是黄色牌背marker，不显示gold_id。ROI profile现支持 `tile/marker`；marker只报告存在，不输出tile_id。gold_id必须在实时开金/翻金事件中识别并记忆，现有回放不能评估gold牌面准确率。
+   - 亮色牌面主体归一化后，当前可评分 hand+draw strict静态基线为 **96.03%**：hand 95.24%（126样本），draw 100%（25样本）；类别准确率98.68%。阈值0.80时127/151被接受，接受样本准确率98.43%。
+   - presence-aware固定窗口稳定性：hand 127/128=99.22%；draw 2/2=100%但样本过少。继续用 sequence miner 自动扩充真正“持续可见”的draw序列。
+   - **Gold纠正**：当前目标房左侧黄色高亮牌是正面可见的金牌（用户截图可直接读出4筒），当前 `gold_region` 必须按 `tile` 识别具体 `gold_id`；此前marker判断作废。已有8个gold标签，但同一gold类别尚未跨两个独立session重复，因此严格gold泛化准确率暂不可测。下一步继续积累回放，直到gold同类跨session重复。
+   - **公开比分ROI**：两侧玩家面板都是头像+头像下方当前分数；头像/昵称不识别，仅作为定位锚点。新增双方score ROI，读取当前分数并与MatchScoreState交叉校验（目标房双方总分2000守恒）；同时逐步接剩余牌数、第几局/8等公开状态。
    - 仍缺 F1/F3/F4/F5/F6/F8/S7/S9，F2/F7仅单session；还需不同录屏批次、缩放/移动/遮挡。
-   - Executor继续关闭。下一步优先：① 扩大draw连续可见稳定性样本；② 补牌类覆盖；③ 获取从开金前开始的实时录像建立gold reveal识别；④ 压力测试。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。
+   - Executor继续关闭。下一步优先：① 扩大draw连续可见稳定性样本；② 获得gold同类跨session重复并建立gold准确率；③ 补牌类覆盖；④ 加入score/剩余牌数/局数PublicState识别；⑤ 压力测试。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`。
 
 ## P2：低频规则
 
