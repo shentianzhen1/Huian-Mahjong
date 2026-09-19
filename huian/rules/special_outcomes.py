@@ -87,7 +87,11 @@ _SPECIAL_OUTCOMES = {
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="youjin_trigger",
         settlement_ready=False,
-        note="x4 observed; executable trigger/state-machine edge cases remain incomplete.",
+        note=(
+            "x4 is directly settlement-confirmed. Youjin stage is independent of "
+            "current gold count: match_evidence_002 shows Youjin while 3 gold remain. "
+            "Exact entry/cancel/upgrade predicates remain incomplete."
+        ),
     ),
     "DOUBLE_YOU": SpecialOutcomeProfile(
         key="DOUBLE_YOU",
@@ -98,9 +102,11 @@ _SPECIAL_OUTCOMES = {
         settlement_ready=False,
         note=(
             "Target-room terminal settlement directly confirms Double-You x8: "
-            "(dealer base 30 + gold 2 + flower 1) x8 = 264. Trigger/upgrade "
-            "state-machine edges remain incomplete, so automatic settlement is "
-            "still not enabled from inferred state alone."
+            "(dealer base 30 + gold 2 + flower 1) x8 = 264. The same hand first "
+            "shows Youjin with 3 gold and terminates Double-You with 2 gold, so "
+            "stage must not be inferred from gold count. Trigger/upgrade edges "
+            "remain incomplete, so automatic settlement is still not enabled "
+            "from inferred state alone."
         ),
     ),
     "TRIPLE_YOU": SpecialOutcomeProfile(
