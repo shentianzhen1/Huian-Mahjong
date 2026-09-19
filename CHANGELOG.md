@@ -1,5 +1,16 @@
 # 重要变更记录
 
+## 2026-09-19 — PublicState Score Reader V0.1
+
+- 新增 `public_state_scores.py`：两侧比分ROI先做12×放大和灰度二值化，再以70/80/90三个阈值产生digits-only OCR候选；OCR后端通过接口隔离，当前实验后端为Tesseract CLI。
+- 读数不直接进入比赛状态：优先寻找满足双方总分2000的候选组合；只有一侧完全无候选、另一侧又只有唯一候选时才允许用2000分守恒反推；两侧都有候选但无法守恒时直接invalid。
+- 8局真实回放按5/10/15/20/25/30/40/50秒抽样，共64组比分、128个单边ROI：单阈值80裸OCR为125/128=**97.66%**；错误为1000→100、920→9200、895→空。
+- 三阈值候选+2000分约束后，当前同批录像 **64/64比分对正确**：63帧直接匹配守恒组合，1帧由唯一1105反推895。明确记录：64/64是系统级同批录像结果，不等于OCR 100%，也不等于外部泛化率。
+- Score Reader输出继续 `safe_for_executor=false`，多帧仍交由 `fuse_public_state()` 做共识、同局比分稳定和MatchScoreState交叉校验。
+- 新增Score Reader预处理、候选解码、唯一侧反推回归；本轮 Tests 与 Vision Regression 均通过，Vision专用回归当前35项。
+- 下一步：剩余牌数 / 第几局读取、新独立录像比分泛化、随后再做缩放/移动/遮挡压力测试。
+
+
 ## 2026-09-19 — 仓库真相源、CI与公开证据治理
 
 - README / AGENTS / workspace/ai README / Issue #6 全部对齐到当前前沿：`CurrentAgent = MeldAwareShantenAgent V0.10`；V0.6固定主对照，V0.3消融基线。V0.11/V0.12“排除金等待后做即时score-aware”明确记为结构性不可触发，不再作为默认路线。
