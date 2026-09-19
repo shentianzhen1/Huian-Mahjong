@@ -20,7 +20,7 @@ from .postprocess import (MultiFrameVoter, ObservationConstraints,
                           validate_observation)
 from .crop_rois import crop_regions
 from .roi import ROIProfile
-from .template_classifier import TemplateTileClassifier
+from .template_classifier import TemplateTileClassifier, _normalize_tile_face
 
 
 class TilesV01Tests(unittest.TestCase):
@@ -36,6 +36,21 @@ class TilesV01Tests(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             profile.crop(Image.new("RGB", (100, 80)), "hand_region")
+
+    def test_template_normalization_crops_dark_ui_margins(self) -> None:
+        tile = Image.new("RGB", (24, 40), "white")
+        draw = ImageDraw.Draw(tile)
+        draw.rectangle((9, 5, 14, 35), fill="black")
+
+        framed = Image.new("RGB", (40, 60), (0, 45, 45))
+        framed.paste(tile, (8, 10))
+        normalized = _normalize_tile_face(framed)
+
+        self.assertLess(normalized.width, framed.width)
+        self.assertLess(normalized.height, framed.height)
+        self.assertGreaterEqual(normalized.width, 20)
+        self.assertGreaterEqual(normalized.height, 36)
+
 
     def test_calibrated_roi_crop_writes_all_three_regions(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
