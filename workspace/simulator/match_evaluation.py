@@ -69,7 +69,7 @@ def _factory_name(factory):
 
 def run_paired_real_matches(
         seeds=range(20), *, agent_factories, agent_names=None, max_steps=1000,
-        initial_dealer=0, match_runner=run_real_ordinary_match):
+        initial_dealer=0, match_runner=None):
     """Run original+swapped eight-hand matches and summarize complete pairs.
 
     Identity A is agent_factories[0] and identity B is agent_factories[1].
@@ -89,6 +89,9 @@ def run_paired_real_matches(
         raise ValueError("max_steps must be a positive integer")
     if type(initial_dealer) is not int or initial_dealer not in (0, 1):
         raise ValueError("initial_dealer must be seat 0 or 1")
+    using_default_runner = match_runner is None
+    if using_default_runner:
+        match_runner = run_real_ordinary_match
     if not callable(match_runner):
         raise ValueError("match_runner must be callable")
     if agent_names is None:
@@ -108,7 +111,7 @@ def run_paired_real_matches(
         pair_attempts[pair_index] = {}
         for swapped in (False, True):
             seat_factories = factories if not swapped else factories[::-1]
-            if match_runner is run_real_ordinary_match:
+            if using_default_runner or match_runner is run_real_ordinary_match:
                 seed_keys = (0, 1) if not swapped else (1, 0)
                 result = match_runner(
                     seed=seed, agent_factories=seat_factories,
