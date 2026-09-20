@@ -13,6 +13,8 @@ from .special_outcomes import (SPECIAL_OUTCOMES, SpecialOutcomeProfile,
                                special_outcome_for_source,
                                special_outcome_profile)
 from .adapter import HuianRulesAdapter
+from .registry import (DEFAULT_RULE_SNAPSHOT, RULE_REGISTRY, ImpactLevel,
+                       RuleDomain, RuleNotConfirmedError, RuleRecord, RuleSnapshot)
 
 __all__ = ["DrawSource", "FanAggregator", "FanComponent", "FanResult", "HuContext", "HuDecomposition", "HuianRules", "HuResult",
            "HuianRulesAdapter", "KongKind", "RulesConfig", "SanjindaoChoice",
@@ -24,4 +26,6 @@ __all__ = ["DrawSource", "FanAggregator", "FanComponent", "FanResult", "HuContex
            "youjin_progression_rule",
            "HuianObservedSettlement", "HuianObservedSettlementPlugin",
            "SPECIAL_OUTCOMES", "SpecialOutcomeProfile", "special_outcome_profile",
-           "special_outcome_for_phase", "special_outcome_for_source"]
+           "special_outcome_for_phase", "special_outcome_for_source",
+           "DEFAULT_RULE_SNAPSHOT", "RULE_REGISTRY", "ImpactLevel", "RuleDomain",
+           "RuleNotConfirmedError", "RuleRecord", "RuleSnapshot"]

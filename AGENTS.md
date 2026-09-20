@@ -20,6 +20,16 @@ Never let lower-priority evidence overwrite higher-priority evidence.
 
 If these disagree, do not average them. Prefer the higher-priority current source and fix the stale document.
 
+## Rule isolation / versioning
+High-impact runtime rules are registered in `huian/rules/registry.py` and grouped into an immutable `DEFAULT_RULE_SNAPSHOT`.
+
+- `RULE_STATUS.md` / `RULE_EVIDENCE_MATRIX.md` remain the human evidence truth; the registry mirrors evidence-backed runtime values and must not invent rules.
+- A corrected HIGH/CRITICAL rule must increment only that rule's revision, update its evidence/value/status, and add focused regression evidence.
+- Saved Simulator and paired AI evaluation outputs must retain their rule snapshot fingerprint. Never combine score/EV promotion evidence across different fingerprints.
+- WORKING/UNKNOWN values must not enter official AI reward/EV through a hidden fallback; use the confirmed gate or stop safely.
+- Prefer small rule IDs and dependencies (legality vs multiplier vs full settlement) over one monolithic special-rule switch.
+- See `docs/rule_isolation.md`.
+
 ## Architecture
 Keep these layers independent:
 - Rules

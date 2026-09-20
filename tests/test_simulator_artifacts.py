@@ -5,6 +5,7 @@ import shutil
 from tempfile import TemporaryDirectory
 import unittest
 
+from huian.rules import DEFAULT_RULE_SNAPSHOT
 from workspace.ai import CurrentAgent, ShantenAgent
 from workspace.simulator.artifacts import (
     AGENTS, event_digest, replay_saved_hand, run_saved_evaluation, save_replay,
@@ -54,6 +55,15 @@ class SimulatorArtifactsTests(unittest.TestCase):
             "status": "completed", "hands_written": 2, "hands_requested": 2})
         self.assertEqual(read_json(self.saved / "summary.json"),
                          json.loads(json.dumps(self.report.to_dict())))
+        manifest = read_json(self.saved / "run.json")
+        self.assertEqual(
+            manifest["rule_snapshot"]["fingerprint"],
+            DEFAULT_RULE_SNAPSHOT.fingerprint,
+        )
+        self.assertEqual(
+            manifest["rule_snapshot"]["label"],
+            DEFAULT_RULE_SNAPSHOT.label,
+        )
         records = self.records()
         self.assertEqual(len(records), 2)
         self.assertEqual(records[0]["summary"]["agents"], ["RandomAgent", "BaselineAgent"])
@@ -106,6 +116,11 @@ class SimulatorArtifactsTests(unittest.TestCase):
         for key, value, message in (
             ("source_digest", "0" * 64, "sources"),
             ("runtime", {"implementation": "different", "version": "0"}, "runtime"),
+            (
+                "rule_snapshot",
+                {"fingerprint": "0" * 64},
+                "Rule snapshot",
+            ),
         ):
             with self.subTest(key=key):
                 modified = dict(original)

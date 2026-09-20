@@ -1,7 +1,7 @@
 """Sitting dealer base and consecutive-dealer increment.
 
 Player wording 2026-09-15/18: "sitting dealer base +5, each keep +5".
-Direct full-match replay room 541913 (2026-09-19) resolves the screen/settlement
+Direct full-match replay match_evidence_001 (2026-09-19) resolves the screen/settlement
 mapping: non-dealer own base is 5, while the first sitting dealer's CURRENT
 SETTLEMENT BASE is 10; every consecutive dealer hand adds another 5.
 The observed chain is 10 -> 15 -> 20 -> 25, and a dealer change resets the new
@@ -13,10 +13,16 @@ Dealer-win extra ×2 is not used.
 """
 from numbers import Integral
 
+from .registry import DEFAULT_RULE_SNAPSHOT
+
 NON_DEALER_BASE = 5
-DEALER_ENTRY_INCREMENT = 5
-SITTING_DEALER_BASE = NON_DEALER_BASE + DEALER_ENTRY_INCREMENT  # 10
-REPEAT_DEALER_INCREMENT = 5
+SITTING_DEALER_BASE = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+    "match.new_dealer_base"
+).value
+DEALER_ENTRY_INCREMENT = SITTING_DEALER_BASE - NON_DEALER_BASE
+REPEAT_DEALER_INCREMENT = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+    "match.repeat_dealer_increment"
+).value
 MATCH_HAND_COUNT = 8
 MATCH_STARTING_SCORE = 1000
 MATCH_TOTAL_SCORE = MATCH_STARTING_SCORE * 2
@@ -32,7 +38,7 @@ def dealer_base_for_consecutive_hands(consecutive_dealer_hands):
     """Base for the hand about to be played.
 
     ``consecutive_dealer_hands`` is 1 on first sit, 2 after one keep, ...
-    Direct room541913 evidence gives 10, 15, 20, 25 for consecutive counts
+    Direct match_evidence_001 evidence gives 10, 15, 20, 25 for consecutive counts
     1..4. Player confirmation 2026-09-19 confirms no cap while the same dealer
     continues: counts 1..8 are 10,15,20,25,30,35,40,45. If the dealer loses,
     the consecutive count resets to 1, so the new dealer starts again at 10.
