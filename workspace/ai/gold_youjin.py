@@ -415,7 +415,7 @@ class YoujinTenpaiCandidateAgent(MeldAwareShantenAgent):
         return AgentDecision(
             action,
             "DISCARD "
-            f"{potential.discard}: youjin_tenpai_candidate_v0.15b "
+            f"{potential.discard}: V0.15b experimental youjin_tenpai_candidate "
             f"(ordinary shanten=0; meld_deficit="
             f"{baseline_potential.meld_deficit}->{potential.meld_deficit}; "
             f"live={baseline_eff.total_live_copies}->{efficiency.total_live_copies} "
