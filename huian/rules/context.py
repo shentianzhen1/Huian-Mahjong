@@ -72,7 +72,8 @@ class YoujinOpponentResponseRule:
     stage: YoujinStage
     opponent_draw_chances: int = 1
     allowed_win_sources: tuple[WinSource, ...] = (WinSource.SELF_DRAW,)
-    no_win_outcome: str = "YOUJIN_STAGE_SUCCESS"
+    must_discard_after_miss: bool = True
+    no_win_outcome: str = "YOUJIN_RESPONSE_DISCARD"
 
 
 def youjin_opponent_response_rule(stage):
@@ -87,12 +88,14 @@ def youjin_opponent_response_rule(stage):
 class YoujinProgressionRule:
     """Confirmed post-interception progression for an established Youjin stage.
 
-    For single/double You, an opponent miss does not immediately settle:
-    the Youjin player receives one normal wall-head draw.  If that draw creates
+    For single/double You, an opponent miss first requires the opponent to
+    discard one tile. Only after that response discard does the Youjin player
+    receive one normal wall-head draw. If that draw creates
     a gold that can be independently discarded while preserving the roaming-gold
     ready structure, upgrade is optional; declining it settles the current stage.
 
-    Triple-You has no further upgrade draw: an opponent miss settles Triple-You.
+    Triple-You has no further upgrade draw: after the opponent misses and
+    completes the mandatory response discard, Triple-You settles.
     """
 
     stage: YoujinStage
