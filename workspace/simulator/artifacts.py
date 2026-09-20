@@ -7,6 +7,7 @@ from pathlib import Path
 import platform
 import sys
 
+from huian.rules import DEFAULT_RULE_SNAPSHOT
 from workspace.ai import BaselineAgent, CurrentAgent, ShantenAgent
 from .core import RandomAgent, Simulator, SimulatorConfig
 from .evaluation import make_hand_summary, run_many_normal_hands
@@ -14,7 +15,7 @@ from .evaluation import make_hand_summary, run_many_normal_hands
 
 AGENTS = {"random": RandomAgent, "baseline": BaselineAgent,
           "shanten_v03": ShantenAgent, "current": CurrentAgent}
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 def _canonical(value):
@@ -82,6 +83,7 @@ def run_saved_evaluation(output_dir, seeds, *, agent_names=("random", "baseline"
         "schema_version": SCHEMA_VERSION,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "source_digest": source_digest(), "runtime": runtime_id(),
+        "rule_snapshot": DEFAULT_RULE_SNAPSHOT.to_manifest(),
         "simulation_only": True, "simulator_config": asdict(SimulatorConfig()),
         "parameters": {"seeds": seeds, "agent_names": agent_names,
                        "max_steps": max_steps, "swap_seats": swap_seats, "dealer": dealer},
@@ -138,6 +140,11 @@ def replay_saved_hand(report_dir, hand_index):
         raise ValueError("Unsupported evaluation schema")
     if manifest.get("simulation_only") is not True:
         raise ValueError("Only simulation-only evaluations may be replayed")
+    recorded_snapshot = manifest.get("rule_snapshot")
+    if not isinstance(recorded_snapshot, dict):
+        raise ValueError("Evaluation is missing its rule snapshot")
+    if recorded_snapshot.get("fingerprint") != DEFAULT_RULE_SNAPSHOT.fingerprint:
+        raise ValueError("Rule snapshot differs from the recorded run")
     if manifest.get("simulator_config") != asdict(SimulatorConfig()):
         raise ValueError("Unsupported simulator profile")
     if manifest.get("runtime") != runtime_id():
