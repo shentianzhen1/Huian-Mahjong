@@ -1,16 +1,47 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 Youjin / Double-You / Triple-You progression confirmed
+
+Player confirmation now closes the normal sequential progression after an established Youjin stage:
+
+1. **Every established stage gives the opponent exactly one self-draw opportunity.**
+   - Youjin, Double-You and Triple-You all use the same one-draw interception window.
+   - If the opponent self-draws, the Youjin chain is intercepted.
+   - If the opponent does not self-draw, that drawn tile **stays in the opponent's concealed hand**; it is not discarded or returned.
+
+2. **After a missed opponent response, single Youjin / Double-You gives the Youjin player one draw.**
+   - If the new tile is the natural tile that replaces a wildcard gold already completing a meld, that wildcard gold becomes free.
+   - If the new tile is itself gold, it directly creates a new free gold.
+   - The structural condition is therefore not a hard-coded tile list: after the draw, one gold must be discardable while the remaining concealed hand still has the confirmed "all remaining melds + one roaming gold" Youjin-ready structure.
+
+3. **Upgrade is optional.**
+   - Single Youjin + free gold: player may discard one gold to enter Double-You, or decline and settle current Youjin ×4.
+   - Double-You + free gold: player may discard one gold to enter Triple-You, or decline and settle current Double-You ×8.
+   - If the Youjin player's extra draw does not create a free gold, the current stage settles automatically.
+
+4. **Triple-You has no further upgrade draw.**
+   - Triple-You gives the opponent its one self-draw opportunity.
+   - If the opponent does not Hu, Triple-You settles immediately at ×16.
+
+5. **Settlement formula remains the directly confirmed target-room formula:**
+   `(current dealer base + winner fan) × stage multiplier`, with ×4 / ×8 / ×16 and no extra dealer multiplier.
+
+The Environment now tracks missed opponent response draws as retained physical tiles via `youjin_response_draws`, exposes the Youjin player's continuation draw, optional DOUBLE_YOU / TRIPLE_YOU upgrade actions, and a `YOUJIN_SETTLEMENT_READY` state. A dedicated `finalize_youjin_outcome()` applies the confirmed formula once audited dealer-base/fan inputs are provided.
+
+**Remaining precise blocker:** after an earlier missed response draw stays in the opponent hand, a later Double-/Triple-You response produces an oversized concealed hand. The target-room rule for which tiles participate in that later self-draw Hu check is not yet confirmed. The Environment therefore stops at `youjin_response_hu_extra_tiles` instead of incorrectly treating an 18/19-tile ordinary-Hu solve as "cannot Hu".
+
+External Quanzhou/Xiamen rules broadly support the same single→double→triple structure, "natural tile frees gold" logic and optional upgrade behavior, but public sources conflict on Triple-You response and scoring. They are retained only as low-priority cross-checks at `references/gameplay/2026-09-20/quanzhou_youjin_external_crosscheck.md`; target Huian two-player evidence remains authoritative.
+
+
 ## 2026-09-20 single-Youjin Environment entry/response window
 
-The confirmed single-Youjin structure is now connected to an explicit Environment path without guessing Double-/Triple-You upgrades:
+The original single-Youjin entry implementation remains valid, but its old "stop after opponent miss" boundary has now been superseded by the confirmed progression section above:
 
-- After the current Qiangjin/Sanjindao special prompt is closed, every discard returned by `youjin_entry_discards()` is exposed as a distinct optional `YOUJIN` action **alongside the same ordinary DISCARD**. Choosing ordinary discard therefore remains the confirmed “do not Youjin now” path and creates no permanent lockout.
-- Choosing `YOUJIN(tile=X)` discards X to the player's river, sets that player to `YOUJIN`, skips the ordinary discard-claim window, and gives the opponent exactly one wall-head draw.
-- If that one opponent draw cannot self-Hu, the Environment records `YOUJIN_STAGE_SUCCESS` and safely stops at `youjin_stage_success_resolution`; it does not guess terminal settlement versus later upgrade timing.
-- If the opponent can self-Hu on that draw, a normal self-draw HU declaration is exposed. Executing it cancels the active Youjin stage and proceeds through the existing ordinary self-draw declaration/settlement path.
-- Whether an opponent who *can* self-Hu may deliberately decline that Hu remains `youjin_response_hu_decline` UNKNOWN; the known HU action can still be audited/executed without inventing the decline branch.
-
-This removes the old blanket “any active Youjin = immediate `youjin_permissions` stop” for the confirmed single-Youjin response window only. Double-/Triple-You entry and upgrade predicates remain unresolved.
+- `youjin_entry_discards()` still exposes optional YOUJIN beside the same ordinary DISCARD.
+- Choosing ordinary discard declines only the current Youjin offer and does not lock later progression.
+- Choosing YOUJIN still discards the entry tile, establishes single Youjin, skips the ordinary discard-claim window and gives the opponent one self-draw response.
+- After an opponent miss, Environment now continues into the confirmed Youjin-player draw / optional upgrade / current-stage settlement flow instead of stopping at the retired `youjin_stage_success_resolution` unknown.
+- Whether an opponent who *can* self-Hu may deliberately decline that Hu remains `youjin_response_hu_decline` UNKNOWN.
 
 ## 2026-09-20 single-Youjin structural eligibility confirmed
 
