@@ -1,5 +1,13 @@
 # 重要变更记录
 
+## 2026-09-20 — 单游可选入口与一次对手自摸窗口接入Environment
+
+- 将已确认的`is_youjin_ready_hand()/youjin_entry_discards()`从Rules接到Environment：关闭当前抢金/三金倒窗口后，可入游弃牌同时生成`YOUJIN`与普通`DISCARD`，不点游金仍可正常打牌且不设置永久锁。
+- 选择`YOUJIN`后，入游弃牌进入牌河但不打开普通吃碰杠/点炮响应；对手切换到`YOUJIN_RESPONSE_DRAW`并只有1次wall-head摸牌机会。
+- 对手这次摸牌不能自摸时，自动记录`YOUJIN_STAGE_SUCCESS`，在`youjin_stage_success_resolution`安全停止，不猜立即结算还是继续升级。
+- 对手能自摸时进入`YOUJIN_RESPONSE_AFTER_DRAW`并暴露普通HU；执行HU会清除对方YOUJIN状态并进入既有普通自摸声明。是否允许有胡不胡继续标为`youjin_response_hu_decline` UNKNOWN。
+- 新增Environment回归：同牌DISCARD与YOUJIN并存、声明后仅1次对手摸牌、无胡→单游成功安全停止、有胡→取消游金并普通自摸。
+
 ## 2026-09-20 — 八花游项目规则改为固定16番、无额外加成
 
 - 用户决定：八花游极少出现，当前项目统一按**固定16番**处理，不再使用旧的临时×2。
