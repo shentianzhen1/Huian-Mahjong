@@ -33,7 +33,8 @@ class YoujinOpponentResponseRuleTests(unittest.TestCase):
                 self.assertEqual(rule.stage, stage)
                 self.assertEqual(rule.opponent_draw_chances, 1)
                 self.assertEqual(rule.allowed_win_sources, (WinSource.SELF_DRAW,))
-                self.assertEqual(rule.no_win_outcome, "YOUJIN_STAGE_SUCCESS")
+                self.assertTrue(rule.must_discard_after_miss)
+                self.assertEqual(rule.no_win_outcome, "YOUJIN_RESPONSE_DISCARD")
 
     def test_triple_you_is_not_limited_to_kong_tail_hu(self):
         rule = youjin_opponent_response_rule(YoujinStage.TRIPLE_YOU)
