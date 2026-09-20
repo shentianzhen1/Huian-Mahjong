@@ -17,6 +17,12 @@ def _mean(values):
 
 
 def run_v015_diagnostics(*, pairs=1, seed_start=420000, max_steps=1000):
+    if type(pairs) is not int or pairs <= 0:
+        raise ValueError("pairs must be a positive integer")
+    if type(seed_start) is not int:
+        raise ValueError("seed_start must be an integer")
+    if type(max_steps) is not int or max_steps <= 0:
+        raise ValueError("max_steps must be a positive integer")
     records = []
     attempts = []
     for seed in range(seed_start, seed_start + pairs):
@@ -83,6 +89,10 @@ def run_v015_diagnostics(*, pairs=1, seed_start=420000, max_steps=1000):
     ties = sum(value == 0 for value in score_deltas)
     return {
         "pairs": pairs,
+        "evaluation_scope": (
+            "ordinary-safety-only; Youjin special rewards are absent, so "
+            "score/deal-in direction is diagnostic and not promotion evidence"
+        ),
         "completed_attempts": len(score_deltas),
         "wins": wins,
         "losses": losses,
@@ -106,6 +116,23 @@ def run_v015_diagnostics(*, pairs=1, seed_start=420000, max_steps=1000):
         ),
         "mean_future_type_delta": _mean(
             item.future_type_delta for item in interventions
+        ),
+        "live_loss_minus_one": sum(
+            item.immediate_live_delta == -1 for item in interventions
+        ),
+        "live_loss_zero": sum(
+            item.immediate_live_delta == 0 for item in interventions
+        ),
+        "type_loss_violations": sum(
+            item.immediate_type_delta < 0 for item in interventions
+        ),
+        "immediate_youjin_entry_interventions": sum(
+            item.reason_gate == "immediate_youjin_entry"
+            for item in interventions
+        ),
+        "future_youjin_gain_interventions": sum(
+            item.reason_gate == "future_youjin_gain"
+            for item in interventions
         ),
         "unknown_reasons": dict(sorted(unknown.items())),
     }
