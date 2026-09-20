@@ -276,6 +276,92 @@ class HuianEnvironment:
         self._seen.add(self._position(candidate))
         return self.state, deepcopy(event)
 
+    def finalize_youjin_outcome(
+            self, *, current_dealer_base, winner_fan):
+        """Settle a confirmed Youjin-family stage using audited fan input.
+
+        Formula confirmed from target-room settlements:
+            (current dealer base + winner fan) * stage multiplier
+        where multipliers are Youjin x4, Double-You x8, Triple-You x16.
+
+        This method deliberately accepts an explicit winner_fan instead of
+        guessing a special-hand fan decomposition. The caller may supply a
+        replay/Vision-confirmed fan total or a future audited special fan
+        aggregator.
+        """
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        if self._state.phase != "YOUJIN_SETTLEMENT_READY":
+            raise ValueError("Youjin settlement requires YOUJIN_SETTLEMENT_READY")
+        if type(current_dealer_base) is not int or current_dealer_base < 0:
+            raise ValueError("current_dealer_base must be a nonnegative integer")
+        if type(winner_fan) is not int or winner_fan < 0:
+            raise ValueError("winner_fan must be a nonnegative integer")
+
+        active = [
+            index for index, value in enumerate(self._state.special_states)
+            if value in (
+                YoujinStage.YOUJIN.value,
+                YoujinStage.DOUBLE_YOU.value,
+                YoujinStage.TRIPLE_YOU.value,
+            )
+        ]
+        if len(active) != 1:
+            raise ValueError("Youjin settlement requires exactly one active stage")
+        winner = active[0]
+        if winner != self._state.current_player:
+            raise ValueError("Youjin settlement winner must own the current stage")
+        stage = YoujinStage(self._state.special_states[winner])
+        terms = self.rules.rules.youjin_score_terms(
+            stage,
+            winner=winner,
+            dealer=self._state.dealer,
+            winner_fan=winner_fan,
+        )
+        net = terms.total_for_current_dealer_base(current_dealer_base)
+        rewards = [net, -net] if winner == 0 else [-net, net]
+
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = rewards
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "AUTO_" + stage.value
+        candidate.pending_discard = None
+        candidate.pending_hu = None
+        candidate.pending_kong = None
+        self.rules.validate_state(candidate)
+
+        event = {
+            "seq": len(self._events),
+            "action": {
+                "player": winner,
+                "type": "END_HAND",
+                "tile": None,
+                "tiles": [],
+                "metadata": {
+                    "source": "confirmed_youjin_formula",
+                    "special": stage.value,
+                    "current_dealer_base": current_dealer_base,
+                    "winner_fan": winner_fan,
+                    "multiplier": terms.youjin_multiplier,
+                    "dealer_multiplier": terms.dealer_multiplier,
+                    "formula": "(current_dealer_base + winner_fan) * multiplier",
+                    "rewards": list(rewards),
+                },
+            },
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
+
     def finalize_eight_flower_outcome(
             self, *, current_dealer_base, winner_fan=None):
         """Settle the project Eight-Flower-You working rule.
