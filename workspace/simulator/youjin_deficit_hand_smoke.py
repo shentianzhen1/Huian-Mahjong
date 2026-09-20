@@ -33,8 +33,10 @@ def run_youjin_deficit_hand_smoke(
 
     for seed in range(seed_start, seed_start + hands):
         agents = (
-            GoldYoujinShadowAgent(seed=seed * 2, template_samples=32),
-            GoldYoujinShadowAgent(seed=seed * 2 + 1, template_samples=32),
+            GoldYoujinShadowAgent(
+                seed=seed * 2, template_samples=32, include_future=False),
+            GoldYoujinShadowAgent(
+                seed=seed * 2 + 1, template_samples=32, include_future=False),
         )
         result = simulator.run_normal_hand(
             seed=seed,
