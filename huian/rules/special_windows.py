@@ -181,11 +181,36 @@ def _strip_unrobbable_kong_unknown(adapter, state, result):
 
 
 def report_with_specials(adapter, state):
-    # Simulation-only normal hands deliberately bypass all special Huian
-    # declaration windows; keep only the confirmed big-Ming/An non-robbable fix.
+    # Simulation-only hands bypass special Huian declaration windows by
+    # default. A narrow research opt-in can expose only confirmed Youjin-family
+    # actions while Qiangjin/Sanjindao/Eight-Flower stay on their PASS path.
     # ADD_KONG (补/蓄/加杠) remains the only robbable kong branch.
     if adapter.rules.config.simulation_only_normal_hand:
-        return _strip_unrobbable_kong_unknown(adapter, state, base_report(adapter, state))
+        result = _strip_unrobbable_kong_unknown(
+            adapter, state, base_report(adapter, state)
+        )
+        if not adapter.rules.config.simulation_enable_youjin:
+            return result
+
+        # Established Youjin phases are already fully described by base_report.
+        if (state.special_states != ["NORMAL", "NORMAL"]
+                or state.phase.startswith("YOUJIN_")):
+            return result
+
+        # Single-Youjin offers are exposed only after an auditable real own draw.
+        # The synthetic opening bypass is not treated as evidence of an opening
+        # Youjin window.
+        last = state.last_action
+        if (state.phase == "AFTER_DRAW"
+                and isinstance(last, dict)
+                and last.get("type") == env.ActionType.DRAW.value
+                and last.get("player") == state.current_player):
+            youjin = _single_youjin_offer_actions(adapter, state)
+            if youjin:
+                return ActionReport(
+                    youjin + result.known_actions, result.unresolved
+                )
+        return result
     A, T = env.Action, env.ActionType
     p = state.current_player
     if _window_just_closed(state) and state.phase in ("AFTER_DRAW", "NEED_DRAW"):

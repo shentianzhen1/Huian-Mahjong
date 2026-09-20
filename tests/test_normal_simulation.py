@@ -6,7 +6,7 @@ from huian import HuianEnvironment, DeadLoopError
 from huian._legacy import env
 from workspace.ai import AgentDecision, BaselineAgent
 from workspace.simulator import Simulator, SimulatorConfig
-from test_huian_environment import scenario
+from test_huian_environment import scenario, youjin_offer_scenario
 
 
 WIN_HAND = ["M1", "M1", "M2", "M3", "M4", "M5", "M6", "M7",
@@ -39,6 +39,24 @@ def boundary_state():
     state.reserved_tiles.extend(state.wall[17:])
     state.wall = state.wall[:17]
     return state
+
+
+class TakeYoujinAgent(BaselineAgent):
+    """Test policy: enter/upgrade Youjin whenever that confirmed action exists."""
+
+    def choose_decision(self, observation, legal_actions):
+        for kind in (
+                env.ActionType.YOUJIN,
+                env.ActionType.DOUBLE_YOU,
+                env.ActionType.TRIPLE_YOU):
+            action = next(
+                (item for item in legal_actions if item.type == kind), None
+            )
+            if action is not None:
+                return AgentDecision(
+                    action, f"{kind.value}: test fixture takes confirmed Youjin path"
+                )
+        return super().choose_decision(observation, legal_actions)
 
 
 class FirstDiscardAgent:
@@ -175,7 +193,8 @@ class NormalSimulationTests(unittest.TestCase):
 
     def test_special_config_is_unknown_and_strictly_boolean(self):
         for field in SimulatorConfig.__dataclass_fields__:
-            if field.startswith("enable_") and field not in ("enable_added_kong", "enable_real_scoring"):
+            if field.startswith("enable_") and field not in (
+                    "enable_added_kong", "enable_real_scoring", "enable_youjin"):
                 simulator = Simulator(config=SimulatorConfig(**{field: True}))
                 result = simulator.run_normal_hand(seed=1)
                 self.assertEqual(result.status, "STOPPED_UNKNOWN")
@@ -186,6 +205,58 @@ class NormalSimulationTests(unittest.TestCase):
             SimulatorConfig(enable_youjin="false")
         with self.assertRaises(ValueError):
             Simulator(config=SimulatorConfig(normal_hand_mode=False)).run_normal_hand()
+
+    def test_youjin_profile_requires_real_scoring(self):
+        simulator = Simulator(config=SimulatorConfig(enable_youjin=True))
+        with self.assertRaisesRegex(ValueError, "enable_youjin requires"):
+            simulator.run_normal_hand(seed=1)
+
+    def test_youjin_profile_runs_confirmed_single_you_chain_to_real_132(self):
+        state = youjin_offer_scenario()
+        # The narrow simulator profile exposes a Youjin offer only after an
+        # auditable real draw, never from the synthetic opening bypass.
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": "N"},
+        ).to_dict()
+
+        # Opponent response draw: isolated M9, so no self-Hu.
+        first = state.wall.index("M9")
+        state.wall[0], state.wall[first] = state.wall[first], state.wall[0]
+        # Youjin continuation draw: N is the known unrelated draw from the
+        # environment regression and therefore settles current single You.
+        second = state.wall.index("N", 1)
+        state.wall[1], state.wall[second] = state.wall[second], state.wall[1]
+
+        simulator = Simulator(config=SimulatorConfig(
+            enable_real_scoring=True,
+            enable_youjin=True,
+        ))
+        result = simulator.run_normal_hand(
+            initial_state=state,
+            agents=(TakeYoujinAgent(), TakeYoujinAgent()),
+            max_steps=4,
+            current_dealer_base=30,
+        )
+
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.steps, 4)
+        self.assertEqual(result.terminal_reason, "AUTO_YOUJIN")
+        self.assertEqual(result.winner, 0)
+        self.assertEqual(result.win_source, "youjin")
+        self.assertEqual(result.rewards, (132, -132))
+        end = result.events[-1]["action"]["metadata"]
+        self.assertEqual(end["source"], "automatic_youjin_fan")
+        self.assertEqual(end["winner_fan"], 3)
+        self.assertEqual(end["multiplier"], 4)
+        self.assertTrue(any(
+            event["action"]["type"] == "YOUJIN"
+            for event in result.events
+        ))
+        self.assertTrue(any(
+            event["action"]["metadata"].get("youjin_response_discard") is True
+            for event in result.events
+        ))
 
     def test_observed_special_situation_stops_with_reason(self):
         state = boundary_state()

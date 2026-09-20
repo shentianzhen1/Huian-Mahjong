@@ -280,3 +280,33 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
         )
 
     return MatchRunner(run_hand).run(initial_dealer=initial_dealer)
+
+
+def run_real_youjin_match(seed=0, *, agent_factories=None, max_steps=1000,
+                          initial_dealer=0, simulator=None,
+                          agent_seed_keys=(0, 1)):
+    """Run the fixed eight-hand match with confirmed Youjin-family scoring.
+
+    Enabled:
+    - ordinary Pinghu/Zimo real scoring;
+    - confirmed sequential Youjin / Double-You / Triple-You chain;
+    - automatic Youjin fan aggregation and x4/x8/x16 settlement.
+
+    Still outside this profile:
+    Qiangjin, Sanjindao settlement, real Eight-Flower evidence, Gang-Hu scoring
+    and unresolved rob-kong settlement edges.
+    """
+    if simulator is None:
+        from .core import Simulator, SimulatorConfig
+        simulator = Simulator(config=SimulatorConfig(
+            enable_real_scoring=True,
+            enable_youjin=True,
+        ))
+    return run_real_ordinary_match(
+        seed=seed,
+        agent_factories=agent_factories,
+        max_steps=max_steps,
+        initial_dealer=initial_dealer,
+        simulator=simulator,
+        agent_seed_keys=agent_seed_keys,
+    )

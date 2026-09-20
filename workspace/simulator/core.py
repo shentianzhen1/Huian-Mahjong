@@ -79,7 +79,7 @@ class SimulatorConfig:
                 raise ValueError(f"{name} must be boolean")
 
     def unsupported_rules(self):
-        supported = {"enable_added_kong", "enable_real_scoring"}
+        supported = {"enable_added_kong", "enable_real_scoring", "enable_youjin"}
         return tuple(name.removeprefix("enable_")
                      for name, value in asdict(self).items()
                      if name.startswith("enable_") and name not in supported and value)
@@ -104,19 +104,33 @@ class Simulator:
         events = game.events
         for item in decisions:
             events[item["seq"]]["decision"] = deepcopy(item["decision"])
-        declaration = next((
-            event["action"]["metadata"]["hu_declaration"]
-            for event in reversed(events)
+        end_event = next((
+            event for event in reversed(events)
             if event["action"]["type"] == "END_HAND"
-            and "hu_declaration" in event["action"].get("metadata", {})
-        ), None) or state.pending_hu
+        ), None)
+        declaration = (
+            end_event["action"]["metadata"].get("hu_declaration")
+            if end_event is not None else None
+        ) or state.pending_hu
+        special = (
+            end_event["action"]["metadata"].get("special")
+            if end_event is not None else None
+        )
+        winner = (
+            declaration["winner"] if declaration is not None
+            else end_event["action"]["player"] if special is not None else None
+        )
+        win_source = (
+            declaration["source"] if declaration is not None
+            else special.lower() if isinstance(special, str) else None
+        )
         return SimulationResult(
             seed=seed, status=status, events=tuple(events),
             unresolved=tuple(unresolved), dice_total=dice_total,
             phase=state.phase, state_hash=state.state_hash(),
             wall_remaining=state.wall_remaining(), rewards=tuple(state.rewards),
-            winner=declaration["winner"] if declaration else None,
-            win_source=declaration["source"] if declaration else None,
+            winner=winner,
+            win_source=win_source,
             terminal_reason=state.terminal_reason, **extra,
         )
 
@@ -154,12 +168,13 @@ class Simulator:
         return self._result(game, seed=seed, status="READY", dice_total=dice_total)
 
     @staticmethod
-    def _special_rules(state):
+    def _special_rules(state, *, enable_youjin=False):
         """Observable out-of-scope situations; never infer Youjin from shape."""
         if state.terminal:
             return ()
         unknown = []
-        if state.special_states != ["NORMAL", "NORMAL"]:
+        if (state.special_states != ["NORMAL", "NORMAL"]
+                and not enable_youjin):
             unknown.append("youjin_permissions")
         # Ordinary-only simulation takes the confirmed PASS branch for an
         # eight-flower special and keeps the eight base flower fan for ordinary Hu.
@@ -204,8 +219,12 @@ class Simulator:
                 raise ValueError("real scoring requires a nonnegative integer current_dealer_base")
         elif current_dealer_base is not None:
             raise ValueError("current_dealer_base is only valid with enable_real_scoring")
+        if profile.enable_youjin and not profile.enable_real_scoring:
+            raise ValueError("enable_youjin requires enable_real_scoring")
         rules = HuianRulesAdapter(HuianRules(RulesConfig(
-            simulation_only_normal_hand=True, enable_added_kong=profile.enable_added_kong)))
+            simulation_only_normal_hand=True,
+            simulation_enable_youjin=profile.enable_youjin,
+            enable_added_kong=profile.enable_added_kong)))
         # Environment also limits events. Two setup events are not agent steps.
         game = self.environment_factory(rules=rules, max_steps=max_steps + 2)
         if initial_state is None:
@@ -265,7 +284,13 @@ class Simulator:
                         and state.pending_hu["source"] == "kong_tail_draw"):
                     return finish("STOPPED_UNKNOWN", ("GANG_HU_SCORING_UNKNOWN",),
                                   "unresolved_rule")
-                unknown = self._special_rules(state)
+                if (profile.enable_youjin
+                        and state.phase == "YOUJIN_SETTLEMENT_READY"):
+                    game.finalize_youjin_outcome(
+                        current_dealer_base=current_dealer_base)
+                    continue
+                unknown = self._special_rules(
+                    state, enable_youjin=profile.enable_youjin)
                 if unknown:
                     return finish("STOPPED_UNKNOWN", unknown, "special_rule_encountered")
                 if state.phase == "HU_DECLARED":
