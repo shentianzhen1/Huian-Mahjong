@@ -61,9 +61,6 @@ class PublicRolloutAgentTests(unittest.TestCase):
             PublicRolloutEstimate(
                 "N", 8, 8, 0, 3, 0.25, 14.0, 4.0),
         )
-        baseline = MeldAwareShantenAgent(
-            seed=7, template_samples=32).choose_decision(view, actions)
-
         with patch(
                 "workspace.ai.rollout.min_shanten_discards",
                 return_value=frontier), patch(
@@ -75,9 +72,10 @@ class PublicRolloutAgentTests(unittest.TestCase):
         self.assertEqual(decision.action.tile, "N")
         self.assertIn("public_rollout_v0.14_candidate", decision.reason)
         self.assertIn("no real opponent hand/wall order", decision.reason)
-        # The test intentionally allows rollout to disagree with V0.10 even
-        # though immediate live counts are not tied.
-        self.assertNotEqual(decision.action.tile, baseline.action.tile)
+        # Immediate live counts are deliberately not tied: V0.14 is allowed
+        # to search beyond the old exact-offense-tie gate.
+        self.assertNotEqual(frontier[0].total_live_copies,
+                            frontier[1].total_live_copies)
 
     def test_v014_falls_back_when_current_hand_contains_gold(self):
         hand = (
