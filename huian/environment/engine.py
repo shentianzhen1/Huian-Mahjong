@@ -668,7 +668,15 @@ class HuianEnvironment:
             response_player = action.player
             youjin_player = 1 - response_player
             context = HuContext.from_draw_metadata(action.metadata)
-            if self.rules.rules.can_win(
+            prior_retained = candidate.youjin_response_draws[response_player]
+            if prior_retained:
+                # The player confirmed that prior missed response draws remain
+                # in hand. A later response therefore has >17 concealed tiles,
+                # and the ordinary exact-size Hu solver cannot decide which
+                # retained/extra tiles the target room ignores for this special
+                # self-draw check. Stop safely until that subset rule is known.
+                candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
+            elif self.rules.rules.can_win(
                     candidate.hands[response_player], candidate.gold_tile,
                     len(candidate.melds[response_player]), win_context=context):
                 candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
