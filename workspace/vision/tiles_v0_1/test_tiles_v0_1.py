@@ -30,7 +30,8 @@ from .public_state_scores import (
     prepare_score_gray, read_score_pair,
 )
 from .public_state_status import (
-    StatusLineRead, infer_missing_hand_from_transition, parse_hand_progress,
+    StatusLineRead, TesseractStatusReader,
+    infer_missing_hand_from_transition, parse_hand_progress,
     parse_remaining_tiles, prepare_status_crop,
 )
 from .public_state_reader import compose_public_candidate
@@ -722,6 +723,46 @@ class TilesV01Tests(unittest.TestCase):
         self.assertEqual(read.mode, "inferred_bottom")
         self.assertEqual(read.confidence, 0.75)
         self.assertFalse(read.safe_for_executor)
+
+    def test_status_reader_uses_tighter_remaining_crop_only_after_invalid_primary(self) -> None:
+        class FakeOCR:
+            def __init__(self, outputs):
+                self.outputs = iter(outputs)
+                self.calls = 0
+
+            def __call__(self, _image):
+                self.calls += 1
+                return next(self.outputs)
+
+        frame = Image.new("RGB", (1000, 500), "black")
+        backend = FakeOCR(["985", "98", "5/8"])
+        read = TesseractStatusReader(backend).read(frame)
+        self.assertEqual(read.remaining_tiles, 98)
+        self.assertEqual(read.remaining_mode, "right_trim_fallback")
+        self.assertEqual(read.raw_remaining, "985")
+        self.assertEqual(read.raw_remaining_fallback, "98")
+        self.assertEqual(read.hand_number, 5)
+        self.assertEqual(backend.calls, 3)
+        self.assertNotIn("remaining_unreadable", read.issues)
+
+    def test_status_reader_never_replaces_valid_primary_remaining_read(self) -> None:
+        class FakeOCR:
+            def __init__(self, outputs):
+                self.outputs = iter(outputs)
+                self.calls = 0
+
+            def __call__(self, _image):
+                self.calls += 1
+                return next(self.outputs)
+
+        frame = Image.new("RGB", (1000, 500), "black")
+        backend = FakeOCR(["107", "1/8"])
+        read = TesseractStatusReader(backend).read(frame)
+        self.assertEqual(read.remaining_tiles, 107)
+        self.assertEqual(read.remaining_mode, "primary")
+        self.assertIsNone(read.raw_remaining_fallback)
+        self.assertEqual(read.hand_number, 1)
+        self.assertEqual(backend.calls, 2)
 
     def test_status_reader_corrects_target_font_seven_confusion(self) -> None:
         self.assertEqual(parse_remaining_tiles("10/"), 107)
