@@ -1,5 +1,42 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 single-Youjin structural eligibility confirmed
+
+Player clarification closes the core **single-Youjin hand-shape predicate**:
+
+- After the intended entry discard, the concealed hand is a Youjin-ready shape when **exactly one gold can be reserved as the roaming singleton** and all other concealed tiles already form every remaining required meld.
+- Any additional gold tiles are still ordinary wildcards inside those melds. The roaming gold is the **extra** gold left after the meld structure is complete; it is not determined by total gold count.
+- In the ~01:06 example, three golds are visible: two are consumed as wildcards to complete the meld structure, while the third is the extra roaming gold. That is why the game offers single Youjin.
+- Equivalently, after entry the next ordinary drawn tile can pair with the reserved roaming gold to complete the ordinary Hu structure.
+- The rule works at the structural level and is not “three gold = Youjin”. A hand with a different gold count can qualify if it has the same complete-melds-plus-one-roaming-gold shape.
+
+Implementation: `HuianRules.is_youjin_ready_hand()` checks the post-discard structure and `youjin_entry_discards()` enumerates which current discards create it. These functions only expose eligibility; they do not auto-declare Youjin or guess Double-/Triple-You upgrades.
+
+## 2026-09-20 match_evidence_002 Youjin-offer / Double-You path clarification
+
+Target-room replay + player clarification now adds a concrete mid-hand path:
+
+- Around **01:06**, the player already has a visible **Youjin option** while holding three playable gold tiles. Two gold tiles are being used as the pair/wildcards to complete the current structure involving S3/S4 and M5/M5/M6.
+- Selecting the Youjin option at that moment would discard M9 and enter **single Youjin**.
+- The player instead **declines the Youjin option**, continues normal play, and discards M9 without entering Youjin.
+- Later the player **Chi claims S2**, then discards one gold tile and enters **Double-You**.
+- Therefore a visible single-Youjin offer is **optional**, not an automatic state transition; declining it does **not** permanently lock the hand out of later Youjin-family progression.
+- This is direct evidence that later Double-You can be reached after an earlier declined single-Youjin opportunity. It does not yet prove that every Chi+discard-gold pattern is a universal Double-You trigger.
+
+Implementation consequence: `youjin_offer_rule()` records an optional offer whose decline keeps ordinary play alive and does not set a permanent Youjin lockout. Exact universal stage-entry/upgrade predicates remain evidence-gated.
+
+## 2026-09-20 Youjin-family opponent response correction
+
+Player clarification from the target Huian two-player room now confirms a common opponent interception rule for all three established Youjin stages:
+
+- **Youjin / Double-You / Triple-You each give the opponent exactly one draw opportunity to self-draw Hu.**
+- If the opponent self-draws on that opportunity, the opponent wins and the pending Youjin stage is intercepted.
+- If the opponent does not self-draw Hu on that opportunity, the current Youjin stage succeeds.
+- This supersedes the older working note that Triple-You / 三游 / 三金游 could only be intercepted by kong-replacement self-draw.
+- This correction does **not** close the remaining timing gap: the exact point at which a successful stage settles versus remains eligible for a further upgrade is still UNKNOWN and must not be inferred.
+
+The response rule is now exposed by `youjin_opponent_response_rule()`; stage entry/upgrade continues to be explicit and evidence-gated rather than inferred from gold count.
+
 ## 2026-09-19 match_evidence_001 complete eight-hand replay
 
 A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/match_evidence_001_full_8hand/README.md`.

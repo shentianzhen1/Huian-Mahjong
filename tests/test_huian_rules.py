@@ -193,6 +193,42 @@ class HuianRulesTests(unittest.TestCase):
         self.assertIn("sanjindao_settlement", UNKNOWN_RULES)
         self.assertNotIn("sanjinyou_multiplier", UNKNOWN_RULES)
 
+    def test_youjin_ready_reserves_one_gold_and_uses_other_golds_as_wildcards(self):
+        # Five complete concealed groups after reserving one roaming P9:
+        # M1 M2 [P9], M4 M5 M6, P1 P2 P3, S3 S4 [P9], E E E,
+        # plus the third P9 as the independent Youjin gold.
+        ready = [
+            "M1", "M2", "P9",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S3", "S4", "P9",
+            "E", "E", "E",
+            "P9",
+        ]
+        self.assertTrue(self.rules.is_youjin_ready_hand(ready, "P9"))
+        self.assertFalse(self.rules.is_youjin_ready_hand(
+            [tile if i != 10 else "S8" for i, tile in enumerate(ready)], "P9"
+        ))
+
+    def test_youjin_entry_discards_are_optional_candidates_not_automatic_state(self):
+        ready = [
+            "M1", "M2", "P9",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S3", "S4", "P9",
+            "E", "E", "E",
+            "P9",
+        ]
+        hand = ready + ["M9"]
+        candidates = self.rules.youjin_entry_discards(hand, "P9")
+        self.assertIn("M9", candidates)
+        # Structural enumeration reports an offered discard only; the caller
+        # still chooses whether to enter Youjin or continue ordinary play.
+        self.assertTrue(self.rules.is_youjin_ready_hand(
+            [tile for index, tile in enumerate(hand) if index != len(hand) - 1],
+            "P9",
+        ))
+
     def test_youjin_score_terms_match_recorded_triple_you_608(self):
         for stage, multiplier in ((YoujinStage.YOUJIN, 4),
                                   (YoujinStage.DOUBLE_YOU, 8),

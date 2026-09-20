@@ -3,7 +3,9 @@ from .engine import (HuDecomposition, HuianRules, HuResult, KongFanResult,
                      Settlement, YoujinScoreTerms)
 from .fan import FanAggregator, FanComponent, FanResult
 from .context import (DrawSource, HuContext, KongKind, SanjindaoChoice,
-                      SanjindaoDecision, WinSource, YoujinStage)
+                      SanjindaoDecision, WinSource, YoujinOfferRule,
+                      YoujinOpponentResponseRule, YoujinStage,
+                      youjin_offer_rule, youjin_opponent_response_rule)
 from .observed_settlement import HuianObservedSettlement, HuianObservedSettlementPlugin
 from .special_outcomes import (SPECIAL_OUTCOMES, SpecialOutcomeProfile,
                                special_outcome_for_phase,
@@ -15,7 +17,8 @@ __all__ = ["DrawSource", "FanAggregator", "FanComponent", "FanResult", "HuContex
            "HuianRulesAdapter", "KongKind", "RulesConfig", "SanjindaoChoice",
            "SanjindaoDecision", "WinSource", "EvidenceStatus",
            "UnknownRuleError", "UNKNOWN_RULES", "KongFanResult", "Settlement", "YoujinScoreTerms",
-           "YoujinStage",
+           "YoujinOfferRule", "YoujinOpponentResponseRule", "YoujinStage",
+           "youjin_offer_rule", "youjin_opponent_response_rule",
            "HuianObservedSettlement", "HuianObservedSettlementPlugin",
            "SPECIAL_OUTCOMES", "SpecialOutcomeProfile", "special_outcome_profile",
            "special_outcome_for_phase", "special_outcome_for_source"]

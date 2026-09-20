@@ -281,6 +281,59 @@ class HuianRules:
                     SanjindaoChoice.CONTINUE_PLAY) if eligible else ())
         return SanjindaoDecision(eligible, count, choices, self.SANJINDAO_MULTIPLIER)
 
+    def is_youjin_ready_hand(self, hand, gold_tile, open_melds=0):
+        """Return whether a post-discard hand is structurally ready to enter Youjin.
+
+        Confirmed 2026-09-20 semantics: reserve exactly one gold as the roaming
+        singleton.  All remaining concealed tiles, including any other golds as
+        wildcards, must already form every concealed meld still required by the
+        5-meld Huian hand.  The next ordinary draw can then pair with the reserved
+        gold and complete an ordinary structural Hu.
+
+        This checks structure only.  It does not advance the Youjin stage or
+        encode later Double-/Triple-You upgrade timing.
+        """
+        self._validate_hand(hand, gold_tile)
+        nonnegative_int(open_melds, "open_melds")
+        if open_melds > 5:
+            raise ValueError("At most five melds")
+        if gold_tile is None or hand.count(gold_tile) < 1:
+            return False
+        groups_needed = 5 - open_melds
+        if len(hand) != groups_needed * 3 + 1:
+            return False
+
+        # Reuse the audited ordinary-Hu solver rather than maintain a second
+        # wildcard meld solver.  Add one legal non-gold sentinel draw and require
+        # a decomposition whose pair is exactly sentinel + GOLD.  Such a split is
+        # equivalent to: current hand = all remaining melds + one roaming gold.
+        for tile in core.BASE_TILES:
+            if tile == gold_tile or hand.count(tile) >= 4:
+                continue
+            splits = winning_decompositions(
+                [*hand, tile], gold_tile, open_melds, max_solutions=64
+            )
+            if any(split["pair"] == (tile, "GOLD") for split in splits):
+                return True
+        return False
+
+    def youjin_entry_discards(self, hand, gold_tile, open_melds=0):
+        """Enumerate discards that leave the confirmed single-Youjin-ready shape."""
+        self._validate_hand(hand, gold_tile)
+        nonnegative_int(open_melds, "open_melds")
+        if open_melds > 5:
+            raise ValueError("At most five melds")
+        expected = (5 - open_melds) * 3 + 2
+        if len(hand) != expected:
+            return ()
+        out = []
+        for tile in sorted(set(hand)):
+            candidate = list(hand)
+            candidate.remove(tile)
+            if self.is_youjin_ready_hand(candidate, gold_tile, open_melds):
+                out.append(tile)
+        return tuple(out)
+
     def youjin_score_terms(self, stage, *, winner, dealer, winner_fan):
         """Return confirmed terms; fan aggregation and payer remain external."""
         try:
