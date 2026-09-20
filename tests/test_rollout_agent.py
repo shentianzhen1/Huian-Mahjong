@@ -76,6 +76,23 @@ class PublicRolloutAgentTests(unittest.TestCase):
         # to search beyond the old exact-offense-tie gate.
         self.assertNotEqual(frontier[0].total_live_copies,
                             frontier[1].total_live_copies)
+        diagnostic = PublicRolloutAgent(
+            seed=7, rollout_samples=8)
+        with patch(
+                "workspace.ai.rollout.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.rollout.estimate_public_rollouts",
+                return_value=estimates):
+            diagnostic.choose_decision(view, actions)
+        self.assertEqual(len(diagnostic.diagnostics), 1)
+        record = diagnostic.diagnostics[0]
+        self.assertEqual(record.gate, "searched_intervention")
+        self.assertTrue(record.changed_from_v010)
+        self.assertEqual(record.min_shanten, 1)
+        self.assertEqual(record.frontier_size, 2)
+        self.assertEqual(record.candidate_count, 2)
+        self.assertEqual(record.immediate_live_delta, -2)
+        self.assertEqual(record.rollout_samples_completed, 8)
 
     def test_v014_falls_back_when_current_hand_contains_gold(self):
         hand = (
@@ -94,6 +111,14 @@ class PublicRolloutAgentTests(unittest.TestCase):
         self.assertEqual(actual.action, expected.action)
         rollout.assert_not_called()
         self.assertIn("gated_off_gold_in_hand", actual.reason)
+        agent = PublicRolloutAgent(seed=9, rollout_samples=8)
+        with patch(
+                "workspace.ai.rollout.estimate_public_rollouts"
+        ) as second_rollout:
+            agent.choose_decision(view, actions)
+        second_rollout.assert_not_called()
+        self.assertEqual(agent.diagnostics[0].gate, "gated_gold_in_hand")
+        self.assertFalse(agent.diagnostics[0].changed_from_v010)
 
     def test_v014_keeps_promoted_current_agent_unchanged(self):
         from workspace.ai import CURRENT_AGENT_VERSION, CurrentAgent
