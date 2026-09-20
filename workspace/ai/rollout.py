@@ -10,8 +10,8 @@ The first implementation is intentionally narrow:
 - shortlist up to a few best immediate ordinary candidates;
 - use common-random-number rollouts for every candidate;
 - simulate own draw -> best discard -> hidden opponent draw depletion -> own draw;
-- stop/ignore a rollout when the acting player samples Jin because special-Jin
-  EV is not complete yet;
+- stop/ignore a rollout when a flower replacement is sampled, or when the
+  acting player samples Jin, because those special branches are incomplete;
 - CHI/PENG and all unsupported action classes fall back to promoted V0.10.
 
 This is ordinary offense search, not a claim of full Mahjong EV.
@@ -31,7 +31,7 @@ class PublicRolloutEstimate:
     discard: str
     samples_requested: int
     samples_completed: int
-    skipped_gold_samples: int
+    skipped_special_samples: int
     wins_within_horizon: int
     mean_final_shanten: float
     mean_final_live_copies: float
@@ -55,15 +55,29 @@ def _public_tiles(observation):
 
 
 def _unseen_pool(observation):
-    """Return physical base tiles not in own concealed hand or public zones."""
+    """Return physical tiles not in own concealed hand or public zones.
+
+    Flowers are included so rollout sampling does not silently pretend they are
+    absent from the wall. Any sampled flower event is later treated as an
+    unsupported replacement branch and excluded symmetrically for all
+    candidates.
+    """
     own = Counter(observation.hand)
     public = Counter(_public_tiles(observation))
+    visible_flowers = Counter(
+        tile for zone in observation.flowers for tile in zone
+    )
     pool = []
     for tile in env.BASE_TILES:
         capacity = 3 if tile == observation.gold_tile else 4
         remaining = capacity - own[tile] - public[tile]
         if remaining < 0:
             raise ValueError("known copies exceed physical tile capacity")
+        pool.extend([tile] * remaining)
+    for tile in env.FLOWERS:
+        remaining = 1 - visible_flowers[tile]
+        if remaining < 0:
+            raise ValueError("flower copies exceed physical tile capacity")
         pool.extend([tile] * remaining)
     return tuple(pool)
 
@@ -112,17 +126,20 @@ def estimate_public_rollouts(
     for discard in candidates:
         starting_hand = list(observation.hand)
         starting_hand.remove(discard)
-        wins = completed = skipped_gold = 0
+        wins = completed = skipped_special = 0
         shanten_sum = live_sum = type_sum = 0.0
 
         for sequence in sequences:
-            # Any own future Jin draw would require special-state EV. Because
-            # common sequences are shared by every candidate, dropping these
-            # samples does not create candidate-specific hidden information.
+            # Any flower draw needs the tail-replacement process, and any own
+            # future Jin draw needs special-state EV. Common sequences are
+            # shared by every candidate, so excluding these unsupported samples
+            # does not inject candidate-specific hidden information.
             own_sequence = tuple(sequence[index] for index in range(0, len(sequence), 2))
-            if (observation.gold_tile is not None
-                    and observation.gold_tile in own_sequence):
-                skipped_gold += 1
+            unsupported_flower = any(tile in env.FLOWERS for tile in sequence)
+            own_gold = (observation.gold_tile is not None
+                        and observation.gold_tile in own_sequence)
+            if unsupported_flower or own_gold:
+                skipped_special += 1
                 continue
 
             hand = list(starting_hand)
@@ -167,7 +184,7 @@ def estimate_public_rollouts(
             discard=discard,
             samples_requested=samples,
             samples_completed=completed,
-            skipped_gold_samples=skipped_gold,
+            skipped_special_samples=skipped_special,
             wins_within_horizon=wins,
             mean_final_shanten=shanten_sum / completed,
             mean_final_live_copies=live_sum / completed,
@@ -306,7 +323,7 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
             f"(horizon_own_draws={self.own_draws}, "
             f"samples={estimate.samples_completed}/"
             f"{estimate.samples_requested}, "
-            f"gold_cutoffs={estimate.skipped_gold_samples}, "
+            f"special_cutoffs={estimate.skipped_special_samples}, "
             f"win_rate={estimate.win_rate:.3f}, "
             f"final_shanten={estimate.mean_final_shanten:.3f}, "
             f"final_live={estimate.mean_final_live_copies:.2f}, "
