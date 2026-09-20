@@ -11,6 +11,10 @@ Build an offline-first Windows assistant for 开心惠安二人麻将 that can e
 ## Primary architecture
 `Rules -> Environment -> Simulator -> AI -> Vision -> Executor`
 
+High-impact rules also pass through a versioned metadata boundary:
+`Evidence -> RULE_STATUS -> Rule Registry / RuleSnapshot -> Rules services -> Simulator/AI evaluation`.
+Each snapshot has a stable fingerprint, so AI score/EV evidence produced under an older rule set cannot be silently treated as current evidence. See `docs/rule_isolation.md`.
+
 ### Rules
 Owns legality, Hu/Ting, gold (金), flowers, Chi/Peng/Gang, Sanjindao, Youjin/Double-You/Triple-You, fan and settlement.
 
