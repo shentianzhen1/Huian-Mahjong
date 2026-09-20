@@ -1,0 +1,33 @@
+name: V0.15b Youjin Pilot
+
+on:
+  pull_request:
+    paths:
+      - "workspace/ai/gold_youjin.py"
+      - "workspace/simulator/v015b_youjin_benchmark.py"
+      - ".github/workflows/v015b-youjin-pilot.yml"
+  workflow_dispatch:
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run paired real-scoring Youjin pilot
+        run: |
+          mkdir -p data/evaluations/v015b-youjin
+          /usr/bin/time -v python -B -m workspace.simulator.v015b_youjin_benchmark \
+            --pairs 4 \
+            --seed-start 440000 \
+            --max-steps 1000 \
+            > data/evaluations/v015b-youjin/report.json \
+            2> data/evaluations/v015b-youjin/runtime.txt
+          cat data/evaluations/v015b-youjin/report.json
+      - uses: actions/upload-artifact@v6
+        with:
+          name: v015b-youjin-pilot
+          path: data/evaluations/v015b-youjin/
