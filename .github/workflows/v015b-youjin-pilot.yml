@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir -p data/evaluations/v015b-youjin
           /usr/bin/time -v python -B -m workspace.simulator.v015b_youjin_benchmark \
-            --pairs 4 \
+            --pairs 1 \
             --seed-start 440000 \
             --max-steps 1000 \
             > data/evaluations/v015b-youjin/report.json \
