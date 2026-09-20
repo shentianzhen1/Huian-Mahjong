@@ -275,14 +275,21 @@ class HuianEnvironment:
         self._seen.add(self._position(candidate))
         return self.state, deepcopy(event)
 
-    def finalize_eight_flower_outcome(self, *, current_dealer_base, winner_fan):
-        """Settle a declared eight-flower special win with project provisional x2.
+    def finalize_eight_flower_outcome(
+            self, *, current_dealer_base, winner_fan=None):
+        """Settle the project Eight-Flower-You working rule.
 
-        Trigger/pass/dealer flow are player-confirmed. The x2 multiplier is a
-        project setting chosen 2026-09-18, not direct real-room evidence.
-        winner_fan remains explicit because eight-flower Hu does not require
-        an ordinary decomposition, so concealed structural fan cannot be safely
-        inferred from FanAggregator.
+        Working rule chosen 2026-09-20:
+        - fixed special fan = 16;
+        - Hu multiplier = x1 (no extra multiplier);
+        - do not stack the ordinary eight-flower +8, gold fan, meld fan, kong fan,
+          or other additive fan on top of the special 16.
+        - PASS is separate: if the player declines Eight-Flower-You, the eight
+          flowers remain ordinary +8 fan for a later non-Eight-Flower result.
+
+        winner_fan is accepted only as a compatibility guard. Supplying a
+        value other than 16 is rejected so callers cannot accidentally re-add
+        ordinary flower fan or other fan components.
         """
         self._require_state()
         if self._state.terminal:
@@ -292,14 +299,22 @@ class HuianEnvironment:
             raise ValueError("Eight-flower settlement requires its declaration phase")
         if type(current_dealer_base) is not int or current_dealer_base < 0:
             raise ValueError("current_dealer_base must be a nonnegative integer")
-        if type(winner_fan) is not int or winner_fan < 8:
-            raise ValueError("eight-flower winner_fan must include at least the 8 flower fan")
+
         declaration = deepcopy(self._state.pending_hu)
         winner = declaration["winner"]
+        fixed_fan = declaration["fixed_fan"]
         multiplier = declaration["multiplier"]
-        if multiplier != 2 or declaration.get("project_rule") is not True:
-            raise ValueError("Eight-flower declaration must use the project provisional x2")
-        net = (current_dealer_base + winner_fan) * multiplier
+        if (fixed_fan != 16 or multiplier != 1
+                or declaration.get("project_rule") is not True):
+            raise ValueError(
+                "Eight-flower declaration must use fixed 16 fan with no extra multiplier"
+            )
+        if winner_fan is not None and winner_fan != fixed_fan:
+            raise ValueError(
+                "Eight-Flower-You fan is fixed at 16; ordinary/additional fan must not stack"
+            )
+
+        net = (current_dealer_base + fixed_fan) * multiplier
         rewards = [net, -net] if winner == 0 else [-net, net]
 
         before = self._state.state_hash()
@@ -317,13 +332,15 @@ class HuianEnvironment:
             "action": {
                 "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
                 "metadata": {
-                    "source": "project_provisional",
+                    "source": "project_working_rule",
                     "special": "EIGHT_FLOWER_YOU",
                     "project_rule": True,
                     "evidence_status": "WORKING",
                     "current_dealer_base": current_dealer_base,
-                    "winner_fan": winner_fan,
+                    "winner_fan": fixed_fan,
+                    "fixed_fan": fixed_fan,
                     "multiplier": multiplier,
+                    "fan_policy": "FIXED_SPECIAL_FAN_NO_STACKING",
                     "hu_declaration": declaration,
                     "rewards": list(rewards),
                 },
