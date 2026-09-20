@@ -1,5 +1,18 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 match_evidence_002 Youjin-offer / Double-You path clarification
+
+Target-room replay + player clarification now adds a concrete mid-hand path:
+
+- Around **01:06**, the player already has a visible **Youjin option** while holding three playable gold tiles. Two gold tiles are being used as the pair/wildcards to complete the current structure involving S3/S4 and M5/M5/M6.
+- Selecting the Youjin option at that moment would discard M9 and enter **single Youjin**.
+- The player instead **declines the Youjin option**, continues normal play, and discards M9 without entering Youjin.
+- Later the player **Chi claims S2**, then discards one gold tile and enters **Double-You**.
+- Therefore a visible single-Youjin offer is **optional**, not an automatic state transition; declining it does **not** permanently lock the hand out of later Youjin-family progression.
+- This is direct evidence that later Double-You can be reached after an earlier declined single-Youjin opportunity. It does not yet prove that every Chi+discard-gold pattern is a universal Double-You trigger.
+
+Implementation consequence: `youjin_offer_rule()` records an optional offer whose decline keeps ordinary play alive and does not set a permanent Youjin lockout. Exact universal stage-entry/upgrade predicates remain evidence-gated.
+
 ## 2026-09-20 Youjin-family opponent response correction
 
 Player clarification from the target Huian two-player room now confirms a common opponent interception rule for all three established Youjin stages:
