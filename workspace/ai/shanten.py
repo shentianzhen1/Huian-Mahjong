@@ -218,6 +218,86 @@ def _max_natural_used(counts, groups_needed):
 
 
 @lru_cache(maxsize=200000)
+def _max_natural_used_melds_only(counts, groups_needed):
+    """Maximum natural tiles placeable into meld-only structure.
+
+    Used by the Jin/Youjin research layer after reserving one roaming Jin.
+    Pairs are not a target component here; pair-shaped naturals may still be
+    used as two-tile taatsu toward a triplet because _segment_states already
+    emits that representation with pair_used=0.
+    """
+    total_natural = sum(counts)
+    segments = (
+        _segment_states(counts[0:9], True),
+        _segment_states(counts[9:18], True),
+        _segment_states(counts[18:27], True),
+        _segment_states(counts[27:34], False),
+    )
+
+    combined = {(0, 0)}
+    for segment in segments:
+        next_states = set()
+        for melds_a, taatsu_a in combined:
+            for melds_b, taatsu_b, pair_b in segment:
+                if pair_b:
+                    continue
+                melds = melds_a + melds_b
+                taatsu = taatsu_a + taatsu_b
+                if melds > groups_needed or taatsu > groups_needed:
+                    continue
+                next_states.add((melds, taatsu))
+        combined = next_states
+
+    best = 0
+    for melds, taatsu in combined:
+        effective_taatsu = min(taatsu, groups_needed - melds)
+        extra_taatsu = taatsu - effective_taatsu
+        consumed = 3 * melds + 2 * taatsu
+        skipped = total_natural - consumed
+        if skipped < 0:
+            continue
+        single_pool = skipped + 2 * extra_taatsu
+        empty_components = groups_needed - melds - effective_taatsu
+        used = (
+            3 * melds
+            + 2 * effective_taatsu
+            + min(single_pool, empty_components)
+        )
+        best = max(best, used)
+    return best
+
+
+def youjin_meld_deficit(hand, gold_tile=None, open_melds=0):
+    """Return structural deficit after reserving one roaming Jin.
+
+    Input is a post-discard concealed hand (16 tiles with no open melds).
+    One Jin is reserved as the roaming singleton. Remaining Jin copies act as
+    wildcards inside melds. The result is the number of meld slots that still
+    cannot be filled by the current tiles:
+
+    - 0: structurally equivalent to confirmed single-Youjin-ready shape;
+    - 1+: progressively farther from that meld-only target;
+    - None: no Jin is available to reserve.
+
+    This is a structural research metric, not a score EV and not a promise of
+    exact draws-to-Youjin.
+    """
+    groups_needed, target = _validate_inputs(hand, gold_tile, open_melds)
+    if len(hand) != target - 1:
+        raise ValueError(
+            "youjin_meld_deficit requires the post-discard concealed hand size"
+        )
+    if gold_tile is None or tuple(hand).count(gold_tile) < 1:
+        return None
+
+    counts, gold_count = _counts_without_gold(tuple(hand), gold_tile)
+    natural_used = _max_natural_used_melds_only(counts, groups_needed)
+    wildcard_gold = gold_count - 1
+    missing_slots = groups_needed * 3 - natural_used
+    return max(0, missing_slots - wildcard_gold)
+
+
+@lru_cache(maxsize=200000)
 def _ordinary_shanten_counts(counts, gold_count, groups_needed):
     target_slots = groups_needed * 3 + 2
     natural_used = _max_natural_used(counts, groups_needed)
