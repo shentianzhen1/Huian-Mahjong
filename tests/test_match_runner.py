@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from huian import UnknownRuleError
 from workspace.simulator import (
@@ -122,6 +123,35 @@ class MatchRunnerTests(unittest.TestCase):
         self.assertEqual(result.deal_in_count_for(1), 8)
         with self.assertRaises(ValueError):
             result.deal_in_count_for(2)
+
+    def test_real_youjin_match_builds_confirmed_special_profile(self):
+        created = []
+
+        class FakeSimulator:
+            def __init__(self, config):
+                created.append(config)
+
+            def run_normal_hand(self, **kwargs):
+                return SimulationResult(
+                    seed=kwargs["seed"], status="COMPLETED",
+                    rewards=(0, 0), winner=None, win_source=None,
+                    terminal_reason="WALL_16",
+                    simulation_only=True, real_scoring=True,
+                )
+
+        with patch("workspace.simulator.core.Simulator", FakeSimulator):
+            result = run_real_youjin_match(
+                seed=9,
+                agent_factories=(lambda seed: object(), lambda seed: object()),
+            )
+
+        self.assertTrue(result.complete)
+        self.assertEqual(len(created), 1)
+        self.assertTrue(created[0].enable_real_scoring)
+        self.assertTrue(created[0].enable_youjin)
+        self.assertFalse(created[0].enable_qiangjin)
+        self.assertFalse(created[0].enable_sanjindao)
+        self.assertFalse(created[0].enable_eight_flower_you)
 
     def test_real_ordinary_match_can_seed_agents_by_identity_not_seat(self):
         seen = []
