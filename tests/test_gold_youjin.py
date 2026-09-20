@@ -191,7 +191,7 @@ class YoujinTenpaiCandidateTests(unittest.TestCase):
             actual = agent.choose_decision(view, actions)
 
         self.assertEqual(actual.action.tile, other)
-        self.assertIn("V0.15b experimental", actual.reason)
+        self.assertIn("youjin_tenpai_candidate_v0.15b", actual.reason)
 
     def test_v015b_keeps_v010_when_live_loss_exceeds_one(self):
         hand = YOUJIN_READY + ["N"]
