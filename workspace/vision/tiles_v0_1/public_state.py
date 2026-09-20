@@ -232,14 +232,20 @@ def fuse_public_state(
         score_pair = None
         if any(candidate.score_pair is not None for candidate in candidates):
             issues.append("score_consensus")
+        else:
+            issues.append("score_unreadable")
     if hand_votes < minimum_votes:
         hand_number = None
         if any(candidate.hand_number is not None for candidate in candidates):
             issues.append("hand_consensus")
+        else:
+            issues.append("hand_unreadable")
     if remaining_votes < minimum_votes:
         remaining_tiles = None
         if any(candidate.remaining_tiles is not None for candidate in candidates):
             issues.append("remaining_consensus")
+        else:
+            issues.append("remaining_unreadable")
 
     if score_pair is not None and expected_scores is not None:
         if score_pair != expected_scores:
