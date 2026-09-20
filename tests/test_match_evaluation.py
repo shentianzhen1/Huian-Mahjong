@@ -2,6 +2,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from huian.rules import DEFAULT_RULE_SNAPSHOT
 from workspace.simulator import run_paired_real_matches
 
 
@@ -47,6 +48,8 @@ class PairedMatchEvaluationTests(unittest.TestCase):
                 [9], agent_factories=(factory_a, factory_b))
 
         self.assertEqual(report.completed_pairs, 1)
+        self.assertEqual(report.rule_snapshot_id, DEFAULT_RULE_SNAPSHOT.fingerprint)
+        self.assertEqual(report.rule_snapshot_label, DEFAULT_RULE_SNAPSHOT.label)
         self.assertEqual(calls[0][0], (factory_a, factory_b))
         self.assertEqual(calls[0][1], (0, 1))
         self.assertEqual(calls[1][0], (factory_b, factory_a))
