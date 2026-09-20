@@ -176,6 +176,8 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 `public_state_reader.py` 已把比分、剩余牌数、局号和 `fuse_public_state()` 合成统一帧/窗口读取接口。详细基线：`references/vision/2026-09-19/public_state_v01_baseline.md`。
 
+2026-09-20 已把状态栏评估扩展到现有8局的64个时点（5/10/15/20/25/30/40/50秒）。这次结果证明单个约10秒种子帧偏乐观：主读数remaining为44/63正确、hand为46/64正确。remaining新增一个**只在主读数无法解析时**启用的右缘收窄fallback，同批把10个原不可读样本全部恢复正确，remaining提升到54/63正确、63/63可读；但仍保留9个“解析成合法数字却与真值不符”的错误，不做字符硬映射。详细证据：`references/vision/2026-09-20/public_state_status_multitimepoint.md`。Executor仍关闭。
+
 当前OCR后端是可替换的 `TesseractCLIBackend`。运行数字读取需要系统存在 `tesseract` 可执行文件；CI会显式安装它。Windows机器后续只需安装Tesseract并加入PATH，或向读取器传入 `tesseract.exe` 路径。状态融合层不依赖Tesseract，将来可替换为ONNX/专用数字模型。
 
 下一步优先做：剩余牌/局号的多时点统计、新独立录像PublicState泛化，以及缩放/移动/遮挡压力测试。
