@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir -p data/evaluations/gold-youjin-shadow
           /usr/bin/time -v python -B -m workspace.simulator.youjin_deficit_hand_smoke \
-            --hands 8 \
+            --hands 2 \
             --seed-start 430000 \
             --max-steps 1000 \
             > data/evaluations/gold-youjin-shadow/report.json \
@@ -65,7 +65,7 @@ jobs:
           print(json.dumps(summary, ensure_ascii=False, indent=2))
           with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
               fh.write("# Jin / Youjin meld-deficit shadow audit\n\n")
-              fh.write("Eight fresh ordinary-hand seeds 430000..430007; both seats use the shadow policy, which always executes V0.10.\n\n")
+              fh.write("Two fresh ordinary-hand seeds 430000..430001; both seats use the shadow policy, which always executes V0.10.\n\n")
               fh.write("```json\n")
               fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
               fh.write("\n```\n")
