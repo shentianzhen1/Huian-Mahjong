@@ -69,8 +69,11 @@ class RulesConfig:
     experimental_no_rob_kong: bool = False
     # Player feedback: room/player setting, usually disabled. Never infer from the generic page.
     single_gold_can_pinghu: bool = False
-    # Simulator-only profile.  It never enables a special Huian rule.
+    # Simulator-only profile. By default it bypasses all special Huian rules.
     simulation_only_normal_hand: bool = False
+    # Narrow simulator opt-in: enable only the confirmed Youjin family while
+    # keeping Qiangjin/Sanjindao/Eight-Flower special windows on their PASS path.
+    simulation_enable_youjin: bool = False
     # Disable only new added-kong offers; an existing response window still resolves.
     enable_added_kong: bool = True
 
@@ -83,5 +86,11 @@ class RulesConfig:
             raise ValueError("experimental_no_rob_kong must be boolean")
         if type(self.simulation_only_normal_hand) is not bool:
             raise ValueError("simulation_only_normal_hand must be boolean")
+        if type(self.simulation_enable_youjin) is not bool:
+            raise ValueError("simulation_enable_youjin must be boolean")
+        if self.simulation_enable_youjin and not self.simulation_only_normal_hand:
+            raise ValueError(
+                "simulation_enable_youjin requires simulation_only_normal_hand"
+            )
         if self.settlement_model not in (None, "current_dealer_plus_winner_v1"):
             raise ValueError("Unsupported settlement model")
