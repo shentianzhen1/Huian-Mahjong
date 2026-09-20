@@ -16,6 +16,7 @@ from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        is_ordinary_ron_tenpai)
 from .score_ev import (OrdinaryImmediateValue, OrdinaryWinningDrawValue,
                        evaluate_tenpai_ordinary_value)
+from .youjin_value import YoujinImmediateValue, evaluate_immediate_youjin_value
 from .gold_youjin import (GoldYoujinShadowAgent, GoldYoujinShadowDiagnostic,
                           YoujinDiscardPotential,
                           estimate_youjin_discard_potentials)
@@ -59,6 +60,7 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "estimate_tenpai_wait_loss_scores", "is_ordinary_ron_tenpai",
            "OrdinaryImmediateValue", "OrdinaryWinningDrawValue",
            "evaluate_tenpai_ordinary_value",
+           "YoujinImmediateValue", "evaluate_immediate_youjin_value",
            "YoujinDiscardPotential", "GoldYoujinShadowDiagnostic",
            "GoldYoujinShadowAgent", "estimate_youjin_discard_potentials",
            "KongOpportunity",
