@@ -282,7 +282,7 @@ class EnvironmentTests(unittest.TestCase):
             for a in second.known_actions
         ))
 
-    def test_eight_flower_special_declares_and_project_x2_settles(self):
+    def test_eight_flower_special_is_fixed_16_fan_without_extra_multiplier(self):
         state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
         for flower in env.FLOWERS:
             state.wall.remove(flower)
@@ -296,17 +296,44 @@ class EnvironmentTests(unittest.TestCase):
         declare = next(
             a for a in actions if a.metadata.get("special") == "EIGHT_FLOWER_YOU"
         )
-        self.assertEqual(declare.metadata["multiplier"], 2)
+        self.assertEqual(declare.metadata["fixed_fan"], 16)
+        self.assertEqual(declare.metadata["multiplier"], 1)
         self.assertTrue(declare.metadata["project_rule"])
         instance.step(declare)
         self.assertEqual(instance.state.phase, "EIGHT_FLOWER_YOU_DECLARED")
         terminal, event = instance.finalize_eight_flower_outcome(
-            current_dealer_base=5, winner_fan=8)
+            current_dealer_base=5)
         self.assertTrue(terminal.terminal)
-        self.assertEqual(terminal.rewards, [26, -26])
+        self.assertEqual(terminal.rewards, [21, -21])
         self.assertEqual(terminal.terminal_reason, "PROJECT_EIGHT_FLOWER_YOU")
-        self.assertEqual(event["action"]["metadata"]["multiplier"], 2)
-        self.assertEqual(event["action"]["metadata"]["evidence_status"], "WORKING")
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["winner_fan"], 16)
+        self.assertEqual(metadata["fixed_fan"], 16)
+        self.assertEqual(metadata["multiplier"], 1)
+        self.assertEqual(metadata["fan_policy"], "FIXED_SPECIAL_FAN_NO_STACKING")
+        self.assertEqual(metadata["evidence_status"], "WORKING")
+
+    def test_eight_flower_special_rejects_ordinary_or_extra_fan_stacking(self):
+        state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
+        for flower in env.FLOWERS:
+            state.wall.remove(flower)
+            state.flowers[0].append(flower)
+        state.last_action = env.Action(
+            0, env.ActionType.DRAW,
+            metadata={"source": "wall_head", "drawn_tile": "F8"},
+        ).to_dict()
+        instance = game(state)
+        declare = next(
+            a for a in instance.legal_actions()
+            if a.metadata.get("special") == "EIGHT_FLOWER_YOU"
+        )
+        instance.step(declare)
+        for invalid_fan in (8, 24, 17):
+            with self.subTest(invalid_fan=invalid_fan):
+                with self.assertRaisesRegex(ValueError, "fixed at 16"):
+                    instance.finalize_eight_flower_outcome(
+                        current_dealer_base=5, winner_fan=invalid_fan
+                    )
 
     def test_eight_flower_pass_closes_window_and_keeps_eight_flowers(self):
         state = scenario("AFTER_DRAW", hand=HAND + ["M9"])
