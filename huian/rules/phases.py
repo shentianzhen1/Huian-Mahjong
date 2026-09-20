@@ -23,13 +23,16 @@ PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG", "QIANGJIN_DECLARED",
           "SANJINDAO_DECLARED", "EIGHT_FLOWER_YOU_DECLARED",
           "YOUJIN_RESPONSE_DRAW", "YOUJIN_RESPONSE_AFTER_DRAW",
-          "YOUJIN_STAGE_SUCCESS"}
+          "YOUJIN_STAGE_SUCCESS", "YOUJIN_UPGRADE_CHOICE",
+          "YOUJIN_SETTLEMENT_READY"}
 
 
 YOUJIN_RESPONSE_PHASES = {
     "YOUJIN_RESPONSE_DRAW",
     "YOUJIN_RESPONSE_AFTER_DRAW",
     "YOUJIN_STAGE_SUCCESS",
+    "YOUJIN_UPGRADE_CHOICE",
+    "YOUJIN_SETTLEMENT_READY",
 }
 
 
@@ -55,9 +58,9 @@ def _validate_youjin_response_phase(state):
             raise ValueError("The opponent must own the one-draw Youjin response window")
     else:
         if state.current_player != youjin_player:
-            raise ValueError("Successful Youjin stage must return control to the Youjin player")
+            raise ValueError("Youjin progression/settlement must belong to the Youjin player")
     if state.pending_discard is not None:
-        raise ValueError("Youjin response does not use an ordinary discard-claim window")
+        raise ValueError("Youjin chain does not use an ordinary discard-claim window")
     if state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
         last = state.last_action
         if (not isinstance(last, dict)
@@ -70,6 +73,24 @@ def _validate_youjin_response_phase(state):
                 or last.get("type") != env.ActionType.DRAW.value
                 or last.get("player") != responder):
             raise ValueError("Youjin stage success requires the completed opponent draw")
+    if state.phase == "YOUJIN_UPGRADE_CHOICE":
+        if state.special_states[youjin_player] == YoujinStage.TRIPLE_YOU.value:
+            raise ValueError("Triple-You has no further upgrade choice")
+        if not adapter.rules.can_youjin_upgrade_after_draw(
+                state.hands[youjin_player], state.gold_tile,
+                len(state.melds[youjin_player])):
+            raise ValueError("Youjin upgrade choice requires a structurally free gold")
+    if state.phase == "YOUJIN_SETTLEMENT_READY":
+        # Single/Double settlement follows the Youjin player's extra draw.
+        # Triple settlement follows the opponent miss directly.
+        stage = YoujinStage(state.special_states[youjin_player])
+        expected_last_player = (
+            responder if stage == YoujinStage.TRIPLE_YOU else youjin_player
+        )
+        last = state.last_action
+        if (not isinstance(last, dict)
+                or last.get("player") != expected_last_player):
+            raise ValueError("Youjin settlement phase has inconsistent transition provenance")
 
 
 def _validate_pending_kong(state):
@@ -248,6 +269,11 @@ def validate(adapter, state):
             s != "UNKNOWN" and s not in known_special_states
             for s in state.special_states):
         raise ValueError("Invalid special states")
+    if (not isinstance(state.youjin_response_draws, list)
+            or len(state.youjin_response_draws) != 2
+            or any(type(value) is not int or value < 0
+                   for value in state.youjin_response_draws)):
+        raise ValueError("Youjin response draw counts must be two nonnegative integers")
     if any(type(r) is not int for r in state.rewards):
         raise ValueError("Rewards must be integer net scores")
     if not state.terminal and state.rewards != [0, 0]:
@@ -294,16 +320,20 @@ def validate(adapter, state):
     _validate_pending_hu(state)
     if not state.terminal:
         for p in range(2):
-            expected = 16 - 3 * len(state.melds[p])
+            expected = (16 - 3 * len(state.melds[p])
+                        + state.youjin_response_draws[p])
             if p == state.current_player and state.phase in (
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
-                "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW"
+                "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW",
+                "YOUJIN_UPGRADE_CHOICE"
             ):
                 expected += 1
-            if (state.phase == "YOUJIN_STAGE_SUCCESS"
-                    and p == 1 - state.current_player):
-                # The opponent's one allowed response draw remains physically
-                # in hand even though the Youjin player owns the successful stage.
+            if (state.phase == "YOUJIN_SETTLEMENT_READY"
+                    and p == state.current_player
+                    and state.special_states[p] in (
+                        YoujinStage.YOUJIN.value,
+                        YoujinStage.DOUBLE_YOU.value)):
+                # Single/Double settles only after the Youjin player's extra draw.
                 expected += 1
             if (p == state.current_player and state.phase == "HU_DECLARED"
                     and state.pending_hu["source"] != WinSource.DISCARD.value):
