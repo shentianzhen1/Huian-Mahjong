@@ -19,6 +19,7 @@ def apply_qiangjin_action(state, action):
             "winner": p,
             "source": "eight_flower_you",
             "flower_count": len(state.flowers[p]),
+            "fixed_fan": action.metadata.get("fixed_fan"),
             "multiplier": action.metadata.get("multiplier"),
             "project_rule": bool(action.metadata.get("project_rule")),
         }

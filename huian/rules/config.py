@@ -40,8 +40,8 @@ UNKNOWN_RULES = MappingProxyType({
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
     # exposed_triplet_fan resolved 2026-09-18: suited exposed Peng=0, honor Peng=1.
-    # Eight-flower trigger/pass confirmed; project provisional multiplier is x2.
-    "eight_flower_real_multiplier": "Real-room multiplier for eight-flower win; project uses provisional x2",
+    # Eight-flower trigger/pass confirmed. Project working settlement is fixed 16 fan x1 with no stacking.
+    "eight_flower_real_multiplier": "Real-room Eight-Flower settlement is still unobserved; project uses fixed 16 fan with no extra multiplier/stacking",
     "open_gold_procedure": "Reveal location and physical tile accounting",
     "deal_replacement_order": "Dealing order, flower replacement order and source",
     "added_kong_details": "Remaining added-kong UI/payment edge cases; fan table and rob scope are adopted",

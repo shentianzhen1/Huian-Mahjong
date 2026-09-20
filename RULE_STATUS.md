@@ -70,7 +70,7 @@ A re-review of the archived Huian two-player replay evidence separates **direct 
 - **Triple-You / 三游 ×16 — CONFIRMED by target two-player settlement.** The archived +608 hand settles `(current dealer base 35 + winner fan 3) × 16 = 608`.
 - **Sanjindao ×3 — confirmed as the adopted target-room multiplier from player confirmation plus the in-game page, but its direct settlement/payment/dealer flow is still unresolved.** Multiplier evidence and executable settlement readiness remain separate.
 - **Rob-Kong Hu ×2 — CONFIRMED multiplier.** Player confirmation establishes that 抢杠胡 uses the same Hu multiplier as ordinary self-draw, therefore ×2; the Huian in-game rules page independently lists 抢杠 ×2. `ROB_KONG_SCORING_UNKNOWN` is narrowed to the remaining payment/dealer-continuation and settlement-flow details, so automatic settlement remains disabled until those details are closed.
-- **Eight-Flower You:** collecting all eight flowers and the DECLARE/PASS window are confirmed; PASS keeps 8 ordinary flower fan. The page item “八花齐 16” is a **fan item**, not evidence that Eight-Flower-You has a ×16 Hu multiplier. The project's provisional ×2 remains WORKING only; the real-room special multiplier is UNKNOWN.
+- **Eight-Flower You:** collecting all eight flowers and the DECLARE/PASS window are confirmed; PASS keeps 8 ordinary flower fan. Project working rule updated 2026-09-20: DECLARE uses the in-game “八花齐16番” as a **fixed special 16 fan**, applies no extra Hu multiplier (×1), and does not stack the ordinary +8 flower fan or other additive fan. This remains WORKING until a real target-room Eight-Flower terminal settlement is captured.
 - **Qiangjin and Gang-Hu multipliers remain UNKNOWN.** No archived target-room settlement or sufficiently scoped in-game multiplier rule closes those branches.
 - The in-game page also lists **Tianhu ×4** and **Tianting ×4**, but current two-player target-room enablement/trigger semantics are not confirmed, so they are evidence leads only and are not enabled as executable special outcomes.
 - The two ~57.47s Triple-You evidence records (`21d61237...` and `7bc12fa...`) are treated as likely duplicate representations of the same hand unless future source hashing proves otherwise; they must not be counted as two independent settlement samples.
@@ -179,8 +179,8 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Confirmed in-scope Hu/settlement categories are Pinghu, Zimo, Sanjindao, Youjin, Double-You, Triple-You, Eight-Flower You (八花游), flower scoring, and repeat-dealer/base scoring. Confirmation of the category scope does not confirm every trigger, multiplier, stacking rule, or settlement formula; unresolved details below remain UNKNOWN.
 - Player confirmation (2026-09-14): each flower contributes 1 fan as its base flower value. Complete-set bonuses, stacking, and the interaction with special flower outcomes remain separate questions.
 - Direct replay `7bc12fa…mp4` confirms Triple-You/三游 ×16; `66fe863f` confirms Youjin ×4; **match_evidence_002 directly confirms terminal Double-You ×8** with `(dealer base30 + gold2 + flower1)×8=264`. Dealer Triple-You settles +608/-608 with current dealer base 35 and winner fan 3 (gold 1 + two flowers 2): `(35 + 3) × 16 = 608`. Flower fan is inside the Hu multiplier. Extra Youjin-chain dealer ×2 is **not** applied on this dealer Triple-You (608, not 1216) and is not applied on ordinary dealer Zimo +68. Declaration-edge cases, cancellation and next dealer remain unresolved. See `references/gameplay/2026-09-15/7bc12fa_video_evidence.md`.
-- **八花游触发已确认；倍率暂按项目规则×2。** 玩家确认：只要集齐全部8张花牌，即具备八花游资格，不要求普通胡结构，可直接作为特殊胡；也可选择【过】继续。PASS后8张花仍按1番/张，共8番进入普通牌局。2026-09-18 用户决定：鉴于八花游出现概率极低，项目实现中将八花游特殊胡**暂定为×2**；这一倍率属于项目人工设定，不标记为真实房间已验证规则。庄位仍按正常胜负流程处理；与其他特殊牌型并列/冲突时沿用特殊牌型通用处理框架。
-- Confirmed opponent permissions during the Youjin chain (player confirmation, 2026-09-14): while one player is in Youjin, the opponent may Hu; while one player is in Double-You, the opponent may self-draw Hu; while one player is in Triple-You, the opponent may Hu only through a kong-replacement self-draw (杠上自摸胡 / 杠胡).
+- **八花游触发已确认；项目结算改为固定16番、无额外倍数。** 集齐8花即可DECLARE/PASS，不要求普通胡结构。DECLARE时按项目WORKING规则固定记16番，倍率×1，不再叠加8张花的普通8番、金牌番、刻子/杠番或其他附加番；因此项目公式为 `当前庄底 + 16`。若选择【过】，8张花仍按1番/张共8番保留到后续普通/其他胡法。真实目标房八花游终局结算仍未直接观察，未来若有高优先级实战证据冲突，以实战覆盖项目规则。
+- Confirmed opponent response during the Youjin chain (updated 2026-09-20): Youjin, Double-You and Triple-You each give the opponent exactly one ordinary draw opportunity to self-draw Hu; if the opponent does not self-draw on that opportunity, the current Youjin stage succeeds.
 
 ## High-confidence settlement evidence from real Huian screenshots
 Room-settings evidence received 2026-09-13: [archived two-player creation page](references/room_settings/2026-09-13/README.md)
@@ -322,7 +322,7 @@ No target-room rule was promoted to CONFIRMED in this review.
 Additional UNKNOWN questions exposed by the comparison:
 11. Whether a natural exposed suited triplet scores fan, and the exact honor Peng value in the target room.
 12. Whether added-kong fan is an incremental bonus or a total meld value.
-13. 八花游：真实触发规则已确认——集齐8张花即可直接特殊胡，不要求普通牌型；可选择【过】，过后8花按1番/张计入普通胡，共8番。特殊胡倍率在真实房间仍缺直接结算证据；项目当前人工暂定×2，后续若有真实结算图则以真实证据覆盖。庄位按正常流程。
+13. 八花游：真实触发规则已确认——集齐8张花即可直接特殊胡，不要求普通牌型；可选择【过】，过后8花按1番/张计入普通胡，共8番。项目WORKING结算现统一为固定16番、×1、无其他番叠加，即 `当前庄底+16`；真实房间终局仍缺直接结算证据，后续若有真实结算图则以真实证据覆盖。庄位按正常流程。
 
 Before adopting new web claims, verify the mini-program identity, 惠安 two-player selection, room options and current in-game rules. General 泉州 rules and another provider's official page are lower-priority external evidence for this project.
 

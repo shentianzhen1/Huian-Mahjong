@@ -104,16 +104,20 @@ def _validate_pending_hu(state):
             raise ValueError("Sanjindao declaration must retain exactly three gold tiles")
         return
     if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
-        expected = {"winner", "source", "flower_count", "multiplier", "project_rule"}
+        expected = {"winner", "source", "flower_count", "fixed_fan",
+                    "multiplier", "project_rule"}
         if (not isinstance(pending, dict) or set(pending) != expected
                 or pending["source"] != "eight_flower_you"
                 or type(pending["winner"]) is not int
                 or pending["winner"] not in (0, 1)
                 or pending["winner"] != state.current_player
                 or pending["flower_count"] != 8
-                or pending["multiplier"] != 2
+                or pending["fixed_fan"] != 16
+                or pending["multiplier"] != 1
                 or pending["project_rule"] is not True):
-            raise ValueError("EIGHT_FLOWER_YOU_DECLARED requires the project x2 declaration")
+            raise ValueError(
+                "EIGHT_FLOWER_YOU_DECLARED requires fixed 16 fan and no extra multiplier"
+            )
         if len(state.flowers[pending["winner"]]) != 8:
             raise ValueError("Eight-flower declaration must retain all eight flowers")
         return
