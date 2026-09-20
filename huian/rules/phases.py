@@ -497,6 +497,95 @@ def report(adapter, state):
             metadata={"source": DrawSource.WALL_HEAD.value,
                       "youjin_progression": stage.value},
         ),))
+    if state.phase == "YOUJIN_KONG_CHOICE":
+        p = state.current_player
+        hand = state.hands[p]
+        actions = []
+        for tile in adapter.rules.concealed_kongs(hand, state.gold_tile):
+            actions.append(env.Action(
+                p, env.ActionType.AN_GANG, tile=tile, tiles=(tile,) * 4,
+                metadata={"youjin_kong": True},
+            ))
+        if adapter.rules.config.enable_added_kong:
+            actions.extend(
+                env.Action(
+                    p, env.ActionType.ADD_KONG, tile=tile, tiles=(tile,) * 4,
+                    metadata={"meld_index": index, "youjin_kong": True},
+                )
+                for index, tile in adapter.rules.added_kong_options(
+                    hand, state.melds[p], state.gold_tile
+                )
+            )
+        actions.append(env.Action(
+            p, env.ActionType.PASS,
+            metadata={
+                "youjin_kong_decline": True,
+                "stage": state.special_states[p],
+            },
+        ))
+        return ActionReport(tuple(actions))
+
+    if state.phase == "YOUJIN_KONG_AFTER_DRAW":
+        p = state.current_player
+        hand = state.hands[p]
+        stage = YoujinStage(state.special_states[p])
+        progression = youjin_progression_rule(stage)
+        last = state.last_action
+        draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
+        actions = []
+        eligible_hu = adapter.rules.can_win(
+            hand, state.gold_tile, len(state.melds[p]),
+            win_context=draw_context,
+        )
+        if eligible_hu:
+            actions.append(env.Action(
+                p, env.ActionType.HU, tile=draw_context.winning_tile,
+                metadata={
+                    "win_source": draw_context.source.value,
+                    "kong_kind": (
+                        draw_context.kong_kind.value
+                        if draw_context.kong_kind else None
+                    ),
+                    "youjin_kong_tail_hu": True,
+                    "optional": progression.next_stage is not None,
+                },
+            ))
+        can_upgrade = (
+            progression.next_stage is not None
+            and adapter.rules.can_youjin_upgrade_after_draw(
+                hand, state.gold_tile, len(state.melds[p])
+            )
+        )
+        if can_upgrade:
+            action_type = (
+                env.ActionType.DOUBLE_YOU
+                if progression.next_stage == YoujinStage.DOUBLE_YOU
+                else env.ActionType.TRIPLE_YOU
+            )
+            actions.append(env.Action(
+                p, action_type, tile=state.gold_tile,
+                metadata={
+                    "from_stage": stage.value,
+                    "to_stage": progression.next_stage.value,
+                    "optional": True,
+                    "upgrade_rule": "free_gold_after_kong_tail_draw",
+                },
+            ))
+        if not eligible_hu:
+            actions.extend(
+                env.Action(
+                    p, env.ActionType.DISCARD, tile=tile,
+                    metadata={
+                        "youjin_kong_discard": True,
+                        "stage": stage.value,
+                        "declined_upgrade": bool(can_upgrade),
+                    },
+                )
+                for tile in sorted(set(hand))
+                if tile != state.gold_tile
+            )
+        return ActionReport(tuple(actions))
+
     if state.phase == "YOUJIN_UPGRADE_CHOICE":
         p = state.current_player
         stage = YoujinStage(state.special_states[p])
@@ -522,6 +611,45 @@ def report(adapter, state):
         return ActionReport((upgrade, decline))
     if state.phase == "YOUJIN_SETTLEMENT_READY":
         return ActionReport((), ("youjin_settlement_context",))
+
+    active_youjin = _active_youjin_players(state)
+    if active_youjin and state.phase == "ROB_KONG_WINDOW":
+        p = state.current_player
+        hand = state.hands[p]
+        pending = state.pending_kong
+        tile = pending["tile"]
+        actions = [env.Action(p, env.ActionType.PASS)]
+        context = HuContext(WinSource.ROB_KONG, winning_tile=tile)
+        try:
+            eligible = adapter.rules.can_win(
+                [*hand, tile], state.gold_tile, len(state.melds[p]),
+                win_context=context,
+            )
+        except UnknownRuleError as exc:
+            return ActionReport(tuple(actions), exc.rule_ids)
+        if eligible:
+            actions.insert(0, env.Action(
+                p, env.ActionType.ROB_KONG_HU, tile=tile,
+                metadata={
+                    "win_source": WinSource.ROB_KONG.value,
+                    "kong_player": pending["kong_player"],
+                    "meld_index": pending["meld_index"],
+                },
+            ))
+        return ActionReport(tuple(actions))
+    if active_youjin and state.phase in ("AFTER_AN_GANG", "AFTER_ADDED_GANG"):
+        p = state.current_player
+        owner = active_youjin[0]
+        if p != owner:
+            raise ValueError("Youjin kong completion must return to the Youjin owner")
+        return ActionReport((env.Action(
+            p, env.ActionType.DRAW,
+            metadata={
+                "source": DrawSource.WALL_TAIL.value,
+                "kong_kind": state.phase.removeprefix("AFTER_"),
+                "youjin_kong_tail": True,
+            },
+        ),))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
     p = state.current_player
