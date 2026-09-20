@@ -81,6 +81,35 @@ def _validate_youjin_response_phase(adapter, state):
             raise ValueError(
                 "Youjin stage success requires the opponent's mandatory response discard"
             )
+    if state.phase == "YOUJIN_KONG_CHOICE":
+        if state.special_states[youjin_player] == YoujinStage.TRIPLE_YOU.value:
+            raise ValueError("Triple-You has no own progression draw/kong choice")
+        last = state.last_action
+        metadata = last.get("metadata", {}) if isinstance(last, dict) else {}
+        if (not isinstance(last, dict)
+                or last.get("type") != env.ActionType.DRAW.value
+                or last.get("player") != youjin_player
+                or metadata.get("youjin_progression")
+                    != state.special_states[youjin_player]):
+            raise ValueError(
+                "Youjin kong choice requires the completed own progression draw"
+            )
+    if state.phase == "YOUJIN_KONG_AFTER_DRAW":
+        last = state.last_action
+        try:
+            context = HuContext.from_draw_metadata(
+                last.get("metadata", {}) if isinstance(last, dict) else {}
+            )
+        except (AttributeError, ValueError) as exc:
+            raise ValueError(
+                "Youjin kong continuation requires an audited kong-tail draw"
+            ) from exc
+        if (not isinstance(last, dict)
+                or last.get("player") != youjin_player
+                or context.source != WinSource.KONG_TAIL_DRAW):
+            raise ValueError(
+                "Youjin kong continuation requires the owner's kong-tail draw"
+            )
     if state.phase == "YOUJIN_UPGRADE_CHOICE":
         if state.special_states[youjin_player] == YoujinStage.TRIPLE_YOU.value:
             raise ValueError("Triple-You has no further upgrade choice")
@@ -328,6 +357,7 @@ def validate(adapter, state):
             if p == state.current_player and state.phase in (
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
                 "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW",
+                "YOUJIN_KONG_CHOICE", "YOUJIN_KONG_AFTER_DRAW",
                 "YOUJIN_UPGRADE_CHOICE"
             ):
                 expected += 1
