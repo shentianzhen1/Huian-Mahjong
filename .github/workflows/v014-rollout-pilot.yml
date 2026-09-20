@@ -1,0 +1,74 @@
+name: V0.14 Rollout Pilot
+
+on:
+  pull_request:
+    paths:
+      - "workspace/ai/rollout.py"
+      - "workspace/simulator/rollout_benchmark.py"
+      - ".github/workflows/v014-rollout-pilot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pilot:
+    name: 25-pair V0.14 vs V0.10
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Run paired rollout pilot
+        run: |
+          mkdir -p data/evaluations/v014-rollout-pilot
+          /usr/bin/time -v python -B -m workspace.simulator.rollout_benchmark \
+            --pairs 25 \
+            --seed-start 400000 \
+            --max-steps 1000 \
+            > data/evaluations/v014-rollout-pilot/report.json \
+            2> data/evaluations/v014-rollout-pilot/runtime.txt
+
+      - name: Publish summary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report_path = Path("data/evaluations/v014-rollout-pilot/report.json")
+          data = json.loads(report_path.read_text(encoding="utf-8"))
+          summary = {
+              "agent_names": data.get("agent_names"),
+              "total_pairs": data.get("total_pairs"),
+              "completed_pairs": data.get("completed_pairs"),
+              "incomplete_pairs": data.get("incomplete_pairs"),
+              "match_wins_by_agent": data.get("match_wins_by_agent"),
+              "ties": data.get("ties"),
+              "average_final_score_by_agent": data.get("average_final_score_by_agent"),
+              "paired_score_delta_mean": data.get("paired_score_delta_mean"),
+              "paired_score_delta_ci95_low": data.get("paired_score_delta_ci95_low"),
+              "paired_score_delta_ci95_high": data.get("paired_score_delta_ci95_high"),
+              "paired_deal_in_delta_mean": data.get("paired_deal_in_delta_mean"),
+              "average_deal_ins_per_match_by_agent": data.get("average_deal_ins_per_match_by_agent"),
+              "unknown_reasons": data.get("unknown_reasons"),
+          }
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
+              fh.write("# V0.14 rollout pilot\n\n")
+              fh.write("25 fresh seed pairs, fixed wall, seat swap, identity-stable RNG.\n\n")
+              fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
+              fh.write("\n")
+          PY
+
+      - name: Upload pilot report
+        uses: actions/upload-artifact@v7
+        with:
+          name: v014-rollout-pilot-400000-25pairs
+          path: |
+            data/evaluations/v014-rollout-pilot/report.json
+            data/evaluations/v014-rollout-pilot/runtime.txt
+          if-no-files-found: error
