@@ -849,6 +849,13 @@ class HuianEnvironment:
             else:
                 state.phase = "AFTER_DRAW"
         elif kind == T.PASS:
+            if state.phase == "YOUJIN_KONG_AFTER_DRAW":
+                if not action.metadata.get("youjin_kong_tail_settle"):
+                    raise ValueError(
+                        "Youjin Kong-tail PASS must explicitly choose special settlement"
+                    )
+                state.phase = "YOUJIN_SETTLEMENT_READY"
+                return
             if state.phase == "YOUJIN_KONG_CHOICE":
                 if not action.metadata.get("youjin_kong_decline"):
                     raise ValueError("Youjin Kong PASS must explicitly decline Kong")
