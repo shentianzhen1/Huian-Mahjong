@@ -112,7 +112,8 @@ def youjin_stage_success_with_peng():
     for tile in state.physical_tiles():
         remaining.remove(tile)
     for tile in remaining.copy():
-        if tile in env.BASE_TILES and tile != "P9" and len(state.hands[1]) < 16:
+        if (tile in env.BASE_TILES and tile not in ("P9", "E")
+                and len(state.hands[1]) < 16):
             state.hands[1].append(tile)
             remaining.remove(tile)
     state.wall = remaining
