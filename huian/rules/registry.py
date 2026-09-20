@@ -292,6 +292,12 @@ RULE_REGISTRY = MappingProxyType({
         EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.CRITICAL,
         (), "huian.rules.special_outcomes",
     ),
+    "settlement.eight_flower_working_multiplier": _record(
+        "settlement.eight_flower_working_multiplier", RuleDomain.SETTLEMENT,
+        EvidenceStatus.WORKING, 1, 1, ImpactLevel.HIGH,
+        ("rule_page_2026-09-13",), "huian.rules.special_outcomes",
+        note="Project-only fallback; no real target-room terminal multiplier evidence.",
+    ),
     "settlement.eight_flower_working_fixed_fan": _record(
         "settlement.eight_flower_working_fixed_fan", RuleDomain.SETTLEMENT,
         EvidenceStatus.WORKING, 1, 16, ImpactLevel.HIGH,
