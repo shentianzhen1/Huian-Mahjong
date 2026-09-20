@@ -1,4 +1,4 @@
-name: V0.15 Constrained Gold Youjin Pilot
+name: V0.15 Constrained Gold Youjin Safety Pilot
 
 on:
   pull_request:
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   pilot:
-    name: 1-pair V0.15 vs V0.10 pilot
+    name: 1-pair V0.15 ordinary-safety pilot
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -42,6 +42,7 @@ jobs:
           from pathlib import Path
           data = json.loads(Path("data/evaluations/v015-gold-youjin/report.json").read_text())
           keys = (
+              "evaluation_scope",
               "completed_attempts",
               "wins",
               "losses",
@@ -56,13 +57,18 @@ jobs:
               "mean_immediate_type_delta",
               "mean_future_live_delta",
               "mean_future_type_delta",
+              "live_loss_minus_one",
+              "live_loss_zero",
+              "type_loss_violations",
+              "immediate_youjin_entry_interventions",
+              "future_youjin_gain_interventions",
               "unknown_reasons",
           )
           summary = {key: data.get(key) for key in keys}
           print(json.dumps(summary, ensure_ascii=False, indent=2))
           with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
-              fh.write("# V0.15 constrained Gold/Youjin pilot + intervention diagnostics\n\n")
-              fh.write("Fresh seed 420000, both seat orders.\n\n")
+              fh.write("# V0.15 constrained Gold/Youjin ordinary-safety pilot\n\n")
+              fh.write("Fresh seed 420000, both seat orders. Score direction is NOT promotion evidence because Youjin rewards are absent.\n\n")
               fh.write("```json\n")
               fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
               fh.write("\n```\n")
