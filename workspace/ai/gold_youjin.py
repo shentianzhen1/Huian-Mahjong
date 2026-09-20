@@ -17,7 +17,7 @@ from huian._legacy import env
 from huian.rules import HuianRules
 
 from .baseline import AgentDecision, MeldAwareShantenAgent
-from .shanten import best_offense_ties
+from .shanten import min_shanten_discards, youjin_meld_deficit
 
 
 @dataclass(frozen=True)
@@ -28,11 +28,14 @@ class YoujinDiscardPotential:
     future_entry_types: int
     enabling_draws: tuple[tuple[str, int], ...]
     gold_count_after_discard: int
+    meld_deficit: int | None = None
 
     @property
     def structural_key(self):
+        deficit = 99 if self.meld_deficit is None else self.meld_deficit
         return (
             self.immediate_entry,
+            -deficit,
             self.future_entry_live_copies,
             self.future_entry_types,
         )
@@ -44,7 +47,7 @@ class GoldYoujinShadowDiagnostic:
     phase: str
     gold_count: int
     shanten: int
-    exact_offense_tie_count: int
+    min_shanten_frontier_size: int
     baseline_tile: str
     structural_choice_tile: str
     would_change_v010: bool
@@ -57,6 +60,15 @@ class GoldYoujinShadowDiagnostic:
     baseline_future_types: int
     best_future_types: int
     future_type_delta: int
+    baseline_meld_deficit: int | None
+    best_meld_deficit: int | None
+    meld_deficit_delta: int | None
+    baseline_live_copies: int
+    best_live_copies: int
+    immediate_live_delta: int
+    baseline_effective_types: int
+    best_effective_types: int
+    immediate_type_delta: int
     hand_index: int | None
     score_margin_for_actor: int | None
     wall_remaining: int
@@ -73,7 +85,7 @@ def _public_base_tiles(observation):
 
 
 def estimate_youjin_discard_potentials(
-        observation, candidate_discards, *, rules=None):
+        observation, candidate_discards, *, rules=None, include_future=True):
     """Return structural Youjin opportunity for candidate ordinary discards.
 
     The candidate discard itself becomes public before future-draw live-copy
@@ -88,6 +100,8 @@ def estimate_youjin_discard_potentials(
     if any(tile not in observation.hand for tile in candidates):
         raise ValueError("every candidate discard must be in the acting hand")
 
+    if type(include_future) is not bool:
+        raise ValueError("include_future must be boolean")
     rules = HuianRules() if rules is None else rules
     open_melds = len(observation.melds[observation.seat])
     public = Counter(_public_base_tiles(observation))
@@ -100,19 +114,27 @@ def estimate_youjin_discard_potentials(
         public_after = public.copy()
         public_after[discard] += 1
 
+        deficit = youjin_meld_deficit(
+            after, observation.gold_tile, open_melds
+        )
         immediate = rules.is_youjin_ready_hand(
             after, observation.gold_tile, open_melds
         )
+        if (deficit == 0) != immediate:
+            raise RuntimeError(
+                "youjin_meld_deficit=0 must match confirmed Youjin-ready structure"
+            )
         enabling = []
-        for draw in env.BASE_TILES:
-            capacity = 3 if draw == observation.gold_tile else 4
-            live = capacity - own[draw] - public_after[draw]
-            if live <= 0:
-                continue
-            drawn = [*after, draw]
-            if rules.youjin_entry_discards(
-                    drawn, observation.gold_tile, open_melds):
-                enabling.append((draw, live))
+        if include_future:
+            for draw in env.BASE_TILES:
+                capacity = 3 if draw == observation.gold_tile else 4
+                live = capacity - own[draw] - public_after[draw]
+                if live <= 0:
+                    continue
+                drawn = [*after, draw]
+                if rules.youjin_entry_discards(
+                        drawn, observation.gold_tile, open_melds):
+                    enabling.append((draw, live))
 
         out.append(YoujinDiscardPotential(
             discard=discard,
@@ -121,6 +143,7 @@ def estimate_youjin_discard_potentials(
             future_entry_types=len(enabling),
             enabling_draws=tuple(enabling),
             gold_count_after_discard=after.count(observation.gold_tile),
+            meld_deficit=deficit,
         ))
     return tuple(out)
 
@@ -128,14 +151,17 @@ def estimate_youjin_discard_potentials(
 class GoldYoujinShadowAgent(MeldAwareShantenAgent):
     """V0.10 policy with read-only Jin/Youjin structural diagnostics.
 
-    The returned action is always exactly V0.10.  A hypothetical structural
-    choice is computed only inside V0.10's exact ordinary-offense tie, so the
-    audit can answer whether confirmed Youjin structure has enough signal to
-    justify a future tie-break experiment without sacrificing current offense.
+    The returned action is always exactly V0.10. A hypothetical structural
+    choice is computed across the whole minimum-shanten frontier, so the audit
+    can measure how much immediate ordinary efficiency would be traded for a
+    smaller confirmed Youjin meld deficit. No shadow choice is executed.
     """
 
-    def __init__(self, seed=None, template_samples=32):
+    def __init__(self, seed=None, template_samples=32, *, include_future=True):
         super().__init__(seed=seed, template_samples=template_samples)
+        if type(include_future) is not bool:
+            raise ValueError("include_future must be boolean")
+        self.include_future = include_future
         self._gold_diagnostics = []
         self._gold_diagnostic_index = 0
 
@@ -159,39 +185,108 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             return baseline
 
         legal_by_tile = {action.tile: action for action in discards}
-        ties = best_offense_ties(
+        frontier = min_shanten_discards(
             observation.hand,
             gold_tile=observation.gold_tile,
             open_melds=len(observation.melds[observation.seat]),
             visible_tiles=_public_base_tiles(observation),
             allowed_discards=tuple(legal_by_tile),
         )
-        candidates = tuple(item.discard for item in ties)
-        potentials = estimate_youjin_discard_potentials(
-            observation, candidates
+        candidates = tuple(item.discard for item in frontier)
+        # First evaluate only confirmed structural distance. Future one-draw
+        # enumeration is optional because it is substantially more expensive.
+        coarse = estimate_youjin_discard_potentials(
+            observation, candidates, include_future=False
         )
-        by_tile = {item.discard: item for item in potentials}
-        structural_choice = max(
-            potentials,
-            key=lambda item: (
-                item.structural_key,
-                -env.BASE_TILES.index(item.discard),
-            ),
+        coarse_by_tile = {item.discard: item for item in coarse}
+        best_coarse_key = max(
+            (
+                item.immediate_entry,
+                -(99 if item.meld_deficit is None else item.meld_deficit),
+            )
+            for item in coarse
         )
+        finalists = tuple(
+            item.discard for item in coarse
+            if (
+                item.immediate_entry,
+                -(99 if item.meld_deficit is None else item.meld_deficit),
+            ) == best_coarse_key
+        )
+        by_eff = {item.discard: item for item in frontier}
+
+        if self.include_future:
+            detailed_tiles = tuple(dict.fromkeys(
+                (baseline.action.tile, *finalists)
+            ))
+            potentials = estimate_youjin_discard_potentials(
+                observation, detailed_tiles, include_future=True
+            )
+            by_tile = {item.discard: item for item in potentials}
+            best_full_key = max(
+                by_tile[tile].structural_key for tile in finalists
+            )
+            if (baseline.action.tile in finalists
+                    and by_tile[baseline.action.tile].structural_key == best_full_key):
+                structural_choice = by_tile[baseline.action.tile]
+            else:
+                structural_choice = min(
+                    (
+                        by_tile[tile] for tile in finalists
+                        if by_tile[tile].structural_key == best_full_key
+                    ),
+                    key=lambda item: env.BASE_TILES.index(item.discard),
+                )
+            finalist_future_keys = {
+                (
+                    by_tile[tile].future_entry_live_copies,
+                    by_tile[tile].future_entry_types,
+                )
+                for tile in finalists
+            }
+        else:
+            by_tile = coarse_by_tile
+            if baseline.action.tile in finalists:
+                structural_choice = coarse_by_tile[baseline.action.tile]
+            else:
+                structural_choice = min(
+                    (coarse_by_tile[tile] for tile in finalists),
+                    key=lambda item: env.BASE_TILES.index(item.discard),
+                )
+            finalist_future_keys = {(0, 0)}
+
         baseline_potential = by_tile[baseline.action.tile]
-        distinct_keys = {item.structural_key for item in potentials}
+        baseline_eff = by_eff[baseline.action.tile]
+        best_eff = by_eff[structural_choice.discard]
+        coarse_keys = {
+            (
+                item.immediate_entry,
+                item.meld_deficit,
+            )
+            for item in coarse
+        }
+        signal_differentiated = (
+            len(coarse_keys) > 1
+            or (self.include_future and len(finalist_future_keys) > 1)
+        )
         context = observation.match_context
+        baseline_deficit = baseline_potential.meld_deficit
+        best_deficit = structural_choice.meld_deficit
+        deficit_delta = (
+            None if baseline_deficit is None or best_deficit is None
+            else best_deficit - baseline_deficit
+        )
         self._gold_diagnostics.append(GoldYoujinShadowDiagnostic(
             decision_index=self._gold_diagnostic_index,
             phase=observation.phase,
             gold_count=observation.hand.count(observation.gold_tile),
-            shanten=ties[0].shanten,
-            exact_offense_tie_count=len(ties),
+            shanten=frontier[0].shanten,
+            min_shanten_frontier_size=len(frontier),
             baseline_tile=baseline.action.tile,
             structural_choice_tile=structural_choice.discard,
             would_change_v010=(
                 structural_choice.discard != baseline.action.tile),
-            signal_differentiated=len(distinct_keys) > 1,
+            signal_differentiated=signal_differentiated,
             baseline_immediate_entry=baseline_potential.immediate_entry,
             best_immediate_entry=structural_choice.immediate_entry,
             baseline_future_live_copies=(
@@ -206,6 +301,17 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             future_type_delta=(
                 structural_choice.future_entry_types
                 - baseline_potential.future_entry_types),
+            baseline_meld_deficit=baseline_deficit,
+            best_meld_deficit=best_deficit,
+            meld_deficit_delta=deficit_delta,
+            baseline_live_copies=baseline_eff.total_live_copies,
+            best_live_copies=best_eff.total_live_copies,
+            immediate_live_delta=(
+                best_eff.total_live_copies - baseline_eff.total_live_copies),
+            baseline_effective_types=len(baseline_eff.effective_tiles),
+            best_effective_types=len(best_eff.effective_tiles),
+            immediate_type_delta=(
+                len(best_eff.effective_tiles) - len(baseline_eff.effective_tiles)),
             hand_index=(context.hand_index if context else None),
             score_margin_for_actor=(
                 context.margin_for(observation.seat) if context else None),
@@ -216,7 +322,11 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             baseline.action,
             f"{baseline.reason}; gold_youjin_shadow keeps V0.10 action "
             f"(shadow_choice={structural_choice.discard}, "
-            f"immediate={structural_choice.immediate_entry}, "
-            f"future_live={structural_choice.future_entry_live_copies}, "
-            f"future_types={structural_choice.future_entry_types})",
+            f"meld_deficit={baseline_potential.meld_deficit}"
+            f"->{structural_choice.meld_deficit}, "
+            f"live={baseline_eff.total_live_copies}"
+            f"->{best_eff.total_live_copies}, "
+            f"types={len(baseline_eff.effective_tiles)}"
+            f"->{len(best_eff.effective_tiles)}, "
+            f"future_live={structural_choice.future_entry_live_copies})",
         )

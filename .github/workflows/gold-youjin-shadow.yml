@@ -27,9 +27,9 @@ jobs:
       - name: Run shadow audit
         run: |
           mkdir -p data/evaluations/gold-youjin-shadow
-          /usr/bin/time -v python -B -m workspace.simulator.gold_youjin_shadow \
-            --pairs 1 \
-            --seed-start 410000 \
+          /usr/bin/time -v python -B -m workspace.simulator.youjin_deficit_hand_smoke \
+            --hands 32 \
+            --seed-start 430000 \
             --max-steps 1000 \
             > data/evaluations/gold-youjin-shadow/report.json \
             2> data/evaluations/gold-youjin-shadow/runtime.txt
@@ -43,28 +43,29 @@ jobs:
 
           data = json.loads(Path("data/evaluations/gold-youjin-shadow/report.json").read_text())
           keys = (
-              "pairs",
-              "completed_attempts",
-              "stopped_attempts",
+              "hands_requested",
+              "status_counts",
+              "unknown_reasons",
               "gold_discard_decisions",
-              "gold_decisions_by_gold_count",
-              "exact_offense_tie_decisions",
-              "signal_differentiated_ties",
+              "multi_candidate_min_shanten_decisions",
+              "signal_differentiated_frontiers",
               "shadow_would_change_v010",
               "shadow_change_rate_among_gold_decisions",
-              "shadow_change_rate_among_exact_ties",
-              "baseline_immediate_youjin_entries",
-              "best_immediate_youjin_entries",
-              "ties_by_shanten",
-              "changes_by_shanten",
-              "mean_future_youjin_live_delta_on_change",
-              "changes_improving_future_youjin_live",
+              "shadow_change_rate_among_multi_frontiers",
+              "mean_meld_deficit_delta_on_change",
+              "changes_reducing_meld_deficit",
+              "mean_immediate_live_delta_on_change",
+              "mean_immediate_type_delta_on_change",
+              "changes_losing_live_copies",
+              "changes_losing_effective_types",
+              "changes_with_live_loss_at_most_one",
+              "changes_with_no_type_loss",
           )
           summary = {key: data.get(key) for key in keys}
           print(json.dumps(summary, ensure_ascii=False, indent=2))
           with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
-              fh.write("# Jin / Youjin structural shadow audit\n\n")
-              fh.write("Fresh seed 410000, both seat orders. Shadow policy always executes V0.10.\n\n")
+              fh.write("# Jin / Youjin meld-deficit shadow audit\n\n")
+              fh.write("Thirty-two fresh ordinary-hand seeds 430000..430031; both seats use the shadow policy, which always executes V0.10.\n\n")
               fh.write("```json\n")
               fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
               fh.write("\n```\n")
