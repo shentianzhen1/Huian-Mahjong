@@ -1,5 +1,17 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 Youjin-family opponent response correction
+
+Player clarification from the target Huian two-player room now confirms a common opponent interception rule for all three established Youjin stages:
+
+- **Youjin / Double-You / Triple-You each give the opponent exactly one draw opportunity to self-draw Hu.**
+- If the opponent self-draws on that opportunity, the opponent wins and the pending Youjin stage is intercepted.
+- If the opponent does not self-draw Hu on that opportunity, the current Youjin stage succeeds.
+- This supersedes the older working note that Triple-You / 三游 / 三金游 could only be intercepted by kong-replacement self-draw.
+- This correction does **not** close the remaining timing gap: the exact point at which a successful stage settles versus remains eligible for a further upgrade is still UNKNOWN and must not be inferred.
+
+The response rule is now exposed by `youjin_opponent_response_rule()`; stage entry/upgrade continues to be explicit and evidence-gated rather than inferred from gold count.
+
 ## 2026-09-19 match_evidence_001 complete eight-hand replay
 
 A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/match_evidence_001_full_8hand/README.md`.
