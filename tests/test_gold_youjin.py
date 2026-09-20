@@ -5,6 +5,8 @@ from unittest.mock import patch
 from huian._legacy import env
 from workspace.ai import (
     ConstrainedGoldYoujinAgent,
+    AgentDecision,
+    ConstrainedGoldYoujinAgent,
     GoldYoujinShadowAgent,
     GoldYoujinShadowDiagnostic,
     MeldAwareShantenAgent,
@@ -201,6 +203,121 @@ class ConstrainedGoldYoujinAgentTests(unittest.TestCase):
         self.assertEqual(actual.action, baseline.action)
         self.assertEqual(agent.v015_diagnostics[0].reason_gate,
                          "no_material_youjin_gain")
+
+
+class ConstrainedGoldYoujinAgentTests(unittest.TestCase):
+    def _run_candidate(
+            self, *, baseline_tile="N", candidate_tile="E",
+            baseline_live=10, candidate_live=9,
+            baseline_types=3, candidate_types=3,
+            baseline_potential=None, candidate_potential=None):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = AgentDecision(
+            env.Action(0, env.ActionType.DISCARD, tile=baseline_tile),
+            "v0.10 baseline",
+        )
+        frontier = (
+            SimpleNamespace(
+                discard=baseline_tile,
+                shanten=1,
+                total_live_copies=baseline_live,
+                effective_tiles=tuple(range(baseline_types)),
+            ),
+            SimpleNamespace(
+                discard=candidate_tile,
+                shanten=1,
+                total_live_copies=candidate_live,
+                effective_tiles=tuple(range(candidate_types)),
+            ),
+        )
+        if baseline_potential is None:
+            baseline_potential = YoujinDiscardPotential(
+                baseline_tile, False, 0, 0, (), 1)
+        if candidate_potential is None:
+            candidate_potential = YoujinDiscardPotential(
+                candidate_tile, True, 0, 0, (), 1)
+
+        agent = ConstrainedGoldYoujinAgent(seed=17, template_samples=32)
+        with patch.object(
+                MeldAwareShantenAgent, "choose_decision",
+                return_value=baseline), patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=(baseline_potential, candidate_potential)):
+            actual = agent.choose_decision(view, actions)
+        return agent, actual, baseline
+
+    def test_immediate_youjin_may_trade_at_most_one_live_copy(self):
+        agent, actual, baseline = self._run_candidate(
+            baseline_live=10, candidate_live=9,
+            baseline_types=3, candidate_types=3,
+        )
+        self.assertNotEqual(actual.action, baseline.action)
+        self.assertEqual(actual.action.tile, "E")
+        self.assertIn("immediate_youjin_entry", actual.reason)
+        record = agent.v015_diagnostics[-1]
+        self.assertTrue(record.changed_from_v010)
+        self.assertEqual(record.immediate_live_delta, -1)
+        self.assertEqual(record.immediate_type_delta, 0)
+
+    def test_candidate_cannot_trade_two_live_copies_for_youjin(self):
+        agent, actual, baseline = self._run_candidate(
+            baseline_live=10, candidate_live=8,
+            baseline_types=3, candidate_types=3,
+        )
+        self.assertEqual(actual.action, baseline.action)
+        self.assertTrue(all(
+            not record.changed_from_v010 for record in agent.v015_diagnostics
+        ))
+
+    def test_candidate_cannot_reduce_effective_tile_types(self):
+        agent, actual, baseline = self._run_candidate(
+            baseline_live=10, candidate_live=10,
+            baseline_types=3, candidate_types=2,
+        )
+        self.assertEqual(actual.action, baseline.action)
+        self.assertTrue(all(
+            not record.changed_from_v010 for record in agent.v015_diagnostics
+        ))
+
+    def test_material_future_youjin_gain_can_override_without_immediate_entry(self):
+        baseline_potential = YoujinDiscardPotential(
+            "N", False, 2, 1, (("M9", 2),), 1)
+        candidate_potential = YoujinDiscardPotential(
+            "E", False, 7, 3,
+            (("M1", 3), ("M2", 2), ("M3", 2)), 1)
+        agent, actual, baseline = self._run_candidate(
+            baseline_live=10,
+            candidate_live=10,
+            baseline_types=3,
+            candidate_types=3,
+            baseline_potential=baseline_potential,
+            candidate_potential=candidate_potential,
+        )
+        self.assertNotEqual(actual.action, baseline.action)
+        self.assertEqual(actual.action.tile, "E")
+        self.assertIn("future_youjin_gain", actual.reason)
+        record = agent.v015_diagnostics[-1]
+        self.assertEqual(record.future_live_delta, 5)
+        self.assertEqual(record.future_type_delta, 2)
+
+    def test_small_future_gain_does_not_override(self):
+        baseline_potential = YoujinDiscardPotential(
+            "N", False, 2, 1, (("M9", 2),), 1)
+        candidate_potential = YoujinDiscardPotential(
+            "E", False, 5, 2, (("M1", 3), ("M2", 2)), 1)
+        agent, actual, baseline = self._run_candidate(
+            baseline_potential=baseline_potential,
+            candidate_potential=candidate_potential,
+        )
+        self.assertEqual(actual.action, baseline.action)
+        self.assertEqual(
+            agent.v015_diagnostics[-1].reason_gate,
+            "no_material_youjin_gain",
+        )
 
 
 class GoldYoujinShadowSummaryTests(unittest.TestCase):
