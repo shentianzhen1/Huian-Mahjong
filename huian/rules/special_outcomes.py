@@ -23,6 +23,7 @@ class SpecialOutcomeProfile:
     multiplier_status: EvidenceStatus
     settlement_rule_id: str | None
     settlement_ready: bool
+    fixed_fan: int | None = None
     project_rule: bool = False
     note: str = ""
 
@@ -35,6 +36,8 @@ class SpecialOutcomeProfile:
         }
         if self.multiplier is not None:
             data["multiplier"] = self.multiplier
+        if self.fixed_fan is not None:
+            data["fixed_fan"] = self.fixed_fan
         if self.settlement_rule_id is not None:
             data["settlement_rule_id"] = self.settlement_rule_id
         if self.project_rule:
@@ -69,15 +72,18 @@ _SPECIAL_OUTCOMES = {
     "EIGHT_FLOWER_YOU": SpecialOutcomeProfile(
         key="EIGHT_FLOWER_YOU",
         declaration_phase="EIGHT_FLOWER_YOU_DECLARED",
-        multiplier=2,
+        multiplier=1,
         multiplier_status=EvidenceStatus.WORKING,
         settlement_rule_id="eight_flower_real_multiplier",
         settlement_ready=True,
+        fixed_fan=16,
         project_rule=True,
         note=(
-            "Project provisional x2 only. The in-game page lists eight-flowers-together "
-            "as 16 fan, which is a fan item rather than proof of Eight-Flower-You x16. "
-            "Real-room Eight-Flower-You multiplier still awaits direct settlement evidence."
+            "Project working rule 2026-09-20: Eight-Flower-You is a fixed 16-fan "
+            "special result with no extra Hu multiplier and no stacking of the ordinary "
+            "8 flower fan, gold fan, triplet/kong fan, or other additive fan. PASS still "
+            "keeps the eight flowers as ordinary +8 fan for later non-Eight-Flower Hu. "
+            "Real target-room terminal settlement remains unobserved."
         ),
     ),
     "YOUJIN": SpecialOutcomeProfile(
