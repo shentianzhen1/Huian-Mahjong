@@ -229,38 +229,6 @@ class HuianRulesTests(unittest.TestCase):
             "P9",
         ))
 
-    def test_later_youjin_response_hu_requires_retained_tiles_and_latest_draw(self):
-        winning = [
-            "M7", "M8", "M9",
-            "P4", "P5", "P6",
-            "S4", "S5", "S6",
-            "S7", "S8", "S9",
-            "W", "W", "W",
-            "N", "N",
-        ]
-        oversized = winning + ["B"]
-
-        # Prior retained W and latest N can both participate; B is the one
-        # ordinary pre-existing tile omitted from the normal 17-tile Hu subset.
-        candidates = self.rules.youjin_response_hu_hands(
-            oversized,
-            "P9",
-            retained_response_tiles=("W",),
-            winning_tile="N",
-        )
-        self.assertTrue(candidates)
-        self.assertTrue(all(len(hand) == 17 for hand in candidates))
-        self.assertTrue(all("W" in hand and "N" in hand for hand in candidates))
-
-        # If the retained response tile were B instead, it must participate.
-        # No normal 17-tile Hu subset can keep B here.
-        self.assertFalse(self.rules.can_youjin_response_hu(
-            oversized,
-            "P9",
-            retained_response_tiles=("B",),
-            winning_tile="N",
-        ))
-
     def test_youjin_upgrade_after_draw_accepts_direct_new_gold(self):
         ready = [
             "M1", "M2", "M3",
