@@ -20,7 +20,7 @@ class YoujinImmediateValue:
     single_you_points: int
     continuation_live_copies: int
     continuation_weighted_points: int
-    gross_weighted_points: int
+    one_draw_weighted_points: int
     current_dealer_base: int
 
     @property
@@ -122,6 +122,9 @@ def evaluate_immediate_youjin_value(
         single_you_points=single_points,
         continuation_live_copies=live,
         continuation_weighted_points=weighted,
-        gross_weighted_points=single_points + weighted,
+        one_draw_weighted_points=(
+            single_points * max(0, observation.wall_remaining - live)
+            + live * single_points + weighted
+        ),
         current_dealer_base=current_dealer_base,
     )
