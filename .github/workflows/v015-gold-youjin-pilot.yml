@@ -1,0 +1,73 @@
+name: V0.15 Constrained Gold Youjin Pilot
+
+on:
+  pull_request:
+    paths:
+      - "workspace/ai/gold_youjin.py"
+      - "workspace/ai/__init__.py"
+      - "workspace/simulator/gold_youjin_benchmark.py"
+      - "tests/test_gold_youjin.py"
+      - ".github/workflows/v015-gold-youjin-pilot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pilot:
+    name: 1-pair V0.15 vs V0.10 pilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Run paired pilot
+        run: |
+          mkdir -p data/evaluations/v015-gold-youjin
+          /usr/bin/time -v python -B -m workspace.simulator.gold_youjin_benchmark \
+            --pairs 1 \
+            --seed-start 420000 \
+            --max-steps 1000 \
+            > data/evaluations/v015-gold-youjin/report.json \
+            2> data/evaluations/v015-gold-youjin/runtime.txt
+
+      - name: Publish summary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          data = json.loads(Path("data/evaluations/v015-gold-youjin/report.json").read_text())
+          keys = (
+              "completed_pairs",
+              "completed_matches",
+              "match_wins_by_agent",
+              "ties",
+              "paired_score_delta_mean",
+              "paired_score_delta_ci95_low",
+              "paired_score_delta_ci95_high",
+              "paired_deal_in_delta_mean",
+              "average_deal_ins_per_match_by_agent",
+              "unknown_reasons",
+          )
+          summary = {key: data.get(key) for key in keys}
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
+              fh.write("# V0.15 constrained Gold/Youjin pilot\n\n")
+              fh.write("Fresh seed 420000, both seat orders.\n\n")
+              fh.write("```json\n")
+              fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
+              fh.write("\n```\n")
+          PY
+
+      - name: Upload pilot report
+        uses: actions/upload-artifact@v7
+        with:
+          name: v015-gold-youjin-420000-1pair
+          path: |
+            data/evaluations/v015-gold-youjin/report.json
+            data/evaluations/v015-gold-youjin/runtime.txt
+          if-no-files-found: error
