@@ -1,0 +1,71 @@
+name: V0.15b Youjin Pilot
+
+on:
+  pull_request:
+    paths:
+      - "workspace/ai/gold_youjin.py"
+      - "workspace/ai/__init__.py"
+      - "workspace/simulator/match_evaluation.py"
+      - "workspace/simulator/youjin_benchmark.py"
+      - ".github/workflows/v015b-youjin-pilot.yml"
+  workflow_dispatch:
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Run five-pair real Youjin pilot
+        run: |
+          mkdir -p data/evaluations/v015b-youjin
+          /usr/bin/time -v python -B -m workspace.simulator.youjin_benchmark \
+            --pairs 5 \
+            --seed-start 440000 \
+            --max-steps 1000 \
+            > data/evaluations/v015b-youjin/report.json \
+            2> data/evaluations/v015b-youjin/runtime.txt
+      - name: Publish summary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.loads(
+              Path("data/evaluations/v015b-youjin/report.json").read_text()
+          )
+          keys = (
+              "total_pairs",
+              "completed_pairs",
+              "incomplete_pairs",
+              "completed_matches",
+              "stopped_matches",
+              "match_wins_by_agent",
+              "ties",
+              "average_final_score_by_agent",
+              "paired_score_delta_mean",
+              "paired_score_delta_ci95_low",
+              "paired_score_delta_ci95_high",
+              "paired_deal_in_delta_mean",
+              "win_source_counts",
+              "unknown_reasons",
+          )
+          summary = {key: report.get(key) for key in keys}
+          print(json.dumps(summary, indent=2))
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a") as fh:
+              fh.write("# V0.15b direct Youjin pilot\n\n")
+              fh.write("Five paired seeds 440000..440004, both seat orders.\n\n")
+              fh.write("```json\n")
+              fh.write(json.dumps(summary, indent=2))
+              fh.write("\n```\n")
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: v015b-youjin-pilot-440000-5pairs
+          path: |
+            data/evaluations/v015b-youjin/report.json
+            data/evaluations/v015b-youjin/runtime.txt
