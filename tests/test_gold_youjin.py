@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from huian._legacy import env
 from workspace.ai import (
+    DirectYoujinAgent,
     GoldYoujinShadowAgent,
     GoldYoujinShadowDiagnostic,
     MeldAwareShantenAgent,
@@ -153,6 +154,63 @@ class GoldYoujinPotentialTests(unittest.TestCase):
         self.assertEqual(agent.gold_diagnostics[-1].structural_choice_tile,
                          expected.action.tile)
         self.assertFalse(agent.gold_diagnostics[-1].would_change_v010)
+
+class DirectYoujinAgentTests(unittest.TestCase):
+    def test_direct_youjin_offer_overrides_v010_discard_only(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        offer = env.Action(
+            0, env.ActionType.YOUJIN, tile="N",
+            metadata={"stage": "YOUJIN", "optional": True},
+        )
+        agent = DirectYoujinAgent(seed=17, template_samples=32)
+        decision = agent.choose_decision(view, [offer, *actions])
+        self.assertEqual(decision.action, offer)
+        self.assertIn("v0.15b", decision.reason)
+
+    def test_direct_youjin_preserves_legal_hu_priority(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        offer = env.Action(
+            0, env.ActionType.YOUJIN, tile="N",
+            metadata={"stage": "YOUJIN", "optional": True},
+        )
+        hu = env.Action(
+            0, env.ActionType.HU, tile="N",
+            metadata={"win_source": "self_draw"},
+        )
+        decision = DirectYoujinAgent(
+            seed=18, template_samples=32
+        ).choose_decision(view, [offer, hu, *discards(hand)])
+        self.assertEqual(decision.action, hu)
+
+    def test_direct_youjin_takes_explicit_upgrade_over_pass(self):
+        view = PlayerObservation(
+            0, tuple(YOUJIN_READY), "P9", "YOUJIN_UPGRADE_CHOICE",
+            0, 40, ((), ()), ((), ()), ((), ()),
+        )
+        for kind in (env.ActionType.DOUBLE_YOU, env.ActionType.TRIPLE_YOU):
+            with self.subTest(kind=kind):
+                upgrade = env.Action(0, kind, tile="P9")
+                pass_action = env.Action(0, env.ActionType.PASS)
+                decision = DirectYoujinAgent(
+                    seed=19, template_samples=32
+                ).choose_decision(view, [pass_action, upgrade])
+                self.assertEqual(decision.action, upgrade)
+
+    def test_direct_youjin_is_exact_v010_without_special_action(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = MeldAwareShantenAgent(
+            seed=20, template_samples=32
+        ).choose_decision(view, actions)
+        candidate = DirectYoujinAgent(
+            seed=20, template_samples=32
+        ).choose_decision(view, actions)
+        self.assertEqual(candidate.action, baseline.action)
+
 
 class GoldYoujinShadowSummaryTests(unittest.TestCase):
     def test_summary_counts_differentiated_shadow_changes(self):
