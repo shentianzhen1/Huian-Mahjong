@@ -115,6 +115,45 @@ class GoldYoujinPotentialTests(unittest.TestCase):
         self.assertEqual(record.immediate_type_delta, 0)
 
 
+    def test_shadow_preserves_v010_when_meld_deficit_is_equal(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        expected = MeldAwareShantenAgent(
+            seed=13, template_samples=32).choose_decision(view, actions)
+        other = next(tile for tile in sorted(set(hand))
+                     if tile != expected.action.tile)
+
+        frontier = (
+            SimpleNamespace(
+                discard=expected.action.tile, shanten=1,
+                total_live_copies=10, effective_tiles=(1, 2, 3)),
+            SimpleNamespace(
+                discard=other, shanten=1,
+                total_live_copies=4, effective_tiles=(1,)),
+        )
+        potentials = (
+            YoujinDiscardPotential(
+                expected.action.tile, False, 0, 0, (), 1,
+                meld_deficit=2),
+            YoujinDiscardPotential(
+                other, False, 0, 0, (), 1,
+                meld_deficit=2),
+        )
+        agent = GoldYoujinShadowAgent(
+            seed=13, template_samples=32, include_future=False)
+        with patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=potentials):
+            actual = agent.choose_decision(view, actions)
+
+        self.assertEqual(actual.action, expected.action)
+        self.assertEqual(agent.gold_diagnostics[-1].structural_choice_tile,
+                         expected.action.tile)
+        self.assertFalse(agent.gold_diagnostics[-1].would_change_v010)
+
 class GoldYoujinShadowSummaryTests(unittest.TestCase):
     def test_summary_counts_differentiated_shadow_changes(self):
         record = GoldYoujinShadowDiagnostic(
