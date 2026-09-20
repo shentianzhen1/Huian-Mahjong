@@ -83,6 +83,56 @@ def youjin_opponent_response_rule(stage):
     return YoujinOpponentResponseRule(stage=parsed)
 
 
+@dataclass(frozen=True)
+class YoujinProgressionRule:
+    """Confirmed post-interception progression for an established Youjin stage.
+
+    For single/double You, an opponent miss does not immediately settle:
+    the Youjin player receives one normal wall-head draw.  If that draw creates
+    a gold that can be independently discarded while preserving the roaming-gold
+    ready structure, upgrade is optional; declining it settles the current stage.
+
+    Triple-You has no further upgrade draw: an opponent miss settles Triple-You.
+    """
+
+    stage: YoujinStage
+    youjin_player_draw_chances: int
+    next_stage: YoujinStage | None
+    upgrade_optional: bool
+    opponent_miss_outcome: str
+    no_upgrade_outcome: str = "SETTLE_CURRENT_STAGE"
+
+
+def youjin_progression_rule(stage):
+    """Return the confirmed single->double->triple progression contract."""
+    parsed = stage if isinstance(stage, YoujinStage) else YoujinStage(stage)
+    if parsed == YoujinStage.NORMAL:
+        raise ValueError("NORMAL has no Youjin progression rule")
+    if parsed == YoujinStage.YOUJIN:
+        return YoujinProgressionRule(
+            stage=parsed,
+            youjin_player_draw_chances=1,
+            next_stage=YoujinStage.DOUBLE_YOU,
+            upgrade_optional=True,
+            opponent_miss_outcome="YOUJIN_PLAYER_DRAW",
+        )
+    if parsed == YoujinStage.DOUBLE_YOU:
+        return YoujinProgressionRule(
+            stage=parsed,
+            youjin_player_draw_chances=1,
+            next_stage=YoujinStage.TRIPLE_YOU,
+            upgrade_optional=True,
+            opponent_miss_outcome="YOUJIN_PLAYER_DRAW",
+        )
+    return YoujinProgressionRule(
+        stage=YoujinStage.TRIPLE_YOU,
+        youjin_player_draw_chances=0,
+        next_stage=None,
+        upgrade_optional=False,
+        opponent_miss_outcome="SETTLE_CURRENT_STAGE",
+    )
+
+
 class SanjindaoChoice(str, Enum):
     DECLARE_SANJINDAO = "DECLARE_SANJINDAO"
     CONTINUE_PLAY = "CONTINUE_PLAY"
