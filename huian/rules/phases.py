@@ -3,7 +3,8 @@ from collections import Counter
 from dataclasses import dataclass
 from huian._legacy import env
 from .config import UnknownRuleError
-from .context import DrawSource, HuContext, WinSource, YoujinStage
+from .context import (DrawSource, HuContext, WinSource, YoujinStage,
+                      youjin_progression_rule)
 from .engine import nonnegative_int
 
 
@@ -427,9 +428,45 @@ def report(adapter, state):
                           "youjin_interception": True},
             )
             return ActionReport((action,), ("youjin_response_hu_decline",))
-        return ActionReport((), ("youjin_stage_success_resolution",))
+        raise ValueError(
+            "A non-winning Youjin response draw must already advance past response phase"
+        )
     if state.phase == "YOUJIN_STAGE_SUCCESS":
-        return ActionReport((), ("youjin_stage_success_resolution",))
+        p = state.current_player
+        stage = YoujinStage(state.special_states[p])
+        progression = youjin_progression_rule(stage)
+        if progression.youjin_player_draw_chances == 0:
+            raise ValueError("Triple-You opponent miss must advance directly to settlement")
+        return ActionReport((env.Action(
+            p, env.ActionType.DRAW,
+            metadata={"source": DrawSource.WALL_HEAD.value,
+                      "youjin_progression": stage.value},
+        ),))
+    if state.phase == "YOUJIN_UPGRADE_CHOICE":
+        p = state.current_player
+        stage = YoujinStage(state.special_states[p])
+        progression = youjin_progression_rule(stage)
+        if progression.next_stage is None:
+            raise ValueError("No upgrade exists after Triple-You")
+        action_type = (
+            env.ActionType.DOUBLE_YOU
+            if progression.next_stage == YoujinStage.DOUBLE_YOU
+            else env.ActionType.TRIPLE_YOU
+        )
+        upgrade = env.Action(
+            p, action_type, tile=state.gold_tile,
+            metadata={"from_stage": stage.value,
+                      "to_stage": progression.next_stage.value,
+                      "optional": True,
+                      "upgrade_rule": "free_gold_after_own_draw"},
+        )
+        decline = env.Action(
+            p, env.ActionType.PASS,
+            metadata={"youjin_upgrade_decline": True, "stage": stage.value},
+        )
+        return ActionReport((upgrade, decline))
+    if state.phase == "YOUJIN_SETTLEMENT_READY":
+        return ActionReport((), ("youjin_settlement_context",))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
     p = state.current_player
