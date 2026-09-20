@@ -684,7 +684,24 @@ class HuianEnvironment:
             raise DeadLoopError("Scenario action limit reached; not a drawn hand")
         was_youjin_response_draw = self._state.phase == "YOUJIN_RESPONSE_DRAW"
         was_youjin_player_draw = self._state.phase == "YOUJIN_STAGE_SUCCESS"
+        active_youjin = [
+            index for index, value in enumerate(self._state.special_states)
+            if value in (
+                YoujinStage.YOUJIN.value,
+                YoujinStage.DOUBLE_YOU.value,
+                YoujinStage.TRIPLE_YOU.value,
+            )
+        ]
+        was_youjin_kong_tail_draw = (
+            len(active_youjin) == 1
+            and self._state.current_player == active_youjin[0]
+            and self._state.phase in ("AFTER_AN_GANG", "AFTER_ADDED_GANG")
+        )
         action = self._canonical_action(self._state, deepcopy(action))
+        was_youjin_kong_decline = (
+            self._state.phase == "YOUJIN_KONG_CHOICE"
+            and action.type == env.ActionType.PASS
+        )
         self.rules.authorize_action(self.state, action)
         before = self._state.state_hash()
         candidate = deepcopy(self._state)
@@ -706,13 +723,15 @@ class HuianEnvironment:
             # cannot continue until that mandatory response discard is made.
             candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
         if was_youjin_player_draw and not candidate.terminal:
-            youjin_player = action.player
-            if self.rules.rules.can_youjin_upgrade_after_draw(
-                    candidate.hands[youjin_player], candidate.gold_tile,
-                    len(candidate.melds[youjin_player])):
-                candidate.phase = "YOUJIN_UPGRADE_CHOICE"
-            else:
-                candidate.phase = "YOUJIN_SETTLEMENT_READY"
+            self._advance_youjin_after_own_draw(
+                candidate, action.player, allow_kong_choice=True
+            )
+        if was_youjin_kong_decline and not candidate.terminal:
+            self._advance_youjin_after_own_draw(
+                candidate, action.player, allow_kong_choice=False
+            )
+        if was_youjin_kong_tail_draw and not candidate.terminal:
+            candidate.phase = "YOUJIN_KONG_AFTER_DRAW"
         candidate.turn_index += 1
         candidate.last_action = action.to_dict()
         self.rules.validate_state(candidate)
@@ -736,6 +755,32 @@ class HuianEnvironment:
         self._events.append(event)
         self._seen.add(position)
         return self.state, deepcopy(event)
+
+    def _advance_youjin_after_own_draw(
+            self, state, player, *, allow_kong_choice):
+        """Continue the confirmed Youjin own-draw path.
+
+        Not choosing a Kong preserves the prior behavior exactly:
+        structurally free Jin -> optional upgrade, otherwise settle current stage.
+        """
+        if allow_kong_choice:
+            concealed = self.rules.rules.concealed_kongs(
+                state.hands[player], state.gold_tile
+            )
+            added = ()
+            if self.rules.rules.config.enable_added_kong:
+                added = self.rules.rules.added_kong_options(
+                    state.hands[player], state.melds[player], state.gold_tile
+                )
+            if concealed or added:
+                state.phase = "YOUJIN_KONG_CHOICE"
+                return
+        if self.rules.rules.can_youjin_upgrade_after_draw(
+                state.hands[player], state.gold_tile,
+                len(state.melds[player])):
+            state.phase = "YOUJIN_UPGRADE_CHOICE"
+        else:
+            state.phase = "YOUJIN_SETTLEMENT_READY"
 
     @classmethod
     def _resolve_flowers(cls, state):
@@ -804,6 +849,18 @@ class HuianEnvironment:
             else:
                 state.phase = "AFTER_DRAW"
         elif kind == T.PASS:
+            if state.phase == "YOUJIN_KONG_AFTER_DRAW":
+                if not action.metadata.get("youjin_kong_tail_settle"):
+                    raise ValueError(
+                        "Youjin Kong-tail PASS must explicitly choose special settlement"
+                    )
+                state.phase = "YOUJIN_SETTLEMENT_READY"
+                return
+            if state.phase == "YOUJIN_KONG_CHOICE":
+                if not action.metadata.get("youjin_kong_decline"):
+                    raise ValueError("Youjin Kong PASS must explicitly decline Kong")
+                state.phase = "AFTER_DRAW"
+                return
             if state.phase == "YOUJIN_UPGRADE_CHOICE":
                 if not action.metadata.get("youjin_upgrade_decline"):
                     raise ValueError("Youjin upgrade PASS must explicitly decline upgrade")
@@ -833,8 +890,9 @@ class HuianEnvironment:
             state.current_player = 1 - p
             state.phase = "YOUJIN_RESPONSE_DRAW"
         elif kind in (T.DOUBLE_YOU, T.TRIPLE_YOU):
-            if state.phase != "YOUJIN_UPGRADE_CHOICE":
-                raise ValueError("Youjin upgrade action requires its choice phase")
+            if state.phase not in (
+                    "YOUJIN_UPGRADE_CHOICE", "YOUJIN_KONG_AFTER_DRAW"):
+                raise ValueError("Youjin upgrade action requires an upgrade-capable phase")
             current = YoujinStage(state.special_states[p])
             progression = youjin_progression_rule(current)
             expected = (
@@ -852,7 +910,21 @@ class HuianEnvironment:
             state.current_player = 1 - p
             state.phase = "YOUJIN_RESPONSE_DRAW"
         elif kind == T.DISCARD:
-            if state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
+            if state.phase == "YOUJIN_KONG_AFTER_DRAW":
+                if action.metadata.get("youjin_kong_discard") is not True:
+                    raise ValueError(
+                        "Youjin Kong-tail continuation requires its special discard"
+                    )
+                if action.tile == state.gold_tile:
+                    raise ValueError(
+                        "Discarding Jin from a Youjin Kong tail must use the upgrade action"
+                    )
+                state.hands[p].remove(action.tile)
+                state.discards[p].append(action.tile)
+                state.pending_discard = None
+                state.current_player = 1 - p
+                state.phase = "YOUJIN_RESPONSE_DRAW"
+            elif state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
                 if action.metadata.get("youjin_response_discard") is not True:
                     raise ValueError(
                         "Missed Youjin response requires an explicit response discard"

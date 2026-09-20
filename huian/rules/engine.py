@@ -417,6 +417,37 @@ class HuianRules:
                 out.append(tile)
         return tuple(out)
 
+    def can_youjin_kong_tail_ordinary_hu(
+            self, hand, gold_tile, open_melds=0, *, win_context):
+        """Return whether a Youjin Kong-tail draw has a genuine ordinary Hu split.
+
+        The established roaming Jin paired with the just-drawn Kong-tail tile is
+        the special Youjin mechanism, not by itself an ordinary self-draw.  A
+        normal Hu option is exposed only when at least one legal ordinary
+        decomposition exists whose pair is not exactly {winning tile, GOLD}.
+        """
+        if not isinstance(win_context, HuContext):
+            raise TypeError("win_context must be HuContext")
+        if win_context.source != WinSource.KONG_TAIL_DRAW:
+            raise ValueError("Youjin Kong-tail ordinary Hu requires Kong-tail context")
+        result = self.analyze_hu(
+            hand, gold_tile, open_melds,
+            win_context=win_context,
+            max_decompositions=64,
+        )
+        if not result.legal:
+            return False
+        winning_tile = win_context.winning_tile
+        for decomposition in result.decompositions:
+            pair = decomposition.pair
+            roaming_pair = (
+                pair.count("GOLD") == 1
+                and pair.count(winning_tile) == 1
+            )
+            if not roaming_pair:
+                return True
+        return False
+
     def can_youjin_upgrade_after_draw(self, hand, gold_tile, open_melds=0):
         """Return whether the just-completed own draw can support the next You stage.
 
