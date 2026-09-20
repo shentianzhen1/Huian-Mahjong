@@ -85,7 +85,7 @@ def _public_base_tiles(observation):
 
 
 def estimate_youjin_discard_potentials(
-        observation, candidate_discards, *, rules=None):
+        observation, candidate_discards, *, rules=None, include_future=True):
     """Return structural Youjin opportunity for candidate ordinary discards.
 
     The candidate discard itself becomes public before future-draw live-copy
@@ -100,6 +100,8 @@ def estimate_youjin_discard_potentials(
     if any(tile not in observation.hand for tile in candidates):
         raise ValueError("every candidate discard must be in the acting hand")
 
+    if type(include_future) is not bool:
+        raise ValueError("include_future must be boolean")
     rules = HuianRules() if rules is None else rules
     open_melds = len(observation.melds[observation.seat])
     public = Counter(_public_base_tiles(observation))
@@ -123,15 +125,16 @@ def estimate_youjin_discard_potentials(
                 "youjin_meld_deficit=0 must match confirmed Youjin-ready structure"
             )
         enabling = []
-        for draw in env.BASE_TILES:
-            capacity = 3 if draw == observation.gold_tile else 4
-            live = capacity - own[draw] - public_after[draw]
-            if live <= 0:
-                continue
-            drawn = [*after, draw]
-            if rules.youjin_entry_discards(
-                    drawn, observation.gold_tile, open_melds):
-                enabling.append((draw, live))
+        if include_future:
+            for draw in env.BASE_TILES:
+                capacity = 3 if draw == observation.gold_tile else 4
+                live = capacity - own[draw] - public_after[draw]
+                if live <= 0:
+                    continue
+                drawn = [*after, draw]
+                if rules.youjin_entry_discards(
+                        drawn, observation.gold_tile, open_melds):
+                    enabling.append((draw, live))
 
         out.append(YoujinDiscardPotential(
             discard=discard,
@@ -187,13 +190,35 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             allowed_discards=tuple(legal_by_tile),
         )
         candidates = tuple(item.discard for item in frontier)
+        # Two-stage computation preserves the structural ordering while avoiding
+        # a 34-draw future enumeration for every minimum-shanten candidate.
+        coarse = estimate_youjin_discard_potentials(
+            observation, candidates, include_future=False
+        )
+        best_coarse_key = max(
+            (
+                item.immediate_entry,
+                -(99 if item.meld_deficit is None else item.meld_deficit),
+            )
+            for item in coarse
+        )
+        finalists = tuple(
+            item.discard for item in coarse
+            if (
+                item.immediate_entry,
+                -(99 if item.meld_deficit is None else item.meld_deficit),
+            ) == best_coarse_key
+        )
+        detailed_tiles = tuple(dict.fromkeys(
+            (baseline.action.tile, *finalists)
+        ))
         potentials = estimate_youjin_discard_potentials(
-            observation, candidates
+            observation, detailed_tiles, include_future=True
         )
         by_tile = {item.discard: item for item in potentials}
         by_eff = {item.discard: item for item in frontier}
         structural_choice = max(
-            potentials,
+            (by_tile[tile] for tile in finalists),
             key=lambda item: (
                 item.structural_key,
                 -env.BASE_TILES.index(item.discard),
@@ -202,7 +227,23 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
         baseline_potential = by_tile[baseline.action.tile]
         baseline_eff = by_eff[baseline.action.tile]
         best_eff = by_eff[structural_choice.discard]
-        distinct_keys = {item.structural_key for item in potentials}
+        coarse_keys = {
+            (
+                item.immediate_entry,
+                item.meld_deficit,
+            )
+            for item in coarse
+        }
+        finalist_future_keys = {
+            (
+                by_tile[tile].future_entry_live_copies,
+                by_tile[tile].future_entry_types,
+            )
+            for tile in finalists
+        }
+        signal_differentiated = (
+            len(coarse_keys) > 1 or len(finalist_future_keys) > 1
+        )
         context = observation.match_context
         baseline_deficit = baseline_potential.meld_deficit
         best_deficit = structural_choice.meld_deficit
@@ -220,7 +261,7 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             structural_choice_tile=structural_choice.discard,
             would_change_v010=(
                 structural_choice.discard != baseline.action.tile),
-            signal_differentiated=len(distinct_keys) > 1,
+            signal_differentiated=signal_differentiated,
             baseline_immediate_entry=baseline_potential.immediate_entry,
             best_immediate_entry=structural_choice.immediate_entry,
             baseline_future_live_copies=(
