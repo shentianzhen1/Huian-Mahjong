@@ -21,7 +21,55 @@ PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "AFTER_PENG", "AFTER_MING_GANG", "AFTER_AN_GANG", "NEED_FLOWER_REPLACE",
           "OPENING_QIANGJIN_CHECK", "HU_DECLARED", "TERMINAL", "ROB_KONG_WINDOW",
           "ROB_KONG_HU_DECLARED", "AFTER_ADDED_GANG", "QIANGJIN_DECLARED",
-          "SANJINDAO_DECLARED", "EIGHT_FLOWER_YOU_DECLARED"}
+          "SANJINDAO_DECLARED", "EIGHT_FLOWER_YOU_DECLARED",
+          "YOUJIN_RESPONSE_DRAW", "YOUJIN_RESPONSE_AFTER_DRAW",
+          "YOUJIN_STAGE_SUCCESS"}
+
+
+YOUJIN_RESPONSE_PHASES = {
+    "YOUJIN_RESPONSE_DRAW",
+    "YOUJIN_RESPONSE_AFTER_DRAW",
+    "YOUJIN_STAGE_SUCCESS",
+}
+
+
+def _active_youjin_players(state):
+    stages = {
+        YoujinStage.YOUJIN.value,
+        YoujinStage.DOUBLE_YOU.value,
+        YoujinStage.TRIPLE_YOU.value,
+    }
+    return tuple(i for i, stage in enumerate(state.special_states) if stage in stages)
+
+
+def _validate_youjin_response_phase(state):
+    if state.phase not in YOUJIN_RESPONSE_PHASES:
+        return
+    active = _active_youjin_players(state)
+    if len(active) != 1:
+        raise ValueError("A Youjin response phase requires exactly one active Youjin stage")
+    youjin_player = active[0]
+    responder = 1 - youjin_player
+    if state.phase in ("YOUJIN_RESPONSE_DRAW", "YOUJIN_RESPONSE_AFTER_DRAW"):
+        if state.current_player != responder:
+            raise ValueError("The opponent must own the one-draw Youjin response window")
+    else:
+        if state.current_player != youjin_player:
+            raise ValueError("Successful Youjin stage must return control to the Youjin player")
+    if state.pending_discard is not None:
+        raise ValueError("Youjin response does not use an ordinary discard-claim window")
+    if state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
+        last = state.last_action
+        if (not isinstance(last, dict)
+                or last.get("type") != env.ActionType.DRAW.value
+                or last.get("player") != responder):
+            raise ValueError("Youjin response-after-draw requires the opponent draw event")
+    if state.phase == "YOUJIN_STAGE_SUCCESS":
+        last = state.last_action
+        if (not isinstance(last, dict)
+                or last.get("type") != env.ActionType.DRAW.value
+                or last.get("player") != responder):
+            raise ValueError("Youjin stage success requires the completed opponent draw")
 
 
 def _validate_pending_kong(state):
@@ -207,6 +255,7 @@ def validate(adapter, state):
     if Counter(state.physical_tiles()) != Counter(env.full_wall()):
         raise ValueError("Every physical tile must be accounted for: exactly the 144-tile set")
     _validate_pending_kong(state)
+    _validate_youjin_response_phase(state)
     if state.phase == "READY":
         if (len(state.wall) != 144 or state.gold_tile is not None
                 or state.pending_discard is not None or state.pending_hu is not None):
@@ -248,8 +297,13 @@ def validate(adapter, state):
             expected = 16 - 3 * len(state.melds[p])
             if p == state.current_player and state.phase in (
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
-                "OPENING_QIANGJIN_CHECK"
+                "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW"
             ):
+                expected += 1
+            if (state.phase == "YOUJIN_STAGE_SUCCESS"
+                    and p == 1 - state.current_player):
+                # The opponent's one allowed response draw remains physically
+                # in hand even though the Youjin player owns the successful stage.
                 expected += 1
             if (p == state.current_player and state.phase == "HU_DECLARED"
                     and state.pending_hu["source"] != WinSource.DISCARD.value):
@@ -319,6 +373,33 @@ def report(adapter, state):
         if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
             return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
         return ActionReport((), ("win_declaration_and_settlement",))
+    if state.phase == "YOUJIN_RESPONSE_DRAW":
+        p = state.current_player
+        return ActionReport((env.Action(
+            p, env.ActionType.DRAW,
+            metadata={"source": DrawSource.WALL_HEAD.value},
+        ),))
+    if state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
+        p = state.current_player
+        last = state.last_action
+        try:
+            draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
+        except (AttributeError, ValueError):
+            raise ValueError("Youjin response draw must retain auditable draw metadata")
+        if adapter.rules.can_win(
+                state.hands[p], state.gold_tile, len(state.melds[p]),
+                win_context=draw_context):
+            action = env.Action(
+                p, env.ActionType.HU, tile=draw_context.winning_tile,
+                metadata={"win_source": draw_context.source.value,
+                          "kong_kind": (draw_context.kong_kind.value
+                                        if draw_context.kong_kind else None),
+                          "youjin_interception": True},
+            )
+            return ActionReport((action,), ("youjin_response_hu_decline",))
+        return ActionReport((), ("youjin_stage_success_resolution",))
+    if state.phase == "YOUJIN_STAGE_SUCCESS":
+        return ActionReport((), ("youjin_stage_success_resolution",))
     if state.special_states != ["NORMAL", "NORMAL"]:
         return ActionReport((), ("youjin_permissions",))
     p = state.current_player
