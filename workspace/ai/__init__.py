@@ -16,6 +16,9 @@ from .opponent import (OrdinaryDealInEstimate, TenpaiWaitLossEstimate,
                        is_ordinary_ron_tenpai)
 from .score_ev import (OrdinaryImmediateValue, OrdinaryWinningDrawValue,
                        evaluate_tenpai_ordinary_value)
+from .gold_youjin import (GoldYoujinShadowAgent, GoldYoujinShadowDiagnostic,
+                          YoujinDiscardPotential,
+                          estimate_youjin_discard_potentials)
 from .kong import KongOpportunity, analyze_kong_actions
 from .kong_agent import KongAwareMeldAgent
 from .rollout import (PublicRolloutAgent, PublicRolloutDecisionDiagnostic,
@@ -53,7 +56,10 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "estimate_tenpai_wait_risk_scores",
            "estimate_tenpai_wait_loss_scores", "is_ordinary_ron_tenpai",
            "OrdinaryImmediateValue", "OrdinaryWinningDrawValue",
-           "evaluate_tenpai_ordinary_value", "KongOpportunity",
+           "evaluate_tenpai_ordinary_value",
+           "YoujinDiscardPotential", "GoldYoujinShadowDiagnostic",
+           "GoldYoujinShadowAgent", "estimate_youjin_discard_potentials",
+           "KongOpportunity",
            "analyze_kong_actions", "KongAwareMeldAgent",
            "PublicRolloutAgent", "PublicRolloutDecisionDiagnostic",
            "PublicRolloutEstimate", "estimate_public_rollouts"]
