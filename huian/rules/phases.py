@@ -70,10 +70,14 @@ def _validate_youjin_response_phase(adapter, state):
             raise ValueError("Youjin response-after-draw requires the opponent draw event")
     if state.phase == "YOUJIN_STAGE_SUCCESS":
         last = state.last_action
+        metadata = last.get("metadata", {}) if isinstance(last, dict) else {}
         if (not isinstance(last, dict)
-                or last.get("type") != env.ActionType.DRAW.value
-                or last.get("player") != responder):
-            raise ValueError("Youjin stage success requires the completed opponent draw")
+                or last.get("type") != env.ActionType.DISCARD.value
+                or last.get("player") != responder
+                or metadata.get("youjin_response_discard") is not True):
+            raise ValueError(
+                "Youjin stage success requires the opponent's mandatory response discard"
+            )
     if state.phase == "YOUJIN_UPGRADE_CHOICE":
         if state.special_states[youjin_player] == YoujinStage.TRIPLE_YOU.value:
             raise ValueError("Triple-You has no further upgrade choice")
@@ -271,24 +275,6 @@ def validate(adapter, state):
             s != "UNKNOWN" and s not in known_special_states
             for s in state.special_states):
         raise ValueError("Invalid special states")
-    if (not isinstance(state.youjin_response_tiles, list)
-            or len(state.youjin_response_tiles) != 2
-            or any(not isinstance(zone, list)
-                   for zone in state.youjin_response_tiles)
-            or any(tile not in env.BASE_TILES
-                   for zone in state.youjin_response_tiles for tile in zone)
-            or any(len(zone) > 3 for zone in state.youjin_response_tiles)):
-        raise ValueError(
-            "Youjin retained response tiles must be two normal-tile lists of length <= 3"
-        )
-    for p, retained in enumerate(state.youjin_response_tiles):
-        hand_counts = Counter(state.hands[p])
-        retained_counts = Counter(retained)
-        if any(hand_counts[tile] < count
-               for tile, count in retained_counts.items()):
-            raise ValueError(
-                "Every retained Youjin response tile must still be in that player's hand"
-            )
     if any(type(r) is not int for r in state.rewards):
         raise ValueError("Rewards must be integer net scores")
     if not state.terminal and state.rewards != [0, 0]:
@@ -335,8 +321,7 @@ def validate(adapter, state):
     _validate_pending_hu(state)
     if not state.terminal:
         for p in range(2):
-            expected = (16 - 3 * len(state.melds[p])
-                        + len(state.youjin_response_tiles[p]))
+            expected = 16 - 3 * len(state.melds[p])
             if p == state.current_player and state.phase in (
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
                 "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW",
@@ -417,10 +402,6 @@ def report(adapter, state):
     if state.phase == "HU_DECLARED":
         if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
             return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
-        winner = state.pending_hu["winner"]
-        if (state.pending_hu["source"] == WinSource.SELF_DRAW.value
-                and state.youjin_response_tiles[winner]):
-            return ActionReport((), ("youjin_response_extra_tile_scoring",))
         return ActionReport((), ("win_declaration_and_settlement",))
     if state.phase == "YOUJIN_RESPONSE_DRAW":
         p = state.current_player
@@ -435,19 +416,9 @@ def report(adapter, state):
             draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
         except (AttributeError, ValueError):
             raise ValueError("Youjin response draw must retain auditable draw metadata")
-        retained = tuple(state.youjin_response_tiles[p])
-        if retained:
-            eligible = adapter.rules.can_youjin_response_hu(
-                state.hands[p],
-                state.gold_tile,
-                len(state.melds[p]),
-                retained_response_tiles=retained,
-                winning_tile=draw_context.winning_tile,
-            )
-        else:
-            eligible = adapter.rules.can_win(
-                state.hands[p], state.gold_tile, len(state.melds[p]),
-                win_context=draw_context)
+        eligible = adapter.rules.can_win(
+            state.hands[p], state.gold_tile, len(state.melds[p]),
+            win_context=draw_context)
         if eligible:
             action = env.Action(
                 p, env.ActionType.HU, tile=draw_context.winning_tile,
@@ -456,17 +427,27 @@ def report(adapter, state):
                     "kong_kind": (draw_context.kong_kind.value
                                   if draw_context.kong_kind else None),
                     "youjin_interception": True,
-                    "retained_response_tiles": list(retained),
-                    "oversized_response_hand": bool(retained),
                 },
             )
-            unresolved = ("youjin_response_hu_decline",)
-            if retained:
-                unresolved += ("youjin_response_extra_tile_scoring",)
-            return ActionReport((action,), unresolved)
-        raise ValueError(
-            "A non-winning Youjin response draw must already advance past response phase"
+            return ActionReport((action,), ("youjin_response_hu_decline",))
+        stage = next(
+            YoujinStage(value) for value in state.special_states
+            if value in (
+                YoujinStage.YOUJIN.value,
+                YoujinStage.DOUBLE_YOU.value,
+                YoujinStage.TRIPLE_YOU.value,
+            )
         )
+        return ActionReport(tuple(
+            env.Action(
+                p, env.ActionType.DISCARD, tile=tile,
+                metadata={
+                    "youjin_response_discard": True,
+                    "stage": stage.value,
+                },
+            )
+            for tile in sorted(set(state.hands[p]))
+        ))
     if state.phase == "YOUJIN_STAGE_SUCCESS":
         p = state.current_player
         stage = YoujinStage(state.special_states[p])
