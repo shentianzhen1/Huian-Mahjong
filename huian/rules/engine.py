@@ -165,8 +165,7 @@ class HuianRules:
         if (gold_tile is not None
                 and hand.count(gold_tile) > self.MAX_PLAYABLE_GOLD_COPIES):
             raise ValueError(
-                "Opened gold indicator is non-drawable; a hand exceeds the "
-                "registered playable-gold-copy limit"
+                "Opened gold indicator is non-drawable; a hand can contain at most three gold copies"
             )
 
     def meld_options(self, hand, discard, gold_tile=None):
