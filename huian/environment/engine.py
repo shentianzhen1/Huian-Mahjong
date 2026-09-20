@@ -277,17 +277,15 @@ class HuianEnvironment:
         return self.state, deepcopy(event)
 
     def finalize_youjin_outcome(
-            self, *, current_dealer_base, winner_fan):
-        """Settle a confirmed Youjin-family stage using audited fan input.
+            self, *, current_dealer_base, winner_fan=None):
+        """Settle a confirmed Youjin-family stage.
 
-        Formula confirmed from target-room settlements:
-            (current dealer base + winner fan) * stage multiplier
-        where multipliers are Youjin x4, Double-You x8, Triple-You x16.
+        Formula:
+            (current dealer base + winner fan) * 4/8/16
 
-        This method deliberately accepts an explicit winner_fan instead of
-        guessing a special-hand fan decomposition. The caller may supply a
-        replay/Vision-confirmed fan total or a future audited special fan
-        aggregator.
+        winner_fan remains an optional replay/externally-audited override.
+        When omitted, fan is derived from the confirmed Youjin meld-only
+        structure using already-confirmed additive fan components.
         """
         self._require_state()
         if self._state.terminal:
@@ -296,8 +294,9 @@ class HuianEnvironment:
             raise ValueError("Youjin settlement requires YOUJIN_SETTLEMENT_READY")
         if type(current_dealer_base) is not int or current_dealer_base < 0:
             raise ValueError("current_dealer_base must be a nonnegative integer")
-        if type(winner_fan) is not int or winner_fan < 0:
-            raise ValueError("winner_fan must be a nonnegative integer")
+        if winner_fan is not None and (
+                type(winner_fan) is not int or winner_fan < 0):
+            raise ValueError("winner_fan must be a nonnegative integer or None")
 
         active = [
             index for index, value in enumerate(self._state.special_states)
@@ -313,6 +312,39 @@ class HuianEnvironment:
         if winner != self._state.current_player:
             raise ValueError("Youjin settlement winner must own the current stage")
         stage = YoujinStage(self._state.special_states[winner])
+
+        fan_result = None
+        pair_tile = None
+        if winner_fan is None:
+            if stage in (YoujinStage.YOUJIN, YoujinStage.DOUBLE_YOU):
+                for event in reversed(self._events):
+                    action = event.get("action", {})
+                    metadata = action.get("metadata", {})
+                    if (action.get("player") == winner
+                            and action.get("type") == env.ActionType.DRAW.value
+                            and metadata.get("youjin_progression") == stage.value):
+                        pair_tile = metadata.get(
+                            "effective_drawn_tile",
+                            metadata.get("drawn_tile"),
+                        )
+                        break
+                if pair_tile is None:
+                    raise ValueError(
+                        "Single/Double-You settlement requires its audited progression draw"
+                    )
+
+            fan_result = self.rules.rules.aggregate_youjin_fan(
+                self._state.hands[winner],
+                self._state.melds[winner],
+                self._state.flowers[winner],
+                self._state.gold_tile,
+                pair_tile=pair_tile,
+            )
+            if not fan_result.complete:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError(*fan_result.unresolved)
+            winner_fan = fan_result.fan
+
         terms = self.rules.rules.youjin_score_terms(
             stage,
             winner=winner,
@@ -333,36 +365,30 @@ class HuianEnvironment:
         candidate.pending_kong = None
         self.rules.validate_state(candidate)
 
-        event = {
-            "seq": len(self._events),
-            "action": {
-                "player": winner,
-                "type": "END_HAND",
-                "tile": None,
-                "tiles": [],
-                "metadata": {
-                    "source": "confirmed_youjin_formula",
-                    "special": stage.value,
-                    "current_dealer_base": current_dealer_base,
-                    "winner_fan": winner_fan,
-                    "multiplier": terms.youjin_multiplier,
-                    "dealer_multiplier": terms.dealer_multiplier,
-                    "formula": "(current_dealer_base + winner_fan) * multiplier",
-                    "rewards": list(rewards),
-                },
-            },
-            "before_hash": before,
-            "after_hash": candidate.state_hash(),
-            "wall_remaining": candidate.wall_remaining(),
-            "current_player_after": candidate.current_player,
-            "phase_after": candidate.phase,
-        }
-        self._state = candidate
-        self._events.append(event)
-        self._seen.add(self._position(candidate))
-        return self.state, deepcopy(event)
+        metadata = {
+            "source": (
+                "automatic_youjin_fan"
+                if fan_result is not None
+                else "confirmed_youjin_formula"
+            ),
+            "special": stage.value,
+            "current_dealer_base": current_dealer_base,
+            "winner_fan": winner_fan,
+            "multiplier": terms.youjin_multiplier,
+            "dealer_multiplier": terms.dealer_multZ\Y\Ü][HÝ\[ÙX[\Ø\ÙH
+ÈÚ[\Ù[H
+][\Y\]Ø\È\Ý
+]Ø\ÊKBYZ\Ý[H\ÈÝÛNY]Y]VÈ[ÝZ[ÜZ\Ý[HHHZ\Ý[BY[Ü\Ý[\ÈÝÛNY]Y]VÈ[ØÛÛ\Û[ÈHHÞÂØ]YÛÜHÛÛ\Û[Ø]YÛÜK[ÛÛ\Û[[]Z[ÛÛ\Û[]Z[Ý]\ÈÛÛ\Û[Ý]\Ë[YK]Y[ÙHÛÛ\Û[]Y[ÙKHÜÛÛ\Û[[[Ü\Ý[ÛÛ\Û[×BY]Y]VÈ[ØØ[Y]WÙ[ÈHH\Ý
+[Ü\Ý[Ø[Y]WÙ[ÊBY]Y]VÈ[ÙXÛÛ\ÜÚ][ÛØÛÝ[HH[Ü\Ý[XÛÛ\ÜÚ][ÛØÛÝ[Y]Y]VÈ[ÜÙ[XÝYÙXÛÛ\ÜÚ][ÛÚ[^HH
+[Ü\Ý[Ù[XÝYÙXÛÛ\ÜÚ][ÛÚ[^
+BY]Y]VÈ[ÜÙ[XÝ[ÛÜÛXÞHHH[Ü\Ý[Ù[XÝ[ÛÜÛXÞB][HÂÙ\H[Ù[Ù][ÊKXÝ[ÛÂ^Y\Ú[\\HSÒS[HÛK[\È×KY]Y]HY]Y]KKYÜWÚ\ÚYÜKY\Ú\ÚØ[Y]KÝ]WÚ\Ú
 
-    def finalize_eight_flower_outcome(
+KØ[Ü[XZ[[ÈØ[Y]KØ[Ü[XZ[[Ê
+KÝ\[Ü^Y\ØY\Ø[Y]KÝ\[Ü^Y\\ÙWØY\Ø[Y]K\ÙKBÙ[ÜÝ]HHØ[Y]BÙ[Ù][Ë\[
+][
+BÙ[ÜÙY[Y
+Ù[ÜÜÚ][ÛØ[Y]JJB]\Ù[Ý]KY\ÛÜJ][
+B    def finalize_eight_flower_outcome(
             self, *, current_dealer_base, winner_fan=None):
         """Settle the project Eight-Flower-You working rule.
 
