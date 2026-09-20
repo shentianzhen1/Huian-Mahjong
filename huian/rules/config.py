@@ -29,6 +29,7 @@ UNKNOWN_RULES = MappingProxyType({
     "double_you_entry": "Whether any rare direct Double-You entry exists outside the confirmed sequential Youjin upgrade path",
     "youjin_permissions": "Remaining edge interactions outside the confirmed sequential Youjin/Double-/Triple-You chain",
     "youjin_response_hu_decline": "Whether an opponent who can self-draw in the one-draw Youjin interception window may decline that Hu",
+    "youjin_response_hu_extra_tiles": "How later Double-/Triple-You response self-Hu is structurally checked when earlier missed response draws remain in the opponent hand",
     "youjin_settlement_context": "Current dealer base and audited winner fan are required inputs to the confirmed Youjin settlement formula",
     "room_multipliers": "Unconfirmed multipliers outside confirmed Pinghu/Zimo, Youjin x4, Double-You x8 and Triple-You x16",
     "flower_open_gold": "Ownership, replacement and reopening after revealing a flower",
