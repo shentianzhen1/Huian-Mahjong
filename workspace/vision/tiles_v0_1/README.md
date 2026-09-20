@@ -180,6 +180,52 @@ meta/roi_profiles/   仅限已验证窗口尺寸的 ROI/槽位配置
 
 下一步优先做：剩余牌/局号的多时点统计、新独立录像PublicState泛化，以及缩放/移动/遮挡压力测试。
 
+
+### PublicState 多时点评估器
+
+`evaluate_public_state.py` 把“多时点统计”固定成可重复口径。每个稳定时点提供真值以及1张或多张附近帧；工具同时报告：
+
+- 原始单帧比分对 / 局号 / 剩余牌的可读率、可读时准确率和总体精确率；
+- 短窗口经过 `fuse_public_state()` 后的同三项指标；
+- 完整 PublicState（三项同时可读且正确）的覆盖率/准确率；
+- OCR score mode、单帧 issues、融合 issues 的计数；
+- 跨时点只传递“无 issue 且已有可信比分+局号”的 previous state，避免坏读数污染下一时点；
+- 输出始终 `safe_for_executor=false`。
+
+manifest 示例：
+
+```json
+{
+  "samples": [
+    {
+      "id": "session_01_t10",
+      "frames": [
+        "session_01/t09_9.png",
+        "session_01/t10_0.png",
+        "session_01/t10_1.png"
+      ],
+      "truth": {
+        "hand_number": 1,
+        "top_right_score": 1000,
+        "bottom_left_score": 1000,
+        "remaining_tiles": 107
+      }
+    }
+  ]
+}
+```
+
+相对路径默认以 manifest 所在目录解析，也可通过 `--frames-root` 指定抽帧根目录。真值不会注入 OCR；只有显式提供 `engine_expected_scores` 时，才测试线上本来就可用的 MatchScoreState 交叉校验。
+
+```powershell
+.\.venv-capture\Scripts\python.exe -m workspace.vision.tiles_v0_1.evaluate_public_state `
+  dataset/tiles_v0_1/meta/public_state_eval.json `
+  --minimum-votes 2 `
+  --output dataset/tiles_v0_1/meta/public_state_eval_report.json
+```
+
+现有8局的比分已经有5/10/15/20/25/30/40/50秒共64组统计；剩余牌/局号目前只有每局约10秒的8个种子真值。下一步直接用本工具给这两个字段补齐多时点统计，而不是再手工汇总。
+
 ### Executor 门槛
 
 Tiles V0.1 的所有输出仍固定 `safe_for_executor: false`。当前阶段不因为某一项指标看起来好就开启自动点击；至少要先有目标小程序真实录像上的：
