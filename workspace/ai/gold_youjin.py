@@ -157,8 +157,11 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
     smaller confirmed Youjin meld deficit. No shadow choice is executed.
     """
 
-    def __init__(self, seed=None, template_samples=32):
+    def __init__(self, seed=None, template_samples=32, *, include_future=True):
         super().__init__(seed=seed, template_samples=template_samples)
+        if type(include_future) is not bool:
+            raise ValueError("include_future must be boolean")
+        self.include_future = include_future
         self._gold_diagnostics = []
         self._gold_diagnostic_index = 0
 
@@ -190,11 +193,12 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             allowed_discards=tuple(legal_by_tile),
         )
         candidates = tuple(item.discard for item in frontier)
-        # Two-stage computation preserves the structural ordering while avoiding
-        # a 34-draw future enumeration for every minimum-shanten candidate.
+        # First evaluate only confirmed structural distance. Future one-draw
+        # enumeration is optional because it is substantially more expensive.
         coarse = estimate_youjin_discard_potentials(
             observation, candidates, include_future=False
         )
+        coarse_by_tile = {item.discard: item for item in coarse}
         best_coarse_key = max(
             (
                 item.immediate_entry,
@@ -209,21 +213,38 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
                 -(99 if item.meld_deficit is None else item.meld_deficit),
             ) == best_coarse_key
         )
-        detailed_tiles = tuple(dict.fromkeys(
-            (baseline.action.tile, *finalists)
-        ))
-        potentials = estimate_youjin_discard_potentials(
-            observation, detailed_tiles, include_future=True
-        )
-        by_tile = {item.discard: item for item in potentials}
         by_eff = {item.discard: item for item in frontier}
-        structural_choice = max(
-            (by_tile[tile] for tile in finalists),
-            key=lambda item: (
-                item.structural_key,
-                -env.BASE_TILES.index(item.discard),
-            ),
-        )
+
+        if self.include_future:
+            detailed_tiles = tuple(dict.fromkeys(
+                (baseline.action.tile, *finalists)
+            ))
+            potentials = estimate_youjin_discard_potentials(
+                observation, detailed_tiles, include_future=True
+            )
+            by_tile = {item.discard: item for item in potentials}
+            structural_choice = max(
+                (by_tile[tile] for tile in finalists),
+                key=lambda item: (
+                    item.structural_key,
+                    -env.BASE_TILES.index(item.discard),
+                ),
+            )
+            finalist_future_keys = {
+                (
+                    by_tile[tile].future_entry_live_copies,
+                    by_tile[tile].future_entry_types,
+                )
+                for tile in finalists
+            }
+        else:
+            by_tile = coarse_by_tile
+            structural_choice = min(
+                (coarse_by_tile[tile] for tile in finalists),
+                key=lambda item: env.BASE_TILES.index(item.discard),
+            )
+            finalist_future_keys = {(0, 0)}
+
         baseline_potential = by_tile[baseline.action.tile]
         baseline_eff = by_eff[baseline.action.tile]
         best_eff = by_eff[structural_choice.discard]
@@ -234,15 +255,9 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             )
             for item in coarse
         }
-        finalist_future_keys = {
-            (
-                by_tile[tile].future_entry_live_copies,
-                by_tile[tile].future_entry_types,
-            )
-            for tile in finalists
-        }
         signal_differentiated = (
-            len(coarse_keys) > 1 or len(finalist_future_keys) > 1
+            len(coarse_keys) > 1
+            or (self.include_future and len(finalist_future_keys) > 1)
         )
         context = observation.match_context
         baseline_deficit = baseline_potential.meld_deficit
