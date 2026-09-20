@@ -418,6 +418,8 @@ def report(adapter, state):
             draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
         except (AttributeError, ValueError):
             raise ValueError("Youjin response draw must retain auditable draw metadata")
+        if state.youjin_response_draws[p]:
+            return ActionReport((), ("youjin_response_hu_extra_tiles",))
         if adapter.rules.can_win(
                 state.hands[p], state.gold_tile, len(state.melds[p]),
                 win_context=draw_context):
