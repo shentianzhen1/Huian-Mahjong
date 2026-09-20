@@ -91,7 +91,7 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(after.special_states, ["NORMAL", "NORMAL"])
         self.assertEqual(after.phase, "AFTER_DISCARD")
 
-    def test_single_youjin_declaration_opens_exactly_one_opponent_draw(self):
+    def test_single_youjin_declaration_opens_one_response_then_own_draw(self):
         instance = game(youjin_offer_scenario())
         offer = next(
             a for a in instance.legal_actions()
@@ -109,15 +109,116 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(actions[0].type, env.ActionType.DRAW)
         self.assertEqual(actions[0].metadata, {"source": "wall_head"})
 
-        # This fixture's response hand is not a winning hand after the first
-        # wall-head draw, so the confirmed one-draw opportunity is exhausted.
+        # The missed response draw remains in the opponent's hand.
+        before_response_len = len(instance.state.hands[1])
         resolved, _ = instance.step(actions[0])
         self.assertEqual(resolved.phase, "YOUJIN_STAGE_SUCCESS")
         self.assertEqual(resolved.current_player, 0)
         self.assertEqual(resolved.special_states, ["YOUJIN", "NORMAL"])
+        self.assertEqual(len(resolved.hands[1]), before_response_len + 1)
+        self.assertEqual(resolved.youjin_response_draws, [0, 1])
+
+        # Surviving single You gives the Youjin player exactly one own draw.
+        report = instance.action_report()
+        self.assertEqual(len(report.known_actions), 1)
+        self.assertEqual(report.known_actions[0].type, env.ActionType.DRAW)
+        self.assertEqual(report.known_actions[0].metadata, {
+            "source": "wall_head",
+            "youjin_progression": "YOUJIN",
+        })
+
+    def test_single_youjin_unrelated_own_draw_settles_current_stage(self):
+        state = youjin_offer_scenario()
+        instance = game(state)
+        offer = next(a for a in instance.legal_actions()
+                     if a.type == env.ActionType.YOUJIN)
+        instance.step(offer)
+        instance.step(instance.legal_actions()[0])  # opponent misses
+
+        # Force an unrelated non-gold draw for the Youjin player.
+        candidate = "N"
+        index = instance.state.wall.index(candidate)
+        mutable = instance.state
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+
+        after, _ = instance.step(instance.legal_actions()[0])
+        self.assertEqual(after.phase, "YOUJIN_SETTLEMENT_READY")
+        self.assertEqual(after.special_states, ["YOUJIN", "NORMAL"])
+        self.assertEqual(after.current_player, 0)
+        self.assertEqual(instance.action_report().unresolved,
+                         ("youjin_settlement_context",))
+
+        terminal, event = instance.finalize_youjin_outcome(
+            current_dealer_base=30, winner_fan=3
+        )
+        self.assertTrue(terminal.terminal)
+        self.assertEqual(terminal.terminal_reason, "AUTO_YOUJIN")
+        self.assertEqual(terminal.rewards, [132, -132])
+        self.assertEqual(event["action"]["metadata"]["multiplier"], 4)
+
+    def test_single_youjin_direct_gold_draw_offers_optional_double_you(self):
+        instance = game(youjin_offer_scenario())
+        offer = next(a for a in instance.legal_actions()
+                     if a.type == env.ActionType.YOUJIN)
+        instance.step(offer)
+        instance.step(instance.legal_actions()[0])  # opponent misses
+
+        mutable = instance.state
+        index = mutable.wall.index("P9")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+
+        after, _ = instance.step(instance.legal_actions()[0])
+        self.assertEqual(after.phase, "YOUJIN_UPGRADE_CHOICE")
+        report = instance.action_report()
+        kinds = {action.type for action in report.known_actions}
+        self.assertEqual(kinds, {env.ActionType.DOUBLE_YOU, env.ActionType.PASS})
+
+        # Upgrade is optional. PASS settles the current single-You stage.
+        declined = instance.clone()
+        pass_action = next(a for a in declined.legal_actions()
+                           if a.type == env.ActionType.PASS)
+        settled, _ = declined.step(pass_action)
+        self.assertEqual(settled.phase, "YOUJIN_SETTLEMENT_READY")
+        self.assertEqual(settled.special_states, ["YOUJIN", "NORMAL"])
+
+        # Choosing the upgrade discards one gold and starts Double-You response.
+        upgrade = next(a for a in instance.legal_actions()
+                       if a.type == env.ActionType.DOUBLE_YOU)
+        before_gold = instance.state.hands[0].count("P9")
+        upgraded, _ = instance.step(upgrade)
+        self.assertEqual(upgraded.phase, "YOUJIN_RESPONSE_DRAW")
+        self.assertEqual(upgraded.special_states, ["DOUBLE_YOU", "NORMAL"])
+        self.assertEqual(upgraded.current_player, 1)
+        self.assertEqual(upgraded.hands[0].count("P9"), before_gold - 1)
+        self.assertEqual(upgraded.discards[0][-1], "P9")
+        self.assertIsNone(upgraded.pending_discard)
+
+    def test_later_youjin_response_with_retained_extra_tile_fails_safe(self):
+        instance = game(youjin_offer_scenario())
+        offer = next(a for a in instance.legal_actions()
+                     if a.type == env.ActionType.YOUJIN)
+        instance.step(offer)
+        instance.step(instance.legal_actions()[0])  # first opponent miss retained
+
+        mutable = instance.state
+        index = mutable.wall.index("P9")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+        instance.step(instance.legal_actions()[0])  # own gold draw
+        upgrade = next(a for a in instance.legal_actions()
+                       if a.type == env.ActionType.DOUBLE_YOU)
+        instance.step(upgrade)
+
+        # The opponent now starts from 17 concealed tiles because the previous
+        # missed response draw stayed in hand. After the next response draw the
+        # ordinary exact-size solver must not silently declare "cannot Hu".
+        instance.step(instance.legal_actions()[0])
+        self.assertEqual(instance.state.phase, "YOUJIN_RESPONSE_AFTER_DRAW")
         report = instance.action_report()
         self.assertEqual(report.known_actions, ())
-        self.assertEqual(report.unresolved, ("youjin_stage_success_resolution",))
+        self.assertEqual(report.unresolved, ("youjin_response_hu_extra_tiles",))
 
     def test_youjin_response_draw_can_self_hu_and_cancels_active_stage(self):
         response_tenpai = [
