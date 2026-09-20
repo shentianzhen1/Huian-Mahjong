@@ -1,5 +1,17 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 single-Youjin Environment entry/response window
+
+The confirmed single-Youjin structure is now connected to an explicit Environment path without guessing Double-/Triple-You upgrades:
+
+- After the current Qiangjin/Sanjindao special prompt is closed, every discard returned by `youjin_entry_discards()` is exposed as a distinct optional `YOUJIN` action **alongside the same ordinary DISCARD**. Choosing ordinary discard therefore remains the confirmed “do not Youjin now” path and creates no permanent lockout.
+- Choosing `YOUJIN(tile=X)` discards X to the player's river, sets that player to `YOUJIN`, skips the ordinary discard-claim window, and gives the opponent exactly one wall-head draw.
+- If that one opponent draw cannot self-Hu, the Environment records `YOUJIN_STAGE_SUCCESS` and safely stops at `youjin_stage_success_resolution`; it does not guess terminal settlement versus later upgrade timing.
+- If the opponent can self-Hu on that draw, a normal self-draw HU declaration is exposed. Executing it cancels the active Youjin stage and proceeds through the existing ordinary self-draw declaration/settlement path.
+- Whether an opponent who *can* self-Hu may deliberately decline that Hu remains `youjin_response_hu_decline` UNKNOWN; the known HU action can still be audited/executed without inventing the decline branch.
+
+This removes the old blanket “any active Youjin = immediate `youjin_permissions` stop” for the confirmed single-Youjin response window only. Double-/Triple-You entry and upgrade predicates remain unresolved.
+
 ## 2026-09-20 single-Youjin structural eligibility confirmed
 
 Player clarification closes the core **single-Youjin hand-shape predicate**:
