@@ -1,0 +1,51 @@
+name: Youjin special-aware A/B
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/youjin-special-aware-eval-v2-20260920
+
+permissions:
+  contents: read
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e .
+      - name: Run 5-pair Youjin-aware pilot
+        run: |
+          mkdir -p data/evaluations/youjin-special-aware
+          /usr/bin/time -v python -B -m workspace.simulator.youjin_match_benchmark \
+            --pairs 5 \
+            --seed-start 440000 \
+            --max-steps 1000 \
+            > data/evaluations/youjin-special-aware/report.json \
+            2> data/evaluations/youjin-special-aware/runtime.txt
+      - name: Print compact summary
+        run: |
+          python - <<'PY'
+          import json
+          p = "data/evaluations/youjin-special-aware/report.json"
+          d = json.load(open(p, encoding="utf-8"))
+          keys = (
+              "total_pairs", "completed_pairs", "incomplete_pairs",
+              "completed_matches", "stopped_matches", "match_wins_by_agent",
+              "ties", "paired_score_delta_mean",
+              "paired_score_delta_ci95_low", "paired_score_delta_ci95_high",
+              "paired_deal_in_delta_mean", "win_source_counts",
+              "unknown_reasons",
+          )
+          print(json.dumps({k: d[k] for k in keys}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v6
+        with:
+          name: youjin-special-aware-5pairs
+          path: data/evaluations/youjin-special-aware/
