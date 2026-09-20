@@ -76,15 +76,25 @@ print(report.unknown_reasons)
 
 旧37:3、+228.25属于历史代码快照，不能再作为当前晋级门槛。
 
-### 当前晋级基线：TenpaiRisk V0.6
+### 当前晋级基线：MeldAware V0.10
 
-项目当前正式策略入口为 `workspace.ai.CurrentAgent`，等价于 `TenpaiRiskTieBreakAgent V0.6`；`ShantenAgent V0.3`保留为对照基线。
+项目当前正式策略入口为 `workspace.ai.CurrentAgent`，等价于 `MeldAwareShantenAgent V0.10`；`TenpaiRiskTieBreakAgent V0.6`保留固定主对照，`ShantenAgent V0.3`保留牌效消融基线。
 
 V0.6晋级使用300个互不重叠seed pair、每个seed原座位+换座两场，共600场完整8局。A/B随机seed已改为跟Agent身份走，避免换座时改变随机策略内部采样流。合并结果：V0.6 322胜、V0.3 275胜、3平；平均配对最终分差+18.9633，约95% CI +2.3881～+35.5385；点炮319 vs 350。
 
-后续策略晋级应以 `CurrentAgent` 为主对照，并继续保留V0.3消融结果。证据见 `references/ai/2026-09-19/v06_promotion.md`。
+后续策略晋级应以 `CurrentAgent V0.10` 为主对照，并继续保留V0.6/V0.3结果。V0.10晋级证据见 `references/ai/2026-09-19/meld_aware_v010_promotion.md`；V0.6历史证据见 `references/ai/2026-09-19/v06_promotion.md`。
 
 保存型单局评估现可使用 `--agent-a current` 或 `--agent-a shanten_v03` 显式选择当前策略或旧基线。
+
+### V0.14 Rollout候选 pilot
+
+`PublicRolloutAgent V0.14` 当前只作为实验候选。标准25-pair方向性测试：
+
+```powershell
+python -B -m workspace.simulator.rollout_benchmark --pairs 25 --seed-start 400000
+```
+
+该命令直接调用 `run_paired_real_matches()`，使用固定牌墙、正反换座和Agent身份稳定RNG比较 V0.14 candidate vs V0.10。pilot只用于判断是否值得扩大样本，不能作为晋级证据；正式晋级仍需更大独立seed确认。
 
 
 ## 普通点炮概率离线校准
