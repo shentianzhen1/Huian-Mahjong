@@ -72,6 +72,7 @@ class YoujinOpponentResponseRule:
     stage: YoujinStage
     opponent_draw_chances: int = 1
     allowed_win_sources: tuple[WinSource, ...] = (WinSource.SELF_DRAW,)
+    self_hu_optional: bool = True
     must_discard_after_miss: bool = True
     no_win_outcome: str = "YOUJIN_RESPONSE_DISCARD"
 

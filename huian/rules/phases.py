@@ -419,17 +419,6 @@ def report(adapter, state):
         eligible = adapter.rules.can_win(
             state.hands[p], state.gold_tile, len(state.melds[p]),
             win_context=draw_context)
-        if eligible:
-            action = env.Action(
-                p, env.ActionType.HU, tile=draw_context.winning_tile,
-                metadata={
-                    "win_source": draw_context.source.value,
-                    "kong_kind": (draw_context.kong_kind.value
-                                  if draw_context.kong_kind else None),
-                    "youjin_interception": True,
-                },
-            )
-            return ActionReport((action,), ("youjin_response_hu_decline",))
         stage = next(
             YoujinStage(value) for value in state.special_states
             if value in (
@@ -438,16 +427,30 @@ def report(adapter, state):
                 YoujinStage.TRIPLE_YOU.value,
             )
         )
-        return ActionReport(tuple(
+        discards = tuple(
             env.Action(
                 p, env.ActionType.DISCARD, tile=tile,
                 metadata={
                     "youjin_response_discard": True,
                     "stage": stage.value,
+                    "declined_self_hu": bool(eligible),
                 },
             )
             for tile in sorted(set(state.hands[p]))
-        ))
+        )
+        if eligible:
+            hu = env.Action(
+                p, env.ActionType.HU, tile=draw_context.winning_tile,
+                metadata={
+                    "win_source": draw_context.source.value,
+                    "kong_kind": (draw_context.kong_kind.value
+                                  if draw_context.kong_kind else None),
+                    "youjin_interception": True,
+                    "optional": True,
+                },
+            )
+            return ActionReport((hu, *discards))
+        return ActionReport(discards)
     if state.phase == "YOUJIN_STAGE_SUCCESS":
         p = state.current_player
         stage = YoujinStage(state.special_states[p])

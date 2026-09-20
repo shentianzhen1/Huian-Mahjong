@@ -33,6 +33,7 @@ class YoujinOpponentResponseRuleTests(unittest.TestCase):
                 self.assertEqual(rule.stage, stage)
                 self.assertEqual(rule.opponent_draw_chances, 1)
                 self.assertEqual(rule.allowed_win_sources, (WinSource.SELF_DRAW,))
+                self.assertTrue(rule.self_hu_optional)
                 self.assertTrue(rule.must_discard_after_miss)
                 self.assertEqual(rule.no_win_outcome, "YOUJIN_RESPONSE_DISCARD")
 

@@ -317,7 +317,26 @@ class EnvironmentTests(unittest.TestCase):
         hu = next(a for a in report.known_actions if a.type == env.ActionType.HU)
         self.assertEqual(hu.tile, "N")
         self.assertTrue(hu.metadata["youjin_interception"])
-        self.assertIn("youjin_response_hu_decline", report.unresolved)
+        self.assertTrue(hu.metadata["optional"])
+        self.assertEqual(report.unresolved, ())
+        self.assertTrue(any(
+            a.type == env.ActionType.DISCARD
+            and a.metadata.get("declined_self_hu") is True
+            for a in report.known_actions
+        ))
+
+        # Even with a legal self-Hu, the responder may deliberately decline it
+        # and discard one tile to continue the Youjin chain.
+        declined = instance.clone()
+        discard = next(
+            a for a in declined.legal_actions()
+            if a.type == env.ActionType.DISCARD
+        )
+        after_decline, _ = declined.step(discard)
+        self.assertEqual(after_decline.phase, "YOUJIN_STAGE_SUCCESS")
+        self.assertEqual(after_decline.current_player, 0)
+        self.assertEqual(after_decline.special_states, ["YOUJIN", "NORMAL"])
+        self.assertIsNone(after_decline.pending_discard)
 
         declared, _ = instance.step(hu)
         self.assertEqual(declared.phase, "HU_DECLARED")

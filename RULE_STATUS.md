@@ -34,7 +34,7 @@ The Environment now enforces the corrected response sequence: opponent DRAW → 
 - Single/Double-You: after that discard, control returns to the Youjin player for the confirmed one-card progression draw.
 - Triple-You: after that discard, the current Triple-You settles at ×16.
 - The prior 18/19-tile retained-response model, `youjin_response_tiles`, subset Hu solver, and `youjin_response_extra_tile_scoring` blocker are retired.
-- If the opponent's response draw itself is a legal self-Hu, HU remains the known action. Whether a player may intentionally decline an available self-Hu and discard instead remains `youjin_response_hu_decline` UNKNOWN.
+- If the opponent's response draw itself is a legal self-Hu, **HU is optional**: the responder may choose Hu, or deliberately decline it and discard one tile instead. Choosing the discard continues the Youjin chain exactly like any other missed response.
 
 External Quanzhou/Xiamen rules broadly support the same single→double→triple structure, "natural tile frees gold" logic and optional upgrade behavior, but public sources conflict on Triple-You response and scoring. They are retained only as low-priority cross-checks at `references/gameplay/2026-09-20/quanzhou_youjin_external_crosscheck.md`; target Huian two-player evidence remains authoritative.
 
