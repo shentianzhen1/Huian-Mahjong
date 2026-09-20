@@ -1,6 +1,4 @@
-from collections import Counter
 from dataclasses import dataclass
-from itertools import combinations
 from numbers import Integral
 
 from huian._legacy import core
@@ -335,95 +333,6 @@ class HuianRules:
             if self.is_youjin_ready_hand(candidate, gold_tile, open_melds):
                 out.append(tile)
         return tuple(out)
-
-    def youjin_response_hu_hands(
-            self, hand, gold_tile, open_melds=0, *,
-            retained_response_tiles=(), winning_tile):
-        """Enumerate legal normal-size Hu subsets for a later Youjin response.
-
-        Confirmed 2026-09-20 semantics:
-        - every missed earlier Youjin response draw stays in the responder's
-          concealed hand;
-        - those retained response tiles continue to participate in later
-          Double-/Triple-You self-draw evaluation;
-        - the newest response draw must also participate.
-
-        The responder can therefore physically hold 18/19 tiles even though a
-        Hu decomposition still consumes the normal concealed size for the
-        current open-meld count.  We enumerate normal-size subsets from the
-        whole concealed pool, requiring every earlier retained response tile
-        plus the newest winning tile to be present.  Any extra omitted tiles
-        are ordinary pre-existing hand tiles, never the retained response
-        evidence itself.
-        """
-        self._validate_hand(hand, gold_tile)
-        nonnegative_int(open_melds, "open_melds")
-        if open_melds > 5:
-            raise ValueError("At most five melds")
-        if winning_tile not in core.BASE_TILES:
-            raise ValueError("winning_tile must be a normal tile")
-        retained = tuple(retained_response_tiles)
-        if any(tile not in core.BASE_TILES for tile in retained):
-            raise ValueError("retained response tiles must be normal tiles")
-
-        target = (5 - open_melds) * 3 + 2
-        if len(hand) < target:
-            return ()
-
-        required = Counter(retained)
-        required[winning_tile] += 1
-        available = Counter(hand)
-        if any(available[tile] < count for tile, count in required.items()):
-            return ()
-
-        extra = len(hand) - target
-        removable_counts = available - required
-        removable = tuple(
-            tile
-            for tile in core.BASE_TILES
-            for _ in range(removable_counts[tile])
-        )
-        if len(removable) < extra:
-            return ()
-
-        omitted_sets = {()}
-        if extra:
-            omitted_sets = {
-                tuple(sorted(removable[index] for index in indices))
-                for indices in combinations(range(len(removable)), extra)
-            }
-
-        results = []
-        seen = set()
-        context = HuContext(WinSource.SELF_DRAW, winning_tile=winning_tile)
-        for omitted in omitted_sets:
-            candidate = list(hand)
-            for tile in omitted:
-                candidate.remove(tile)
-            key = tuple(sorted(candidate))
-            if key in seen:
-                continue
-            seen.add(key)
-            result = self.analyze_hu(
-                candidate,
-                gold_tile,
-                open_melds,
-                win_context=context,
-            )
-            if result.legal:
-                results.append(tuple(candidate))
-        return tuple(results)
-
-    def can_youjin_response_hu(
-            self, hand, gold_tile, open_melds=0, *,
-            retained_response_tiles=(), winning_tile):
-        return bool(self.youjin_response_hu_hands(
-            hand,
-            gold_tile,
-            open_melds,
-            retained_response_tiles=retained_response_tiles,
-            winning_tile=winning_tile,
-        ))
 
     def can_youjin_upgrade_after_draw(self, hand, gold_tile, open_melds=0):
         """Return whether the just-completed own draw can support the next You stage.
