@@ -1,5 +1,17 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 single-Youjin structural eligibility confirmed
+
+Player clarification closes the core **single-Youjin hand-shape predicate**:
+
+- After the intended entry discard, the concealed hand is a Youjin-ready shape when **exactly one gold can be reserved as the roaming singleton** and all other concealed tiles already form every remaining required meld.
+- Any additional gold tiles are still ordinary wildcards inside those melds. The roaming gold is the **extra** gold left after the meld structure is complete; it is not determined by total gold count.
+- In the ~01:06 example, three golds are visible: two are consumed as wildcards to complete the meld structure, while the third is the extra roaming gold. That is why the game offers single Youjin.
+- Equivalently, after entry the next ordinary drawn tile can pair with the reserved roaming gold to complete the ordinary Hu structure.
+- The rule works at the structural level and is not “three gold = Youjin”. A hand with a different gold count can qualify if it has the same complete-melds-plus-one-roaming-gold shape.
+
+Implementation: `HuianRules.is_youjin_ready_hand()` checks the post-discard structure and `youjin_entry_discards()` enumerates which current discards create it. These functions only expose eligibility; they do not auto-declare Youjin or guess Double-/Triple-You upgrades.
+
 ## 2026-09-20 match_evidence_002 Youjin-offer / Double-You path clarification
 
 Target-room replay + player clarification now adds a concrete mid-hand path:
