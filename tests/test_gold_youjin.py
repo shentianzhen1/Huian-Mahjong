@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from huian._legacy import env
 from workspace.ai import (
+    ConstrainedGoldYoujinAgent,
     GoldYoujinShadowAgent,
     GoldYoujinShadowDiagnostic,
     MeldAwareShantenAgent,
@@ -89,6 +90,113 @@ class GoldYoujinPotentialTests(unittest.TestCase):
         self.assertTrue(record.signal_differentiated)
         self.assertEqual(record.structural_choice_tile, other)
         self.assertEqual(record.future_live_delta, 6)
+
+
+class ConstrainedGoldYoujinAgentTests(unittest.TestCase):
+    def test_v015_can_trade_one_live_copy_for_immediate_youjin_without_type_loss(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = MeldAwareShantenAgent(
+            seed=21, template_samples=32).choose_decision(view, actions)
+        other = next(tile for tile in sorted(set(hand))
+                     if tile not in (baseline.action.tile, "P9"))
+
+        frontier = (
+            SimpleNamespace(
+                discard=baseline.action.tile, shanten=1,
+                total_live_copies=10, effective_tiles=(1, 2, 3)),
+            SimpleNamespace(
+                discard=other, shanten=1,
+                total_live_copies=9, effective_tiles=(1, 2, 3)),
+        )
+        potentials = (
+            YoujinDiscardPotential(
+                baseline.action.tile, False, 2, 1, (("M9", 2),), 1),
+            YoujinDiscardPotential(
+                other, True, 3, 1, (("M9", 3),), 1),
+        )
+        agent = ConstrainedGoldYoujinAgent(seed=21)
+        with patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=potentials):
+            actual = agent.choose_decision(view, actions)
+
+        self.assertEqual(actual.action.tile, other)
+        self.assertIn("constrained_gold_youjin_v0.15_candidate", actual.reason)
+        self.assertEqual(len(agent.v015_diagnostics), 1)
+        diag = agent.v015_diagnostics[0]
+        self.assertTrue(diag.changed_from_v010)
+        self.assertEqual(diag.reason_gate, "immediate_youjin_entry")
+        self.assertEqual(diag.immediate_live_delta, -1)
+        self.assertEqual(diag.immediate_type_delta, 0)
+
+    def test_v015_refuses_two_live_copy_loss(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = MeldAwareShantenAgent(
+            seed=22, template_samples=32).choose_decision(view, actions)
+        other = next(tile for tile in sorted(set(hand))
+                     if tile not in (baseline.action.tile, "P9"))
+
+        frontier = (
+            SimpleNamespace(
+                discard=baseline.action.tile, shanten=1,
+                total_live_copies=10, effective_tiles=(1, 2, 3)),
+            SimpleNamespace(
+                discard=other, shanten=1,
+                total_live_copies=8, effective_tiles=(1, 2, 3)),
+        )
+        with patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials"
+        ) as estimate:
+            actual = ConstrainedGoldYoujinAgent(
+                seed=22, max_live_loss=1).choose_decision(view, actions)
+
+        self.assertEqual(actual.action, baseline.action)
+        estimate.assert_called_once()
+        called_tiles = estimate.call_args.args[1]
+        self.assertNotIn(other, called_tiles)
+
+    def test_v015_future_signal_requires_material_live_and_type_gain(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = MeldAwareShantenAgent(
+            seed=23, template_samples=32).choose_decision(view, actions)
+        other = next(tile for tile in sorted(set(hand))
+                     if tile not in (baseline.action.tile, "P9"))
+
+        frontier = (
+            SimpleNamespace(
+                discard=baseline.action.tile, shanten=2,
+                total_live_copies=12, effective_tiles=(1, 2, 3, 4)),
+            SimpleNamespace(
+                discard=other, shanten=2,
+                total_live_copies=12, effective_tiles=(1, 2, 3, 4)),
+        )
+        weak = (
+            YoujinDiscardPotential(
+                baseline.action.tile, False, 2, 1, (("M9", 2),), 1),
+            YoujinDiscardPotential(
+                other, False, 5, 2, (("M7", 2), ("M8", 3)), 1),
+        )
+        agent = ConstrainedGoldYoujinAgent(
+            seed=23, min_future_live_gain=4, min_future_type_gain=1)
+        with patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=weak):
+            actual = agent.choose_decision(view, actions)
+        self.assertEqual(actual.action, baseline.action)
+        self.assertEqual(agent.v015_diagnostics[0].reason_gate,
+                         "no_material_youjin_gain")
 
 
 class GoldYoujinShadowSummaryTests(unittest.TestCase):
