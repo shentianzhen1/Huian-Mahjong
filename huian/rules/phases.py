@@ -87,7 +87,7 @@ def _validate_youjin_response_phase(adapter, state):
             raise ValueError("Youjin upgrade choice requires a structurally free gold")
     if state.phase == "YOUJIN_SETTLEMENT_READY":
         # Single/Double settlement follows the Youjin player's extra draw.
-        # Triple settlement follows the opponent miss directly.
+        # Triple settlement follows the opponent's mandatory response discard.
         stage = YoujinStage(state.special_states[youjin_player])
         expected_last_player = (
             responder if stage == YoujinStage.TRIPLE_YOU else youjin_player
@@ -453,7 +453,9 @@ def report(adapter, state):
         stage = YoujinStage(state.special_states[p])
         progression = youjin_progression_rule(stage)
         if progression.youjin_player_draw_chances == 0:
-            raise ValueError("Triple-You opponent miss must advance directly to settlement")
+            raise ValueError(
+                "Triple-You response discard must advance directly to settlement"
+            )
         return ActionReport((env.Action(
             p, env.ActionType.DRAW,
             metadata={"source": DrawSource.WALL_HEAD.value,
