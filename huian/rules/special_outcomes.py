@@ -13,6 +13,12 @@ from dataclasses import dataclass
 from types import MappingProxyType
 
 from .config import EvidenceStatus
+from .registry import DEFAULT_RULE_SNAPSHOT
+
+
+def _rule_value(rule_id):
+    return DEFAULT_RULE_SNAPSHOT.get(rule_id).value
+
 
 
 @dataclass(frozen=True)
@@ -58,7 +64,7 @@ _SPECIAL_OUTCOMES = {
     "SANJINDAO": SpecialOutcomeProfile(
         key="SANJINDAO",
         declaration_phase="SANJINDAO_DECLARED",
-        multiplier=3,
+        multiplier=_rule_value("settlement.sanjindao_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="sanjindao_settlement",
         settlement_ready=False,
@@ -72,11 +78,11 @@ _SPECIAL_OUTCOMES = {
     "EIGHT_FLOWER_YOU": SpecialOutcomeProfile(
         key="EIGHT_FLOWER_YOU",
         declaration_phase="EIGHT_FLOWER_YOU_DECLARED",
-        multiplier=1,
+        multiplier=_rule_value("settlement.eight_flower_working_multiplier"),
         multiplier_status=EvidenceStatus.WORKING,
         settlement_rule_id="eight_flower_real_multiplier",
         settlement_ready=True,
-        fixed_fan=16,
+        fixed_fan=_rule_value("settlement.eight_flower_working_fixed_fan"),
         project_rule=True,
         note=(
             "Project working rule 2026-09-20: Eight-Flower-You is a fixed 16-fan "
@@ -89,7 +95,7 @@ _SPECIAL_OUTCOMES = {
     "YOUJIN": SpecialOutcomeProfile(
         key="YOUJIN",
         declaration_phase=None,
-        multiplier=4,
+        multiplier=_rule_value("settlement.youjin_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="youjin_trigger",
         settlement_ready=False,
@@ -112,7 +118,7 @@ _SPECIAL_OUTCOMES = {
     "DOUBLE_YOU": SpecialOutcomeProfile(
         key="DOUBLE_YOU",
         declaration_phase=None,
-        multiplier=8,
+        multiplier=_rule_value("settlement.double_you_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="double_you_entry",
         settlement_ready=False,
@@ -131,7 +137,7 @@ _SPECIAL_OUTCOMES = {
     "TRIPLE_YOU": SpecialOutcomeProfile(
         key="TRIPLE_YOU",
         declaration_phase=None,
-        multiplier=16,
+        multiplier=_rule_value("settlement.triple_you_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="triple_you_sequence",
         settlement_ready=False,
@@ -147,7 +153,7 @@ _SPECIAL_OUTCOMES = {
     "ROB_KONG_HU": SpecialOutcomeProfile(
         key="ROB_KONG_HU",
         declaration_phase="ROB_KONG_HU_DECLARED",
-        multiplier=2,
+        multiplier=_rule_value("settlement.rob_kong_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="ROB_KONG_SCORING_UNKNOWN",
         settlement_ready=False,
