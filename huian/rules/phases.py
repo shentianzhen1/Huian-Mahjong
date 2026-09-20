@@ -46,7 +46,7 @@ def _active_youjin_players(state):
     return tuple(i for i, stage in enumerate(state.special_states) if stage in stages)
 
 
-def _validate_youjin_response_phase(state):
+def _validate_youjin_response_phase(adapter, state):
     if state.phase not in YOUJIN_RESPONSE_PHASES:
         return
     active = _active_youjin_players(state)
@@ -283,7 +283,7 @@ def validate(adapter, state):
     if Counter(state.physical_tiles()) != Counter(env.full_wall()):
         raise ValueError("Every physical tile must be accounted for: exactly the 144-tile set")
     _validate_pending_kong(state)
-    _validate_youjin_response_phase(state)
+    _validate_youjin_response_phase(adapter, state)
     if state.phase == "READY":
         if (len(state.wall) != 144 or state.gold_tile is not None
                 or state.pending_discard is not None or state.pending_hu is not None):
