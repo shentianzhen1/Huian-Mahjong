@@ -277,17 +277,16 @@ class HuianEnvironment:
         return self.state, deepcopy(event)
 
     def finalize_youjin_outcome(
-            self, *, current_dealer_base, winner_fan):
+            self, *, current_dealer_base, winner_fan=None):
         """Settle a confirmed Youjin-family stage using audited fan input.
 
         Formula confirmed from target-room settlements:
             (current dealer base + winner fan) * stage multiplier
         where multipliers are Youjin x4, Double-You x8, Triple-You x16.
 
-        This method deliberately accepts an explicit winner_fan instead of
-        guessing a special-hand fan decomposition. The caller may supply a
-        replay/Vision-confirmed fan total or a future audited special fan
-        aggregator.
+        An explicit winner_fan remains available for replay/Vision-confirmed
+        outcomes. When omitted, the winner fan is derived from the confirmed
+        Youjin meld-only structure and the existing evidence-aware fan table.
         """
         self._require_state()
         if self._state.terminal:
@@ -296,8 +295,9 @@ class HuianEnvironment:
             raise ValueError("Youjin settlement requires YOUJIN_SETTLEMENT_READY")
         if type(current_dealer_base) is not int or current_dealer_base < 0:
             raise ValueError("current_dealer_base must be a nonnegative integer")
-        if type(winner_fan) is not int or winner_fan < 0:
-            raise ValueError("winner_fan must be a nonnegative integer")
+        if winner_fan is not None and (
+                type(winner_fan) is not int or winner_fan < 0):
+            raise ValueError("winner_fan must be a nonnegative integer or None")
 
         active = [
             index for index, value in enumerate(self._state.special_states)
@@ -313,6 +313,18 @@ class HuianEnvironment:
         if winner != self._state.current_player:
             raise ValueError("Youjin settlement winner must own the current stage")
         stage = YoujinStage(self._state.special_states[winner])
+        fan_result = None
+        if winner_fan is None:
+            fan_result = self.rules.rules.aggregate_youjin_fan(
+                self._state.hands[winner],
+                self._state.melds[winner],
+                self._state.flowers[winner],
+                self._state.gold_tile,
+            )
+            if not fan_result.complete:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError(*fan_result.unresolved)
+            winner_fan = fan_result.fan
         terms = self.rules.rules.youjin_score_terms(
             stage,
             winner=winner,
@@ -341,7 +353,11 @@ class HuianEnvironment:
                 "tile": None,
                 "tiles": [],
                 "metadata": {
-                    "source": "confirmed_youjin_formula",
+                    "source": (
+                        "automatic_youjin_fan"
+                        if fan_result is not None
+                        else "confirmed_youjin_formula"
+                    ),
                     "special": stage.value,
                     "current_dealer_base": current_dealer_base,
                     "winner_fan": winner_fan,
@@ -349,6 +365,26 @@ class HuianEnvironment:
                     "dealer_multiplier": terms.dealer_multiplier,
                     "formula": "(current_dealer_base + winner_fan) * multiplier",
                     "rewards": list(rewards),
+                    "fan_components": ([{
+                        "category": component.category,
+                        "fan": component.fan,
+                        "detail": component.detail,
+                        "status": component.status.value,
+                        "evidence": component.evidence,
+                    } for component in fan_result.components]
+                    if fan_result is not None else None),
+                    "fan_candidate_fans": (
+                        list(fan_result.candidate_fans)
+                        if fan_result is not None else None
+                    ),
+                    "fan_decomposition_count": (
+                        fan_result.decomposition_count
+                        if fan_result is not None else None
+                    ),
+                    "fan_selection_policy": (
+                        fan_result.selection_policy
+                        if fan_result is not None else None
+                    ),
                 },
             },
             "before_hash": before,

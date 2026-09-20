@@ -147,6 +147,25 @@ class FanAggregator:
             (c.category, c.fan, c.detail, c.status.value)
             for c in components
         ))
+    def _youjin_concealed_components(self, decomposition):
+        components = []
+        for group in decomposition.groups:
+            if len(group) != 3:
+                raise ValueError("Youjin meld groups must contain three positions")
+            if "GOLD" in group or len(set(group)) != 1:
+                continue
+            tile = group[0]
+            if tile not in core.BASE_TILES:
+                raise ValueError("Invalid tile in Youjin meld decomposition")
+            fan = 2 if core.is_honor(tile) else 1
+            components.append(self._component(
+                "concealed_triplet", fan,
+                f"{tile}{tile}{tile}",
+                EvidenceStatus.CONFIRMED,
+                ("Natural concealed triplet fan remains additive in Youjin; "
+                 "Gold-filled triplets are excluded by decomposition marker"),
+            ))
+        return components
 
     def aggregate(self, hand, melds=(), flowers=(), gold_tile=None, *,
                   hu_result=None):
@@ -214,3 +233,113 @@ class FanAggregator:
             selected_decomposition_index=selected_index,
             selection_policy=selection_policy,
         )
+    def aggregate_youjin(
+            self, hand, melds=(), flowers=(), gold_tile=None):
+        """Aggregate additive fan for a confirmed Youjin-family settlement.
+
+        Triple-You settles on the 16-tile "all melds + one roaming Jin" shape.
+        Single/Double-You settle after one retained continuation draw, so the
+        physical concealed zone has one extra tile.  For that 17-tile case,
+        enumerate every single-tile removal that restores the confirmed
+        Youjin-ready structure, then score every legal meld-only decomposition.
+
+        The removed tile is only a structural bookkeeping device for the
+        special settlement.  Fan base components are always counted from the
+        full physical hand, so every retained Jin still contributes +1 fan.
+        """
+        hand = list(hand)
+        melds = tuple(melds)
+        flowers = tuple(flowers)
+        self.rules._validate_hand(hand, gold_tile)
+
+        groups_needed = 5 - len(melds)
+        ready_size = groups_needed * 3 + 1
+        structural_hands = []
+
+        if len(hand) == ready_size:
+            result = self.rules.analyze_youjin_melds(
+                hand, gold_tile, open_melds=len(melds),
+                max_decompositions=64,
+            )
+            if result.legal:
+                structural_hands.append(result)
+        elif len(hand) == ready_size + 1:
+            seen = set()
+            for index in range(len(hand)):
+                structural = hand[:index] + hand[index + 1:]
+                key = tuple(sorted(structural))
+                if key in seen:
+                    continue
+                seen.add(key)
+                result = self.rules.analyze_youjin_melds(
+                    structural, gold_tile, open_melds=len(melds),
+                    max_decompositions=64,
+                )
+                if result.legal:
+                    structural_hands.append(result)
+        else:
+            raise ValueError(
+                "Youjin settlement hand must be ready-size or ready-size+1"
+            )
+
+        if not structural_hands:
+            raise ValueError(
+                "Youjin fan aggregation requires a legal meld-only structure"
+            )
+
+        base_components, base_unresolved = self._base_components(
+            hand, melds, flowers, gold_tile
+        )
+        candidates = []
+        component_sets = []
+        truncated = False
+        decomposition_count = 0
+
+        for meld_result in structural_hands:
+            if meld_result.gold_tile != gold_tile:
+                raise ValueError(
+                    "Youjin meld result gold tile disagrees with aggregation input"
+                )
+            if meld_result.open_melds != len(melds):
+                raise ValueError(
+                    "Youjin meld result open-meld count disagrees with melds"
+                )
+            truncated = truncated or meld_result.may_be_truncated
+            for decomposition in meld_result.decompositions:
+                decomposition_count += 1
+                components = tuple(
+                    base_components
+                    + self._youjin_concealed_components(decomposition)
+                )
+                candidates.append(sum(item.fan for item in components))
+                component_sets.append(components)
+
+        unresolved = list(dict.fromkeys(base_unresolved))
+        selected_index = None
+        selection_policy = None
+        if truncated:
+            unresolved.append("decomposition_scoring")
+            components = tuple(base_components)
+            accounted = sum(item.fan for item in components)
+        else:
+            selected_index = max(
+                range(len(candidates)), key=lambda index: candidates[index]
+            )
+            selection_policy = "MAX_TOTAL_FAN_YOUJIN_MELDS"
+            components = component_sets[selected_index]
+            accounted = candidates[selected_index]
+
+        unresolved = tuple(dict.fromkeys(unresolved))
+        fan = accounted if not unresolved else None
+        return FanResult(
+            fan=fan,
+            accounted_fan=accounted,
+            components=components,
+            unresolved=unresolved,
+            candidate_fans=tuple(sorted(set(candidates))),
+            decomposition_count=decomposition_count,
+            decomposition_fans=tuple(candidates),
+            selected_decomposition_index=selected_index,
+            selection_policy=selection_policy,
+        )
+

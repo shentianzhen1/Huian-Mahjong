@@ -72,6 +72,27 @@ class HuResult:
     def is_gang_hu(self):
         return self.context.is_gang_hu
 
+@dataclass(frozen=True)
+class YoujinMeldDecomposition:
+    """One meld-only split after reserving exactly one roaming Jin."""
+
+    groups: tuple[tuple[str, str, str], ...]
+
+    @property
+    def gold_used(self):
+        return sum(group.count("GOLD") for group in self.groups)
+
+
+@dataclass(frozen=True)
+class YoujinMeldResult:
+    """Structural Youjin meld analysis without fan/settlement assumptions."""
+
+    legal: bool
+    decompositions: tuple[YoujinMeldDecomposition, ...]
+    gold_tile: str | None
+    open_melds: int
+    may_be_truncated: bool = False
+
 
 @dataclass(frozen=True)
 class KongFanResult:
@@ -163,6 +184,13 @@ class HuianRules:
         from .fan import FanAggregator
         return FanAggregator(self).aggregate(
             hand, melds, flowers, gold_tile, hu_result=hu_result
+        )
+    def aggregate_youjin_fan(
+            self, hand, melds=(), flowers=(), gold_tile=None):
+        """Aggregate additive fan for a confirmed Youjin-family settlement."""
+        from .fan import FanAggregator
+        return FanAggregator(self).aggregate_youjin(
+            hand, melds, flowers, gold_tile,
         )
 
     def kong_fan(self, kind, tile):
@@ -317,6 +345,61 @@ class HuianRules:
                 return True
         return False
 
+    def analyze_youjin_melds(
+            self, hand, gold_tile, open_melds=0, max_decompositions=64):
+        """Enumerate meld-only splits after reserving one roaming Jin.
+
+        The input hand is the post-discard Youjin-ready concealed zone:
+        all remaining concealed melds plus exactly one roaming Jin.
+        Additional Jin copies may occupy wildcard positions inside melds.
+
+        The ordinary solver is reused by appending one legal non-Jin sentinel
+        and keeping only decompositions whose pair is sentinel + GOLD.
+        """
+        self._validate_hand(hand, gold_tile)
+        nonnegative_int(open_melds, "open_melds")
+        if open_melds > 5:
+            raise ValueError("At most five melds")
+        if (isinstance(max_decompositions, bool)
+                or not isinstance(max_decompositions, Integral)
+                or max_decompositions <= 0):
+            raise ValueError("max_decompositions must be a positive integer")
+        if not self.is_youjin_ready_hand(hand, gold_tile, open_melds):
+            return YoujinMeldResult(False, (), gold_tile, open_melds, False)
+
+        found = {}
+        truncated = False
+        for sentinel in core.BASE_TILES:
+            if sentinel == gold_tile or hand.count(sentinel) >= 4:
+                continue
+            splits = winning_decompositions(
+                [*hand, sentinel], gold_tile, open_melds,
+                max_solutions=max_decompositions + 1,
+            )
+            for split in splits:
+                if split["pair"] != (sentinel, "GOLD"):
+                    continue
+                groups = tuple(tuple(group) for group in split["groups"])
+                key = tuple(sorted(groups))
+                if key in found:
+                    continue
+                found[key] = YoujinMeldDecomposition(groups=groups)
+                if len(found) > max_decompositions:
+                    truncated = True
+                    break
+            if truncated:
+                break
+
+        decompositions = tuple(
+            found[key] for key in sorted(found)
+        )[:max_decompositions]
+        return YoujinMeldResult(
+            legal=bool(decompositions),
+            decompositions=decompositions,
+            gold_tile=gold_tile,
+            open_melds=open_melds,
+            may_be_truncated=truncated,
+        )
     def youjin_entry_discards(self, hand, gold_tile, open_melds=0):
         """Enumerate discards that leave the confirmed single-Youjin-ready shape."""
         self._validate_hand(hand, gold_tile)
