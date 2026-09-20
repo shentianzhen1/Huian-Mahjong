@@ -206,6 +206,56 @@ class FanAggregatorTests(unittest.TestCase):
         self.assertEqual(suited.unresolved, ())
         self.assertEqual(suited.components, ())
 
+    def test_youjin_ready_hand_auto_fan_is_gold_plus_natural_triplet(self):
+        ready = [
+            "M1", "M2", "M3",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+            "P9",
+        ]
+        result = self.rules.aggregate_youjin_fan(
+            ready, gold_tile="P9"
+        )
+        self.assertTrue(result.complete)
+        self.assertEqual(result.fan, 3)
+        self.assertEqual(
+            sorted((item.category, item.fan) for item in result.components),
+            [("concealed_triplet", 2), ("gold", 1)],
+        )
+        self.assertEqual(
+            result.selection_policy, "MAX_TOTAL_FAN_YOUJIN_MELDS"
+        )
+
+    def test_youjin_retained_draw_still_counts_full_physical_gold_fan(self):
+        ready = [
+            "M1", "M2", "M3",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+            "P9",
+        ]
+        # Single/Double-You keeps the continuation draw in hand.
+        result = self.rules.aggregate_youjin_fan(
+            ready + ["N"], gold_tile="P9"
+        )
+        self.assertTrue(result.complete)
+        self.assertEqual(result.fan, 3)
+
+        # If the retained draw is another Jin, both physical Jin copies still
+        # count +1 fan even though one tile is outside the meld-only structure.
+        gold_draw = self.rules.aggregate_youjin_fan(
+            ready + ["P9"], gold_tile="P9"
+        )
+        self.assertTrue(gold_draw.complete)
+        self.assertEqual(gold_draw.fan, 4)
+        self.assertIn(
+            ("gold", 2),
+            [(item.category, item.fan) for item in gold_draw.components],
+        )
+
     def test_kong_table_works_inside_aggregator(self):
         concealed = [
             "M1", "M1",
