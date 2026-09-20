@@ -1,5 +1,7 @@
 # Migration Notes
 
+> **Historical migration log.** This file records the 2026-09-13 migration state and is not a current project-status source. For current capability and open work, use `PROJECT_STATUS.md`, `RULE_STATUS.md`, and GitHub Issues / `TODO.md`. Statements below such as “M3 has not started” are preserved only as historical context.
+
 The legacy code was created while the project was still named Quanzhou Mahjong. The actual target is now 开心惠安二人麻将.
 
 Do not perform a risky full rewrite. Recommended migration:

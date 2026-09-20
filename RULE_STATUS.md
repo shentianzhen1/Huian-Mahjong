@@ -104,7 +104,7 @@ The response rule is now exposed by `youjin_opponent_response_rule()`; stage ent
 
 ## 2026-09-19 match_evidence_001 complete eight-hand replay
 
-A complete target-room match (room **541913**, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/match_evidence_001_full_8hand/README.md`.
+A complete anonymized target-room match (`match_evidence_001`, 惠安2人 / 单金不平胡 / 无托管) was reviewed from eight replay videos covering hand 1/8 through 8/8. Both players start at 1000; the final ledger is **1113 / 887**. Source hashes and the hand-by-hand table are archived at `references/gameplay/2026-09-19/match_evidence_001_full_8hand/README.md`.
 
 Direct conclusions:
 
@@ -182,7 +182,7 @@ Remaining evidence gaps: actual-room added-kong (补/蓄/加杠) response/declin
 
 ## Latest direct replay evidence — 66fe863f, 2026-09-15
 
-[Source and frame-by-frame review](references/gameplay/2026-09-15/66fe863f_youjin100/README.md): room 206640, hand 5/8, gold M1, 单金不平胡, no trusteeship.
+[Source and frame-by-frame review](references/gameplay/2026-09-15/66fe863f_youjin100/README.md): anonymized replay `evidence_66fe863f`, hand 5/8, gold M1, 单金不平胡, no trusteeship.
 - Observed path: P1 Peng → fourth P1 → added kong; then Chi S789, discard S1 while retaining one gold, opponent plays, M7 appears, Youjin ×4 settles. This is one verified path, not a complete Youjin or rob-kong state machine.
 - Winner is the non-dealer (own base5); opponent is 庄3/base20. Winner fan is gold1 + flower1 + triplet1 + kong2 = 5. Displayed winner value40 is `(own base5+fan5)×4`; actual +100/-100 is `(current dealer base20+fan5)×4`. The loser's 1 fan is not deducted.
 - The sole kong was visibly formed by upgrading a P1 Peng; its displayed 2-fan contribution confirms this suited added-kong example. This does not confirm incremental kong fees, payments at declaration, rob-kong permissions, or flow-hand kong settlement.
@@ -192,7 +192,7 @@ Regression: `tests/fixtures/settlement_66fe863f.json`, `tests/test_66fe863f_evid
 ## Direct replay evidence — b3892b34, 2026-09-15
 
 [Source, frame timestamps and transcription](references/gameplay/2026-09-15/b3892b34_zimo68/README.md).
-This is an in-game replay of room 745816, hand 8/8, with 单金不平胡 and no trusteeship.
+This is an anonymized in-game replay `evidence_b3892b34`, hand 8/8, with 单金不平胡 and no trusteeship.
 - At 60/65 seconds, one gold S3 and two Chi melds are visible before/after the winning M5; all three suits are present. Ordinary self-draw therefore has no mandatory missing-suit gate in this target room.
 - At 71–75 seconds, the dealer badge is 庄5, dealer base is 30, winner fan is gold 1 + flowers 2 + concealed triplet 1, and Zimo ×2 pays +68/-68: `(30 + 4) × 2 = 68`.
 - This ordinary dealer self-draw has no extra dealer ×2, and the loser's displayed 4 fan is not subtracted. Combined with 7bc12fa dealer Triple-You +608, extra dealer ×2 is not applied to ordinary Zimo or to Triple-You.
@@ -202,9 +202,9 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 
 ## Direct replay evidence — 7bc12fa, 2026-09-18
 
-[Source and frame review](references/gameplay/2026-09-15/7bc12fa_video_evidence.md): in-game replay of room 673185, hand 6/8, gold M1 (一筒), 单金不平胡, trusteeship on, 2025-12-16 22:05:48. Duration 57.47s.
+[Source and frame review](references/gameplay/2026-09-15/7bc12fa_video_evidence.md): anonymized in-game replay `evidence_7bc12fa`, hand 6/8, gold M1 (一筒), 单金不平胡, trusteeship on, 2025-12-16 22:05:48. Duration 57.47s.
 - Path: flower replacement; several PASS on opponent discards after tenpai; Chi; discard 一条 (waste bamboo, not gold) with Youjin badges; then Double-You splash; draw 八万 still badged; Triple-You splash; further PASS available; settlement Triple-You ×16 +608/-608.
-- Winner 知止 shows **5庄**, gold 1 fan + flowers 2 fan. `(35 + 3) × 16 = 608`. Winner is the dealer; there is no extra dealer ×2 (that would be 1216).
+- The anonymized winner (`seat_0`) shows **5庄**, gold 1 fan + flowers 2 fan. `(35 + 3) × 16 = 608`. Winner is the dealer; there is no extra dealer ×2 (that would be 1216).
 - Entry does not require discarding gold. Chi then Youjin is allowed (same family as 66fe863f).
 - This clip climbs Youjin → Double-You → Triple-You in order; no direct skip to Double/Triple. The Youjin-side player may PASS opponent discards while climbing.
 - Do not equate the settlement label 5庄 with b3892b34's 庄5/base30. This hand's current dealer base in the formula is 35.

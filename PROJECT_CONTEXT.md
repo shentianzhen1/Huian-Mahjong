@@ -52,13 +52,13 @@ Confirmed Chi interaction boundary:
 - AI evaluates each Chi sequence as a different action
 - Vision/Executor must identify and select the matching option in the mini-program panel; uncertainty stops execution
 
-Confirmed opponent Hu permissions during the Youjin chain:
-- opponent of a Youjin player may Hu
-- opponent of a Double-You player may self-draw Hu
-- opponent of a Triple-You player may Hu only by kong-replacement self-draw
-
-Any more specific Youjin/Double-You response windows remain UNKNOWN unless listed
-in `RULE_STATUS.md`.
+Confirmed opponent response contract during the Youjin chain:
+- Youjin / Double-You / Triple-You each gives the opponent exactly one normal draw opportunity.
+- If that draw is a legal self-Hu, Hu is optional: the responder may Hu or decline and discard one tile.
+- If the responder does not Hu, exactly one tile must be discarded; this special response discard enters the river but opens no ordinary Chi/Peng/Kong/discard-Hu claim window.
+- After that discard, single/double You returns to the Youjin player for the confirmed progression draw; Triple-You settles at ×16.
+- Youjin-stage identity is structural/stateful and must never be inferred from current Jin count alone.
+- Flowers and AN_GANG / ADD_KONG may continue during the Youjin player's progression turn under the confirmed flow. Remaining scoring blockers are the shared Gang-Hu / Rob-Kong settlement gaps documented in Issue #4.
 
 ### Environment
 Owns GameState and state transitions:

@@ -1,13 +1,6 @@
 name: Gold Youjin Shadow Audit
 
 on:
-  pull_request:
-    paths:
-      - "workspace/ai/gold_youjin.py"
-      - "workspace/ai/__init__.py"
-      - "workspace/simulator/gold_youjin_shadow.py"
-      - "tests/test_gold_youjin.py"
-      - ".github/workflows/gold-youjin-shadow.yml"
   workflow_dispatch:
 
 permissions:
@@ -15,7 +8,7 @@ permissions:
 
 jobs:
   audit:
-    name: 1-pair Jin/Youjin structural shadow
+    name: 32-hand Jin/Youjin structural shadow
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -74,7 +67,7 @@ jobs:
       - name: Upload shadow report
         uses: actions/upload-artifact@v7
         with:
-          name: gold-youjin-shadow-410000-1pair
+          name: gold-youjin-shadow-430000-32hands
           path: |
             data/evaluations/gold-youjin-shadow/report.json
             data/evaluations/gold-youjin-shadow/runtime.txt

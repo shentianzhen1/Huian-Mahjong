@@ -1,5 +1,7 @@
 # Baseline Test Results at Handoff
 
+> **Historical handoff record.** Counts and limitations below describe earlier snapshots and must not be used as the current test-status source. Use `PROJECT_STATUS.md` and the latest GitHub Actions runs for current regression status.
+
 ## PASS / 16-tile regression — 2026-09-14
 
 - Project tests: 53 passed; legacy Core: 9 passed; legacy Environment: 9 passed.

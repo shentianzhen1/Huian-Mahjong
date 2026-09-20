@@ -3,7 +3,15 @@ name: Tests
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - "**/*.txt"
+      - "references/**"
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "**/*.txt"
+      - "references/**"
   workflow_dispatch:
 
 permissions:

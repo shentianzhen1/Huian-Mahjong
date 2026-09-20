@@ -40,7 +40,7 @@ python -B -m unittest discover -s tests -v
 
 ## 当前还不能做什么
 
-- 抢金的精确资格/真实结算、三金倒真实终局、游金链完整状态机、抢杠胡完整结算、杠胡倍率、八花游真实倍率仍未全部闭环；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
+- 抢金的精确资格/真实结算、三金倒真实终局、抢杠胡/杠胡结算、八花游真实倍率仍未闭环；游金主链（响应弃牌、单→双→三游、花牌与杠续行）已实现，剩余主要受杠胡/抢杠胡计分缺口阻塞；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
 - AI已经接通公开8局比赛上下文（当前比分、剩余局数、庄位、庄底、连庄次数）和点炮统计。V0.11/V0.12的“排除金等待后再做即时score-aware”路径已验证为结构性几乎不可触发，因此不再沿这条死门槛继续堆版本。下一阶段优先研究有金时的副露/特殊状态EV、KONG决策，以及不依赖该死门槛的多步/整场EV；见 Issue #6。
 - Vision 已有真实牌面基线以及 Score Reader / Status Reader V0.1，但仍缺新的独立录屏批次、部分牌类覆盖、更多draw连续序列、状态栏整段多时点统计和缩放/移动/遮挡压力测试。当前同批离线高分不等于端到端泛化；见 Issue #7。
 - Executor 未接入。Vision达到量化准确率、置信度和多帧稳定性门槛之前，不启用自动点击。
@@ -54,12 +54,12 @@ python -B -m unittest discover -s tests -v
 | Environment | GameState 与确定性状态转移 | M2可用；特殊窗口逐步补齐 |
 | Simulator | 单局/8局、固定牌墙、评估 | ordinary-real 8局可完整运行；特殊结算安全停止 |
 | AI | 选择动作、EV与风险 | CurrentAgent = MeldAwareShantenAgent V0.10；V0.6固定主对照，V0.3消融基线；下一步是有金副露/KONG/多步与整场EV |
-| Vision | 画面转GameState | hand+draw严格基线98.66%；Gold当前批次多帧98.47%；PublicState约束层已接，待数字读取器和外部泛化 |
+| Vision | 画面转GameState | hand+draw严格基线98.66%；Gold当前批次多帧98.47%；Score/Status Reader 与 PublicState约束层已接，待新独立批次与压力测试 |
 | Executor | UI执行 | 未接入，等待Vision门槛 |
 
 ## 测试
 
-核心回归（GitHub Actions 默认在 Python 3.10/3.11/3.12 执行）：
+核心回归（GitHub Actions 当前在 Python 3.10–3.14 执行；纯文档改动除外）：
 
 ```powershell
 python -B -m unittest discover -s tests -v
