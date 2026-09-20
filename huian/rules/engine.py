@@ -72,6 +72,27 @@ class HuResult:
     def is_gang_hu(self):
         return self.context.is_gang_hu
 
+@dataclass(frozen=True)
+class YoujinMeldDecomposition:
+    """One meld-only split after reserving exactly one roaming Jin."""
+
+    groups: tuple[tuple[str, str, str], ...]
+
+    @property
+    def gold_used(self):
+        return sum(group.count("GOLD") for group in self.groups)
+
+
+@dataclass(frozen=True)
+class YoujinMeldResult:
+    """Structural Youjin meld analysis without fan/settlement assumptions."""
+
+    legal: bool
+    decompositions: tuple[YoujinMeldDecomposition, ...]
+    gold_tile: str | None
+    open_melds: int
+    may_be_truncated: bool = False
+
 
 @dataclass(frozen=True)
 class KongFanResult:
