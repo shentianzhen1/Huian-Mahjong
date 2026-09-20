@@ -223,13 +223,20 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
                 observation, detailed_tiles, include_future=True
             )
             by_tile = {item.discard: item for item in potentials}
-            structural_choice = max(
-                (by_tile[tile] for tile in finalists),
-                key=lambda item: (
-                    item.structural_key,
-                    -env.BASE_TILES.index(item.discard),
-                ),
+            best_full_key = max(
+                by_tile[tile].structural_key for tile in finalists
             )
+            if (baseline.action.tile in finalists
+                    and by_tile[baseline.action.tile].structural_key == best_full_key):
+                structural_choice = by_tile[baseline.action.tile]
+            else:
+                structural_choice = min(
+                    (
+                        by_tile[tile] for tile in finalists
+                        if by_tile[tile].structural_key == best_full_key
+                    ),
+                    key=lambda item: env.BASE_TILES.index(item.discard),
+                )
             finalist_future_keys = {
                 (
                     by_tile[tile].future_entry_live_copies,
@@ -239,10 +246,13 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             }
         else:
             by_tile = coarse_by_tile
-            structural_choice = min(
-                (coarse_by_tile[tile] for tile in finalists),
-                key=lambda item: env.BASE_TILES.index(item.discard),
-            )
+            if baseline.action.tile in finalists:
+                structural_choice = coarse_by_tile[baseline.action.tile]
+            else:
+                structural_choice = min(
+                    (coarse_by_tile[tile] for tile in finalists),
+                    key=lambda item: env.BASE_TILES.index(item.discard),
+                )
             finalist_future_keys = {(0, 0)}
 
         baseline_potential = by_tile[baseline.action.tile]
