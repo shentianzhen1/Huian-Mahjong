@@ -179,12 +179,20 @@ class EnvironmentTests(unittest.TestCase):
                          ("youjin_settlement_context",))
 
         terminal, event = instance.finalize_youjin_outcome(
-            current_dealer_base=30, winner_fan=3
+            current_dealer_base=30
         )
         self.assertTrue(terminal.terminal)
         self.assertEqual(terminal.terminal_reason, "AUTO_YOUJIN")
         self.assertEqual(terminal.rewards, [132, -132])
-        self.assertEqual(event["action"]["metadata"]["multiplier"], 4)
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["winner_fan"], 3)
+        self.assertEqual(metadata["multiplier"], 4)
+        self.assertEqual(metadata["source"], "automatic_youjin_fan")
+        self.assertEqual(
+            sorted((item["category"], item["fan"])
+                   for item in metadata["fan_components"]),
+            [("concealed_triplet", 2), ("gold", 1)],
+        )
 
     def test_single_youjin_direct_gold_draw_offers_optional_double_you(self):
         instance = game(youjin_offer_scenario())
@@ -291,6 +299,17 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(settled.phase, "YOUJIN_SETTLEMENT_READY")
         self.assertEqual(settled.current_player, 0)
         self.assertEqual(settled.special_states, ["TRIPLE_YOU", "NORMAL"])
+
+        terminal, event = instance.finalize_youjin_outcome(
+            current_dealer_base=35
+        )
+        self.assertTrue(terminal.terminal)
+        self.assertEqual(terminal.terminal_reason, "AUTO_TRIPLE_YOU")
+        self.assertEqual(terminal.rewards, [608, -608])
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["winner_fan"], 3)
+        self.assertEqual(metadata["multiplier"], 16)
+        self.assertEqual(metadata["source"], "automatic_youjin_fan")
 
     def test_youjin_response_draw_can_self_hu_and_cancels_active_stage(self):
         response_tenpai = [
