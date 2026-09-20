@@ -1,0 +1,80 @@
+name: Gold Youjin Shadow Audit
+
+on:
+  pull_request:
+    paths:
+      - "workspace/ai/gold_youjin.py"
+      - "workspace/ai/__init__.py"
+      - "workspace/simulator/gold_youjin_shadow.py"
+      - "tests/test_gold_youjin.py"
+      - ".github/workflows/gold-youjin-shadow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: 1-pair Jin/Youjin structural shadow
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Run shadow audit
+        run: |
+          mkdir -p data/evaluations/gold-youjin-shadow
+          /usr/bin/time -v python -B -m workspace.simulator.gold_youjin_shadow \
+            --pairs 1 \
+            --seed-start 410000 \
+            --max-steps 1000 \
+            > data/evaluations/gold-youjin-shadow/report.json \
+            2> data/evaluations/gold-youjin-shadow/runtime.txt
+
+      - name: Publish summary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          data = json.loads(Path("data/evaluations/gold-youjin-shadow/report.json").read_text())
+          keys = (
+              "pairs",
+              "completed_attempts",
+              "stopped_attempts",
+              "gold_discard_decisions",
+              "gold_decisions_by_gold_count",
+              "exact_offense_tie_decisions",
+              "signal_differentiated_ties",
+              "shadow_would_change_v010",
+              "shadow_change_rate_among_gold_decisions",
+              "shadow_change_rate_among_exact_ties",
+              "baseline_immediate_youjin_entries",
+              "best_immediate_youjin_entries",
+              "ties_by_shanten",
+              "changes_by_shanten",
+              "mean_future_youjin_live_delta_on_change",
+              "changes_improving_future_youjin_live",
+          )
+          summary = {key: data.get(key) for key in keys}
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
+              fh.write("# Jin / Youjin structural shadow audit\n\n")
+              fh.write("Fresh seed 410000, both seat orders. Shadow policy always executes V0.10.\n\n")
+              fh.write("```json\n")
+              fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
+              fh.write("\n```\n")
+          PY
+
+      - name: Upload shadow report
+        uses: actions/upload-artifact@v7
+        with:
+          name: gold-youjin-shadow-410000-1pair
+          path: |
+            data/evaluations/gold-youjin-shadow/report.json
+            data/evaluations/gold-youjin-shadow/runtime.txt
+          if-no-files-found: error
