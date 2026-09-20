@@ -342,34 +342,44 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
         if not legal_actions:
             raise ValueError("No legal actions")
 
-        # Always compute V0.10 at the same decision point.  Besides providing a
+        # Always compute V0.10 at the same decision point. Besides providing a
         # conservative fallback, this advances V0.6/V0.10 risk RNG consistently.
         baseline = super().choose_decision(observation, legal_actions)
         actions = sorted(legal_actions, key=self._key)
+        discards = [action for action in actions
+                    if action.type == env.ActionType.DISCARD]
 
-        # Keep wins, claim response logic, KONG and special actions on V0.10.
+        # Wins are outside the discard-search diagnostic denominator.
         if baseline.action.type.value in ("HU", "ROB_KONG_HU"):
             return baseline
+
+        # Keep claim response logic, KONG and special actions on V0.10.
         if any(action.type in (
                 env.ActionType.CHI, env.ActionType.PENG,
                 env.ActionType.MING_GANG, env.ActionType.AN_GANG,
                 env.ActionType.ADD_KONG, env.ActionType.YOUJIN,
         ) for action in actions):
-            return AgentDecision(
+            decision = AgentDecision(
                 baseline.action,
                 f"{baseline.reason}; public_rollout_v0.14 gated_off_nonordinary_actions",
             )
+            if len(discards) >= 2:
+                self._record_diagnostic(
+                    observation, baseline, decision, "gated_nonordinary_actions")
+            return decision
 
-        discards = [action for action in actions
-                    if action.type == env.ActionType.DISCARD]
         if len(discards) < 2:
             return baseline
+
         if (observation.gold_tile is not None
                 and observation.gold_tile in observation.hand):
-            return AgentDecision(
+            decision = AgentDecision(
                 baseline.action,
                 f"{baseline.reason}; public_rollout_v0.14 gated_off_gold_in_hand",
             )
+            self._record_diagnostic(
+                observation, baseline, decision, "gated_gold_in_hand")
+            return decision
 
         legal_by_tile = {action.tile: action for action in discards}
         frontier = min_shanten_discards(
@@ -380,6 +390,9 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
             allowed_discards=tuple(legal_by_tile),
         )
         if len(frontier) <= 1:
+            self._record_diagnostic(
+                observation, baseline, baseline, "gated_single_frontier",
+                frontier=frontier)
             return baseline
 
         # Search more broadly than V0.8/V0.9 exact-offense ties, but keep the
@@ -403,10 +416,14 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
                 seed=self._next_rollout_seed(),
             )
         except (RuntimeError, ValueError):
-            return AgentDecision(
+            decision = AgentDecision(
                 baseline.action,
                 f"{baseline.reason}; public_rollout_v0.14 fallback=rollout_unavailable",
             )
+            self._record_diagnostic(
+                observation, baseline, decision, "rollout_unavailable",
+                frontier=frontier, candidates=candidates)
+            return decision
 
         by_tile = {item.discard: item for item in estimates}
         best_key = min(self._rollout_key(item) for item in estimates)
@@ -426,7 +443,7 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
             f"live={by_tile[tile].mean_final_live_copies:.2f}"
             for tile in candidates
         )
-        return AgentDecision(
+        decision = AgentDecision(
             legal_by_tile[chosen],
             f"DISCARD {chosen}: public_rollout_v0.14_candidate "
             f"(horizon_own_draws={self.own_draws}, "
@@ -440,3 +457,12 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
             f"candidates=[{alternatives}]); "
             f"public unseen-pool sampling only; no real opponent hand/wall order",
         )
+        gate = (
+            "searched_intervention"
+            if decision.action != baseline.action
+            else "searched_same_as_v010"
+        )
+        self._record_diagnostic(
+            observation, baseline, decision, gate,
+            frontier=frontier, candidates=candidates, estimates=estimates)
+        return decision
