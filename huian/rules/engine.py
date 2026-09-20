@@ -8,6 +8,7 @@ from .config import EvidenceStatus, RulesConfig, UnknownRuleError
 from .context import (HuContext, KongKind, SanjindaoChoice, SanjindaoDecision,
                       WinSource, YoujinStage)
 from .special_outcomes import special_outcome_profile
+from .registry import DEFAULT_RULE_SNAPSHOT
 from .dealer_base import (
     DEALER_WIN_MULTIPLIER,
     MATCH_HAND_COUNT,
@@ -122,6 +123,9 @@ class YoujinScoreTerms:
 
 class HuianRules:
     DRAW_WALL_REMAINING = 16
+    MAX_PLAYABLE_GOLD_COPIES = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+        "physical.max_playable_gold_copies"
+    ).value
     SANJINDAO_MULTIPLIER = special_outcome_profile("SANJINDAO").multiplier
     SITTING_DEALER_BASE = SITTING_DEALER_BASE
     MATCH_HAND_COUNT = MATCH_HAND_COUNT
@@ -158,9 +162,11 @@ class HuianRules:
         self.validate_tiles(hand)
         if gold_tile is not None and gold_tile not in core.BASE_TILES:
             raise ValueError("Gold must be a normal tile")
-        if gold_tile is not None and hand.count(gold_tile) > 3:
+        if (gold_tile is not None
+                and hand.count(gold_tile) > self.MAX_PLAYABLE_GOLD_COPIES):
             raise ValueError(
-                "Opened gold indicator is non-drawable; a hand can contain at most three gold copies"
+                "Opened gold indicator is non-drawable; a hand exceeds the "
+                "registered playable-gold-copy limit"
             )
 
     def meld_options(self, hand, discard, gold_tile=None):
