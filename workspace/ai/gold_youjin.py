@@ -330,3 +330,40 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             f"->{len(best_eff.effective_tiles)}, "
             f"future_live={structural_choice.future_entry_live_copies})",
         )
+
+
+class DirectYoujinAgent(MeldAwareShantenAgent):
+    """V0.15b candidate: take only explicit confirmed Youjin-family offers.
+
+    This candidate does not alter ordinary discard, Chi/Peng, risk, or match
+    policy. It intervenes only when the environment already exposes a confirmed
+    YOUJIN / DOUBLE_YOU / TRIPLE_YOU action.
+
+    Legal ordinary Hu/rob-kong Hu keeps priority over special progression.
+    Upgrade choices are greedy by design for this experiment; evaluation, not
+    assumption, decides whether that behavior is worth keeping.
+    """
+
+    VERSION = "v0.15b-direct-youjin"
+
+    def choose_decision(self, observation, legal_actions):
+        baseline = super().choose_decision(observation, legal_actions)
+        if baseline.action.type in (
+                env.ActionType.HU, env.ActionType.ROB_KONG_HU):
+            return baseline
+
+        actions = sorted(legal_actions, key=self._key)
+        for kind in (
+                env.ActionType.TRIPLE_YOU,
+                env.ActionType.DOUBLE_YOU,
+                env.ActionType.YOUJIN):
+            action = next(
+                (item for item in actions if item.type == kind), None
+            )
+            if action is not None:
+                return AgentDecision(
+                    action,
+                    f"{kind.value}: v0.15b direct confirmed Youjin-family "
+                    f"offer; preserve ordinary-Hu priority and V0.10 otherwise",
+                )
+        return baseline
