@@ -271,11 +271,15 @@ def validate(adapter, state):
             s != "UNKNOWN" and s not in known_special_states
             for s in state.special_states):
         raise ValueError("Invalid special states")
-    if (not isinstance(state.youjin_response_draws, list)
-            or len(state.youjin_response_draws) != 2
-            or any(type(value) is not int or value < 0
-                   for value in state.youjin_response_draws)):
-        raise ValueError("Youjin response draw counts must be two nonnegative integers")
+    if (not isinstance(state.youjin_response_tiles, list)
+            or len(state.youjin_response_tiles) != 2
+            or any(not isinstance(zone, list)
+                   for zone in state.youjin_response_tiles)
+            or any(tile not in env.BASE_TILES
+                   for zone in state.youjin_response_tiles for tile in zone)):
+        raise ValueError(
+            "Youjin retained response tiles must be two normal-tile lists"
+        )
     if any(type(r) is not int for r in state.rewards):
         raise ValueError("Rewards must be integer net scores")
     if not state.terminal and state.rewards != [0, 0]:
@@ -323,7 +327,7 @@ def validate(adapter, state):
     if not state.terminal:
         for p in range(2):
             expected = (16 - 3 * len(state.melds[p])
-                        + state.youjin_response_draws[p])
+                        + len(state.youjin_response_tiles[p]))
             if p == state.current_player and state.phase in (
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
                 "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW",
@@ -418,19 +422,35 @@ def report(adapter, state):
             draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
         except (AttributeError, ValueError):
             raise ValueError("Youjin response draw must retain auditable draw metadata")
-        if state.youjin_response_draws[p]:
-            return ActionReport((), ("youjin_response_hu_extra_tiles",))
-        if adapter.rules.can_win(
+        retained = tuple(state.youjin_response_tiles[p])
+        if retained:
+            eligible = adapter.rules.can_youjin_response_hu(
+                state.hands[p],
+                state.gold_tile,
+                len(state.melds[p]),
+                retained_response_tiles=retained,
+                winning_tile=draw_context.winning_tile,
+            )
+        else:
+            eligible = adapter.rules.can_win(
                 state.hands[p], state.gold_tile, len(state.melds[p]),
-                win_context=draw_context):
+                win_context=draw_context)
+        if eligible:
             action = env.Action(
                 p, env.ActionType.HU, tile=draw_context.winning_tile,
-                metadata={"win_source": draw_context.source.value,
-                          "kong_kind": (draw_context.kong_kind.value
-                                        if draw_context.kong_kind else None),
-                          "youjin_interception": True},
+                metadata={
+                    "win_source": draw_context.source.value,
+                    "kong_kind": (draw_context.kong_kind.value
+                                  if draw_context.kong_kind else None),
+                    "youjin_interception": True,
+                    "retained_response_tiles": list(retained),
+                    "oversized_response_hand": bool(retained),
+                },
             )
-            return ActionReport((action,), ("youjin_response_hu_decline",))
+            unresolved = ("youjin_response_hu_decline",)
+            if retained:
+                unresolved += ("youjin_response_extra_tile_scoring",)
+            return ActionReport((action,), unresolved)
         raise ValueError(
             "A non-winning Youjin response draw must already advance past response phase"
         )
