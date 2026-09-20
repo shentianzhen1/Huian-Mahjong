@@ -276,10 +276,19 @@ def validate(adapter, state):
             or any(not isinstance(zone, list)
                    for zone in state.youjin_response_tiles)
             or any(tile not in env.BASE_TILES
-                   for zone in state.youjin_response_tiles for tile in zone)):
+                   for zone in state.youjin_response_tiles for tile in zone)
+            or any(len(zone) > 3 for zone in state.youjin_response_tiles)):
         raise ValueError(
-            "Youjin retained response tiles must be two normal-tile lists"
+            "Youjin retained response tiles must be two normal-tile lists of length <= 3"
         )
+    for p, retained in enumerate(state.youjin_response_tiles):
+        hand_counts = Counter(state.hands[p])
+        retained_counts = Counter(retained)
+        if any(hand_counts[tile] < count
+               for tile, count in retained_counts.items()):
+            raise ValueError(
+                "Every retained Youjin response tile must still be in that player's hand"
+            )
     if any(type(r) is not int for r in state.rewards):
         raise ValueError("Rewards must be integer net scores")
     if not state.terminal and state.rewards != [0, 0]:
@@ -408,6 +417,10 @@ def report(adapter, state):
     if state.phase == "HU_DECLARED":
         if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
             return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
+        winner = state.pending_hu["winner"]
+        if (state.pending_hu["source"] == WinSource.SELF_DRAW.value
+                and state.youjin_response_tiles[winner]):
+            return ActionReport((), ("youjin_response_extra_tile_scoring",))
         return ActionReport((), ("win_declaration_and_settlement",))
     if state.phase == "YOUJIN_RESPONSE_DRAW":
         p = state.current_player
