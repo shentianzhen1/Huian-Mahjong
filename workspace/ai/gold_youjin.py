@@ -330,3 +330,96 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             f"->{len(best_eff.effective_tiles)}, "
             f"future_live={structural_choice.future_entry_live_copies})",
         )
+
+
+class YoujinTenpaiCandidateAgent(MeldAwareShantenAgent):
+    """Experimental V0.15b: very narrow tenpai-to-Youjin structural tradeoff.
+
+    This candidate exists only because the 32-hand shadow audit found two
+    disagreements in 480 Jin discard decisions, both at ordinary shanten 0:
+    meld deficit improved by one while losing exactly one live winning copy and
+    no effective-tile type.
+
+    It never changes non-tenpai play and never accepts a larger ordinary
+    efficiency sacrifice. Evaluation must use the real Youjin-enabled match
+    runner before promotion.
+    """
+
+    def choose_decision(self, observation, legal_actions):
+        baseline = super().choose_decision(observation, legal_actions)
+        if (baseline.action.type != env.ActionType.DISCARD
+                or observation.gold_tile is None
+                or observation.gold_tile not in observation.hand):
+            return baseline
+
+        discards = [
+            action for action in sorted(legal_actions, key=self._key)
+            if action.type == env.ActionType.DISCARD
+        ]
+        if len(discards) < 2:
+            return baseline
+
+        legal_by_tile = {action.tile: action for action in discards}
+        frontier = min_shanten_discards(
+            observation.hand,
+            gold_tile=observation.gold_tile,
+            open_melds=len(observation.melds[observation.seat]),
+            visible_tiles=self._public_tiles(observation),
+            allowed_discards=tuple(legal_by_tile),
+        )
+        if not frontier or frontier[0].shanten != 0:
+            return baseline
+
+        by_eff = {item.discard: item for item in frontier}
+        baseline_eff = by_eff.get(baseline.action.tile)
+        if baseline_eff is None:
+            return baseline
+
+        potentials = estimate_youjin_discard_potentials(
+            observation,
+            tuple(item.discard for item in frontier),
+            include_future=False,
+        )
+        by_tile = {item.discard: item for item in potentials}
+        baseline_potential = by_tile[baseline.action.tile]
+        if baseline_potential.meld_deficit is None:
+            return baseline
+
+        eligible = []
+        baseline_types = len(baseline_eff.effective_tiles)
+        for item in frontier:
+            potential = by_tile[item.discard]
+            if potential.meld_deficit is None:
+                continue
+            if potential.meld_deficit >= baseline_potential.meld_deficit:
+                continue
+            live_delta = item.total_live_copies - baseline_eff.total_live_copies
+            type_delta = len(item.effective_tiles) - baseline_types
+            if live_delta < -1 or type_delta < 0:
+                continue
+            eligible.append((potential, item, live_delta, type_delta))
+
+        if not eligible:
+            return baseline
+
+        potential, efficiency, live_delta, type_delta = min(
+            eligible,
+            key=lambda row: (
+                row[0].meld_deficit,
+                -row[1].total_live_copies,
+                -len(row[1].effective_tiles),
+                env.BASE_TILES.index(row[0].discard),
+            ),
+        )
+        action = legal_by_tile[potential.discard]
+        return AgentDecision(
+            action,
+            "DISCARD "
+            f"{potential.discard}: youjin_tenpai_candidate_v0.15b "
+            f"(ordinary shanten=0; meld_deficit="
+            f"{baseline_potential.meld_deficit}->{potential.meld_deficit}; "
+            f"live={baseline_eff.total_live_copies}->{efficiency.total_live_copies} "
+            f"delta={live_delta}; types={baseline_types}->"
+            f"{len(efficiency.effective_tiles)} delta={type_delta}); "
+            "experimental special-aware evaluation candidate",
+        )
