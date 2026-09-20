@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from .registry import DEFAULT_RULE_SNAPSHOT
+
 
 class DrawSource(str, Enum):
     WALL_HEAD = "wall_head"
@@ -73,7 +75,9 @@ class YoujinOpponentResponseRule:
     opponent_draw_chances: int = 1
     allowed_win_sources: tuple[WinSource, ...] = (WinSource.SELF_DRAW,)
     self_hu_optional: bool = True
-    must_discard_after_miss: bool = True
+    must_discard_after_miss: bool = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+        "state.youjin_response_must_discard"
+    ).value
     no_win_outcome: str = "YOUJIN_RESPONSE_DISCARD"
 
 
@@ -194,4 +198,6 @@ class SanjindaoDecision:
     eligible: bool
     gold_count: int
     choices: tuple[SanjindaoChoice, ...]
-    multiplier: int = 3
+    multiplier: int = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+        "settlement.sanjindao_multiplier"
+    ).value
