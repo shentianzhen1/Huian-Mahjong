@@ -88,5 +88,6 @@ Vision 使用 OpenCV/Pillow；`.github/workflows/vision-tests.yml` 会在 `works
 - [TODO.md](TODO.md)：GitHub Issues 的短期索引/摘要。
 - [docs/huian_rules.md](docs/huian_rules.md)：中文规则开发摘要。
 - [AGENTS.md](AGENTS.md)：代理改代码前的约束。
+- [docs/rule_isolation.md](docs/rule_isolation.md)：规则版本隔离、RuleSnapshot、AI评估防污染与规则纠错流程。
 
 修改规则或计分前先更新规则证据；实现存在或测试通过不等于规则已确认。
