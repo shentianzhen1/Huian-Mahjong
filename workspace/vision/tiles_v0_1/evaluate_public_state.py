@@ -131,6 +131,7 @@ def evaluate_public_state_manifest(
     frame_issue_counts = Counter()
     fused_issue_counts = Counter()
     score_mode_counts = Counter()
+    remaining_mode_counts = Counter()
     rows = []
     previous = None
 
@@ -205,6 +206,8 @@ def evaluate_public_state_manifest(
                 raw_complete_correct += 1
 
             score_mode_counts[frame.score.mode] += 1
+            remaining_mode = getattr(frame.status, "remaining_mode", "primary")
+            remaining_mode_counts[remaining_mode] += 1
             frame_issue_counts.update(frame.issues)
             raw_frames.append({
                 "frame": str(image_paths[frame_index]),
@@ -212,6 +215,12 @@ def evaluate_public_state_manifest(
                 "hand_number": hand,
                 "remaining_tiles": remaining,
                 "score_mode": frame.score.mode,
+                "remaining_mode": remaining_mode,
+                "raw_remaining": getattr(frame.status, "raw_remaining", None),
+                "raw_remaining_fallback": getattr(
+                    frame.status, "raw_remaining_fallback", None),
+                "raw_hand_progress": getattr(
+                    frame.status, "raw_hand_progress", None),
                 "issues": list(frame.issues),
             })
 
@@ -292,6 +301,8 @@ def evaluate_public_state_manifest(
                 "exact_rate": _ratio(raw_complete_correct, raw_total),
             },
             "score_mode_counts": dict(sorted(score_mode_counts.items())),
+            "remaining_mode_counts": dict(
+                sorted(remaining_mode_counts.items())),
             "issue_counts": dict(sorted(frame_issue_counts.items())),
         },
         "fused_window": {
