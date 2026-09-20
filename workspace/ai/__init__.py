@@ -18,8 +18,8 @@ from .score_ev import (OrdinaryImmediateValue, OrdinaryWinningDrawValue,
                        evaluate_tenpai_ordinary_value)
 from .kong import KongOpportunity, analyze_kong_actions
 from .kong_agent import KongAwareMeldAgent
-from .rollout import (PublicRolloutAgent, PublicRolloutEstimate,
-                      estimate_public_rollouts)
+from .rollout import (PublicRolloutAgent, PublicRolloutDecisionDiagnostic,
+                      PublicRolloutEstimate, estimate_public_rollouts)
 from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
                       TwoPlyOffense, analyze_effective_tiles,
                       analyze_two_ply_offense, best_discard, best_offense_ties,
@@ -55,5 +55,5 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "OrdinaryImmediateValue", "OrdinaryWinningDrawValue",
            "evaluate_tenpai_ordinary_value", "KongOpportunity",
            "analyze_kong_actions", "KongAwareMeldAgent",
-           "PublicRolloutAgent", "PublicRolloutEstimate",
-           "estimate_public_rollouts"]
+           "PublicRolloutAgent", "PublicRolloutDecisionDiagnostic",
+           "PublicRolloutEstimate", "estimate_public_rollouts"]
