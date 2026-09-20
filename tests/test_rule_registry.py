@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from huian.rules import EvidenceStatus
+from huian.rules import EvidenceStatus, HuianRules, RulesConfig
 from huian.rules.dealer_base import REPEAT_DEALER_INCREMENT, SITTING_DEALER_BASE
 from huian.rules.registry import (
     DEFAULT_RULE_SNAPSHOT,
@@ -93,6 +93,20 @@ class RuleRegistryTests(unittest.TestCase):
                     special_outcome_profile(outcome).multiplier,
                     multiplier,
                 )
+
+    def test_target_room_defaults_match_registry(self):
+        self.assertEqual(
+            RulesConfig().single_gold_can_pinghu,
+            DEFAULT_RULE_SNAPSHOT.require_confirmed(
+                "legality.single_gold_discard_pinghu"
+            ).value,
+        )
+        self.assertEqual(
+            HuianRules.MAX_PLAYABLE_GOLD_COPIES,
+            DEFAULT_RULE_SNAPSHOT.require_confirmed(
+                "physical.max_playable_gold_copies"
+            ).value,
+        )
 
     def test_unknown_dependencies_are_explicit(self):
         robbed = DEFAULT_RULE_SNAPSHOT.get("settlement.rob_kong_full")
