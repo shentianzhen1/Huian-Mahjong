@@ -286,4 +286,22 @@ V0.14 是从“即时启发式”向“多步搜索”推进的第一版候选�
 python -B -m workspace.simulator.rollout_benchmark --pairs 25 --seed-start 400000
 ```
 
+2026-09-20 的25-pair正式pilot已经完成：V0.14 23胜、V0.10 26胜、1平，平均配对最终分差 -23.28，配对点炮差 +0.24；因此当前V0.14不扩大样本、不晋级，也不盲目增加rollout深度/样本数。
+
+新增决策介入诊断：
+
+```powershell
+python -B -m workspace.simulator.rollout_diagnostics --pairs 5 --seed-start 400200
+```
+
+诊断只记录V0.14自身可见信息，重点统计：
+- 多候选弃牌点中多少被金牌/非普通动作/单一frontier挡住；
+- 真正执行rollout的次数及相对V0.10的改牌率；
+- 改牌集中在哪个向听层；
+- 改牌是否牺牲当前有效牌总张数/种类数；
+- 花牌/未来摸金造成的特殊样本剔除率；
+- 介入时的公开8局比分上下文。
+
+这些数据用于定义下一版搜索门控，不把诊断本身视为晋级证据。
+
 默认使用25个全新seed pair、固定牌墙、正反换座、Agent身份稳定RNG，直接比较 V0.14 candidate 与 V0.10。只有pilot方向值得继续时，才扩大到100/200+ pair并做独立确认；任何情况下都不能仅凭单批pilot把V0.14晋级为CurrentAgent。
