@@ -60,6 +60,35 @@ def youjin_offer_scenario(response_hand=None):
     return state
 
 
+def later_youjin_response_scenario():
+    """Double-You response with one earlier missed response tile retained."""
+    state = HuianGameState(
+        phase="YOUJIN_RESPONSE_DRAW",
+        gold_tile="P9",
+        special_states=["DOUBLE_YOU", "NORMAL"],
+        current_player=1,
+    )
+    state.hands[0] = list(YOUJIN_READY)
+    state.hands[1] = [
+        "M7", "M8", "M9",
+        "P4", "P5", "P6",
+        "S4", "S5", "S6",
+        "S7", "S8", "S9",
+        "W", "W", "W",
+        "N",
+        "B",
+    ]
+    state.youjin_response_tiles[1] = ["W"]
+    state.reserved_tiles = ["P9"]
+    remaining = env.full_wall()
+    for tile in state.physical_tiles():
+        remaining.remove(tile)
+    n_index = remaining.index("N")
+    remaining[0], remaining[n_index] = remaining[n_index], remaining[0]
+    state.wall = remaining
+    return state
+
+
 def game(state, experimental=False, **kwargs):
     adapter = HuianRulesAdapter(HuianRules(RulesConfig(experimental_no_rob_kong=experimental)))
     result = HuianEnvironment(adapter, **kwargs)
@@ -116,7 +145,9 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(resolved.current_player, 0)
         self.assertEqual(resolved.special_states, ["YOUJIN", "NORMAL"])
         self.assertEqual(len(resolved.hands[1]), before_response_len + 1)
-        self.assertEqual(resolved.youjin_response_draws, [0, 1])
+        self.assertEqual(len(resolved.youjin_response_tiles[0]), 0)
+        self.assertEqual(len(resolved.youjin_response_tiles[1]), 1)
+        self.assertIn(resolved.youjin_response_tiles[1][0], resolved.hands[1])
 
         # Surviving single You gives the Youjin player exactly one own draw.
         report = instance.action_report()
@@ -195,30 +226,31 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(upgraded.discards[0][-1], "P9")
         self.assertIsNone(upgraded.pending_discard)
 
-    def test_later_youjin_response_with_retained_extra_tile_fails_safe(self):
-        instance = game(youjin_offer_scenario())
-        offer = next(a for a in instance.legal_actions()
-                     if a.type == env.ActionType.YOUJIN)
-        instance.step(offer)
-        instance.step(instance.legal_actions()[0])  # first opponent miss retained
-
-        mutable = instance.state
-        index = mutable.wall.index("P9")
-        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
-        instance.set_state(mutable)
-        instance.step(instance.legal_actions()[0])  # own gold draw
-        upgrade = next(a for a in instance.legal_actions()
-                       if a.type == env.ActionType.DOUBLE_YOU)
-        instance.step(upgrade)
-
-        # The opponent now starts from 17 concealed tiles because the previous
-        # missed response draw stayed in hand. After the next response draw the
-        # ordinary exact-size solver must not silently declare "cannot Hu".
+    def test_later_double_you_response_can_hu_with_retained_tile_participating(self):
+        instance = game(later_youjin_response_scenario())
+        before = len(instance.state.hands[1])
         instance.step(instance.legal_actions()[0])
+
         self.assertEqual(instance.state.phase, "YOUJIN_RESPONSE_AFTER_DRAW")
+        self.assertEqual(len(instance.state.hands[1]), before + 1)
+        self.assertEqual(instance.state.youjin_response_tiles[1], ["W"])
+
         report = instance.action_report()
-        self.assertEqual(report.known_actions, ())
-        self.assertEqual(report.unresolved, ("youjin_response_hu_extra_tiles",))
+        hu = next(a for a in report.known_actions if a.type == env.ActionType.HU)
+        self.assertEqual(hu.tile, "N")
+        self.assertEqual(hu.metadata["retained_response_tiles"], ["W"])
+        self.assertTrue(hu.metadata["oversized_response_hand"])
+        self.assertIn("youjin_response_extra_tile_scoring", report.unresolved)
+
+        declared, _ = instance.step(hu)
+        self.assertEqual(declared.phase, "HU_DECLARED")
+        self.assertEqual(declared.special_states, ["NORMAL", "NORMAL"])
+        self.assertEqual(declared.pending_hu["winning_tile"], "N")
+        self.assertEqual(instance.action_report().unresolved,
+                         ("youjin_response_extra_tile_scoring",))
+        with self.assertRaisesRegex(
+                UnknownRuleError, "youjin_response_extra_tile_scoring"):
+            instance.finalize_ordinary_outcome(current_dealer_base=30)
 
     def test_youjin_response_draw_can_self_hu_and_cancels_active_stage(self):
         response_tenpai = [
