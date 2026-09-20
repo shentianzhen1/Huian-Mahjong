@@ -16,6 +16,7 @@ from .public_state_scores import TesseractCLIBackend
 
 
 _STATUS_CHARS = re.compile(r"[0-9/]")
+_REMAINING_FALLBACK_RIGHT_KEEP = 0.86
 
 
 def prepare_status_crop(image, *, scale=10):
@@ -31,6 +32,18 @@ def prepare_status_crop(image, *, scale=10):
 
 def _clean_status_text(text):
     return "".join(_STATUS_CHARS.findall(text or ""))
+
+
+def _trim_remaining_right_edge(image):
+    """Trim the UI glyph immediately right of the wall count.
+
+    Current target-room frames sometimes include the leading edge of the
+    following Chinese character in the normalized remaining-tiles ROI. Tesseract
+    may append that edge as an extra digit (for example 98 -> 985). This crop is
+    deliberately a fallback only: a valid primary parse is never replaced.
+    """
+    keep = max(1, int(round(image.width * _REMAINING_FALLBACK_RIGHT_KEEP)))
+    return image.crop((0, 0, keep, image.height))
 
 
 def parse_remaining_tiles(text):
@@ -92,6 +105,8 @@ class StatusLineRead:
     hand_inferred_from_transition: bool = False
     issues: tuple[str, ...] = ()
     safe_for_executor: bool = False
+    remaining_mode: str = "primary"
+    raw_remaining_fallback: str | None = None
 
     def to_candidate(
         self,
@@ -140,10 +155,25 @@ class TesseractStatusReader:
         raw_remaining = self.backend(
             prepare_status_crop(crops["remaining_tiles"])
         )
+        remaining = parse_remaining_tiles(raw_remaining)
+        raw_remaining_fallback = None
+        remaining_mode = "primary"
+        if remaining is None:
+            raw_remaining_fallback = self.backend(
+                prepare_status_crop(
+                    _trim_remaining_right_edge(crops["remaining_tiles"])
+                )
+            )
+            fallback = parse_remaining_tiles(raw_remaining_fallback)
+            if fallback is not None:
+                remaining = fallback
+                remaining_mode = "right_trim_fallback"
+            else:
+                remaining_mode = "invalid"
+
         raw_hand = self.backend(
             prepare_status_crop(crops["hand_progress"])
         )
-        remaining = parse_remaining_tiles(raw_remaining)
         hand = parse_hand_progress(raw_hand)
         issues = []
         if remaining is None:
@@ -157,4 +187,6 @@ class TesseractStatusReader:
             raw_hand_progress=raw_hand,
             issues=tuple(issues),
             safe_for_executor=False,
+            remaining_mode=remaining_mode,
+            raw_remaining_fallback=raw_remaining_fallback,
         )
