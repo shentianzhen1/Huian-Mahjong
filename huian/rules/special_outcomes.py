@@ -90,10 +90,14 @@ _SPECIAL_OUTCOMES = {
         note=(
             "x4 is directly settlement-confirmed. Youjin stage is independent of "
             "current gold count: match_evidence_002 shows Youjin while 3 gold remain. "
-            "Each established Youjin-family stage gives the opponent exactly one "
-            "normal self-draw Hu interception opportunity; if that draw does not "
-            "self-Hu, the current Youjin stage succeeds. Exact entry/cancel/upgrade "
-            "predicates and the post-success upgrade-versus-settle timing remain incomplete."
+            "Single-Youjin structural eligibility is confirmed: after the entry "
+            "discard, reserve one gold as the roaming singleton while every remaining "
+            "concealed tile (including other golds as wildcards) already forms the "
+            "required melds. The offer is optional and declining it does not block "
+            "later Youjin-family progression. Each established stage gives the opponent "
+            "exactly one normal self-draw Hu interception opportunity; if that draw does "
+            "not self-Hu, the current stage succeeds. UI timing, Double-/Triple-You "
+            "upgrade predicates and post-success settlement timing remain incomplete."
         ),
     ),
     "DOUBLE_YOU": SpecialOutcomeProfile(
