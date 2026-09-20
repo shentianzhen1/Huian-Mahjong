@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from huian import HuianRules
 from huian._legacy import env
 
-from .gold_youjin import _public_base_tiles
+
 
 
 @dataclass(frozen=True)
@@ -80,7 +80,12 @@ def evaluate_immediate_youjin_value(
         raise UnknownRuleError(*fan_result.unresolved)
 
     single_points = (current_dealer_base + fan_result.fan) * 4
-    public = list(_public_base_tiles(observation))
+    public = []
+    for river in observation.discards:
+        public.extend(tile for tile in river if tile in env.BASE_TILES)
+    for seat_melds in observation.melds:
+        for _, meld_tiles in seat_melds:
+            public.extend(tile for tile in meld_tiles if tile in env.BASE_TILES)
     public.append(entry_discard)
     own = list(after)
 
