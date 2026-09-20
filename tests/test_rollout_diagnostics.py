@@ -47,7 +47,8 @@ class RolloutDiagnosticSummaryTests(unittest.TestCase):
             {"seed": 1, "swapped": False,
              "diagnostic": diagnostic(
                  gate="searched_same_as_v010", changed=False,
-                 shanten=2, live_delta=0, type_delta=0, margin=-10)},
+                 shanten=2, live_delta=0, type_delta=0, margin=-10,
+                 completed=24, cutoffs=0)},
             {"seed": 1, "swapped": True,
              "diagnostic": diagnostic(
                  gate="gated_gold_in_hand", changed=False,
