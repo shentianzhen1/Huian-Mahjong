@@ -43,6 +43,29 @@ class YoujinStage(str, Enum):
     SANJIN_YOU = "TRIPLE_YOU"
 
 
+@dataclass(frozen=True)
+class YoujinOpponentResponseRule:
+    """Confirmed opponent interception window for an established Youjin stage.
+
+    This object deliberately says nothing about how the stage was entered or
+    whether/when the Youjin player may choose to upgrade afterward. Those
+    transition predicates remain evidence-gated.
+    """
+
+    stage: YoujinStage
+    opponent_draw_chances: int = 1
+    allowed_win_sources: tuple[WinSource, ...] = (WinSource.SELF_DRAW,)
+    no_win_outcome: str = "YOUJIN_STAGE_SUCCESS"
+
+
+def youjin_opponent_response_rule(stage):
+    """Return the confirmed one-draw self-Hu interception rule for a Youjin stage."""
+    parsed = stage if isinstance(stage, YoujinStage) else YoujinStage(stage)
+    if parsed == YoujinStage.NORMAL:
+        raise ValueError("NORMAL has no Youjin opponent response window")
+    return YoujinOpponentResponseRule(stage=parsed)
+
+
 class SanjindaoChoice(str, Enum):
     DECLARE_SANJINDAO = "DECLARE_SANJINDAO"
     CONTINUE_PLAY = "CONTINUE_PLAY"
