@@ -26,7 +26,8 @@ from .rollout import (PublicRolloutAgent, PublicRolloutDecisionDiagnostic,
 from .shanten import (DiscardEfficiency, EffectiveTile, HandEfficiency,
                       TwoPlyOffense, analyze_effective_tiles,
                       analyze_two_ply_offense, best_discard, best_offense_ties,
-                      min_shanten_discards, ordinary_shanten, rank_discards)
+                      min_shanten_discards, ordinary_shanten, rank_discards,
+                      youjin_meld_deficit)
 
 # Stable entry point for the currently promoted AI policy.
 # Keep TenpaiRiskTieBreakAgent V0.6 and ShantenAgent V0.3 available explicitly
@@ -49,6 +50,7 @@ __all__ = ["AgentDecision", "BaselineAgent", "EfficiencyAgent", "ShantenAgent",
            "ordinary_shanten", "analyze_effective_tiles",
            "analyze_two_ply_offense", "rank_discards",
            "best_discard", "best_offense_ties", "min_shanten_discards",
+           "youjin_meld_deficit",
            "PublicDangerEstimate", "estimate_discard_danger",
            "OrdinaryDealInEstimate", "TenpaiWaitRiskEstimate",
            "TenpaiWaitLossEstimate",
