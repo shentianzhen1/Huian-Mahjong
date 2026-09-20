@@ -2,9 +2,6 @@ name: Youjin special-aware A/B
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/youjin-special-aware-eval-v2-20260920
 
 permissions:
   contents: read
