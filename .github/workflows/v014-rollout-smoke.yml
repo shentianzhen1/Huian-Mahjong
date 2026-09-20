@@ -1,0 +1,49 @@
+name: V0.14 Rollout Smoke
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/v014-rollout-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: 5-pair V0.14 vs V0.10 smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Run smoke
+        run: |
+          mkdir -p data/evaluations/v014-rollout-smoke
+          /usr/bin/time -v python -B -m workspace.simulator.rollout_benchmark \
+            --pairs 5 \
+            --seed-start 400100 \
+            --max-steps 1000 \
+            > data/evaluations/v014-rollout-smoke/report.json \
+            2> data/evaluations/v014-rollout-smoke/runtime.txt
+      - name: Print summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/evaluations/v014-rollout-smoke/report.json").read_text())
+          keys = ["completed_pairs", "match_wins_by_agent", "ties",
+                  "paired_score_delta_mean", "paired_score_delta_ci95_low",
+                  "paired_score_delta_ci95_high", "paired_deal_in_delta_mean",
+                  "unknown_reasons"]
+          print(json.dumps({key: data.get(key) for key in keys}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: v014-rollout-smoke-400100-5pairs
+          path: |
+            data/evaluations/v014-rollout-smoke/report.json
+            data/evaluations/v014-rollout-smoke/runtime.txt
+          if-no-files-found: error
