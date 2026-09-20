@@ -1,8 +1,9 @@
 """Shadow benchmark for confirmed Jin / Youjin structural opportunity.
 
-The shadow agent always returns the promoted V0.10 action.  Diagnostics ask
-whether, inside the exact V0.10 ordinary-offense tie, a discard with better
-confirmed Youjin structure would have been available.
+The shadow agent always returns the promoted V0.10 action. Diagnostics compare
+the full minimum-shanten discard frontier and ask whether a discard with a
+smaller confirmed Youjin meld deficit would have been available, together with
+the immediate ordinary live/type cost of that hypothetical choice.
 
 Example:
     python -B -m workspace.simulator.gold_youjin_shadow \
@@ -39,12 +40,12 @@ def _margin_bucket(value):
 def summarize_gold_youjin_shadow(records, *, attempts):
     records = tuple(records)
     attempts = tuple(attempts)
-    tied = tuple(
+    frontier_multi = tuple(
         record for record in records
-        if record["diagnostic"].exact_offense_tie_count > 1
+        if record["diagnostic"].min_shanten_frontier_size > 1
     )
     differentiated = tuple(
-        record for record in tied
+        record for record in frontier_multi
         if record["diagnostic"].signal_differentiated
     )
     changes = tuple(
@@ -55,8 +56,8 @@ def summarize_gold_youjin_shadow(records, *, attempts):
     by_gold = Counter(
         str(record["diagnostic"].gold_count) for record in records
     )
-    ties_by_shanten = Counter(
-        str(record["diagnostic"].shanten) for record in tied
+    frontier_by_shanten = Counter(
+        str(record["diagnostic"].shanten) for record in frontier_multi
     )
     changes_by_shanten = Counter(
         str(record["diagnostic"].shanten) for record in changes
@@ -71,6 +72,16 @@ def summarize_gold_youjin_shadow(records, *, attempts):
     )
     future_type_deltas = tuple(
         record["diagnostic"].future_type_delta for record in changes
+    )
+    deficit_deltas = tuple(
+        record["diagnostic"].meld_deficit_delta for record in changes
+        if record["diagnostic"].meld_deficit_delta is not None
+    )
+    immediate_live_deltas = tuple(
+        record["diagnostic"].immediate_live_delta for record in changes
+    )
+    immediate_type_deltas = tuple(
+        record["diagnostic"].immediate_type_delta for record in changes
     )
 
     completed_attempts = tuple(
@@ -94,14 +105,14 @@ def summarize_gold_youjin_shadow(records, *, attempts):
         "unknown_reasons": dict(sorted(unknown_reasons.items())),
         "gold_discard_decisions": len(records),
         "gold_decisions_by_gold_count": dict(sorted(by_gold.items())),
-        "exact_offense_tie_decisions": len(tied),
-        "signal_differentiated_ties": len(differentiated),
+        "multi_candidate_min_shanten_decisions": len(frontier_multi),
+        "signal_differentiated_frontiers": len(differentiated),
         "shadow_would_change_v010": len(changes),
         "shadow_change_rate_among_gold_decisions": (
             len(changes) / len(records) if records else 0.0
         ),
-        "shadow_change_rate_among_exact_ties": (
-            len(changes) / len(tied) if tied else 0.0
+        "shadow_change_rate_among_multi_frontiers": (
+            len(changes) / len(frontier_multi) if frontier_multi else 0.0
         ),
         "baseline_immediate_youjin_entries": sum(
             record["diagnostic"].baseline_immediate_entry for record in records
@@ -109,11 +120,23 @@ def summarize_gold_youjin_shadow(records, *, attempts):
         "best_immediate_youjin_entries": sum(
             record["diagnostic"].best_immediate_entry for record in records
         ),
-        "ties_by_shanten": dict(sorted(ties_by_shanten.items())),
+        "frontiers_by_shanten": dict(sorted(frontier_by_shanten.items())),
         "changes_by_shanten": dict(sorted(changes_by_shanten.items())),
         "changes_by_match_margin": dict(sorted(changes_by_margin.items())),
         "mean_future_youjin_live_delta_on_change": _mean(future_live_deltas),
         "mean_future_youjin_type_delta_on_change": _mean(future_type_deltas),
+        "mean_meld_deficit_delta_on_change": _mean(deficit_deltas),
+        "changes_reducing_meld_deficit": sum(
+            value < 0 for value in deficit_deltas
+        ),
+        "mean_immediate_live_delta_on_change": _mean(immediate_live_deltas),
+        "mean_immediate_type_delta_on_change": _mean(immediate_type_deltas),
+        "changes_losing_live_copies": sum(
+            value < 0 for value in immediate_live_deltas
+        ),
+        "changes_losing_effective_types": sum(
+            value < 0 for value in immediate_type_deltas
+        ),
         "changes_improving_future_youjin_live": sum(
             value > 0 for value in future_live_deltas
         ),
