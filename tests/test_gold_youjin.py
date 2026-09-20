@@ -9,6 +9,7 @@ from workspace.ai import (
     MeldAwareShantenAgent,
     PlayerObservation,
     YoujinDiscardPotential,
+    YoujinTenpaiCandidateAgent,
     estimate_youjin_discard_potentials,
     youjin_meld_deficit,
 )
@@ -153,6 +154,79 @@ class GoldYoujinPotentialTests(unittest.TestCase):
         self.assertEqual(agent.gold_diagnostics[-1].structural_choice_tile,
                          expected.action.tile)
         self.assertFalse(agent.gold_diagnostics[-1].would_change_v010)
+
+class YoujinTenpaiCandidateTests(unittest.TestCase):
+    def test_v015b_changes_only_inside_narrow_tenpai_gate(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = MeldAwareShantenAgent(
+            seed=21, template_samples=32).choose_decision(view, actions)
+        other = next(tile for tile in sorted(set(hand))
+                     if tile != baseline.action.tile)
+
+        frontier = (
+            SimpleNamespace(
+                discard=baseline.action.tile, shanten=0,
+                total_live_copies=8, effective_tiles=(1, 2, 3)),
+            SimpleNamespace(
+                discard=other, shanten=0,
+                total_live_copies=7, effective_tiles=(1, 2, 3)),
+        )
+        potentials = (
+            YoujinDiscardPotential(
+                baseline.action.tile, False, 0, 0, (), 1,
+                meld_deficit=2),
+            YoujinDiscardPotential(
+                other, False, 0, 0, (), 1,
+                meld_deficit=1),
+        )
+        agent = YoujinTenpaiCandidateAgent(seed=21, template_samples=32)
+        with patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=potentials):
+            actual = agent.choose_decision(view, actions)
+
+        self.assertEqual(actual.action.tile, other)
+        self.assertIn("V0.15b experimental", actual.reason)
+
+    def test_v015b_keeps_v010_when_live_loss_exceeds_one(self):
+        hand = YOUJIN_READY + ["N"]
+        view = observation(hand)
+        actions = discards(hand)
+        baseline = MeldAwareShantenAgent(
+            seed=22, template_samples=32).choose_decision(view, actions)
+        other = next(tile for tile in sorted(set(hand))
+                     if tile != baseline.action.tile)
+
+        frontier = (
+            SimpleNamespace(
+                discard=baseline.action.tile, shanten=0,
+                total_live_copies=8, effective_tiles=(1, 2, 3)),
+            SimpleNamespace(
+                discard=other, shanten=0,
+                total_live_copies=6, effective_tiles=(1, 2, 3)),
+        )
+        potentials = (
+            YoujinDiscardPotential(
+                baseline.action.tile, False, 0, 0, (), 1,
+                meld_deficit=2),
+            YoujinDiscardPotential(
+                other, False, 0, 0, (), 1,
+                meld_deficit=1),
+        )
+        agent = YoujinTenpaiCandidateAgent(seed=22, template_samples=32)
+        with patch(
+                "workspace.ai.gold_youjin.min_shanten_discards",
+                return_value=frontier), patch(
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=potentials):
+            actual = agent.choose_decision(view, actions)
+
+        self.assertEqual(actual.action, baseline.action)
+
 
 class GoldYoujinShadowSummaryTests(unittest.TestCase):
     def test_summary_counts_differentiated_shadow_changes(self):
