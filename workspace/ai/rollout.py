@@ -179,7 +179,7 @@ def estimate_public_rollouts(
             type_sum += len(final.effective_tiles)
 
         if not completed:
-            raise RuntimeError("all rollout samples entered unsupported gold branches")
+            raise RuntimeError("all rollout samples entered unsupported special branches")
         out.append(PublicRolloutEstimate(
             discard=discard,
             samples_requested=samples,
