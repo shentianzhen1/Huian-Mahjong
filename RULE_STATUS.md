@@ -26,11 +26,15 @@ Player confirmation now closes the normal sequential progression after an establ
 5. **Settlement formula remains the directly confirmed target-room formula:**
    `(current dealer base + winner fan) × stage multiplier`, with ×4 / ×8 / ×16 and no extra dealer multiplier.
 
-The Environment now tracks missed opponent response draws as retained physical tiles via `youjin_response_draws`, exposes the Youjin player's continuation draw, optional DOUBLE_YOU / TRIPLE_YOU upgrade actions, and a `YOUJIN_SETTLEMENT_READY` state. A dedicated `finalize_youjin_outcome()` applies the confirmed formula once audited dealer-base/fan inputs are provided.
+The Environment now enforces the corrected response sequence: opponent DRAW → self-Hu if available, otherwise mandatory DISCARD → only then return to the Youjin player's continuation draw (single/double) or current-stage settlement (triple). Response discards enter the river but do not open an ordinary claim window. A dedicated `finalize_youjin_outcome()` applies the confirmed formula once audited dealer-base/fan inputs are provided.
 
-**2026-09-20 retained-response Hu clarification:** the player confirmed that earlier missed response draws which stayed in hand **also participate in later Double-/Triple-You self-draw Hu evaluation**. The Rules layer now evaluates the whole oversized concealed pool by enumerating normal-size Hu subsets that must contain every previously retained response tile plus the newest response draw. This is the implementation interpretation of the confirmed participation rule and standard 5-meld+pair structure; it removes the old `youjin_response_hu_extra_tiles` eligibility blocker.
+**2026-09-20 response-discard correction (latest player confirmation):** the earlier interpretation that a missed response draw remains in hand is superseded. Correct target-room behavior is: after the opponent's one response draw, if they do not Hu, they **must discard one tile**. The hand therefore returns to its normal concealed size before the Youjin chain continues.
 
-The remaining boundary is narrower: if a later oversized response actually Hu's, exact fan aggregation/settlement treatment for the physically retained extra tiles has not yet been directly observed. Such a declaration is allowed and audited, but automatic scoring stops at `youjin_response_extra_tile_scoring` unless an observed settlement supplies the fan/result.
+- The mandatory response discard is a special-chain discard: it is recorded in the river for physical accounting, but it does **not** open ordinary Chi/Peng/Gang/discard-Hu responses.
+- Single/Double-You: after that discard, control returns to the Youjin player for the confirmed one-card progression draw.
+- Triple-You: after that discard, the current Triple-You settles at ×16.
+- The prior 18/19-tile retained-response model, `youjin_response_tiles`, subset Hu solver, and `youjin_response_extra_tile_scoring` blocker are retired.
+- If the opponent's response draw itself is a legal self-Hu, HU remains the known action. Whether a player may intentionally decline an available self-Hu and discard instead remains `youjin_response_hu_decline` UNKNOWN.
 
 External Quanzhou/Xiamen rules broadly support the same single→double→triple structure, "natural tile frees gold" logic and optional upgrade behavior, but public sources conflict on Triple-You response and scoring. They are retained only as low-priority cross-checks at `references/gameplay/2026-09-20/quanzhou_youjin_external_crosscheck.md`; target Huian two-player evidence remains authoritative.
 
