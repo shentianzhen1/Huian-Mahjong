@@ -2,7 +2,9 @@ __pycache__/
 *.py[cod]
 .venv/
 .venv-capture/
+.venv-hint-alpha/
 data/capture_validation/
+data/hint_alpha/
 venv/
 .env
 *.log
