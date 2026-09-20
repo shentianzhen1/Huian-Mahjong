@@ -181,10 +181,6 @@ class HuianEnvironment:
 
         declaration = deepcopy(self._state.pending_hu)
         source = WinSource(declaration["source"])
-        if (source == WinSource.SELF_DRAW
-                and self._state.youjin_response_tiles[declaration["winner"]]):
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("youjin_response_extra_tile_scoring")
         if source == WinSource.ROB_KONG:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
@@ -669,39 +665,10 @@ class HuianEnvironment:
             if len(replacements) == 1:
                 action.metadata["effective_drawn_tile"] = replacements[0]
         if was_youjin_response_draw and not candidate.terminal:
-            response_player = action.player
-            youjin_player = 1 - response_player
-            context = HuContext.from_draw_metadata(action.metadata)
-            retained = tuple(candidate.youjin_response_tiles[response_player])
-            if retained:
-                eligible = self.rules.rules.can_youjin_response_hu(
-                    candidate.hands[response_player],
-                    candidate.gold_tile,
-                    len(candidate.melds[response_player]),
-                    retained_response_tiles=retained,
-                    winning_tile=context.winning_tile,
-                )
-            else:
-                eligible = self.rules.rules.can_win(
-                    candidate.hands[response_player], candidate.gold_tile,
-                    len(candidate.melds[response_player]), win_context=context)
-            if eligible:
-                candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
-            else:
-                # Confirmed 2026-09-20: every missed response draw remains
-                # physically in hand and participates in later response Hu
-                # subset evaluation.
-                candidate.youjin_response_tiles[response_player].append(
-                    context.winning_tile
-                )
-                candidate.current_player = youjin_player
-                stage = YoujinStage(candidate.special_states[youjin_player])
-                progression = youjin_progression_rule(stage)
-                candidate.phase = (
-                    "YOUJIN_SETTLEMENT_READY"
-                    if progression.youjin_player_draw_chances == 0
-                    else "YOUJIN_STAGE_SUCCESS"
-                )
+            # Confirmed correction 2026-09-20: after the response draw, the
+            # opponent either self-Hu's or must discard one tile. Progression
+            # cannot continue until that mandatory response discard is made.
+            candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
         if was_youjin_player_draw and not candidate.terminal:
             youjin_player = action.player
             if self.rules.rules.can_youjin_upgrade_after_draw(
@@ -849,12 +816,30 @@ class HuianEnvironment:
             state.current_player = 1 - p
             state.phase = "YOUJIN_RESPONSE_DRAW"
         elif kind == T.DISCARD:
-            state.hands[p].remove(action.tile)
-            state.discards[p].append(action.tile)
-            state.pending_discard = dict(player=p, tile=action.tile,
-                                         river_index=len(state.discards[p]) - 1)
-            state.current_player = 1 - p
-            state.phase = "AFTER_DISCARD"
+            if state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
+                if action.metadata.get("youjin_response_discard") is not True:
+                    raise ValueError(
+                        "Missed Youjin response requires an explicit response discard"
+                    )
+                youjin_player = 1 - p
+                stage = YoujinStage(state.special_states[youjin_player])
+                progression = youjin_progression_rule(stage)
+                state.hands[p].remove(action.tile)
+                state.discards[p].append(action.tile)
+                state.pending_discard = None
+                state.current_player = youjin_player
+                state.phase = (
+                    "YOUJIN_SETTLEMENT_READY"
+                    if progression.youjin_player_draw_chances == 0
+                    else "YOUJIN_STAGE_SUCCESS"
+                )
+            else:
+                state.hands[p].remove(action.tile)
+                state.discards[p].append(action.tile)
+                state.pending_discard = dict(player=p, tile=action.tile,
+                                             river_index=len(state.discards[p]) - 1)
+                state.current_player = 1 - p
+                state.phase = "AFTER_DISCARD"
         elif kind == T.ADD_KONG:
             state.pending_kong = {
                 "kong_player": p, "tile": action.tile,
