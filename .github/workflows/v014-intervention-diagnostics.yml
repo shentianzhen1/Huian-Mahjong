@@ -1,13 +1,6 @@
 name: V0.14 Intervention Diagnostics
 
 on:
-  pull_request:
-    paths:
-      - "workspace/ai/rollout.py"
-      - "workspace/simulator/rollout_diagnostics.py"
-      - "tests/test_rollout_agent.py"
-      - "tests/test_rollout_diagnostics.py"
-      - ".github/workflows/v014-intervention-diagnostics.yml"
   workflow_dispatch:
 
 permissions:
