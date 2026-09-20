@@ -697,11 +697,11 @@ class HuianEnvironment:
             and self._state.current_player == active_youjin[0]
             and self._state.phase in ("AFTER_AN_GANG", "AFTER_ADDED_GANG")
         )
+        action = self._canonical_action(self._state, deepcopy(action))
         was_youjin_kong_decline = (
             self._state.phase == "YOUJIN_KONG_CHOICE"
             and action.type == env.ActionType.PASS
         )
-        action = self._canonical_action(self._state, deepcopy(action))
         self.rules.authorize_action(self.state, action)
         before = self._state.state_hash()
         candidate = deepcopy(self._state)
