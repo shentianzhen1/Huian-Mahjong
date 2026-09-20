@@ -44,6 +44,23 @@ class YoujinStage(str, Enum):
 
 
 @dataclass(frozen=True)
+class YoujinOfferRule:
+    """Confirmed semantics of a visible Youjin offer.
+
+    The offer is optional: declining it keeps ordinary play alive and does not
+    permanently disable later Youjin-family progression in the same hand.
+    """
+
+    optional: bool = True
+    decline_keeps_playing: bool = True
+    decline_blocks_later_youjin: bool = False
+
+
+def youjin_offer_rule():
+    return YoujinOfferRule()
+
+
+@dataclass(frozen=True)
 class YoujinOpponentResponseRule:
     """Confirmed opponent interception window for an established Youjin stage.
 
