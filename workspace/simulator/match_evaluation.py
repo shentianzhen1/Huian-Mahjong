@@ -8,7 +8,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from math import sqrt
 
-from .match_runner import run_real_ordinary_match
+from .match_runner import run_real_ordinary_match, run_real_youjin_match
 
 
 @dataclass(frozen=True)
@@ -111,7 +111,9 @@ def run_paired_real_matches(
         pair_attempts[pair_index] = {}
         for swapped in (False, True):
             seat_factories = factories if not swapped else factories[::-1]
-            if using_default_runner or match_runner is run_real_ordinary_match:
+            if (using_default_runner
+                    or match_runner in (run_real_ordinary_match,
+                                        run_real_youjin_match)):
                 seed_keys = (0, 1) if not swapped else (1, 0)
                 result = match_runner(
                     seed=seed, agent_factories=seat_factories,
