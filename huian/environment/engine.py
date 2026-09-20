@@ -559,6 +559,7 @@ class HuianEnvironment:
             raise ValueError("Hand is terminal")
         if len(self._events) >= self.max_steps:
             raise DeadLoopError("Scenario action limit reached; not a drawn hand")
+        was_youjin_response_draw = self._state.phase == "YOUJIN_RESPONSE_DRAW"
         action = self._canonical_action(self._state, deepcopy(action))
         self.rules.authorize_action(self.state, action)
         before = self._state.state_hash()
@@ -575,6 +576,20 @@ class HuianEnvironment:
                             for tile in item.replacements if tile not in env.FLOWERS]
             if len(replacements) == 1:
                 action.metadata["effective_drawn_tile"] = replacements[0]
+        if was_youjin_response_draw and not candidate.terminal:
+            response_player = action.player
+            youjin_player = 1 - response_player
+            context = HuContext.from_draw_metadata(action.metadata)
+            if self.rules.rules.can_win(
+                    candidate.hands[response_player], candidate.gold_tile,
+                    len(candidate.melds[response_player]), win_context=context):
+                candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
+            else:
+                # Player-confirmed: if the opponent's one allowed draw cannot
+                # self-draw Hu, the current Youjin stage succeeds. Settlement/
+                # further-upgrade timing remains explicitly unresolved.
+                candidate.current_player = youjin_player
+                candidate.phase = "YOUJIN_STAGE_SUCCESS"
         candidate.turn_index += 1
         candidate.last_action = action.to_dict()
         self.rules.validate_state(candidate)
@@ -651,11 +666,17 @@ class HuianEnvironment:
         p, kind = action.player, action.type
         T = env.ActionType
         if kind == T.DRAW:
+            response_draw = state.phase == "YOUJIN_RESPONSE_DRAW"
             source = DrawSource.parse(action.metadata.get("source"))
             tile = state.wall.pop(-1 if source == DrawSource.WALL_TAIL else 0)
             action.metadata["drawn_tile"] = tile
             state.hands[p].append(tile)
-            state.phase = "NEED_FLOWER_REPLACE" if tile in env.FLOWERS else "AFTER_DRAW"
+            if tile in env.FLOWERS:
+                state.phase = "NEED_FLOWER_REPLACE"
+            else:
+                state.phase = (
+                    "YOUJIN_RESPONSE_AFTER_DRAW" if response_draw else "AFTER_DRAW"
+                )
         elif kind == T.PASS:
             if state.phase == "ROB_KONG_WINDOW":
                 pending = state.pending_kong
@@ -673,6 +694,13 @@ class HuianEnvironment:
             # The declined tile stays in its owner's river.
             state.pending_discard = None
             state.phase = "NEED_DRAW"
+        elif kind == T.YOUJIN:
+            state.hands[p].remove(action.tile)
+            state.discards[p].append(action.tile)
+            state.pending_discard = None
+            state.special_states[p] = "YOUJIN"
+            state.current_player = 1 - p
+            state.phase = "YOUJIN_RESPONSE_DRAW"
         elif kind == T.DISCARD:
             state.hands[p].remove(action.tile)
             state.discards[p].append(action.tile)
@@ -698,6 +726,9 @@ class HuianEnvironment:
             state.current_player = p
             state.phase = "ROB_KONG_HU_DECLARED"
         elif kind == T.HU:
+            if state.phase == "YOUJIN_RESPONSE_AFTER_DRAW":
+                youjin_player = 1 - p
+                state.special_states[youjin_player] = "NORMAL"
             source = WinSource(action.metadata.get("win_source"))
             pending = state.pending_discard if source == WinSource.DISCARD else None
             state.pending_hu = {

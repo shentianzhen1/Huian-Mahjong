@@ -138,6 +138,28 @@ def current_player_special_actions(adapter, state):
     return tuple(actions)
 
 
+def _single_youjin_offer_actions(adapter, state):
+    """Known optional single-Youjin declarations after the current special window.
+
+    A distinct YOUJIN action records the system's special choice. Ordinary
+    DISCARD of the same tile remains available and means the player declined
+    this offer without locking future Youjin-family progression.
+    """
+    p = state.current_player
+    candidates = adapter.rules.youjin_entry_discards(
+        state.hands[p], state.gold_tile, len(state.melds[p])
+    )
+    A, T = env.Action, env.ActionType
+    return tuple(
+        A(p, T.YOUJIN, tile=tile, metadata={
+            "stage": YoujinStage.YOUJIN.value,
+            "optional": True,
+            "entry_rule": "complete_melds_plus_one_roaming_gold",
+        })
+        for tile in candidates
+    )
+
+
 def _strip_unrobbable_kong_unknown(adapter, state, result):
     if "rob_kong" not in result.unresolved:
         return result
@@ -171,8 +193,10 @@ def report_with_specials(adapter, state):
         if state.phase == "NEED_DRAW":
             return ActionReport((A(p, T.DRAW, metadata={
                 "source": DrawSource.WALL_HEAD.value}),))
-        return ActionReport(tuple(
-            A(p, T.DISCARD, tile=tile) for tile in sorted(set(state.hands[p]))))
+        youjin = _single_youjin_offer_actions(adapter, state)
+        discards = tuple(
+            A(p, T.DISCARD, tile=tile) for tile in sorted(set(state.hands[p])))
+        return ActionReport(youjin + discards)
     if state.phase == "OPENING_QIANGJIN_CHECK":
         validate(adapter, state)
         return ActionReport(current_player_special_actions(adapter, state))

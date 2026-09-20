@@ -8,6 +8,15 @@ from huian._legacy import env
 HAND = ["M1", "M2", "M4", "M5", "M7", "M8", "P1", "P2",
         "P4", "S1", "S2", "S4", "E", "E", "E", "N"]
 
+YOUJIN_READY = [
+    "M1", "M2", "M3",
+    "M4", "M5", "M6",
+    "P1", "P2", "P3",
+    "S1", "S2", "S3",
+    "E", "E", "E",
+    "P9",
+]
+
 
 def scenario(phase="AFTER_DISCARD", hand=None, discard="M3"):
     state = HuianGameState(phase=phase, gold_tile="P9", special_states=["NORMAL", "NORMAL"])
@@ -27,6 +36,30 @@ def scenario(phase="AFTER_DISCARD", hand=None, discard="M3"):
     return state
 
 
+def youjin_offer_scenario(response_hand=None):
+    """17-tile action node with exactly one known single-Youjin entry discard."""
+    state = HuianGameState(
+        phase="AFTER_DRAW", gold_tile="P9",
+        special_states=["NORMAL", "NORMAL"],
+    )
+    state.hands[0] = YOUJIN_READY + ["N"]
+    state.hands[1] = list(response_hand or [
+        "P4", "P4", "P5", "P5", "P6", "P6",
+        "S4", "S4", "S5", "S5", "S6", "S6",
+        "W", "W", "R", "R",
+    ])
+    state.reserved_tiles = ["P9"]
+    state.last_action = env.Action(
+        0, env.ActionType.PASS_QIANGJIN,
+        metadata={"window": "current_only"},
+    ).to_dict()
+    remaining = env.full_wall()
+    for tile in state.physical_tiles():
+        remaining.remove(tile)
+    state.wall = remaining
+    return state
+
+
 def game(state, experimental=False, **kwargs):
     adapter = HuianRulesAdapter(HuianRules(RulesConfig(experimental_no_rob_kong=experimental)))
     result = HuianEnvironment(adapter, **kwargs)
@@ -39,6 +72,87 @@ def choose(instance, kind):
 
 
 class EnvironmentTests(unittest.TestCase):
+    def test_single_youjin_offer_coexists_with_same_ordinary_discard(self):
+        instance = game(youjin_offer_scenario())
+        actions = instance.legal_actions()
+        offer = next(a for a in actions if a.type == env.ActionType.YOUJIN)
+        self.assertEqual(offer.tile, "N")
+        self.assertEqual(offer.metadata, {
+            "stage": "YOUJIN",
+            "optional": True,
+            "entry_rule": "complete_melds_plus_one_roaming_gold",
+        })
+        self.assertIn(env.Action(0, env.ActionType.DISCARD, tile="N"), actions)
+
+        # Choosing ordinary DISCARD is the confirmed decline path: no permanent
+        # Youjin flag is created.
+        declined = game(youjin_offer_scenario())
+        after, _ = declined.step(env.Action(0, env.ActionType.DISCARD, tile="N"))
+        self.assertEqual(after.special_states, ["NORMAL", "NORMAL"])
+        self.assertEqual(after.phase, "AFTER_DISCARD")
+
+    def test_single_youjin_declaration_opens_exactly_one_opponent_draw(self):
+        instance = game(youjin_offer_scenario())
+        offer = next(
+            a for a in instance.legal_actions()
+            if a.type == env.ActionType.YOUJIN
+        )
+        after, _ = instance.step(offer)
+        self.assertEqual(after.special_states, ["YOUJIN", "NORMAL"])
+        self.assertEqual(after.current_player, 1)
+        self.assertEqual(after.phase, "YOUJIN_RESPONSE_DRAW")
+        self.assertEqual(after.discards[0][-1], "N")
+        self.assertIsNone(after.pending_discard)
+
+        actions = instance.legal_actions()
+        self.assertEqual(len(actions), 1)
+        self.assertEqual(actions[0].type, env.ActionType.DRAW)
+        self.assertEqual(actions[0].metadata, {"source": "wall_head"})
+
+        # This fixture's response hand is not a winning hand after the first
+        # wall-head draw, so the confirmed one-draw opportunity is exhausted.
+        resolved, _ = instance.step(actions[0])
+        self.assertEqual(resolved.phase, "YOUJIN_STAGE_SUCCESS")
+        self.assertEqual(resolved.current_player, 0)
+        self.assertEqual(resolved.special_states, ["YOUJIN", "NORMAL"])
+        report = instance.action_report()
+        self.assertEqual(report.known_actions, ())
+        self.assertEqual(report.unresolved, ("youjin_stage_success_resolution",))
+
+    def test_youjin_response_draw_can_self_hu_and_cancels_active_stage(self):
+        response_tenpai = [
+            "P4", "P5", "P6",
+            "P4", "P5", "P6",
+            "S4", "S5", "S6",
+            "S4", "S5", "S6",
+            "W", "W", "W",
+            "N",
+        ]
+        state = youjin_offer_scenario(response_tenpai)
+        n_index = state.wall.index("N")
+        state.wall[0], state.wall[n_index] = state.wall[n_index], state.wall[0]
+        instance = game(state)
+        offer = next(
+            a for a in instance.legal_actions()
+            if a.type == env.ActionType.YOUJIN
+        )
+        instance.step(offer)
+        instance.step(instance.legal_actions()[0])
+
+        self.assertEqual(instance.state.phase, "YOUJIN_RESPONSE_AFTER_DRAW")
+        report = instance.action_report()
+        hu = next(a for a in report.known_actions if a.type == env.ActionType.HU)
+        self.assertEqual(hu.tile, "N")
+        self.assertTrue(hu.metadata["youjin_interception"])
+        self.assertIn("youjin_response_hu_decline", report.unresolved)
+
+        declared, _ = instance.step(hu)
+        self.assertEqual(declared.phase, "HU_DECLARED")
+        self.assertEqual(declared.special_states, ["NORMAL", "NORMAL"])
+        self.assertEqual(declared.current_player, 1)
+        self.assertEqual(declared.pending_hu["source"], "self_draw")
+        self.assertEqual(declared.pending_hu["winning_tile"], "N")
+
     def test_chi_transfers_river_tile_and_requires_discard(self):
         instance = game(scenario())
         self.assertIn(env.Action(0, env.ActionType.PASS), instance.legal_actions())
