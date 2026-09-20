@@ -174,6 +174,40 @@ class PublicStateBatchEvaluationTests(unittest.TestCase):
             self.assertIsNone(reader.previous_seen[0])
             self.assertIsNone(reader.previous_seen[1])
 
+    def test_fusion_marks_fully_unreadable_window_invalid(self):
+        from .public_state import PublicStateCandidate, fuse_public_state
+
+        result = fuse_public_state(
+            [PublicStateCandidate(), PublicStateCandidate()],
+            minimum_votes=2,
+        )
+        self.assertIsNone(result.score_pair)
+        self.assertIsNone(result.hand_number)
+        self.assertIsNone(result.remaining_tiles)
+        self.assertEqual(
+            result.issues,
+            ("score_unreadable", "hand_unreadable", "remaining_unreadable"),
+        )
+        self.assertFalse(result.valid)
+        self.assertFalse(result.safe_for_executor)
+
+    def test_fusion_distinguishes_unreadable_from_disagreement(self):
+        from .public_state import PublicStateCandidate, fuse_public_state
+
+        result = fuse_public_state(
+            [
+                PublicStateCandidate(1000, 1000, 1, 107),
+                PublicStateCandidate(1026, 974, 2, 106),
+            ],
+            minimum_votes=2,
+        )
+        self.assertIn("score_consensus", result.issues)
+        self.assertIn("hand_consensus", result.issues)
+        self.assertIn("remaining_consensus", result.issues)
+        self.assertNotIn("score_unreadable", result.issues)
+        self.assertNotIn("hand_unreadable", result.issues)
+        self.assertNotIn("remaining_unreadable", result.issues)
+
     def test_manifest_rejects_invalid_truth_and_empty_frames(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
