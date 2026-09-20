@@ -1,5 +1,21 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-20 Youjin own-turn flowers / concealed Kong / added Kong confirmed
+
+Latest player confirmation extends the established Youjin/Double-You own progression turn without changing the non-Kong path:
+
+- **No Kong selected:** behavior is unchanged. After the opponent misses and discards, the Youjin player takes the existing one-card progression draw; if a free Jin exists, upgrade remains optional; otherwise the current stage settles as before.
+- **Flowers do not interrupt Youjin.** If the Youjin player's progression draw is a flower, normal automatic flower replacement continues from the wall tail, including repeated flower replacements, until a non-flower effective draw is obtained. The Youjin stage remains active throughout.
+- **Concealed Kong is allowed while Youjin is active.** If the completed own draw/replacement leaves four identical non-Jin tiles, the player may declare AN_GANG; the Kong completes normally and the replacement tile is drawn from the wall tail.
+- **Added Kong is allowed while Youjin is active.** An existing PENG may be upgraded when the player draws the fourth tile. Existing confirmed rob scope remains unchanged: ADD_KONG keeps its rob-Kong response window; AN_GANG is not robbable.
+- **Kong-tail Jin / freed Jin:** if the tail draw creates a discardable Jin, the player may discard Jin and upgrade single→double or double→triple.
+- **Kong-tail ordinary tile:** when no ordinary Hu/special-settlement/upgrade is selected, the player must discard one non-Jin tile. The current Youjin stage is preserved and play returns to the opponent's one-draw response window; the discard is a Youjin-chain discard and opens no ordinary Chi/Peng/Gang/discard-Hu claim window.
+- **Kong-tail tile that genuinely completes an ordinary Hu:** the player may choose ordinary self-draw Hu, or choose to settle the current Youjin stage instead. Ordinary Hu eligibility must have a legal decomposition beyond the trivial "roaming Jin + just-drawn tail tile as the pair"; otherwise every Kong-tail tile would be falsely treated as an ordinary Hu.
+- **Kong fan remains additive** in any later settlement; there is still no independent immediate Kong fee.
+- The ordinary Gang-Hu scoring formula remains `GANG_HU_SCORING_UNKNOWN`. Allowing the Hu action does not invent its multiplier/stacking.
+
+Implementation uses `YOUJIN_KONG_CHOICE` and `YOUJIN_KONG_AFTER_DRAW`; declining the Kong explicitly returns to the pre-existing progression logic.
+
 ## 2026-09-20 Youjin / Double-You / Triple-You progression confirmed
 
 Player confirmation now closes the normal sequential progression after an established Youjin stage:
@@ -7,7 +23,7 @@ Player confirmation now closes the normal sequential progression after an establ
 1. **Every established stage gives the opponent exactly one self-draw opportunity.**
    - Youjin, Double-You and Triple-You all use the same one-draw interception window.
    - If the opponent self-draws, the Youjin chain is intercepted.
-   - If the opponent does not self-draw, that drawn tile **stays in the opponent's concealed hand**; it is not discarded or returned.
+   - If the opponent does not self-draw, the opponent **must discard one tile**; that special response discard enters the river but opens no ordinary claim window.
 
 2. **After a missed opponent response, single Youjin / Double-You gives the Youjin player one draw.**
    - If the new tile is the natural tile that replaces a wildcard gold already completing a meld, that wildcard gold becomes free.
@@ -47,7 +63,7 @@ The original single-Youjin entry implementation remains valid, but its old "stop
 - Choosing ordinary discard declines only the current Youjin offer and does not lock later progression.
 - Choosing YOUJIN still discards the entry tile, establishes single Youjin, skips the ordinary discard-claim window and gives the opponent one self-draw response.
 - After an opponent miss, Environment now continues into the confirmed Youjin-player draw / optional upgrade / current-stage settlement flow instead of stopping at the retired `youjin_stage_success_resolution` unknown.
-- Whether an opponent who *can* self-Hu may deliberately decline that Hu remains `youjin_response_hu_decline` UNKNOWN.
+- If the opponent can self-Hu in that response window, Hu is optional: the player may decline Hu and discard one tile to continue the Youjin chain.
 
 ## 2026-09-20 single-Youjin structural eligibility confirmed
 
