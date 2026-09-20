@@ -48,23 +48,29 @@ jobs:
               "stopped_attempts",
               "gold_discard_decisions",
               "gold_decisions_by_gold_count",
-              "exact_offense_tie_decisions",
-              "signal_differentiated_ties",
+              "multi_candidate_min_shanten_decisions",
+              "signal_differentiated_frontiers",
               "shadow_would_change_v010",
               "shadow_change_rate_among_gold_decisions",
-              "shadow_change_rate_among_exact_ties",
+              "shadow_change_rate_among_multi_frontiers",
               "baseline_immediate_youjin_entries",
               "best_immediate_youjin_entries",
-              "ties_by_shanten",
+              "frontiers_by_shanten",
               "changes_by_shanten",
               "mean_future_youjin_live_delta_on_change",
+              "mean_meld_deficit_delta_on_change",
+              "changes_reducing_meld_deficit",
+              "mean_immediate_live_delta_on_change",
+              "mean_immediate_type_delta_on_change",
+              "changes_losing_live_copies",
+              "changes_losing_effective_types",
               "changes_improving_future_youjin_live",
           )
           summary = {key: data.get(key) for key in keys}
           print(json.dumps(summary, ensure_ascii=False, indent=2))
           with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as fh:
-              fh.write("# Jin / Youjin structural shadow audit\n\n")
-              fh.write("Fresh seed 410000, both seat orders. Shadow policy always executes V0.10.\n\n")
+              fh.write("# Jin / Youjin meld-deficit shadow audit\n\n")
+              fh.write("Fresh seed 410000, both seat orders. Shadow policy always executes V0.10; full minimum-shanten frontier is audited.\n\n")
               fh.write("```json\n")
               fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
               fh.write("\n```\n")
