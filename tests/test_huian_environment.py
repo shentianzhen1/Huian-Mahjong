@@ -71,6 +71,54 @@ def choose(instance, kind):
     return next(a for a in instance.action_report().known_actions if a.type == kind)
 
 
+def single_youjin_progression_instance():
+    instance = game(youjin_offer_scenario())
+    offer = next(
+        action for action in instance.legal_actions()
+        if action.type == env.ActionType.YOUJIN
+    )
+    instance.step(offer)
+    complete_youjin_response_miss(instance)
+    return instance
+
+
+def youjin_stage_success_with_peng():
+    """Single-You own progression node with one exposed honor Peng."""
+    state = HuianGameState(
+        phase="YOUJIN_STAGE_SUCCESS",
+        gold_tile="P9",
+        special_states=["YOUJIN", "NORMAL"],
+        current_player=0,
+    )
+    state.hands[0] = [
+        "M1", "M2", "M3",
+        "M4", "M5", "M6",
+        "P1", "P2", "P3",
+        "S1", "S2", "S3",
+        "P9",
+    ]
+    state.melds[0] = [env.Meld("PENG", ["E"] * 3, 1)]
+    state.discards[1] = ["N"]
+    state.last_action = env.Action(
+        1, env.ActionType.DISCARD, tile="N",
+        metadata={
+            "youjin_response_discard": True,
+            "stage": "YOUJIN",
+            "declined_self_hu": False,
+        },
+    ).to_dict()
+    state.reserved_tiles = ["P9"]
+    remaining = env.full_wall()
+    for tile in state.physical_tiles():
+        remaining.remove(tile)
+    for tile in remaining.copy():
+        if tile in env.BASE_TILES and tile != "P9" and len(state.hands[1]) < 16:
+            state.hands[1].append(tile)
+            remaining.remove(tile)
+    state.wall = remaining
+    return state
+
+
 def complete_youjin_response_miss(instance):
     """Draw the one response tile, then perform the mandatory discard."""
     draw = next(
@@ -231,6 +279,203 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(upgraded.hands[0].count("P9"), before_gold - 1)
         self.assertEqual(upgraded.discards[0][-1], "P9")
         self.assertIsNone(upgraded.pending_discard)
+
+    def test_youjin_progression_flower_chain_replaces_until_nonflower_before_kong_choice(self):
+        instance = single_youjin_progression_instance()
+        mutable = instance.state
+
+        # Head draw F1; tail replacements F2 then E. Final E makes EEEE.
+        head_index = mutable.wall.index("F1")
+        mutable.wall[0], mutable.wall[head_index] = (
+            mutable.wall[head_index], mutable.wall[0]
+        )
+        tail_flower_index = mutable.wall.index("F2")
+        mutable.wall[-1], mutable.wall[tail_flower_index] = (
+            mutable.wall[tail_flower_index], mutable.wall[-1]
+        )
+        final_index = mutable.wall.index("E")
+        mutable.wall[-2], mutable.wall[final_index] = (
+            mutable.wall[final_index], mutable.wall[-2]
+        )
+        instance.set_state(mutable)
+
+        after, event = instance.step(instance.legal_actions()[0])
+        self.assertEqual(after.phase, "YOUJIN_KONG_CHOICE")
+        self.assertEqual(after.special_states, ["YOUJIN", "NORMAL"])
+        self.assertIn("F1", after.flowers[0])
+        self.assertIn("F2", after.flowers[0])
+        self.assertEqual(event["action"]["metadata"]["drawn_tile"], "F1")
+        self.assertEqual(event["action"]["metadata"]["effective_drawn_tile"], "E")
+        self.assertTrue(any(
+            action.type == env.ActionType.AN_GANG and action.tile == "E"
+            for action in instance.legal_actions()
+        ))
+
+    def test_youjin_declining_kong_preserves_previous_progression_logic(self):
+        instance = single_youjin_progression_instance()
+        mutable = instance.state
+        index = mutable.wall.index("E")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+
+        after, _ = instance.step(instance.legal_actions()[0])
+        self.assertEqual(after.phase, "YOUJIN_KONG_CHOICE")
+        decline = next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.PASS
+            and action.metadata.get("youjin_kong_decline")
+        )
+        settled, _ = instance.step(decline)
+        self.assertEqual(settled.phase, "YOUJIN_SETTLEMENT_READY")
+        self.assertEqual(settled.special_states, ["YOUJIN", "NORMAL"])
+
+    def test_youjin_concealed_kong_tail_ordinary_tile_discards_and_keeps_stage(self):
+        instance = single_youjin_progression_instance()
+        mutable = instance.state
+        index = mutable.wall.index("E")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+        instance.step(instance.legal_actions()[0])
+
+        an_gang = next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.AN_GANG and action.tile == "E"
+        )
+        after_kong, _ = instance.step(an_gang)
+        self.assertEqual(after_kong.phase, "AFTER_AN_GANG")
+        self.assertEqual(after_kong.special_states, ["YOUJIN", "NORMAL"])
+
+        mutable = instance.state
+        index = mutable.wall.index("N")
+        mutable.wall[-1], mutable.wall[index] = mutable.wall[index], mutable.wall[-1]
+        instance.set_state(mutable)
+
+        tail_draw = instance.legal_actions()[0]
+        self.assertEqual(tail_draw.metadata["source"], "wall_tail")
+        after_tail, event = instance.step(tail_draw)
+        self.assertEqual(after_tail.phase, "YOUJIN_KONG_AFTER_DRAW")
+        self.assertEqual(event["action"]["metadata"]["drawn_tile"], "N")
+
+        report = instance.action_report()
+        self.assertTrue(report.known_actions)
+        self.assertTrue(all(
+            action.type == env.ActionType.DISCARD
+            for action in report.known_actions
+        ))
+        discard_n = next(
+            action for action in report.known_actions if action.tile == "N"
+        )
+        continued, _ = instance.step(discard_n)
+        self.assertEqual(continued.phase, "YOUJIN_RESPONSE_DRAW")
+        self.assertEqual(continued.special_states, ["YOUJIN", "NORMAL"])
+        self.assertEqual(continued.current_player, 1)
+        self.assertEqual(continued.discards[0][-1], "N")
+        self.assertIsNone(continued.pending_discard)
+
+    def test_youjin_concealed_kong_tail_gold_can_upgrade(self):
+        instance = single_youjin_progression_instance()
+        mutable = instance.state
+        index = mutable.wall.index("E")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+        instance.step(instance.legal_actions()[0])
+        instance.step(next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.AN_GANG and action.tile == "E"
+        ))
+
+        mutable = instance.state
+        index = mutable.wall.index("P9")
+        mutable.wall[-1], mutable.wall[index] = mutable.wall[index], mutable.wall[-1]
+        instance.set_state(mutable)
+        instance.step(instance.legal_actions()[0])
+
+        self.assertEqual(instance.state.phase, "YOUJIN_KONG_AFTER_DRAW")
+        upgrade = next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.DOUBLE_YOU
+        )
+        upgraded, _ = instance.step(upgrade)
+        self.assertEqual(upgraded.phase, "YOUJIN_RESPONSE_DRAW")
+        self.assertEqual(upgraded.special_states, ["DOUBLE_YOU", "NORMAL"])
+
+    def test_youjin_kong_tail_real_hu_offers_selfdraw_or_current_stage_settlement(self):
+        instance = single_youjin_progression_instance()
+        mutable = instance.state
+        index = mutable.wall.index("E")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+        instance.step(instance.legal_actions()[0])
+        instance.step(next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.AN_GANG and action.tile == "E"
+        ))
+
+        # M1 forms a genuine alternative ordinary Hu:
+        # pair M1-M1, M2-M3-GOLD, M4-M5-M6, P123, S123.
+        mutable = instance.state
+        index = mutable.wall.index("M1")
+        mutable.wall[-1], mutable.wall[index] = mutable.wall[index], mutable.wall[-1]
+        instance.set_state(mutable)
+        instance.step(instance.legal_actions()[0])
+
+        actions = instance.legal_actions()
+        hu = next(action for action in actions if action.type == env.ActionType.HU)
+        special = next(
+            action for action in actions
+            if action.type == env.ActionType.PASS
+            and action.metadata.get("youjin_kong_tail_settle")
+        )
+        self.assertEqual(hu.metadata["win_source"], "kong_tail_draw")
+        self.assertEqual(hu.metadata["kong_kind"], "AN_GANG")
+
+        ordinary = instance.clone()
+        declared, _ = ordinary.step(hu)
+        self.assertEqual(declared.phase, "HU_DECLARED")
+        self.assertEqual(declared.pending_hu["source"], "kong_tail_draw")
+        self.assertIn("GANG_HU_SCORING_UNKNOWN",
+                      ordinary.action_report().unresolved)
+
+        settled, _ = instance.step(special)
+        self.assertEqual(settled.phase, "YOUJIN_SETTLEMENT_READY")
+        terminal, event = instance.finalize_youjin_outcome(
+            current_dealer_base=30
+        )
+        self.assertEqual(terminal.terminal_reason, "AUTO_YOUJIN")
+        # Honor concealed Kong 4 + Jin 1 = 5 fan; Kong fan remains additive.
+        self.assertEqual(event["action"]["metadata"]["winner_fan"], 5)
+        self.assertEqual(terminal.rewards, [140, -140])
+
+    def test_youjin_added_kong_keeps_rob_window_then_tail_draw(self):
+        state = youjin_stage_success_with_peng()
+        instance = game(state)
+
+        mutable = instance.state
+        index = mutable.wall.index("E")
+        mutable.wall[0], mutable.wall[index] = mutable.wall[index], mutable.wall[0]
+        instance.set_state(mutable)
+        after, _ = instance.step(instance.legal_actions()[0])
+        self.assertEqual(after.phase, "YOUJIN_KONG_CHOICE")
+
+        add_kong = next(
+            action for action in instance.legal_actions()
+            if action.type == env.ActionType.ADD_KONG and action.tile == "E"
+        )
+        rob_window, _ = instance.step(add_kong)
+        self.assertEqual(rob_window.phase, "ROB_KONG_WINDOW")
+        self.assertEqual(rob_window.special_states, ["YOUJIN", "NORMAL"])
+        pass_rob = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.PASS
+        )
+        completed, _ = instance.step(pass_rob)
+        self.assertEqual(completed.phase, "AFTER_ADDED_GANG")
+        self.assertEqual(completed.current_player, 0)
+        self.assertEqual(completed.melds[0][0].kind, "ADDED_GANG")
+
+        tail = instance.legal_actions()[0]
+        self.assertEqual(tail.metadata["source"], "wall_tail")
+        self.assertEqual(tail.metadata["kong_kind"], "ADDED_GANG")
 
     def test_double_you_response_miss_discards_and_never_accumulates_extra_tiles(self):
         instance = game(youjin_offer_scenario())
