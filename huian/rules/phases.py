@@ -248,6 +248,7 @@ def validate(adapter, state):
     scored_reason = isinstance(state.terminal_reason, str) and state.terminal_reason in (
         "OBSERVED_PINGHU", "OBSERVED_ZIMO", "AUTO_PINGHU", "AUTO_ZIMO",
         "SIMULATION_PINGHU", "SIMULATION_ZIMO", "PROJECT_EIGHT_FLOWER_YOU",
+        "AUTO_YOUJIN", "AUTO_DOUBLE_YOU", "AUTO_TRIPLE_YOU",
         "OBSERVED_SPECIAL"
     )
     if state.terminal_reason not in (None, "WALL_16") and not scored_reason:
