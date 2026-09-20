@@ -270,6 +270,7 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
 
     def clear_diagnostics(self):
         self._diagnostics.clear()
+        self._diagnostic_index = 0
 
     def _record_diagnostic(
             self, observation, baseline, chosen, gate, *,
