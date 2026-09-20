@@ -10,6 +10,7 @@ from workspace.ai import (
     PlayerObservation,
     YoujinDiscardPotential,
     YoujinTenpaiCandidateAgent,
+    YoujinTenpaiCandidateAgent,
     estimate_youjin_discard_potentials,
     youjin_meld_deficit,
 )
