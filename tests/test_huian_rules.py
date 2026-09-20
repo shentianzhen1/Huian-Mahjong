@@ -229,6 +229,51 @@ class HuianRulesTests(unittest.TestCase):
             "P9",
         ))
 
+    def test_youjin_upgrade_after_draw_accepts_direct_new_gold(self):
+        ready = [
+            "M1", "M2", "M3",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+            "P9",
+        ]
+        self.assertTrue(self.rules.is_youjin_ready_hand(ready, "P9"))
+        self.assertTrue(self.rules.can_youjin_upgrade_after_draw(
+            ready + ["P9"], "P9"
+        ))
+
+    def test_youjin_upgrade_after_draw_accepts_natural_tile_that_frees_gold(self):
+        # Before the progression draw, one P9 is the roaming gold and one P9
+        # fills M3 inside M1-M2-M3. Drawing natural M3 frees that wildcard.
+        ready_with_wildcard = [
+            "M1", "M2", "P9",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+            "P9",
+        ]
+        self.assertTrue(self.rules.is_youjin_ready_hand(
+            ready_with_wildcard, "P9"
+        ))
+        self.assertTrue(self.rules.can_youjin_upgrade_after_draw(
+            ready_with_wildcard + ["M3"], "P9"
+        ))
+
+    def test_youjin_upgrade_after_draw_rejects_unrelated_draw(self):
+        ready = [
+            "M1", "M2", "M3",
+            "M4", "M5", "M6",
+            "P1", "P2", "P3",
+            "S1", "S2", "S3",
+            "E", "E", "E",
+            "P9",
+        ]
+        self.assertFalse(self.rules.can_youjin_upgrade_after_draw(
+            ready + ["N"], "P9"
+        ))
+
     def test_youjin_score_terms_match_recorded_triple_you_608(self):
         for stage, multiplier in ((YoujinStage.YOUJIN, 4),
                                   (YoujinStage.DOUBLE_YOU, 8),
