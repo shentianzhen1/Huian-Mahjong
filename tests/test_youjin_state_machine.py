@@ -2,13 +2,23 @@ import unittest
 
 from huian import (
     WinSource,
+    YoujinOfferRule,
     YoujinOpponentResponseRule,
     YoujinStage,
+    youjin_offer_rule,
     youjin_opponent_response_rule,
 )
 
 
 class YoujinOpponentResponseRuleTests(unittest.TestCase):
+
+    def test_youjin_offer_is_optional_and_decline_does_not_lock_later_progression(self):
+        rule = youjin_offer_rule()
+        self.assertIsInstance(rule, YoujinOfferRule)
+        self.assertTrue(rule.optional)
+        self.assertTrue(rule.decline_keeps_playing)
+        self.assertFalse(rule.decline_blocks_later_youjin)
+
     def test_all_three_stages_share_one_normal_self_draw_interception(self):
         for stage in (
             YoujinStage.YOUJIN,
