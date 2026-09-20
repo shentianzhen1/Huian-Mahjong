@@ -181,6 +181,10 @@ class HuianEnvironment:
 
         declaration = deepcopy(self._state.pending_hu)
         source = WinSource(declaration["source"])
+        if (source == WinSource.SELF_DRAW
+                and self._state.youjin_response_tiles[declaration["winner"]]):
+            from huian.rules.config import UnknownRuleError
+            raise UnknownRuleError("youjin_response_extra_tile_scoring")
         if source == WinSource.ROB_KONG:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
@@ -668,22 +672,28 @@ class HuianEnvironment:
             response_player = action.player
             youjin_player = 1 - response_player
             context = HuContext.from_draw_metadata(action.metadata)
-            prior_retained = candidate.youjin_response_draws[response_player]
-            if prior_retained:
-                # The player confirmed that prior missed response draws remain
-                # in hand. A later response therefore has >17 concealed tiles,
-                # and the ordinary exact-size Hu solver cannot decide which
-                # retained/extra tiles the target room ignores for this special
-                # self-draw check. Stop safely until that subset rule is known.
-                candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
-            elif self.rules.rules.can_win(
+            retained = tuple(candidate.youjin_response_tiles[response_player])
+            if retained:
+                eligible = self.rules.rules.can_youjin_response_hu(
+                    candidate.hands[response_player],
+                    candidate.gold_tile,
+                    len(candidate.melds[response_player]),
+                    retained_response_tiles=retained,
+                    winning_tile=context.winning_tile,
+                )
+            else:
+                eligible = self.rules.rules.can_win(
                     candidate.hands[response_player], candidate.gold_tile,
-                    len(candidate.melds[response_player]), win_context=context):
+                    len(candidate.melds[response_player]), win_context=context)
+            if eligible:
                 candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
             else:
-                # Confirmed 2026-09-20: the missed interception draw remains
-                # physically in the opponent's hand.
-                candidate.youjin_response_draws[response_player] += 1
+                # Confirmed 2026-09-20: every missed response draw remains
+                # physically in hand and participates in later response Hu
+                # subset evaluation.
+                candidate.youjin_response_tiles[response_player].append(
+                    context.winning_tile
+                )
                 candidate.current_player = youjin_player
                 stage = YoujinStage(candidate.special_states[youjin_player])
                 progression = youjin_progression_rule(stage)
