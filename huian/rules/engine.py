@@ -334,6 +334,38 @@ class HuianRules:
                 out.append(tile)
         return tuple(out)
 
+    def can_youjin_upgrade_after_draw(self, hand, gold_tile, open_melds=0):
+        """Return whether the just-completed own draw can support the next You stage.
+
+        Confirmed 2026-09-20 upgrade semantics:
+        - after single/double You survives the opponent's one self-draw chance,
+          the Youjin player receives one normal draw;
+        - upgrade is available only when one gold can now be discarded and the
+          remaining concealed hand is still the confirmed
+          "all remaining melds + one roaming gold" structure;
+        - this captures both confirmed mechanisms:
+          (1) drawing the natural tile that replaces a wildcard gold, thereby
+              freeing that gold; or
+          (2) drawing another gold directly;
+        - choosing the upgrade is optional.
+
+        This method is structural only.  It does not infer the current/next
+        Youjin stage and does not resolve the opponent-response draw's physical
+        tile disposition.
+        """
+        self._validate_hand(hand, gold_tile)
+        nonnegative_int(open_melds, "open_melds")
+        if open_melds > 5:
+            raise ValueError("At most five melds")
+        expected = (5 - open_melds) * 3 + 2
+        if len(hand) != expected or gold_tile is None or gold_tile not in hand:
+            return False
+        after_gold_discard = list(hand)
+        after_gold_discard.remove(gold_tile)
+        return self.is_youjin_ready_hand(
+            after_gold_discard, gold_tile, open_melds
+        )
+
     def youjin_score_terms(self, stage, *, winner, dealer, winner_fan):
         """Return confirmed terms; fan aggregation and payer remain external."""
         try:

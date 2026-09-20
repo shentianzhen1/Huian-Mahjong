@@ -4,9 +4,11 @@ from huian import (
     WinSource,
     YoujinOfferRule,
     YoujinOpponentResponseRule,
+    YoujinProgressionRule,
     YoujinStage,
     youjin_offer_rule,
     youjin_opponent_response_rule,
+    youjin_progression_rule,
 )
 
 
@@ -45,6 +47,32 @@ class YoujinOpponentResponseRuleTests(unittest.TestCase):
     def test_normal_stage_has_no_youjin_response_window(self):
         with self.assertRaisesRegex(ValueError, "NORMAL"):
             youjin_opponent_response_rule(YoujinStage.NORMAL)
+
+    def test_single_and_double_survival_get_one_optional_upgrade_draw(self):
+        cases = (
+            (YoujinStage.YOUJIN, YoujinStage.DOUBLE_YOU),
+            (YoujinStage.DOUBLE_YOU, YoujinStage.TRIPLE_YOU),
+        )
+        for stage, next_stage in cases:
+            with self.subTest(stage=stage):
+                rule = youjin_progression_rule(stage)
+                self.assertIsInstance(rule, YoujinProgressionRule)
+                self.assertEqual(rule.youjin_player_draw_chances, 1)
+                self.assertEqual(rule.next_stage, next_stage)
+                self.assertTrue(rule.upgrade_optional)
+                self.assertEqual(rule.opponent_miss_outcome, "YOUJIN_PLAYER_DRAW")
+                self.assertEqual(rule.no_upgrade_outcome, "SETTLE_CURRENT_STAGE")
+
+    def test_triple_you_opponent_miss_settles_immediately(self):
+        rule = youjin_progression_rule(YoujinStage.TRIPLE_YOU)
+        self.assertEqual(rule.youjin_player_draw_chances, 0)
+        self.assertIsNone(rule.next_stage)
+        self.assertFalse(rule.upgrade_optional)
+        self.assertEqual(rule.opponent_miss_outcome, "SETTLE_CURRENT_STAGE")
+
+    def test_normal_has_no_progression_rule(self):
+        with self.assertRaisesRegex(ValueError, "NORMAL"):
+            youjin_progression_rule(YoujinStage.NORMAL)
 
 
 if __name__ == "__main__":

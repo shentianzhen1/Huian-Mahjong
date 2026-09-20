@@ -7,7 +7,8 @@ import random
 
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
-from huian.rules.context import DrawSource, HuContext, WinSource
+from huian.rules.context import (DrawSource, HuContext, WinSource, YoujinStage,
+                                 youjin_progression_rule)
 from .state import HuianGameState
 from .opening import HuianOpeningPlugin
 from .flowers import replace_flowers
@@ -263,6 +264,92 @@ class HuianEnvironment:
             "action": {
                 "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
                 "metadata": metadata,
+            },
+            "before_hash": before,
+            "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
+
+    def finalize_youjin_outcome(
+            self, *, current_dealer_base, winner_fan):
+        """Settle a confirmed Youjin-family stage using audited fan input.
+
+        Formula confirmed from target-room settlements:
+            (current dealer base + winner fan) * stage multiplier
+        where multipliers are Youjin x4, Double-You x8, Triple-You x16.
+
+        This method deliberately accepts an explicit winner_fan instead of
+        guessing a special-hand fan decomposition. The caller may supply a
+        replay/Vision-confirmed fan total or a future audited special fan
+        aggregator.
+        """
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        if self._state.phase != "YOUJIN_SETTLEMENT_READY":
+            raise ValueError("Youjin settlement requires YOUJIN_SETTLEMENT_READY")
+        if type(current_dealer_base) is not int or current_dealer_base < 0:
+            raise ValueError("current_dealer_base must be a nonnegative integer")
+        if type(winner_fan) is not int or winner_fan < 0:
+            raise ValueError("winner_fan must be a nonnegative integer")
+
+        active = [
+            index for index, value in enumerate(self._state.special_states)
+            if value in (
+                YoujinStage.YOUJIN.value,
+                YoujinStage.DOUBLE_YOU.value,
+                YoujinStage.TRIPLE_YOU.value,
+            )
+        ]
+        if len(active) != 1:
+            raise ValueError("Youjin settlement requires exactly one active stage")
+        winner = active[0]
+        if winner != self._state.current_player:
+            raise ValueError("Youjin settlement winner must own the current stage")
+        stage = YoujinStage(self._state.special_states[winner])
+        terms = self.rules.rules.youjin_score_terms(
+            stage,
+            winner=winner,
+            dealer=self._state.dealer,
+            winner_fan=winner_fan,
+        )
+        net = terms.total_for_current_dealer_base(current_dealer_base)
+        rewards = [net, -net] if winner == 0 else [-net, net]
+
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = rewards
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "AUTO_" + stage.value
+        candidate.pending_discard = None
+        candidate.pending_hu = None
+        candidate.pending_kong = None
+        self.rules.validate_state(candidate)
+
+        event = {
+            "seq": len(self._events),
+            "action": {
+                "player": winner,
+                "type": "END_HAND",
+                "tile": None,
+                "tiles": [],
+                "metadata": {
+                    "source": "confirmed_youjin_formula",
+                    "special": stage.value,
+                    "current_dealer_base": current_dealer_base,
+                    "winner_fan": winner_fan,
+                    "multiplier": terms.youjin_multiplier,
+                    "dealer_multiplier": terms.dealer_multiplier,
+                    "formula": "(current_dealer_base + winner_fan) * multiplier",
+                    "rewards": list(rewards),
+                },
             },
             "before_hash": before,
             "after_hash": candidate.state_hash(),
@@ -560,6 +647,7 @@ class HuianEnvironment:
         if len(self._events) >= self.max_steps:
             raise DeadLoopError("Scenario action limit reached; not a drawn hand")
         was_youjin_response_draw = self._state.phase == "YOUJIN_RESPONSE_DRAW"
+        was_youjin_player_draw = self._state.phase == "YOUJIN_STAGE_SUCCESS"
         action = self._canonical_action(self._state, deepcopy(action))
         self.rules.authorize_action(self.state, action)
         before = self._state.state_hash()
@@ -580,16 +668,38 @@ class HuianEnvironment:
             response_player = action.player
             youjin_player = 1 - response_player
             context = HuContext.from_draw_metadata(action.metadata)
-            if self.rules.rules.can_win(
+            prior_retained = candidate.youjin_response_draws[response_player]
+            if prior_retained:
+                # The player confirmed that prior missed response draws remain
+                # in hand. A later response therefore has >17 concealed tiles,
+                # and the ordinary exact-size Hu solver cannot decide which
+                # retained/extra tiles the target room ignores for this special
+                # self-draw check. Stop safely until that subset rule is known.
+                candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
+            elif self.rules.rules.can_win(
                     candidate.hands[response_player], candidate.gold_tile,
                     len(candidate.melds[response_player]), win_context=context):
                 candidate.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
             else:
-                # Player-confirmed: if the opponent's one allowed draw cannot
-                # self-draw Hu, the current Youjin stage succeeds. Settlement/
-                # further-upgrade timing remains explicitly unresolved.
+                # Confirmed 2026-09-20: the missed interception draw remains
+                # physically in the opponent's hand.
+                candidate.youjin_response_draws[response_player] += 1
                 candidate.current_player = youjin_player
-                candidate.phase = "YOUJIN_STAGE_SUCCESS"
+                stage = YoujinStage(candidate.special_states[youjin_player])
+                progression = youjin_progression_rule(stage)
+                candidate.phase = (
+                    "YOUJIN_SETTLEMENT_READY"
+                    if progression.youjin_player_draw_chances == 0
+                    else "YOUJIN_STAGE_SUCCESS"
+                )
+        if was_youjin_player_draw and not candidate.terminal:
+            youjin_player = action.player
+            if self.rules.rules.can_youjin_upgrade_after_draw(
+                    candidate.hands[youjin_player], candidate.gold_tile,
+                    len(candidate.melds[youjin_player])):
+                candidate.phase = "YOUJIN_UPGRADE_CHOICE"
+            else:
+                candidate.phase = "YOUJIN_SETTLEMENT_READY"
         candidate.turn_index += 1
         candidate.last_action = action.to_dict()
         self.rules.validate_state(candidate)
@@ -667,17 +777,25 @@ class HuianEnvironment:
         T = env.ActionType
         if kind == T.DRAW:
             response_draw = state.phase == "YOUJIN_RESPONSE_DRAW"
+            progression_draw = state.phase == "YOUJIN_STAGE_SUCCESS"
             source = DrawSource.parse(action.metadata.get("source"))
             tile = state.wall.pop(-1 if source == DrawSource.WALL_TAIL else 0)
             action.metadata["drawn_tile"] = tile
             state.hands[p].append(tile)
             if tile in env.FLOWERS:
                 state.phase = "NEED_FLOWER_REPLACE"
+            elif response_draw:
+                state.phase = "YOUJIN_RESPONSE_AFTER_DRAW"
+            elif progression_draw:
+                state.phase = "AFTER_DRAW"
             else:
-                state.phase = (
-                    "YOUJIN_RESPONSE_AFTER_DRAW" if response_draw else "AFTER_DRAW"
-                )
+                state.phase = "AFTER_DRAW"
         elif kind == T.PASS:
+            if state.phase == "YOUJIN_UPGRADE_CHOICE":
+                if not action.metadata.get("youjin_upgrade_decline"):
+                    raise ValueError("Youjin upgrade PASS must explicitly decline upgrade")
+                state.phase = "YOUJIN_SETTLEMENT_READY"
+                return
             if state.phase == "ROB_KONG_WINDOW":
                 pending = state.pending_kong
                 kong_player, tile = pending["kong_player"], pending["tile"]
@@ -699,6 +817,25 @@ class HuianEnvironment:
             state.discards[p].append(action.tile)
             state.pending_discard = None
             state.special_states[p] = "YOUJIN"
+            state.current_player = 1 - p
+            state.phase = "YOUJIN_RESPONSE_DRAW"
+        elif kind in (T.DOUBLE_YOU, T.TRIPLE_YOU):
+            if state.phase != "YOUJIN_UPGRADE_CHOICE":
+                raise ValueError("Youjin upgrade action requires its choice phase")
+            current = YoujinStage(state.special_states[p])
+            progression = youjin_progression_rule(current)
+            expected = (
+                YoujinStage.DOUBLE_YOU if kind == T.DOUBLE_YOU
+                else YoujinStage.TRIPLE_YOU
+            )
+            if progression.next_stage != expected:
+                raise ValueError("Youjin upgrade does not match the next confirmed stage")
+            if action.tile != state.gold_tile:
+                raise ValueError("Youjin upgrade must discard one current gold tile")
+            state.hands[p].remove(state.gold_tile)
+            state.discards[p].append(state.gold_tile)
+            state.pending_discard = None
+            state.special_states[p] = expected.value
             state.current_player = 1 - p
             state.phase = "YOUJIN_RESPONSE_DRAW"
         elif kind == T.DISCARD:

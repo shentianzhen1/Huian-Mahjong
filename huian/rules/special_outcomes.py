@@ -101,9 +101,10 @@ _SPECIAL_OUTCOMES = {
             "concealed tile (including other golds as wildcards) already forms the "
             "required melds. The offer is optional and declining it does not block "
             "later Youjin-family progression. Each established stage gives the opponent "
-            "exactly one normal self-draw Hu interception opportunity; if that draw does "
-            "not self-Hu, the current stage succeeds. UI timing, Double-/Triple-You "
-            "upgrade predicates and post-success settlement timing remain incomplete."
+            "exactly one normal self-draw Hu interception opportunity. If single/double "
+            "You survives, the Youjin player draws once: a structurally freed/new gold "
+            "offers an optional next-stage upgrade, otherwise the current stage settles. "
+            "Declining an available upgrade also settles the current stage."
         ),
     ),
     "DOUBLE_YOU": SpecialOutcomeProfile(
@@ -117,11 +118,11 @@ _SPECIAL_OUTCOMES = {
             "Target-room terminal settlement directly confirms Double-You x8: "
             "(dealer base 30 + gold 2 + flower 1) x8 = 264. The same hand first "
             "shows Youjin with 3 gold and terminates Double-You with 2 gold, so "
-            "stage must not be inferred from gold count. Trigger/upgrade edges "
-            "remain incomplete, so automatic settlement is still not enabled "
-            "from inferred state alone. Like Youjin and Triple-You, Double-You "
-            "gives the opponent exactly one normal self-draw Hu interception "
-            "opportunity before the stage succeeds."
+            "stage must not be inferred from gold count. Sequential upgrade from "
+            "single You is confirmed: after the opponent misses, the Youjin player "
+            "draws once; if that draw frees/adds a discardable gold, upgrading by "
+            "discarding one gold is optional. Declining or failing to free a gold "
+            "settles Double-You at x8."
         ),
     ),
     "TRIPLE_YOU": SpecialOutcomeProfile(
@@ -134,9 +135,9 @@ _SPECIAL_OUTCOMES = {
         note=(
             "x16 and +608 example confirmed. Triple-You uses the same confirmed "
             "opponent response rule as Youjin/Double-You: exactly one normal "
-            "self-draw Hu opportunity; if it does not self-Hu, Triple-You succeeds. "
-            "This supersedes the older working note that Triple-You could only be "
-            "intercepted by kong-replacement Hu. Exact upgrade timing remains incomplete."
+            "self-draw Hu opportunity; if it does not self-Hu, Triple-You settles "
+            "immediately at x16 with no further upgrade draw. This supersedes the older "
+            "working note that Triple-You could only be intercepted by kong-replacement Hu."
         ),
     ),
     "ROB_KONG_HU": SpecialOutcomeProfile(

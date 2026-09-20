@@ -14,6 +14,10 @@ class HuianGameState(env.GameState):
     # until PASS commits the kong. A robbed tile remains there for accounting.
     pending_kong: dict | None = None
     special_states: list[str] = field(default_factory=lambda: ["UNKNOWN", "UNKNOWN"])
+    # Missed Youjin interception draws stay in the responder's concealed hand.
+    # Count only completed response draws that did NOT Hu; a currently pending
+    # response draw is represented by its phase instead.
+    youjin_response_draws: list[int] = field(default_factory=lambda: [0, 0])
     # Physical tiles explicitly excluded from play by an imported scenario.
     # This represents accounting only, not a guessed indicator-opening rule.
     reserved_tiles: list[str] = field(default_factory=list)
@@ -25,6 +29,7 @@ class HuianGameState(env.GameState):
                     pending_hu=self.pending_hu,
                     pending_kong=self.pending_kong,
                     special_states=list(self.special_states),
+                    youjin_response_draws=list(self.youjin_response_draws),
                     reserved_tiles=list(self.reserved_tiles),
                     terminal_reason=self.terminal_reason)
         return data
