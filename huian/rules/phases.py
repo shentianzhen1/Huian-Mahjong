@@ -533,7 +533,7 @@ def report(adapter, state):
         last = state.last_action
         draw_context = HuContext.from_draw_metadata(last.get("metadata", {}))
         actions = []
-        eligible_hu = adapter.rules.can_win(
+        eligible_hu = adapter.rules.can_youjin_kong_tail_ordinary_hu(
             hand, state.gold_tile, len(state.melds[p]),
             win_context=draw_context,
         )
@@ -547,7 +547,15 @@ def report(adapter, state):
                         if draw_context.kong_kind else None
                     ),
                     "youjin_kong_tail_hu": True,
-                    "optional": progression.next_stage is not None,
+                    "optional": True,
+                },
+            ))
+            actions.append(env.Action(
+                p, env.ActionType.PASS,
+                metadata={
+                    "youjin_kong_tail_settle": True,
+                    "stage": stage.value,
+                    "alternative_to_self_hu": True,
                 },
             ))
         can_upgrade = (
