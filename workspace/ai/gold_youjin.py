@@ -17,7 +17,7 @@ from huian._legacy import env
 from huian.rules import HuianRules
 
 from .baseline import AgentDecision, MeldAwareShantenAgent
-from .shanten import best_offense_ties
+from .shanten import best_offense_ties, min_shanten_discards
 
 
 @dataclass(frozen=True)
@@ -219,4 +219,199 @@ class GoldYoujinShadowAgent(MeldAwareShantenAgent):
             f"immediate={structural_choice.immediate_entry}, "
             f"future_live={structural_choice.future_entry_live_copies}, "
             f"future_types={structural_choice.future_entry_types})",
+        )
+
+
+@dataclass(frozen=True)
+class ConstrainedGoldYoujinDiagnostic:
+    decision_index: int
+    baseline_tile: str
+    chosen_tile: str
+    changed_from_v010: bool
+    shanten: int
+    baseline_live_copies: int
+    chosen_live_copies: int
+    immediate_live_delta: int
+    baseline_effective_types: int
+    chosen_effective_types: int
+    immediate_type_delta: int
+    baseline_immediate_entry: bool
+    chosen_immediate_entry: bool
+    baseline_future_live: int
+    chosen_future_live: int
+    future_live_delta: int
+    baseline_future_types: int
+    chosen_future_types: int
+    future_type_delta: int
+    reason_gate: str
+
+
+class ConstrainedGoldYoujinAgent(MeldAwareShantenAgent):
+    """Experimental V0.15 candidate: conservative Jin/Youjin structural override.
+
+    Hard constraints:
+    - V0.10 remains fallback and CurrentAgent is unchanged.
+    - only ordinary discard decisions with exactly one concealed Jin;
+    - ordinary shanten may never worsen;
+    - effective-tile type count may never decrease;
+    - immediate live effective copies may drop by at most max_live_loss;
+    - Jin itself is never chosen as the V0.15 override discard.
+
+    Override requires either immediate single-Youjin entry or a material
+    next-draw Youjin-entry improvement. This is a constrained structural
+    heuristic, not calibrated score EV.
+    """
+
+    def __init__(self, seed=None, template_samples=32, *,
+                 max_live_loss=1, min_future_live_gain=4,
+                 min_future_type_gain=1):
+        super().__init__(seed=seed, template_samples=template_samples)
+        for name, value in (
+                ("max_live_loss", max_live_loss),
+                ("min_future_live_gain", min_future_live_gain),
+                ("min_future_type_gain", min_future_type_gain)):
+            if type(value) is not int or value < 0:
+                raise ValueError(f"{name} must be a nonnegative integer")
+        self.max_live_loss = max_live_loss
+        self.min_future_live_gain = min_future_live_gain
+        self.min_future_type_gain = min_future_type_gain
+        self._v015_diagnostics = []
+        self._v015_index = 0
+
+    @property
+    def v015_diagnostics(self):
+        return tuple(self._v015_diagnostics)
+
+    def _record(self, baseline_item, chosen_item, baseline_potential,
+                chosen_potential, gate):
+        self._v015_diagnostics.append(ConstrainedGoldYoujinDiagnostic(
+            decision_index=self._v015_index,
+            baseline_tile=baseline_item.discard,
+            chosen_tile=chosen_item.discard,
+            changed_from_v010=(chosen_item.discard != baseline_item.discard),
+            shanten=baseline_item.shanten,
+            baseline_live_copies=baseline_item.total_live_copies,
+            chosen_live_copies=chosen_item.total_live_copies,
+            immediate_live_delta=(
+                chosen_item.total_live_copies - baseline_item.total_live_copies),
+            baseline_effective_types=len(baseline_item.effective_tiles),
+            chosen_effective_types=len(chosen_item.effective_tiles),
+            immediate_type_delta=(
+                len(chosen_item.effective_tiles) - len(baseline_item.effective_tiles)),
+            baseline_immediate_entry=baseline_potential.immediate_entry,
+            chosen_immediate_entry=chosen_potential.immediate_entry,
+            baseline_future_live=baseline_potential.future_entry_live_copies,
+            chosen_future_live=chosen_potential.future_entry_live_copies,
+            future_live_delta=(
+                chosen_potential.future_entry_live_copies
+                - baseline_potential.future_entry_live_copies),
+            baseline_future_types=baseline_potential.future_entry_types,
+            chosen_future_types=chosen_potential.future_entry_types,
+            future_type_delta=(
+                chosen_potential.future_entry_types
+                - baseline_potential.future_entry_types),
+            reason_gate=gate,
+        ))
+        self._v015_index += 1
+
+    def choose_decision(self, observation, legal_actions):
+        baseline = super().choose_decision(observation, legal_actions)
+        if (baseline.action.type != env.ActionType.DISCARD
+                or observation.gold_tile is None
+                or observation.hand.count(observation.gold_tile) != 1):
+            return baseline
+
+        actions = sorted(legal_actions, key=self._key)
+        discards = [a for a in actions if a.type == env.ActionType.DISCARD]
+        if len(discards) < 2:
+            return baseline
+
+        legal_by_tile = {action.tile: action for action in discards}
+        frontier = min_shanten_discards(
+            observation.hand,
+            gold_tile=observation.gold_tile,
+            open_melds=len(observation.melds[observation.seat]),
+            visible_tiles=_public_base_tiles(observation),
+            allowed_discards=tuple(legal_by_tile),
+        )
+        by_eff = {item.discard: item for item in frontier}
+        baseline_item = by_eff.get(baseline.action.tile)
+        if baseline_item is None:
+            return baseline
+
+        candidate_tiles = tuple(
+            item.discard for item in frontier
+            if item.discard != observation.gold_tile
+            and item.total_live_copies >=
+                baseline_item.total_live_copies - self.max_live_loss
+            and len(item.effective_tiles) >= len(baseline_item.effective_tiles)
+        )
+        if not candidate_tiles:
+            return baseline
+
+        potential_tiles = tuple(dict.fromkeys((
+            baseline.action.tile, *candidate_tiles
+        )))
+        potentials = estimate_youjin_discard_potentials(
+            observation, potential_tiles)
+        by_potential = {item.discard: item for item in potentials}
+        baseline_potential = by_potential[baseline.action.tile]
+
+        qualified = []
+        for tile in candidate_tiles:
+            potential = by_potential[tile]
+            immediate_gain = (
+                potential.immediate_entry and not baseline_potential.immediate_entry
+            )
+            future_gain = (
+                potential.future_entry_live_copies
+                    - baseline_potential.future_entry_live_copies
+                    >= self.min_future_live_gain
+                and potential.future_entry_types
+                    - baseline_potential.future_entry_types
+                    >= self.min_future_type_gain
+            )
+            if immediate_gain or future_gain:
+                qualified.append((tile, immediate_gain, future_gain))
+
+        if not qualified:
+            self._record(baseline_item, baseline_item, baseline_potential,
+                         baseline_potential, "no_material_youjin_gain")
+            return baseline
+
+        chosen_tile, immediate_gain, future_gain = max(
+            qualified,
+            key=lambda entry: (
+                by_potential[entry[0]].immediate_entry,
+                by_potential[entry[0]].future_entry_live_copies,
+                by_potential[entry[0]].future_entry_types,
+                by_eff[entry[0]].total_live_copies,
+                len(by_eff[entry[0]].effective_tiles),
+                -env.BASE_TILES.index(entry[0]),
+            ),
+        )
+        chosen_item = by_eff[chosen_tile]
+        chosen_potential = by_potential[chosen_tile]
+        gate = "immediate_youjin_entry" if immediate_gain else "future_youjin_gain"
+        self._record(baseline_item, chosen_item, baseline_potential,
+                     chosen_potential, gate)
+
+        if chosen_tile == baseline.action.tile:
+            return baseline
+
+        return AgentDecision(
+            legal_by_tile[chosen_tile],
+            f"DISCARD {chosen_tile}: constrained_gold_youjin_v0.15_candidate "
+            f"(baseline={baseline.action.tile}; shanten={chosen_item.shanten}; "
+            f"live={baseline_item.total_live_copies}->{chosen_item.total_live_copies}; "
+            f"types={len(baseline_item.effective_tiles)}"
+            f"->{len(chosen_item.effective_tiles)}; "
+            f"immediate_youjin={baseline_potential.immediate_entry}"
+            f"->{chosen_potential.immediate_entry}; "
+            f"future_youjin_live={baseline_potential.future_entry_live_copies}"
+            f"->{chosen_potential.future_entry_live_copies}; "
+            f"future_youjin_types={baseline_potential.future_entry_types}"
+            f"->{chosen_potential.future_entry_types}; gate={gate}); "
+            f"hard constraints: same shanten, live loss<={self.max_live_loss}, "
+            f"effective types nondecreasing, never override-discard Jin",
         )
