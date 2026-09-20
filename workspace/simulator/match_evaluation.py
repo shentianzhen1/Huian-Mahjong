@@ -8,6 +8,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from math import sqrt
 
+from huian.rules import DEFAULT_RULE_SNAPSHOT
 from .match_runner import run_real_ordinary_match, run_real_youjin_match
 
 
@@ -27,6 +28,8 @@ class MatchAttemptSummary:
 
 @dataclass(frozen=True)
 class PairedMatchEvaluation:
+    rule_snapshot_id: str
+    rule_snapshot_label: str
     agent_names: tuple[str, str]
     total_pairs: int
     completed_pairs: int
@@ -229,6 +232,8 @@ def run_paired_real_matches(
         if pair_deal_in_deltas else None
     )
     return PairedMatchEvaluation(
+        rule_snapshot_id=DEFAULT_RULE_SNAPSHOT.fingerprint,
+        rule_snapshot_label=DEFAULT_RULE_SNAPSHOT.label,
         agent_names=names,
         total_pairs=len(seeds),
         completed_pairs=completed_pairs,
