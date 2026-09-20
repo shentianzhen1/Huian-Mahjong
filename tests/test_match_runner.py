@@ -4,7 +4,7 @@ from unittest.mock import patch
 from huian import UnknownRuleError
 from workspace.simulator import (
     MatchHandResult, MatchRunner, SimulationResult, run_eight_hand_match,
-    run_real_ordinary_match, summarize_match_rule_gaps,
+    run_real_ordinary_match, run_real_youjin_match, summarize_match_rule_gaps,
 )
 
 
