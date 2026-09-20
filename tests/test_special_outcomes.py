@@ -21,10 +21,12 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
         self.assertFalse(sanjindao.settlement_ready)
 
         eight = special_outcome_profile("EIGHT_FLOWER_YOU")
-        self.assertEqual(eight.multiplier, 2)
+        self.assertEqual(eight.multiplier, 1)
+        self.assertEqual(eight.fixed_fan, 16)
         self.assertEqual(eight.multiplier_status, EvidenceStatus.WORKING)
         self.assertTrue(eight.settlement_ready)
         self.assertTrue(eight.project_rule)
+        self.assertEqual(eight.action_metadata["fixed_fan"], 16)
 
         youjin = special_outcome_profile("YOUJIN")
         self.assertEqual(youjin.multiplier, 4)
