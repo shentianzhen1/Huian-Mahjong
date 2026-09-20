@@ -44,6 +44,38 @@ class PublicRolloutEstimate:
         return self.wins_within_horizon / self.samples_completed
 
 
+@dataclass(frozen=True)
+class PublicRolloutDecisionDiagnostic:
+    """Public-information audit record for one V0.14 multi-discard decision."""
+
+    decision_index: int
+    gate: str
+    phase: str
+    baseline_action_type: str
+    baseline_tile: str | None
+    chosen_action_type: str
+    chosen_tile: str | None
+    changed_from_v010: bool
+    min_shanten: int | None
+    frontier_size: int
+    candidate_count: int
+    baseline_live_copies: int | None
+    baseline_effective_types: int | None
+    chosen_live_copies: int | None
+    chosen_effective_types: int | None
+    immediate_live_delta: int | None
+    immediate_type_delta: int | None
+    rollout_samples_requested: int
+    rollout_samples_completed: int
+    special_cutoffs: int
+    candidate_rollouts: tuple[tuple[str, int, int, float, float], ...]
+    wall_remaining: int
+    hand_index: int | None
+    hands_remaining: int | None
+    score_margin_for_actor: int | None
+    current_dealer_base: int | None
+
+
 def _public_tiles(observation):
     tiles = []
     for river in observation.discards:
@@ -214,6 +246,8 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
         self.own_draws = own_draws
         self.candidate_limit = candidate_limit
         self._rollout_index = 0
+        self._diagnostics = []
+        self._diagnostic_index = 0
 
     def _next_rollout_seed(self):
         value = self.seed * 1_000_003 + 700_001 + self._rollout_index
@@ -228,6 +262,81 @@ class PublicRolloutAgent(MeldAwareShantenAgent):
             -estimate.mean_final_live_copies,
             -estimate.mean_final_effective_types,
         )
+
+    @property
+    def diagnostics(self):
+        """Immutable snapshot of V0.14 decision diagnostics."""
+        return tuple(self._diagnostics)
+
+    def clear_diagnostics(self):
+        self._diagnostics.clear()
+
+    def _record_diagnostic(
+            self, observation, baseline, chosen, gate, *,
+            frontier=(), candidates=(), estimates=()):
+        by_frontier = {item.discard: item for item in frontier}
+        baseline_item = by_frontier.get(baseline.action.tile)
+        chosen_item = by_frontier.get(chosen.action.tile)
+        requested = completed = cutoffs = 0
+        candidate_rollouts = ()
+        if estimates:
+            first = estimates[0]
+            requested = first.samples_requested
+            completed = first.samples_completed
+            cutoffs = first.skipped_special_samples
+            candidate_rollouts = tuple(
+                (
+                    item.discard,
+                    item.wins_within_horizon,
+                    item.samples_completed,
+                    item.mean_final_shanten,
+                    item.mean_final_live_copies,
+                )
+                for item in estimates
+            )
+        context = observation.match_context
+        record = PublicRolloutDecisionDiagnostic(
+            decision_index=self._diagnostic_index,
+            gate=gate,
+            phase=observation.phase,
+            baseline_action_type=baseline.action.type.value,
+            baseline_tile=baseline.action.tile,
+            chosen_action_type=chosen.action.type.value,
+            chosen_tile=chosen.action.tile,
+            changed_from_v010=(chosen.action != baseline.action),
+            min_shanten=(frontier[0].shanten if frontier else None),
+            frontier_size=len(frontier),
+            candidate_count=len(candidates),
+            baseline_live_copies=(
+                baseline_item.total_live_copies if baseline_item else None),
+            baseline_effective_types=(
+                len(baseline_item.effective_tiles) if baseline_item else None),
+            chosen_live_copies=(
+                chosen_item.total_live_copies if chosen_item else None),
+            chosen_effective_types=(
+                len(chosen_item.effective_tiles) if chosen_item else None),
+            immediate_live_delta=(
+                chosen_item.total_live_copies - baseline_item.total_live_copies
+                if chosen_item is not None and baseline_item is not None
+                else None),
+            immediate_type_delta=(
+                len(chosen_item.effective_tiles) - len(baseline_item.effective_tiles)
+                if chosen_item is not None and baseline_item is not None
+                else None),
+            rollout_samples_requested=requested,
+            rollout_samples_completed=completed,
+            special_cutoffs=cutoffs,
+            candidate_rollouts=candidate_rollouts,
+            wall_remaining=observation.wall_remaining,
+            hand_index=(context.hand_index if context else None),
+            hands_remaining=(context.hands_remaining if context else None),
+            score_margin_for_actor=(
+                context.margin_for(observation.seat) if context else None),
+            current_dealer_base=(
+                context.current_dealer_base if context else None),
+        )
+        self._diagnostic_index += 1
+        self._diagnostics.append(record)
 
     def choose_decision(self, observation, legal_actions):
         if not legal_actions:
