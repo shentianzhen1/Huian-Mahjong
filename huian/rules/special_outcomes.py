@@ -90,7 +90,10 @@ _SPECIAL_OUTCOMES = {
         note=(
             "x4 is directly settlement-confirmed. Youjin stage is independent of "
             "current gold count: match_evidence_002 shows Youjin while 3 gold remain. "
-            "Exact entry/cancel/upgrade predicates remain incomplete."
+            "Each established Youjin-family stage gives the opponent exactly one "
+            "normal self-draw Hu interception opportunity; if that draw does not "
+            "self-Hu, the current Youjin stage succeeds. Exact entry/cancel/upgrade "
+            "predicates and the post-success upgrade-versus-settle timing remain incomplete."
         ),
     ),
     "DOUBLE_YOU": SpecialOutcomeProfile(
@@ -106,7 +109,9 @@ _SPECIAL_OUTCOMES = {
             "shows Youjin with 3 gold and terminates Double-You with 2 gold, so "
             "stage must not be inferred from gold count. Trigger/upgrade edges "
             "remain incomplete, so automatic settlement is still not enabled "
-            "from inferred state alone."
+            "from inferred state alone. Like Youjin and Triple-You, Double-You "
+            "gives the opponent exactly one normal self-draw Hu interception "
+            "opportunity before the stage succeeds."
         ),
     ),
     "TRIPLE_YOU": SpecialOutcomeProfile(
@@ -116,7 +121,13 @@ _SPECIAL_OUTCOMES = {
         multiplier_status=EvidenceStatus.CONFIRMED,
         settlement_rule_id="triple_you_sequence",
         settlement_ready=False,
-        note="x16 and +608 example confirmed; full upgrade state machine remains incomplete.",
+        note=(
+            "x16 and +608 example confirmed. Triple-You uses the same confirmed "
+            "opponent response rule as Youjin/Double-You: exactly one normal "
+            "self-draw Hu opportunity; if it does not self-Hu, Triple-You succeeds. "
+            "This supersedes the older working note that Triple-You could only be "
+            "intercepted by kong-replacement Hu. Exact upgrade timing remains incomplete."
+        ),
     ),
     "ROB_KONG_HU": SpecialOutcomeProfile(
         key="ROB_KONG_HU",
