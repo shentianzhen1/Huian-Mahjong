@@ -186,13 +186,11 @@ class HuianRules:
             hand, melds, flowers, gold_tile, hu_result=hu_result
         )
     def aggregate_youjin_fan(
-            self, hand, melds=(), flowers=(), gold_tile=None, *,
-            pair_tile=None, meld_result=None):
+            self, hand, melds=(), flowers=(), gold_tile=None):
         """Aggregate additive fan for a confirmed Youjin-family settlement."""
         from .fan import FanAggregator
         return FanAggregator(self).aggregate_youjin(
             hand, melds, flowers, gold_tile,
-            pair_tile=pair_tile, meld_result=meld_result,
         )
 
     def kong_fan(self, kind, tile):
