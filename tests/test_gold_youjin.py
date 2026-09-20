@@ -150,11 +150,15 @@ class ConstrainedGoldYoujinAgentTests(unittest.TestCase):
                 discard=other, shanten=1,
                 total_live_copies=8, effective_tiles=(1, 2, 3)),
         )
+        baseline_only = (
+            YoujinDiscardPotential(
+                baseline.action.tile, False, 0, 0, (), 1),
+        )
         with patch(
                 "workspace.ai.gold_youjin.min_shanten_discards",
                 return_value=frontier), patch(
-                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials"
-        ) as estimate:
+                "workspace.ai.gold_youjin.estimate_youjin_discard_potentials",
+                return_value=baseline_only) as estimate:
             actual = ConstrainedGoldYoujinAgent(
                 seed=22, max_live_loss=1).choose_decision(view, actions)
 
