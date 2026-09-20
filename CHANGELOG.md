@@ -1,5 +1,13 @@
 # 重要变更记录
 
+## 2026-09-20 — PublicRolloutAgent V0.14 多步搜索候选
+
+- 新增 `workspace/ai/rollout.py`：V0.14在最低向听层内最多选4个候选，用共同随机样本进行两次我方未来摸牌的普通进攻rollout；两次我方摸牌之间显式采样并消耗一次对手隐藏摸牌。
+- 未见牌池只由自己暗手、公开牌河/副露/花牌和“开金占1张”实体约束推导；不读取真实对手暗手或真实未来牌墙。
+- 与V0.8/V0.9不同，V0.14不要求即时牌效三项完全并列才搜索，因此能真正跨“同向听但当前有效牌数量不同”的候选做多步比较。
+- 花牌补牌、我方未来摸金均属于未闭环特殊分支，使用同一随机序列对所有候选一致剔除；当前手里有金或出现CHI/PENG/KONG/YOUJIN时直接回退V0.10。
+- `CurrentAgent`继续固定V0.10；新增 `workspace.simulator.rollout_benchmark`，默认用全新seed 400000起的25 pair做V0.14 vs V0.10方向性pilot，pilot不能直接晋级。
+
 ## 2026-09-20 — 单游可选入口与一次对手自摸窗口接入Environment
 
 - 将已确认的`is_youjin_ready_hand()/youjin_entry_discards()`从Rules接到Environment：关闭当前抢金/三金倒窗口后，可入游弃牌同时生成`YOUJIN`与普通`DISCARD`，不点游金仍可正常打牌且不设置永久锁。
