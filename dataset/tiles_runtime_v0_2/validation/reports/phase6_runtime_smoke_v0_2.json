@@ -1,0 +1,33 @@
+{
+  "schema_version": "vision_runtime_v0_2_smoke_report",
+  "source_session": "session_4d68a8e72498d729",
+  "source_frame_range": [118, 122],
+  "source_path_stored": false,
+  "stability": {
+    "frames": 5,
+    "stable_votes": 5,
+    "geometry_untrusted": false
+  },
+  "geometry": {
+    "hand": 16,
+    "draw_visual": 0,
+    "gold": 0,
+    "concealed_tile_count": 16
+  },
+  "identity": {
+    "accepted": 5,
+    "below_confidence_threshold": 8,
+    "blocked_by_missing_class_category": 3,
+    "unknown_total": 11,
+    "confidence_threshold": 0.82,
+    "standard_class_coverage": "33/34",
+    "missing_standard_classes": ["M2"]
+  },
+  "policy": {
+    "candidate_identity_is_diagnostic_only": true,
+    "wan_identity_blocked_until_m2_exists": true,
+    "game_state_mutation": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}

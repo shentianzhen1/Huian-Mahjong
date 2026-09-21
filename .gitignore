@@ -23,6 +23,13 @@ models/*.pt
 models/*.onnx
 data/raw_frames/
 data/evaluations/
+# Vision Dataset Recovery V0.2: raw media and automatic review material stay
+# local.  The reviewed manifest, labels, ROI profiles, tile-only templates and
+# formal validation reports are intentionally tracked.
+dataset/tiles_runtime_v0_2/work/
+dataset/tiles_runtime_v0_2/validation/generated/
+dataset/tiles_runtime_v0_2/validation/recovery_scan.json
+dataset/tiles_runtime_v0_2/validation/candidate_frames.jsonl
 # Local derivatives extracted while reviewing gameplay video. Text evidence remains tracked.
 references/gameplay/**/keyframes/
 references/gameplay/**/contact_sheet_*.png

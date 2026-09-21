@@ -33,6 +33,8 @@ def _crop_label(root, label):
         x, y, width, height = label["bbox"]
         if x < 0 or y < 0 or width <= 0 or height <= 0:
             raise ValueError("label bbox must have positive dimensions")
+        if Path(label["image"]).parts[:1] == ("templates",):
+            return source.convert("RGB")
         if x + width > source.width or y + height > source.height:
             raise ValueError(f"label bbox exceeds image: {label['image']}")
         return source.convert("RGB").crop((x, y, x + width, y + height))

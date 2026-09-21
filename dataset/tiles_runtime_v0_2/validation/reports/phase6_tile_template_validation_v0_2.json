@@ -1,0 +1,1835 @@
+{
+  "total_approved_labels": 139,
+  "scorable_labels": 117,
+  "unscorable_labels": 22,
+  "scorable_coverage": 0.841726618705036,
+  "exact_accuracy": 0.7948717948717948,
+  "category_accuracy": 0.9316239316239316,
+  "confidence_threshold": 0.82,
+  "accepted_labels": 50,
+  "accepted_fraction_of_scorable": 0.42735042735042733,
+  "accepted_accuracy": 1.0,
+  "per_class": {
+    "E": {
+      "scorable": 2,
+      "correct": 2,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 1.0,
+      "accepted_accuracy": null
+    },
+    "M1": {
+      "scorable": 2,
+      "correct": 2,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 1.0,
+      "accepted_accuracy": null
+    },
+    "M3": {
+      "scorable": 6,
+      "correct": 5,
+      "accepted": 3,
+      "accepted_correct": 3,
+      "accuracy": 0.8333333333333334,
+      "accepted_accuracy": 1.0
+    },
+    "M5": {
+      "scorable": 3,
+      "correct": 2,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 0.6666666666666666,
+      "accepted_accuracy": null
+    },
+    "P1": {
+      "scorable": 3,
+      "correct": 3,
+      "accepted": 2,
+      "accepted_correct": 2,
+      "accuracy": 1.0,
+      "accepted_accuracy": 1.0
+    },
+    "P3": {
+      "scorable": 2,
+      "correct": 2,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 1.0,
+      "accepted_accuracy": null
+    },
+    "P4": {
+      "scorable": 12,
+      "correct": 12,
+      "accepted": 5,
+      "accepted_correct": 5,
+      "accuracy": 1.0,
+      "accepted_accuracy": 1.0
+    },
+    "P5": {
+      "scorable": 11,
+      "correct": 8,
+      "accepted": 7,
+      "accepted_correct": 7,
+      "accuracy": 0.7272727272727273,
+      "accepted_accuracy": 1.0
+    },
+    "P6": {
+      "scorable": 15,
+      "correct": 11,
+      "accepted": 9,
+      "accepted_correct": 9,
+      "accuracy": 0.7333333333333333,
+      "accepted_accuracy": 1.0
+    },
+    "P7": {
+      "scorable": 13,
+      "correct": 12,
+      "accepted": 10,
+      "accepted_correct": 10,
+      "accuracy": 0.9230769230769231,
+      "accepted_accuracy": 1.0
+    },
+    "P8": {
+      "scorable": 5,
+      "correct": 4,
+      "accepted": 3,
+      "accepted_correct": 3,
+      "accuracy": 0.8,
+      "accepted_accuracy": 1.0
+    },
+    "P9": {
+      "scorable": 12,
+      "correct": 12,
+      "accepted": 7,
+      "accepted_correct": 7,
+      "accuracy": 1.0,
+      "accepted_accuracy": 1.0
+    },
+    "R": {
+      "scorable": 2,
+      "correct": 2,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 1.0,
+      "accepted_accuracy": null
+    },
+    "S1": {
+      "scorable": 2,
+      "correct": 2,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 1.0,
+      "accepted_accuracy": null
+    },
+    "S2": {
+      "scorable": 3,
+      "correct": 3,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 1.0,
+      "accepted_accuracy": null
+    },
+    "S4": {
+      "scorable": 3,
+      "correct": 0,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 0.0,
+      "accepted_accuracy": null
+    },
+    "S5": {
+      "scorable": 6,
+      "correct": 2,
+      "accepted": 2,
+      "accepted_correct": 2,
+      "accuracy": 0.3333333333333333,
+      "accepted_accuracy": 1.0
+    },
+    "S6": {
+      "scorable": 6,
+      "correct": 3,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 0.5,
+      "accepted_accuracy": null
+    },
+    "S7": {
+      "scorable": 5,
+      "correct": 3,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "accuracy": 0.6,
+      "accepted_accuracy": null
+    },
+    "S8": {
+      "scorable": 4,
+      "correct": 3,
+      "accepted": 2,
+      "accepted_correct": 2,
+      "accuracy": 0.75,
+      "accepted_accuracy": 1.0
+    }
+  },
+  "per_region": {
+    "draw_visual": {
+      "scorable": 3,
+      "correct": 3,
+      "accuracy": 1.0
+    },
+    "hand_region": {
+      "scorable": 114,
+      "correct": 90,
+      "accuracy": 0.7894736842105263
+    }
+  },
+  "confusion": {
+    "E": {
+      "E": 2
+    },
+    "M1": {
+      "M1": 2
+    },
+    "M3": {
+      "M3": 5,
+      "SOUTH": 1
+    },
+    "M5": {
+      "M5": 2,
+      "P8": 1
+    },
+    "P1": {
+      "P1": 3
+    },
+    "P3": {
+      "P3": 2
+    },
+    "P4": {
+      "P4": 12
+    },
+    "P5": {
+      "M3": 1,
+      "M5": 1,
+      "P5": 8,
+      "P8": 1
+    },
+    "P6": {
+      "M5": 1,
+      "P6": 11,
+      "P8": 1,
+      "P9": 1,
+      "S4": 1
+    },
+    "P7": {
+      "P7": 12,
+      "P8": 1
+    },
+    "P8": {
+      "P6": 1,
+      "P8": 4
+    },
+    "P9": {
+      "P9": 12
+    },
+    "R": {
+      "R": 2
+    },
+    "S1": {
+      "S1": 2
+    },
+    "S2": {
+      "S2": 3
+    },
+    "S4": {
+      "P6": 1,
+      "S6": 2
+    },
+    "S5": {
+      "S3": 1,
+      "S5": 2,
+      "S7": 1,
+      "S8": 2
+    },
+    "S6": {
+      "S4": 1,
+      "S6": 3,
+      "S7": 1,
+      "S8": 1
+    },
+    "S7": {
+      "P8": 1,
+      "S5": 1,
+      "S7": 3
+    },
+    "S8": {
+      "S8": 3,
+      "S9": 1
+    }
+  },
+  "method": "leave_source_session_or_group_out_same_region",
+  "template_scope": "same_region",
+  "distinct_source_groups": 10,
+  "unscorable": [
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/draw/tile_0f8159a417ad3930_P7.png",
+      "tile_id": "P7",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_61b63e56881ac740_W.png",
+      "tile_id": "W",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_2579bb0ed3b71b04_M9.png",
+      "tile_id": "M9",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_28ef3b25dda96605_M9.png",
+      "tile_id": "M9",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/draw/960_draw_region_s00_S3.png",
+      "tile_id": "S3",
+      "region": "draw_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/gold/960_gold_region_s00_N.png",
+      "tile_id": "N",
+      "region": "gold_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s08_M4.png",
+      "tile_id": "M4",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/draw/tile_4d6b1bedfe2dbb31_P2.png",
+      "tile_id": "P2",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_2bc72278ccdb44d5_SOUTH.png",
+      "tile_id": "SOUTH",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_2a1469a29a8605d8_SOUTH.png",
+      "tile_id": "SOUTH",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/draw/tile_aaa921b08dbfec79_M8.png",
+      "tile_id": "M8",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_4d8f12145129d9de_B.png",
+      "tile_id": "B",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/draw/tile_d5f8cdd914564156_M6.png",
+      "tile_id": "M6",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_cf3d5cd142f9920c_S9.png",
+      "tile_id": "S9",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/draw/1046_draw_region_s00_M5.png",
+      "tile_id": "M5",
+      "region": "draw_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/gold/1046_gold_region_s00_S3.png",
+      "tile_id": "S3",
+      "region": "gold_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s04_S3.png",
+      "tile_id": "S3",
+      "region": "hand_region",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/draw/tile_aaec99b693280ecc_M3.png",
+      "tile_id": "M3",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/draw/tile_b434ca725fc0dc5b_M3.png",
+      "tile_id": "M3",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/draw/tile_e5ad950eb1cbd1a6_P9.png",
+      "tile_id": "P9",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/draw/tile_9de8087eab64e57d_G.png",
+      "tile_id": "G",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/draw/tile_8514064cc2dd0141_M7.png",
+      "tile_id": "M7",
+      "region": "draw_visual",
+      "reason": "true_class_missing_outside_holdout_group_in_region"
+    }
+  ],
+  "predictions": [
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_f143ec54726db832_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.7255693674087524,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_2e32e17677d10444_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.911796510219574,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_555cf42113e1e9b2_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.600421667098999,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_63fdb225cbac01fe_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.7091400623321533,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_aa567ebfacb42ac3_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.6778368949890137,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_5114bf5f0d361c0f_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.8380157947540283,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_ecd0b50dc1afb1ad_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.9287453889846802,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_b5e89c609f39f02d_P3.png",
+      "region": "hand_region",
+      "true_tile": "P3",
+      "predicted_tile": "P3",
+      "confidence": 0.46100929379463196,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_772cb6a29a9142d4_P1.png",
+      "region": "hand_region",
+      "true_tile": "P1",
+      "predicted_tile": "P1",
+      "confidence": 0.9195579290390015,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_7e37ee57f96397d4_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.9256253242492676,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_c1d4f62119ea0cc4_S5.png",
+      "region": "hand_region",
+      "true_tile": "S5",
+      "predicted_tile": "S5",
+      "confidence": 0.8531602621078491,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_0e565528164aa77f",
+      "image": "templates/hand/tile_a26b1cef2294d06b_S1.png",
+      "region": "hand_region",
+      "true_tile": "S1",
+      "predicted_tile": "S1",
+      "confidence": 0.775563657283783,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/draw/tile_54a8c9a2b1619277_S6.png",
+      "region": "draw_visual",
+      "true_tile": "S6",
+      "predicted_tile": "S6",
+      "confidence": 0.39498981833457947,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_06bfee325cdf5903_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.8216394186019897,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_37cc5f10d535dba3_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.9323030114173889,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_a2379af56a8306f2_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.8988161087036133,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_6fbf70db65217cf7_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.950247049331665,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_9d1cad9fdf0f71a8_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.8185445070266724,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_f2a4ac52911d9552_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.7181979417800903,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_12ea48d4131b07bd_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.6523963212966919,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_8818663c01348a1c_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.7976996898651123,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_fe7c59c44379fc56_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8178215622901917,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_a228f14a72f4d663_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.9263389110565186,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_31b08ed6831568b7_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.9256253242492676,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_590a5a3a3bade6e8_M1.png",
+      "region": "hand_region",
+      "true_tile": "M1",
+      "predicted_tile": "M1",
+      "confidence": 0.8143755793571472,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_8610212dc312ea9c_M3.png",
+      "region": "hand_region",
+      "true_tile": "M3",
+      "predicted_tile": "M3",
+      "confidence": 0.8816981315612793,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_4d68a8e72498d729",
+      "image": "templates/hand/tile_9fe4ec26c4524a4b_M3.png",
+      "region": "hand_region",
+      "true_tile": "M3",
+      "predicted_tile": "M3",
+      "confidence": 0.7121189832687378,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/draw/tile_ead08b1382cdd408_S6.png",
+      "region": "draw_visual",
+      "true_tile": "S6",
+      "predicted_tile": "S6",
+      "confidence": 0.39498981833457947,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/draw/tile_779d316f10f41a81_S6.png",
+      "region": "draw_visual",
+      "true_tile": "S6",
+      "predicted_tile": "S6",
+      "confidence": 0.3016372621059418,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_58b15ee73ce73e10_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P8",
+      "confidence": 0.32389238476753235,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_f8287e38001c3b16_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "M5",
+      "confidence": 0.45120877027511597,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "wan",
+      "category_correct": false
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_93b13b0848d7dc53_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.6748008728027344,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_b82d1b000e6b1c90_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "M5",
+      "confidence": 0.4182889461517334,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "wan",
+      "category_correct": false
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_7706bffa34e5e7ff_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P8",
+      "confidence": 0.41818729043006897,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_ec47a280d37ccf0f_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P8",
+      "confidence": 0.3089216351509094,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_96b7e41c89c082ff_M5.png",
+      "region": "hand_region",
+      "true_tile": "M5",
+      "predicted_tile": "P8",
+      "confidence": 0.29039421677589417,
+      "correct": false,
+      "true_category": "wan",
+      "predicted_category": "tong",
+      "category_correct": false
+    },
+    {
+      "group": "session_59460988023cc9f1",
+      "image": "templates/hand/tile_b4a45a3b2f131062_M5.png",
+      "region": "hand_region",
+      "true_tile": "M5",
+      "predicted_tile": "M5",
+      "confidence": 0.7526843547821045,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s00_P3.png",
+      "region": "hand_region",
+      "true_tile": "P3",
+      "predicted_tile": "P3",
+      "confidence": 0.46100929379463196,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s01_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.6819429397583008,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s02_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "M3",
+      "confidence": 0.354655385017395,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "wan",
+      "category_correct": false
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s03_S4.png",
+      "region": "hand_region",
+      "true_tile": "S4",
+      "predicted_tile": "P6",
+      "confidence": 0.3863711357116699,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tong",
+      "category_correct": false
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s04_S5.png",
+      "region": "hand_region",
+      "true_tile": "S5",
+      "predicted_tile": "S3",
+      "confidence": 0.44234830141067505,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s05_S6.png",
+      "region": "hand_region",
+      "true_tile": "S6",
+      "predicted_tile": "S4",
+      "confidence": 0.7609954476356506,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s06_S7.png",
+      "region": "hand_region",
+      "true_tile": "S7",
+      "predicted_tile": "S5",
+      "confidence": 0.5095666646957397,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s07_M3.png",
+      "region": "hand_region",
+      "true_tile": "M3",
+      "predicted_tile": "SOUTH",
+      "confidence": 0.25707221031188965,
+      "correct": false,
+      "true_category": "wan",
+      "predicted_category": "honor",
+      "category_correct": false
+    },
+    {
+      "group": "session_5d8a0e3c",
+      "image": "templates/hand/960_hand_region_s09_M5.png",
+      "region": "hand_region",
+      "true_tile": "M5",
+      "predicted_tile": "M5",
+      "confidence": 0.7526843547821045,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_1e07d6c01887eb4e_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.6807486414909363,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_3fb8ffb4122b20b0_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.7999248504638672,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_1fe1aa093034c468_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.8687998652458191,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_4e6e4fd9d440aef1_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.9287453889846802,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_338c192971cbb892_S6.png",
+      "region": "hand_region",
+      "true_tile": "S6",
+      "predicted_tile": "S8",
+      "confidence": 0.5022604465484619,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_68cde796f31ff3b5_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.8587318062782288,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_e37a7e98783b26f0_S5.png",
+      "region": "hand_region",
+      "true_tile": "S5",
+      "predicted_tile": "S8",
+      "confidence": 0.39959749579429626,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_8ec400560b0485b0_P1.png",
+      "region": "hand_region",
+      "true_tile": "P1",
+      "predicted_tile": "P1",
+      "confidence": 0.9195579290390015,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_519f0faa26c0134e_S5.png",
+      "region": "hand_region",
+      "true_tile": "S5",
+      "predicted_tile": "S8",
+      "confidence": 0.3998212516307831,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_3fcc11c0a830e9cc_S7.png",
+      "region": "hand_region",
+      "true_tile": "S7",
+      "predicted_tile": "S7",
+      "confidence": 0.7894562482833862,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_1be032f4fa21a3a8_S7.png",
+      "region": "hand_region",
+      "true_tile": "S7",
+      "predicted_tile": "S7",
+      "confidence": 0.5800503492355347,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_c1402696f3c0cc3f_S2.png",
+      "region": "hand_region",
+      "true_tile": "S2",
+      "predicted_tile": "S2",
+      "confidence": 0.5560595393180847,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_5e02f7d0458be0a9",
+      "image": "templates/hand/tile_5192089c320b9e6f_S2.png",
+      "region": "hand_region",
+      "true_tile": "S2",
+      "predicted_tile": "S2",
+      "confidence": 0.658531129360199,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_620535f30ae73827_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.8687998652458191,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_c6408037e472dc8f_P8.png",
+      "region": "hand_region",
+      "true_tile": "P8",
+      "predicted_tile": "P8",
+      "confidence": 0.873482346534729,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_4babc54891292c2b_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.8679777979850769,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_b4c44261cbe749ae_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.8890360593795776,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_20de04d09b0ffbc2_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.8931527137756348,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_75608291699bcea5_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.9528282284736633,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_45c563114e6a299a_P1.png",
+      "region": "hand_region",
+      "true_tile": "P1",
+      "predicted_tile": "P1",
+      "confidence": 0.7281273007392883,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_114a69cbdce223c5_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.9263389110565186,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_d1ff14e1667b9b22_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.9277483820915222,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_d21779b652836dd8_S8.png",
+      "region": "hand_region",
+      "true_tile": "S8",
+      "predicted_tile": "S8",
+      "confidence": 0.8387181162834167,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_e7d5ade06a60ecb9_E.png",
+      "region": "hand_region",
+      "true_tile": "E",
+      "predicted_tile": "E",
+      "confidence": 0.7475574612617493,
+      "correct": true,
+      "true_category": "honor",
+      "predicted_category": "honor",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_ee2c702c6ae17185_R.png",
+      "region": "hand_region",
+      "true_tile": "R",
+      "predicted_tile": "R",
+      "confidence": 0.7144822478294373,
+      "correct": true,
+      "true_category": "honor",
+      "predicted_category": "honor",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_f73a87a31fbf699a_M3.png",
+      "region": "hand_region",
+      "true_tile": "M3",
+      "predicted_tile": "M3",
+      "confidence": 0.7681704759597778,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_627b6c2022d3f910",
+      "image": "templates/hand/tile_48184d5a6580bb48_M3.png",
+      "region": "hand_region",
+      "true_tile": "M3",
+      "predicted_tile": "M3",
+      "confidence": 0.8816981315612793,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_68fa4d13e4d2dd4a_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.8720079660415649,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_8559bbf40d2bb6cd_P8.png",
+      "region": "hand_region",
+      "true_tile": "P8",
+      "predicted_tile": "P6",
+      "confidence": 0.6984890699386597,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_635b2f76ba50aec3_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.9266543984413147,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_c501fe812a1819b1_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.950247049331665,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_f6d2006cdbbd8e9c_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.907922625541687,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_81101dc4927bcff4_S5.png",
+      "region": "hand_region",
+      "true_tile": "S5",
+      "predicted_tile": "S5",
+      "confidence": 0.8531602621078491,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_629f7b137c7a8629_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8770139813423157,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_3b255896982cfa4e_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8750273585319519,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_e4748db25f494c98_S7.png",
+      "region": "hand_region",
+      "true_tile": "S7",
+      "predicted_tile": "S7",
+      "confidence": 0.7894562482833862,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_2f524bfdbcd1d059_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8178215622901917,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_781bfe34c40993ef",
+      "image": "templates/hand/tile_92818654a41d308e_R.png",
+      "region": "hand_region",
+      "true_tile": "R",
+      "predicted_tile": "R",
+      "confidence": 0.7144822478294373,
+      "correct": true,
+      "true_category": "honor",
+      "predicted_category": "honor",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s00_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.6778368949890137,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s01_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.6890780925750732,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s02_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P9",
+      "confidence": 0.38256117701530457,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s03_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "S4",
+      "confidence": 0.3863711357116699,
+      "correct": false,
+      "true_category": "tong",
+      "predicted_category": "tiao",
+      "category_correct": false
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s05_S4.png",
+      "region": "hand_region",
+      "true_tile": "S4",
+      "predicted_tile": "S6",
+      "confidence": 0.6738068461418152,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s06_S5.png",
+      "region": "hand_region",
+      "true_tile": "S5",
+      "predicted_tile": "S7",
+      "confidence": 0.5095666646957397,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s07_S6.png",
+      "region": "hand_region",
+      "true_tile": "S6",
+      "predicted_tile": "S7",
+      "confidence": 0.45497065782546997,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s08_S7.png",
+      "region": "hand_region",
+      "true_tile": "S7",
+      "predicted_tile": "P8",
+      "confidence": 0.36617693305015564,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tong",
+      "category_correct": false
+    },
+    {
+      "group": "session_7f4c1b2e",
+      "image": "templates/hand/1046_hand_region_s09_S8.png",
+      "region": "hand_region",
+      "true_tile": "S8",
+      "predicted_tile": "S9",
+      "confidence": 0.8139219284057617,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_fb1344bffd251bac_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.8563005328178406,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_edfc5a7cf868015c_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.9528282284736633,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_1cee84b323888dfd_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.8558051586151123,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_bd20620a28d6a9c3_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.8517770767211914,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_33e4f7ded2386160_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.8680139780044556,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_2e8d99ba891ae19a_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.911796510219574,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_214855c77244d6f2_P6.png",
+      "region": "hand_region",
+      "true_tile": "P6",
+      "predicted_tile": "P6",
+      "confidence": 0.9059273600578308,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_17702c62bc0ae7fd_P5.png",
+      "region": "hand_region",
+      "true_tile": "P5",
+      "predicted_tile": "P5",
+      "confidence": 0.8813849687576294,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_3ca67d60c8d4a5ca_P7.png",
+      "region": "hand_region",
+      "true_tile": "P7",
+      "predicted_tile": "P7",
+      "confidence": 0.8641384840011597,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_a1ba13b5482c04c2_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8858907222747803,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_94960e642f407502",
+      "image": "templates/hand/tile_53a96e7391ae40b3_E.png",
+      "region": "hand_region",
+      "true_tile": "E",
+      "predicted_tile": "E",
+      "confidence": 0.7475574612617493,
+      "correct": true,
+      "true_category": "honor",
+      "predicted_category": "honor",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_acfa0037899841ab_P8.png",
+      "region": "hand_region",
+      "true_tile": "P8",
+      "predicted_tile": "P8",
+      "confidence": 0.873482346534729,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_e440a441ad9648c2_P9.png",
+      "region": "hand_region",
+      "true_tile": "P9",
+      "predicted_tile": "P9",
+      "confidence": 0.48071300983428955,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_e3532fb8aa9ac0f5_P8.png",
+      "region": "hand_region",
+      "true_tile": "P8",
+      "predicted_tile": "P8",
+      "confidence": 0.8558588624000549,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_20d7967ef0991a4c_P8.png",
+      "region": "hand_region",
+      "true_tile": "P8",
+      "predicted_tile": "P8",
+      "confidence": 0.7235414385795593,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_7f19025ed9b6bad3_S8.png",
+      "region": "hand_region",
+      "true_tile": "S8",
+      "predicted_tile": "S8",
+      "confidence": 0.5115340352058411,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_97df553b91572f84_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8770139813423157,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_be4848adb314bc4c_P4.png",
+      "region": "hand_region",
+      "true_tile": "P4",
+      "predicted_tile": "P4",
+      "confidence": 0.8858907222747803,
+      "correct": true,
+      "true_category": "tong",
+      "predicted_category": "tong",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_5f38fd064796b864_S8.png",
+      "region": "hand_region",
+      "true_tile": "S8",
+      "predicted_tile": "S8",
+      "confidence": 0.8387181162834167,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_cd9225f1bd61526f_S4.png",
+      "region": "hand_region",
+      "true_tile": "S4",
+      "predicted_tile": "S6",
+      "confidence": 0.7609954476356506,
+      "correct": false,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_ed5016521df0f72e_M1.png",
+      "region": "hand_region",
+      "true_tile": "M1",
+      "predicted_tile": "M1",
+      "confidence": 0.8143755793571472,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_8b9b156526834bc6_M3.png",
+      "region": "hand_region",
+      "true_tile": "M3",
+      "predicted_tile": "M3",
+      "confidence": 0.8702042102813721,
+      "correct": true,
+      "true_category": "wan",
+      "predicted_category": "wan",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_e25498dd9f87a10f_S1.png",
+      "region": "hand_region",
+      "true_tile": "S1",
+      "predicted_tile": "S1",
+      "confidence": 0.775563657283783,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    },
+    {
+      "group": "session_dcac8580c55879a2",
+      "image": "templates/hand/tile_de4789bc19dbc91e_S2.png",
+      "region": "hand_region",
+      "true_tile": "S2",
+      "predicted_tile": "S2",
+      "confidence": 0.658531129360199,
+      "correct": true,
+      "true_category": "tiao",
+      "predicted_category": "tiao",
+      "category_correct": true
+    }
+  ],
+  "safe_for_executor": false
+}

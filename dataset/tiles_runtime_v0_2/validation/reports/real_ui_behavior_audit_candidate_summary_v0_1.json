@@ -1,0 +1,301 @@
+{
+  "schema_version": "real_ui_behavior_audit_candidates_v0_1",
+  "status": "automatic_candidates_ready_for_human_evidence_review",
+  "method": "All local recordings were scanned sequentially at 4 samples/second. Adaptive frame-difference peaks define +/-1.5 second windows. Candidate labels are hypotheses, never confirmed events.",
+  "sources_scanned": 24,
+  "full_game_sources": 8,
+  "candidate_windows": 184,
+  "resolution_source_counts": {
+    "1108x690": 19,
+    "1126x698": 2,
+    "960x448": 1,
+    "1046x480": 2
+  },
+  "candidate_type_counts": {
+    "bottom_layout_motion": 141,
+    "action_button_or_right_ui_change": 80,
+    "draw_visual_count_decrease": 59,
+    "right_independent_tile_disappeared": 59,
+    "draw_visual_count_increase": 58,
+    "centre_discard_or_action_motion": 46,
+    "hand_count_decrease": 36,
+    "right_independent_tile_appeared": 34,
+    "meld_count_increase": 25,
+    "large_scene_or_overlay_transition": 20,
+    "hand_count_increase": 19,
+    "meld_count_decrease": 14,
+    "gold_count_decrease": 10,
+    "gold_count_increase": 7,
+    "settlement_template_candidate": 6
+  },
+  "sources": [
+    {
+      "source_id": "src_c02222f129d4b102",
+      "source_session": "session_c02222f129d4b102",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 120.0,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_ff1d2fe5ae374e67",
+      "source_session": "session_ff1d2fe5ae374e67",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 120.0,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_4d68a8e72498d729",
+      "source_session": "session_4d68a8e72498d729",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 120.0,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 120.0,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_781bfe34c40993ef",
+      "source_session": "session_781bfe34c40993ef",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 105.0,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 58.7,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_cf9935d86b2bdc03",
+      "source_session": "session_cf9935d86b2bdc03",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 38.0,
+      "candidate_windows": 14
+    },
+    {
+      "source_id": "src_f0c950fb84d81325",
+      "source_session": "session_f0c950fb84d81325",
+      "full_game_set": true,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 42.1,
+      "candidate_windows": 8
+    },
+    {
+      "source_id": "src_47287aa15e0dda39",
+      "source_session": "session_47287aa15e0dda39",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 42.0,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 46.6,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_c849211357c2dc8b",
+      "source_session": "session_c849211357c2dc8b",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 34.3,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_da593f9a24526340",
+      "source_session": "session_da593f9a24526340",
+      "full_game_set": false,
+      "size": [
+        1126,
+        698
+      ],
+      "duration_seconds": 30.0,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_ded5de8ed09ef18e",
+      "source_session": "session_ded5de8ed09ef18e",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 29.8,
+      "candidate_windows": 5
+    },
+    {
+      "source_id": "src_5e02f7d0458be0a9",
+      "source_session": "session_5e02f7d0458be0a9",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 29.5,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_6bb8fccdc030451c",
+      "source_session": "session_6bb8fccdc030451c",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 32.2,
+      "candidate_windows": 5
+    },
+    {
+      "source_id": "src_59460988023cc9f1",
+      "source_session": "session_59460988023cc9f1",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 18.7,
+      "candidate_windows": 3
+    },
+    {
+      "source_id": "src_6f17296422fb1534",
+      "source_session": "session_6f17296422fb1534",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 20.5,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_0e565528164aa77f",
+      "source_session": "session_0e565528164aa77f",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 13.0,
+      "candidate_windows": 3
+    },
+    {
+      "source_id": "src_a8484354f15a1f6e",
+      "source_session": "session_a8484354f15a1f6e",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 14.1,
+      "candidate_windows": 5
+    },
+    {
+      "source_id": "src_04bf012ce76304b7",
+      "source_session": "session_04bf012ce76304b7",
+      "full_game_set": false,
+      "size": [
+        960,
+        448
+      ],
+      "duration_seconds": 139.827,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_c395a1f552e63b4e",
+      "source_session": "session_c395a1f552e63b4e",
+      "full_game_set": false,
+      "size": [
+        1046,
+        480
+      ],
+      "duration_seconds": 110.068,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_0b9561b6e5ce79c3",
+      "source_session": "session_0b9561b6e5ce79c3",
+      "full_game_set": false,
+      "size": [
+        1046,
+        480
+      ],
+      "duration_seconds": 85.275,
+      "candidate_windows": 6
+    },
+    {
+      "source_id": "src_b6352cfd43ebfaa6",
+      "source_session": "session_b6352cfd43ebfaa6",
+      "full_game_set": false,
+      "size": [
+        1126,
+        698
+      ],
+      "duration_seconds": 6.4,
+      "candidate_windows": 3
+    },
+    {
+      "source_id": "src_f85d3eaca7b7418f",
+      "source_session": "session_f85d3eaca7b7418f",
+      "full_game_set": false,
+      "size": [
+        1108,
+        690
+      ],
+      "duration_seconds": 2.8,
+      "candidate_windows": 0
+    }
+  ],
+  "private_work_manifest": "work/real_ui_behavior_audit_v0_1/candidate_windows.jsonl",
+  "private_contact_sheets": "work/real_ui_behavior_audit_v0_1/contact_sheets/",
+  "privacy": "Full frames and local filenames remain ignored local work products.",
+  "safe_for_executor": false
+}

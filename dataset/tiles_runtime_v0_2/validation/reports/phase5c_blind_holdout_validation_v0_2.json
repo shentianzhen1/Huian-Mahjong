@@ -1,0 +1,163 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase5c_blind_holdout",
+  "status": "metrics_computed",
+  "evaluation_policy": "The locked blind-holdout truth was fully approved before this one-shot detector run. No holdout outcome authorizes detector tuning in this phase.",
+  "plan": "validation/holdout/phase5b_geometry_holdout_plan_v0_2.json",
+  "truth": "validation/holdout/geometry_holdout_ground_truth_v0_2.jsonl",
+  "approved_rows": 24,
+  "truth_state_counts": {
+    "trusted": 23,
+    "non_game": 1
+  },
+  "metrics": {
+    "component_precision": 0.9946949602122016,
+    "component_recall": 0.9868421052631579,
+    "bbox_mean_iou": 0.7778744637180295,
+    "region_accuracy": 0.992,
+    "hand_count_exact_match_rate": 0.9565217391304348,
+    "false_positives": 2,
+    "false_negatives": 5,
+    "meld_misclassified_as_hand": 0,
+    "draw_visual_gold_silent_misclassifications": 0,
+    "draw_visual_gold_unknown": 1,
+    "geometry_untrusted_frames": 8,
+    "stable_geometry_rows": 23,
+    "unstable_animation_occluded_or_non_game_rows": 1,
+    "unstable_frame_reject_rate": 1.0,
+    "stable_slot_policy": "animation/occluded/non_game rows are excluded from component, region, and hand-count metrics"
+  },
+  "acceptance_gates": {
+    "component_precision_minimum": {
+      "threshold": 0.98,
+      "actual": 0.9946949602122016,
+      "passed": true
+    },
+    "component_recall_minimum": {
+      "threshold": 0.98,
+      "actual": 0.9868421052631579,
+      "passed": true
+    },
+    "hand_count_exact_minimum": {
+      "threshold": 0.95,
+      "actual": 0.9565217391304348,
+      "passed": true
+    },
+    "no_silent_hand_draw_visual_gold_region_misclassification": {
+      "actual": 1,
+      "passed": false
+    },
+    "meld_never_classified_as_hand": {
+      "actual": 0,
+      "passed": true
+    }
+  },
+  "failure_cases": [
+    {
+      "id": "phase5b_holdout_0002",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_frame": 120,
+      "truth_components": 16,
+      "detected_components": 16,
+      "matched_components": 16,
+      "region_errors": 1,
+      "meld_as_hand": 0,
+      "geometry_untrusted": true,
+      "issues": [
+        "component_size_inconsistent",
+        "gold_unreadable"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0003",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_frame": 360,
+      "truth_components": 16,
+      "detected_components": 15,
+      "matched_components": 15,
+      "region_errors": 0,
+      "meld_as_hand": 0,
+      "geometry_untrusted": false,
+      "issues": [
+        "gold_unreadable",
+        "meld_candidates_detected"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0011",
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "source_frame": 180,
+      "truth_components": 16,
+      "detected_components": 15,
+      "matched_components": 15,
+      "region_errors": 2,
+      "meld_as_hand": 0,
+      "geometry_untrusted": false,
+      "issues": [
+        "gold_unreadable"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0020",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_frame": 240,
+      "truth_components": 18,
+      "detected_components": 18,
+      "matched_components": 17,
+      "region_errors": 0,
+      "meld_as_hand": 0,
+      "geometry_untrusted": true,
+      "issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected",
+        "stacked_meld_overlap_recovered"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0021",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_frame": 300,
+      "truth_components": 18,
+      "detected_components": 18,
+      "matched_components": 17,
+      "region_errors": 0,
+      "meld_as_hand": 0,
+      "geometry_untrusted": true,
+      "issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected",
+        "stacked_meld_overlap_recovered"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0022",
+      "source_id": "src_59460988023cc9f1",
+      "source_session": "session_59460988023cc9f1",
+      "source_frame": 0,
+      "truth_components": 18,
+      "detected_components": 17,
+      "matched_components": 17,
+      "region_errors": 0,
+      "meld_as_hand": 0,
+      "geometry_untrusted": true,
+      "issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected",
+        "stacked_meld_overlap_recovered"
+      ]
+    }
+  ],
+  "coverage_gaps": {
+    "second_960x448_session": "not_found_locally; retained but no longer a Phase 6 blocker",
+    "17_hand": "not independently reviewed; retained but no longer a Phase 6 blocker"
+  },
+  "phase6_formal_tile_labeling_allowed": false,
+  "safe_for_executor": false
+}

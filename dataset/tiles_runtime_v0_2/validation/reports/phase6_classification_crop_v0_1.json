@@ -1,0 +1,10 @@
+{
+  "schema_version": "vision_runtime_v0_2_classification_crop_v0_1",
+  "rebuilt_templates": 115,
+  "geometry_bbox_changed": false,
+  "tile_id_changed": false,
+  "crop_policy": "expand bright-component geometry bbox; clamp horizontal padding at adjacent tile midpoints; preserve source bounds",
+  "local_comparison_sheet": "work/phase6_tile_review/crop_padding_before_after.jpg",
+  "human_visual_review": "passed_manual_2026-09-21",
+  "safe_for_executor": false
+}

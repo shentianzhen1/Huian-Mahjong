@@ -1,0 +1,53 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase6_dataset_audit",
+  "approved_labels": 139,
+  "templates": 139,
+  "source_sessions": 10,
+  "regions": {
+    "draw_region": 2,
+    "draw_visual": 12,
+    "gold_region": 2,
+    "hand_region": 123
+  },
+  "standard_class_coverage": {
+    "covered": 33,
+    "total": 34,
+    "missing": [
+      "M2"
+    ]
+  },
+  "traceability": {
+    "missing_required_fields": [],
+    "absolute_paths": [],
+    "missing_assets": [],
+    "asset_hash_mismatches": []
+  },
+  "privacy_shape_gate": {
+    "minimum_dimensions": [
+      37,
+      64
+    ],
+    "maximum_dimensions": [
+      82,
+      105
+    ],
+    "all_assets_under_templates": true,
+    "human_contact_sheet_review": "passed_manual_2026-09-21",
+    "local_contact_sheet": "work/phase6_tile_review/approved_templates_contact_sheet.jpg"
+  },
+  "leakage_safe_validation": {
+    "distinct_source_groups": 10,
+    "scorable_labels": 117,
+    "unscorable_labels": 22,
+    "scorable_coverage": 0.841726618705036,
+    "exact_accuracy": 0.7948717948717948,
+    "category_accuracy": 0.9316239316239316,
+    "confidence_threshold": 0.82,
+    "accepted_labels": 50,
+    "accepted_fraction_of_scorable": 0.42735042735042733,
+    "accepted_accuracy": 1.0
+  },
+  "test_build_decision": "fail_closed_prototype_only",
+  "test_build_policy": "Only high-confidence predictions from covered classes may be shown; all other observations return UNKNOWN. No executor actions.",
+  "safe_for_executor": false
+}

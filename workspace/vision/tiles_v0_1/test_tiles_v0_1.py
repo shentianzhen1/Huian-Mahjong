@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -43,6 +44,55 @@ from .template_classifier import (
 
 
 class TilesV01Tests(unittest.TestCase):
+    def test_runtime_v02_tile_crop_uses_root_labels_and_source_bbox(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "dataset"
+            template_dir = root / "templates" / "hand"
+            template_dir.mkdir(parents=True)
+            tile = Image.new("RGB", (40, 64), "white")
+            ImageDraw.Draw(tile).rectangle((16, 8, 23, 55), fill="black")
+            tile.save(template_dir / "m1.png")
+            tile_b = Image.new("RGB", (42, 66), "white")
+            ImageDraw.Draw(tile_b).rectangle((17, 9, 24, 57), fill="black")
+            tile_b.save(template_dir / "m1_b.png")
+            row = {
+                "image": "templates/hand/m1.png",
+                "source_id": "src_anonymous",
+                "source_session": "session_anonymous",
+                "source_frame": 123,
+                "bbox": [600, 400, 40, 64],
+                "slot": 0,
+                "tile_id": "M1",
+                "region": "hand_region",
+                "approved": True,
+                "status": "approved",
+                "sha256": "0" * 64,
+            }
+            row_b = {
+                **row,
+                "id": "runtime_b",
+                "image": "templates/hand/m1_b.png",
+                "source_session": "session_b",
+                "source_frame": 456,
+                "bbox": [500, 300, 42, 66],
+                "sha256": "1" * 64,
+            }
+            (root / "labels.jsonl").write_text(
+                json.dumps(row) + "\n" + json.dumps(row_b) + "\n",
+                encoding="utf-8",
+            )
+
+            classifier = TemplateTileClassifier.from_dataset(root)
+
+            self.assertEqual(sorted(classifier.templates), ["M1"])
+            self.assertEqual(
+                classifier.classify(tile, region="hand_region").tile_id,
+                "M1",
+            )
+            report = evaluate_template_dataset(root)
+            self.assertEqual(report["scorable_labels"], 2)
+            self.assertEqual(report["exact_accuracy"], 1.0)
+
     def test_roi_profile_rejects_unverified_crop(self) -> None:
         profile = ROIProfile(
             source_size=(100, 80),

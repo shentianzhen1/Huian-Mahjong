@@ -1,0 +1,44 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase5b",
+  "scope": "Dynamic Geometry targeted fixes only; no tile_id classification, Rules, AI, Simulator, Hint Alpha, or executor changes.",
+  "ground_truth": {
+    "approved_rows": 29,
+    "sha256": "03a46b23ba00faa6100a4f047eb3266ee8ef7da51a234086a04842fd32c135e8",
+    "policy": "Frozen; the detector was rerun against source frames and the truth JSONL was not modified. geo_0030 remains an unapproved draft."
+  },
+  "detector_changes": {
+    "meld_aware_geometry": [
+      "largest local contiguous hand cluster, without an absolute x coordinate",
+      "small separated-group test using baseline, aspect/orientation deviation, and group spacing",
+      "meld emitted as a non-hand region without inferring Chi/Peng/Kong"
+    ],
+    "right_edge_joined_components": "Wide connected components are split from the observed same-frame tile width and a local projection valley; expected hand count is never used to add a box."
+  },
+  "frozen_regression": {
+    "runtime_target_regions": ["hand", "draw", "gold"],
+    "component_precision": 1.0,
+    "component_recall": 1.0,
+    "bbox_mean_iou": 0.9969150428449653,
+    "hand_count_exact_match_rate": 1.0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "region_misclassifications": 0,
+    "meld_candidates": 10,
+    "meld_misclassified_as_hand": 0,
+    "rightmost_hand_components_checked": 10,
+    "rightmost_hand_false_negatives": 0
+  },
+  "holdout": {
+    "plan": "validation/holdout/phase5b_geometry_holdout_plan_v0_2.json",
+    "selected_frames": 24,
+    "source_disjoint_sessions": 8,
+    "status": "awaiting independent manual geometry review; these frames are selection-locked and must not be used for further detector tuning"
+  },
+  "remaining_gaps": [
+    "No second independent 960x448 source session is present locally.",
+    "No independently reviewed 17-hand frame exists yet.",
+    "Holdout frames are unreviewed and therefore cannot be used for accuracy claims."
+  ],
+  "phase6_formal_tile_labeling_allowed": false,
+  "safe_for_executor": false
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "vision_runtime_v0_2_recovery_scope",
+  "status": "recovery_phase_1_no_labels_or_templates",
+  "tracked_long_term_assets": [
+    "manifest.json",
+    "labels.jsonl (final reviewed labels only)",
+    "roi_profiles/*.json (manually calibrated only)",
+    "templates/hand|draw|gold/* (privacy-reviewed Mahjong-tile crops only)",
+    "validation/reports/*.json"
+  ],
+  "local_only_assets": [
+    "work/**",
+    "validation/generated/**",
+    "validation/candidate_frames.jsonl",
+    "validation/recovery_scan.json",
+    "all source video, full screenshots, contact sheets, and temporary crops"
+  ],
+  "label_source_policy": "Use anonymous source_id and source_session. Do not store an absolute local path.",
+  "template_privacy_policy": "A runtime template must be a tightly cropped Mahjong tile only. Nicknames, avatars, room numbers, and complete UI are prohibited.",
+  "safe_for_executor": false
+}

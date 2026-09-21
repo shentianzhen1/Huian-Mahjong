@@ -63,6 +63,7 @@
    - Status Reader V0.1已落地：`remaining_tiles` / `hand_progress` 独立ROI；目标字体7常被OCR成`/`，只在结构化数字字段内纠错。8局约10秒稳定帧：剩余牌数8/8正确、局号直接7/8正确；第5局`5/8→0/8`不硬猜，只有上一局已可信且2000守恒比分发生真实变化时才推为上一局+1，顺序处理后8/8种子PublicState完整。
    - 新增 `public_state_reader.py`，统一比分、剩余牌、局号的帧/窗口读取，并继续由 `fuse_public_state()` 做多帧共识与物理约束。Tesseract由Vision CI显式安装；灰度/autocontrast比分通道仅保留为显式诊断，默认仍使用已验证的三阈值比分路径。
    - 当前缺口：① 把剩余牌/局号从8个种子扩展到整段多时点统计；② 新独立录像上的PublicState/比分/gold泛化；③ draw时间稳定性样本量；④ F1/F3/F4/F5/F6/F8/S7/S9覆盖，F2/F7跨session；⑤ 缩放/移动/遮挡与开局/结算切换压力测试。
+   - **Runtime Vision V0.2 收口门（2026-09-22）**：代码/数据可作为实验性 read-only prototype 合入，但 Phase 5C blind holdout 有1个 acceptance gate 未通过，formal promotion 保持 BLOCKED。下一次晋级必须使用新的 source-disjoint blind holdout；不得继续把已揭示 Phase 5C 当泛化证据。已知 replay session 的 runtime smoke 必须排除同 session 模板，V0.2 tests 必须由 Vision CI 执行。
    - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/match_evidence_001_public_state_seed.json`、`references/vision/2026-09-19/public_state_v01_baseline.md`。
 
 ## P2：低频规则

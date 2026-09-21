@@ -10,6 +10,10 @@ from .labels import approved_labels
 from .postprocess import TilePrediction
 
 
+def _canonical_region(region):
+    return "draw_visual" if region == "draw_region" else region
+
+
 def _tile_face_box(image, brightness_threshold=100):
     """Return the dominant plausible bright tile-face box, or None.
 
@@ -115,13 +119,21 @@ class TemplateTileClassifier:
                 continue
             with Image.open(image_path) as source:
                 x, y, width, height = label["bbox"]
-                if x + width > source.width or y + height > source.height:
-                    continue
-                crop = source.convert("RGB").crop((x, y, x + width, y + height))
-            value = _feature(crop, region=label["region"])
+                # Runtime V0.2 stores privacy-reviewed tile-only assets under
+                # templates/, while bbox remains the traceable coordinate in
+                # the private source frame. Such assets are already cropped.
+                is_runtime_crop = Path(label["image"]).parts[:1] == ("templates",)
+                if is_runtime_crop:
+                    crop = source.convert("RGB")
+                else:
+                    if x + width > source.width or y + height > source.height:
+                        continue
+                    crop = source.convert("RGB").crop((x, y, x + width, y + height))
+            region = _canonical_region(label["region"])
+            value = _feature(crop, region=region)
             templates.setdefault(label["tile_id"], []).append(value)
             regional_templates.setdefault(
-                label["region"], {}
+                region, {}
             ).setdefault(label["tile_id"], []).append(value)
         return cls(templates, regional_templates)
 
@@ -131,6 +143,7 @@ class TemplateTileClassifier:
         return cls.from_labels(root, approved_labels(root))
 
     def classify(self, image, region=None):
+        region = _canonical_region(region)
         sample = _feature(image, region=region)
         templates = (
             self.regional_templates.get(region, {})
