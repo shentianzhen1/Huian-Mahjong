@@ -1,0 +1,17 @@
+{
+  "schema_version": "vision_runtime_v0_2",
+  "purpose": "reviewed, anonymized runtime asset manifest; no approved runtime assets yet",
+  "label_required_fields": [
+    "source_id",
+    "source_session",
+    "source_frame",
+    "bbox",
+    "slot",
+    "tile_id",
+    "approved",
+    "sha256"
+  ],
+  "source_reference_policy": "source_id/source_session only; absolute paths are forbidden",
+  "privacy": "templates may contain tile crops only; no full frames, player UI, nickname, avatar, or room number",
+  "entries": []
+}
