@@ -5,7 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "huian-mahjong-assistant"
 version = "0.1.0"
-description = "Evidence-driven Huian Mahjong rules, simulation, and vision tooling"
+description = "Evidence-driven Huian two-player Mahjong: rules, environment, 8-hand simulation, AI, and vision; UNKNOWN rules are never hard-coded"
+keywords = ["mahjong", "huian", "python", "computer-vision", "game-ai"]
 readme = "README.md"
 requires-python = ">=3.10,<3.15"
 dependencies = []
