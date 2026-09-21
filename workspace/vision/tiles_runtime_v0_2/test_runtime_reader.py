@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from .runtime_reader import identity_gate
+from .runtime_reader import _training_labels, identity_gate
 
 
 class RuntimeReaderGateTests(unittest.TestCase):
