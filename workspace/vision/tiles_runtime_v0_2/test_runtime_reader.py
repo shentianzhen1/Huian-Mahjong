@@ -25,6 +25,19 @@ class RuntimeReaderGateTests(unittest.TestCase):
             confidence_threshold=0.82,
         )
 
+    def test_known_runtime_session_is_excluded_from_templates(self) -> None:
+        labels = [
+            {"tile_id": "P9", "approved": True, "source_session": "session_a"},
+            {"tile_id": "P9", "approved": True, "source_session": "session_b"},
+            {"tile_id": "P9", "approved": True, "source_session": "session_c"},
+        ]
+        filtered = _training_labels(labels, "session_b")
+        self.assertEqual([row["source_session"] for row in filtered], ["session_a", "session_c"])
+
+    def test_unknown_runtime_session_keeps_all_templates(self) -> None:
+        labels = [{"tile_id": "P9", "approved": True, "source_session": "session_a"}]
+        self.assertEqual(_training_labels(labels, None), labels)
+
     def test_high_confidence_cross_session_class_is_accepted(self) -> None:
         self.assertEqual(self.gate("P9", 0.93), ("P9", "accepted"))
 
