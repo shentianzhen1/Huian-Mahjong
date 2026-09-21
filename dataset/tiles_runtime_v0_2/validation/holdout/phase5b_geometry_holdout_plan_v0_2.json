@@ -1,0 +1,358 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase5b_holdout",
+  "status": "awaiting_independent_manual_geometry_review",
+  "selection_lock": "Source-disjoint from the 29 approved Phase 5 rows and excluded from Phase 5B detector tuning. Do not tune on these frames after selection.",
+  "privacy": "Only content-derived anonymous source identifiers are stored. No local paths, filenames, full screenshots, player UI, names, or room identifiers are included.",
+  "frames": [
+    {
+      "id": "phase5b_holdout_0001",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "source_frame": 60,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0002",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "source_frame": 120,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0003",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "source_frame": 360,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "visible_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0004",
+      "source_id": "src_4d68a8e72498d729",
+      "source_session": "session_4d68a8e72498d729",
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "source_frame": 120,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0005",
+      "source_id": "src_4d68a8e72498d729",
+      "source_session": "session_4d68a8e72498d729",
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "source_frame": 420,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "visible_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0006",
+      "source_id": "src_4d68a8e72498d729",
+      "source_session": "session_4d68a8e72498d729",
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "source_frame": 540,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_and_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0007",
+      "source_id": "src_781bfe34c40993ef",
+      "source_session": "session_781bfe34c40993ef",
+      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+      "source_frame": 0,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0008",
+      "source_id": "src_781bfe34c40993ef",
+      "source_session": "session_781bfe34c40993ef",
+      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+      "source_frame": 300,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0009",
+      "source_id": "src_781bfe34c40993ef",
+      "source_session": "session_781bfe34c40993ef",
+      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+      "source_frame": 840,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "visible_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0010",
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "source_frame": 60,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0011",
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "source_frame": 180,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0012",
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "source_frame": 720,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "visible_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0013",
+      "source_id": "src_5e02f7d0458be0a9",
+      "source_session": "session_5e02f7d0458be0a9",
+      "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "source_frame": 0,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0014",
+      "source_id": "src_5e02f7d0458be0a9",
+      "source_session": "session_5e02f7d0458be0a9",
+      "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "source_frame": 60,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0015",
+      "source_id": "src_5e02f7d0458be0a9",
+      "source_session": "session_5e02f7d0458be0a9",
+      "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "source_frame": 180,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0016",
+      "source_id": "src_0e565528164aa77f",
+      "source_session": "session_0e565528164aa77f",
+      "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "source_frame": 0,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0017",
+      "source_id": "src_0e565528164aa77f",
+      "source_session": "session_0e565528164aa77f",
+      "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "source_frame": 60,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0018",
+      "source_id": "src_0e565528164aa77f",
+      "source_session": "session_0e565528164aa77f",
+      "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "source_frame": 120,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0019",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_sha256": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "source_frame": 0,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "opening_or_17_hand_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0020",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_sha256": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "source_frame": 240,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "draw_and_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0021",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_sha256": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "source_frame": 300,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "gold_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0022",
+      "source_id": "src_59460988023cc9f1",
+      "source_session": "session_59460988023cc9f1",
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "source_frame": 0,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "gold_and_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0023",
+      "source_id": "src_59460988023cc9f1",
+      "source_session": "session_59460988023cc9f1",
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "source_frame": 60,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "gold_and_meld_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    },
+    {
+      "id": "phase5b_holdout_0024",
+      "source_id": "src_59460988023cc9f1",
+      "source_session": "session_59460988023cc9f1",
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "source_frame": 90,
+      "size": [
+        1108,
+        690
+      ],
+      "selection_role": "transition_or_rejection_candidate",
+      "review_status": "unreviewed_holdout",
+      "approved": false
+    }
+  ],
+  "selected_frame_count": 24,
+  "selected_session_count": 8,
+  "resolutions": [
+    "1108x690"
+  ],
+  "coverage_targets": {
+    "second_960x448_session": "not_found_locally; a short new capture is required",
+    "17_hand": "candidate_only; independent manual count is required before claiming coverage",
+    "meld": "candidate_frames_selected",
+    "draw": "candidate_frames_selected",
+    "gold_different_positions": "candidate_frames_selected; manual review required"
+  },
+  "missing_local_sources": [],
+  "safe_for_executor": false
+}

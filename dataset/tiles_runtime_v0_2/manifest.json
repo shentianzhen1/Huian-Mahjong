@@ -21,8 +21,12 @@
   "template_count": 24,
   "template_regions": {
     "hand": 20,
-    "draw": 2,
+    "draw_visual": 2,
     "gold": 2
   },
+  "legacy_region_aliases": {
+    "draw_region": "draw_visual"
+  },
+  "draw_semantics": "draw_visual is a transient visual geometry label; a temporal Draw Event Tracker owns DRAW_STARTED/DRAW_VISIBLE/DRAW_MERGING/DRAW_SETTLED, and static ROI observations never directly mutate GameState",
   "entries": []
 }

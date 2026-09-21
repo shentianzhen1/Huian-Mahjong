@@ -1,0 +1,154 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase5",
+  "status": "metrics_computed_phase5b",
+  "ground_truth_path": "validation/geometry_ground_truth_v0_2.jsonl",
+  "ground_truth_rows_approved": 29,
+  "candidate_review_plan": {
+    "target_frames": 30,
+    "planned_windows": [
+      {
+        "size": [
+          1046,
+          480
+        ],
+        "source_session": "session_9aa2041d",
+        "frames": [
+          145,
+          146,
+          147,
+          148,
+          149
+        ],
+        "state": "unreviewed_stable_layout"
+      },
+      {
+        "size": [
+          1046,
+          480
+        ],
+        "source_session": "session_7f4c1b2e",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "state": "unreviewed_stable_layout"
+      },
+      {
+        "size": [
+          1046,
+          480
+        ],
+        "source_session": "session_7f4c1b2e",
+        "frames": [
+          2028,
+          2029,
+          2030,
+          2031,
+          2032
+        ],
+        "state": "draw_present_stable_layout"
+      },
+      {
+        "size": [
+          960,
+          448
+        ],
+        "source_session": "session_5d8a0e3c",
+        "frames": [
+          347,
+          348,
+          349,
+          350,
+          351
+        ],
+        "state": "16_component_stable_layout"
+      },
+      {
+        "size": [
+          960,
+          448
+        ],
+        "source_session": "session_5d8a0e3c",
+        "frames": [
+          3335,
+          3336,
+          3337,
+          3338,
+          3339
+        ],
+        "state": "10_component_candidate_layout"
+      },
+      {
+        "size": [
+          960,
+          448
+        ],
+        "source_session": "session_5d8a0e3c",
+        "frames": [
+          580,
+          581,
+          582,
+          583,
+          584
+        ],
+        "state": "15_component_candidate_layout"
+      }
+    ]
+  },
+  "acceptance_gate": {
+    "trusted_unoccluded_hand_count_exact_match_minimum": 0.98,
+    "trusted_unoccluded_hand_component_recall_minimum": 0.98,
+    "draw_gold_policy": "No silent wrong region assignment. UNKNOWN is permitted when confidence is insufficient.",
+    "occluded_animation_policy": "Prefer geometry_untrusted rejection over forced output.",
+    "generalization_requirement": "At least two independent source sessions for each supported runtime resolution."
+  },
+  "metrics": {
+    "component_recall": 1.0,
+    "component_precision": 1.0,
+    "bbox_iou": 0.9969150428449653,
+    "region_classification_accuracy": 1.0,
+    "hand_count_exact_match_rate": 1.0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "region_misclassifications": 0,
+    "geometry_untrusted_reject_rate": null,
+    "temporal_jitter": {
+      "adjacent_component_center_mean_px": 0.1052532173871702,
+      "adjacent_component_center_max_px": 20.5,
+      "component_transitions": 344,
+      "stable_windows": 6,
+      "windows_with_at_least_3_frames": 6,
+      "fusion_coordinate_behavior": "layout-vote only; fused boxes are the selected latest trusted frame and are not spatially averaged"
+    }
+  },
+  "coverage_gaps": [
+    "A second independent 960x448 source session is absent locally.",
+    "No manually verified 17-hand window exists.",
+    "No clean, manually reviewed Chi/Peng/Kong geometry windows exist; available named frames are replay-control occluded."
+  ],
+  "phase6_formal_tile_labeling_allowed": false,
+  "safe_for_executor": false,
+  "ground_truth_sha256": "03a46b23ba00faa6100a4f047eb3266ee8ef7da51a234086a04842fd32c135e8",
+  "ground_truth_policy": "The approved rows are frozen. Metrics rerun the detector from source frames and never write the truth file.",
+  "metrics_definition": {
+    "runtime_target_regions": [
+      "draw_visual",
+      "gold",
+      "hand"
+    ],
+    "meld": "Meld is a separate non-hand candidate. The frozen Phase 5 truth predates meld boxes, so meld candidates are reported separately and are not counted as target false positives.",
+    "iou_match_threshold": 0.5
+  },
+  "phase5b_targeted_regression": {
+    "meld_candidates": 10,
+    "meld_audit_frames": 5,
+    "meld_candidates_in_audit": 10,
+    "meld_misclassified_as_hand": 0,
+    "right_edge_audit_frames": 5,
+    "rightmost_hand_components_checked": 10,
+    "rightmost_hand_false_negatives": 0
+  }
+}
