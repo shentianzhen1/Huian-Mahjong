@@ -12,13 +12,14 @@ Do not invent Mahjong rules. If a rule is uncertain, mark it as UNKNOWN/TODO/con
 Never let lower-priority evidence overwrite higher-priority evidence.
 
 ## Source-of-truth order
-1. GitHub Issues / TODO.md for current execution work.
-2. RULE_STATUS.md for confirmed/unknown Mahjong rules.
-3. RULE_EVIDENCE_MATRIX.md for evidence and state-machine gaps.
-4. PROJECT_STATUS.md for the current integrated snapshot.
-5. CHANGELOG.md only for history; do not treat older entries as current state.
+1. GitHub Issues are the only truth source for current execution work.
+2. RULE_STATUS.md is the only truth source for confirmed/unknown Mahjong rules.
+3. RULE_EVIDENCE_MATRIX.md records evidence and state-machine gaps.
+4. PROJECT_STATUS.md is a one-page integrated snapshot; it must not duplicate the backlog.
+5. TODO.md is only an index of open GitHub Issues and must not carry independent execution semantics.
+6. CHANGELOG.md is history only; never use an older entry as current state.
 
-If these disagree, do not average them. Prefer the higher-priority current source and fix the stale document.
+If these disagree, do not average them. Prefer the higher-priority source and fix or shrink the stale document.
 
 ## Rule isolation / versioning
 High-impact runtime rules are registered in `huian/rules/registry.py` and grouped into an immutable `DEFAULT_RULE_SNAPSHOT`.
@@ -49,11 +50,11 @@ The Executor performs optional UI actions only after validation.
 ## Development priorities
 1. Close remaining special-result evidence/settlement gaps: Qiangjin exact eligibility+settlement, Sanjindao real terminal settlement, Rob-Kong/Gang-Hu settlement, and Eight-Flower-You real multiplier/priority. The core Youjin/Double/Triple progression flow is implemented; do not reopen superseded response semantics unless higher-priority evidence conflicts.
 2. Preserve the now-confirmed ordinary settlement/dealer-base/full-match regression chain; do not reopen solved rules unless higher-priority evidence conflicts.
-3. Treat `CurrentAgent = MeldAwareShantenAgent V0.10` as the current AI frontier. Keep TenpaiRiskTieBreakAgent V0.6 as the fixed main comparison baseline and ShantenAgent V0.3 as the explicit offense ablation baseline. V0.11/V0.12's "exclude Jin waits, then apply immediate score-aware value" path was structurally non-triggering and must not be revived without new evidence. Next strategy work should focus on Jin-aware meld/special-state EV, KONG as a separate decision, or multi-step/full-match EV. Any promoted strategy must beat V0.10 in fixed-wall, seat-swapped, identity-stable-RNG paired evaluation.
+3. Treat `CurrentAgent = MeldAwareShantenAgent V0.10` as the current AI frontier. Keep TenpaiRiskTieBreakAgent V0.6 as the fixed main comparison baseline and ShantenAgent V0.3 as the explicit offense ablation baseline. Do not open a new Agent version line while Issue #4 (Rob-Kong/Gang-Hu settlement) is still a shared scoring blocker. V0.11/V0.12's dead gate, V0.13 KONG candidate, and V0.14 PublicRollout are closed experiments and must not be revived without new evidence. Any future promoted strategy must beat V0.10 in fixed-wall, seat-swapped, identity-stable-RNG paired evaluation.
 4. Preserve the confirmed opening-gold physical accounting: the opened Jin is one reserved physical copy, cannot return to the drawable wall, and leaves at most three playable Jin copies.
-5. Preserve the measured Vision baseline instead of chasing tiny static-template gains: hand+draw strict holdout is currently 98.66%, while Gold has same-batch temporal evidence but still needs independent-session generalization. Prioritize PublicState digit reading (scores / remaining tiles / hand index), label audit, new-session Gold/Draw validation, and scale/move/occlusion stress tests.
+5. Preserve the measured Vision baseline instead of chasing tiny static-template gains. Phase 5C is revealed development evidence and must not be reused as generalization evidence. The next Vision milestone is only a new source-disjoint batch evaluated against the frozen `promotion_gate.py`; do not tune thresholds after seeing that holdout.
 6. Integrate Vision observations with Rules/Match validation only through conservative state fusion. Score observations must conserve 2000 in the target two-player room; inconsistent or low-confidence reads must stop state updates.
-7. Executor last; never click the live applet until Vision confidence, multi-frame stability, and post-action validation are sufficient.
+7. Hint Alpha remains internal/read-only until Vision passes the independent promotion gate. Executor is later still: never click the live applet until a separate post-action safety gate is defined and passed.
 
 Do not spend major effort on UI before evaluation reports are reproducible.
 Do not rewrite Rules, Environment, or Simulator control flow for hygiene-only work.
@@ -66,8 +67,10 @@ After any change to rules/environment/simulator:
 - reject negative wall counts
 - verify only legal actions execute
 - detect dead loops
-- preserve zero-sum net settlement in 2-player hands where applicable
-- add regression tests for real settlement screenshots whenever a rule becomes confirmed
+- preserve zero-sum net settlement in 2-player hands and full matches where applicable
+- preserve 144-tile conservation and at most three playable Jin after the opened Jin is reserved
+- preserve monotonic hand index / non-increasing remaining-tile observations in PublicState
+- add a golden fixture / focused regression for every CONFIRMED real settlement rule
 - do not count UNKNOWN stops as draws or wins
 
 ## Naming
