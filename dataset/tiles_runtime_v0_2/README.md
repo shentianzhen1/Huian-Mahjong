@@ -26,3 +26,9 @@ Geometry uses `hand`, `draw_visual`, `meld`, `gold`, and `unknown`.
 draw event across its merge into `hand`, and only a later GameState integration
 may consume that event. Legacy `draw_region` label and ROI assets are read as
 `draw_visual`; they are not evidence that draw is a permanent semantic zone.
+
+## Promotion status
+
+Runtime Vision V0.2 is an **experimental, read-only prototype**. The 2026-09-22 closeout audit found that the locked Phase 5C blind holdout did not pass every acceptance gate, so the reviewed Phase 6 assets are retained only as development/prototype assets. They must not be cited as evidence that V0.2 has formally generalized or is ready for Hint/Executor control.
+
+Formal promotion remains blocked until a new source-disjoint blind holdout is reviewed and passes all acceptance gates. Runtime replay smoke tests with a known `session` must exclude templates from that same session. `safe_for_executor=false` remains mandatory.
