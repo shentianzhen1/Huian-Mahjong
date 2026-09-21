@@ -14,28 +14,68 @@ FRACTIONS = (0.20, 0.50, 0.80)
 SOURCE_COUNT = 8
 
 
-def _used_hashes(paths: list[Path]) -> set[str]:
-    used: set[str] = set()
-    for path in paths:
+def _anonymous_token(value: str | None, prefix: str) -> str | None:
+    if not value or not value.startswith(prefix):
+        return None
+    token = value[len(prefix):].strip().lower()
+    return token or None
+
+
+def _known_source_tokens(dataset: Path) -> set[str]:
+    """Collect conservative source identifiers from every tracked evidence family.
+
+    Full source hashes from geometry truth are preferred. Approved tile labels do
+    not expose the raw media hash, so their anonymized source/session suffixes
+    are also treated as exclusion prefixes. This can over-exclude a candidate,
+    which is acceptable for a blind promotion holdout; it must never under-
+    exclude a known development source.
+    """
+    tokens: set[str] = set()
+    truth_paths = [
+        dataset / "validation" / "geometry_ground_truth_v0_2.jsonl",
+        dataset / "validation" / "holdout" / "geometry_holdout_ground_truth_v0_2.jsonl",
+    ]
+    for path in truth_paths:
         if not path.exists():
             continue
         for line in path.read_text(encoding="utf-8").splitlines():
-            if line:
-                value = json.loads(line).get("source_sha256")
-                if value:
-                    used.add(value)
-    return used
+            if not line:
+                continue
+            row = json.loads(line)
+            source_hash = row.get("source_sha256")
+            if source_hash:
+                tokens.add(str(source_hash).lower())
+            for field, prefix in (("source_id", "src_"), ("source_session", "session_")):
+                token = _anonymous_token(row.get(field), prefix)
+                if token:
+                    tokens.add(token)
+
+    labels_path = dataset / "labels.jsonl"
+    if labels_path.exists():
+        for line in labels_path.read_text(encoding="utf-8").splitlines():
+            if not line:
+                continue
+            row = json.loads(line)
+            if not row.get("approved"):
+                continue
+            for field, prefix in (("source_id", "src_"), ("source_session", "session_")):
+                token = _anonymous_token(row.get(field), prefix)
+                if token:
+                    tokens.add(token)
+    return tokens
+
+
+def _source_is_known(source_hash: str, known_tokens: set[str]) -> bool:
+    source_hash = source_hash.lower()
+    return any(source_hash == token or source_hash.startswith(token) for token in known_tokens)
 
 
 def build(root: Path, dataset: Path, output: Path) -> dict:
-    used = _used_hashes([
-        dataset / "validation" / "geometry_ground_truth_v0_2.jsonl",
-        dataset / "validation" / "holdout" / "geometry_holdout_ground_truth_v0_2.jsonl",
-    ])
+    known_tokens = _known_source_tokens(dataset)
     sources = locate_sources(root)
     candidates = []
     for source_hash, source in sorted(sources.items()):
-        if source_hash in used:
+        if _source_is_known(source_hash, known_tokens):
             continue
         capture = cv2.VideoCapture(str(source))
         width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -71,10 +111,18 @@ def build(root: Path, dataset: Path, output: Path) -> dict:
         "schema_version": "vision_runtime_v0_2_phase5e_blind_holdout",
         "status": "awaiting_independent_manual_geometry_review",
         "selection_lock": (
-            "Selected from source sessions absent from all Phase 5/5C truth. "
-            "Frames use fixed 20/50/80 percent positions; the detector was not called. "
-            "Do not tune on these frames after selection."
+            "Selected from source sessions absent from all tracked geometry truth and "
+            "approved runtime tile-label source/session identifiers. Frames use fixed "
+            "20/50/80 percent positions; the detector was not called. Do not tune on "
+            "these frames after selection."
         ),
+        "source_disjoint_policy": (
+            "Reject a candidate when its full source hash equals or begins with any "
+            "tracked full hash or anonymized src_/session_ suffix from geometry truth "
+            "or approved Runtime V0.2 labels. Conservative over-exclusion is allowed."
+        ),
+        "known_source_token_count": len(known_tokens),
+        "source_disjoint_from_tracked_evidence": True,
         "privacy": "Only anonymous content hashes and frame geometry are tracked.",
         "frames": frames,
         "selected_frame_count": len(frames),
