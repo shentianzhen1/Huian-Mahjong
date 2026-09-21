@@ -10,7 +10,10 @@ holdout afterwards.
 """
 from __future__ import annotations
 
+import argparse
 from dataclasses import dataclass, asdict
+import json
+from pathlib import Path
 from typing import Any
 
 
@@ -307,3 +310,26 @@ def evaluate_promotion_bundle(
             "Executor requires a separate post-action safety gate."
         ),
     }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Evaluate a frozen independent Runtime Vision V0.2 promotion bundle"
+    )
+    parser.add_argument("--bundle", required=True, help="JSON evidence bundle")
+    parser.add_argument("--output", help="Optional JSON gate report")
+    args = parser.parse_args()
+
+    bundle = json.loads(Path(args.bundle).read_text(encoding="utf-8"))
+    result = evaluate_promotion_bundle(bundle)
+    payload = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(payload, encoding="utf-8")
+    print(payload, end="")
+    raise SystemExit(0 if result["passed"] else 2)
+
+
+if __name__ == "__main__":
+    main()
