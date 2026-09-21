@@ -13,5 +13,16 @@
   ],
   "source_reference_policy": "source_id/source_session only; absolute paths are forbidden",
   "privacy": "templates may contain tile crops only; no full frames, player UI, nickname, avatar, or room number",
+  "profiles": [
+    "roi_profiles/huian_1046x480_v0_2.json",
+    "roi_profiles/huian_960x448_v0_2.json"
+  ],
+  "approved_label_count": 24,
+  "template_count": 24,
+  "template_regions": {
+    "hand": 20,
+    "draw": 2,
+    "gold": 2
+  },
   "entries": []
 }

@@ -1,0 +1,61 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase2",
+  "representative_frames": [
+    {
+      "source_id": "src_ac27bc0798ed252f",
+      "source_session": "session_7f4c1b2e",
+      "source_frame": null,
+      "size": [1046, 480],
+      "profile": "roi_profiles/huian_1046x480_v0_2.json"
+    },
+    {
+      "source_id": "src_04bf012ce76304b7",
+      "source_session": "session_5d8a0e3c",
+      "source_frame": 3654,
+      "size": [960, 448],
+      "profile": "roi_profiles/huian_960x448_v0_2.json"
+    }
+  ],
+  "slots_per_profile": {
+    "hand_region": 10,
+    "draw_region": 1,
+    "gold_region": 1
+  },
+  "trial_labels": {
+    "count": 24,
+    "regions": {
+      "hand_region": 20,
+      "draw_region": 2,
+      "gold_region": 2
+    },
+    "classes": ["M3", "M4", "M5", "N", "P3", "P4", "P5", "P6", "S3", "S4", "S5", "S6", "S7", "S8"],
+    "families_covered": ["wan", "tong", "tiao", "honor", "gold"],
+    "absolute_source_paths": 0,
+    "missing_required_traceability_fields": 0
+  },
+  "template_privacy_review": {
+    "count": 24,
+    "dimensions": {"minimum": [37, 64], "maximum": [48, 73]},
+    "result": "tile_crops_only",
+    "excluded_content": ["nickname", "avatar", "room_number", "full_ui"]
+  },
+  "round_trip": {
+    "method": "existing_tiles_v0_1_template_classifier_with_local_compatibility_index",
+    "representative_prediction_counts": {"1046x480": 12, "960x448": 12},
+    "representative_issues": [],
+    "safe_for_executor": false,
+    "result": "passed"
+  },
+  "roi_drift_check": {
+    "1046x480_adjacent_frames": [12, 12],
+    "960x448_adjacent_frames": [11, 12],
+    "coordinate_drift_detected": false,
+    "note": "The 11-slot 960x448 observation is treated as a temporal presence change, not an inferred tile or a geometry adjustment."
+  },
+  "ready_for_mass_annotation": false,
+  "required_before_next_stage": [
+    "Review a multi-frame stable window for the 960x448 11-slot observation.",
+    "Add independent sessions before using template accuracy as a promotion metric.",
+    "Manually verify rare honors, flowers, and missing suited ranks rather than inferring coverage."
+  ]
+}

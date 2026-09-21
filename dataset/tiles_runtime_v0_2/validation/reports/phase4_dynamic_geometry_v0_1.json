@@ -1,0 +1,103 @@
+{
+  "schema_version": "vision_runtime_v0_2_dynamic_geometry_v0_1",
+  "scope": "visible tile-face geometry only; tile_id and Mahjong-state semantics are intentionally absent",
+  "output_schema": ["normalized_bbox", "pixel_bbox", "region_candidate", "confidence", "frame", "session"],
+  "algorithm": {
+    "coordinates": "resolution-normalized",
+    "hand": "bottom-baseline bright tile-face components; dynamic count, not fixed slots",
+    "draw": "rightmost component after a gap greater than 0.55 median tile width; otherwise UNKNOWN",
+    "gold": "independent lower-band yellow tile-skin component; UNKNOWN when absent",
+    "fusion": "a layout must have 3..5 matching trusted-frame signatures before acceptance",
+    "untrusted_conditions": ["component count outside reviewed 8..17 range", "component-size inconsistency", "fragmented_or_occluded_layout"],
+    "safe_for_executor": false
+  },
+  "known_geometry_test": {
+    "actual_components": 18,
+    "detected_components": 18,
+    "missed": 0,
+    "extra": 0,
+    "region_misclassification": 0,
+    "composition": {"hand": 16, "draw": 1, "gold": 1}
+  },
+  "real_frame_windows": [
+    {
+      "size": [960, 448],
+      "source_session": "session_5d8a0e3c",
+      "frames": [347, 348, 349, 350, 351],
+      "actual_components": "UNKNOWN; no manual geometry ground truth was added",
+      "detected": {"hand": 16, "draw": 0, "gold": 0},
+      "missed": "UNKNOWN",
+      "extra": "UNKNOWN",
+      "region_misclassification": "UNKNOWN",
+      "stable_votes": 5,
+      "max_slot_x_jitter_px": 1,
+      "geometry_untrusted": false,
+      "note": "Gold is independently UNKNOWN in this window; it is not merged into hand."
+    },
+    {
+      "size": [1046, 480],
+      "source_session": "session_9aa2041d",
+      "frames": [145, 146, 147, 148, 149],
+      "actual_components": "UNKNOWN; no manual geometry ground truth was added",
+      "detected": {"hand": 15, "draw": 0, "gold": 1},
+      "missed": "UNKNOWN",
+      "extra": "UNKNOWN",
+      "region_misclassification": "UNKNOWN",
+      "stable_votes": 5,
+      "max_slot_x_jitter_px": 0,
+      "geometry_untrusted": false
+    },
+    {
+      "size": [1046, 480],
+      "source_session": "session_7f4c1b2e",
+      "frames": [0, 1, 2, 3, 4],
+      "actual_components": "UNKNOWN; no manual geometry ground truth was added",
+      "detected": {"hand": 15, "draw": 0, "gold": 1},
+      "missed": "UNKNOWN",
+      "extra": "UNKNOWN",
+      "region_misclassification": "UNKNOWN",
+      "stable_votes": 5,
+      "max_slot_x_jitter_px": 1,
+      "geometry_untrusted": false
+    },
+    {
+      "size": [1046, 480],
+      "source_session": "session_7f4c1b2e",
+      "frames": [2028, 2029, 2030, 2031, 2032],
+      "actual_components": "UNKNOWN; no manual geometry ground truth was added",
+      "detected": {"hand": 11, "draw": 1, "gold": 1},
+      "missed": "UNKNOWN",
+      "extra": "UNKNOWN",
+      "region_misclassification": "UNKNOWN",
+      "stable_votes": 5,
+      "geometry_untrusted": false,
+      "note": "The isolated draw remains separate from hand."
+    },
+    {
+      "size": [960, 448],
+      "source_session": "session_5d8a0e3c",
+      "frames": [3333, 3334, 3335, 3336, 3337],
+      "actual_components": "UNKNOWN; no manual geometry ground truth was added",
+      "detected": {"hand": 10, "draw": 0, "gold": 1},
+      "missed": "UNKNOWN",
+      "extra": "UNKNOWN",
+      "region_misclassification": "UNKNOWN",
+      "stable_votes": 3,
+      "geometry_untrusted": false
+    }
+  ],
+  "occlusion_behavior": {
+    "result": "frames with fragmented components or implausible component counts are geometry_untrusted and excluded from fusion",
+    "example": "Named Peng/Kong review frames remain untrusted because replay controls obscure bottom components."
+  },
+  "coverage_gaps": [
+    "Only one independent 960x448 session exists locally; no generalization claim is permitted.",
+    "A manually verified 17-hand window is not yet available.",
+    "Chi/Peng/Kong semantic labels and manual component ground truth are deliberately not created in this phase."
+  ],
+  "decision": {
+    "dynamic_geometry_unoccluded_frames": "passed",
+    "runtime_profile_strategy": "dynamic geometry primary; static 16/17, 13/14, 10/11 layouts only as a future failure fallback",
+    "next_gate": "Acquire a second independent 960x448 session and manually review geometry ground truth before calling the detector generalizable or beginning formal tile labels."
+  }
+}

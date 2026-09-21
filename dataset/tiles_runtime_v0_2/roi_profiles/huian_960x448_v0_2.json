@@ -1,0 +1,24 @@
+{
+  "version": "tiles_v0_1",
+  "name": "huian_960x448_v0_2",
+  "source_size": [960, 448],
+  "calibrated": true,
+  "source_id": "src_04bf012ce76304b7",
+  "source_session": "session_5d8a0e3c",
+  "source_frame": 3654,
+  "regions": {
+    "hand_region": [411, 382, 379, 64],
+    "draw_region": [822, 378, 41, 68],
+    "gold_region": [361, 381, 44, 65]
+  },
+  "slots": {
+    "hand_region": [[0, 0, 37, 64], [38, 0, 37, 64], [76, 0, 37, 64], [114, 0, 37, 64], [152, 0, 37, 64], [190, 0, 37, 64], [228, 0, 37, 64], [266, 0, 37, 64], [304, 0, 37, 64], [342, 0, 37, 64]],
+    "draw_region": [[0, 0, 41, 68]],
+    "gold_region": [[0, 0, 44, 65]]
+  },
+  "region_modes": {
+    "hand_region": "tile",
+    "draw_region": "tile",
+    "gold_region": "tile"
+  }
+}

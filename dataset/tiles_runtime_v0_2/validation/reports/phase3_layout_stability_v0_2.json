@@ -1,0 +1,115 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase3",
+  "scope": "geometry and visible tile-face presence only; no tile-class accuracy claim",
+  "fixed_10_slot_profile": {
+    "result": "midgame_only",
+    "reason": "The calibrated profiles begin near the right-side concealed-hand cluster and exclude observed opening-width layouts."
+  },
+  "dynamic_component_detector": {
+    "method": "bottom-band bright tile-face connected components plus rightmost-gap draw candidate and independently detected yellow Gold component",
+    "result": "viable_for_presence_and_geometry_when_unoccluded",
+    "not_safe_for": ["meld_vs_concealed_hand_semantics", "tile_identity", "single-frame use under replay-control occlusion"],
+    "safe_for_executor": false
+  },
+  "1046x480": {
+    "independent_source_sessions": 2,
+    "gold_component_positions": {
+      "opening": [114, 412, 47, 64],
+      "chi_midgame": [395, 411, 46, 65]
+    },
+    "layout_checks": [
+      {
+        "state": "opening",
+        "session": "session_7f4c1b2e",
+        "actual_visible_dark_hand_count": "UNKNOWN; replay controls obscure part of the state",
+        "detected_tile_face_components": 15,
+        "detected_slot_count": 15,
+        "missed": "UNKNOWN",
+        "extra": "UNKNOWN",
+        "draw_region": "not spatially separated",
+        "slot_position_range_x": [160, 815],
+        "tile_width_range": [44, 46]
+      },
+      {
+        "state": "chi",
+        "session": "session_9aa2041d",
+        "actual_visible_dark_hand_count": "UNKNOWN; exposed meld and replay controls require human state review",
+        "detected_tile_face_components": 10,
+        "detected_slot_count": 10,
+        "missed": "UNKNOWN",
+        "extra": "UNKNOWN",
+        "draw_region": "separated candidate at [888,412,46,64]",
+        "slot_position_range_x": [180, 814],
+        "tile_width_range": [42, 46]
+      },
+      {
+        "state": "peng",
+        "session": "session_9aa2041d",
+        "actual_visible_dark_hand_count": "UNKNOWN; overlay-occluded",
+        "detected_tile_face_components": 4,
+        "detected_slot_count": 4,
+        "missed": "UNKNOWN",
+        "extra": "UNKNOWN",
+        "draw_region": "separated candidate at [888,413,46,63]"
+      },
+      {
+        "state": "kong",
+        "session": "session_9aa2041d",
+        "actual_visible_dark_hand_count": "UNKNOWN; overlay-occluded",
+        "detected_tile_face_components": 6,
+        "detected_slot_count": 6,
+        "missed": "UNKNOWN",
+        "extra": "UNKNOWN",
+        "draw_region": "not separable in this occluded frame"
+      }
+    ],
+    "verified_16_or_17_dark_hand_coverage": false,
+    "conclusion": "Two sessions show substantial geometry movement and dynamic Gold relocation, but no unoccluded 16/17-card ground-truth frame is available."
+  },
+  "960x448": {
+    "independent_source_sessions": 1,
+    "source_session_requirement_met": false,
+    "layout_checks": [
+      {
+        "state": "unreviewed replay sample",
+        "source_frame": 348,
+        "actual_visible_dark_hand_count": "UNKNOWN; no manual state label",
+        "detected_tile_face_components": 16,
+        "detected_slot_count": 16,
+        "missed": "UNKNOWN",
+        "extra": "UNKNOWN",
+        "draw_region": "not spatially separated",
+        "slot_position_range_x": [98, 752],
+        "tile_width_range": [41, 43]
+      },
+      {
+        "state": "unreviewed replay sample",
+        "source_frame": 3828,
+        "actual_visible_dark_hand_count": "UNKNOWN; no manual state label",
+        "detected_tile_face_components": 13,
+        "detected_slot_count": 12,
+        "missed": "UNKNOWN",
+        "extra": "UNKNOWN",
+        "draw_region": "separated candidate at [821,381,42,53]",
+        "slot_position_range_x": [212, 752],
+        "tile_width_range": [39, 42]
+      }
+    ],
+    "verified_16_or_17_dark_hand_coverage": true,
+    "conclusion": "A 16-component layout is directly observed, but independent-session validation and semantic Chi/Peng/Kong labels are missing."
+  },
+  "roi_drift": {
+    "coordinate_drift_detected": true,
+    "meaning": "Layout-dependent relocation, not a resize mismatch: the current fixed 10-slot profile omits observed opening-width components and fixed Gold coordinates move with layout."
+  },
+  "decision": {
+    "recommended_profile_strategy": "one normalized dynamic profile with dynamic hand slots, dynamic Gold detection, and an independently separated draw candidate",
+    "fallback": "if dynamic detector is rejected by later validation, use distinct reviewed static layouts for 16/17, 13/14, and 10/11 visible-hand states; never claim one layout covers all states",
+    "not_ready_for_mass_annotation": true,
+    "required_before_next_stage": [
+      "Acquire a second independent 960x448 source session.",
+      "Manually review unoccluded opening, normal-draw, Chi, Peng, and Kong frames to establish actual visible hand counts.",
+      "Gate component detection on replay-control/overlay occlusion and use multi-frame stability before assigning any slot count."
+    ]
+  }
+}
