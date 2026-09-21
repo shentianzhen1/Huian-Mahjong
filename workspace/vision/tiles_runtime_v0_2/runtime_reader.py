@@ -52,6 +52,16 @@ def _coverage(labels: list[dict]) -> tuple[set[str], dict[str, set[str]]]:
     return covered, cross_session
 
 
+def _training_labels(labels: list[dict], session: str | None) -> list[dict]:
+    """Exclude the current known session so replay smoke tests emulate an unseen session."""
+    if not session:
+        return labels
+    return [
+        row for row in labels
+        if (row.get("source_session") or row.get("source_id") or "unknown") != session
+    ]
+
+
 def identity_gate(
     candidate_tile_id: str,
     confidence: float,
@@ -91,8 +101,9 @@ def read_stable_frames(
 
     root = Path(dataset_root)
     labels = approved_labels(root)
-    covered, cross_session = _coverage(labels)
-    classifier = TemplateTileClassifier.from_labels(root, labels)
+    training_labels = _training_labels(labels, session)
+    covered, cross_session = _coverage(training_labels)
+    classifier = TemplateTileClassifier.from_labels(root, training_labels)
     geometry_frames = [
         detect_dynamic_geometry(image, frame=frame_id, session=session)
         for image, frame_id in zip(images, frame_ids)
@@ -102,6 +113,7 @@ def read_stable_frames(
     base = {
         "schema_version": "vision_runtime_v0_2_smoke",
         "session": session,
+        "current_session_excluded_from_templates": bool(session),
         "frames": frame_ids,
         "confidence_threshold": confidence_threshold,
         "standard_class_coverage": {
