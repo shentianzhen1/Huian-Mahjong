@@ -64,6 +64,7 @@
    - 新增 `public_state_reader.py`，统一比分、剩余牌、局号的帧/窗口读取，并继续由 `fuse_public_state()` 做多帧共识与物理约束。Tesseract由Vision CI显式安装；灰度/autocontrast比分通道仅保留为显式诊断，默认仍使用已验证的三阈值比分路径。
    - 当前缺口：① 把剩余牌/局号从8个种子扩展到整段多时点统计；② 新独立录像上的PublicState/比分/gold泛化；③ draw时间稳定性样本量；④ F1/F3/F4/F5/F6/F8/S7/S9覆盖，F2/F7跨session；⑤ 缩放/移动/遮挡与开局/结算切换压力测试。
    - **Runtime Vision V0.2 收口门（2026-09-22）**：代码/数据可作为实验性 read-only prototype 合入，但 Phase 5C blind holdout 有1个 acceptance gate 未通过，formal promotion 保持 BLOCKED。下一次晋级必须使用新的 source-disjoint blind holdout；不得继续把已揭示 Phase 5C 当泛化证据。已知 replay session 的 runtime smoke 必须排除同 session 模板，V0.2 tests 必须由 Vision CI 执行。
+   - Phase 5E锁定器已强化：候选新录像会同时排除既有geometry truth完整hash和approved Runtime V0.2标签中的匿名source/session前缀，保守防止旧开发来源混入新盲测。
    - 已冻结独立晋级门 V0.1：`promotion_gate.py` 要求新 source-disjoint batch >=8 sessions；geometry precision/recall >=98%、hand-count >=95%、静默区域误判=0；34/34标准牌覆盖；高置信牌面>=99%且>=100样本；draw事件>=30且precision/recall>=98%、重复事件=0；PublicState/Gold/压力测试达到文档阈值。任一缺失即FAIL，且通过也不开放Executor。
    - Executor继续关闭。证据：`references/vision/2026-09-19/drive_8hand_tiles_v0_1_baseline.md`、`references/vision/2026-09-19/match_evidence_001_public_state_seed.json`、`references/vision/2026-09-19/public_state_v01_baseline.md`。
 
