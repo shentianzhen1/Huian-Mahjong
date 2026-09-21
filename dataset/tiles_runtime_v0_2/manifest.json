@@ -1,6 +1,6 @@
 {
   "schema_version": "vision_runtime_v0_2",
-  "purpose": "reviewed, anonymized runtime asset manifest; no approved runtime assets yet",
+  "purpose": "reviewed, anonymized runtime assets for a conservative read-only test build",
   "label_required_fields": [
     "source_id",
     "source_session",
@@ -17,16 +17,25 @@
     "roi_profiles/huian_1046x480_v0_2.json",
     "roi_profiles/huian_960x448_v0_2.json"
   ],
-  "approved_label_count": 24,
-  "template_count": 24,
+  "approved_label_count": 139,
+  "template_count": 139,
   "template_regions": {
-    "hand": 20,
-    "draw_visual": 2,
+    "hand": 123,
+    "draw_visual": 14,
     "gold": 2
   },
+  "standard_tile_class_coverage": {
+    "covered": 33,
+    "total": 34,
+    "missing": ["M2"]
+  },
+  "test_build_scope": "stable hand/draw_visual/gold snapshots only; low-confidence or unsupported classes return UNKNOWN; no automatic UI action",
+  "test_build_tile_confidence_threshold": 0.82,
+  "classification_crop_policy": "neighbor_safe_v0_1",
+  "tile_validation_report": "validation/reports/phase6_tile_template_validation_v0_2.json",
   "legacy_region_aliases": {
     "draw_region": "draw_visual"
   },
-  "draw_semantics": "draw_visual is a transient visual geometry label; a temporal Draw Event Tracker owns DRAW_STARTED/DRAW_VISIBLE/DRAW_MERGING/DRAW_SETTLED, and static ROI observations never directly mutate GameState",
+  "draw_semantics": "draw_visual joins the concealed multiset once when first trusted; after a confirmed discard, HAND_RESORTING is visual-only and never adds the tile again; direct discard of draw_visual skips resort; static ROI observations never directly mutate GameState",
   "entries": []
 }

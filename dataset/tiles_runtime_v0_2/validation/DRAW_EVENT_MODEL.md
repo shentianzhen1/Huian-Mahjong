@@ -1,33 +1,71 @@
-# Draw Event Model V0.2
+# Draw / Discard / Hand-Resort Event Model V0.2
 
 The Vision geometry layer reports what is visible: `hand`, `draw_visual`,
-`meld`, `gold`, or `unknown`. A drawn tile is already a concealed tile even
-while it is visually separated from the continuous hand.
+`meld`, `gold`, or `unknown`. A drawn tile joins the concealed multiset as soon
+as a trusted `draw_visual` appears. Its later screen position does not add the
+tile again.
 
-The temporal layer owns this state machine:
+## Observed UI paths
+
+When another concealed tile is discarded:
 
 ```
-STABLE_HAND -> DRAW_STARTED -> DRAW_VISIBLE -> DRAW_MERGING
-            -> DRAW_SETTLED -> STABLE_HAND
+STABLE_HAND -> DRAW_VISIBLE -> DISCARD_CONFIRMED
+            -> HAND_RESORTING -> STABLE_HAND
 ```
 
-Untrusted, occluded, or animated frames do not update semantic game state. The
-tracker keeps one pending draw transaction from first visibility through
-settlement. During that transaction the semantic concealed count remains
-`hand_region_count + draw_visual_count` from the first trusted draw frame. When
-the tile later appears in the hand region, it settles the same transaction; it
-does not add another tile.
+When the newly drawn tile itself is discarded:
 
-`DrawEvent` contains `player`, `tile_bbox`, optional `tile_id`,
-`first_seen_frame`, `settled_frame`, and `confidence`. `tile_id` remains null
-until a later classifier supplies it. This phase does not mutate GameState.
+```
+STABLE_HAND -> DRAW_VISIBLE -> DISCARD_DRAWN_TILE -> STABLE_HAND
+```
 
-The intended architecture is:
+`HAND_RESORTING` (also called post-discard resort) is a UI animation. It changes
+visual layout only. It never changes the concealed count and never emits a new
+draw or discard. During this state `stable_for_hint=false`.
+
+Example count flow:
+
+```
+stable:          hand=10, draw_visual=0, concealed=10
+draw visible:    hand=10, draw_visual=1, concealed=11
+discard another: semantic concealed=10
+hand resort:     semantic concealed=10 (geometry untrusted)
+stable:          hand=10, draw_visual=0, concealed=10
+```
+
+The draw event is emitted exactly once when `draw_visual` first becomes
+trusted. A separately confirmed discard decrements the semantic count exactly
+once. The discard confirmation must say whether the source was `hand`,
+`draw_visual`, or `unknown`; unknown fails closed and does not mutate the count.
+
+No slot index is treated as a persistent tile identity. Once tile
+classification exists, consistency must use concealed-tile multisets:
+
+```
+after = before + drawn_tile - discarded_tile
+```
+
+Automatic sorting may move many components, so slot-to-slot correspondence is
+not evidence of tile identity.
+
+## Annotation policy
+
+Frames captured during automatic sorting use:
+
+```json
+{"frame_state": "animation", "animation_type": "hand_resort"}
+```
+
+Their boxes may be retained as visual audit evidence, but the frames are
+excluded from stable component, region, slot, and hand-count metrics. Only a
+later motionless trusted frame is stable geometry truth.
+
+The intended architecture remains:
 
 ```
 Vision observations -> Event Tracker -> GameState -> AI
 ```
 
-Discard, Chi, Peng, Kong, and flower-replacement tracking can later use the
-same observation/event/state separation. Static ROI changes must not directly
-mutate GameState.
+This phase does not modify GameState, Rules, AI, Simulator, Hint Alpha, or the
+Executor.

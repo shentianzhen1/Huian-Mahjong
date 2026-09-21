@@ -111,8 +111,11 @@ def _split_joined_component(
 
 def _bright_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
     height, width = frame.shape[:2]
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    mask = (gray > 150).astype(np.uint8) * 255
+    # HSV value preserves bright tile faces carrying saturated red/green art.
+    # A grayscale threshold underweights those colours and can merge or lose
+    # otherwise clear meld components.
+    value = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)[:, :, 2]
+    mask = (value > 150).astype(np.uint8) * 255
     count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
     raw_boxes = []
     for x, y, box_width, box_height, area in stats[1:count]:
@@ -131,7 +134,11 @@ def _bright_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
     typical_height = median([box[3] for box in normal_boxes]) if normal_boxes else 0.0
     boxes = []
     for box in raw_boxes:
-        height_matches_tiles = typical_height and abs(box[3] - typical_height) <= typical_height * 0.10
+        # Exposed/meld faces can be visibly shorter than upright concealed
+        # tiles.  Height is only a guard against splitting wide UI panels; the
+        # observed width still determines every split and no target count is
+        # consulted.
+        height_matches_tiles = typical_height and abs(box[3] - typical_height) <= typical_height * 0.25
         if typical_width and height_matches_tiles and box[2] > typical_width * 1.55:
             boxes.extend(_split_joined_component(box, mask, typical_width))
         elif box[2] <= width * 0.075:
@@ -196,7 +203,7 @@ def _meld_like_group(
     A candidate must be a small separated group and must visibly differ from
     the dominant hand in at least one of orientation, baseline, or aspect.
     """
-    if not group or not hand or len(group) > 4:
+    if not group or not hand:
         return False
     hand_baseline = median(item[1] + item[3] for item in hand)
     hand_aspect = median(item[3] / item[2] for item in hand)
@@ -213,6 +220,66 @@ def _meld_like_group(
     aspect_deviation = abs(group_aspect - hand_aspect) >= 0.075
     orientation_deviation = abs(group_orientation - hand_orientation) >= 8.0
     return separated and (baseline_deviation or aspect_deviation or orientation_deviation)
+
+
+def _recover_stacked_meld_faces(
+    group: list[tuple[int, int, int, int]], typical_width: float
+) -> list[tuple[int, int, int, int]]:
+    """Recover the lower face hidden by a stable 3+1 stacked meld layout.
+
+    In the observed UI, the upper face and the middle lower face can become a
+    single bright connected component.  The visible signature is relational:
+    three adjacent components share a bottom baseline, the first two have the
+    same raised top, and the third exposes the normal lower-face height.  One
+    overlapping lower-face candidate is reconstructed from that local scale.
+    """
+    ordered = sorted(group)
+    recovered: list[tuple[int, int, int, int]] = []
+    for first, middle, last in zip(ordered, ordered[1:], ordered[2:]):
+        heights = (first[3], middle[3], last[3])
+        bottoms = (first[1] + first[3], middle[1] + middle[3], last[1] + last[3])
+        if max(bottoms) - min(bottoms) > last[3] * 0.10:
+            continue
+        if abs(first[1] - middle[1]) > last[3] * 0.10:
+            continue
+        if min(first[3], middle[3]) < last[3] * 1.15:
+            continue
+        if last[1] - middle[1] < last[3] * 0.15:
+            continue
+        first_gap = middle[0] - (first[0] + first[2])
+        second_gap = last[0] - (middle[0] + middle[2])
+        if abs(first_gap) > typical_width * 0.20 or abs(second_gap) > typical_width * 0.20:
+            continue
+        width = int(round(typical_width))
+        centre = middle[0] + middle[2] / 2
+        candidate = (int(round(centre - width / 2)), last[1], width, last[3])
+        if candidate not in recovered:
+            recovered.append(candidate)
+        break
+    return recovered
+
+
+def _recover_gap_meld_faces(
+    group: list[tuple[int, int, int, int]], typical_width: float
+) -> list[tuple[int, int, int, int]]:
+    """Recover a dark meld face bracketed by two aligned visible faces."""
+    ordered = sorted(group)
+    recovered: list[tuple[int, int, int, int]] = []
+    for left, right in zip(ordered, ordered[1:]):
+        gap_start = left[0] + left[2]
+        gap = right[0] - gap_start
+        typical_height = median((left[3], right[3]))
+        baseline_delta = abs((left[1] + left[3]) - (right[1] + right[3]))
+        if not typical_width * 0.55 <= gap <= typical_width * 0.90:
+            continue
+        if baseline_delta > typical_height * 0.15:
+            continue
+        width = int(round(min(typical_width, gap * 1.10)))
+        centre = gap_start + gap / 2
+        y = int(round(median((left[1], right[1]))))
+        height = int(round(typical_height))
+        recovered.append((int(round(centre - width / 2)), y, width, height))
+    return recovered
 
 
 def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
@@ -232,15 +299,51 @@ def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
     return max(candidates, key=lambda box: box[2] * box[3], default=None)
 
 
+def _gold_is_draw_visual(
+    gold: tuple[int, int, int, int] | None,
+    all_boxes: list[tuple[int, int, int, int]],
+) -> bool:
+    """Distinguish a yellow drawn tile from the separate public Gold display.
+
+    The decision is relational: a yellow tile face is ``draw_visual`` only
+    when it is the isolated component immediately to the right of a dominant
+    concealed-hand cluster with a compatible baseline.  No fixed coordinate
+    or tile identity is used.
+    """
+    if gold is None:
+        return False
+    gold_boxes = [box for box in all_boxes if _overlaps(box, gold)]
+    non_gold = [box for box in all_boxes if box not in gold_boxes]
+    if not gold_boxes or not non_gold:
+        return False
+    typical_width = median(box[2] for box in non_gold)
+    clusters = _clusters(non_gold, typical_width, gap_limit=0.32)
+    hand = max(clusters, key=len, default=[])
+    if len(hand) < 8:
+        return False
+    right_edge = max(box[0] + box[2] for box in hand)
+    hand_baseline = median(box[1] + box[3] for box in hand)
+    hand_height = median(box[3] for box in hand)
+    for candidate in gold_boxes:
+        gap = candidate[0] - right_edge
+        baseline_delta = abs((candidate[1] + candidate[3]) - hand_baseline)
+        if gap > typical_width * 0.55 and baseline_delta <= hand_height * 0.35:
+            return True
+    return False
+
+
 def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = None,
                             session: str | None = None) -> GeometryFrame:
     """Observe hand/draw_visual/gold/meld candidates without a fixed layout or count."""
     array = cv2.cvtColor(np.asarray(image.convert("RGB")), cv2.COLOR_RGB2BGR)
     height, width = array.shape[:2]
-    gray = cv2.cvtColor(array, cv2.COLOR_BGR2GRAY)
-    bright_mask = (gray > 150).astype(np.uint8) * 255
+    value = cv2.cvtColor(array, cv2.COLOR_BGR2HSV)[:, :, 2]
+    bright_mask = (value > 150).astype(np.uint8) * 255
     gold = _gold_box(array)
-    boxes = [box for box in _bright_boxes(array) if gold is None or not _overlaps(box, gold)]
+    all_boxes = _bright_boxes(array)
+    if _gold_is_draw_visual(gold, all_boxes):
+        gold = None
+    boxes = [box for box in all_boxes if gold is None or not _overlaps(box, gold)]
     widths = [box[2] for box in boxes]
     typical_width = median(widths) if widths else 0.0
 
@@ -263,11 +366,19 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
 
     remainder = [box for box in boxes if box not in hand_set and box != draw]
     meld = []
+    stacked_recovered = []
+    gap_recovered = []
     # A meld may have more relaxed within-group spacing than the concealed
     # hand, but must remain a small, separated, geometrically deviant group.
     for group in _clusters(remainder, typical_width, gap_limit=1.10) if typical_width else []:
         if _meld_like_group(group, hand, bright_mask, typical_width):
             meld.extend(group)
+            stacked_recovered.extend(_recover_stacked_meld_faces(group, typical_width))
+            gap_recovered.extend(_recover_gap_meld_faces(group, typical_width))
+    recovered_meld = [*stacked_recovered, *gap_recovered]
+    if recovered_meld:
+        boxes.extend(recovered_meld)
+        meld.extend(recovered_meld)
     meld_set = set(meld)
     unknown = [box for box in remainder if box not in meld_set]
 
@@ -287,11 +398,21 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
         issues.append("gold_unreadable")
     if meld:
         issues.append("meld_candidates_detected")
+    if stacked_recovered:
+        issues.append("stacked_meld_overlap_recovered")
+    if gap_recovered:
+        issues.append("dark_meld_gap_recovered")
     # A missing yellow Gold candidate and a separately reported meld candidate
     # must never be merged into hand.  Neither invalidates an otherwise stable
     # geometry observation; occlusion/fragmentation and implausible hand counts
     # remain fatal.
-    untrusted = any(issue not in {"gold_unreadable", "meld_candidates_detected"} for issue in issues)
+    untrusted = any(
+        issue not in {
+            "gold_unreadable", "meld_candidates_detected",
+            "stacked_meld_overlap_recovered", "dark_meld_gap_recovered",
+        }
+        for issue in issues
+    )
     components = []
     for box in boxes:
         if box in hand_set:

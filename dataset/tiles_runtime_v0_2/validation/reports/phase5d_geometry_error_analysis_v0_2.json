@@ -1,0 +1,157 @@
+{
+  "schema_version": "vision_runtime_v0_2_phase5d_error_analysis",
+  "status": "revealed_holdout_diagnostic_only",
+  "policy": "Phase 5C is revealed and may be used only as a regression/development set. Any generalized claim requires a new untouched blind holdout.",
+  "source_report": "validation/reports/phase5c_blind_holdout_validation_v0_2.json",
+  "category_counts": {
+    "meld_component_miss": 4,
+    "draw_visual_miss": 2,
+    "stacked_or_overlapping_meld_miss": 2,
+    "unmatched_prediction": 2,
+    "region_draw_visual_as_unknown": 1,
+    "region_hand_as_draw_visual": 1,
+    "region_hand_as_unknown": 1,
+    "non_trusted_rejected": 1
+  },
+  "failure_frames": [
+    {
+      "id": "phase5b_holdout_0002",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_frame": 120,
+      "categories": {
+        "region_draw_visual_as_unknown": 1
+      },
+      "detector_issues": [
+        "component_size_inconsistent",
+        "gold_unreadable"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0003",
+      "source_id": "src_dcac8580c55879a2",
+      "source_session": "session_dcac8580c55879a2",
+      "source_frame": 360,
+      "categories": {
+        "draw_visual_miss": 1
+      },
+      "detector_issues": [
+        "gold_unreadable",
+        "meld_candidates_detected"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0005",
+      "source_id": "src_4d68a8e72498d729",
+      "source_session": "session_4d68a8e72498d729",
+      "source_frame": 420,
+      "categories": {
+        "meld_component_miss": 1
+      },
+      "detector_issues": [
+        "gold_unreadable",
+        "meld_candidates_detected"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0006",
+      "source_id": "src_4d68a8e72498d729",
+      "source_session": "session_4d68a8e72498d729",
+      "source_frame": 540,
+      "categories": {
+        "meld_component_miss": 1
+      },
+      "detector_issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0011",
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "source_frame": 180,
+      "categories": {
+        "region_hand_as_draw_visual": 1,
+        "region_hand_as_unknown": 1,
+        "draw_visual_miss": 1
+      },
+      "detector_issues": [
+        "gold_unreadable"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0012",
+      "source_id": "src_627b6c2022d3f910",
+      "source_session": "session_627b6c2022d3f910",
+      "source_frame": 720,
+      "categories": {
+        "meld_component_miss": 1
+      },
+      "detector_issues": [
+        "gold_unreadable",
+        "meld_candidates_detected"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0020",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_frame": 240,
+      "categories": {
+        "stacked_or_overlapping_meld_miss": 1,
+        "unmatched_prediction": 1
+      },
+      "detector_issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected",
+        "stacked_meld_overlap_recovered"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0021",
+      "source_id": "src_94960e642f407502",
+      "source_session": "session_94960e642f407502",
+      "source_frame": 300,
+      "categories": {
+        "stacked_or_overlapping_meld_miss": 1,
+        "unmatched_prediction": 1
+      },
+      "detector_issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected",
+        "stacked_meld_overlap_recovered"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0022",
+      "source_id": "src_59460988023cc9f1",
+      "source_session": "session_59460988023cc9f1",
+      "source_frame": 0,
+      "categories": {
+        "meld_component_miss": 1
+      },
+      "detector_issues": [
+        "component_size_inconsistent",
+        "gold_unreadable",
+        "meld_candidates_detected",
+        "stacked_meld_overlap_recovered"
+      ]
+    },
+    {
+      "id": "phase5b_holdout_0024",
+      "frame_state": "non_game",
+      "scene_type": "settlement",
+      "geometry_untrusted": true,
+      "categories": [
+        "non_trusted_rejected"
+      ]
+    }
+  ],
+  "local_overlay_directory": "validation/generated/phase5d_error_overlays",
+  "phase6_formal_tile_labeling_allowed": false,
+  "safe_for_executor": false
+}

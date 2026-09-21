@@ -4,7 +4,12 @@ import unittest
 
 from PIL import Image, ImageDraw
 
-from .dynamic_geometry import detect_dynamic_geometry, fuse_dynamic_geometry
+from .dynamic_geometry import (
+    _recover_gap_meld_faces,
+    _recover_stacked_meld_faces,
+    detect_dynamic_geometry,
+    fuse_dynamic_geometry,
+)
 
 
 def synthetic_frame(draw_present: bool = False) -> Image.Image:
@@ -91,6 +96,20 @@ class DynamicGeometryTests(unittest.TestCase):
         result = detect_dynamic_geometry(joined_right_edge_frame())
         self.assertFalse(result.geometry_untrusted)
         self.assertEqual(sum(item.region_candidate == "hand" for item in result.components), 12)
+
+    def test_recovers_overlapping_lower_face_from_stacked_meld_geometry(self) -> None:
+        recovered = _recover_stacked_meld_faces(
+            [(4, 588, 61, 81), (65, 588, 46, 81), (110, 603, 58, 66)],
+            typical_width=59,
+        )
+        self.assertEqual(recovered, [(58, 603, 59, 66)])
+
+    def test_recovers_dark_face_from_local_meld_gap(self) -> None:
+        recovered = _recover_gap_meld_faces(
+            [(4, 603, 61, 67), (109, 603, 59, 67)],
+            typical_width=59,
+        )
+        self.assertEqual(recovered, [(63, 603, 48, 67)])
 
 
 if __name__ == "__main__":

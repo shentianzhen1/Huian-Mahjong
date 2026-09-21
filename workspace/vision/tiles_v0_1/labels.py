@@ -31,9 +31,15 @@ def append_label(dataset_root, *, image, bbox, tile_id, region, status="approved
 
 
 def approved_labels(dataset_root):
-    path = Path(dataset_root) / "labels" / "tiles.jsonl"
+    root = Path(dataset_root)
+    legacy_path = root / "labels" / "tiles.jsonl"
+    runtime_path = root / "labels.jsonl"
+    path = runtime_path if runtime_path.exists() else legacy_path
     if not path.exists():
         return []
     with path.open(encoding="utf-8") as stream:
         rows = (json.loads(line) for line in stream if line.strip())
-        return [row for row in rows if row.get("status") == "approved"]
+        return [
+            row for row in rows
+            if row.get("status") == "approved" or row.get("approved") is True
+        ]

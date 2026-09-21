@@ -42,6 +42,13 @@ class GeometrySchemaTests(unittest.TestCase):
         self.assertEqual(fields["expected_draw_visual_count"], 1)
         self.assertEqual(fields["expected_concealed_tile_count"], 2)
 
+    def test_non_game_scene_is_explicit_and_has_no_concealed_tiles(self) -> None:
+        fields = new_geometry_row_fields([], "non_game", scene_type="settlement")
+        self.assertEqual(fields["frame_state"], "non_game")
+        self.assertEqual(fields["scene_type"], "settlement")
+        self.assertIsNone(fields["animation_type"])
+        self.assertEqual(fields["expected_concealed_tile_count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -106,19 +106,19 @@
     "generalization_requirement": "At least two independent source sessions for each supported runtime resolution."
   },
   "metrics": {
-    "component_recall": 1.0,
+    "component_recall": 0.9787735849056604,
     "component_precision": 1.0,
-    "bbox_iou": 0.9969150428449653,
+    "bbox_iou": 0.9925761091972528,
     "region_classification_accuracy": 1.0,
-    "hand_count_exact_match_rate": 1.0,
+    "hand_count_exact_match_rate": 0.6896551724137931,
     "false_positives": 0,
-    "false_negatives": 0,
+    "false_negatives": 9,
     "region_misclassifications": 0,
     "geometry_untrusted_reject_rate": null,
     "temporal_jitter": {
-      "adjacent_component_center_mean_px": 0.1052532173871702,
-      "adjacent_component_center_max_px": 20.5,
-      "component_transitions": 344,
+      "adjacent_component_center_mean_px": 0.09525517270142822,
+      "adjacent_component_center_max_px": 20.506096654409877,
+      "component_transitions": 357,
       "stable_windows": 6,
       "windows_with_at_least_3_frames": 6,
       "fusion_coordinate_behavior": "layout-vote only; fused boxes are the selected latest trusted frame and are not spatially averaged"
@@ -143,9 +143,9 @@
     "iou_match_threshold": 0.5
   },
   "phase5b_targeted_regression": {
-    "meld_candidates": 10,
+    "meld_candidates": 35,
     "meld_audit_frames": 5,
-    "meld_candidates_in_audit": 10,
+    "meld_candidates_in_audit": 25,
     "meld_misclassified_as_hand": 0,
     "right_edge_audit_frames": 5,
     "rightmost_hand_components_checked": 10,

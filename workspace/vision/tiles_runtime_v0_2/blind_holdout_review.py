@@ -46,38 +46,67 @@ def save_rows(path: Path, rows: dict[str, dict]) -> None:
 
 
 class BlindHoldoutReview(tk.Tk):
-    def __init__(self, dataset: Path, media_root: Path):
+    def __init__(
+        self,
+        dataset: Path,
+        media_root: Path,
+        *,
+        plan_path: Path | None = None,
+        truth_path: Path | None = None,
+        report_path: Path | None = None,
+        report_schema: str = "vision_runtime_v0_2_phase5c_blind_holdout",
+    ):
         super().__init__()
         self.dataset = dataset
-        self.plan_path = dataset / "validation" / "holdout" / "phase5b_geometry_holdout_plan_v0_2.json"
-        self.truth_path = dataset / "validation" / "holdout" / "geometry_holdout_ground_truth_v0_2.jsonl"
+        self.plan_path = plan_path or dataset / "validation" / "holdout" / "phase5b_geometry_holdout_plan_v0_2.json"
+        self.truth_path = truth_path or dataset / "validation" / "holdout" / "geometry_holdout_ground_truth_v0_2.jsonl"
+        self.report_path = report_path
+        self.report_schema = report_schema
         self.plan = json.loads(self.plan_path.read_text(encoding="utf-8"))
         self.items = self.plan["frames"]
-        self.reviews, self.index = load_rows(self.truth_path), 0
+        self.reviews = load_rows(self.truth_path)
+        self.index = next(
+            (
+                index
+                for index, item in enumerate(self.items)
+                if not (
+                    self.reviews.get(item["id"], {}).get("approved")
+                    and self.reviews[item["id"]].get("review_status") == "approved_geometry"
+                )
+            ),
+            max(0, len(self.items) - 1),
+        )
         self.sources = locate_sources(media_root)
         self.components, self.selected, self.drag_start, self.frozen = [], None, None, False
         self.region = tk.StringVar(value="hand")
         self.trust = tk.StringVar(value="trusted")
+        self.animation_type = tk.StringVar(value="none")
+        self.scene_type = tk.StringVar(value="none")
         self.hand_count = tk.StringVar(value="0")
         self.draw_visual_count = tk.StringVar(value="0")
         self.concealed_count = tk.StringVar(value="0")
         self.title("Huian Vision V0.2 — Phase 5C Blind Holdout Review")
         self.canvas = tk.Canvas(self, width=1000, height=620, background="black")
-        self.canvas.grid(row=0, column=0, columnspan=8)
+        self.canvas.grid(row=0, column=0, columnspan=10)
         ttk.Label(self, text="Region").grid(row=1, column=0)
         ttk.Combobox(self, textvariable=self.region, values=("hand", "draw_visual", "gold", "meld", "unknown"), width=12).grid(row=1, column=1)
         ttk.Label(self, text="Frame state").grid(row=1, column=2)
-        ttk.Combobox(self, textvariable=self.trust, values=("trusted", "occluded", "animation"), width=10).grid(row=1, column=3)
-        ttk.Label(self, text="hand / draw_visual / concealed").grid(row=1, column=4)
-        ttk.Label(self, textvariable=self.hand_count).grid(row=1, column=5)
-        ttk.Label(self, textvariable=self.draw_visual_count).grid(row=1, column=6)
-        ttk.Label(self, textvariable=self.concealed_count).grid(row=1, column=7)
+        ttk.Combobox(self, textvariable=self.trust, values=("trusted", "occluded", "animation", "non_game"), width=10).grid(row=1, column=3)
+        ttk.Label(self, text="Animation type").grid(row=1, column=4)
+        ttk.Combobox(self, textvariable=self.animation_type, values=("none", "hand_resort", "other", "unknown"), width=12).grid(row=1, column=5)
+        ttk.Label(self, text="Scene type").grid(row=1, column=6)
+        ttk.Combobox(self, textvariable=self.scene_type, values=("none", "settlement", "other", "unknown"), width=10).grid(row=1, column=7)
+        ttk.Label(self, text="hand / draw / concealed").grid(row=1, column=8)
+        ttk.Label(self, textvariable=self.hand_count).grid(row=1, column=9)
+        ttk.Label(self, textvariable=self.draw_visual_count).grid(row=2, column=8)
+        ttk.Label(self, textvariable=self.concealed_count).grid(row=2, column=9)
         self.delete_button = ttk.Button(self, text="Delete selected", command=self.delete_selected); self.delete_button.grid(row=2, column=0)
         self.region_button = ttk.Button(self, text="Apply region", command=self.apply_region); self.region_button.grid(row=2, column=1)
         self.save_button = ttk.Button(self, text="Save draft", command=self.save_draft); self.save_button.grid(row=2, column=2)
         self.approve_button = ttk.Button(self, text="Approve & Next", command=self.approve_next); self.approve_button.grid(row=2, column=3)
         ttk.Button(self, text="Previous", command=lambda: self.move(-1)).grid(row=2, column=4)
         ttk.Button(self, text="Next", command=lambda: self.move(1)).grid(row=2, column=5)
+        self.clear_button = ttk.Button(self, text="Clear all boxes", command=self.clear_all); self.clear_button.grid(row=2, column=6)
         self.status = ttk.Label(self, text="")
         self.status.grid(row=2, column=6, columnspan=2)
         self.canvas.bind("<ButtonPress-1>", self.pointer_down)
@@ -113,12 +142,16 @@ class BlindHoldoutReview(tk.Tk):
             view = compatibility_view(review)
             self.components = view["components"]
             self.trust.set(view["frame_state"])
+            self.animation_type.set(view.get("animation_type") or "none")
+            self.scene_type.set(view.get("scene_type") or "none")
         else:
             # Blind mode: never seed a human review with model output.
             self.components = []
             self.trust.set("trusted")
+            self.animation_type.set("none")
+            self.scene_type.set("none")
         state = "disabled" if self.frozen else "normal"
-        for control in (self.delete_button, self.region_button, self.save_button, self.approve_button):
+        for control in (self.delete_button, self.region_button, self.save_button, self.approve_button, self.clear_button):
             control.config(state=state)
         self.selected = None
         self.redraw()
@@ -181,10 +214,19 @@ class BlindHoldoutReview(tk.Tk):
 
     def row(self, approved: bool) -> dict:
         item = self.current()
+        if self.trust.get() == "non_game" and self.components:
+            raise ValueError("Non-game frames cannot contain gameplay boxes. Use Clear all boxes first.")
+        if self.trust.get() == "non_game" and self.scene_type.get() == "none":
+            raise ValueError("Choose a scene type for a non-game frame.")
         return {
             "id": item["id"], "source_id": item["source_id"], "source_session": item["source_session"],
             "source_frame": item["source_frame"], "source_sha256": item["source_sha256"], "size": item["size"],
-            **new_geometry_row_fields(self.components, self.trust.get()),
+            **new_geometry_row_fields(
+                self.components,
+                self.trust.get(),
+                None if self.animation_type.get() == "none" else self.animation_type.get(),
+                None if self.scene_type.get() == "none" else self.scene_type.get(),
+            ),
             "review_status": "approved_geometry" if approved else "draft",
             "approved": approved, "reviewer": "manual_blind_holdout",
         }
@@ -203,6 +245,14 @@ class BlindHoldoutReview(tk.Tk):
         if self.frozen or self.selected is None:
             return
         self.components.pop(self.selected)
+        self.selected = None
+        self.save_draft()
+        self.redraw()
+
+    def clear_all(self) -> None:
+        if self.frozen:
+            return
+        self.components = []
         self.selected = None
         self.save_draft()
         self.redraw()
@@ -231,7 +281,10 @@ class BlindHoldoutReview(tk.Tk):
         self.move(1)
         if complete:
             from .geometry_holdout_metrics import evaluate
-            report = evaluate(self.dataset, self.plan_path, self.truth_path, self.sources)
+            report = evaluate(
+                self.dataset, self.plan_path, self.truth_path, self.sources,
+                output_path=self.report_path, schema_version=self.report_schema,
+            )
             messagebox.showinfo("Phase 5C metrics written", f"Holdout report written. Phase 6 allowed: {report['phase6_formal_tile_labeling_allowed']}")
 
     def move(self, delta: int) -> None:
@@ -243,8 +296,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run a blind, human-only Phase 5C holdout geometry review")
     parser.add_argument("--dataset", default="dataset/tiles_runtime_v0_2")
     parser.add_argument("--media-root", default="data/capture_validation")
+    parser.add_argument("--plan")
+    parser.add_argument("--truth")
+    parser.add_argument("--report")
+    parser.add_argument("--report-schema", default="vision_runtime_v0_2_phase5c_blind_holdout")
     args = parser.parse_args()
-    BlindHoldoutReview(Path(args.dataset), Path(args.media_root)).mainloop()
+    BlindHoldoutReview(
+        Path(args.dataset), Path(args.media_root),
+        plan_path=Path(args.plan) if args.plan else None,
+        truth_path=Path(args.truth) if args.truth else None,
+        report_path=Path(args.report) if args.report else None,
+        report_schema=args.report_schema,
+    ).mainloop()
 
 
 if __name__ == "__main__":

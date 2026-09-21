@@ -55,7 +55,15 @@ def _match(expected: list[dict], predicted: list[dict]) -> list[tuple[dict, dict
     return matches
 
 
-def evaluate(dataset: Path, plan_path: Path, truth_path: Path, sources: dict[str, Path]) -> dict:
+def evaluate(
+    dataset: Path,
+    plan_path: Path,
+    truth_path: Path,
+    sources: dict[str, Path],
+    *,
+    output_path: Path | None = None,
+    schema_version: str = "vision_runtime_v0_2_phase5c_blind_holdout",
+) -> dict:
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     expected_ids = {item["id"] for item in plan["frames"]}
     truth = _rows(truth_path)
@@ -73,6 +81,7 @@ def evaluate(dataset: Path, plan_path: Path, truth_path: Path, sources: dict[str
     hand_exact = meld_as_hand = runtime_region_misclassifications = 0
     draw_visual_gold_silent_misclassifications = draw_visual_gold_unknown = 0
     ious, cases, state_counts, rejected = [], [], Counter(), 0
+    trusted_rows = unstable_rows = unstable_rejected = 0
     for item in plan["frames"]:
         row = truth[item["id"]]
         state_counts[row["frame_state"]] += 1
@@ -80,6 +89,21 @@ def evaluate(dataset: Path, plan_path: Path, truth_path: Path, sources: dict[str
         if source is None:
             raise ValueError("A local source matching an anonymous holdout ID is missing")
         observation = detect_dynamic_geometry(_frame(source, row["source_frame"]), frame=row["source_frame"], session=row["source_session"])
+        if row["frame_state"] != "trusted":
+            unstable_rows += 1
+            unstable_rejected += int(observation.geometry_untrusted)
+            if not observation.geometry_untrusted:
+                cases.append({
+                    "id": row["id"], "source_id": row["source_id"],
+                    "source_session": row["source_session"], "source_frame": row["source_frame"],
+                    "frame_state": row["frame_state"],
+                    "animation_type": row.get("animation_type"),
+                    "scene_type": row.get("scene_type"),
+                    "geometry_untrusted": False,
+                    "issue": "unstable frame produced geometry; excluded from stable geometry metrics",
+                })
+            continue
+        trusted_rows += 1
         expected = [component for component in row["components"] if component["region_candidate"] in REGIONS]
         prediction = [component.to_dict() for component in observation.components]
         truth_total += len(expected)
@@ -119,21 +143,21 @@ def evaluate(dataset: Path, plan_path: Path, truth_path: Path, sources: dict[str
     precision = None if not predicted_total else matched / predicted_total
     recall = None if not truth_total else matched / truth_total
     region_accuracy = None if not matched else correct_regions / matched
-    hand_count_exact = hand_exact / len(plan["frames"])
+    hand_count_exact = None if not trusted_rows else hand_exact / trusted_rows
     gates = {
         "component_precision_minimum": {"threshold": 0.98, "actual": precision, "passed": precision is not None and precision >= 0.98},
         "component_recall_minimum": {"threshold": 0.98, "actual": recall, "passed": recall is not None and recall >= 0.98},
-        "hand_count_exact_minimum": {"threshold": 0.95, "actual": hand_count_exact, "passed": hand_count_exact >= 0.95},
+        "hand_count_exact_minimum": {"threshold": 0.95, "actual": hand_count_exact, "passed": hand_count_exact is not None and hand_count_exact >= 0.95},
         "no_silent_hand_draw_visual_gold_region_misclassification": {"actual": runtime_region_misclassifications, "passed": runtime_region_misclassifications == 0},
         "meld_never_classified_as_hand": {"actual": meld_as_hand, "passed": meld_as_hand == 0},
     }
     passed = all(gate["passed"] for gate in gates.values())
     report = {
-        "schema_version": "vision_runtime_v0_2_phase5c_blind_holdout",
+        "schema_version": schema_version,
         "status": "metrics_computed",
         "evaluation_policy": "The locked blind-holdout truth was fully approved before this one-shot detector run. No holdout outcome authorizes detector tuning in this phase.",
-        "plan": "validation/holdout/phase5b_geometry_holdout_plan_v0_2.json",
-        "truth": "validation/holdout/geometry_holdout_ground_truth_v0_2.jsonl",
+        "plan": plan_path.relative_to(dataset).as_posix(),
+        "truth": truth_path.relative_to(dataset).as_posix(),
         "approved_rows": len(plan["frames"]),
         "truth_state_counts": dict(state_counts),
         "metrics": {
@@ -148,6 +172,10 @@ def evaluate(dataset: Path, plan_path: Path, truth_path: Path, sources: dict[str
             "draw_visual_gold_silent_misclassifications": draw_visual_gold_silent_misclassifications,
             "draw_visual_gold_unknown": draw_visual_gold_unknown,
             "geometry_untrusted_frames": rejected,
+            "stable_geometry_rows": trusted_rows,
+            "unstable_animation_occluded_or_non_game_rows": unstable_rows,
+            "unstable_frame_reject_rate": None if not unstable_rows else unstable_rejected / unstable_rows,
+            "stable_slot_policy": "animation/occluded/non_game rows are excluded from component, region, and hand-count metrics",
         },
         "acceptance_gates": gates,
         "failure_cases": cases,
@@ -158,7 +186,7 @@ def evaluate(dataset: Path, plan_path: Path, truth_path: Path, sources: dict[str
         "phase6_formal_tile_labeling_allowed": passed,
         "safe_for_executor": False,
     }
-    output = dataset / "validation" / "reports" / "phase5c_blind_holdout_validation_v0_2.json"
+    output = output_path or dataset / "validation" / "reports" / "phase5c_blind_holdout_validation_v0_2.json"
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return report
 

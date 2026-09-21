@@ -14,6 +14,8 @@ New rows use this schema:
   "source_frame": 145,
   "size": [1046, 480],
   "frame_state": "trusted",
+  "animation_type": null,
+  "scene_type": null,
   "components": [
     {"pixel_bbox": [160, 415, 45, 60], "region_candidate": "hand", "confidence": 1.0}
   ],
@@ -28,7 +30,7 @@ New rows use this schema:
 }
 ```
 
-`frame_state` is one of `trusted`, `occluded`, or `animation`. Geometry regions
+`frame_state` is one of `trusted`, `occluded`, `animation`, or `non_game`. Geometry regions
 are `hand`, `draw_visual`, `meld`, `gold`, and `unknown`. The count invariant is:
 
 ```
@@ -39,6 +41,14 @@ expected_concealed_tile_count =
 Normally `expected_draw_visual_count` is 0 or 1. `meld` and public `gold` do not
 count as concealed tiles. A moving/merging tile whose geometry cannot be judged
 reliably makes the frame `animation`; reviewers do not manufacture a stable box.
+Automatic post-discard sorting uses `animation_type=hand_resort`. Such rows are
+kept for rejection/temporal validation but excluded from stable geometry and
+slot metrics.
+
+Settlement pages and other screens outside active gameplay use
+`frame_state=non_game` with an explicit `scene_type` such as `settlement`.
+They contain no gameplay component boxes. They test whether geometry refuses
+output and are excluded from stable component, region, and hand-count metrics.
 
 Legacy approved rows remain frozen. At read time, `draw` is interpreted as
 `draw_visual`, `trust_state` as `frame_state`, and

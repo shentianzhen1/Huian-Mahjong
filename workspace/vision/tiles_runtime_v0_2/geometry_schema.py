@@ -39,6 +39,8 @@ def compatibility_view(row: dict[str, Any]) -> dict[str, Any]:
     derived = geometry_counts(components)
     view["components"] = components
     view["frame_state"] = row.get("frame_state", row.get("trust_state", "trusted"))
+    view["animation_type"] = row.get("animation_type")
+    view["scene_type"] = row.get("scene_type")
     view["expected_hand_region_count"] = row.get(
         "expected_hand_region_count",
         row.get("expected_hand_component_count", derived["expected_hand_region_count"]),
@@ -65,12 +67,19 @@ def compatibility_view(row: dict[str, Any]) -> dict[str, Any]:
     return view
 
 
-def new_geometry_row_fields(components: list[dict[str, Any]], frame_state: str) -> dict[str, Any]:
+def new_geometry_row_fields(
+    components: list[dict[str, Any]],
+    frame_state: str,
+    animation_type: str | None = None,
+    scene_type: str | None = None,
+) -> dict[str, Any]:
     """Build fields for new annotations; counts always derive from visible geometry."""
     canonical = canonical_components(components)
     counts = geometry_counts(canonical)
     return {
         "frame_state": frame_state,
+        "animation_type": animation_type if frame_state == "animation" else None,
+        "scene_type": scene_type if frame_state == "non_game" else None,
         "components": canonical,
         "hand_bboxes": [c["pixel_bbox"] for c in canonical if c["region_candidate"] == "hand"],
         "meld_bboxes": [c["pixel_bbox"] for c in canonical if c["region_candidate"] == "meld"],
