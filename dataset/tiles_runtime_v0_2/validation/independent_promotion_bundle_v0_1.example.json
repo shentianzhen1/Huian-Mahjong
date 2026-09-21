@@ -1,0 +1,45 @@
+{
+  "schema_version": "vision_runtime_v0_2_independent_bundle_v0_1",
+  "provenance": {
+    "independent_batch": true,
+    "holdout_locked_before_evaluation": true,
+    "tuning_after_lock": false,
+    "source_sessions": 0
+  },
+  "geometry": {
+    "component_precision": null,
+    "component_recall": null,
+    "hand_count_exact_match_rate": null,
+    "runtime_region_errors": null
+  },
+  "tile_identity": {
+    "standard_classes_covered": null,
+    "standard_classes_missing": null,
+    "accepted_accuracy": null,
+    "accepted_labels": null
+  },
+  "draw_temporal": {
+    "events": null,
+    "precision": null,
+    "recall": null,
+    "duplicate_events": null
+  },
+  "public_state": {
+    "score_points": null,
+    "score_pair_accuracy": null,
+    "status_points": null,
+    "remaining_tiles_accuracy": null,
+    "hand_index_accuracy": null
+  },
+  "gold": {
+    "sessions": null,
+    "session_majority_accuracy": null
+  },
+  "stress": {
+    "cases": null,
+    "unsafe_acceptances": null
+  },
+  "policy": {
+    "safe_for_executor": false
+  }
+}
