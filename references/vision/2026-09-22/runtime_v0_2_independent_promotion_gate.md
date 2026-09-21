@@ -53,3 +53,17 @@ The review order is:
 - **PASS**: Runtime Vision V0.2 may be named the formal read-only observation baseline.
 - **FAIL**: V0.2 remains experimental; failures become development targets.
 - In both cases: **Executor remains disabled** until a separate post-action safety validation exists.
+
+
+## Source-disjoint locking implementation
+
+`phase5e_holdout.py` must reject any candidate source whose SHA-256 equals or begins with a tracked identifier from:
+
+- Phase 5 / Phase 5C geometry truth `source_sha256`;
+- anonymized `source_id` suffixes;
+- anonymized `source_session` suffixes;
+- approved Runtime V0.2 tile labels.
+
+This is intentionally conservative. Over-excluding a possibly related recording is acceptable; admitting a development source into the promotion holdout is not.
+
+The generated plan records `source_disjoint_from_tracked_evidence=true`, the exclusion policy, and the number of known source tokens used for the lock.
