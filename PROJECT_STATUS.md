@@ -104,6 +104,8 @@ GitHub Issues #1–#9 已建立，TODO.md 只保留未完成工作：
 
 - **Runtime Vision V0.2 独立晋级门 V0.1（2026-09-22）**：新增机器可判定 `promotion_gate.py`，冻结下一批 source-disjoint blind holdout 的晋级阈值；缺指标、同源批次、holdout锁定后调参、静默区域误判均 fail-closed。门槛同时覆盖动态几何、34类牌面、draw时序、PublicState、Gold和压力测试；通过只代表正式 read-only Vision baseline，`executor_ready=false` 固定不变。执行真相源为 Issue #7 与 `references/vision/2026-09-22/runtime_v0_2_independent_promotion_gate.md`。
 
+- **Phase 5E source-disjoint lock（2026-09-22）**：新盲测选择器从只排除几何truth完整hash，升级为同时排除几何truth与approved Runtime V0.2标签中的匿名source/session标识；候选源hash命中任一已知完整hash或匿名前缀即拒绝。策略允许保守过度排除，不允许旧开发来源进入promotion holdout。
+
 ## 下一步计划
 
 1. 庄底字段已由match_evidence_001完整8局解决，不再等待a562bd21：新庄当前结算底10、连庄+5、换庄重置10，闲家自身底5；庄底上限已解决：连续坐庄不上封顶、+5到8局结束；后续不再追问此项。`7bc12fa…mp4`的三游证据仍保留既有归档口径。
