@@ -27,7 +27,9 @@
   "standard_tile_class_coverage": {
     "covered": 33,
     "total": 34,
-    "missing": ["M2"]
+    "missing": [
+      "M2"
+    ]
   },
   "test_build_scope": "stable hand/draw_visual/gold snapshots only; low-confidence or unsupported classes return UNKNOWN; no automatic UI action",
   "test_build_tile_confidence_threshold": 0.82,
@@ -37,5 +39,13 @@
     "draw_region": "draw_visual"
   },
   "draw_semantics": "draw_visual joins the concealed multiset once when first trusted; after a confirmed discard, HAND_RESORTING is visual-only and never adds the tile again; direct discard of draw_visual skips resort; static ROI observations never directly mutate GameState",
-  "entries": []
+  "entries": [],
+  "promotion_status": "blocked_pending_new_source_disjoint_blind_holdout",
+  "phase5c_blind_holdout": {
+    "report": "validation/reports/phase5c_blind_holdout_validation_v0_2.json",
+    "all_acceptance_gates_passed": false,
+    "formal_tile_labeling_allowed": false
+  },
+  "phase6_asset_role": "development_prototype_only",
+  "runtime_known_session_policy": "exclude current source_session from template training when session is supplied"
 }
