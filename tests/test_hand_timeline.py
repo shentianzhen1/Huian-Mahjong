@@ -61,6 +61,13 @@ class HandTimelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "conserving 2000"):
             HandSettlement(scores_after=(1001, 1000))
 
+    def test_score_pair_rejects_negative_or_overflow_values(self):
+        for pair in ((-1, 2001), (2001, -1)):
+            with self.subTest(pair=pair), self.assertRaisesRegex(
+                ValueError, "physical two-integer pair"
+            ):
+                HandSettlement(scores_after=pair)
+
     def test_unknown_values_remain_explicit_in_markdown(self):
         timeline = HandTimeline(
             evidence_id="unknown_case",
