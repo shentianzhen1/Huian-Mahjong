@@ -46,7 +46,7 @@ jobs:
       - name: Measure Rules and Environment coverage
         run: |
           python -m coverage run --source=huian.rules,huian.environment -m unittest discover -s tests -v
-          python -m coverage report --show-missing --skip-covered
+          python -m coverage report --show-missing --skip-covered --fail-under=85
 
   legacy-advisory:
     name: Legacy baseline (advisory)
