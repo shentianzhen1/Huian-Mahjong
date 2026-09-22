@@ -1,0 +1,23 @@
+{
+  "schema_version": "player_perspective_v0_1",
+  "entries": [
+    {
+      "perspective_id": "66fe863f_local_bottom_seat0",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "player_seat": 0,
+      "status": "fixture_confirmed",
+      "evidence_ref": "tests/fixtures/settlement_66fe863f.json",
+      "note": "Fixture maps seat 0 to the winning/local player; archived frames show that player's concealed hand and actions in the bottom local-player UI."
+    },
+    {
+      "perspective_id": "b3892b34_local_bottom_seat0",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "player_seat": 0,
+      "status": "fixture_confirmed",
+      "evidence_ref": "tests/fixtures/settlement_b3892b34.json",
+      "note": "Fixture explicitly states seat 0 maps to the bottom/winning player in this replay."
+    }
+  ]
+}
