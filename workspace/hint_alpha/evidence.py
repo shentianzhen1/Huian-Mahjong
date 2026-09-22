@@ -77,6 +77,7 @@ class EvidenceSession:
                 "kind": kind,
                 "payload": dict(payload or {}),
                 "source": dict(source or {}),
+                "project_version": PROJECT_VERSION,
                 "rule_snapshot_id": DEFAULT_RULE_SNAPSHOT.fingerprint,
                 "agent_version": CURRENT_AGENT_VERSION,
             }
