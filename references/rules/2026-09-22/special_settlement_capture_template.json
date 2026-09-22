@@ -1,0 +1,54 @@
+{
+  "schema_version": "special_settlement_capture_v0_1",
+  "issue_number": null,
+  "evidence_id": null,
+  "source": {
+    "sha256": null,
+    "session": null,
+    "file_label": null
+  },
+  "hand_index": null,
+  "special_outcome": null,
+  "trigger": {
+    "kind": null,
+    "timestamp_seconds": null,
+    "just_received_tile": null,
+    "kong_kind": null,
+    "prompt_visible": null
+  },
+  "timestamps": {
+    "pre_trigger": null,
+    "prompt": null,
+    "decision": null,
+    "settlement": null,
+    "next_hand": null
+  },
+  "state_before": {
+    "dealer": null,
+    "current_dealer_base": null,
+    "scores": null,
+    "gold_tile": null,
+    "playable_gold_count": null,
+    "flowers": null,
+    "concealed_hand": null,
+    "exposed_melds": null,
+    "remaining_tiles": null
+  },
+  "decision": {
+    "action": null,
+    "passed": null
+  },
+  "settlement": {
+    "winner": null,
+    "scores_after": null,
+    "net_transfer": null,
+    "displayed_fan": null,
+    "displayed_multiplier": null,
+    "displayed_lines": [],
+    "next_dealer": null,
+    "next_hand_index": null
+  },
+  "evidence_level": "unknown",
+  "unknown_fields": [],
+  "reviewer_notes": []
+}
