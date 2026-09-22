@@ -60,7 +60,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger、Public Tile Detector 已落地；temporal public-candidate tracker 正把单帧候选升级为稳定轨迹，并通过显式 CandidateChannel 接 identity-UNKNOWN RiverSnapshot。下一阻塞为连续真实帧 channel 校准、误轨迹评估与公开区 identity。
+- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger、Public Tile Detector、Candidate Tracker 已落地；开发 channel calibration 已把 16 张上下文帧的 279 个 broad candidate 缩到 26 个 channel candidate（仅候选压缩，不是准确率），且 central/upper actor/action 强制 external。下一阻塞为连续真实帧误轨迹/actor-turn 评估与公开区 identity。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -71,7 +71,7 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：10 个真实 bbox 与 geometry detector 已完成；当前把 temporal candidate tracking / CandidateChannel 做稳，并补连续真实帧的误轨迹与 RiverSnapshot 连续性评估，再做公开区 identity；随后把真实 DISCARD/MELD/Youjin/Hu/settlement 喂入现有 observer + assembler + Ledger；冲突保持 UNKNOWN。
+3. 推进 #69 Public Match Reconstruction V0.1：broad detector / tracker / development channel narrowing 已完成；当前需要连续真实帧验证 stable-channel 误轨迹、central action focus 的 actor/turn 对齐、upper public row/river 增长，再接公开区 identity 与真实 RiverSnapshot；冲突保持 UNKNOWN。
 4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。
