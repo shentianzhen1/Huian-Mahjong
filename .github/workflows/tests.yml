@@ -79,13 +79,16 @@ jobs:
         run: |
           python - <<'PY'
           import importlib.util
+          from importlib.metadata import version
 
-          from huian import HuianEnvironment, HuianRules
+          from huian import HuianEnvironment, HuianRules, __version__
           from workspace.ai import CurrentAgent, CURRENT_AGENT_VERSION
           from workspace.simulator import run_paired_real_matches
 
           assert HuianEnvironment is not None
           assert HuianRules is not None
+          assert __version__ == "0.2.0"
+          assert version("huian-mahjong-assistant") == __version__
           assert CURRENT_AGENT_VERSION == "v0.10"
           assert CurrentAgent.__name__ == "MeldAwareShantenAgent"
           assert callable(run_paired_real_matches)
