@@ -162,9 +162,7 @@ def build_lock(
 
     sources = []
     frames = []
-    for source_index, (source_hash, width, height, frame_count) in enumerate(
-        selected, start=1
-    ):
+    for source_hash, width, height, frame_count in selected:
         source_id = "src_" + source_hash[:16]
         session_id = "session_" + source_hash[:16]
         sources.append({
