@@ -264,6 +264,121 @@ class PublicCandidateTrackerTests(unittest.TestCase):
         self.assertEqual(changed.events, ())
         self.assertEqual(changed.stable_tracks, ())
 
+    def test_large_observation_gap_resets_pending_track_epoch(self):
+        tracker = PublicCandidateTracker(
+            settle_frames=3,
+            disappear_frames=2,
+            maximum_gap_seconds=0.5,
+        )
+        for frame, timestamp in ((1, 0.0), (2, 0.1)):
+            output = tracker.observe(
+                geometry_frame(
+                    frame,
+                    (
+                        candidate(
+                            0.30,
+                            0.20,
+                            0.05,
+                            0.12,
+                            frame=frame,
+                        ),
+                    ),
+                ),
+                timestamp_seconds=timestamp,
+            )
+        self.assertEqual(output.stream_epoch, 0)
+        self.assertEqual(output.stable_tracks, ())
+
+        after_gap = tracker.observe(
+            geometry_frame(
+                3,
+                (
+                    candidate(
+                        0.30,
+                        0.20,
+                        0.05,
+                        0.12,
+                        frame=3,
+                    ),
+                ),
+            ),
+            timestamp_seconds=2.0,
+        )
+        self.assertEqual(after_gap.stream_epoch, 1)
+        self.assertIn("observation_gap_reset", after_gap.issues)
+        self.assertEqual(after_gap.stable_tracks, ())
+        self.assertEqual(after_gap.events, ())
+
+        tracker.observe(
+            geometry_frame(
+                4,
+                (
+                    candidate(
+                        0.301,
+                        0.20,
+                        0.05,
+                        0.12,
+                        frame=4,
+                    ),
+                ),
+            ),
+            timestamp_seconds=2.1,
+        )
+        confirmed = tracker.observe(
+            geometry_frame(
+                5,
+                (
+                    candidate(
+                        0.299,
+                        0.20,
+                        0.05,
+                        0.12,
+                        frame=5,
+                    ),
+                ),
+            ),
+            timestamp_seconds=2.2,
+        )
+        self.assertEqual(confirmed.stream_epoch, 1)
+        self.assertEqual(len(confirmed.stable_tracks), 1)
+        self.assertEqual(
+            [event.kind for event in confirmed.events],
+            [TrackEventKind.APPEARED],
+        )
+
+    def test_large_gap_does_not_emit_false_disappearance(self):
+        tracker = PublicCandidateTracker(
+            settle_frames=2,
+            disappear_frames=1,
+            maximum_gap_seconds=0.5,
+        )
+        for frame, timestamp in ((1, 0.0), (2, 0.1)):
+            confirmed = tracker.observe(
+                geometry_frame(
+                    frame,
+                    (
+                        candidate(
+                            0.30,
+                            0.20,
+                            0.05,
+                            0.12,
+                            frame=frame,
+                        ),
+                    ),
+                ),
+                timestamp_seconds=timestamp,
+            )
+        self.assertEqual(len(confirmed.stable_tracks), 1)
+
+        reset = tracker.observe(
+            geometry_frame(3, ()),
+            timestamp_seconds=2.0,
+        )
+        self.assertIn("observation_gap_reset", reset.issues)
+        self.assertEqual(reset.stream_epoch, 1)
+        self.assertEqual(reset.events, ())
+        self.assertEqual(reset.stable_tracks, ())
+
     def test_timestamp_must_not_go_backwards(self):
         tracker = PublicCandidateTracker(settle_frames=2)
         tracker.observe(
@@ -320,6 +435,7 @@ class PublicCandidateTrackerTests(unittest.TestCase):
         self.assertEqual(len(snapshot.tiles), 1)
         self.assertIsNone(snapshot.tiles[0].tile_id)
         self.assertEqual(snapshot.tiles[0].normalized_bbox[0], 0.25)
+        self.assertEqual(snapshot.stream_epoch, output.stream_epoch)
 
 
 class PublicCandidateTrackerRealFrameTests(unittest.TestCase):
