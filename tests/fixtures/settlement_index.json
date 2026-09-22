@@ -1,0 +1,45 @@
+{
+  "schema_version": "confirmed_settlement_fixture_index_v0_1",
+  "policy": "Every direct target-room settlement fixture treated as CONFIRMED must be listed here and remain executable regression evidence.",
+  "fixtures": [
+    {
+      "file": "settlement_66fe863f.json",
+      "evidence_status": "CONFIRMED",
+      "kind": "single",
+      "outcome": "YOUJIN",
+      "multiplier_field": "youjin_multiplier",
+      "source_binding": "frame_hash"
+    },
+    {
+      "file": "settlement_b3892b34.json",
+      "evidence_status": "CONFIRMED",
+      "kind": "single",
+      "outcome": "ZIMO",
+      "multiplier_field": "hu_multiplier",
+      "source_binding": "frame_hash"
+    },
+    {
+      "file": "settlement_7bc12fa.json",
+      "evidence_status": "CONFIRMED",
+      "kind": "single",
+      "outcome": "TRIPLE_YOU",
+      "multiplier_field": "youjin_multiplier",
+      "source_binding": "archived_replay"
+    },
+    {
+      "file": "settlement_match_evidence_001_8hands.json",
+      "evidence_status": "CONFIRMED",
+      "kind": "match",
+      "outcome": "EIGHT_HAND_MATCH",
+      "source_binding": "full_match_review"
+    },
+    {
+      "file": "settlement_match_evidence_002_double_you.json",
+      "evidence_status": "CONFIRMED",
+      "kind": "single",
+      "outcome": "DOUBLE_YOU",
+      "multiplier_field": "youjin_multiplier",
+      "source_binding": "archived_replay"
+    }
+  ]
+}
