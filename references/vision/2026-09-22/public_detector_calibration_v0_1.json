@@ -151,16 +151,17 @@
         "S9"
       ],
       "bbox": [
-        0.224665,
-        0.854167,
-        0.123327,
-        0.139583
+        0.094646,
+        0.852083,
+        0.126195,
+        0.135417
       ],
       "status": "bbox_reviewed",
       "observation": "S789 Chi visible; S1 has Youjin discard hint",
       "notes": [
         "player-side exposed Chi reference",
-        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only",
+        "2026-09-22 correction: prior x coordinate incorrectly pointed to a later bottom group; pixel re-review places S789 at the left exposed group"
       ]
     },
     {
