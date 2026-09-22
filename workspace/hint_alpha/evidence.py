@@ -7,6 +7,7 @@ import threading
 import uuid
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.version import PROJECT_VERSION, project_manifest
 from workspace.ai import CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION
 
 
@@ -52,6 +53,7 @@ class EvidenceSession:
             "started_at": self.started_at,
             "mode": "HINT_ALPHA_V0_1",
             "executor_enabled": False,
+            "project": project_manifest(),
             "agent": {
                 "name": CURRENT_AGENT_NAME,
                 "version": CURRENT_AGENT_VERSION,
@@ -132,6 +134,7 @@ class EvidenceSession:
                 "finished_at": datetime.now(timezone.utc).isoformat(),
                 "events_written": self._sequence,
                 "reason": str(reason),
+                "project_version": PROJECT_VERSION,
                 "rule_snapshot_id": DEFAULT_RULE_SNAPSHOT.fingerprint,
                 "agent_version": CURRENT_AGENT_VERSION,
             }
