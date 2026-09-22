@@ -309,7 +309,7 @@ def render_markdown(timeline: HandTimeline) -> str:
         "",
         "## Basic info",
         "",
-        f"- Evidence ID: \`{timeline.evidence_id}\`",
+        f"- Evidence ID: `{timeline.evidence_id}`",
         f"- Hand index: {timeline.hand_index}/8",
         f"- Source: {_display(timeline.source_label)}",
         f"- Source SHA256: {_display(timeline.source_sha256)}",
