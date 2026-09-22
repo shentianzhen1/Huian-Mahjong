@@ -94,6 +94,7 @@ Vision 使用 OpenCV/Pillow；`.github/workflows/vision-tests.yml` 会在 `works
 推荐阅读顺序：执行任务先看 GitHub Issues / [TODO.md](TODO.md)，规则事实只看 [RULE_STATUS.md](RULE_STATUS.md) 与相关证据；需要总体快照再看 [PROJECT_STATUS.md](PROJECT_STATUS.md)。[CHANGELOG.md](CHANGELOG.md) 只用于追历史，不应作为当前状态真相源。
 
 - [PROJECT_STATUS.md](PROJECT_STATUS.md)：一页当前集成快照，不复制执行 backlog。
+- [docs/packaging/BOUNDARY.md](docs/packaging/BOUNDARY.md)：当前 wheel 内容边界与后续拆包迁移顺序。
 - [RULE_STATUS.md](RULE_STATUS.md)：规则确认等级的唯一真相源。
 - [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)：规则证据与状态机缺口。
 - [TODO.md](TODO.md)：Open GitHub Issues 的入口索引，不承载独立状态。
