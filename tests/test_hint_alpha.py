@@ -97,6 +97,9 @@ class HintAlphaEvidenceTests(unittest.TestCase):
                 [item["kind"] for item in events],
                 ["SESSION_STARTED", "FRAME_SAVED", "RECOGNITION_ERROR"],
             )
+            self.assertTrue(
+                all(item["project_version"] == PROJECT_VERSION for item in events)
+            )
             self.assertEqual(completion["events_written"], 3)
             self.assertEqual(completion["project_version"], PROJECT_VERSION)
             self.assertTrue((session.path / "completion.json").exists())
