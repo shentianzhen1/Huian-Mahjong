@@ -29,7 +29,11 @@ class PublicMatchReconstructionTests(unittest.TestCase):
         event = action.to_timeline_event()
         self.assertEqual(event.kind, "OPEN_GOLD")
         self.assertEqual(event.tile, "SOUTH")
-        self.assertEqual(event.evidence_level, "direct_observation")
+        self.assertEqual(event.evidence_level, "unknown")
+        self.assertEqual(
+            event.details["reconstruction_evidence_grade"],
+            "DIRECT",
+        )
 
     def test_unknown_gold_stays_unknown(self):
         action = direct_action(RawObservation(3.2, "system", ObservationKind.GOLD))
@@ -68,6 +72,30 @@ class PublicMatchReconstructionTests(unittest.TestCase):
         self.assertEqual(action.consumed_from_hand, ("P3", "P4"))
         self.assertEqual(action.meld, ("P3", "P4", "P5"))
         self.assertEqual(action.confidence, 0.96)
+
+    def test_corroborated_reconstruction_does_not_auto_confirm_timeline_evidence(self):
+        action = reconstruct_claimed_meld(
+            RawObservation(1.0, "opponent", ObservationKind.DISCARD, tile="P5"),
+            RawObservation(
+                1.1,
+                "player",
+                ObservationKind.HAND_DELTA,
+                details={"removed_tiles": ["P3", "P4"]},
+            ),
+            RawObservation(
+                1.2,
+                "player",
+                ObservationKind.MELD_DELTA,
+                tiles=("P3", "P4", "P5"),
+            ),
+        )
+        self.assertEqual(action.evidence_grade, EvidenceGrade.CORROBORATED)
+        event = action.to_timeline_event()
+        self.assertEqual(event.evidence_level, "unknown")
+        self.assertEqual(
+            event.details["reconstruction_evidence_grade"],
+            "CORROBORATED",
+        )
 
     def test_peng_is_reconstructed_from_matching_counts(self):
         action = reconstruct_claimed_meld(
