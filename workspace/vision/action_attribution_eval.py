@@ -155,6 +155,7 @@ class ActionPrediction:
     actor: str
     evidence_grade: str
     evidence_refs: tuple[str, ...]
+    confidence: float | None = None
     tile: str | None = None
     turn_actor: str | None = None
 
@@ -172,6 +173,10 @@ class ActionPrediction:
             raise ValueError("unsupported predicted actor")
         if self.evidence_grade not in GRADES:
             raise ValueError("unsupported prediction evidence grade")
+        if self.confidence is not None:
+            confidence = _number(self.confidence, "prediction confidence")
+            if confidence > 1:
+                raise ValueError("prediction confidence must be between 0 and 1")
         if self.turn_actor is not None and self.turn_actor not in ACTORS | {"unknown"}:
             raise ValueError("prediction turn_actor must be player/opponent/unknown/null")
         if self.tile is not None and (not isinstance(self.tile, str) or not self.tile):
@@ -184,6 +189,8 @@ class ActionPrediction:
             self.kind in {"UNKNOWN_ACTION", "EVIDENCE_CONFLICT"}
             or self.actor not in ACTORS
             or self.evidence_grade == "UNKNOWN"
+            or self.confidence is None
+            or self.confidence == 0
             or not self.evidence_refs
         )
 
@@ -212,6 +219,7 @@ def prediction_from_action(action: ReconstructedAction) -> ActionPrediction:
         actor=action.actor,
         evidence_grade=action.evidence_grade.value,
         evidence_refs=action.evidence_refs,
+        confidence=action.confidence,
         tile=action.tile or action.claimed_tile,
         turn_actor=details.get("turn_actor"),
     )
@@ -415,6 +423,7 @@ def load_predictions(path: str | Path) -> PredictionBatch:
             actor=row["actor"],
             evidence_grade=row.get("evidence_grade", "UNKNOWN"),
             evidence_refs=_refs(row.get("evidence_refs", []), "prediction evidence_refs"),
+            confidence=row.get("confidence"),
             tile=row.get("tile"),
             turn_actor=row.get("turn_actor"),
         ))
