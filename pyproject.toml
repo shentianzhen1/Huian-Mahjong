@@ -19,6 +19,7 @@ huian-hint-alpha = "workspace.hint_alpha.app:main"
 dev = [
     "ruff>=0.6",
     "black>=24.0",
+    "coverage>=7,<8",
 ]
 vision = [
     "opencv-python-headless>=4.10,<6",
