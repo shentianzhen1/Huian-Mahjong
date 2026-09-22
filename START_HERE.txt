@@ -1,23 +1,21 @@
-Huian Mahjong — 当前入口
+惠安麻将项目 — 稳定入口（不要从本文件推断最新进度）
 
 仓库：https://github.com/shentianzhen1/Huian-Mahjong
-分支：main
+唯一代码真源：GitHub main。每次开始前先拉取最新 main，并核对 Open Issues / Open PR / 最新 Actions。
 
-先读：
-  README.md
-  AGENTS.md
-  RULE_STATUS.md
-  PROJECT_STATUS.md
-  TODO.md
+阅读顺序：
+  1. README.md — 安装、总体能力与限制
+  2. AGENTS.md — 规则证据、架构和测试约束
+  3. GitHub Open Issues + TODO.md — 当前执行任务；TODO 仅是索引
+  4. RULE_STATUS.md + RULE_EVIDENCE_MATRIX.md — 规则事实和证据
+  5. PROJECT_STATUS.md — 当前集成快照
+  6. docs/development_workflow.md — 小 PR、证据来源与 CI 分工
 
-当前已有：普通规则真实结算与8局MatchRunner、match_evidence_001完整8局回归、CurrentAgent = MeldAwareShantenAgent V0.10、固定牌墙评估、Recorder/Vision/PublicState离线原型。
+快速检查：
+  python -B -m unittest discover -s tests -v
 
-当前主问题板：GitHub Issues #1–#9；TODO.md只保留未完成项。
-AI继续开发时必须直接对比CurrentAgent V0.10；TenpaiRiskTieBreakAgent V0.6保留为固定主对照，ShantenAgent V0.3保留为消融基线。不要回退到EfficiencyAgent，也不要只对Baseline做晋级判断。
-Executor最后做；Vision真实准确率与多帧稳定性未达门槛前不自动点击。
+一次只推进一个可验收的 Issue 切片：说明数据来源、UNKNOWN 边界、相关测试和合并条件。
+纯开发证据不等于独立盲测；旧录像与新来源分开。未解决特殊结算不能进入默认 AI EV。
+Hint Alpha 仍须遵守独立 Vision 晋级门；Executor 需独立安全门，不因某次测试通过而自动启用。
 
-不要一开始重写整个项目。先跑核心测试，再按Issue依赖推进。
-
-legacy_code/ 仍含泉州命名和过时计分假设，只当基线，不当现行惠安规则。
-
-未知规则必须标为 UNKNOWN，不要硬编码。
+PROJECT_CONTEXT.md 是架构背景，CHANGELOG.md 是历史；不要把它们当作最新任务状态。
