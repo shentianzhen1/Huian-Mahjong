@@ -97,16 +97,19 @@ class TemporalActionAssembler:
     def ingest(self, observation: RawObservation) -> tuple[ReconstructedAction, ...]:
         """Add one stable observation and return newly assembled actions."""
         timestamp = observation.timestamp_seconds
-        if self._seen_any and timestamp < self._watermark:
+        scope = _capture_scope(observation)
+        scope_changed = self._scope is not None and scope != self._scope
+        # A different recorded session may restart its own relative clock at zero.
+        # Within one capture scope, timestamps must remain monotonic.
+        if self._seen_any and timestamp < self._watermark and not scope_changed:
             raise ValueError(
                 "TemporalActionAssembler requires nondecreasing observation timestamps"
             )
-        scope = _capture_scope(observation)
         output: list[ReconstructedAction] = []
         if self._scope is None:
             self._scope = scope
-        elif scope != self._scope:
-            output.extend(self._close_capture_scope(observation, next_scope=scope))
+        elif scope_changed:
+            output.extend(self._close_capture_scope(next_scope=scope))
             self._scope = scope
 
         self._seen_any = True
@@ -166,7 +169,6 @@ class TemporalActionAssembler:
 
     def _close_capture_scope(
         self,
-        next_observation: RawObservation,
         *,
         next_scope: tuple[str | None, int | None],
     ) -> list[ReconstructedAction]:
@@ -190,7 +192,7 @@ class TemporalActionAssembler:
             unknown = self._ambiguous_action(
                 anchor,
                 reason="capture_scope_discontinuity",
-                evidence=[anchor, *related, next_observation],
+                evidence=[anchor, *related],
             )
             actions.append(
                 replace(
