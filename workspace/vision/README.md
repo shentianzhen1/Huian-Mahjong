@@ -27,3 +27,5 @@ Public Channel Calibration V0.1 位于 `public_channel_profiles.py`，配置见 
 Public Identity Shadow V0.1 已验证“直接复用 hand/draw/global 模板识别公开牌”不可行：5 张已复核公开弃牌在 detector bbox 下三种模式均为 0/5；人工 truth bbox 最好也只有 hand 模板 3/5，且平均相关度约 0.38。该实验的 source-session 精确排除实际命中 0 条模板，因此不是 leak-free 评估，但结果已经足以否决 naive cross-region reuse。公开候选继续保持 `tile_id=UNKNOWN`，下一步使用独立 `public_action / public_single / public_meld` 标签域。详见 `references/vision/2026-09-22/public_identity_shadow_v0_1.md`。
 
 Public Identity Labels V0.1 位于 `public_identity_labels.py`，manifest 为 `references/vision/2026-09-22/public_identity_labels_v0_1.json`：独立于 hand/draw/gold 标签域，首批 17 个 approved 开发标签覆盖 `public_action=4 / public_single=1 / public_meld=12`，只覆盖 11/34 标准牌且无跨 session 同类重复，因此 runtime identity 仍固定 UNKNOWN。叠放的 3+1 补杠 face 暂不批准，避免遮挡标签污染。支持 provenance/hash 校验和本地 crop export，详见 `references/vision/2026-09-22/public_identity_labels_v0_1.md`。
+
+Hand Context Assembler V0.1 位于 `hand_context_assembler.py`：把 PublicState 的局号/比分、独立庄家证据与 Gold 证据装成 canonical `HandContext`，并生成 UNKNOWN-only 的 `HAND_START / OPEN_GOLD` 草稿事件。不会从分数、先后手或麻将规则猜庄家，也不推庄底；座位映射未知时比分保持 UNKNOWN。设计见 `references/vision/2026-09-22/hand_context_assembler_v0_1.md`。
