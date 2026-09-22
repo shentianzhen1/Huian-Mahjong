@@ -2,7 +2,7 @@
 
 Date: 2026-09-22  
 Issue: #69  
-Status: real-frame development intake locked; bbox review pending
+Status: real-frame development intake locked; 10 detector bboxes pixel-reviewed
 
 ## What is locked
 
@@ -52,44 +52,46 @@ Supporting non-bbox facts:
 - 1 Youjin animation reference;
 - 2 settlement references.
 
-## Why bbox is still null
+## Pixel bbox review completed
 
-The archive proves **what is visible** in these frames, but the current ChatGPT
-execution environment cannot retrieve the committed JPG bytes into the local
-pixel-analysis container.
+The 10 detector targets were exported from the locked repository images through
+a one-time GitHub Actions artifact, then verified against the manifest SHA256
+values before review.
 
-Therefore V0.1 deliberately stores:
+All ten source JPGs are 1046 x 480.
 
-    status = fact_locked_bbox_pending
-    bbox = null
+The review used the actual pixels, not textual descriptions. The normalized
+bbox convention is:
 
-for discard/meld detector targets.
+    [x / 1046, y / 480, width / 1046, height / 480]
 
-No normalized coordinates are invented from textual descriptions.
+The manifest now marks the 5 discard and 5 meld targets:
 
-## Manual/local review workflow
+    status = bbox_reviewed
 
-Run from a normal repository checkout:
+The review also exposed an important detector fact: opponent discard visuals are
+not a single fixed ROI.
+
+- P1 / S9 / M4 / P7 appear as a large upper-middle response tile in the
+  reviewed frames.
+- N is a much smaller public tile near the upper area.
+- Player meld groups are in the lower public area, with the added-Kong sample
+  using a true stacked 3+1 display.
+
+Therefore Public Tile Detector V0.1 must remain geometry-first and cannot freeze
+one absolute discard box.
+
+## Re-review workflow
+
+The existing helper still supports future pending samples:
 
     python -m workspace.vision.public_detector_calibration \
       --manifest references/vision/2026-09-22/public_detector_calibration_v0_1.json \
       --repository-root . \
       --bbox-template local_bbox_review.json
 
-The tool:
-
-1. validates schema;
-2. verifies each committed image SHA256;
-3. reports target/source coverage;
-4. writes a small bbox-review template containing only the 10 detector targets.
-
-A reviewer then fills normalized:
-
-    [x, y, width, height]
-
-around the reviewed discard tile or exposed meld group.
-
-After review, the manifest can mark that row `bbox_reviewed`.
+For the current manifest, the generated template is empty because all detector
+targets have already been reviewed.
 
 ## Readiness gate
 
@@ -100,8 +102,9 @@ The development Public Tile Detector calibration gate requires, at minimum:
 - 5 bbox-reviewed meld samples;
 - meld samples from >=2 source sessions.
 
-The current manifest meets source/fact coverage but intentionally fails bbox
-readiness until real pixel boxes are reviewed.
+The current manifest now passes this **development** bbox-readiness gate.
+
+This does not make the detector formally promoted.
 
 ## Formal promotion separation
 
@@ -125,10 +128,10 @@ collection task.
 
 The next low-level work is now concrete:
 
-1. fill 10 normalized bboxes on already reviewed committed screenshots;
-2. use them to test public tile/meld segmentation;
-3. add more development frames if failure modes appear;
-4. then evaluate real replay sequences through:
+1. run Public Tile Detector V0.1 against the 10 reviewed target bboxes;
+2. add more development frames for failure modes and non-target negatives;
+3. add public tile identity only with region-appropriate evidence;
+4. evaluate real replay sequences through:
    detector -> River/Meld Observer -> Action Assembler -> Hand Timeline -> Match Ledger.
 
 No Rules, AI, Hint Alpha advice, or Executor behavior changes.
