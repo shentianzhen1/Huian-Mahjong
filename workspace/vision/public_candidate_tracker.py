@@ -68,6 +68,7 @@ class CandidateTrackerOutput:
     issues: tuple[str, ...]
     frame: str | int | None
     session: str | None
+    stream_epoch: int
     safe_for_hint: bool = False
     safe_for_executor: bool = False
 
@@ -79,6 +80,7 @@ class CandidateTrackerOutput:
             "issues": list(self.issues),
             "frame": self.frame,
             "session": self.session,
+            "stream_epoch": self.stream_epoch,
             "safe_for_hint": False,
             "safe_for_executor": False,
         }
@@ -223,18 +225,28 @@ def _snapshot(state: _TrackState) -> StablePublicTrack:
 class PublicCandidateTracker:
     """Track geometry candidates across frames with fail-closed stability."""
 
-    def __init__(self, *, settle_frames: int = 3, disappear_frames: int = 2):
+    def __init__(
+        self,
+        *,
+        settle_frames: int = 3,
+        disappear_frames: int = 2,
+        maximum_gap_seconds: float = 0.5,
+    ):
         if settle_frames < 2:
             raise ValueError("settle_frames must be at least 2")
         if disappear_frames < 1:
             raise ValueError("disappear_frames must be at least 1")
+        if maximum_gap_seconds <= 0:
+            raise ValueError("maximum_gap_seconds must be positive")
         self.settle_frames = settle_frames
         self.disappear_frames = disappear_frames
+        self.maximum_gap_seconds = float(maximum_gap_seconds)
         self._tracks: dict[int, _TrackState] = {}
         self._next_track_id = 1
         self._last_timestamp = 0.0
         self._seen_any = False
         self._session: str | None = None
+        self._stream_epoch = 0
 
     def observe(
         self,
@@ -246,19 +258,29 @@ class PublicCandidateTracker:
             raise ValueError("timestamp_seconds must be nonnegative")
         if self._seen_any and timestamp_seconds < self._last_timestamp:
             raise ValueError("tracker timestamps must be nondecreasing")
-        self._seen_any = True
-        self._last_timestamp = float(timestamp_seconds)
 
         issues: list[str] = []
         events: list[PublicTrackEvent] = []
 
-        if (
+        session_changed = (
             self._session is not None
             and frame.session is not None
             and frame.session != self._session
-        ):
+        )
+        gap_reset = (
+            self._seen_any
+            and timestamp_seconds - self._last_timestamp > self.maximum_gap_seconds
+        )
+        if session_changed or gap_reset:
             self._tracks.clear()
-            issues.append("session_changed_reset")
+            self._stream_epoch += 1
+            if session_changed:
+                issues.append("session_changed_reset")
+            if gap_reset:
+                issues.append("observation_gap_reset")
+
+        self._seen_any = True
+        self._last_timestamp = float(timestamp_seconds)
         if frame.session is not None:
             self._session = frame.session
 
@@ -346,6 +368,7 @@ class PublicCandidateTracker:
             issues=tuple(dict.fromkeys(issues)),
             frame=frame.frame,
             session=frame.session,
+            stream_epoch=self._stream_epoch,
         )
 
 
@@ -387,4 +410,5 @@ def river_snapshot_from_channel(
         frame=output.frame,
         trusted=True,
         evidence_refs=tuple(refs),
+        stream_epoch=output.stream_epoch,
     )
