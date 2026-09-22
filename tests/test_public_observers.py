@@ -34,6 +34,7 @@ def river(
     *,
     frame: int,
     trusted: bool = True,
+    stream_epoch: int = 0,
 ) -> RiverSnapshot:
     return RiverSnapshot(
         timestamp_seconds=t,
@@ -42,6 +43,7 @@ def river(
         frame=frame,
         trusted=trusted,
         evidence_refs=(f"frame:{frame}",),
+        stream_epoch=stream_epoch,
     )
 
 
@@ -67,6 +69,7 @@ def meld_frame(
     *,
     frame: int,
     trusted: bool = True,
+    stream_epoch: int = 0,
 ) -> MeldSnapshot:
     return MeldSnapshot(
         timestamp_seconds=t,
@@ -75,6 +78,7 @@ def meld_frame(
         frame=frame,
         trusted=trusted,
         evidence_refs=(f"frame:{frame}",),
+        stream_epoch=stream_epoch,
     )
 
 
@@ -239,6 +243,81 @@ class DiscardRiverObserverTests(unittest.TestCase):
         self.assertFalse(output.trusted)
         self.assertTrue(output.baseline_rebased)
         self.assertEqual(output.issues, ("river_transition_ambiguous",))
+
+    def test_stream_epoch_change_reestablishes_river_baseline(self):
+        observer = DiscardRiverObserver(settle_frames=2)
+        self._settle(
+            observer,
+            lambda i: river(
+                1 + i * 0.1,
+                "opponent",
+                (tile(0.20, "M1"),),
+                frame=10 + i,
+                stream_epoch=0,
+            ),
+        )
+
+        first_new_epoch = observer.observe(
+            river(
+                5.0,
+                "opponent",
+                (tile(0.20, "M1"), tile(0.25, "M2")),
+                frame=50,
+                stream_epoch=1,
+            )
+        )
+        self.assertFalse(first_new_epoch.stable)
+        self.assertTrue(first_new_epoch.baseline_rebased)
+        self.assertEqual(
+            first_new_epoch.issues,
+            ("river_stream_epoch_reset",),
+        )
+
+        new_baseline = observer.observe(
+            river(
+                5.1,
+                "opponent",
+                (tile(0.20, "M1"), tile(0.25, "M2")),
+                frame=51,
+                stream_epoch=1,
+            )
+        )
+        self.assertTrue(new_baseline.stable)
+        self.assertIsNone(new_baseline.observation)
+        self.assertEqual(
+            new_baseline.issues,
+            ("river_baseline_established",),
+        )
+
+        first_plus_one = observer.observe(
+            river(
+                6.0,
+                "opponent",
+                (
+                    tile(0.20, "M1"),
+                    tile(0.25, "M2"),
+                    tile(0.30, "M3"),
+                ),
+                frame=60,
+                stream_epoch=1,
+            )
+        )
+        self.assertFalse(first_plus_one.stable)
+        discard = observer.observe(
+            river(
+                6.1,
+                "opponent",
+                (
+                    tile(0.20, "M1"),
+                    tile(0.25, "M2"),
+                    tile(0.30, "M3"),
+                ),
+                frame=61,
+                stream_epoch=1,
+            )
+        )
+        self.assertIsNotNone(discard.observation)
+        self.assertEqual(discard.observation.tile, "M3")
 
     def test_untrusted_snapshot_does_not_change_baseline(self):
         observer = DiscardRiverObserver(settle_frames=2)
@@ -409,6 +488,57 @@ class MeldSnapshotObserverTests(unittest.TestCase):
         self.assertFalse(output.trusted)
         self.assertTrue(output.baseline_rebased)
         self.assertEqual(output.issues, ("meld_transition_ambiguous",))
+
+    def test_stream_epoch_change_reestablishes_meld_baseline(self):
+        observer = MeldSnapshotObserver(settle_frames=2)
+        self._settle(
+            observer,
+            lambda i: meld_frame(
+                1 + i * 0.1,
+                "player",
+                (meld(0.05, ("E", "E", "E")),),
+                frame=10 + i,
+                stream_epoch=0,
+            ),
+        )
+
+        first_new_epoch = observer.observe(
+            meld_frame(
+                5.0,
+                "player",
+                (
+                    meld(0.05, ("E", "E", "E")),
+                    meld(0.25, ("P3", "P4", "P5")),
+                ),
+                frame=50,
+                stream_epoch=1,
+            )
+        )
+        self.assertFalse(first_new_epoch.stable)
+        self.assertTrue(first_new_epoch.baseline_rebased)
+        self.assertEqual(
+            first_new_epoch.issues,
+            ("meld_stream_epoch_reset",),
+        )
+
+        new_baseline = observer.observe(
+            meld_frame(
+                5.1,
+                "player",
+                (
+                    meld(0.05, ("E", "E", "E")),
+                    meld(0.25, ("P3", "P4", "P5")),
+                ),
+                frame=51,
+                stream_epoch=1,
+            )
+        )
+        self.assertTrue(new_baseline.stable)
+        self.assertIsNone(new_baseline.observation)
+        self.assertEqual(
+            new_baseline.issues,
+            ("meld_baseline_established",),
+        )
 
     def test_one_frame_meld_animation_does_not_emit(self):
         observer = MeldSnapshotObserver(settle_frames=3)
