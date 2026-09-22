@@ -1,0 +1,415 @@
+{
+  "schema_version": "public_identity_labels_v0_1",
+  "excluded_from_formal_promotion": true,
+  "development_only_reason": "Labels come from already-reviewed target-room development frames. They establish the separate public-region data loop only and cannot be reused as source-disjoint formal promotion evidence.",
+  "labels": [
+    {
+      "label_id": "public_action_p1",
+      "source_calibration_sample_id": "66fe_opponent_discard_p1_035s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/peng_offer_p1_035000ms.jpg",
+      "image_sha256": "d29e37ca1a59b745a214a83b3ad460a0138bea7c176fcd7fadc69025b37aa072",
+      "frame_index": 1015,
+      "time_ms": 35000,
+      "region": "public_action",
+      "tile_id": "P1",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "uses locked pixel-reviewed public detector bbox"
+      ]
+    },
+    {
+      "label_id": "public_action_s9",
+      "source_calibration_sample_id": "66fe_opponent_discard_s9_080s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/chi_offer_s9_080000ms.jpg",
+      "image_sha256": "257a1a557adcffe4f9cbcc413e7522c687aec0489da5184bd6d54bc8f43e1d97",
+      "frame_index": 2320,
+      "time_ms": 80000,
+      "region": "public_action",
+      "tile_id": "S9",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "uses locked pixel-reviewed public detector bbox"
+      ]
+    },
+    {
+      "label_id": "public_single_n",
+      "source_calibration_sample_id": "66fe_opponent_discard_n_085s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/opponent_turn_085000ms.jpg",
+      "image_sha256": "46e03b620d80b8b89db4b49ad07d77f231fbbc407598721f4e018fee09cde455",
+      "frame_index": 2465,
+      "time_ms": 85000,
+      "region": "public_single",
+      "tile_id": "N",
+      "bbox": [
+        0.254302,
+        0.00625,
+        0.023901,
+        0.072917
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "uses locked pixel-reviewed public detector bbox"
+      ]
+    },
+    {
+      "label_id": "public_action_m4",
+      "source_calibration_sample_id": "b389_opponent_discard_m4_033s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_m4_offer_033000ms.jpg",
+      "image_sha256": "ca2527edf287b752be4a80e88f47916e598a2f9fae43f2a6c5153cde8ead3856",
+      "frame_index": 957,
+      "time_ms": 33000,
+      "region": "public_action",
+      "tile_id": "M4",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "uses locked pixel-reviewed public detector bbox"
+      ]
+    },
+    {
+      "label_id": "public_action_p7",
+      "source_calibration_sample_id": "b389_opponent_discard_p7_055s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_p7_offer_055000ms.jpg",
+      "image_sha256": "5e521e6477d168e63f9b0f065cadb5bab3698be30e445867bcd1d2f11549ef1e",
+      "frame_index": 1595,
+      "time_ms": 55000,
+      "region": "public_action",
+      "tile_id": "P7",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "uses locked pixel-reviewed public detector bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_p1_a",
+      "source_calibration_sample_id": "66fe_player_peng_p1_040s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/peng_p1_visible_040000ms.jpg",
+      "image_sha256": "8113ac95c339ceff1f7f22e7e5290f759699ae4af4a21020941605ec6c7f5f39",
+      "frame_index": 1160,
+      "time_ms": 40000,
+      "region": "public_meld",
+      "tile_id": "P1",
+      "bbox": [
+        0.095602,
+        0.8625,
+        0.041109,
+        0.125
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_p1_b",
+      "source_calibration_sample_id": "66fe_player_peng_p1_040s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/peng_p1_visible_040000ms.jpg",
+      "image_sha256": "8113ac95c339ceff1f7f22e7e5290f759699ae4af4a21020941605ec6c7f5f39",
+      "frame_index": 1160,
+      "time_ms": 40000,
+      "region": "public_meld",
+      "tile_id": "P1",
+      "bbox": [
+        0.136711,
+        0.8625,
+        0.041109,
+        0.125
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_p1_c",
+      "source_calibration_sample_id": "66fe_player_peng_p1_040s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/peng_p1_visible_040000ms.jpg",
+      "image_sha256": "8113ac95c339ceff1f7f22e7e5290f759699ae4af4a21020941605ec6c7f5f39",
+      "frame_index": 1160,
+      "time_ms": 40000,
+      "region": "public_meld",
+      "tile_id": "P1",
+      "bbox": [
+        0.17782,
+        0.8625,
+        0.041109,
+        0.125
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_s7",
+      "source_calibration_sample_id": "66fe_player_chi_s789_082s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/chi_s789_youjin_hint_082000ms.jpg",
+      "image_sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "frame_index": 2378,
+      "time_ms": 82000,
+      "region": "public_meld",
+      "tile_id": "S7",
+      "bbox": [
+        0.094646,
+        0.852083,
+        0.042065,
+        0.135417
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_s8",
+      "source_calibration_sample_id": "66fe_player_chi_s789_082s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/chi_s789_youjin_hint_082000ms.jpg",
+      "image_sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "frame_index": 2378,
+      "time_ms": 82000,
+      "region": "public_meld",
+      "tile_id": "S8",
+      "bbox": [
+        0.136711,
+        0.852083,
+        0.042065,
+        0.135417
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_s9",
+      "source_calibration_sample_id": "66fe_player_chi_s789_082s",
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "image_path": "references/gameplay/2026-09-15/66fe863f_youjin100/chi_s789_youjin_hint_082000ms.jpg",
+      "image_sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "frame_index": 2378,
+      "time_ms": 82000,
+      "region": "public_meld",
+      "tile_id": "S9",
+      "bbox": [
+        0.178776,
+        0.852083,
+        0.042065,
+        0.135417
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_m4",
+      "source_calibration_sample_id": "b389_player_chi_m456_035s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_m456_035000ms.jpg",
+      "image_sha256": "7cc505b7f0abb0e5ca52272554eb2cb3b9004d0163a9f5aee42ff0b60410ee74",
+      "frame_index": 1015,
+      "time_ms": 35000,
+      "region": "public_meld",
+      "tile_id": "M4",
+      "bbox": [
+        0.094646,
+        0.85625,
+        0.042065,
+        0.133333
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_m5",
+      "source_calibration_sample_id": "b389_player_chi_m456_035s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_m456_035000ms.jpg",
+      "image_sha256": "7cc505b7f0abb0e5ca52272554eb2cb3b9004d0163a9f5aee42ff0b60410ee74",
+      "frame_index": 1015,
+      "time_ms": 35000,
+      "region": "public_meld",
+      "tile_id": "M5",
+      "bbox": [
+        0.136711,
+        0.85625,
+        0.042065,
+        0.133333
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_m6",
+      "source_calibration_sample_id": "b389_player_chi_m456_035s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_m456_035000ms.jpg",
+      "image_sha256": "7cc505b7f0abb0e5ca52272554eb2cb3b9004d0163a9f5aee42ff0b60410ee74",
+      "frame_index": 1015,
+      "time_ms": 35000,
+      "region": "public_meld",
+      "tile_id": "M6",
+      "bbox": [
+        0.178776,
+        0.85625,
+        0.042065,
+        0.133333
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_p6",
+      "source_calibration_sample_id": "b389_player_chi_p678_057s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_p678_057000ms.jpg",
+      "image_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "frame_index": 1653,
+      "time_ms": 57000,
+      "region": "public_meld",
+      "tile_id": "P6",
+      "bbox": [
+        0.223709,
+        0.85625,
+        0.042065,
+        0.133333
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_p7",
+      "source_calibration_sample_id": "b389_player_chi_p678_057s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_p678_057000ms.jpg",
+      "image_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "frame_index": 1653,
+      "time_ms": 57000,
+      "region": "public_meld",
+      "tile_id": "P7",
+      "bbox": [
+        0.265774,
+        0.85625,
+        0.042065,
+        0.133333
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    },
+    {
+      "label_id": "public_meld_p8",
+      "source_calibration_sample_id": "b389_player_chi_p678_057s",
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "image_path": "references/gameplay/2026-09-15/b3892b34_zimo68/chi_p678_057000ms.jpg",
+      "image_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "frame_index": 1653,
+      "time_ms": 57000,
+      "region": "public_meld",
+      "tile_id": "P8",
+      "bbox": [
+        0.307839,
+        0.85625,
+        0.042065,
+        0.133333
+      ],
+      "status": "approved",
+      "annotator": "pixel_review_2026_09_22",
+      "notes": [
+        "development-only public-region identity label",
+        "individual visible meld face reviewed inside locked exposed-group bbox"
+      ]
+    }
+  ]
+}
