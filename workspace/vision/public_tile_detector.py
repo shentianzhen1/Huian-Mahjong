@@ -7,6 +7,11 @@ own those semantics.
 
 The first calibration set is already-reviewed development evidence and remains
 excluded from formal Runtime Vision promotion.
+
+Public Identity Shadow V0.1 showed that reusing the existing hand/draw/global
+template pools on reviewed public discard crops is not reliable, especially on
+detector bboxes. This module therefore keeps every public candidate identity
+UNKNOWN; public-region identity must use a separate reviewed data path.
 """
 from __future__ import annotations
 
