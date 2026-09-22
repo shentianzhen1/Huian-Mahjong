@@ -60,7 +60,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：基础 observation/action/evidence 契约与 river/meld observer 已落地；现有 Runtime Vision 已接我方 meld/hand-delta bridge。下一阻塞是用真实帧校准双方弃牌河、对手副露低层 segmentation/identity，再接时序 assembler。
+- **#69** Public Match Reconstruction：基础契约、river/meld observer、我方 Runtime bridge 与 Temporal Action Assembler 已落地；当前真实阻塞集中为双方弃牌河 / 对手副露低层 segmentation/identity 校准，再进入整局 ledger。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -71,7 +71,7 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：先完成 river/meld 稳定快照 observer，再用已复核真实帧接低层弃牌/副露 detector；最终把局号/庄家/开金、双方弃牌、副露、游金状态、胡牌/结算重建成可审计 Hand Timeline；冲突保持 UNKNOWN。
+3. 推进 #69 Public Match Reconstruction V0.1：现有稳定 observer + assembler 已可消费 DISCARD/HAND_DELTA/MELD_DELTA；下一步用已归档真实截图与新录像校准 Public Tile Detector，再生成局号/庄家/开金、双方弃牌、副露、游金状态、胡牌/结算的整局 ledger；冲突保持 UNKNOWN。
 4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。
