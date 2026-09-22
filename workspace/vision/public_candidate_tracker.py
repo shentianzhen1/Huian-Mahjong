@@ -411,4 +411,5 @@ def river_snapshot_from_channel(
         trusted=True,
         evidence_refs=tuple(refs),
         stream_epoch=output.stream_epoch,
+        source_session=output.session,
     )

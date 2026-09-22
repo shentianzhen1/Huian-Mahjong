@@ -117,6 +117,7 @@ class RiverSnapshot:
     trusted: bool = True
     evidence_refs: tuple[str, ...] = ()
     stream_epoch: int = 0
+    source_session: str | None = None
 
     def __post_init__(self) -> None:
         if self.timestamp_seconds < 0:
@@ -127,6 +128,10 @@ class RiverSnapshot:
             or self.stream_epoch < 0
         ):
             raise ValueError("stream_epoch must be a nonnegative integer")
+        if self.source_session is not None and (
+            not isinstance(self.source_session, str) or not self.source_session
+        ):
+            raise ValueError("source_session must be a nonempty string or None")
         _validate_actor(self.actor)
         object.__setattr__(self, "tiles", tuple(self.tiles))
         object.__setattr__(
@@ -175,6 +180,7 @@ class MeldSnapshot:
     trusted: bool = True
     evidence_refs: tuple[str, ...] = ()
     stream_epoch: int = 0
+    source_session: str | None = None
 
     def __post_init__(self) -> None:
         if self.timestamp_seconds < 0:
@@ -185,6 +191,10 @@ class MeldSnapshot:
             or self.stream_epoch < 0
         ):
             raise ValueError("stream_epoch must be a nonnegative integer")
+        if self.source_session is not None and (
+            not isinstance(self.source_session, str) or not self.source_session
+        ):
+            raise ValueError("source_session must be a nonempty string or None")
         _validate_actor(self.actor)
         object.__setattr__(self, "groups", tuple(self.groups))
         object.__setattr__(
@@ -337,17 +347,22 @@ class DiscardRiverObserver:
         self._accepted: RiverSnapshot | None = None
         self._pending: RiverSnapshot | None = None
         self._pending_streak = 0
-        self._stream_epoch: int | None = None
+        self._capture_scope: tuple[str | None, int] | None = None
 
     def observe(self, snapshot: RiverSnapshot) -> ObserverOutput:
-        epoch_reset = False
-        if self._stream_epoch is None:
-            self._stream_epoch = snapshot.stream_epoch
-        elif snapshot.stream_epoch != self._stream_epoch:
-            self._stream_epoch = snapshot.stream_epoch
+        scope = (snapshot.source_session, snapshot.stream_epoch)
+        reset_issue: str | None = None
+        if self._capture_scope is None:
+            self._capture_scope = scope
+        elif scope != self._capture_scope:
+            reset_issue = (
+                "river_stream_epoch_reset"
+                if scope[1] != self._capture_scope[1]
+                else "river_source_session_reset"
+            )
+            self._capture_scope = scope
             self._accepted = None
             self._clear_pending()
-            epoch_reset = True
 
         if not snapshot.trusted:
             self._clear_pending()
@@ -356,8 +371,8 @@ class DiscardRiverObserver:
                 stable=False,
                 trusted=False,
                 issues=(
-                    ("river_stream_epoch_reset", "river_snapshot_untrusted")
-                    if epoch_reset
+                    (reset_issue, "river_snapshot_untrusted")
+                    if reset_issue
                     else ("river_snapshot_untrusted",)
                 ),
             )
@@ -377,8 +392,8 @@ class DiscardRiverObserver:
                 None,
                 stable=False,
                 trusted=True,
-                issues=(("river_stream_epoch_reset",) if epoch_reset else ()),
-                baseline_rebased=epoch_reset,
+                issues=((reset_issue,) if reset_issue else ()),
+                baseline_rebased=reset_issue is not None,
             )
 
         self._pending = snapshot
@@ -432,6 +447,8 @@ class DiscardRiverObserver:
                     "new_tile_bbox": list(new_tile.normalized_bbox),
                     "tile_identity_observed": new_tile.tile_id is not None,
                     "observer": "discard_river_v0_1",
+                    "source_session": stable_snapshot.source_session,
+                    "stream_epoch": stable_snapshot.stream_epoch,
                 },
             )
             self._accepted = stable_snapshot
@@ -492,17 +509,22 @@ class MeldSnapshotObserver:
         self._accepted: MeldSnapshot | None = None
         self._pending: MeldSnapshot | None = None
         self._pending_streak = 0
-        self._stream_epoch: int | None = None
+        self._capture_scope: tuple[str | None, int] | None = None
 
     def observe(self, snapshot: MeldSnapshot) -> ObserverOutput:
-        epoch_reset = False
-        if self._stream_epoch is None:
-            self._stream_epoch = snapshot.stream_epoch
-        elif snapshot.stream_epoch != self._stream_epoch:
-            self._stream_epoch = snapshot.stream_epoch
+        scope = (snapshot.source_session, snapshot.stream_epoch)
+        reset_issue: str | None = None
+        if self._capture_scope is None:
+            self._capture_scope = scope
+        elif scope != self._capture_scope:
+            reset_issue = (
+                "meld_stream_epoch_reset"
+                if scope[1] != self._capture_scope[1]
+                else "meld_source_session_reset"
+            )
+            self._capture_scope = scope
             self._accepted = None
             self._clear_pending()
-            epoch_reset = True
 
         if not snapshot.trusted:
             self._clear_pending()
@@ -511,8 +533,8 @@ class MeldSnapshotObserver:
                 stable=False,
                 trusted=False,
                 issues=(
-                    ("meld_stream_epoch_reset", "meld_snapshot_untrusted")
-                    if epoch_reset
+                    (reset_issue, "meld_snapshot_untrusted")
+                    if reset_issue
                     else ("meld_snapshot_untrusted",)
                 ),
             )
@@ -532,8 +554,8 @@ class MeldSnapshotObserver:
                 None,
                 stable=False,
                 trusted=True,
-                issues=(("meld_stream_epoch_reset",) if epoch_reset else ()),
-                baseline_rebased=epoch_reset,
+                issues=((reset_issue,) if reset_issue else ()),
+                baseline_rebased=reset_issue is not None,
             )
 
         self._pending = snapshot
@@ -639,6 +661,8 @@ class MeldSnapshotObserver:
             "tile_identity_complete": identities_complete,
             "tile_candidates": [tile for tile in group.tiles],
             "observer": "meld_snapshot_v0_1",
+            "source_session": snapshot.source_session,
+            "stream_epoch": snapshot.stream_epoch,
         }
         if previous_group is not None:
             details["previous_group_size"] = len(previous_group.tiles)

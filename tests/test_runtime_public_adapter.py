@@ -300,5 +300,53 @@ class RuntimePublicAdapterHandDeltaTests(unittest.TestCase):
         )
 
 
+class RuntimeCaptureScopeTests(unittest.TestCase):
+    """The adapter must not produce a hand delta across unrelated captures."""
+
+    def test_hand_delta_rejects_different_sessions(self):
+        before = report([], concealed_count=4, frame=100, session="session-a")
+        after = report([], concealed_count=2, frame=110, session="session-b")
+        self.assertIsNone(
+            player_hand_delta_from_runtime(
+                before, after, timestamp_seconds=1.0
+            )
+        )
+
+    def test_hand_delta_rejects_different_stream_epochs(self):
+        before = {**report([], concealed_count=4, frame=100),
+                  "stream_epoch": 0}
+        after = {**report([], concealed_count=2, frame=110),
+                 "stream_epoch": 1}
+        self.assertIsNone(
+            player_hand_delta_from_runtime(
+                before, after, timestamp_seconds=1.0
+            )
+        )
+
+    def test_hand_delta_carries_session_and_epoch_on_same_source(self):
+        before = {**report([], concealed_count=4, frame=100,
+                           session="session-a"),
+                  "stream_epoch": 3}
+        after = {**report([], concealed_count=2, frame=110,
+                          session="session-a"),
+                 "stream_epoch": 3}
+        delta = player_hand_delta_from_runtime(
+            before, after, timestamp_seconds=1.0
+        )
+        assert delta is not None
+        self.assertEqual(delta.details["source_session"], "session-a")
+        self.assertEqual(delta.details["stream_epoch"], 3)
+        self.assertEqual(delta.details["removed_count"], 2)
+
+    def test_meld_snapshot_carries_session_and_epoch(self):
+        source = {**report([], frame=100, session="session-a"),
+                  "stream_epoch": 2}
+        snapshot = player_meld_snapshot_from_runtime(
+            source, timestamp_seconds=1.0
+        )
+        self.assertEqual(snapshot.source_session, "session-a")
+        self.assertEqual(snapshot.stream_epoch, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

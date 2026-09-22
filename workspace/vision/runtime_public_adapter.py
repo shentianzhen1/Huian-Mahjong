@@ -156,6 +156,8 @@ def player_meld_snapshot_from_runtime(
         frame=(report.get("frames") or [None])[-1],
         trusted=trusted,
         evidence_refs=_runtime_refs(report, components),
+        source_session=report.get("session") or None,
+        stream_epoch=report.get("stream_epoch", 0),
     )
 
 
@@ -197,6 +199,15 @@ def player_hand_delta_from_runtime(
     if before.get("geometry_untrusted") or after.get("geometry_untrusted"):
         return None
 
+    # Never compare two reports from distinct sources or tracking epochs.
+    before_session, after_session = before.get("session"), after.get("session")
+    before_epoch = before.get("stream_epoch", 0)
+    after_epoch = after.get("stream_epoch", 0)
+    if before_session != after_session or before_epoch != after_epoch:
+        return None
+    if isinstance(before_epoch, bool) or not isinstance(before_epoch, int) or before_epoch < 0:
+        return None
+
     before_count = before.get("concealed_tile_count")
     after_count = after.get("concealed_tile_count")
     if not isinstance(before_count, int) or not isinstance(after_count, int):
@@ -213,6 +224,8 @@ def player_hand_delta_from_runtime(
         "after_concealed_count": after_count,
         "observer": "runtime_public_adapter_v0_1",
         "identity_delta_observed": False,
+        "source_session": before_session,
+        "stream_epoch": before_epoch,
     }
 
     before_components = _concealed_components(before)
