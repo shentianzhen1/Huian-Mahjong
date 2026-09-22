@@ -13,3 +13,5 @@ Public Observers V0.1 位于 `public_observers.py`：用稳定快照差分观察
 Runtime Public Adapter V0.1 位于 `runtime_public_adapter.py`，把现有 Runtime Vision V0.2 的底部动态几何接入 Public Observers：生成我方 `MeldSnapshot`，并从前后稳定 runtime report 生成我方 `HAND_DELTA`。当前 meld 区没有独立身份分类器，因此副露牌面身份保持 UNKNOWN，不复用 hand 模板冒充已解决。设计见 `references/vision/2026-09-22/runtime_public_adapter_v0_1.md`。
 
 Temporal Action Assembler V0.1 位于 `action_assembler.py`：把已稳定的 `DISCARD / HAND_DELTA / MELD_DELTA` 按 actor 与时间窗口组合成 CHI/PENG/MING_GANG/ADD_KONG；时序参数属于采集启发式，不属于麻将规则。过期、重复或多组合歧义均 fail closed 为 UNKNOWN。设计见 `references/vision/2026-09-22/temporal_action_assembler_v0_1.md`。
+
+Public Match Ledger V0.1 位于 `match_ledger.py`：直接从 canonical `HandTimeline` 渲染中文整局流水，不另造展示真相源；支持简洁/审计两种视图、1/8~8/8、庄家、金、双方出牌、吃碰杠、游金状态、胡牌和结算，并检查相邻局比分连续性。设计见 `references/vision/2026-09-22/public_match_ledger_v0_1.md`。
