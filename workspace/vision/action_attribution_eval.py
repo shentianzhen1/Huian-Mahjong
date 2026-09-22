@@ -12,7 +12,7 @@ import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from workspace.vision.public_match_reconstruction import ReconstructedAction
 
@@ -188,6 +188,19 @@ class ActionPrediction:
         )
 
 
+@dataclass(frozen=True)
+class PredictionBatch:
+    """Capture hash must match independently reviewed truth, not just its alias."""
+
+    source_sha256: str
+    actions: tuple[ActionPrediction, ...]
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.source_sha256, str) or not _SHA256.fullmatch(self.source_sha256):
+            raise ValueError("prediction source_sha256 must be lowercase SHA256")
+        object.__setattr__(self, "actions", tuple(self.actions))
+
+
 def prediction_from_action(action: ReconstructedAction) -> ActionPrediction:
     """Convert a real assembler action without inventing its turn or source."""
     details = action.details
@@ -210,7 +223,7 @@ def _ratio(numerator: int, denominator: int) -> float | None:
 
 def evaluate_attribution(
     truth: TruthBatch,
-    predictions: Iterable[ActionPrediction],
+    predictions: PredictionBatch,
     *,
     tolerance_seconds: float = 0.35,
 ) -> dict[str, Any]:
@@ -223,7 +236,9 @@ def evaluate_attribution(
     tolerance = _number(tolerance_seconds, "tolerance_seconds")
     if tolerance == 0:
         raise ValueError("tolerance_seconds must be positive")
-    predicted = tuple(predictions)
+    if predictions.source_sha256 != truth.source_sha256:
+        raise ValueError("prediction source_sha256 does not match reviewed truth")
+    predicted = predictions.actions
     in_scope: list[tuple[int, ActionPrediction]] = []
     out_of_scope: list[int] = []
     for index, item in enumerate(predicted):
@@ -384,7 +399,7 @@ def load_truth(path: str | Path) -> TruthBatch:
     )
 
 
-def load_predictions(path: str | Path) -> tuple[ActionPrediction, ...]:
+def load_predictions(path: str | Path) -> PredictionBatch:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("unsupported prediction file schema")
@@ -403,7 +418,7 @@ def load_predictions(path: str | Path) -> tuple[ActionPrediction, ...]:
             tile=row.get("tile"),
             turn_actor=row.get("turn_actor"),
         ))
-    return tuple(result)
+    return PredictionBatch(source_sha256=payload.get("source_sha256"), actions=tuple(result))
 
 
 def main() -> None:
