@@ -47,13 +47,21 @@ class PublicDetectorCalibrationManifestTests(unittest.TestCase):
         self.assertEqual(report["source_sessions_by_target"]["discard"], 2)
         self.assertEqual(report["source_sessions_by_target"]["meld"], 2)
 
-    def test_bbox_is_intentionally_pending_not_invented(self):
+    def test_ten_detector_targets_have_pixel_reviewed_bboxes(self):
         pending = pending_bbox_samples(self.manifest)
-        self.assertEqual(len(pending), 10)
-        self.assertTrue(all(sample.bbox is None for sample in pending))
+        self.assertEqual(pending, ())
+        reviewed = [
+            sample
+            for sample in self.manifest.samples
+            if sample.target in {"discard", "meld"}
+        ]
+        self.assertEqual(len(reviewed), 10)
+        self.assertTrue(all(sample.bbox is not None for sample in reviewed))
+        self.assertTrue(all(sample.status == "bbox_reviewed" for sample in reviewed))
         report = readiness_report(self.manifest)
-        self.assertEqual(report["bbox_ready_by_target"], {})
-        self.assertFalse(report["public_tile_detector_bbox_ready"])
+        self.assertEqual(report["bbox_ready_by_target"]["discard"], 5)
+        self.assertEqual(report["bbox_ready_by_target"]["meld"], 5)
+        self.assertTrue(report["public_tile_detector_bbox_ready"])
 
     def test_real_committed_evidence_files_match_locked_hashes(self):
         self.assertEqual(
@@ -61,18 +69,13 @@ class PublicDetectorCalibrationManifestTests(unittest.TestCase):
             (),
         )
 
-    def test_bbox_template_contains_only_detector_targets(self):
+    def test_bbox_template_is_empty_after_review_completion(self):
         template = bbox_review_template(self.manifest)
         self.assertEqual(
             template["schema_version"],
             "public_detector_bbox_review_v0_1",
         )
-        self.assertEqual(len(template["samples"]), 10)
-        self.assertEqual(
-            {row["target"] for row in template["samples"]},
-            {"discard", "meld"},
-        )
-        self.assertTrue(all(row["bbox"] is None for row in template["samples"]))
+        self.assertEqual(template["samples"], [])
 
     def test_bbox_reviewed_status_requires_real_box(self):
         sample = self.manifest.samples[0]

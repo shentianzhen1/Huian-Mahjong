@@ -15,10 +15,19 @@
       "target": "discard",
       "expected_tile": "P1",
       "expected_tiles": [],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "bbox_reviewed",
       "observation": "Opponent P1 discard; bottom hand contains two P1 copies",
-      "notes": ["screen recording of in-game replay", "replay controls may obscure part of river"]
+      "notes": [
+        "screen recording of in-game replay",
+        "replay controls may obscure part of river",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "66fe_player_peng_p1_040s",
@@ -31,11 +40,23 @@
       "actor": "player",
       "target": "meld",
       "expected_tile": null,
-      "expected_tiles": ["P1", "P1", "P1"],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "expected_tiles": [
+        "P1",
+        "P1",
+        "P1"
+      ],
+      "bbox": [
+        0.092734,
+        0.835417,
+        0.128107,
+        0.158333
+      ],
+      "status": "bbox_reviewed",
       "observation": "Three-tile P1 Peng visible; fourth copy not yet present",
-      "notes": ["player-side exposed meld reference"]
+      "notes": [
+        "player-side exposed meld reference",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "66fe_player_hand_fourth_p1_069s",
@@ -52,7 +73,10 @@
       "bbox": null,
       "status": "fact_only",
       "observation": "Existing P1 Peng and an additional P1 at the hand edge",
-      "notes": ["supports later ADD_KONG temporal sequence", "not a public river calibration target"]
+      "notes": [
+        "supports later ADD_KONG temporal sequence",
+        "not a public river calibration target"
+      ]
     },
     {
       "sample_id": "66fe_player_added_kong_p1_070s",
@@ -65,11 +89,24 @@
       "actor": "player",
       "target": "meld",
       "expected_tile": null,
-      "expected_tiles": ["P1", "P1", "P1", "P1"],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "expected_tiles": [
+        "P1",
+        "P1",
+        "P1",
+        "P1"
+      ],
+      "bbox": [
+        0.091778,
+        0.783333,
+        0.130019,
+        0.210417
+      ],
+      "status": "bbox_reviewed",
       "observation": "P1 meld becomes a stacked kong; extra white B visible; wall display 95 to 94",
-      "notes": ["important stacked 3+1 meld geometry reference"]
+      "notes": [
+        "important stacked 3+1 meld geometry reference",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "66fe_opponent_discard_s9_080s",
@@ -83,10 +120,19 @@
       "target": "discard",
       "expected_tile": "S9",
       "expected_tiles": [],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "bbox_reviewed",
       "observation": "Opponent S9 offered; S7 and S8 in bottom hand",
-      "notes": ["response/offer frame", "replay overlay present"]
+      "notes": [
+        "response/offer frame",
+        "replay overlay present",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "66fe_player_chi_s789_082s",
@@ -99,11 +145,23 @@
       "actor": "player",
       "target": "meld",
       "expected_tile": null,
-      "expected_tiles": ["S7", "S8", "S9"],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "expected_tiles": [
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "bbox": [
+        0.224665,
+        0.854167,
+        0.123327,
+        0.139583
+      ],
+      "status": "bbox_reviewed",
       "observation": "S789 Chi visible; S1 has Youjin discard hint",
-      "notes": ["player-side exposed Chi reference"]
+      "notes": [
+        "player-side exposed Chi reference",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "66fe_player_hand_after_s1_084s",
@@ -120,7 +178,10 @@
       "bbox": null,
       "status": "fact_only",
       "observation": "S1 removed; ten concealed tiles with one gold M1; replay progress 25/28",
-      "notes": ["supports player HAND_DELTA evidence", "does not prove river visibility"]
+      "notes": [
+        "supports player HAND_DELTA evidence",
+        "does not prove river visibility"
+      ]
     },
     {
       "sample_id": "66fe_opponent_discard_n_085s",
@@ -134,10 +195,18 @@
       "target": "discard",
       "expected_tile": "N",
       "expected_tiles": [],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "bbox": [
+        0.254302,
+        0.00625,
+        0.023901,
+        0.072917
+      ],
+      "status": "bbox_reviewed",
       "observation": "Opponent N displayed after bottom S1 discard; wall display 92",
-      "notes": ["opponent-turn discard reference"]
+      "notes": [
+        "opponent-turn discard reference",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "66fe_youjin_animation_090s",
@@ -154,7 +223,10 @@
       "bbox": null,
       "status": "fact_only",
       "observation": "Youjin animation visible; same M7 present",
-      "notes": ["special-state detector reference", "not inferred from Jin count"]
+      "notes": [
+        "special-state detector reference",
+        "not inferred from Jin count"
+      ]
     },
     {
       "sample_id": "66fe_settlement_youjin_095s",
@@ -171,7 +243,9 @@
       "bbox": null,
       "status": "fact_only",
       "observation": "Winner base5, fan5, display40, YOUJIN x4; opponent dealer3/base20; +100/-100",
-      "notes": ["terminal settlement reference"]
+      "notes": [
+        "terminal settlement reference"
+      ]
     },
     {
       "sample_id": "b389_opponent_discard_m4_033s",
@@ -185,10 +259,18 @@
       "target": "discard",
       "expected_tile": "M4",
       "expected_tiles": [],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "bbox_reviewed",
       "observation": "Opponent M4 before first Chi",
-      "notes": ["second source session for opponent discard calibration"]
+      "notes": [
+        "second source session for opponent discard calibration",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "b389_player_chi_m456_035s",
@@ -201,11 +283,23 @@
       "actor": "player",
       "target": "meld",
       "expected_tile": null,
-      "expected_tiles": ["M4", "M5", "M6"],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "expected_tiles": [
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "bbox": [
+        0.092734,
+        0.854167,
+        0.128107,
+        0.139583
+      ],
+      "status": "bbox_reviewed",
       "observation": "M456 Chi visible",
-      "notes": ["second source session for player meld calibration"]
+      "notes": [
+        "second source session for player meld calibration",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "b389_opponent_discard_p7_055s",
@@ -219,10 +313,18 @@
       "target": "discard",
       "expected_tile": "P7",
       "expected_tiles": [],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "bbox": [
+        0.470363,
+        0.0875,
+        0.055449,
+        0.1625
+      ],
+      "status": "bbox_reviewed",
       "observation": "Opponent P7 before second Chi",
-      "notes": ["second source session for opponent discard calibration"]
+      "notes": [
+        "second source session for opponent discard calibration",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "b389_player_chi_p678_057s",
@@ -235,11 +337,23 @@
       "actor": "player",
       "target": "meld",
       "expected_tile": null,
-      "expected_tiles": ["P6", "P7", "P8"],
-      "bbox": null,
-      "status": "fact_locked_bbox_pending",
+      "expected_tiles": [
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "bbox": [
+        0.224665,
+        0.854167,
+        0.123327,
+        0.139583
+      ],
+      "status": "bbox_reviewed",
       "observation": "P678 Chi visible",
-      "notes": ["second source session for player meld calibration"]
+      "notes": [
+        "second source session for player meld calibration",
+        "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only"
+      ]
     },
     {
       "sample_id": "b389_player_hand_winning_m5_065s",
@@ -256,7 +370,9 @@
       "bbox": null,
       "status": "fact_only",
       "observation": "Extra M5 visible; replay overlay obscures exact offer/draw timing",
-      "notes": ["do not infer exact action window from this frame"]
+      "notes": [
+        "do not infer exact action window from this frame"
+      ]
     },
     {
       "sample_id": "b389_settlement_zimo_075s",
@@ -273,7 +389,9 @@
       "bbox": null,
       "status": "fact_only",
       "observation": "Stable settlement for manual transcription",
-      "notes": ["Zimo x2, dealer5/base30, +68/-68"]
+      "notes": [
+        "Zimo x2, dealer5/base30, +68/-68"
+      ]
     }
   ]
 }

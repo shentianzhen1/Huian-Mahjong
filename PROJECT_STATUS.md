@@ -40,7 +40,7 @@
   - V0.1 静态 hand+draw 严格 leave-session-out：147/149 = **98.66%**。
   - Gold 同批时序：193/196 = **98.47%**，8/8 session 多数票正确；这不是外部泛化率。
   - Runtime Vision V0.2 已加入动态几何、`draw_visual` 时序、session 隔离、只读 runtime reader。
-  - Public Match Reconstruction 已进入 observer 阶段：`public_observers.py` 用稳定 river/meld 快照差分生成 `DISCARD` / `MELD_DELTA`，不写死弃牌方向或副露排序；多重/漏帧变化 fail closed 并重建基线。`runtime_public_adapter.py` 已把现有底部 Runtime Vision 接到我方 `MeldSnapshot` / `HAND_DELTA`；meld 身份仍保持 UNKNOWN，等待独立 meld-region 识别证据。
+  - Public Match Reconstruction 已进入 observer/detector 阶段：`public_observers.py` 用稳定 river/meld 快照差分生成 `DISCARD` / `MELD_DELTA`，不写死弃牌方向或副露排序；`runtime_public_adapter.py` 已把现有底部 Runtime Vision 接到我方 `MeldSnapshot` / `HAND_DELTA`；`public_tile_detector.py` 新增全帧 public tile-like geometry intake，并由 2 session / 10 个真实 bbox 做 development regression。公开牌身份仍保持 UNKNOWN。
   - PublicState 同批8局已补 64 时点状态栏审计：primary remaining 44/63 正确；只在 primary 无法解析时启用右缘收窄 fallback 后为 54/63，63/63 可读。仍有 9 个 false-valid 误读，不能作为 Executor 依据，也不属于独立泛化证据。
   - Phase 5C 已揭示且有 1 个语义区域 gate 失败，因此不能作为正式泛化证据。
   - 独立晋级门与 Phase 5E source-disjoint 锁已落地（#49 / #50）；新增 `independent_batch_lock.py` 作为新录像进入正式盲测前的本地锁定器，先固定 SHA256 / session / 20-50-80% 帧位，再允许人工 truth。
@@ -60,7 +60,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger 已落地；Public Detector 开发校准集已锁定 2 session / 5 弃牌 / 5 副露真实帧，当前具体阻塞为这 10 个目标的 bbox 像素复核及随后 segmentation/identity。
+- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger 已落地；Public Detector 开发校准集 2 session / 5 弃牌 / 5 副露已完成真实像素 bbox 复核，Public Tile Detector V0.1 已进入全帧 geometry intake。当前下一阻塞为负样本/连续帧误候选评估、temporal public-candidate tracking 与公开区 identity。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -71,7 +71,7 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：先完成已锁定 10 个真实 discard/meld 校准目标的 normalized bbox 复核，再实现 Public Tile segmentation/identity；随后把真实 DISCARD/MELD/Youjin/Hu/settlement 喂入现有 observer + assembler + Ledger；冲突保持 UNKNOWN。
+3. 推进 #69 Public Match Reconstruction V0.1：10 个真实 discard/meld bbox 已复核，当前先把 Public Tile Detector 的 geometry candidate 召回与误候选控制做稳，再接 temporal tracking / 公开区 identity；随后把真实 DISCARD/MELD/Youjin/Hu/settlement 喂入现有 observer + assembler + Ledger；冲突保持 UNKNOWN。
 4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。
