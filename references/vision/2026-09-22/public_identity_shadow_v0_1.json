@@ -1,0 +1,240 @@
+{
+  "schema_version": "public_identity_shadow_v0_1",
+  "date": "2026-09-22",
+  "issue": 69,
+  "status": "development_diagnostic",
+  "excluded_from_formal_promotion": true,
+  "purpose": "Test whether existing Runtime Vision hand/draw/global templates can be naively reused for reviewed public discard identity.",
+  "samples": [
+    "66fe_opponent_discard_p1_035s",
+    "66fe_opponent_discard_s9_080s",
+    "66fe_opponent_discard_n_085s",
+    "b389_opponent_discard_m4_033s",
+    "b389_opponent_discard_p7_055s"
+  ],
+  "expected_tiles": [
+    "P1",
+    "S9",
+    "N",
+    "M4",
+    "P7"
+  ],
+  "attempted_same_source_exclusion": {
+    "method": "Exact source_session/source_id string equality against calibration source_session.",
+    "excluded_labels_per_sample": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "effective": false,
+    "limitation": "Calibration source session names did not match runtime-template source session identifiers, so this experiment is not leave-session-out or leak-free."
+  },
+  "summary": {
+    "detector_bbox::draw_visual": {
+      "correct": 0,
+      "total": 5,
+      "accuracy": 0,
+      "average_confidence": 0.320743
+    },
+    "detector_bbox::global": {
+      "correct": 0,
+      "total": 5,
+      "accuracy": 0,
+      "average_confidence": 0.359319
+    },
+    "detector_bbox::hand_region": {
+      "correct": 0,
+      "total": 5,
+      "accuracy": 0,
+      "average_confidence": 0.350665
+    },
+    "truth_bbox::draw_visual": {
+      "correct": 0,
+      "total": 5,
+      "accuracy": 0,
+      "average_confidence": 0.34724
+    },
+    "truth_bbox::global": {
+      "correct": 2,
+      "total": 5,
+      "accuracy": 0.4,
+      "average_confidence": 0.393534
+    },
+    "truth_bbox::hand_region": {
+      "correct": 3,
+      "total": 5,
+      "accuracy": 0.6,
+      "average_confidence": 0.379249
+    }
+  },
+  "per_sample": [
+    {
+      "sample_id": "66fe_opponent_discard_p1_035s",
+      "expected": "P1",
+      "truth_bbox": {
+        "global": [
+          "P1",
+          0.374668
+        ],
+        "hand_region": [
+          "P1",
+          0.374668
+        ],
+        "draw_visual": [
+          "G",
+          0.302474
+        ]
+      },
+      "detector_bbox": {
+        "global": [
+          "E",
+          0.376986
+        ],
+        "hand_region": [
+          "E",
+          0.376986
+        ],
+        "draw_visual": [
+          "G",
+          0.340055
+        ]
+      }
+    },
+    {
+      "sample_id": "66fe_opponent_discard_s9_080s",
+      "expected": "S9",
+      "truth_bbox": {
+        "global": [
+          "S6",
+          0.297032
+        ],
+        "hand_region": [
+          "M4",
+          0.253549
+        ],
+        "draw_visual": [
+          "S6",
+          0.297032
+        ]
+      },
+      "detector_bbox": {
+        "global": [
+          "M4",
+          0.257299
+        ],
+        "hand_region": [
+          "M4",
+          0.257299
+        ],
+        "draw_visual": [
+          "M5",
+          0.241037
+        ]
+      }
+    },
+    {
+      "sample_id": "66fe_opponent_discard_n_085s",
+      "expected": "N",
+      "truth_bbox": {
+        "global": [
+          "E",
+          0.516208
+        ],
+        "hand_region": [
+          "E",
+          0.516208
+        ],
+        "draw_visual": [
+          "G",
+          0.396114
+        ]
+      },
+      "detector_bbox": {
+        "global": [
+          "E",
+          0.486693
+        ],
+        "hand_region": [
+          "E",
+          0.486693
+        ],
+        "draw_visual": [
+          "G",
+          0.393443
+        ]
+      }
+    },
+    {
+      "sample_id": "b389_opponent_discard_m4_033s",
+      "expected": "M4",
+      "truth_bbox": {
+        "global": [
+          "M4",
+          0.402568
+        ],
+        "hand_region": [
+          "M4",
+          0.402568
+        ],
+        "draw_visual": [
+          "M5",
+          0.363384
+        ]
+      },
+      "detector_bbox": {
+        "global": [
+          "M1",
+          0.357516
+        ],
+        "hand_region": [
+          "M1",
+          0.357516
+        ],
+        "draw_visual": [
+          "P2",
+          0.311079
+        ]
+      }
+    },
+    {
+      "sample_id": "b389_opponent_discard_p7_055s",
+      "expected": "P7",
+      "truth_bbox": {
+        "global": [
+          "M5",
+          0.377195
+        ],
+        "hand_region": [
+          "P7",
+          0.34925
+        ],
+        "draw_visual": [
+          "M5",
+          0.377195
+        ]
+      },
+      "detector_bbox": {
+        "global": [
+          "G",
+          0.3181
+        ],
+        "hand_region": [
+          "P1",
+          0.274829
+        ],
+        "draw_visual": [
+          "G",
+          0.3181
+        ]
+      }
+    }
+  ],
+  "conclusion": {
+    "naive_cross_region_reuse": "rejected",
+    "runtime_policy": "Keep public detector candidate tile_id UNKNOWN.",
+    "next_step": "Create a separate public-region identity label schema/dataset; do not silently reuse hand/draw template gates.",
+    "rationale": "Detector-bbox identity was 0/5 in every existing-template mode. Even manually reviewed truth crops only reached 3/5 in the best mode at low confidence. Poor performance occurred despite ineffective same-source exclusion, so tighter leak-free evaluation cannot justify direct reuse."
+  }
+}
