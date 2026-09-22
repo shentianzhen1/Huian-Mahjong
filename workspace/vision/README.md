@@ -23,3 +23,5 @@ Public Tile Detector V0.1 位于 `public_tile_detector.py`：全帧几何候选 
 Public Candidate Tracker V0.1 位于 `public_candidate_tracker.py`：把 Public Tile Detector 的单帧 geometry candidate 变成跨帧稳定轨迹，默认连续 3 帧才 APPEARED、连续 2 帧缺失才 DISAPPEARED，并用默认 0.5s 最大观测间隔防止断流前后误续轨迹。session/超时会递增 `stream_epoch`；River/Meld Observer 在 epoch 变化后必须重新建立基线。Tracker 本身不内置河牌 ROI；只有调用方显式提供 CandidateChannel 后，稳定轨迹才可转换成 identity-UNKNOWN 的 RiverSnapshot。
 
 Public Channel Calibration V0.1 位于 `public_channel_profiles.py`，配置见 `references/vision/2026-09-22/public_channel_profiles_v0_1.json`：把全帧 broad candidate 缩到三个 development-only channel——central action focus、upper public single、player exposed group。16 张锁定上下文帧当前从 279 个原始候选缩到 26 个 channel 候选，但这只是候选压缩，不是准确率。central/upper 的 actor/action 均必须由外部时序证据确认，禁止直接当 DISCARD。
+
+Public Identity Shadow V0.1 已验证“直接复用 hand/draw/global 模板识别公开牌”不可行：5 张已复核公开弃牌在 detector bbox 下三种模式均为 0/5；人工 truth bbox 最好也只有 hand 模板 3/5，且平均相关度约 0.38。该实验的 source-session 精确排除实际命中 0 条模板，因此不是 leak-free 评估，但结果已经足以否决 naive cross-region reuse。公开候选继续保持 `tile_id=UNKNOWN`，下一步使用独立 `public_action / public_single / public_meld` 标签域。详见 `references/vision/2026-09-22/public_identity_shadow_v0_1.md`。
