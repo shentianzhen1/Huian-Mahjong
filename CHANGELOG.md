@@ -1,5 +1,13 @@
 # 重要变更记录
 
+## 2026-09-22 — PublicState 64时点状态栏审计迁入最新主线
+
+- 从暂停的旧PR #42中只迁移仍有效的证据和窄修复，不整分支合并，避免覆盖后续Runtime Vision V0.2 / PublicState改动。
+- 同批8局录像按5/10/15/20/25/30/40/50秒建立64时点审计；remaining有63个可评分点，primary为44/63正确、53/63可读。
+- 只在primary无法解析时收窄remaining ROI右缘14%并重试；10个原不可读点全部恢复，达到54/63正确、63/63可读。
+- 9个false-valid primary错误继续保留，不让fallback覆盖合法primary，不做字符硬映射；因此本改动改善可读性但不解决可靠性门槛。
+- 结果明确为same-batch diagnostics，不用于Runtime Vision V0.2正式晋级；Executor继续关闭。
+
 ## 2026-09-22 — Package 0.2.0：版本身份与评估 provenance 收口
 
 - Python package / project release 升至 `0.2.0`，并通过 `huian.__version__` / `PROJECT_VERSION` 暴露；它只表示仓库集成版本，不替代 RuleSnapshot 或 Agent 版本。
