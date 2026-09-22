@@ -79,7 +79,7 @@ jobs:
         run: |
           python - <<'PY'
           import importlib.util
-          from importlib.metadata import version
+          from importlib.metadata import files, version
 
           from huian import HuianEnvironment, HuianRules, __version__
           from workspace.ai import CurrentAgent, CURRENT_AGENT_VERSION
@@ -92,6 +92,26 @@ jobs:
           assert CURRENT_AGENT_VERSION == "v0.10"
           assert CurrentAgent.__name__ == "MeldAwareShantenAgent"
           assert callable(run_paired_real_matches)
+
+          installed_files = {str(path).replace("\\", "/") for path in files("huian-mahjong-assistant")}
+          required_prefixes = (
+              "huian/",
+              "mahjong_framework/",
+              "workspace/ai/",
+              "workspace/simulator/",
+              "workspace/vision/",
+              "workspace/hint_alpha/",
+          )
+          forbidden_prefixes = (
+              "legacy_code/",
+              "tests/",
+              "dataset/",
+              "references/",
+          )
+          for prefix in required_prefixes:
+              assert any(path.startswith(prefix) for path in installed_files), prefix
+          for prefix in forbidden_prefixes:
+              assert not any(path.startswith(prefix) for path in installed_files), prefix
 
           # Frozen comparison baselines must not leak into the installed runtime
           # as top-level packages.
