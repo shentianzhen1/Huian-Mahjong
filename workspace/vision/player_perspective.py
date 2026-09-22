@@ -155,6 +155,35 @@ def resolve_player_perspective(
         if not _SHA256.fullmatch(source_sha256):
             raise ValueError("source_sha256 must be a SHA256 hex digest")
 
+    # When the caller supplies both identifiers, matching either one alone is
+    # insufficient: the pair must point to the *same* archived source. This
+    # also catches mixed sources whose archived player seats happen to agree.
+    # Unseen live sources may still use explicit runtime configuration.
+    if (
+        manifest is not None
+        and source_session is not None
+        and source_sha256 is not None
+    ):
+        matched = tuple(
+            entry
+            for entry in manifest.entries
+            if entry.source_session == source_session
+            or entry.source_sha256 == source_sha256
+        )
+        if matched and not any(
+            entry.source_session == source_session
+            and entry.source_sha256 == source_sha256
+            for entry in matched
+        ):
+            return PlayerPerspectiveResolution(
+                player_seat=None,
+                source="source_identity_conflict",
+                evidence_refs=tuple(
+                    dict.fromkeys(entry.evidence_ref for entry in matched)
+                ),
+                issues=("player_source_identity_conflict",),
+            )
+
     candidates: list[tuple[int, str, str]] = []
     if explicit_player_seat is not None:
         candidates.append((
