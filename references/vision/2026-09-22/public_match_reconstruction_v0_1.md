@@ -107,7 +107,9 @@ If the three sources disagree, emit EVIDENCE_CONFLICT instead of choosing one.
 
 ### Timeline
 
-Hand Timeline is the human/machine review record. It stores reconstructed events plus provenance. It is not allowed to silently upgrade UNKNOWN rule evidence to confirmed rule truth.
+Hand Timeline is the human/machine review record. It stores reconstructed events plus provenance. Automated reconstruction is written as an **UNKNOWN-only draft**: `TimelineEvent.evidence_level` remains `unknown` even when the machine reconstruction grade is DIRECT or CORROBORATED. The machine grade/confidence stays in event details. Only a later explicit human/evidence review may upgrade the canonical Timeline evidence level.
+
+It is not allowed to silently upgrade UNKNOWN rule evidence to confirmed rule truth.
 
 ## Evidence grades
 
@@ -208,5 +210,5 @@ The reconstruction layer must not patch Rules automatically.
 - CHI/PENG/MING_GANG require consistent discard + hand delta + meld delta;
 - ADD_KONG requires explicit previous-Peng evidence;
 - contradictory evidence emits EVIDENCE_CONFLICT;
-- output converts into existing Hand Timeline events with provenance;
+- output converts into existing Hand Timeline events with provenance while remaining UNKNOWN-only until review;
 - no Executor, Hint advice, AI version, or Rules behavior changes.
