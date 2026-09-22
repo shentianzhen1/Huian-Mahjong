@@ -33,11 +33,7 @@ hint-alpha = [
 ]
 
 [tool.setuptools.packages.find]
-where = [
-    ".",
-    "legacy_code/core_v0.1.1",
-    "legacy_code/environment_v0.1",
-]
+where = ["."]
 include = [
     "huian*",
     "mahjong_framework*",
@@ -45,8 +41,6 @@ include = [
     "workspace.simulator*",
     "workspace.vision*",
     "workspace.hint_alpha*",
-    "qzcore*",
-    "qzenv*",
 ]
 exclude = [
     "tests*",
