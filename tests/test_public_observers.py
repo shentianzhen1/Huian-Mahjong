@@ -35,6 +35,7 @@ def river(
     frame: int,
     trusted: bool = True,
     stream_epoch: int = 0,
+    session: str | None = None,
 ) -> RiverSnapshot:
     return RiverSnapshot(
         timestamp_seconds=t,
@@ -44,6 +45,7 @@ def river(
         trusted=trusted,
         evidence_refs=(f"frame:{frame}",),
         stream_epoch=stream_epoch,
+        source_session=session,
     )
 
 
@@ -70,6 +72,7 @@ def meld_frame(
     frame: int,
     trusted: bool = True,
     stream_epoch: int = 0,
+    session: str | None = None,
 ) -> MeldSnapshot:
     return MeldSnapshot(
         timestamp_seconds=t,
@@ -79,6 +82,7 @@ def meld_frame(
         trusted=trusted,
         evidence_refs=(f"frame:{frame}",),
         stream_epoch=stream_epoch,
+        source_session=session,
     )
 
 
@@ -634,6 +638,110 @@ class PublicObserverPipelineIntegrationTests(unittest.TestCase):
                 "opponent_count:2_removed",
             },
         )
+
+
+class CaptureScopeObserverTests(unittest.TestCase):
+    """Reusing the same observer across recordings must not invent actions."""
+
+    def test_same_epoch_new_session_rebases_river_before_new_discard(self):
+        observer = DiscardRiverObserver(settle_frames=2)
+        for i in range(2):
+            observer.observe(
+                river(1 + i * 0.1, "opponent",
+                      (tile(0.20, "M1", ref="a:M1"),),
+                      frame=10 + i, session="session-a")
+            )
+        first_b = observer.observe(
+            river(2.0, "opponent",
+                  (tile(0.20, "M1", ref="b:M1"),
+                   tile(0.26, "M2", ref="b:M2")),
+                  frame=20, session="session-b")
+        )
+        self.assertTrue(first_b.baseline_rebased)
+        self.assertEqual(first_b.issues, ("river_source_session_reset",))
+        self.assertIsNone(first_b.observation)
+        baseline_b = observer.observe(
+            river(2.1, "opponent",
+                  (tile(0.20, "M1"), tile(0.26, "M2")),
+                  frame=21, session="session-b")
+        )
+        self.assertIsNone(baseline_b.observation)
+        self.assertEqual(baseline_b.issues, ("river_baseline_established",))
+        observer.observe(
+            river(3.0, "opponent",
+                  (tile(0.20, "M1"), tile(0.26, "M2"),
+                   tile(0.32, "M3", ref="b:M3")),
+                  frame=30, session="session-b")
+        )
+        result = observer.observe(
+            river(3.1, "opponent",
+                  (tile(0.20, "M1"), tile(0.26, "M2"),
+                   tile(0.32, "M3", ref="b:M3")),
+                  frame=31, session="session-b")
+        )
+        self.assertIsNotNone(result.observation)
+        assert result.observation is not None
+        self.assertEqual(result.observation.tile, "M3")
+        self.assertEqual(result.observation.details["source_session"], "session-b")
+        self.assertEqual(result.observation.details["stream_epoch"], 0)
+        self.assertNotIn("a:M1", result.observation.evidence_refs)
+
+    def test_same_epoch_new_session_rebases_meld_before_new_group(self):
+        observer = MeldSnapshotObserver(settle_frames=2)
+        for i in range(2):
+            observer.observe(
+                meld_frame(1 + i * 0.1, "player",
+                           (meld(0.10, ("E", "E", "E"), ref="a:peng"),),
+                           frame=10 + i, session="session-a")
+            )
+        first_b = observer.observe(
+            meld_frame(2.0, "player",
+                       (meld(0.10, ("E", "E", "E"), ref="b:peng"),
+                        meld(0.30, ("S4", "S5", "S6"))),
+                       frame=20, session="session-b")
+        )
+        self.assertTrue(first_b.baseline_rebased)
+        self.assertEqual(first_b.issues, ("meld_source_session_reset",))
+        observer.observe(
+            meld_frame(2.1, "player",
+                       (meld(0.10, ("E", "E", "E")),
+                        meld(0.30, ("S4", "S5", "S6"))),
+                       frame=21, session="session-b")
+        )
+        observer.observe(
+            meld_frame(3.0, "player",
+                       (meld(0.10, ("E", "E", "E")),
+                        meld(0.30, ("S4", "S5", "S6")),
+                        meld(0.50, ("P2", "P2", "P2"), ref="b:peng2")),
+                       frame=30, session="session-b")
+        )
+        result = observer.observe(
+            meld_frame(3.1, "player",
+                       (meld(0.10, ("E", "E", "E")),
+                        meld(0.30, ("S4", "S5", "S6")),
+                        meld(0.50, ("P2", "P2", "P2"), ref="b:peng2")),
+                       frame=31, session="session-b")
+        )
+        self.assertIsNotNone(result.observation)
+        assert result.observation is not None
+        self.assertEqual(result.observation.tiles, ("P2", "P2", "P2"))
+        self.assertEqual(result.observation.details["source_session"], "session-b")
+        self.assertNotIn("a:peng", result.observation.evidence_refs)
+
+    def test_new_session_unknown_source_does_not_inherit_baseline(self):
+        observer = DiscardRiverObserver(settle_frames=2)
+        for i in range(2):
+            observer.observe(
+                river(1 + i * 0.1, "player", (tile(0.20, "M2"),),
+                      frame=10 + i, session="recorded")
+            )
+        first = observer.observe(
+            river(2.0, "player",
+                  (tile(0.20, "M2"), tile(0.28, "P1")),
+                  frame=20, session=None)
+        )
+        self.assertEqual(first.issues, ("river_source_session_reset",))
+        self.assertIsNone(first.observation)
 
 
 if __name__ == "__main__":
