@@ -95,6 +95,7 @@ Vision 使用 OpenCV/Pillow；`.github/workflows/vision-tests.yml` 会在 `works
 
 - [PROJECT_STATUS.md](PROJECT_STATUS.md)：一页当前集成快照，不复制执行 backlog。
 - [docs/packaging/BOUNDARY.md](docs/packaging/BOUNDARY.md)：当前 wheel 内容边界与后续拆包迁移顺序。
+- [docs/packaging/DEPENDENCY_GRAPH.md](docs/packaging/DEPENDENCY_GRAPH.md)：拆包前强制依赖方向（core → AI/Vision → Simulator/Hint）。
 - [RULE_STATUS.md](RULE_STATUS.md)：规则确认等级的唯一真相源。
 - [RULE_EVIDENCE_MATRIX.md](RULE_EVIDENCE_MATRIX.md)：规则证据与状态机缺口。
 - [TODO.md](TODO.md)：Open GitHub Issues 的入口索引，不承载独立状态。
