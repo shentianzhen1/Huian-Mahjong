@@ -452,8 +452,8 @@ class AdapterTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.adapter.legal_actions(state)
 
-    def test_legacy_action_identity(self):
-        from qzenv import Action, ActionType
+    def test_private_compat_action_identity(self):
+        from huian._compat.qzenv import Action, ActionType
         self.assertTrue(self.adapter.is_legal(self.post_claim(), Action(0, ActionType.DISCARD, "M1")))
 
 
