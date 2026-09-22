@@ -1,0 +1,30 @@
+name: Calibration Export Temporary
+
+on:
+  push:
+    branches:
+      - feature/public-tile-detector-v0-1
+    paths:
+      - ".github/workflows/calibration-export-temporary.yml"
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-detector-calibration-images
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            references/gameplay/2026-09-15/66fe863f_youjin100/peng_offer_p1_035000ms.jpg
+            references/gameplay/2026-09-15/66fe863f_youjin100/peng_p1_visible_040000ms.jpg
+            references/gameplay/2026-09-15/66fe863f_youjin100/added_kong_white_visible_070000ms.jpg
+            references/gameplay/2026-09-15/66fe863f_youjin100/chi_offer_s9_080000ms.jpg
+            references/gameplay/2026-09-15/66fe863f_youjin100/chi_s789_youjin_hint_082000ms.jpg
+            references/gameplay/2026-09-15/66fe863f_youjin100/opponent_turn_085000ms.jpg
+            references/gameplay/2026-09-15/b3892b34_zimo68/chi_m4_offer_033000ms.jpg
+            references/gameplay/2026-09-15/b3892b34_zimo68/chi_m456_035000ms.jpg
+            references/gameplay/2026-09-15/b3892b34_zimo68/chi_p7_offer_055000ms.jpg
+            references/gameplay/2026-09-15/b3892b34_zimo68/chi_p678_057000ms.jpg
