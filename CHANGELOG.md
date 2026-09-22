@@ -1,5 +1,13 @@
 # 重要变更记录
 
+## 2026-09-22 — Hint Alpha 本地 Doctor 与安装自检
+
+- 新增 `workspace.hint_alpha.doctor` 与 `CHECK_HINT_ALPHA.bat`，分开报告 Demo、Live Capture、PublicState OCR 三层 readiness；Executor 固定 OFF。
+- 安装脚本不再只依赖 `py -3.11`，会在 Python 3.10–3.14 中寻找可用解释器；依赖安装完成后自动执行 live-capture Doctor。
+- Tesseract 继续是可选项：缺失时只警告 PublicState OCR unavailable，不阻止采集、录像和证据记录。
+- Hint Alpha evidence session、录像 metadata 与 UI 版本栏补齐 project release 0.2.0，与 RuleSnapshot fingerprint 和 CurrentAgent V0.10 分开记录。
+- 启动失败时 `START_HINT_ALPHA.bat` 明确提示先运行自检，不再只有“一闪而过”的失败体验。
+
 ## 2026-09-22 — PublicState 64时点状态栏审计迁入最新主线
 
 - 从暂停的旧PR #42中只迁移仍有效的证据和窄修复，不整分支合并，避免覆盖后续Runtime Vision V0.2 / PublicState改动。

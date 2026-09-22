@@ -13,6 +13,7 @@ dependencies = []
 
 [project.scripts]
 huian-hint-alpha = "workspace.hint_alpha.app:main"
+huian-hint-doctor = "workspace.hint_alpha.doctor:main"
 
 [project.optional-dependencies]
 # Kept intentionally small: the built-in unittest runner is sufficient for CI.

@@ -7,7 +7,7 @@
 - Windows 窗口采集（复用 Recorder V0.2 的 WGC / PrintWindow / 屏幕区域）
 - 默认自动按局录制
 - PublicState 后台诊断（比分 / 局号 / 剩余牌；需要本机 Tesseract）
-- RuleSnapshot + CurrentAgent 版本写入每次证据会话
+- Project release + RuleSnapshot + CurrentAgent 版本写入每次证据会话
 - 一键保存“识别错误 / AI建议错误 / 新规则证据 / 结算页”
 - UNKNOWN / 非 CONFIRMED / 低置信识别的 fail-closed 提示门
 - 番数 / 倍率 / 庄底 / 最终净分的 Settlement Audit 核对核心
@@ -29,8 +29,24 @@
 
 ```bat
 INSTALL_HINT_ALPHA.bat
+CHECK_HINT_ALPHA.bat
 START_HINT_ALPHA.bat
 ```
+
+### 环境自检
+
+`INSTALL_HINT_ALPHA.bat` 会自动寻找可用的 Python 3.10–3.14，安装完成后运行一次 Doctor。之后任何时候都可以双击 `CHECK_HINT_ALPHA.bat`，或执行：
+
+```powershell
+.\.venv-hint-alpha\Scripts\python.exe -m workspace.hint_alpha.doctor
+```
+
+Doctor 分开报告：
+- `Demo Ready`：UI/证据壳能否启动；
+- `Live Capture Ready`：Windows Capture + pywin32 是否齐全；
+- `PublicState OCR Ready`：Tesseract 是否可用。
+
+Tesseract 缺失只会让 PublicState OCR 不可用，不会阻止窗口采集、录像和证据保存。Doctor 固定显示 `Executor: OFF`。
 
 也可以：
 

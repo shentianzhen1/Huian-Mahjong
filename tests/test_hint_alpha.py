@@ -4,6 +4,7 @@ import unittest
 from types import SimpleNamespace
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.version import PROJECT_VERSION, project_manifest
 from workspace.ai import CURRENT_AGENT_VERSION
 from workspace.hint_alpha import (
     AdvisoryGate,
@@ -79,6 +80,7 @@ class HintAlphaEvidenceTests(unittest.TestCase):
             completion = session.close("test")
 
             manifest = json.loads((session.path / "session.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["project"], project_manifest())
             self.assertEqual(
                 manifest["rule_snapshot"]["fingerprint"],
                 DEFAULT_RULE_SNAPSHOT.fingerprint,
@@ -95,7 +97,11 @@ class HintAlphaEvidenceTests(unittest.TestCase):
                 [item["kind"] for item in events],
                 ["SESSION_STARTED", "FRAME_SAVED", "RECOGNITION_ERROR"],
             )
+            self.assertTrue(
+                all(item["project_version"] == PROJECT_VERSION for item in events)
+            )
             self.assertEqual(completion["events_written"], 3)
+            self.assertEqual(completion["project_version"], PROJECT_VERSION)
             self.assertTrue((session.path / "completion.json").exists())
 
 

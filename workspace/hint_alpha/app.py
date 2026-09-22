@@ -18,6 +18,7 @@ from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.version import PROJECT_VERSION
 from workspace.ai import CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION
 from workspace.vision.capture_validator.auto_recorder import (
     AutoHandRecorder,
@@ -80,6 +81,7 @@ class HintAlphaApp(tk.Tk):
         self.evidence_status = tk.StringVar(value=f"证据目录：{OUTPUT}")
         self.version_status = tk.StringVar(
             value=(
+                f"Project {PROJECT_VERSION} | "
                 f"Agent {CURRENT_AGENT_NAME} {CURRENT_AGENT_VERSION} | "
                 f"Rules {DEFAULT_RULE_SNAPSHOT.label} | "
                 f"{DEFAULT_RULE_SNAPSHOT.fingerprint[:12]}"
@@ -251,6 +253,7 @@ class HintAlphaApp(tk.Tk):
     def _recording_metadata(self):
         return {
             "hint_alpha": True,
+            "project_version": PROJECT_VERSION,
             "executor_enabled": False,
             "session_id": self.evidence.session_id if self.evidence else None,
             "backend": self.backend_name,
