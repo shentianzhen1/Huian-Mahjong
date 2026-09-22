@@ -218,12 +218,35 @@ def _match_tiles(
     return matches, unmatched_previous, unmatched_current
 
 
+def _partial_multiset_compatible(
+    first: tuple[str | None, ...],
+    second: tuple[str | None, ...],
+) -> bool:
+    """Compare visible meld identities without assuming display ordering."""
+    if len(first) != len(second):
+        return False
+    first_unknown = sum(tile is None for tile in first)
+    second_unknown = sum(tile is None for tile in second)
+    first_known: dict[str, int] = {}
+    second_known: dict[str, int] = {}
+    for tile in first:
+        if tile is not None:
+            first_known[tile] = first_known.get(tile, 0) + 1
+    for tile in second:
+        if tile is not None:
+            second_known[tile] = second_known.get(tile, 0) + 1
+
+    for tile in set(first_known) | set(second_known):
+        if first_known.get(tile, 0) > second_known.get(tile, 0) + second_unknown:
+            return False
+        if second_known.get(tile, 0) > first_known.get(tile, 0) + first_unknown:
+            return False
+    return True
+
+
 def _group_identity_compatible(first: MeldGroup, second: MeldGroup) -> bool:
     if len(first.tiles) == len(second.tiles):
-        return all(
-            _identity_compatible(old, new)
-            for old, new in zip(first.tiles, second.tiles)
-        )
+        return _partial_multiset_compatible(first.tiles, second.tiles)
     # A 3 -> 4 transition may be ADD_KONG. Geometry decides candidate group
     # continuity; exact semantic classification remains the reconstructor's job.
     return {len(first.tiles), len(second.tiles)} == {3, 4}
@@ -280,7 +303,7 @@ def _meld_equivalent(first: MeldSnapshot, second: MeldSnapshot) -> bool:
         new = second.groups[new_index]
         if len(old.tiles) != len(new.tiles):
             return False
-        if not all(_identity_compatible(a, b) for a, b in zip(old.tiles, new.tiles)):
+        if not _partial_multiset_compatible(old.tiles, new.tiles):
             return False
     return True
 
