@@ -71,7 +71,7 @@ Product / P2：
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
 3. 推进 #69 Public Match Reconstruction V0.1：把局号/庄家/开金、双方弃牌、副露、游金状态、胡牌/结算重建成可审计 Hand Timeline；冲突保持 UNKNOWN。
-4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核.
+4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。
 
