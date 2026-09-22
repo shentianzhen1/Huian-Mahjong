@@ -7,6 +7,7 @@ record evidence, and audit settlement, but it never clicks the game UI.
 from .advisor import HintAdvisor, HintDecision
 from .evidence import EvidenceSession
 from .safety import AdvisoryGate, AdvisoryGateResult, AdvisoryState
+from .timeline_bridge import build_timeline_draft, load_closed_session, write_timeline_draft
 from .settlement_audit import (
     FanBreakdownItem,
     ObservedSettlement,
@@ -27,4 +28,7 @@ __all__ = [
     "SettlementAuditResult",
     "SettlementPrediction",
     "audit_settlement",
+    "build_timeline_draft",
+    "load_closed_session",
+    "write_timeline_draft",
 ]
