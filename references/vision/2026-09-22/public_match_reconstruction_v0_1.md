@@ -84,9 +84,14 @@ The reconstructor combines independent observations into public actions.
 
 For a claimed meld, a high-confidence action requires consistency across:
 
-1. opponent public discard;
+1. the other player's public discard;
 2. claimant concealed-hand delta;
 3. claimant new exposed meld.
+
+For the visible player hand, the delta may contain exact removed tile identities.
+For the opponent concealed hand, the contract requires only a count delta; hidden
+tile identities must never be fabricated. The new exposed meld makes the consumed
+tiles public after the claim.
 
 Example:
 
