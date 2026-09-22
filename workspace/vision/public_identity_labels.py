@@ -298,25 +298,61 @@ def validate_against_calibration_rows(
             "image_sha256": label.image_sha256,
             "frame_index": label.frame_index,
             "time_ms": label.time_ms,
-            "expected_tile": label.tile_id,
         }
         for key, value in expected.items():
             if row.get(key) != value:
                 issues.append(
                     f"{label.label_id}:calibration_{key}_mismatch"
                 )
+
+        if label.region in {"public_action", "public_single"}:
+            if row.get("target") != "discard":
+                issues.append(
+                    f"{label.label_id}:calibration_target_mismatch"
+                )
+            if row.get("expected_tile") != label.tile_id:
+                issues.append(
+                    f"{label.label_id}:calibration_expected_tile_mismatch"
+                )
+        elif label.region == "public_meld":
+            if row.get("target") != "meld":
+                issues.append(
+                    f"{label.label_id}:calibration_target_mismatch"
+                )
+            expected_tiles = tuple(row.get("expected_tiles") or ())
+            if label.tile_id not in expected_tiles:
+                issues.append(
+                    f"{label.label_id}:calibration_expected_tiles_mismatch"
+                )
+
         try:
             row_bbox = _normalized_bbox(row.get("bbox"))
         except (TypeError, ValueError):
             issues.append(f"{label.label_id}:calibration_bbox_missing")
         else:
-            if any(
-                abs(first - second) > 1e-6
-                for first, second in zip(label.bbox, row_bbox)
-            ):
-                issues.append(
-                    f"{label.label_id}:calibration_bbox_mismatch"
-                )
+            if label.region in {"public_action", "public_single"}:
+                if any(
+                    abs(first - second) > 1e-6
+                    for first, second in zip(label.bbox, row_bbox)
+                ):
+                    issues.append(
+                        f"{label.label_id}:calibration_bbox_mismatch"
+                    )
+            else:
+                # public_meld labels are individual visible face crops nested
+                # inside the reviewed exposed-group bbox.
+                lx, ly, lw, lh = label.bbox
+                rx, ry, rw, rh = row_bbox
+                tolerance = 0.005
+                if not (
+                    lx >= rx - tolerance
+                    and ly >= ry - tolerance
+                    and lx + lw <= rx + rw + tolerance
+                    and ly + lh <= ry + rh + tolerance
+                ):
+                    issues.append(
+                        f"{label.label_id}:calibration_face_outside_group_bbox"
+                    )
     return tuple(issues)
 
 
