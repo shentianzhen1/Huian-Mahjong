@@ -40,6 +40,7 @@
   - V0.1 静态 hand+draw 严格 leave-session-out：147/149 = **98.66%**。
   - Gold 同批时序：193/196 = **98.47%**，8/8 session 多数票正确；这不是外部泛化率。
   - Runtime Vision V0.2 已加入动态几何、`draw_visual` 时序、session 隔离、只读 runtime reader。
+  - Public Match Reconstruction 已进入 observer 阶段：`public_observers.py` 用稳定 river/meld 快照差分生成 `DISCARD` / `MELD_DELTA`，不写死弃牌方向或副露排序；多重/漏帧变化 fail closed 并重建基线。
   - PublicState 同批8局已补 64 时点状态栏审计：primary remaining 44/63 正确；只在 primary 无法解析时启用右缘收窄 fallback 后为 54/63，63/63 可读。仍有 9 个 false-valid 误读，不能作为 Executor 依据，也不属于独立泛化证据。
   - Phase 5C 已揭示且有 1 个语义区域 gate 失败，因此不能作为正式泛化证据。
   - 独立晋级门与 Phase 5E source-disjoint 锁已落地（#49 / #50）；新增 `independent_batch_lock.py` 作为新录像进入正式盲测前的本地锁定器，先固定 SHA256 / session / 20-50-80% 帧位，再允许人工 truth。
@@ -59,7 +60,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：建立只读的整局公开动作流水；先冻结 observation/action/evidence 契约，再接对手弃牌、副露与时序观察器。
+- **#69** Public Match Reconstruction：基础 observation/action/evidence 契约已冻结；当前推进公开弃牌河 / 副露稳定快照 observer，下一步才接真实帧低层 segmentation/identity 与时序 assembler。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -70,7 +71,7 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：把局号/庄家/开金、双方弃牌、副露、游金状态、胡牌/结算重建成可审计 Hand Timeline；冲突保持 UNKNOWN。
+3. 推进 #69 Public Match Reconstruction V0.1：先完成 river/meld 稳定快照 observer，再用已复核真实帧接低层弃牌/副露 detector；最终把局号/庄家/开金、双方弃牌、副露、游金状态、胡牌/结算重建成可审计 Hand Timeline；冲突保持 UNKNOWN。
 4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。
