@@ -496,6 +496,7 @@ class PublicObserverPipelineIntegrationTests(unittest.TestCase):
         self.assertEqual(
             set(action.evidence_refs),
             {
+                "frame:11",
                 "frame:21",
                 "river:S6",
                 "frame:24",
