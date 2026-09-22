@@ -12,6 +12,7 @@
 - UNKNOWN / 非 CONFIRMED / 低置信识别的 fail-closed 提示门
 - 番数 / 倍率 / 庄底 / 最终净分的 Settlement Audit 核对核心
 - Executor 永久关闭
+- 已关闭证据会话可导出 Hand Timeline **待人工审阅草稿**；机器/OCR/用户打点均不会自动升级为 confirmed evidence
 
 ## 仍未接入本壳
 
@@ -47,3 +48,21 @@ PublicState 当前依赖本机 `tesseract` 命令。如果没有安装，采集�
 `data/hint_alpha/<session_id>/`
 
 每个会话包含 `session.json`、`events.jsonl`、`frames/`、`recordings/` 和 `completion.json`。
+
+
+## 导出 Hand Timeline 审阅草稿
+
+必须先停止/关闭 Hint Alpha 会话，再由审阅者明确指定它对应第几局。桥不会从 OCR 自动猜局号，也不会把 PublicState 或结算页数值当成真值。
+
+```powershell
+python -m workspace.hint_alpha.timeline_bridge ^
+  --session data/hint_alpha/<session_id> ^
+  --hand 3
+```
+
+默认输出到：
+
+`data/hint_alpha/<session_id>/timeline_drafts/hand_03_timeline.draft.json`  
+`data/hint_alpha/<session_id>/timeline_drafts/hand_03_timeline.draft.md`
+
+如一个 Hint Alpha 会话覆盖多局，可以人工指定 `--start-seq` / `--end-seq` 选择该局事件范围。所有自动转换事件固定为 `evidence_level=unknown`，需人工对照录像/截图后才能形成正式证据。
