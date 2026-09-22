@@ -56,6 +56,7 @@ P1：
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
 
 Product / P2：
+- **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
 - **#45** Hint Alpha 继续 internal/read-only。
 - **#47** hand timeline 作为“录像 → 规则证据”的统一流水格式。
 - **#9** 低频终局规则等待直接证据。
