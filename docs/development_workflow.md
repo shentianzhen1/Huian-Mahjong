@@ -19,9 +19,9 @@
 | `references/rules/**/*.json`、`tests/fixtures/**/*.json` | Evidence Contracts：UNKNOWN 模板和真实结算 fixture 契约 | fixture 通过 ≠ 新特殊规则确认 |
 | `workspace/vision/**` / `dataset/tiles_*/**` | Vision Regression + 核心代码相关测试 | CI 通过 ≠ Runtime Vision 正式晋级 |
 | Rules、Environment、Simulator、AI 代码 | Tests：核心回归、coverage、安装包边界及适用评估 | 单测通过 ≠ 策略提升 |
-| 纯文档 | 人工审查与 source-of-truth 一致性核查 | 文档中不得伪造测试或规则证据 |
+| 纯文档 | Tests/Vision 的轻量 Scope 检查确认无代码变化，重型测试自动跳过；人工审查真相源 | 文档中不得伪造测试或规则证据 |
 
-手动运行的 AI Paired Evaluation、Gold/Youjin Shadow 和正式 Vision source-disjoint promotion 是**独立实验**，不是每个 PR 的默认 CI。新的 Vision 正式批次必须先锁来源和 holdout，再用冻结的 `promotion_gate.py`；看过答案后不可调参再把同批当盲测。
+Tests 和 Vision Regression 对所有 PR 都创建 Scope 检查，以免纯文档 PR 因路径过滤而缺失仓库必需检查；重型 job 只在对应代码/数据变更时运行。PR 更新后的旧测试自动取消，main 分支结果保留。\n\n手动运行的 AI Paired Evaluation、Gold/Youjin Shadow 和正式 Vision source-disjoint promotion 是**独立实验**，不是每个 PR 的默认 CI。新的 Vision 正式批次必须先锁来源和 holdout，再用冻结的 `promotion_gate.py`；看过答案后不可调参再把同批当盲测。
 
 ## Public Match Reconstruction #69：收敛为三道验收
 
