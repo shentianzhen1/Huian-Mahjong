@@ -44,10 +44,17 @@ def _score_pair(value: Any, name: str) -> tuple[int, int] | None:
         raise ValueError(f"{name} must be a two-integer pair or None") from exc
     if (
         len(pair) != 2
-        or any(isinstance(item, bool) or not isinstance(item, int) for item in pair)
+        or any(
+            isinstance(item, bool)
+            or not isinstance(item, int)
+            or not 0 <= item <= 2000
+            for item in pair
+        )
         or sum(pair) != 2000
     ):
-        raise ValueError(f"{name} must be a two-integer pair conserving 2000")
+        raise ValueError(
+            f"{name} must be a physical two-integer pair conserving 2000"
+        )
     return pair
 
 
