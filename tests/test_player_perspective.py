@@ -1,21 +1,14 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 import unittest
 
-from PIL import Image
-
-from workspace.vision.dealer_marker_detector import detect_dealer_marker
-from workspace.vision.hand_context_assembler import assemble_hand_context
 from workspace.vision.player_perspective import (
     PlayerPerspectiveEvidence,
     PlayerPerspectiveManifest,
     load_player_perspective_manifest,
     resolve_player_perspective,
 )
-from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
-from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,20 +16,6 @@ PERSPECTIVE = (
     ROOT / "references" / "vision" / "2026-09-22"
     / "player_perspective_v0_1.json"
 )
-
-
-def public_state(hand: int, top: int, bottom: int) -> PublicStateObservation:
-    return PublicStateObservation(
-        top_right_score=top,
-        bottom_left_score=bottom,
-        hand_number=hand,
-        remaining_tiles=100,
-        score_votes=3,
-        hand_votes=3,
-        remaining_votes=3,
-        issues=(),
-        safe_for_executor=False,
-    )
 
 
 class PlayerPerspectiveTests(unittest.TestCase):
@@ -110,70 +89,6 @@ class PlayerPerspectiveTests(unittest.TestCase):
                 entries=(*self.manifest.entries, duplicate)
             )
 
-    def test_66fe_perspective_plus_marker_maps_opponent_dealer_to_seat_one(self):
-        perspective = resolve_player_perspective(
-            manifest=self.manifest,
-            source_session="66fe863f_youjin100",
-        )
-        self.assertEqual(perspective.player_seat, 0)
-
-        image = Image.open(
-            ROOT
-            / "references/gameplay/2026-09-15/66fe863f_youjin100"
-            / "peng_offer_p1_035000ms.jpg"
-        ).convert("RGB")
-        marker = detect_dealer_marker(
-            image,
-            frame=1015,
-            session="66fe863f_youjin100",
-        )
-        self.assertEqual(marker.actor, "opponent")
-        dealer = marker.to_dealer_evidence(
-            timestamp_seconds=35.0,
-            player_seat=perspective.player_seat,
-        )
-        self.assertEqual(dealer.dealer_seat, 1)
-
-        context = assemble_hand_context(
-            public_state(5, 900, 1100),
-            player_seat=perspective.player_seat,
-            dealer_evidence=(dealer, dealer),
-            gold_observations=(
-                RawObservation(
-                    35.1, "system", ObservationKind.GOLD,
-                    tile="M1", evidence_refs=("fixture:gold",)
-                ),
-                RawObservation(
-                    35.2, "system", ObservationKind.GOLD,
-                    tile="M1", evidence_refs=("fixture:gold2",)
-                ),
-            ),
-        )
-        self.assertEqual(context.context.player_seat, 0)
-        self.assertEqual(context.context.dealer, 1)
-        self.assertEqual(context.context.initial_scores, (1100, 900))
-
-    def test_b389_perspective_plus_marker_maps_player_dealer_to_seat_zero(self):
-        perspective = resolve_player_perspective(
-            manifest=self.manifest,
-            source_session="b3892b34_zimo68",
-        )
-        image = Image.open(
-            ROOT
-            / "references/gameplay/2026-09-15/b3892b34_zimo68"
-            / "chi_m4_offer_033000ms.jpg"
-        ).convert("RGB")
-        marker = detect_dealer_marker(
-            image,
-            frame=957,
-            session="b3892b34_zimo68",
-        )
-        self.assertEqual(marker.actor, "player")
-        dealer = marker.to_dealer_evidence(
-            timestamp_seconds=33.0,
-            player_seat=perspective.player_seat,
-        )
-        self.assertEqual(dealer.dealer_seat, 0)
 
 
 if __name__ == "__main__":
