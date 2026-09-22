@@ -11,7 +11,7 @@
 
 | Area | Current baseline | Status |
 | --- | --- | --- |
-| Package metadata | `0.1.0` | 第一阶段边界收紧：legacy_code 不再安装；运行时兼容层迁入 `huian._compat` |
+| Package metadata | `0.2.0` | release version 独立于 RuleSnapshot fingerprint 与 Agent version；legacy_code 不再参与安装或 runtime source digest |
 | Rules / Environment | evidence-driven Huian 2-player rules | 普通规则与普通真实结算基本闭环；特殊结算仍有 P0 缺口 |
 | Match | 2 players × 8 hands, 1000/1000 start, zero-sum | ordinary-real MatchRunner 可完整跑普通路径 |
 | AI | `CurrentAgent = MeldAwareShantenAgent V0.10` | 固定当前前沿；V0.6 主对照，V0.3 消融基线 |
@@ -26,6 +26,10 @@
   - 金作为万能牌但不能参与副露；开出的金固定占 1 张实体牌，因此最多 3 张可操作金。
   - 普通番数聚合与普通平胡 / 自摸真实结算已接通；普通多拆法取最高番。
   - 8 局总账从 1000/1000 开始，双方分数零和；庄家连庄底 +5，换庄重置。
+
+- **Evaluation provenance**
+  - 项目 release、RuleSnapshot fingerprint、Agent version 分开记录；保存型评估升级为 schema v3。
+  - runtime `source_digest` 只覆盖 `huian` / `mahjong_framework` / `workspace.ai` / `workspace.simulator`，冻结的 `legacy_code` 不再污染重放身份。
 
 - **AI**
   - V0.10 仅在 CHI/PENG 窗口做副露前后牌效比较；手里有金时保持保守。
