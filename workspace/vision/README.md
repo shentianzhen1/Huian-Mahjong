@@ -31,3 +31,5 @@ Public Identity Labels V0.1 位于 `public_identity_labels.py`，manifest 为 `r
 Hand Context Assembler V0.1 位于 `hand_context_assembler.py`：把 PublicState 的局号/比分、独立庄家证据与 Gold 证据装成 canonical `HandContext`，并生成 UNKNOWN-only 的 `HAND_START / OPEN_GOLD` 草稿事件。不会从分数、先后手或麻将规则猜庄家，也不推庄底；座位映射未知时比分保持 UNKNOWN。设计见 `references/vision/2026-09-22/hand_context_assembler_v0_1.md`。
 
 Dealer Marker Detector V0.1 位于 `dealer_marker_detector.py`：在两个真实开发 session 的相反庄位上，用头像旁窄 ROI 的红/橙庄标信号判断 `player / opponent / UNKNOWN`。10 张锁定图均纳入 Vision 回归；双侧同时有信号或都无信号时 fail closed。不 OCR “庄3/庄5”，不推庄底；只有调用方显式给出 `player_seat` 后才映射成 Hand Context 的 dealer seat。设计见 `references/vision/2026-09-22/dealer_marker_detector_v0_1.md`。
+
+Player Perspective V0.1 位于 `player_perspective.py`，manifest 为 `references/vision/2026-09-22/player_perspective_v0_1.json`：显式桥接 Vision 的 `player/opponent` 与 Rules/Environment 的 seat 0/1。66fe 与 b389 两个已审计 replay 都由 fixture 证据锁定 local/bottom player=seat 0；未知新来源不会默认 seat 0，必须由 session/hash 证据或显式 runtime config 提供，冲突则 fail closed。详见 `references/vision/2026-09-22/player_perspective_v0_1.md`。
