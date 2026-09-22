@@ -72,3 +72,15 @@ Future rollout/EV work should:
   upgrade, fan and x4/x8 settlement logic. It explicitly reports
   `is_full_ev = False`.
 
+
+
+## Workflow archive
+
+The former GitHub Actions entry `.github/workflows/v014-intervention-diagnostics.yml`
+was removed from the active Actions list after this closure. A reproducibility-only
+copy is retained at:
+
+`references/ai/2026-09-20/v014-intervention-diagnostics.workflow.yml`
+
+This is a UI/maintenance cleanup, not new evaluation evidence and not a change
+to the V0.14 closure decision.
