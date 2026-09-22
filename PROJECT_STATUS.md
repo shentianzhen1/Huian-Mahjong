@@ -16,7 +16,7 @@
 | Match | 2 players × 8 hands, 1000/1000 start, zero-sum | ordinary-real MatchRunner 可完整跑普通路径 |
 | AI | `CurrentAgent = MeldAwareShantenAgent V0.10` | 固定当前前沿；V0.6 主对照，V0.3 消融基线 |
 | Vision | Runtime Vision V0.2 | **experimental read-only**；formal promotion blocked |
-| Hint Alpha | V0.1 internal advisory | 只读，不点击 |
+| Hint Alpha | V0.1 internal advisory | 只读，不点击；本地 Doctor 区分 Demo / Live Capture / PublicState OCR readiness |
 | Executor | off | Vision 独立晋级 + 后续单独安全门之前不启用 |
 
 ## What Is Working
@@ -62,7 +62,7 @@ P1：
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
-- **#45** Hint Alpha 继续 internal/read-only；新增 Hint Alpha → Hand Timeline UNKNOWN-only 草稿桥，关闭会话后由人工指定局号/事件范围，机器观察不会自动晋级为证据真值。
+- **#45** Hint Alpha 继续 internal/read-only；新增本地 Doctor 与自检脚本，Hint Alpha evidence session 记录 project release + RuleSnapshot + Agent provenance；Hand Timeline 草稿桥仍保持 UNKNOWN-only。
 - **#9** 低频终局规则等待直接证据。
 
 ## Current Priority Order
