@@ -60,7 +60,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：基础契约、river/meld observer、我方 Runtime bridge、Temporal Action Assembler 与中文 Match Ledger 已落地；当前真实阻塞集中为双方弃牌河 / 对手副露低层 segmentation/identity 与特殊状态视觉校准。
+- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger 已落地；Public Detector 开发校准集已锁定 2 session / 5 弃牌 / 5 副露真实帧，当前具体阻塞为这 10 个目标的 bbox 像素复核及随后 segmentation/identity。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -71,7 +71,7 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：整局 Ledger 展示链已就绪；下一步用已归档真实截图与新录像校准 Public Tile Detector / 对手副露 / 特殊状态 detector，把真实 DISCARD/MELD/Youjin/Hu/settlement 喂入现有 observer + assembler；冲突保持 UNKNOWN。
+3. 推进 #69 Public Match Reconstruction V0.1：先完成已锁定 10 个真实 discard/meld 校准目标的 normalized bbox 复核，再实现 Public Tile segmentation/identity；随后把真实 DISCARD/MELD/Youjin/Hu/settlement 喂入现有 observer + assembler + Ledger；冲突保持 UNKNOWN。
 4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。
