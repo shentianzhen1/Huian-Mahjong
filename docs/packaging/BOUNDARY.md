@@ -51,6 +51,8 @@ Long-term packaging can move toward:
 
 This is an engineering boundary, not a release promise.
 
+See also: [DEPENDENCY_GRAPH.md](DEPENDENCY_GRAPH.md) for the enforced cross-package import DAG.
+
 ## Migration order
 
 1. Keep the umbrella wheel stable and lock its contents in CI.
