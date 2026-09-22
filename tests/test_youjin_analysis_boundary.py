@@ -39,6 +39,46 @@ class YoujinAnalysisBoundaryTests(unittest.TestCase):
             youjin_entry_discards(self.rules, hand, "P9"),
         )
 
+    def test_helper_paths_preserve_ready_hand_override(self):
+        class OverrideRules(HuianRules):
+            def __init__(self):
+                super().__init__()
+                self.calls = 0
+
+            def is_youjin_ready_hand(self, hand, gold_tile, open_melds=0):
+                self.calls += 1
+                return False
+
+        rules = OverrideRules()
+        self.assertFalse(
+            analyze_youjin_melds(rules, READY, "P9").legal
+        )
+        self.assertEqual(rules.calls, 1)
+
+        rules.calls = 0
+        self.assertEqual(
+            youjin_entry_discards(rules, READY + ["M9"], "P9"),
+            (),
+        )
+        self.assertGreater(rules.calls, 0)
+
+        rules.calls = 0
+        self.assertFalse(
+            can_youjin_upgrade_after_draw(
+                rules,
+                [
+                    "M1", "M2", "M3",
+                    "M4", "M5", "M6",
+                    "P1", "P2", "P3",
+                    "S1", "S2", "S3",
+                    "E", "E", "E",
+                    "P9", "P9",
+                ],
+                "P9",
+            )
+        )
+        self.assertEqual(rules.calls, 1)
+
     def test_upgrade_and_score_terms_match_helper_boundary(self):
         ready = [
             "M1", "M2", "M3",
