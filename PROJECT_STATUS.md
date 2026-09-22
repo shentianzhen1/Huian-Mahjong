@@ -57,7 +57,7 @@ P1：
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
-- **#45** Hint Alpha 继续 internal/read-only。
+- **#45** Hint Alpha 继续 internal/read-only；新增 Hint Alpha → Hand Timeline UNKNOWN-only 草稿桥，关闭会话后由人工指定局号/事件范围，机器观察不会自动晋级为证据真值。
 - **#47** hand timeline 作为“录像 → 规则证据”的统一流水格式。
 - **#9** 低频终局规则等待直接证据。
 
