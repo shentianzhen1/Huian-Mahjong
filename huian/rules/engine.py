@@ -28,6 +28,14 @@ from .models import (
     YoujinScoreTerms,
 )
 from .values import nonnegative_int
+from .youjin_analysis import (
+    analyze_youjin_melds as _analyze_youjin_melds,
+    can_youjin_kong_tail_ordinary_hu as _can_youjin_kong_tail_ordinary_hu,
+    can_youjin_upgrade_after_draw as _can_youjin_upgrade_after_draw,
+    is_youjin_ready_hand as _is_youjin_ready_hand,
+    youjin_entry_discards as _youjin_entry_discards,
+    youjin_score_terms as _youjin_score_terms,
+)
 
 
 class HuianRules:
@@ -224,193 +232,40 @@ class HuianRules:
         return SanjindaoDecision(eligible, count, choices, self.SANJINDAO_MULTIPLIER)
 
     def is_youjin_ready_hand(self, hand, gold_tile, open_melds=0):
-        """Return whether a post-discard hand is structurally ready to enter Youjin.
-
-        Confirmed 2026-09-20 semantics: reserve exactly one gold as the roaming
-        singleton.  All remaining concealed tiles, including any other golds as
-        wildcards, must already form every concealed meld still required by the
-        5-meld Huian hand.  The next ordinary draw can then pair with the reserved
-        gold and complete an ordinary structural Hu.
-
-        This checks structure only.  It does not advance the Youjin stage or
-        encode later Double-/Triple-You upgrade timing.
-        """
-        self._validate_hand(hand, gold_tile)
-        nonnegative_int(open_melds, "open_melds")
-        if open_melds > 5:
-            raise ValueError("At most five melds")
-        if gold_tile is None or hand.count(gold_tile) < 1:
-            return False
-        groups_needed = 5 - open_melds
-        if len(hand) != groups_needed * 3 + 1:
-            return False
-
-        # Reuse the audited ordinary-Hu solver rather than maintain a second
-        # wildcard meld solver.  Add one legal non-gold sentinel draw and require
-        # a decomposition whose pair is exactly sentinel + GOLD.  Such a split is
-        # equivalent to: current hand = all remaining melds + one roaming gold.
-        for tile in core.BASE_TILES:
-            if tile == gold_tile or hand.count(tile) >= 4:
-                continue
-            splits = winning_decompositions(
-                [*hand, tile], gold_tile, open_melds, max_solutions=64
-            )
-            if any(split["pair"] == (tile, "GOLD") for split in splits):
-                return True
-        return False
+        """Return whether a post-discard hand is structurally ready to enter Youjin."""
+        return _is_youjin_ready_hand(self, hand, gold_tile, open_melds)
 
     def analyze_youjin_melds(
             self, hand, gold_tile, open_melds=0, max_decompositions=64):
-        """Enumerate meld-only splits after reserving one roaming Jin.
-
-        The input hand is the post-discard Youjin-ready concealed zone:
-        all remaining concealed melds plus exactly one roaming Jin.
-        Additional Jin copies may occupy wildcard positions inside melds.
-
-        The ordinary solver is reused by appending one legal non-Jin sentinel
-        and keeping only decompositions whose pair is sentinel + GOLD.
-        """
-        self._validate_hand(hand, gold_tile)
-        nonnegative_int(open_melds, "open_melds")
-        if open_melds > 5:
-            raise ValueError("At most five melds")
-        if (isinstance(max_decompositions, bool)
-                or not isinstance(max_decompositions, Integral)
-                or max_decompositions <= 0):
-            raise ValueError("max_decompositions must be a positive integer")
-        if not self.is_youjin_ready_hand(hand, gold_tile, open_melds):
-            return YoujinMeldResult(False, (), gold_tile, open_melds, False)
-
-        found = {}
-        truncated = False
-        for sentinel in core.BASE_TILES:
-            if sentinel == gold_tile or hand.count(sentinel) >= 4:
-                continue
-            splits = winning_decompositions(
-                [*hand, sentinel], gold_tile, open_melds,
-                max_solutions=max_decompositions + 1,
-            )
-            for split in splits:
-                if split["pair"] != (sentinel, "GOLD"):
-                    continue
-                groups = tuple(tuple(group) for group in split["groups"])
-                key = tuple(sorted(groups))
-                if key in found:
-                    continue
-                found[key] = YoujinMeldDecomposition(groups=groups)
-                if len(found) > max_decompositions:
-                    truncated = True
-                    break
-            if truncated:
-                break
-
-        decompositions = tuple(
-            found[key] for key in sorted(found)
-        )[:max_decompositions]
-        return YoujinMeldResult(
-            legal=bool(decompositions),
-            decompositions=decompositions,
-            gold_tile=gold_tile,
-            open_melds=open_melds,
-            may_be_truncated=truncated,
+        """Enumerate meld-only splits after reserving one roaming Jin."""
+        return _analyze_youjin_melds(
+            self, hand, gold_tile, open_melds, max_decompositions
         )
+
     def youjin_entry_discards(self, hand, gold_tile, open_melds=0):
         """Enumerate discards that leave the confirmed single-Youjin-ready shape."""
-        self._validate_hand(hand, gold_tile)
-        nonnegative_int(open_melds, "open_melds")
-        if open_melds > 5:
-            raise ValueError("At most five melds")
-        expected = (5 - open_melds) * 3 + 2
-        if len(hand) != expected:
-            return ()
-        out = []
-        for tile in sorted(set(hand)):
-            candidate = list(hand)
-            candidate.remove(tile)
-            if self.is_youjin_ready_hand(candidate, gold_tile, open_melds):
-                out.append(tile)
-        return tuple(out)
+        return _youjin_entry_discards(self, hand, gold_tile, open_melds)
 
     def can_youjin_kong_tail_ordinary_hu(
             self, hand, gold_tile, open_melds=0, *, win_context):
-        """Return whether a Youjin Kong-tail draw has a genuine ordinary Hu split.
-
-        The established roaming Jin paired with the just-drawn Kong-tail tile is
-        the special Youjin mechanism, not by itself an ordinary self-draw.  A
-        normal Hu option is exposed only when at least one legal ordinary
-        decomposition exists whose pair is not exactly {winning tile, GOLD}.
-        """
-        if not isinstance(win_context, HuContext):
-            raise TypeError("win_context must be HuContext")
-        if win_context.source != WinSource.KONG_TAIL_DRAW:
-            raise ValueError("Youjin Kong-tail ordinary Hu requires Kong-tail context")
-        result = self.analyze_hu(
-            hand, gold_tile, open_melds,
-            win_context=win_context,
-            max_decompositions=64,
+        """Check for a genuine ordinary Hu on a Youjin Kong-tail draw."""
+        return _can_youjin_kong_tail_ordinary_hu(
+            self, hand, gold_tile, open_melds, win_context=win_context
         )
-        if not result.legal:
-            return False
-        winning_tile = win_context.winning_tile
-        for decomposition in result.decompositions:
-            pair = decomposition.pair
-            roaming_pair = (
-                pair.count("GOLD") == 1
-                and pair.count(winning_tile) == 1
-            )
-            if not roaming_pair:
-                return True
-        return False
 
     def can_youjin_upgrade_after_draw(self, hand, gold_tile, open_melds=0):
-        """Return whether the just-completed own draw can support the next You stage.
-
-        Confirmed 2026-09-20 upgrade semantics:
-        - after single/double You survives the opponent's one self-draw chance,
-          the Youjin player receives one normal draw;
-        - upgrade is available only when one gold can now be discarded and the
-          remaining concealed hand is still the confirmed
-          "all remaining melds + one roaming gold" structure;
-        - this captures both confirmed mechanisms:
-          (1) drawing the natural tile that replaces a wildcard gold, thereby
-              freeing that gold; or
-          (2) drawing another gold directly;
-        - choosing the upgrade is optional.
-
-        This method is structural only.  It does not infer the current/next
-        Youjin stage and does not resolve the opponent-response draw's physical
-        tile disposition.
-        """
-        self._validate_hand(hand, gold_tile)
-        nonnegative_int(open_melds, "open_melds")
-        if open_melds > 5:
-            raise ValueError("At most five melds")
-        expected = (5 - open_melds) * 3 + 2
-        if len(hand) != expected or gold_tile is None or gold_tile not in hand:
-            return False
-        after_gold_discard = list(hand)
-        after_gold_discard.remove(gold_tile)
-        return self.is_youjin_ready_hand(
-            after_gold_discard, gold_tile, open_melds
+        """Return whether the completed own draw can support the next You stage."""
+        return _can_youjin_upgrade_after_draw(
+            self, hand, gold_tile, open_melds
         )
 
     def youjin_score_terms(self, stage, *, winner, dealer, winner_fan):
-        """Return confirmed terms; fan aggregation and payer remain external."""
-        try:
-            stage = stage if isinstance(stage, YoujinStage) else YoujinStage(stage)
-        except (TypeError, ValueError) as exc:
-            raise ValueError("Invalid Youjin stage") from exc
-        for name, value in (("winner", winner), ("dealer", dealer),
-                            ("winner_fan", winner_fan)):
-            nonnegative_int(value, name)
-        if winner not in (0, 1) or dealer not in (0, 1):
-            raise ValueError("winner and dealer must be seat 0 or 1")
-        if stage not in self.YOUJIN_MULTIPLIERS:
-            raise ValueError("Score terms require Youjin, Double-You or Triple-You")
-        return YoujinScoreTerms(
-            stage=stage,
-            youjin_multiplier=self.YOUJIN_MULTIPLIERS[stage],
-            dealer_multiplier=DEALER_WIN_MULTIPLIER,
+        """Return confirmed Youjin terms; fan aggregation and payer stay external."""
+        return _youjin_score_terms(
+            self,
+            stage,
+            winner=winner,
+            dealer=dealer,
             winner_fan=winner_fan,
         )
 
