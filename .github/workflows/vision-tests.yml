@@ -18,6 +18,11 @@ on:
       - "pyproject.toml"
   workflow_dispatch:
 
+# New PR revisions supersede older runs; retain every main-branch result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
