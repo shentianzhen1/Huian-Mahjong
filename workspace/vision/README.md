@@ -15,3 +15,5 @@ Runtime Public Adapter V0.1 位于 `runtime_public_adapter.py`，把现有 Runti
 Temporal Action Assembler V0.1 位于 `action_assembler.py`：把已稳定的 `DISCARD / HAND_DELTA / MELD_DELTA` 按 actor 与时间窗口组合成 CHI/PENG/MING_GANG/ADD_KONG；时序参数属于采集启发式，不属于麻将规则。过期、重复或多组合歧义均 fail closed 为 UNKNOWN。设计见 `references/vision/2026-09-22/temporal_action_assembler_v0_1.md`。
 
 Public Match Ledger V0.1 位于 `match_ledger.py`：直接从 canonical `HandTimeline` 渲染中文整局流水，不另造展示真相源；支持简洁/审计两种视图、1/8~8/8、庄家、金、双方出牌、吃碰杠、游金状态、胡牌和结算，并检查相邻局比分连续性。设计见 `references/vision/2026-09-22/public_match_ledger_v0_1.md`。
+
+Public Detector Calibration V0.1 位于 `public_detector_calibration.py`，并锁定 `references/vision/2026-09-22/public_detector_calibration_v0_1.json`：已有 2 个真实开发 session、5 个对手弃牌事实和 5 个我方副露/杠事实，图片 SHA256 均可验证；bbox 仍为 pending，禁止从文字描述猜坐标。该批次永久 development-only，不进入 formal Vision promotion。
