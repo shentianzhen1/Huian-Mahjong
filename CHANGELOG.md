@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-09-22 — Package 0.2.0：版本身份与评估 provenance 收口
+
+- Python package / project release 升至 `0.2.0`，并通过 `huian.__version__` / `PROJECT_VERSION` 暴露；它只表示仓库集成版本，不替代 RuleSnapshot 或 Agent 版本。
+- 保存型 Simulator 评估升级为 schema v3，同时记录 project manifest、RuleSnapshot、Agent class/version、Python runtime 与 runtime source digest。
+- 8局 paired evaluation 新增 project version 与 agent versions；无法确认版本的自定义/基线 factory 显式记录 `None`，不猜测。
+- runtime source digest 不再包含 `legacy_code/`；冻结历史基线仍保留 advisory CI，但修改历史对照代码不会再污染当前评估重放身份。
+- 安装包 smoke test 强制校验 setuptools metadata 版本与 `huian.__version__` 一致。
+- 本次只收口版本和评估可追溯性，不改变惠安麻将规则、CurrentAgent V0.10策略、Vision阈值或Executor状态。
+
 ## 2026-09-20 — AI状态收口：V0.14关闭，游金评估底座更新
 
 - 补回此前未同步到状态文档的V0.14结果：25-pair / 50场pilot为23胜26负1平，平均配对分差-23.28，点炮差+0.24；不晋级。
