@@ -20,4 +20,4 @@ Public Detector Calibration V0.1 位于 `public_detector_calibration.py`，并�
 
 Public Tile Detector V0.1 位于 `public_tile_detector.py`：全帧几何候选 intake，不把候选直接判成弃牌/吃碰杠，也不复用 hand 模板猜公开牌身份。真实校准显示弃牌存在 `upper_protrusion` 与 `single_face` 两种尺度，副露存在普通 group 与 `3+1` 叠杠，因此 detector 不冻结单一弃牌 ROI。设计见 `references/vision/2026-09-22/public_tile_detector_v0_1.md`。
 
-Public Candidate Tracker V0.1 位于 `public_candidate_tracker.py`：把 Public Tile Detector 的单帧 geometry candidate 变成跨帧稳定轨迹，默认连续 3 帧才 APPEARED、连续 2 帧缺失才 DISAPPEARED。Tracker 本身不内置河牌 ROI；只有调用方显式提供 CandidateChannel 后，稳定轨迹才可转换成 identity-UNKNOWN 的 RiverSnapshot。设计见 `references/vision/2026-09-22/public_candidate_tracker_v0_1.md`。
+Public Candidate Tracker V0.1 位于 `public_candidate_tracker.py`：把 Public Tile Detector 的单帧 geometry candidate 变成跨帧稳定轨迹，默认连续 3 帧才 APPEARED、连续 2 帧缺失才 DISAPPEARED，并用默认 0.5s 最大观测间隔防止断流前后误续轨迹。session/超时会递增 `stream_epoch`；River/Meld Observer 在 epoch 变化后必须重新建立基线。Tracker 本身不内置河牌 ROI；只有调用方显式提供 CandidateChannel 后，稳定轨迹才可转换成 identity-UNKNOWN 的 RiverSnapshot。
