@@ -208,6 +208,37 @@ class PublicStateBatchEvaluationTests(unittest.TestCase):
         self.assertNotIn("hand_unreadable", result.issues)
         self.assertNotIn("remaining_unreadable", result.issues)
 
+    def test_previous_state_invariants_reject_regression_and_same_hand_drift(self):
+        from .public_state import PublicStateCandidate, fuse_public_state
+
+        previous = observation((1026, 974), 3, 88)
+        cases = (
+            (
+                PublicStateCandidate(1026, 974, 2, 87),
+                "hand_regression",
+            ),
+            (
+                PublicStateCandidate(1026, 974, 5, 87),
+                "hand_jump",
+            ),
+            (
+                PublicStateCandidate(1040, 960, 3, 87),
+                "score_changed_inside_hand",
+            ),
+            (
+                PublicStateCandidate(1026, 974, 3, 89),
+                "remaining_increased_inside_hand",
+            ),
+        )
+        for candidate, issue in cases:
+            with self.subTest(issue=issue):
+                result = fuse_public_state(
+                    [candidate], previous=previous, minimum_votes=1
+                )
+                self.assertIn(issue, result.issues)
+                self.assertFalse(result.valid)
+                self.assertFalse(result.safe_for_executor)
+
     def test_manifest_rejects_invalid_truth_and_empty_frames(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
