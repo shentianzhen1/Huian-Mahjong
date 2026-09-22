@@ -1,5 +1,11 @@
 # 重要变更记录
 
+## 2026-09-22 — Workspace 拆包依赖 DAG 固化
+
+- 新增 `tests/test_workspace_dependency_boundaries.py`，用 AST 扫描实际 import，禁止 core 反向依赖 workspace、AI→Simulator/Vision、Vision→AI/Simulator、Hint→Simulator 等逆向边。
+- 当前允许顺序固定为：core 最底层；AI/Vision 只向 core；Simulator 向 core+AI；Hint Alpha 位于最上层，向 core+AI+Vision。
+- 新增 `docs/packaging/DEPENDENCY_GRAPH.md`，将未来真实多 distribution 拆分顺序固定为 core → AI/Vision → Simulator → Hint；Executor 不进入当前打包计划。
+
 ## 2026-09-22 — Wheel 内容边界与 CHANGELOG 归档
 
 - 根目录 `CHANGELOG.md` 只保留最近变更，09-20 / 09-19 / 09-18 / 09-15 历史按日期迁入 `docs/changelog/`，避免历史日志继续膨胀成伪状态源。
