@@ -15,7 +15,7 @@
 ## P1 — AI / Vision
 
 - **#6 AI EV / 8局上下文** — `CurrentAgent = MeldAwareShantenAgent V0.10` 固定为当前前沿；#4 闭环前不并行开新 Agent 版本。
-- **#7 Vision 独立验证** — 旧8局已完成64时点同批状态栏审计并保留 false-valid 错误；下一里程碑仍只做 source-disjoint 新批次 + 已冻结 `promotion_gate.py`，不得把同批改进当泛化证据。
+- **#7 Vision 独立验证** — 旧8局已完成64时点同批状态栏审计并保留 false-valid 错误；新批次先用 `independent_batch_lock.py` 锁 SHA/session/帧位，再人工 truth，最后只跑已冻结 `promotion_gate.py`。
 
 ## Product
 

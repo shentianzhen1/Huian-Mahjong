@@ -1,5 +1,13 @@
 # 重要变更记录
 
+## 2026-09-22 — Runtime Vision 独立批次锁定器
+
+- 新增 `independent_batch_lock.py`：在任何检测/分类评估前，对全新录像做 SHA256、source-disjoint 排除、匿名 session 与 20/50/80% 帧位冻结。
+- 至少要求8个独立 source session；短于120帧的录像不计入正式批次；同一批次已有锁文件时拒绝覆盖。
+- 自动生成 `batch_lock.json`、metadata-only `geometry_truth.blank.jsonl`、全指标为 null 的 `promotion_bundle.blank.json`。
+- 锁定器不会调用 detector/classifier，不会把模型输出写入人工 truth；一旦看过该批结果并据此调参，该批只能作为开发证据，下一次正式晋级需重新采集 untouched 批次。
+- Executor 仍保持关闭。
+
 ## 2026-09-22 — Workspace 拆包依赖 DAG 固化
 
 - 新增 `tests/test_workspace_dependency_boundaries.py`，用 AST 扫描实际 import，禁止 core 反向依赖 workspace、AI→Simulator/Vision、Vision→AI/Simulator、Hint→Simulator 等逆向边。
