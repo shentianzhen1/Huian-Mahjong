@@ -9,10 +9,11 @@ from .actions import Action, ActionType
 from .events import Event
 from .state import GameState, Meld
 from .rules_adapter import RulesAdapter, ScaffoldRules
+from .environment import QuanzhouEnvironment
 
 __all__ = [
     "Action", "ActionType", "Event", "GameState", "Meld",
-    "RulesAdapter", "ScaffoldRules",
+    "RulesAdapter", "ScaffoldRules", "QuanzhouEnvironment",
     "SUITS", "HONORS", "FLOWERS", "BASE_TILES", "CN",
     "full_wall", "validate_multiset",
 ]
