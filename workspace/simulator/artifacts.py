@@ -8,14 +8,37 @@ import platform
 import sys
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
-from workspace.ai import BaselineAgent, CurrentAgent, ShantenAgent
+from huian.version import project_manifest
+from workspace.ai import (BaselineAgent, CurrentAgent, ShantenAgent,
+                          CURRENT_AGENT_VERSION)
 from .core import RandomAgent, Simulator, SimulatorConfig
 from .evaluation import make_hand_summary, run_many_normal_hands
 
 
 AGENTS = {"random": RandomAgent, "baseline": BaselineAgent,
           "shanten_v03": ShantenAgent, "current": CurrentAgent}
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
+RUNTIME_SOURCE_FOLDERS = (
+    "huian",
+    "mahjong_framework",
+    "workspace/ai",
+    "workspace/simulator",
+)
+
+
+def agent_manifest(name):
+    factory = AGENTS[name]
+    versions = {
+        "current": CURRENT_AGENT_VERSION,
+        "shanten_v03": "v0.3",
+        "baseline": None,
+        "random": None,
+    }
+    return {
+        "registry_name": name,
+        "class": factory.__name__,
+        "version": versions[name],
+    }
 
 
 def _canonical(value):
@@ -34,8 +57,7 @@ def source_digest():
     """Hash runtime sources with normalized newlines, excluding tests/media."""
     root = Path(__file__).resolve().parents[2]
     digest = hashlib.sha256()
-    for folder in ("huian", "mahjong_framework", "workspace/ai",
-                   "workspace/simulator", "legacy_code"):
+    for folder in RUNTIME_SOURCE_FOLDERS:
         for path in sorted((root / folder).rglob("*.py")):
             relative = path.relative_to(root)
             if "tests" in relative.parts or "__pycache__" in relative.parts:
@@ -83,7 +105,9 @@ def run_saved_evaluation(output_dir, seeds, *, agent_names=("random", "baseline"
         "schema_version": SCHEMA_VERSION,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "source_digest": source_digest(), "runtime": runtime_id(),
+        "project": project_manifest(),
         "rule_snapshot": DEFAULT_RULE_SNAPSHOT.to_manifest(),
+        "agents": [agent_manifest(name) for name in agent_names],
         "simulation_only": True, "simulator_config": asdict(SimulatorConfig()),
         "parameters": {"seeds": seeds, "agent_names": agent_names,
                        "max_steps": max_steps, "swap_seats": swap_seats, "dealer": dealer},
@@ -140,6 +164,8 @@ def replay_saved_hand(report_dir, hand_index):
         raise ValueError("Unsupported evaluation schema")
     if manifest.get("simulation_only") is not True:
         raise ValueError("Only simulation-only evaluations may be replayed")
+    if manifest.get("project") != project_manifest():
+        raise ValueError("Project release differs from the recorded run")
     recorded_snapshot = manifest.get("rule_snapshot")
     if not isinstance(recorded_snapshot, dict):
         raise ValueError("Evaluation is missing its rule snapshot")
@@ -154,6 +180,8 @@ def replay_saved_hand(report_dir, hand_index):
     params = manifest["parameters"]
     seeds, names = params["seeds"], params["agent_names"]
     _validate_parameters(seeds, names, params["max_steps"], params["swap_seats"], params["dealer"])
+    if manifest.get("agents") != [agent_manifest(name) for name in names]:
+        raise ValueError("Agent provenance differs from the recorded run")
     record = None
     with (directory / "hands.jsonl").open(encoding="utf-8") as lines:
         for index, line in enumerate(lines):
