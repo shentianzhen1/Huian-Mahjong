@@ -170,7 +170,7 @@ class IndependentBatchLockTests(unittest.TestCase):
                     return_value=(1108, 690, 1000),
                 ),
             ):
-                with self.assertRaises((FileExistsError, FileExistsError)):
+                with self.assertRaises(FileExistsError):
                     build_lock(root, dataset, output)
 
             self.assertTrue((output / first["batch_id"] / "batch_lock.json").is_file())
