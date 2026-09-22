@@ -40,7 +40,11 @@ Default policy:
 
 - candidate must match for 3 consecutive frames before APPEARED;
 - a pending unconfirmed candidate is dropped after one missed frame;
-- a confirmed candidate needs 2 consecutive misses before DISAPPEARED.
+- a confirmed candidate needs 2 consecutive misses before DISAPPEARED;
+- maximum observation gap defaults to 0.5 s.
+
+The 0.5 s value is a capture heuristic, not a Mahjong rule. Callers may tune it
+for their capture cadence.
 
 Geometry matching uses:
 
@@ -51,15 +55,29 @@ Geometry matching uses:
 
 Absolute screen coordinates do not define track continuity.
 
-## Session boundary
+## Capture continuity and stream epochs
 
-Tracks never continue across source-session boundaries.
+Tracks never continue across source-session boundaries or an excessive capture
+gap.
 
-A session change clears active tracks and records:
+A session change records:
 
     session_changed_reset
 
-No false DISAPPEARED event is created at a session boundary.
+A time gap larger than maximum_gap_seconds records:
+
+    observation_gap_reset
+
+Either reset clears active tracks, increments stream_epoch, and emits no false
+DISAPPEARED event.
+
+RiverSnapshot carries the same stream_epoch. DiscardRiverObserver and
+MeldSnapshotObserver treat an epoch change as a hard continuity break: old
+accepted/pending baselines are discarded and the new epoch must establish a
+fresh stable baseline before any DISCARD/MELD_DELTA can be emitted.
+
+This prevents sparse screenshots or capture stalls from turning two
+non-contiguous states into a fabricated action.
 
 ## Geometry-kind boundary
 
@@ -106,6 +124,8 @@ Every emitted PublicTile currently has:
 because Public Tile Detector V0.1 has no public-region identity model yet.
 
 The resulting RiverSnapshot is therefore geometry-ready but identity-UNKNOWN.
+It also carries stream_epoch so downstream observers cannot compare across
+capture discontinuities.
 
 ## Real-frame regression
 
