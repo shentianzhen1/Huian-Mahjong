@@ -8,10 +8,6 @@ on:
       - "**/*.txt"
       - "references/**"
   pull_request:
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.txt"
-      - "references/**"
   workflow_dispatch:
 
 # New PR revisions supersede older runs; retain every main-branch result.
@@ -23,7 +19,45 @@ permissions:
   contents: read
 
 jobs:
+  scope:
+    name: Determine core test scope
+    runs-on: ubuntu-latest
+    outputs:
+      run_full: ${{ steps.detect.outputs.run_full }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Skip costly matrix for documentation/evidence-only PRs
+        id: detect
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "pull_request" ]; then
+            echo "run_full=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import subprocess
+
+          paths = subprocess.check_output(
+              ["git", "diff", "--name-only", os.environ["BASE_SHA"], "HEAD"],
+              text=True,
+          ).splitlines()
+          run_full = any(
+              not (path.endswith((".md", ".txt")) or path.startswith("references/"))
+              for path in paths
+          )
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(f"run_full={str(run_full).lower()}\\n")
+          print(f"Changed files: {len(paths)}; run full core matrix: {run_full}")
+          PY
+
   core:
+    needs: scope
+    if: needs.scope.outputs.run_full == 'true'
     name: Core regression (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
@@ -39,6 +73,8 @@ jobs:
         run: python -B -m unittest discover -s tests -v
 
   core-coverage:
+    needs: scope
+    if: needs.scope.outputs.run_full == 'true'
     name: Core Rules/Environment coverage
     runs-on: ubuntu-latest
     steps:
@@ -54,6 +90,8 @@ jobs:
           python -m coverage report --show-missing --skip-covered --fail-under=85
 
   legacy-advisory:
+    needs: scope
+    if: needs.scope.outputs.run_full == 'true'
     name: Legacy baseline (advisory)
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -70,6 +108,8 @@ jobs:
         run: python -B -m unittest discover -s tests -v
 
   package-smoke:
+    needs: scope
+    if: needs.scope.outputs.run_full == 'true'
     name: Installed package smoke test
     runs-on: ubuntu-latest
     steps:
