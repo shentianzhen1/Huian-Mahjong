@@ -24,6 +24,5 @@
 ## P2 — 低频 / 证据工具
 
 - **#9 低频终局规则** — 天胡 / 天听 / 8局平分。
-- **#47 Hand timeline** — 录像 → 流水事件 → 规则证据 / Vision / Hint 审计格式。
 
 已关闭 Issue（例如 #8）不会继续出现在本文件。需要历史请看 GitHub Closed Issues 或 `CHANGELOG.md`。

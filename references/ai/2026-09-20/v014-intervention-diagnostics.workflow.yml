@@ -1,3 +1,8 @@
+# ARCHIVED WORKFLOW COPY
+# This V0.14 diagnostic is intentionally outside .github/workflows because
+# PublicRollout V0.14 was closed as a non-promoted experiment. Keep for
+# reproducibility only; do not treat it as an active evaluation path.
+
 name: V0.14 Intervention Diagnostics
 
 on:

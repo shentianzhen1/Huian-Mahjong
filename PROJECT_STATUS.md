@@ -42,7 +42,7 @@
 
 ## Open Blockers
 
-当前 Open Issues：**#1–#7、#9、#45、#47**。
+当前 Open Issues：**#1–#7、#9、#45**。
 
 P0 只保留真实结算证据缺口：
 - **#1** 抢金：精确资格与真实终局。
@@ -58,14 +58,13 @@ P1：
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
 - **#45** Hint Alpha 继续 internal/read-only；新增 Hint Alpha → Hand Timeline UNKNOWN-only 草稿桥，关闭会话后由人工指定局号/事件范围，机器观察不会自动晋级为证据真值。
-- **#47** hand timeline 作为“录像 → 规则证据”的统一流水格式。
 - **#9** 低频终局规则等待直接证据。
 
 ## Current Priority Order
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #47 hand timeline，把录像转成可审计证据链。
+3. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 4. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 5. #4 未闭环前，不开启新的 Agent 版本线。
 
