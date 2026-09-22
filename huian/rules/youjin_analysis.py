@@ -49,7 +49,7 @@ def analyze_youjin_melds(
             or not isinstance(max_decompositions, Integral)
             or max_decompositions <= 0):
         raise ValueError("max_decompositions must be a positive integer")
-    if not is_youjin_ready_hand(rules, hand, gold_tile, open_melds):
+    if not rules.is_youjin_ready_hand(hand, gold_tile, open_melds):
         return YoujinMeldResult(False, (), gold_tile, open_melds, False)
 
     found = {}
@@ -100,7 +100,7 @@ def youjin_entry_discards(rules, hand, gold_tile, open_melds=0):
     for tile in sorted(set(hand)):
         candidate = list(hand)
         candidate.remove(tile)
-        if is_youjin_ready_hand(rules, candidate, gold_tile, open_melds):
+        if rules.is_youjin_ready_hand(candidate, gold_tile, open_melds):
             out.append(tile)
     return tuple(out)
 
@@ -142,8 +142,8 @@ def can_youjin_upgrade_after_draw(rules, hand, gold_tile, open_melds=0):
         return False
     after_gold_discard = list(hand)
     after_gold_discard.remove(gold_tile)
-    return is_youjin_ready_hand(
-        rules, after_gold_discard, gold_tile, open_melds
+    return rules.is_youjin_ready_hand(
+        after_gold_discard, gold_tile, open_melds
     )
 
 
