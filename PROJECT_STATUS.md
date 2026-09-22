@@ -11,7 +11,7 @@
 
 | Area | Current baseline | Status |
 | --- | --- | --- |
-| Package metadata | `0.2.0` | release version 独立于 RuleSnapshot fingerprint 与 Agent version；legacy_code 不再参与安装或 runtime source digest |
+| Package metadata | `0.2.0` | umbrella wheel 边界已由 CI 锁定；legacy/tests/dataset/references 不得进入安装产物；真实多 distribution 拆分另行迁移 |
 | Rules / Environment | evidence-driven Huian 2-player rules | 普通规则与普通真实结算基本闭环；特殊结算仍有 P0 缺口 |
 | Match | 2 players × 8 hands, 1000/1000 start, zero-sum | ordinary-real MatchRunner 可完整跑普通路径 |
 | AI | `CurrentAgent = MeldAwareShantenAgent V0.10` | 固定当前前沿；V0.6 主对照，V0.3 消融基线 |
