@@ -1,21 +1,15 @@
-Continue the existing Huian Mahjong project; do not restart the migration.
+Continue the existing Huian Mahjong repository; do not restart or rewrite it.
 
-Read in this order:
-1. AGENTS.md
-2. GitHub Issues / TODO.md for current execution work
-3. RULE_STATUS.md and RULE_EVIDENCE_MATRIX.md for rule truth and evidence gaps
-4. PROJECT_STATUS.md for the integrated snapshot
-5. PROJECT_CONTEXT.md for architecture boundaries
+Before touching code:
+1. Fetch GitHub main and check its HEAD, Open Issues, Open PRs, and latest Actions. Reconcile your local checkout; do not assume this prompt reflects current versions or progress.
+2. Read AGENTS.md and the *selected* GitHub Issue. Use TODO.md only as an Issue index.
+3. For rules/settlement work, read RULE_STATUS.md and RULE_EVIDENCE_MATRIX.md. PROJECT_STATUS.md is the integrated snapshot, not a duplicate backlog.
+4. Follow docs/development_workflow.md: one focused Issue slice / one small PR, explicit source lineage, UNKNOWN handling, relevant tests, and merge gates.
 
-Then run:
+Use the smallest relevant local tests first. Core regression:
   python -B -m unittest discover -s tests -v
+Run the corresponding GitHub Actions gate (core, Vision, or Evidence Contracts) before claiming a change is complete.
 
-Current baseline:
-- Rules / Environment / Simulator / 8-hand MatchRunner are already implemented.
-- CurrentAgent = MeldAwareShantenAgent V0.10.
-- TenpaiRiskTieBreakAgent V0.6 is the fixed main comparison baseline.
-- ShantenAgent V0.3 is the offense ablation baseline.
-- Vision hand+draw strict holdout is 98.66%; Score Reader and Status Reader V0.1 exist.
-- Executor remains disabled until Vision confidence, multi-frame stability, and post-action validation are sufficient.
+Never invent Huian Mahjong rules, silently upgrade machine observation to CONFIRMED evidence, reuse revealed Vision development sessions as independent promotion data, or use UNKNOWN special settlement as official AI reward. Do not start a new Agent line until the shared scoring blockers in the current Issues are closed. Hint Alpha is read-only until independently validated; Executor remains off until a separate post-action safety gate passes.
 
-Work only on the selected open Issue. Preserve existing layers and tests, do not rewrite stable control flow for cleanup, and never infer an UNKNOWN Mahjong rule. Any new AI candidate must beat V0.10 under fixed-wall, seat-swapped, identity-stable-RNG paired evaluation.
+At handoff report: selected Issue, exact base/head SHA, files changed, tests actually run and their results, remaining UNKNOWNs, and the next concrete blocker. GitHub Issues remain the execution truth.
