@@ -82,7 +82,8 @@ class IndependentBatchLockTests(unittest.TestCase):
     def test_known_sources_are_excluded_before_lock(self):
         sources = self.fresh_sources()
         known = {source_hash(1)}
-        with TemporaryDirectory() as temp, (
+        with (
+            TemporaryDirectory() as temp,
             patch(
                 "workspace.vision.tiles_runtime_v0_2.independent_batch_lock.locate_sources",
                 return_value=sources,
@@ -113,7 +114,8 @@ class IndependentBatchLockTests(unittest.TestCase):
                 return 1108, 690, 119
             return 1108, 690, 1000
 
-        with TemporaryDirectory() as temp, (
+        with (
+            TemporaryDirectory() as temp,
             patch(
                 "workspace.vision.tiles_runtime_v0_2.independent_batch_lock.locate_sources",
                 return_value=sources,
