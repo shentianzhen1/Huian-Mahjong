@@ -1,0 +1,9 @@
+{
+  "schema_version": "public_action_attribution_eval_v0_1",
+  "source_session": null,
+  "source_sha256": null,
+  "review_kind": "development_continuous_video",
+  "truth_frozen": false,
+  "reviewed_intervals": [],
+  "events": []
+}
