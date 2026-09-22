@@ -1,0 +1,63 @@
+name: Evidence Contracts
+
+# Data-only changes were previously invisible to both core and Vision CI.
+# This lane checks immutable source lineage without rerunning the five-version core matrix.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "references/vision/**/*.json"
+      - "references/rules/**/*.json"
+      - "references/gameplay/**"
+      - "tests/fixtures/**/*.json"
+      - ".github/workflows/evidence-contracts.yml"
+  pull_request:
+    paths:
+      - "references/vision/**/*.json"
+      - "references/rules/**/*.json"
+      - "references/gameplay/**"
+      - "tests/fixtures/**/*.json"
+      - ".github/workflows/evidence-contracts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-contracts-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence:
+    name: Source integrity and evidence contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install Vision dependencies for real-frame contract checks
+        run: python -m pip install -e ".[vision]"
+      - name: Verify public detector source hashes and locked calibration
+        run: python -B -m unittest discover -s tests -p "test_public_detector_calibration.py" -v
+      - name: Verify public identity provenance and development-only policy
+        run: python -B -m unittest discover -s tests -p "test_public_identity_labels.py" -v
+      - name: Verify player perspective and dealer-seat integration
+        run: |
+          python -B -m unittest discover -s tests -p "test_player_perspective.py" -v
+          python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_dealer_marker_detector.py" -t . -v
+      - name: Verify public channel real-frame calibration
+        run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_public_channel_profiles.py" -t . -v
+      - name: Verify settlement fixture lineage and unknown-first intake
+        run: |
+          python -B -m unittest discover -s tests -p "test_confirmed_settlement_fixture_contract.py" -v
+          python -B -m unittest discover -s tests -p "test_special_settlement_capture_template.py" -v
+      - name: Record evidence-lane meaning
+        run: |
+          {
+            echo "## Evidence contracts"
+            echo ""
+            echo "Source hashes, label/calibration lineage, seat mapping, reviewed public geometry,"
+            echo "confirmed settlement fixtures, and UNKNOWN-first intake checks passed."
+            echo "This is a development integrity check, **not** source-disjoint Vision promotion."
+          } >> "$GITHUB_STEP_SUMMARY"

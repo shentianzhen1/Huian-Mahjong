@@ -3,6 +3,10 @@
 This project is evidence-driven. A clean implementation is not permission to
 invent a Huian Mahjong rule.
 
+## 小 PR / CI 分流
+
+按 [开发与证据流程](docs/development_workflow.md) 将工作拆成可验收的切片：一个 Issue 对应一个具体问题；标明证据级别、UNKNOWN 边界及对应 CI。改动 `references/vision/**/*.json`、`references/rules/**/*.json`、`references/gameplay/**` 或 `tests/fixtures/**/*.json` 时，新增的 **Evidence Contracts** 工作流会单独校验文件哈希、开发标注来源、座位映射与结算 fixture，不把旧录像回归误报为独立盲测。新的独立来源以带版本 manifest 新增，保留已有锁定样本和真值。
+
 ## Before changing code
 
 1. Read the relevant GitHub Issue / `TODO.md`.
