@@ -6,9 +6,17 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.version import project_manifest
 from workspace.ai import CurrentAgent, ShantenAgent
 from workspace.simulator.artifacts import (
-    AGENTS, event_digest, replay_saved_hand, run_saved_evaluation, save_replay,
+    AGENTS,
+    RUNTIME_SOURCE_FOLDERS,
+    SCHEMA_VERSION,
+    agent_manifest,
+    event_digest,
+    replay_saved_hand,
+    run_saved_evaluation,
+    save_replay,
 )
 
 
@@ -56,6 +64,12 @@ class SimulatorArtifactsTests(unittest.TestCase):
         self.assertEqual(read_json(self.saved / "summary.json"),
                          json.loads(json.dumps(self.report.to_dict())))
         manifest = read_json(self.saved / "run.json")
+        self.assertEqual(manifest["schema_version"], SCHEMA_VERSION)
+        self.assertEqual(manifest["project"], project_manifest())
+        self.assertEqual(
+            manifest["agents"],
+            [agent_manifest("random"), agent_manifest("baseline")],
+        )
         self.assertEqual(
             manifest["rule_snapshot"]["fingerprint"],
             DEFAULT_RULE_SNAPSHOT.fingerprint,
@@ -76,6 +90,13 @@ class SimulatorArtifactsTests(unittest.TestCase):
                 self.assertEqual(replay["event_digest"], record["event_digest"])
                 self.assertEqual(event_digest(replay["events"]), record["event_digest"])
                 self.assertEqual(json.loads(json.dumps(replay["summary"])), record["summary"])
+
+    def test_runtime_digest_excludes_frozen_legacy_comparison_code(self):
+        self.assertNotIn("legacy_code", RUNTIME_SOURCE_FOLDERS)
+        self.assertEqual(
+            RUNTIME_SOURCE_FOLDERS,
+            ("huian", "mahjong_framework", "workspace/ai", "workspace/simulator"),
+        )
 
     def test_existing_directory_is_never_overwritten(self):
         before = {path.name: path.read_bytes() for path in self.saved.iterdir()}
@@ -116,6 +137,8 @@ class SimulatorArtifactsTests(unittest.TestCase):
         for key, value, message in (
             ("source_digest", "0" * 64, "sources"),
             ("runtime", {"implementation": "different", "version": "0"}, "runtime"),
+            ("project", {"name": "different", "version": "0"}, "Project release"),
+            ("agents", [], "Agent provenance"),
             (
                 "rule_snapshot",
                 {"fingerprint": "0" * 64},
