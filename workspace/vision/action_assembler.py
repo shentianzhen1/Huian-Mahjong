@@ -10,7 +10,7 @@ them for the capture/replay mode being used.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Iterable
 
 from workspace.vision.public_match_reconstruction import (
@@ -60,6 +60,19 @@ class _Pending:
     consumed: bool = False
 
 
+def _capture_scope(observation: RawObservation) -> tuple[str | None, int | None]:
+    """Require explicit source lineage; never infer it from timestamps or UI position."""
+    session = observation.details.get("source_session")
+    epoch = observation.details.get("stream_epoch")
+    if session is not None and (not isinstance(session, str) or not session):
+        raise ValueError("source_session must be a nonempty string or None")
+    if epoch is not None and (
+        isinstance(epoch, bool) or not isinstance(epoch, int) or epoch < 0
+    ):
+        raise ValueError("stream_epoch must be a nonnegative integer or None")
+    return session, epoch
+
+
 class TemporalActionAssembler:
     """Correlate DISCARD / HAND_DELTA / MELD_DELTA into public actions.
 
@@ -75,6 +88,7 @@ class TemporalActionAssembler:
         self._sequence = 0
         self._watermark = 0.0
         self._seen_any = False
+        self._scope: tuple[str | None, int | None] | None = None
 
     @property
     def watermark(self) -> float:
@@ -87,6 +101,14 @@ class TemporalActionAssembler:
             raise ValueError(
                 "TemporalActionAssembler requires nondecreasing observation timestamps"
             )
+        scope = _capture_scope(observation)
+        output: list[ReconstructedAction] = []
+        if self._scope is None:
+            self._scope = scope
+        elif scope != self._scope:
+            output.extend(self._close_capture_scope(observation, next_scope=scope))
+            self._scope = scope
+
         self._seen_any = True
         self._watermark = timestamp
 
@@ -94,7 +116,6 @@ class TemporalActionAssembler:
         self._sequence += 1
         self._pending.append(pending)
 
-        output: list[ReconstructedAction] = []
         if observation.kind in _DIRECT_KINDS:
             output.append(direct_action(observation))
 
@@ -142,6 +163,49 @@ class TemporalActionAssembler:
                 latest_meld + self.config.claim_window_seconds + 1e-6,
             )
         )
+
+    def _close_capture_scope(
+        self,
+        next_observation: RawObservation,
+        *,
+        next_scope: tuple[str | None, int | None],
+    ) -> list[ReconstructedAction]:
+        """Expire incomplete melds and drop all prior candidates on a source/epoch change."""
+        actions: list[ReconstructedAction] = []
+        for item in self._pending:
+            if item.consumed or item.observation.kind != ObservationKind.MELD_DELTA:
+                continue
+            anchor = item.observation
+            related = [
+                old.observation
+                for old in self._pending
+                if not old.consumed
+                and old.observation.kind in {
+                    ObservationKind.DISCARD,
+                    ObservationKind.HAND_DELTA,
+                }
+                and abs(old.observation.timestamp_seconds - anchor.timestamp_seconds)
+                <= self.config.claim_window_seconds
+            ]
+            unknown = self._ambiguous_action(
+                anchor,
+                reason="capture_scope_discontinuity",
+                evidence=[anchor, *related, next_observation],
+            )
+            actions.append(
+                replace(
+                    unknown,
+                    details={
+                        **unknown.details,
+                        "previous_source_session": self._scope[0],
+                        "previous_stream_epoch": self._scope[1],
+                        "next_source_session": next_scope[0],
+                        "next_stream_epoch": next_scope[1],
+                    },
+                )
+            )
+        self._pending.clear()
+        return actions
 
     def _resolve_ready_melds(self) -> list[ReconstructedAction]:
         output: list[ReconstructedAction] = []
