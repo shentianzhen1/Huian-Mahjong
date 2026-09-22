@@ -256,10 +256,14 @@ Persist:
 
 - raw observations;
 - reconstructed actions;
-- evidence grade;
+- reconstruction evidence grade;
 - confidence;
 - source/session/frame/time references;
 - conflicts / UNKNOWN reasons.
+
+When these machine events are bridged into Hand Timeline, their canonical
+`evidence_level` stays `unknown` until explicit human review. Machine
+DIRECT/CORROBORATED is not the same thing as rule-evidence confirmation.
 
 ### Human hand ledger
 
