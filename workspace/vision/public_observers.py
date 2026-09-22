@@ -347,17 +347,22 @@ class DiscardRiverObserver:
         self._accepted: RiverSnapshot | None = None
         self._pending: RiverSnapshot | None = None
         self._pending_streak = 0
-        self._stream_epoch: int | None = None
+        self._capture_scope: tuple[str | None, int] | None = None
 
     def observe(self, snapshot: RiverSnapshot) -> ObserverOutput:
-        epoch_reset = False
-        if self._stream_epoch is None:
-            self._stream_epoch = snapshot.stream_epoch
-        elif snapshot.stream_epoch != self._stream_epoch:
-            self._stream_epoch = snapshot.stream_epoch
+        scope = (snapshot.source_session, snapshot.stream_epoch)
+        reset_issue: str | None = None
+        if self._capture_scope is None:
+            self._capture_scope = scope
+        elif scope != self._capture_scope:
+            reset_issue = (
+                "river_stream_epoch_reset"
+                if scope[1] != self._capture_scope[1]
+                else "river_source_session_reset"
+            )
+            self._capture_scope = scope
             self._accepted = None
             self._clear_pending()
-            epoch_reset = True
 
         if not snapshot.trusted:
             self._clear_pending()
@@ -366,8 +371,8 @@ class DiscardRiverObserver:
                 stable=False,
                 trusted=False,
                 issues=(
-                    ("river_stream_epoch_reset", "river_snapshot_untrusted")
-                    if epoch_reset
+                    (reset_issue, "river_snapshot_untrusted")
+                    if reset_issue
                     else ("river_snapshot_untrusted",)
                 ),
             )
@@ -387,8 +392,8 @@ class DiscardRiverObserver:
                 None,
                 stable=False,
                 trusted=True,
-                issues=(("river_stream_epoch_reset",) if epoch_reset else ()),
-                baseline_rebased=epoch_reset,
+                issues=((reset_issue,) if reset_issue else ()),
+                baseline_rebased=reset_issue is not None,
             )
 
         self._pending = snapshot
@@ -504,17 +509,22 @@ class MeldSnapshotObserver:
         self._accepted: MeldSnapshot | None = None
         self._pending: MeldSnapshot | None = None
         self._pending_streak = 0
-        self._stream_epoch: int | None = None
+        self._capture_scope: tuple[str | None, int] | None = None
 
     def observe(self, snapshot: MeldSnapshot) -> ObserverOutput:
-        epoch_reset = False
-        if self._stream_epoch is None:
-            self._stream_epoch = snapshot.stream_epoch
-        elif snapshot.stream_epoch != self._stream_epoch:
-            self._stream_epoch = snapshot.stream_epoch
+        scope = (snapshot.source_session, snapshot.stream_epoch)
+        reset_issue: str | None = None
+        if self._capture_scope is None:
+            self._capture_scope = scope
+        elif scope != self._capture_scope:
+            reset_issue = (
+                "meld_stream_epoch_reset"
+                if scope[1] != self._capture_scope[1]
+                else "meld_source_session_reset"
+            )
+            self._capture_scope = scope
             self._accepted = None
             self._clear_pending()
-            epoch_reset = True
 
         if not snapshot.trusted:
             self._clear_pending()
@@ -523,8 +533,8 @@ class MeldSnapshotObserver:
                 stable=False,
                 trusted=False,
                 issues=(
-                    ("meld_stream_epoch_reset", "meld_snapshot_untrusted")
-                    if epoch_reset
+                    (reset_issue, "meld_snapshot_untrusted")
+                    if reset_issue
                     else ("meld_snapshot_untrusted",)
                 ),
             )
@@ -544,8 +554,8 @@ class MeldSnapshotObserver:
                 None,
                 stable=False,
                 trusted=True,
-                issues=(("meld_stream_epoch_reset",) if epoch_reset else ()),
-                baseline_rebased=epoch_reset,
+                issues=((reset_issue,) if reset_issue else ()),
+                baseline_rebased=reset_issue is not None,
             )
 
         self._pending = snapshot
