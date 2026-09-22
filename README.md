@@ -90,4 +90,4 @@ Vision 使用 OpenCV/Pillow；`.github/workflows/vision-tests.yml` 会在 `works
 - [AGENTS.md](AGENTS.md)：代理改代码前的约束。
 - [docs/rule_isolation.md](docs/rule_isolation.md)：规则版本隔离、RuleSnapshot、AI评估防污染与规则纠错流程。
 
-修改规则或计分前先更新规则证据；实现存在或测试通过不等于规则已确认。
+安装包运行时兼容代码位于 `huian/_compat/`；`legacy_code/` 仅保留冻结历史基线与 advisory 对照测试，不再作为 setuptools 安装来源。\n\n修改规则或计分前先更新规则证据；实现存在或测试通过不等于规则已确认。
