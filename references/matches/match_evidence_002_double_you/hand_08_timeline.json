@@ -1,0 +1,212 @@
+{
+  "schema_version": "hand_timeline_v0_1",
+  "evidence_id": "match_evidence_002_double_you",
+  "hand_index": 8,
+  "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+  "duration_seconds": 106.99,
+  "geometry": "1046x480",
+  "source_label": "archived user replay 14.mp4",
+  "context": {
+    "player_seat": 0,
+    "dealer": 0,
+    "initial_scores": null,
+    "current_dealer_base": 30,
+    "gold_tile": "SOUTH",
+    "player_flowers": [],
+    "opponent_flowers": [],
+    "room_options": [
+      "two_player",
+      "eight_hands"
+    ],
+    "notes": [
+      "Replay starts at hand 8/8; exact opening deal and initial scores are not reconstructed from this archived review."
+    ]
+  },
+  "events": [
+    {
+      "timestamp_seconds": 0,
+      "actor": "player",
+      "kind": "REPLAY_BEGIN_STATE",
+      "evidence_level": "direct_observation",
+      "tile": null,
+      "screen_evidence": "Hand 8/8 begins with three highlighted SOUTH Jin visible.",
+      "state_interpretation": "Three playable Jin are visibly held; play continues.",
+      "prompt": null,
+      "choice": null,
+      "result": "play continues",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [],
+      "details": {
+        "visible_gold_count": 3
+      }
+    },
+    {
+      "timestamp_seconds": 43.7,
+      "actor": "player",
+      "kind": "SANJINDAO_PROMPT",
+      "evidence_level": "player_confirmed",
+      "tile": null,
+      "screen_evidence": "Optional-action node with PASS visible; declaration text is partly covered by replay controls.",
+      "state_interpretation": "Player clarification identifies this as a Sanjindao opportunity while the same three Jin remain visible.",
+      "prompt": "SANJINDAO / PASS",
+      "choice": "PASS",
+      "result": "current prompt closes",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [
+        "sanjindao_terminal_settlement"
+      ],
+      "details": {
+        "visible_gold_count": 3
+      }
+    },
+    {
+      "timestamp_seconds": 51.7,
+      "actor": "player",
+      "kind": "SANJINDAO_PROMPT",
+      "evidence_level": "player_confirmed",
+      "tile": null,
+      "screen_evidence": "A later optional-action node appears while the same three Jin remain visible.",
+      "state_interpretation": "Later own action node can re-offer Sanjindao after an earlier PASS.",
+      "prompt": "SANJINDAO / PASS",
+      "choice": "PASS",
+      "result": "play continues toward Youjin",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [
+        "sanjindao_terminal_settlement"
+      ],
+      "details": {
+        "visible_gold_count": 3
+      }
+    },
+    {
+      "timestamp_seconds": 81.5,
+      "actor": "player",
+      "kind": "YOUJIN_ANIMATION",
+      "evidence_level": "direct_observation",
+      "tile": null,
+      "screen_evidence": "You / 游 animation appears with three Jin still visibly in hand.",
+      "state_interpretation": "Youjin stage cannot be inferred from current Jin count alone.",
+      "prompt": null,
+      "choice": null,
+      "result": "Youjin stage established",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [
+        "youjin_universal_upgrade_predicate"
+      ],
+      "details": {
+        "visible_gold_count": 3
+      }
+    },
+    {
+      "timestamp_seconds": 83.9,
+      "actor": "player",
+      "kind": "PRE_DOUBLE_YOU_STATE",
+      "evidence_level": "direct_observation",
+      "tile": null,
+      "screen_evidence": "Immediately before the next upgrade, three Jin remain visible.",
+      "state_interpretation": "Pre-upgrade visual state recorded without inferring the universal trigger.",
+      "prompt": null,
+      "choice": null,
+      "result": "awaiting upgrade transition",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [
+        "youjin_universal_upgrade_predicate"
+      ],
+      "details": {
+        "visible_gold_count": 3
+      }
+    },
+    {
+      "timestamp_seconds": 84.5,
+      "actor": "system",
+      "kind": "DOUBLE_YOU_ANIMATION",
+      "evidence_level": "direct_observation",
+      "tile": null,
+      "screen_evidence": "Double-You / 双游 animation appears.",
+      "state_interpretation": "Replay enters Double-You.",
+      "prompt": null,
+      "choice": null,
+      "result": "Double-You transition",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [],
+      "details": {}
+    },
+    {
+      "timestamp_seconds": 85.5,
+      "actor": "player",
+      "kind": "DOUBLE_YOU_ESTABLISHED",
+      "evidence_level": "direct_observation",
+      "tile": null,
+      "screen_evidence": "After the transition, two Jin are visibly retained.",
+      "state_interpretation": "Visible Jin count changed from three to two on this observed path.",
+      "prompt": null,
+      "choice": null,
+      "result": "Double-You active",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md"
+      ],
+      "unknown_rules": [
+        "youjin_universal_upgrade_predicate"
+      ],
+      "details": {
+        "visible_gold_count": 2
+      }
+    },
+    {
+      "timestamp_seconds": 97.5,
+      "actor": "system",
+      "kind": "SETTLEMENT_PAGE",
+      "evidence_level": "direct_observation",
+      "tile": null,
+      "screen_evidence": "Terminal page shows dealer base 30, Jin 2 fan, flower 1 fan, Double-You x8, winner +264 and loser -264.",
+      "state_interpretation": "Observed arithmetic is (30 + 2 + 1) x 8 = 264.",
+      "prompt": null,
+      "choice": null,
+      "result": "hand settled",
+      "evidence_refs": [
+        "references/gameplay/2026-09-19/match_evidence_002_double_you/README.md",
+        "tests/fixtures/settlement_match_evidence_002_double_you.json"
+      ],
+      "unknown_rules": [],
+      "details": {
+        "displayed_gold_fan": 2,
+        "displayed_flower_fan": 1
+      }
+    }
+  ],
+  "settlement": {
+    "winner": 0,
+    "win_type": "DOUBLE_YOU",
+    "fan": 3,
+    "multiplier": 8,
+    "dealer_base": 30,
+    "net_score": 264,
+    "scores_before": null,
+    "scores_after": null,
+    "next_dealer": null,
+    "evidence_level": "direct_observation",
+    "unknown_rules": [
+      "double_you_next_dealer"
+    ],
+    "notes": [
+      "Direct settlement evidence confirms (30 + 3) x 8 = 264.",
+      "Exact pre/post total scores and next dealer are not archived here and remain UNKNOWN."
+    ]
+  },
+  "notes": [
+    "This timeline is reconstructed only from already archived reviewed observations; missing opening/mid-hand details are not invented.",
+    "Sanjindao prompt identity at 43.7s/51.7s uses player confirmation because the declaration label is partly obscured."
+  ]
+}
