@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from numbers import Integral
 
 from huian._legacy import core
-from qzcore.legal_actions import chi_options, can_peng, can_ming_gang, can_an_gang
-from qzcore.win_checker import winning_decompositions
+from huian._compat.qzcore.legal_actions import chi_options, can_peng, can_ming_gang, can_an_gang
+from huian._compat.qzcore.win_checker import winning_decompositions
 from .config import EvidenceStatus, RulesConfig, UnknownRuleError
 from .context import (HuContext, KongKind, SanjindaoChoice, SanjindaoDecision,
                       WinSource, YoujinStage)
