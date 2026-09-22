@@ -59,14 +59,25 @@ jobs:
           python-version: "3.11"
       - name: Install built project
         run: python -m pip install .
-      - name: Import AI and Simulator outside repository root
+      - name: Verify installed package boundary outside repository root
         working-directory: /tmp
         run: |
           python - <<'PY'
+          import importlib.util
+
+          from huian import HuianEnvironment, HuianRules
           from workspace.ai import CurrentAgent, CURRENT_AGENT_VERSION
           from workspace.simulator import run_paired_real_matches
+
+          assert HuianEnvironment is not None
+          assert HuianRules is not None
           assert CURRENT_AGENT_VERSION == "v0.10"
           assert CurrentAgent.__name__ == "MeldAwareShantenAgent"
           assert callable(run_paired_real_matches)
-          print("installed package imports OK")
+
+          # Frozen comparison baselines must not leak into the installed runtime
+          # as top-level packages.
+          assert importlib.util.find_spec("qzcore") is None
+          assert importlib.util.find_spec("qzenv") is None
+          print("installed package boundary OK")
           PY
