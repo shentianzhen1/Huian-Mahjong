@@ -1,5 +1,11 @@
 # 重要变更记录
 
+## 2026-09-22 — Wheel 内容边界与 CHANGELOG 归档
+
+- 根目录 `CHANGELOG.md` 只保留最近变更，09-20 / 09-19 / 09-18 / 09-15 历史按日期迁入 `docs/changelog/`，避免历史日志继续膨胀成伪状态源。
+- Installed package smoke 现在直接检查 distribution 文件清单：必须包含当前 `huian / mahjong_framework / workspace.ai / simulator / vision / hint_alpha` 运行命名空间，并禁止 `legacy_code / tests / dataset / references` 进入 wheel。
+- 新增 `docs/packaging/BOUNDARY.md`，明确 extras 只能控制依赖、不能完成真实拆包；未来多 distribution 拆分需独立迁移，不与规则/计分改动混做。
+
 本文件只保留最近变更。旧记录按日期归档，避免根目录历史日志与当前状态源互相干扰。
 
 ## 历史归档
