@@ -13,12 +13,19 @@ from .evaluate_public_state import (
 from .public_state import PublicStateObservation
 
 
-def fake_frame(score, hand, remaining, *, mode="direct", issues=()):
+def fake_frame(
+        score, hand, remaining, *, mode="direct", issues=(),
+        remaining_mode="primary", raw_remaining=None,
+        raw_remaining_fallback=None, raw_hand_progress=None):
     return SimpleNamespace(
         score=SimpleNamespace(score_pair=score, mode=mode),
         status=SimpleNamespace(
             hand_number=hand,
             remaining_tiles=remaining,
+            remaining_mode=remaining_mode,
+            raw_remaining=raw_remaining,
+            raw_remaining_fallback=raw_remaining_fallback,
+            raw_hand_progress=raw_hand_progress,
         ),
         issues=tuple(issues),
     )
@@ -94,10 +101,17 @@ class PublicStateBatchEvaluationTests(unittest.TestCase):
             reader = FakeReader([
                 (
                     [
-                        fake_frame((1000, 1000), 1, 107),
+                        fake_frame(
+                            (1000, 1000), 1, 107,
+                            raw_remaining="107", raw_hand_progress="1/8",
+                        ),
                         fake_frame(
                             (1000, 1000), None, 107,
                             issues=("hand_unreadable",),
+                            raw_remaining="985",
+                            raw_remaining_fallback="107",
+                            remaining_mode="right_trim_fallback",
+                            raw_hand_progress="",
                         ),
                     ],
                     first,
@@ -127,6 +141,14 @@ class PublicStateBatchEvaluationTests(unittest.TestCase):
                 report["raw_frame"]["issue_counts"],
                 {"hand_unreadable": 1},
             )
+            self.assertEqual(
+                report["raw_frame"]["remaining_mode_counts"],
+                {"primary": 2, "right_trim_fallback": 1},
+            )
+            fallback_row = report["samples"][0]["raw_frames"][1]
+            self.assertEqual(fallback_row["remaining_mode"], "right_trim_fallback")
+            self.assertEqual(fallback_row["raw_remaining"], "985")
+            self.assertEqual(fallback_row["raw_remaining_fallback"], "107")
 
             fused = report["fused_window"]
             self.assertEqual(fused["complete_state"]["readable"], 2)

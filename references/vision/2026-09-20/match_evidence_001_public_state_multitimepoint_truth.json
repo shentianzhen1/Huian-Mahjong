@@ -1,0 +1,648 @@
+{
+  "evidence_id": "match_evidence_001_public_state_multitimepoint_v1",
+  "sampling_note": "Stable replay frames at 5/10/15/20/25/30/40/50 seconds for each of the eight anonymized hand sessions. session_01 at 5s has no stable status line yet, so remaining_tiles is null and excluded from remaining-count accuracy.",
+  "score_note": "Score truth reuses the already audited hand-level score ledger. The existing constrained score-reader benchmark already covers these 64 timestamps; this fixture is primarily the new status-line truth set.",
+  "samples": [
+    {
+      "id": "session_01_t05",
+      "video": "session_01",
+      "source_time_seconds": 5,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": null,
+      "status_present": false
+    },
+    {
+      "id": "session_01_t10",
+      "video": "session_01",
+      "source_time_seconds": 10,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 107,
+      "status_present": true
+    },
+    {
+      "id": "session_01_t15",
+      "video": "session_01",
+      "source_time_seconds": 15,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 106,
+      "status_present": true
+    },
+    {
+      "id": "session_01_t20",
+      "video": "session_01",
+      "source_time_seconds": 20,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_01_t25",
+      "video": "session_01",
+      "source_time_seconds": 25,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 103,
+      "status_present": true
+    },
+    {
+      "id": "session_01_t30",
+      "video": "session_01",
+      "source_time_seconds": 30,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 101,
+      "status_present": true
+    },
+    {
+      "id": "session_01_t40",
+      "video": "session_01",
+      "source_time_seconds": 40,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 97,
+      "status_present": true
+    },
+    {
+      "id": "session_01_t50",
+      "video": "session_01",
+      "source_time_seconds": 50,
+      "hand_number": 1,
+      "top_right_score": 1000,
+      "bottom_left_score": 1000,
+      "remaining_tiles": 94,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t05",
+      "video": "session_02",
+      "source_time_seconds": 5,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 108,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t10",
+      "video": "session_02",
+      "source_time_seconds": 10,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 108,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t15",
+      "video": "session_02",
+      "source_time_seconds": 15,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 107,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t20",
+      "video": "session_02",
+      "source_time_seconds": 20,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 106,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t25",
+      "video": "session_02",
+      "source_time_seconds": 25,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 104,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t30",
+      "video": "session_02",
+      "source_time_seconds": 30,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 104,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t40",
+      "video": "session_02",
+      "source_time_seconds": 40,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 102,
+      "status_present": true
+    },
+    {
+      "id": "session_02_t50",
+      "video": "session_02",
+      "source_time_seconds": 50,
+      "hand_number": 2,
+      "top_right_score": 1026,
+      "bottom_left_score": 974,
+      "remaining_tiles": 98,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t05",
+      "video": "session_03",
+      "source_time_seconds": 5,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 108,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t10",
+      "video": "session_03",
+      "source_time_seconds": 10,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 107,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t15",
+      "video": "session_03",
+      "source_time_seconds": 15,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t20",
+      "video": "session_03",
+      "source_time_seconds": 20,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 104,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t25",
+      "video": "session_03",
+      "source_time_seconds": 25,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 102,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t30",
+      "video": "session_03",
+      "source_time_seconds": 30,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 100,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t40",
+      "video": "session_03",
+      "source_time_seconds": 40,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 98,
+      "status_present": true
+    },
+    {
+      "id": "session_03_t50",
+      "video": "session_03",
+      "source_time_seconds": 50,
+      "hand_number": 3,
+      "top_right_score": 958,
+      "bottom_left_score": 1042,
+      "remaining_tiles": 98,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t05",
+      "video": "session_04",
+      "source_time_seconds": 5,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 106,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t10",
+      "video": "session_04",
+      "source_time_seconds": 10,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t15",
+      "video": "session_04",
+      "source_time_seconds": 15,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 103,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t20",
+      "video": "session_04",
+      "source_time_seconds": 20,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 102,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t25",
+      "video": "session_04",
+      "source_time_seconds": 25,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 101,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t30",
+      "video": "session_04",
+      "source_time_seconds": 30,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 99,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t40",
+      "video": "session_04",
+      "source_time_seconds": 40,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 96,
+      "status_present": true
+    },
+    {
+      "id": "session_04_t50",
+      "video": "session_04",
+      "source_time_seconds": 50,
+      "hand_number": 4,
+      "top_right_score": 980,
+      "bottom_left_score": 1020,
+      "remaining_tiles": 94,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t05",
+      "video": "session_05",
+      "source_time_seconds": 5,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 107,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t10",
+      "video": "session_05",
+      "source_time_seconds": 10,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 106,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t15",
+      "video": "session_05",
+      "source_time_seconds": 15,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 104,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t20",
+      "video": "session_05",
+      "source_time_seconds": 20,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 103,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t25",
+      "video": "session_05",
+      "source_time_seconds": 25,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 102,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t30",
+      "video": "session_05",
+      "source_time_seconds": 30,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 100,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t40",
+      "video": "session_05",
+      "source_time_seconds": 40,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 99,
+      "status_present": true
+    },
+    {
+      "id": "session_05_t50",
+      "video": "session_05",
+      "source_time_seconds": 50,
+      "hand_number": 5,
+      "top_right_score": 1004,
+      "bottom_left_score": 996,
+      "remaining_tiles": 98,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t05",
+      "video": "session_06",
+      "source_time_seconds": 5,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 106,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t10",
+      "video": "session_06",
+      "source_time_seconds": 10,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t15",
+      "video": "session_06",
+      "source_time_seconds": 15,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 103,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t20",
+      "video": "session_06",
+      "source_time_seconds": 20,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 102,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t25",
+      "video": "session_06",
+      "source_time_seconds": 25,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 101,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t30",
+      "video": "session_06",
+      "source_time_seconds": 30,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 101,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t40",
+      "video": "session_06",
+      "source_time_seconds": 40,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 99,
+      "status_present": true
+    },
+    {
+      "id": "session_06_t50",
+      "video": "session_06",
+      "source_time_seconds": 50,
+      "hand_number": 6,
+      "top_right_score": 1080,
+      "bottom_left_score": 920,
+      "remaining_tiles": 96,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t05",
+      "video": "session_07",
+      "source_time_seconds": 5,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 107,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t10",
+      "video": "session_07",
+      "source_time_seconds": 10,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t15",
+      "video": "session_07",
+      "source_time_seconds": 15,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 104,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t20",
+      "video": "session_07",
+      "source_time_seconds": 20,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 102,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t25",
+      "video": "session_07",
+      "source_time_seconds": 25,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 101,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t30",
+      "video": "session_07",
+      "source_time_seconds": 30,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 100,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t40",
+      "video": "session_07",
+      "source_time_seconds": 40,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 100,
+      "status_present": true
+    },
+    {
+      "id": "session_07_t50",
+      "video": "session_07",
+      "source_time_seconds": 50,
+      "hand_number": 7,
+      "top_right_score": 1105,
+      "bottom_left_score": 895,
+      "remaining_tiles": 97,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t05",
+      "video": "session_08",
+      "source_time_seconds": 5,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 106,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t10",
+      "video": "session_08",
+      "source_time_seconds": 10,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t15",
+      "video": "session_08",
+      "source_time_seconds": 15,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t20",
+      "video": "session_08",
+      "source_time_seconds": 20,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 105,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t25",
+      "video": "session_08",
+      "source_time_seconds": 25,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 104,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t30",
+      "video": "session_08",
+      "source_time_seconds": 30,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 103,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t40",
+      "video": "session_08",
+      "source_time_seconds": 40,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 101,
+      "status_present": true
+    },
+    {
+      "id": "session_08_t50",
+      "video": "session_08",
+      "source_time_seconds": 50,
+      "hand_number": 8,
+      "top_right_score": 1077,
+      "bottom_left_score": 923,
+      "remaining_tiles": 99,
+      "status_present": true
+    }
+  ],
+  "safety_note": "Same-batch offline Vision evidence only. This is not an independent-session generalization set and is never Executor-safe."
+}

@@ -40,6 +40,7 @@
   - V0.1 静态 hand+draw 严格 leave-session-out：147/149 = **98.66%**。
   - Gold 同批时序：193/196 = **98.47%**，8/8 session 多数票正确；这不是外部泛化率。
   - Runtime Vision V0.2 已加入动态几何、`draw_visual` 时序、session 隔离、只读 runtime reader。
+  - PublicState 同批8局已补 64 时点状态栏审计：primary remaining 44/63 正确；只在 primary 无法解析时启用右缘收窄 fallback 后为 54/63，63/63 可读。仍有 9 个 false-valid 误读，不能作为 Executor 依据，也不属于独立泛化证据。
   - Phase 5C 已揭示且有 1 个语义区域 gate 失败，因此不能作为正式泛化证据。
   - 独立晋级门与 Phase 5E source-disjoint 锁已落地（#49 / #50）；下一步只接受全新独立批次。
   - `safe_for_executor=false` 保持不变。
