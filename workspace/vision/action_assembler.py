@@ -225,6 +225,17 @@ class TemporalActionAssembler:
             resolved = self._resolve_meld(meld_item)
             if resolved is not None:
                 action, consumed_sequences = resolved
+                # Preserve capture lineage in the public timeline, not only in
+                # transient observer facts (frame IDs alone can repeat).
+                source = {
+                    key: meld.details[key]
+                    for key in ("source_session", "stream_epoch")
+                    if key in meld.details
+                }
+                if source:
+                    action = replace(
+                        action, details={**action.details, **source}
+                    )
                 self._consume(consumed_sequences)
                 output.append(action)
         return output
@@ -408,6 +419,11 @@ class TemporalActionAssembler:
                 "evidence_kinds": [
                     observation.kind.value for observation in evidence
                 ],
+                **{
+                    key: anchor.details[key]
+                    for key in ("source_session", "stream_epoch")
+                    if key in anchor.details
+                },
             },
         )
 
