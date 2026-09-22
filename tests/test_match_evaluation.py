@@ -3,6 +3,8 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.version import PROJECT_VERSION
+from workspace.ai import CurrentAgent, CURRENT_AGENT_VERSION
 from workspace.simulator import run_paired_real_matches
 
 
@@ -48,12 +50,40 @@ class PairedMatchEvaluationTests(unittest.TestCase):
                 [9], agent_factories=(factory_a, factory_b))
 
         self.assertEqual(report.completed_pairs, 1)
+        self.assertEqual(report.project_version, PROJECT_VERSION)
+        self.assertEqual(report.agent_versions, (None, None))
         self.assertEqual(report.rule_snapshot_id, DEFAULT_RULE_SNAPSHOT.fingerprint)
         self.assertEqual(report.rule_snapshot_label, DEFAULT_RULE_SNAPSHOT.label)
         self.assertEqual(calls[0][0], (factory_a, factory_b))
         self.assertEqual(calls[0][1], (0, 1))
         self.assertEqual(calls[1][0], (factory_b, factory_a))
         self.assertEqual(calls[1][1], (1, 0))
+
+    def test_known_current_agent_version_is_recorded_without_guessing_other_factory(self):
+        def runner(seed, *, agent_factories, **kwargs):
+            return FakeResult(scores=(1000, 1000))
+
+        report = run_paired_real_matches(
+            [7],
+            agent_factories=(CurrentAgent, factory_b),
+            match_runner=runner,
+        )
+        self.assertEqual(
+            report.agent_versions,
+            (CURRENT_AGENT_VERSION, None),
+        )
+
+    def test_explicit_agent_versions_are_preserved(self):
+        def runner(seed, *, agent_factories, **kwargs):
+            return FakeResult(scores=(1000, 1000))
+
+        report = run_paired_real_matches(
+            [7],
+            agent_factories=(factory_a, factory_b),
+            agent_versions=("research-a", None),
+            match_runner=runner,
+        )
+        self.assertEqual(report.agent_versions, ("research-a", None))
 
     def test_agent_identity_follows_factory_across_swapped_seats(self):
         def runner(seed, *, agent_factories, **kwargs):
@@ -165,6 +195,12 @@ class PairedMatchEvaluationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             run_paired_real_matches(
                 [1], agent_factories=(factory_a, factory_b), agent_names=("A", ""))
+        with self.assertRaises(ValueError):
+            run_paired_real_matches(
+                [1], agent_factories=(factory_a, factory_b), agent_versions=("v1",))
+        with self.assertRaises(ValueError):
+            run_paired_real_matches(
+                [1], agent_factories=(factory_a, factory_b), agent_versions=("", None))
 
         def bad_runner(**kwargs):
             return FakeResult(status="MAX_STEPS")

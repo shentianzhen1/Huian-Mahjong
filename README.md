@@ -57,6 +57,17 @@ python -B -m unittest discover -s tests -v
 | Vision | 画面转GameState | hand+draw严格基线98.66%；Gold当前批次多帧98.47%；Score/Status Reader 与 PublicState约束层已接，待新独立批次与压力测试 |
 | Executor | UI执行 | 未接入，等待Vision门槛 |
 
+## 版本与评估身份
+
+这几个版本号含义不同，不互相替代：
+
+- Project release：当前 `0.2.0`，对应 Python 安装包 / 仓库集成版本。
+- RuleSnapshot：用 SHA-256 fingerprint 标识精确规则证据快照；规则变化时 fingerprint 变化。
+- Agent：当前正式策略 `MeldAwareShantenAgent V0.10`，独立于项目 release。
+- Vision：Runtime Vision V0.2 是视觉子系统版本，目前仍是 experimental/read-only，不等同项目 release。
+
+保存型 Simulator 评估会同时记录 project、rule snapshot、agent provenance、Python runtime 与 runtime source digest；冻结的 `legacy_code/` 不再计入运行时代码指纹。
+
 ## 测试
 
 核心回归（GitHub Actions 当前在 Python 3.10–3.14 执行；纯文档改动除外）：

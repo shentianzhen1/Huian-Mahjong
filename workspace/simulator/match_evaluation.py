@@ -9,6 +9,8 @@ from dataclasses import asdict, dataclass
 from math import sqrt
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.version import PROJECT_VERSION
+from workspace.ai import CurrentAgent, ShantenAgent, CURRENT_AGENT_VERSION
 from .match_runner import run_real_ordinary_match, run_real_youjin_match
 
 
@@ -28,9 +30,11 @@ class MatchAttemptSummary:
 
 @dataclass(frozen=True)
 class PairedMatchEvaluation:
+    project_version: str
     rule_snapshot_id: str
     rule_snapshot_label: str
     agent_names: tuple[str, str]
+    agent_versions: tuple[str | None, str | None]
     total_pairs: int
     completed_pairs: int
     incomplete_pairs: int
@@ -70,9 +74,17 @@ def _factory_name(factory):
     return type(factory).__name__
 
 
+def _factory_version(factory):
+    if factory is CurrentAgent:
+        return CURRENT_AGENT_VERSION
+    if factory is ShantenAgent:
+        return "v0.3"
+    return None
+
+
 def run_paired_real_matches(
-        seeds=range(20), *, agent_factories, agent_names=None, max_steps=1000,
-        initial_dealer=0, match_runner=None):
+        seeds=range(20), *, agent_factories, agent_names=None, agent_versions=None,
+        max_steps=1000, initial_dealer=0, match_runner=None):
     """Run original+swapped eight-hand matches and summarize complete pairs.
 
     Identity A is agent_factories[0] and identity B is agent_factories[1].
@@ -104,6 +116,15 @@ def run_paired_real_matches(
         if (len(names) != 2
                 or any(not isinstance(name, str) or not name for name in names)):
             raise ValueError("agent_names must contain two nonempty strings")
+    if agent_versions is None:
+        versions = tuple(_factory_version(factory) for factory in factories)
+    else:
+        versions = tuple(agent_versions)
+        if (len(versions) != 2
+                or any(version is not None
+                       and (not isinstance(version, str) or not version)
+                       for version in versions)):
+            raise ValueError("agent_versions must contain two nonempty strings or None")
 
     attempts = []
     pair_attempts = {}
@@ -232,9 +253,11 @@ def run_paired_real_matches(
         if pair_deal_in_deltas else None
     )
     return PairedMatchEvaluation(
+        project_version=PROJECT_VERSION,
         rule_snapshot_id=DEFAULT_RULE_SNAPSHOT.fingerprint,
         rule_snapshot_label=DEFAULT_RULE_SNAPSHOT.label,
         agent_names=names,
+        agent_versions=versions,
         total_pairs=len(seeds),
         completed_pairs=completed_pairs,
         incomplete_pairs=len(seeds) - completed_pairs,
