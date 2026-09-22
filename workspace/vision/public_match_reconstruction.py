@@ -74,7 +74,9 @@ class RawObservation:
 
     Convention:
     - DISCARD: tile is the public discarded tile.
-    - HAND_DELTA: details contains removed_tiles / added_tiles.
+    - HAND_DELTA: details may contain removed_tiles / added_tiles for the
+      visible player hand, or removed_count / added_count where tile identity
+      is not public (for example the opponent concealed hand).
     - MELD_DELTA: tiles is one newly visible exposed meld.
     - YOUJIN_STATE: details["state"] is an observed state label.
     """
@@ -216,6 +218,24 @@ def _removed_tiles(observation: RawObservation) -> tuple[str, ...]:
     return _tuple_of_strings(observation.details.get("removed_tiles", ()), "removed_tiles")
 
 
+def _removed_count(observation: RawObservation) -> int | None:
+    tiles = _removed_tiles(observation)
+    if tiles:
+        return len(tiles)
+    value = observation.details.get("removed_count")
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValueError("removed_count must be a nonnegative integer or None")
+    return value
+
+
+def _meld_minus_claimed(meld: tuple[str, ...], claimed_tile: str) -> tuple[str, ...]:
+    remaining = list(meld)
+    remaining.remove(claimed_tile)
+    return tuple(remaining)
+
+
 def _same_tile_group(tiles: tuple[str, ...]) -> bool:
     return bool(tiles) and len(set(tiles)) == 1
 
@@ -294,18 +314,12 @@ def reconstruct_claimed_meld(
 
     meld = meld_delta.tiles
     removed = _removed_tiles(hand_delta)
+    removed_count = _removed_count(hand_delta)
     if not meld:
         return _unknown(
             timestamp_seconds=timestamp,
             actor=actor,
             reason="new_meld_tiles_unknown",
-            observations=observations,
-        )
-    if not removed:
-        return _unknown(
-            timestamp_seconds=timestamp,
-            actor=actor,
-            reason="consumed_hand_tiles_unknown",
             observations=observations,
         )
 
@@ -318,14 +332,32 @@ def reconstruct_claimed_meld(
             observations=observations,
             conflict=True,
         )
+    consumed = _meld_minus_claimed(meld, discard.tile)
     expected[discard.tile] -= 1
     if expected[discard.tile] == 0:
         del expected[discard.tile]
-    if Counter(removed) != expected:
+
+    if removed:
+        if Counter(removed) != expected:
+            return _unknown(
+                timestamp_seconds=timestamp,
+                actor=actor,
+                reason="hand_delta_does_not_match_claimed_meld",
+                observations=observations,
+                conflict=True,
+            )
+    elif removed_count is None:
         return _unknown(
             timestamp_seconds=timestamp,
             actor=actor,
-            reason="hand_delta_does_not_match_claimed_meld",
+            reason="consumed_hand_delta_unknown",
+            observations=observations,
+        )
+    elif removed_count != len(consumed):
+        return _unknown(
+            timestamp_seconds=timestamp,
+            actor=actor,
+            reason="hand_count_delta_does_not_match_claimed_meld",
             observations=observations,
             conflict=True,
         )
@@ -354,11 +386,13 @@ def reconstruct_claimed_meld(
         confidence=min(item.confidence for item in observations),
         claimed_tile=discard.tile,
         meld=meld,
-        consumed_from_hand=removed,
+        consumed_from_hand=consumed,
         evidence_refs=_refs(*observations),
         details={
             "source_discard_actor": discard.actor,
             "evidence_components": ["discard", "hand_delta", "meld_delta"],
+            "hand_delta_identity_observed": bool(removed),
+            "removed_count": len(consumed),
         },
     )
 
