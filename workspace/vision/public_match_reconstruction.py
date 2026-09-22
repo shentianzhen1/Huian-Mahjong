@@ -150,12 +150,12 @@ class ReconstructedAction:
         object.__setattr__(self, "details", dict(self.details))
 
     def to_timeline_event(self) -> TimelineEvent:
-        evidence_level = {
-            EvidenceGrade.DIRECT: "direct_observation",
-            EvidenceGrade.CORROBORATED: "derived_from_confirmed",
-            EvidenceGrade.INFERRED: "derived_from_confirmed",
-            EvidenceGrade.UNKNOWN: "unknown",
-        }[self.evidence_grade]
+        """Create an UNKNOWN-only Hand Timeline draft event.
+
+        Reconstruction grades describe machine evidence consistency, not human
+        confirmation. A later review step may explicitly upgrade the canonical
+        Hand Timeline evidence level; this bridge never does so automatically.
+        """
         details = {
             **self.details,
             "reconstruction_evidence_grade": self.evidence_grade.value,
@@ -173,7 +173,7 @@ class ReconstructedAction:
             timestamp_seconds=self.timestamp_seconds,
             actor=self.actor,
             kind=self.kind.value,
-            evidence_level=evidence_level,
+            evidence_level="unknown",
             tile=self.tile or self.claimed_tile,
             state_interpretation=self.details.get("state_interpretation"),
             result=self.details.get("result"),
