@@ -47,7 +47,7 @@
 
 ## Open Blockers
 
-当前 Open Issues：**#1–#7、#9、#45**。
+当前 Open Issues：**#1–#7、#9、#45、#69**。
 
 P0 只保留真实结算证据缺口：
 - **#1** 抢金：精确资格与真实终局。
@@ -59,6 +59,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
+- **#69** Public Match Reconstruction：建立只读的整局公开动作流水；先冻结 observation/action/evidence 契约，再接对手弃牌、副露与时序观察器。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -69,9 +70,10 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
-4. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
-5. #4 未闭环前，不开启新的 Agent 版本线。
+3. 推进 #69 Public Match Reconstruction V0.1：把局号/庄家/开金、双方弃牌、副露、游金状态、胡牌/结算重建成可审计 Hand Timeline；冲突保持 UNKNOWN。
+4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
+5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
+6. #4 未闭环前，不开启新的 Agent 版本线。
 
 ## Required Regression Invariants
 
