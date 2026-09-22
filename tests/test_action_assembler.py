@@ -458,6 +458,8 @@ class CaptureScopeActionAssemblerTests(unittest.TestCase):
         actions = self.assembler.advance_time(1.7)
         self.assertEqual(len(actions), 1)
         self.assertEqual(actions[0].kind, PublicActionKind.CHI)
+        self.assertEqual(actions[0].details["source_session"], "session-a")
+        self.assertEqual(actions[0].details["stream_epoch"], 0)
         self.assertEqual(
             set(actions[0].evidence_refs),
             {"a:discard", "a:meld", "a:hand"},
