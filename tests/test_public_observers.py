@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from workspace.vision.public_match_reconstruction import ObservationKind
+from workspace.vision.public_match_reconstruction import (
+    ObservationKind,
+    PublicActionKind,
+    RawObservation,
+    reconstruct_claimed_meld,
+)
 from workspace.vision.public_observers import (
     DiscardRiverObserver,
     MeldGroup,
@@ -424,6 +429,80 @@ class MeldSnapshotObserverTests(unittest.TestCase):
         self.assertFalse(second.stable)
         self.assertIsNone(first.observation)
         self.assertIsNone(second.observation)
+
+
+
+class PublicObserverPipelineIntegrationTests(unittest.TestCase):
+    def test_player_discard_to_opponent_chi_end_to_end(self):
+        river_observer = DiscardRiverObserver(settle_frames=2)
+        meld_observer = MeldSnapshotObserver(settle_frames=2)
+
+        # Establish empty public baselines.
+        for i in range(2):
+            river_observer.observe(
+                river(1 + i * 0.1, "player", (), frame=10 + i)
+            )
+            meld_observer.observe(
+                meld_frame(1 + i * 0.1, "opponent", (), frame=10 + i)
+            )
+
+        discard_output = None
+        for i in range(2):
+            discard_output = river_observer.observe(
+                river(
+                    2 + i * 0.1,
+                    "player",
+                    (tile(0.30, "S6", ref="river:S6"),),
+                    frame=20 + i,
+                )
+            )
+        assert discard_output is not None
+        discard = discard_output.observation
+        assert discard is not None
+
+        meld_output = None
+        for i in range(2):
+            meld_output = meld_observer.observe(
+                meld_frame(
+                    2.3 + i * 0.1,
+                    "opponent",
+                    (meld(0.15, ("S4", "S5", "S6"), ref="meld:S456"),),
+                    frame=23 + i,
+                )
+            )
+        assert meld_output is not None
+        meld_delta = meld_output.observation
+        assert meld_delta is not None
+
+        opponent_hand_delta = RawObservation(
+            timestamp_seconds=2.25,
+            actor="opponent",
+            kind=ObservationKind.HAND_DELTA,
+            confidence=0.96,
+            evidence_refs=("opponent_count:2_removed",),
+            details={"removed_count": 2},
+        )
+
+        action = reconstruct_claimed_meld(
+            discard,
+            opponent_hand_delta,
+            meld_delta,
+        )
+        self.assertEqual(action.kind, PublicActionKind.CHI)
+        self.assertEqual(action.claimed_tile, "S6")
+        self.assertEqual(action.meld, ("S4", "S5", "S6"))
+        self.assertEqual(action.consumed_from_hand, ("S4", "S5"))
+        self.assertFalse(action.details["hand_delta_identity_observed"])
+        self.assertEqual(
+            set(action.evidence_refs),
+            {
+                "frame:21",
+                "river:S6",
+                "frame:24",
+                "meld:S456",
+                "opponent_count:2_removed",
+            },
+        )
 
 
 if __name__ == "__main__":
