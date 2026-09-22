@@ -51,7 +51,7 @@ jobs:
               for path in paths
           )
           with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
-              output.write(f"run_full={str(run_full).lower()}\\n")
+              print(f"run_full={str(run_full).lower()}", file=output)
           print(f"Changed files: {len(paths)}; run full core matrix: {run_full}")
           PY
 
