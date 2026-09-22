@@ -140,7 +140,60 @@ class PublicMatchReconstructionTests(unittest.TestCase):
             ),
         )
         self.assertEqual(action.kind, PublicActionKind.UNKNOWN_ACTION)
-        self.assertEqual(action.unknown_reasons, ("consumed_hand_tiles_unknown",))
+        self.assertEqual(action.unknown_reasons, ("consumed_hand_delta_unknown",))
+
+
+    def test_opponent_chi_can_use_concealed_count_delta_without_hidden_tile_ids(self):
+        action = reconstruct_claimed_meld(
+            RawObservation(
+                20.0,
+                "player",
+                ObservationKind.DISCARD,
+                tile="S6",
+                confidence=0.99,
+            ),
+            RawObservation(
+                20.3,
+                "opponent",
+                ObservationKind.HAND_DELTA,
+                confidence=0.96,
+                details={"removed_count": 2},
+            ),
+            RawObservation(
+                20.5,
+                "opponent",
+                ObservationKind.MELD_DELTA,
+                confidence=0.97,
+                tiles=("S4", "S5", "S6"),
+            ),
+        )
+        self.assertEqual(action.kind, PublicActionKind.CHI)
+        self.assertEqual(action.evidence_grade, EvidenceGrade.CORROBORATED)
+        self.assertEqual(action.consumed_from_hand, ("S4", "S5"))
+        self.assertFalse(action.details["hand_delta_identity_observed"])
+        self.assertEqual(action.details["removed_count"], 2)
+
+    def test_opponent_meld_count_conflict_fails_closed(self):
+        action = reconstruct_claimed_meld(
+            RawObservation(20.0, "player", ObservationKind.DISCARD, tile="S6"),
+            RawObservation(
+                20.3,
+                "opponent",
+                ObservationKind.HAND_DELTA,
+                details={"removed_count": 1},
+            ),
+            RawObservation(
+                20.5,
+                "opponent",
+                ObservationKind.MELD_DELTA,
+                tiles=("S4", "S5", "S6"),
+            ),
+        )
+        self.assertEqual(action.kind, PublicActionKind.EVIDENCE_CONFLICT)
+        self.assertEqual(
+            action.unknown_reasons,
+            ("hand_count_delta_does_not_match_claimed_meld",),
+        )
 
     def test_add_kong_requires_explicit_previous_peng(self):
         action = reconstruct_add_kong(
