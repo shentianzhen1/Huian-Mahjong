@@ -1,0 +1,84 @@
+# ARCHIVED WORKFLOW COPY
+# This V0.14 diagnostic is intentionally outside .github/workflows because
+# PublicRollout V0.14 was closed as a non-promoted experiment. Keep for
+# reproducibility only; do not treat it as an active evaluation path.
+
+name: V0.14 Intervention Diagnostics
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    name: 5-pair V0.14 intervention diagnostic
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Run fresh diagnostic matches
+        run: |
+          mkdir -p data/evaluations/v014-intervention-diagnostics
+          /usr/bin/time -v python -B -m workspace.simulator.rollout_diagnostics \
+            --pairs 5 \
+            --seed-start 400200 \
+            --max-steps 1000 \
+            > data/evaluations/v014-intervention-diagnostics/report.json \
+            2> data/evaluations/v014-intervention-diagnostics/runtime.txt
+
+      - name: Publish diagnostic summary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path("data/evaluations/v014-intervention-diagnostics/report.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          keys = (
+              "pairs",
+              "completed_attempts",
+              "stopped_attempts",
+              "mean_v014_score_delta_per_match",
+              "mean_v014_deal_in_delta_per_match",
+              "multi_discard_decisions",
+              "gate_counts",
+              "searched_decisions",
+              "interventions",
+              "intervention_rate_among_searched",
+              "intervention_rate_among_multi_discard",
+              "searched_by_shanten",
+              "interventions_by_shanten",
+              "mean_immediate_live_delta_on_intervention",
+              "mean_immediate_type_delta_on_intervention",
+              "interventions_sacrificing_immediate_live",
+              "interventions_preserving_immediate_live",
+              "interventions_improving_immediate_live",
+              "special_cutoff_rate",
+          )
+          summary = {key: data.get(key) for key in keys}
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open(
+                  "a", encoding="utf-8") as fh:
+              fh.write("# V0.14 intervention diagnostics\n\n")
+              fh.write("Fresh seeds 400200..400204, both seat orders.\n\n")
+              fh.write("```json\n")
+              fh.write(json.dumps(summary, ensure_ascii=False, indent=2))
+              fh.write("\n```\n")
+          PY
+
+      - name: Upload diagnostic report
+        uses: actions/upload-artifact@v7
+        with:
+          name: v014-intervention-diagnostics-400200-5pairs
+          path: |
+            data/evaluations/v014-intervention-diagnostics/report.json
+            data/evaluations/v014-intervention-diagnostics/runtime.txt
+          if-no-files-found: error
