@@ -45,6 +45,60 @@ class PlayerPerspectiveTests(unittest.TestCase):
         self.assertTrue(by_session.resolved)
         self.assertTrue(by_hash.resolved)
 
+    def test_matching_session_and_sha_resolve_the_same_entry(self):
+        entry = self.manifest.entries[0]
+        result = resolve_player_perspective(
+            manifest=self.manifest,
+            source_session=entry.source_session,
+            source_sha256=entry.source_sha256,
+        )
+        self.assertTrue(result.resolved)
+        self.assertEqual(result.player_seat, entry.player_seat)
+
+    def test_mismatched_known_session_and_known_hash_fail_even_with_same_seat(self):
+        first, second = self.manifest.entries
+        self.assertEqual(first.player_seat, second.player_seat)
+        result = resolve_player_perspective(
+            manifest=self.manifest,
+            source_session=first.source_session,
+            source_sha256=second.source_sha256,
+        )
+        self.assertIsNone(result.player_seat)
+        self.assertEqual(result.issues, ("player_source_identity_conflict",))
+
+    def test_known_session_with_unknown_hash_does_not_silently_match(self):
+        entry = self.manifest.entries[0]
+        result = resolve_player_perspective(
+            manifest=self.manifest,
+            source_session=entry.source_session,
+            source_sha256="a" * 64,
+        )
+        self.assertIsNone(result.player_seat)
+        self.assertEqual(result.issues, ("player_source_identity_conflict",))
+
+    def test_explicit_runtime_seat_cannot_override_archived_source_mismatch(self):
+        first, second = self.manifest.entries
+        result = resolve_player_perspective(
+            manifest=self.manifest,
+            source_session=first.source_session,
+            source_sha256=second.source_sha256,
+            explicit_player_seat=first.player_seat,
+        )
+        self.assertIsNone(result.player_seat)
+        self.assertEqual(result.issues, ("player_source_identity_conflict",))
+
+    def test_new_unarchived_source_pair_can_still_use_explicit_mapping(self):
+        result = resolve_player_perspective(
+            manifest=self.manifest,
+            source_session="fresh_live_source",
+            source_sha256="f" * 64,
+            explicit_player_seat=1,
+            explicit_evidence_ref="capture_profile:seat=1",
+        )
+        self.assertTrue(result.resolved)
+        self.assertEqual(result.player_seat, 1)
+        self.assertEqual(result.source, "explicit_runtime_config")
+
     def test_unknown_source_never_defaults_to_seat_zero(self):
         result = resolve_player_perspective(
             manifest=self.manifest,
