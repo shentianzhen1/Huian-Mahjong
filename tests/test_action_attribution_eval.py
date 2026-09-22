@@ -87,6 +87,7 @@ def prediction(
     epoch: int | None = 0,
     session: str | None = "synthetic-session-a",
     grade: str = "CORROBORATED",
+    confidence: float | None = 0.99,
     refs: tuple[str, ...] = ("synthetic:machine-frame:63",),
 ) -> ActionPrediction:
     return ActionPrediction(
@@ -98,6 +99,7 @@ def prediction(
         turn_actor=turn_actor,
         evidence_grade=grade,
         evidence_refs=refs,
+        confidence=confidence,
         tile=tile,
     )
 
@@ -178,6 +180,22 @@ class AttributionEvaluationTests(unittest.TestCase):
         self.assertEqual(result["abstentions"], 2)
         self.assertEqual(result["true_positives"], 0)
         self.assertEqual(result["false_negatives"], 1)
+
+    def test_missing_or_zero_confidence_abstains_instead_of_earning_credit(self):
+        result = evaluate_attribution(
+            truth(),
+            batch(
+                prediction(t=2.0, confidence=None),
+                prediction(t=2.1, confidence=0.0),
+            ),
+        )
+        self.assertEqual(result["abstentions"], 2)
+        self.assertEqual(result["true_positives"], 0)
+        self.assertEqual(result["false_negatives"], 1)
+        with self.assertRaisesRegex(ValueError, "confidence"):
+            prediction(confidence=float("nan"))
+        with self.assertRaisesRegex(ValueError, "confidence"):
+            prediction(confidence=1.1)
 
     def test_outside_reviewed_span_and_other_source_are_not_misreported(self):
         result = evaluate_attribution(
@@ -301,6 +319,7 @@ class AttributionEvaluationTests(unittest.TestCase):
         self.assertEqual(prediction_result.tile, "P5")
         self.assertEqual(prediction_result.source_session, "synthetic-session-a")
         self.assertEqual(prediction_result.stream_epoch, 2)
+        self.assertEqual(prediction_result.confidence, 0.8)
         self.assertIsNone(prediction_result.turn_actor)
 
 
@@ -343,6 +362,7 @@ class AttributionJsonIoTests(unittest.TestCase):
                 "turn_actor": None,
                 "tile": "P5",
                 "evidence_grade": "CORROBORATED",
+                "confidence": 0.99,
                 "evidence_refs": ["synthetic:prediction:63"],
             }],
         }
