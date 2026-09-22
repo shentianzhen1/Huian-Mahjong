@@ -70,6 +70,8 @@ Product / P2：
 
 ## Required Regression Invariants
 
+- **Core coverage gate:** `huian.rules + huian.environment` measured baseline is **88%** on the 385-test suite; CI fails below **85%** aggregate coverage. This is a regression floor, not a target to game.
+
 任何 Rules / Environment / Settlement 改动至少保持：
 
 - 144 张实体牌守恒；不存在第 5 张同牌。
