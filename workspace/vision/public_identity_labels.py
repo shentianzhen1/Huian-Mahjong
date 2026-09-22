@@ -10,6 +10,7 @@ claims that public identity is runtime-ready.
 """
 from __future__ import annotations
 
+import argparse
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 import hashlib
@@ -412,3 +413,36 @@ def export_reviewed_crops(
         paths.append(destination)
 
     return tuple(paths)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Validate/export development public identity labels"
+    )
+    parser.add_argument(
+        "--manifest",
+        default="references/vision/2026-09-22/public_identity_labels_v0_1.json",
+    )
+    parser.add_argument("--repository-root", default=".")
+    parser.add_argument("--export-crops")
+    args = parser.parse_args()
+
+    manifest = load_public_identity_manifest(args.manifest)
+    report = readiness_report(manifest)
+    report["file_integrity_issues"] = list(
+        verify_repository_files(manifest, args.repository_root)
+    )
+    if args.export_crops:
+        paths = export_reviewed_crops(
+            manifest,
+            args.repository_root,
+            args.export_crops,
+        )
+        report["exported_crops"] = len(paths)
+        report["export_root"] = str(args.export_crops)
+
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
