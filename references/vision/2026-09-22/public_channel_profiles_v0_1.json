@@ -1,0 +1,65 @@
+{
+  "schema_version": "public_channel_profiles_v0_1",
+  "excluded_from_formal_promotion": true,
+  "development_only_reason": "Profiles are derived from already-reviewed development frames and are not source-disjoint promotion evidence.",
+  "profiles": [
+    {
+      "name": "central_action_focus_dev",
+      "geometry_kinds": ["upper_protrusion"],
+      "zones": [[0.44, 0.04, 0.12, 0.24]],
+      "minimum_zone_coverage": 0.7,
+      "semantic_scope": "public_action_focus",
+      "actor_policy": "external",
+      "action_policy": "external",
+      "development_only": true,
+      "evidence_sample_ids": [
+        "66fe_opponent_discard_p1_035s",
+        "66fe_opponent_discard_s9_080s",
+        "b389_opponent_discard_m4_033s",
+        "b389_opponent_discard_p7_055s"
+      ],
+      "notes": [
+        "The same channel also appears in reviewed non-discard contexts such as fourth-P1-visible and winning-M5-visible frames.",
+        "Never convert this profile to an opponent DISCARD without independent actor/turn/action evidence."
+      ]
+    },
+    {
+      "name": "upper_public_single_dev",
+      "geometry_kinds": ["single_face"],
+      "zones": [[0.22, 0.0, 0.12, 0.12]],
+      "minimum_zone_coverage": 0.7,
+      "semantic_scope": "upper_public_single",
+      "actor_policy": "external",
+      "action_policy": "external",
+      "development_only": true,
+      "evidence_sample_ids": [
+        "66fe_opponent_discard_n_085s"
+      ],
+      "notes": [
+        "A candidate in this zone is also visible in reviewed opening/hand-reference contexts.",
+        "The sparse evidence does not justify calling every candidate here a new discard."
+      ]
+    },
+    {
+      "name": "player_exposed_group_dev",
+      "geometry_kinds": ["bottom_group"],
+      "zones": [[0.06, 0.72, 0.36, 0.28]],
+      "minimum_zone_coverage": 0.7,
+      "semantic_scope": "player_exposed_group",
+      "actor_policy": "player",
+      "action_policy": "external",
+      "development_only": true,
+      "evidence_sample_ids": [
+        "66fe_player_peng_p1_040s",
+        "66fe_player_added_kong_p1_070s",
+        "66fe_player_chi_s789_082s",
+        "b389_player_chi_m456_035s",
+        "b389_player_chi_p678_057s"
+      ],
+      "notes": [
+        "The channel selects visible player-side exposed groups but does not classify CHI/PENG/KONG.",
+        "Group face count and identity require independent evidence."
+      ]
+    }
+  ]
+}
