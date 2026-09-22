@@ -229,7 +229,7 @@ class TemporalActionAssembler:
                 # transient observer facts (frame IDs alone can repeat).
                 source = {
                     key: meld.details[key]
-                    for key in ("source_session", "stream_epoch")
+                    for key in ("source_session", "stream_epoch", "frame")
                     if key in meld.details
                 }
                 if source:
@@ -421,7 +421,7 @@ class TemporalActionAssembler:
                 ],
                 **{
                     key: anchor.details[key]
-                    for key in ("source_session", "stream_epoch")
+                    for key in ("source_session", "stream_epoch", "frame")
                     if key in anchor.details
                 },
             },
