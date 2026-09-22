@@ -117,6 +117,7 @@ class RiverSnapshot:
     trusted: bool = True
     evidence_refs: tuple[str, ...] = ()
     stream_epoch: int = 0
+    source_session: str | None = None
 
     def __post_init__(self) -> None:
         if self.timestamp_seconds < 0:
@@ -127,6 +128,10 @@ class RiverSnapshot:
             or self.stream_epoch < 0
         ):
             raise ValueError("stream_epoch must be a nonnegative integer")
+        if self.source_session is not None and (
+            not isinstance(self.source_session, str) or not self.source_session
+        ):
+            raise ValueError("source_session must be a nonempty string or None")
         _validate_actor(self.actor)
         object.__setattr__(self, "tiles", tuple(self.tiles))
         object.__setattr__(
@@ -175,6 +180,7 @@ class MeldSnapshot:
     trusted: bool = True
     evidence_refs: tuple[str, ...] = ()
     stream_epoch: int = 0
+    source_session: str | None = None
 
     def __post_init__(self) -> None:
         if self.timestamp_seconds < 0:
@@ -185,6 +191,10 @@ class MeldSnapshot:
             or self.stream_epoch < 0
         ):
             raise ValueError("stream_epoch must be a nonnegative integer")
+        if self.source_session is not None and (
+            not isinstance(self.source_session, str) or not self.source_session
+        ):
+            raise ValueError("source_session must be a nonempty string or None")
         _validate_actor(self.actor)
         object.__setattr__(self, "groups", tuple(self.groups))
         object.__setattr__(
@@ -432,6 +442,8 @@ class DiscardRiverObserver:
                     "new_tile_bbox": list(new_tile.normalized_bbox),
                     "tile_identity_observed": new_tile.tile_id is not None,
                     "observer": "discard_river_v0_1",
+                    "source_session": stable_snapshot.source_session,
+                    "stream_epoch": stable_snapshot.stream_epoch,
                 },
             )
             self._accepted = stable_snapshot
@@ -639,6 +651,8 @@ class MeldSnapshotObserver:
             "tile_identity_complete": identities_complete,
             "tile_candidates": [tile for tile in group.tiles],
             "observer": "meld_snapshot_v0_1",
+            "source_session": snapshot.source_session,
+            "stream_epoch": snapshot.stream_epoch,
         }
         if previous_group is not None:
             details["previous_group_size"] = len(previous_group.tiles)
