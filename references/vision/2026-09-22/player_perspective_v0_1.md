@@ -83,6 +83,17 @@ If explicit config disagrees with archived source evidence:
 
     player_seat_evidence_conflict
 
+If the caller supplies **both** session and source SHA256, they must refer to
+the *same* archived entry. A mixed pair is rejected even if the two archived
+entries happen to use the same player seat, and even if explicit runtime config
+would otherwise agree:
+
+    player_source_identity_conflict
+
+A truly new (unarchived) live session/hash pair may still use explicit capture
+configuration. Session-only and SHA-only lookup remain available for replay
+sources with only one identifier.
+
 The resolver fails closed and returns no seat.
 
 ## Dealer-marker integration
