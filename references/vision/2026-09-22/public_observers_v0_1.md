@@ -63,6 +63,21 @@ This is intentionally separate from tile-classification accuracy. Stable
 identity can still be wrong, so later identity confidence / source-disjoint
 gates remain necessary.
 
+### Stream continuity
+
+RiverSnapshot and MeldSnapshot carry a nonnegative stream_epoch.
+
+When the epoch changes, the corresponding observer:
+
+- discards its old accepted baseline;
+- clears pending stability state;
+- does not compare the first new-epoch snapshot with the old epoch;
+- requires the new epoch to settle into a fresh baseline before emitting any
+  public action.
+
+This is used by the Public Candidate Tracker when a source-session changes or
+the capture gap exceeds its configured maximum.
+
 ## Discard river behavior
 
 ### New discard
