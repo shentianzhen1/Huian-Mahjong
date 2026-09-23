@@ -1,0 +1,53 @@
+{
+  "schema_version": "source_river_geometry_v0_1",
+  "source_session": "match_evidence_001_hand_02",
+  "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+  "frame_size": [
+    960,
+    448
+  ],
+  "reviewed_frame_span": [
+    250,
+    1100
+  ],
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "zones": [
+    {
+      "actor": "opponent",
+      "bbox": [
+        0.588,
+        0.225,
+        0.065,
+        0.073
+      ],
+      "single_width": [
+        0.023,
+        0.03
+      ],
+      "single_height": [
+        0.058,
+        0.068
+      ]
+    },
+    {
+      "actor": "player",
+      "bbox": [
+        0.301,
+        0.531,
+        0.081,
+        0.069
+      ],
+      "single_width": [
+        0.03,
+        0.04
+      ],
+      "single_height": [
+        0.051,
+        0.061
+      ]
+    }
+  ],
+  "calibration_scope": "Second hand video frames 250-1100: independently visually reviewed early region development only. Not a source-disjoint holdout; mid/late reflow excluded.",
+  "safety": "Overlay/player hand/zoom outside explicit source-zone bounds; no tile or turn identity inferred."
+}
