@@ -77,6 +77,7 @@ class RiverManifest:
     zones: tuple[RiverZone, ...]
     development_only: bool
     excluded_from_formal_promotion: bool
+    reviewed_frame_span: tuple[int, int] | None = None
 
     def __post_init__(self) -> None:
         if (not isinstance(self.source_session, str) or not self.source_session
@@ -86,6 +87,11 @@ class RiverManifest:
         if (len(self.frame_size) != 2
                 or any(type(n) is not int or n <= 0 for n in self.frame_size)):
             raise ValueError("frame_size must be positive [width, height]")
+        if self.reviewed_frame_span is not None:
+            span = self.reviewed_frame_span
+            if (len(span) != 2 or any(type(n) is not int for n in span)
+                    or span[0] < 0 or span[1] < span[0]):
+                raise ValueError("reviewed_frame_span must be increasing nonnegative frames")
         if len(self.zones) != 2 or {zone.actor for zone in self.zones} != ACTORS:
             raise ValueError("one reviewed river zone required per actor")
         if not self.development_only or not self.excluded_from_formal_promotion:
@@ -119,6 +125,8 @@ def load_river_manifest(path: str | Path) -> RiverManifest:
         zones=zones,
         development_only=data.get("development_only") is True,
         excluded_from_formal_promotion=data.get("excluded_from_formal_promotion") is True,
+        reviewed_frame_span=(tuple(data["reviewed_frame_span"])
+                             if "reviewed_frame_span" in data else None),
     )
 
 
@@ -183,6 +191,11 @@ def qualify_river_frame(image: Image.Image, frame: PublicGeometryFrame,
         raise ValueError("river source session/hash mismatch")
     if image.size != manifest.frame_size:
         raise ValueError("river frame resolution mismatch")
+    if manifest.reviewed_frame_span is not None and (
+        type(frame.frame) is not int
+        or not manifest.reviewed_frame_span[0] <= frame.frame <= manifest.reviewed_frame_span[1]
+    ):
+        raise ValueError("frame outside source-reviewed river interval")
 
     rgb = np.asarray(image.convert("RGB"))
     by_actor: dict[str, list[Any]] = {zone.actor: [] for zone in manifest.zones}

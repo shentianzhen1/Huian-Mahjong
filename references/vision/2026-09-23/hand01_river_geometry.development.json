@@ -3,6 +3,7 @@
   "source_session": "match_evidence_001_hand_01",
   "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
   "frame_size": [1046, 480],
+  "reviewed_frame_span": [348, 725],
   "development_only": true,
   "excluded_from_formal_promotion": true,
   "zones": [

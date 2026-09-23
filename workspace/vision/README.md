@@ -33,3 +33,5 @@ Hand Context Assembler V0.1 位于 `hand_context_assembler.py`：把 PublicState
 Dealer Marker Detector V0.1 位于 `dealer_marker_detector.py`：在两个真实开发 session 的相反庄位上，用头像旁窄 ROI 的红/橙庄标信号判断 `player / opponent / UNKNOWN`。10 张锁定图均纳入 Vision 回归；双侧同时有信号或都无信号时 fail closed。不 OCR “庄3/庄5”，不推庄底；只有调用方显式给出 `player_seat` 后才映射成 Hand Context 的 dealer seat。设计见 `references/vision/2026-09-22/dealer_marker_detector_v0_1.md`。
 
 Player Perspective V0.1 位于 `player_perspective.py`，manifest 为 `references/vision/2026-09-22/player_perspective_v0_1.json`：显式桥接 Vision 的 `player/opponent` 与 Rules/Environment 的 seat 0/1。66fe 与 b389 两个已审计 replay 都由 fixture 证据锁定 local/bottom player=seat 0；未知新来源不会默认 seat 0，必须由 session/hash 证据或显式 runtime config 提供，冲突则 fail closed。详见 `references/vision/2026-09-22/player_perspective_v0_1.md`。
+
+Private Source River Review Queue V0.1 位于 `source_river_review_queue.py`：读取 #69 第一局 SHA + 348–725 帧范围锁，仅将 tracker 的稳定河牌几何候选裁成私有待审阅 PNG 和 `review_queue.json`；6 个候选中 2 个仅标记为可能重复轨迹，**不是六张独立牌、更不是已确认动作**。禁止输出目录位于公开仓库，tile/turn/action 全部 UNKNOWN，人工审阅完成前不得进入 public identity classifier。复现说明见 `references/vision/2026-09-23/hand01_private_river_review_v0_1.md`。
