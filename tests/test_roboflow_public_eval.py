@@ -14,6 +14,7 @@ from workspace.vision.roboflow_public_eval import (
     map_class,
     run_reviewed_trial,
     score_partial_labels,
+    safe_http_status,
 )
 
 REPOSITORY = Path(__file__).resolve().parents[1]
@@ -76,6 +77,16 @@ class PublicRoboflowTrialTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "SHA256"):
                 run_reviewed_trial(root, manifest, infer=lambda p: called.append(p))
             self.assertEqual(called, [])
+
+    def test_sanitized_http_status_never_exposes_exception_message(self):
+        class SecretBearingError(Exception):
+            def __init__(self, status_code):
+                super().__init__("Do not log sensitive URL or request data")
+                self.status_code = status_code
+        self.assertEqual(safe_http_status(SecretBearingError(403)), "403")
+        self.assertEqual(safe_http_status(SecretBearingError(404)), "404")
+        self.assertEqual(safe_http_status(SecretBearingError("secret")), "unknown")
+        self.assertEqual(safe_http_status(SecretBearingError(200)), "unknown")
 
     def test_source_taxonomy_preserves_special_unknown(self):
         self.assertEqual(map_class("1B"), "S1")

@@ -38,6 +38,12 @@ def map_class(name: str) -> str | None:
     return STANDARD_MAP.get(name.strip().upper())
 
 
+def safe_http_status(error: Exception) -> str:
+    """Reveal only a bounded HTTP status, never SDK messages, URLs or credentials."""
+    code = getattr(error, "status_code", None)
+    return str(code) if type(code) is int and 400 <= code <= 599 else "unknown"
+
+
 def _sha(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as fh:
@@ -243,6 +249,7 @@ def main() -> None:
         # Deliberately do not print SDK exception strings; some contain request data.
         if args.cloud:
             parser.exit(2, "Roboflow trial failed (" + type(exc).__name__
+                        + "; HTTP " + safe_http_status(exc)
                         + "); inspect model access and source integrity.\n")
         raise
     report_path.parent.mkdir(parents=True, exist_ok=True)
