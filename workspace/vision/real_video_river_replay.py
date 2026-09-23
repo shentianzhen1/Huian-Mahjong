@@ -32,6 +32,11 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
     manifest = load_river_manifest(manifest_path)
     if type(first_frame) is not int or type(last_frame) is not int or first_frame < 0 or last_frame <= first_frame:
         raise ValueError("continuous frame range must have increasing nonnegative integers")
+    if manifest.reviewed_frame_span is not None and (
+        first_frame < manifest.reviewed_frame_span[0]
+        or last_frame > manifest.reviewed_frame_span[1]
+    ):
+        raise ValueError("replay exceeds source-reviewed river interval")
     actual_hash = source_sha256(Path(video))
     if actual_hash != manifest.source_sha256:
         raise ValueError("video SHA256 mismatch; never import stale source annotations")
