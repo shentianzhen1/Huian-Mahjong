@@ -1,0 +1,100 @@
+{
+  "schema_version": "real_public_geometry_baseline_v0_1",
+  "date": "2026-09-23",
+  "development_only": true,
+  "source_disjoint_holdout": false,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "source_session": "match_evidence_001_hand_01",
+  "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+  "source_main_sha": "7e486c3a9d30225b9998b834d76579fb8014ddb1",
+  "run_script": "workspace/vision/real_video_public_probe.py",
+  "unpublished_raw_trace_sha256": "47c5e55d57c47af5d5cd77a8fc8018c508ed6dbc85ae1b5a4043f7a525311970",
+  "source_frame_span_inclusive": [
+    348,
+    725
+  ],
+  "source_time_seconds": [
+    12,
+    25
+  ],
+  "frames_decoded": 378,
+  "stream_epochs": [
+    0
+  ],
+  "modules": [
+    "workspace.vision.public_tile_detector.detect_public_tile_geometry",
+    "workspace.vision.public_candidate_tracker.PublicCandidateTracker",
+    "workspace.vision.public_channel_profiles.load_channel_manifest"
+  ],
+  "detector_candidate_frame_instances": 5720,
+  "peak_candidates_per_frame": 30,
+  "stable_track_frame_instances": 5627,
+  "tracker_appeared": 61,
+  "tracker_disappeared": 46,
+  "profile_appeared": {
+    "central_action_focus_dev": 0,
+    "upper_public_single_dev": 3,
+    "player_exposed_group_dev": 0
+  },
+  "profile_stable_frames": {
+    "central_action_focus_dev": 0,
+    "upper_public_single_dev": 187,
+    "player_exposed_group_dev": 0
+  },
+  "existing_qualified_river_channels": 0,
+  "generated_action_predictions": 0,
+  "event_precision": null,
+  "event_recall": null,
+  "actor_accuracy": null,
+  "note": "Geometry candidate and tracker stats only. No frozen-truth event outcome was fed to the machine pass. Current reviewed development profiles are not source-specific opponent/player discard river channels; an APPEARED event is not DISCARD. Do not label 0 actions as a measured action-recall score because no valid action-classification pipeline was configured.",
+  "posthoc_visual_diagnostic_not_scoring": [
+    {
+      "truth_frame": 404,
+      "actor": "opponent",
+      "new_river_candidate_frame": 406,
+      "normalized_bbox": [
+        0.617591,
+        0.23125,
+        0.025813,
+        0.0625
+      ]
+    },
+    {
+      "truth_frame": 490,
+      "actor": "player",
+      "new_river_candidate_frame": 492,
+      "normalized_bbox": [
+        0.306883,
+        0.535417,
+        0.033461,
+        0.05625
+      ]
+    },
+    {
+      "truth_frame": 587,
+      "actor": "opponent",
+      "new_river_candidate_frame": 590,
+      "normalized_bbox": [
+        0.591778,
+        0.229167,
+        0.051625,
+        0.064583
+      ],
+      "issue": "Second upper discard merges adjacent two public tiles into one detector bbox"
+    },
+    {
+      "truth_frame": 685,
+      "actor": "player",
+      "new_river_candidate_frame": 687,
+      "normalized_bbox": [
+        0.307839,
+        0.535417,
+        0.063098,
+        0.05625
+      ],
+      "issue": "Second lower discard merges adjacent two public tiles into one detector bbox"
+    }
+  ],
+  "followup_blocker": "Add source-scoped verified river zones and split adjacent 2+ tiles before trusted RiverSnapshot; then run DiscardRiverObserver/TemporalActionAssembler and action_attribution_eval against frozen truth. Keep a separate new source for source-disjoint confirmation."
+}
