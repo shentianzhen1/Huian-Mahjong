@@ -1,0 +1,104 @@
+{
+  "schema_version": "hand01_qualified_river_baseline_v0_1",
+  "date": "2026-09-23",
+  "source_session": "match_evidence_001_hand_01",
+  "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+  "reference_frozen_truth": "references/vision/2026-09-23/hand01_12_25_action_truth.development.frozen.json",
+  "source_frame_span_inclusive": [
+    348,
+    725
+  ],
+  "frames_decoded": 378,
+  "stream_epochs": [
+    0
+  ],
+  "development_only": true,
+  "source_disjoint_holdout": false,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "pipeline": [
+    "public_tile_detector.detect_public_tile_geometry",
+    "source_river_geometry.qualify_river_frame",
+    "public_candidate_tracker.PublicCandidateTracker",
+    "public_candidate_tracker.river_snapshot_from_channel",
+    "public_observers.DiscardRiverObserver for each actor",
+    "action_assembler.TemporalActionAssembler",
+    "action_attribution_eval.evaluate_attribution (after predictions freeze)"
+  ],
+  "geometry_counts": {
+    "detector_candidate_frame_instances": 5720,
+    "qualified_river_candidate_frame_instances": 739,
+    "stable_track_frame_instances": 725,
+    "opponent_river_baseline_established": 1,
+    "player_river_baseline_established": 1,
+    "tracker_appeared": 6,
+    "opponent_river_growth_observations": 2,
+    "player_river_growth_observations": 2,
+    "tracker_disappeared": 2,
+    "player_untrusted_frames": 1,
+    "player_river_snapshot_untrusted": 1,
+    "assembled_actions": 4,
+    "unknown_graded_actions": 4,
+    "known_tile_actions": 0
+  },
+  "untrusted_source_frames": {
+    "opponent": [],
+    "player": [
+      685
+    ]
+  },
+  "predictions_without_private_frame_refs": [
+    {
+      "timestamp_seconds": 14.068967,
+      "actor": "opponent",
+      "kind": "DISCARD",
+      "evidence_grade": "UNKNOWN",
+      "tile": null,
+      "turn_actor": null
+    },
+    {
+      "timestamp_seconds": 17.034478,
+      "actor": "player",
+      "kind": "DISCARD",
+      "evidence_grade": "UNKNOWN",
+      "tile": null,
+      "turn_actor": null
+    },
+    {
+      "timestamp_seconds": 20.413789,
+      "actor": "opponent",
+      "kind": "DISCARD",
+      "evidence_grade": "UNKNOWN",
+      "tile": null,
+      "turn_actor": null
+    },
+    {
+      "timestamp_seconds": 23.7931,
+      "actor": "player",
+      "kind": "DISCARD",
+      "evidence_grade": "UNKNOWN",
+      "tile": null,
+      "turn_actor": null
+    }
+  ],
+  "strict_development_evaluation": {
+    "truth_events": 4,
+    "predictions_total": 4,
+    "in_scope_predictions": 4,
+    "abstentions": 4,
+    "truth_events_with_nearby_abstention_and_no_match": 4,
+    "aligned_events": 0,
+    "true_positives": 0,
+    "false_positives": 0,
+    "false_negatives": 4,
+    "wrong_actor": 0,
+    "event_precision": null,
+    "event_recall": 0.0,
+    "actor_accuracy_on_aligned": null,
+    "turn_truth_labeled_on_aligned": 0,
+    "turn_accuracy_when_known": null
+  },
+  "interpretation": "Four geometry/river-growth outputs fall near the four frozen DISCARD timestamps and screen sides; ALL FOUR abstain under strict action evaluation because public tile identity and independent turn evidence are UNKNOWN. This is not 4/4 end-to-end action recognition or independent Vision accuracy. False positives and wrong actors are 0 among non-abstained predictions (there are none), not demonstrated overall rates.",
+  "no_action_negatives": "All original decoded frames in 348-725, including pre-discard and intervening no-action frames, were processed; no future truth events were supplied to the machine detector.",
+  "privacy": "Source video, private Drive URL/ID and all screenshots/crops remain local; this committed report contains no image pixels or private locator."
+}
