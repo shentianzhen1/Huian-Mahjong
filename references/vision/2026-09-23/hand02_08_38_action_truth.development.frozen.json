@@ -1,0 +1,78 @@
+{
+  "schema_version": "public_action_attribution_eval_v0_1",
+  "source_session": "match_evidence_001_hand_02",
+  "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+  "review_kind": "development_continuous_video",
+  "truth_frozen": true,
+  "reviewed_intervals": [
+    {
+      "stream_epoch": 0,
+      "start_seconds": 8.620689,
+      "end_seconds": 37.931033,
+      "first_frame": 250,
+      "last_frame": 1100,
+      "evidence_refs": [
+        "match_evidence_001_hand_02:reviewed_frames:250-1100",
+        "match_evidence_001_hand_02:source_sha256:1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "timestamp_seconds": 10.310344,
+      "stream_epoch": 0,
+      "frame": 299,
+      "kind": "DISCARD",
+      "actor": "opponent",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_02:frame:298",
+        "match_evidence_001_hand_02:frame:299",
+        "match_evidence_001_hand_02:frame:305"
+      ]
+    },
+    {
+      "timestamp_seconds": 16.931033,
+      "stream_epoch": 0,
+      "frame": 491,
+      "kind": "DISCARD",
+      "actor": "player",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_02:frame:489",
+        "match_evidence_001_hand_02:frame:491",
+        "match_evidence_001_hand_02:frame:493"
+      ]
+    },
+    {
+      "timestamp_seconds": 23.7931,
+      "stream_epoch": 0,
+      "frame": 690,
+      "kind": "DISCARD",
+      "actor": "opponent",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_02:frame:688",
+        "match_evidence_001_hand_02:frame:690",
+        "match_evidence_001_hand_02:frame:691"
+      ]
+    },
+    {
+      "timestamp_seconds": 34.034478,
+      "stream_epoch": 0,
+      "frame": 987,
+      "kind": "DISCARD",
+      "actor": "player",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_02:frame:985",
+        "match_evidence_001_hand_02:frame:987",
+        "match_evidence_001_hand_02:frame:989"
+      ]
+    }
+  ]
+}
