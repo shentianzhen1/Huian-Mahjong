@@ -15,8 +15,6 @@ from pathlib import Path
 import re
 from typing import Any
 
-from workspace.vision.public_candidate_tracker import PublicCandidateTracker, TrackEventKind
-from workspace.vision.public_channel_profiles import load_channel_manifest
 
 SCHEMA_VERSION = 'real_public_geometry_probe_v0_1'
 _SHA256 = re.compile(r'^[0-9a-f]{64}$')
@@ -49,13 +47,15 @@ def probe_video(
     actual_sha256 = source_sha256(path)
     if actual_sha256 != expected_sha256:
         raise ValueError('video SHA256 mismatch; no cross-source replay allowed')
+    # Vision modules are optional; core-only installs may still import this CLI.
+    import cv2
+    from PIL import Image
+    from workspace.vision.public_candidate_tracker import PublicCandidateTracker, TrackEventKind
+    from workspace.vision.public_channel_profiles import load_channel_manifest
+    from workspace.vision.public_tile_detector import detect_public_tile_geometry
     profiles = load_channel_manifest(profile_manifest)
     if not profiles.excluded_from_formal_promotion:
         raise ValueError('profiles must be development-only')
-    # Keep optional Vision dependencies out of core-only imports.
-    import cv2
-    from PIL import Image
-    from workspace.vision.public_tile_detector import detect_public_tile_geometry
 
     capture = cv2.VideoCapture(str(path))
     if not capture.isOpened():
@@ -129,8 +129,8 @@ def probe_video(
         'tracker': 'workspace.vision.public_candidate_tracker.PublicCandidateTracker',
         'development_profile_names': [p.name for p in profiles.profiles],
         'counts': dict(observed_counts),
-        'profile_appearances': dict(profile_appearances),
-        'profile_stable_frames': dict(profile_stable_frames),
+        'profile_appearances': {name: profile_appearances[name] for name, _ in selected},
+        'profile_stable_frames': {name: profile_stable_frames[name] for name, _ in selected},
         'track_events': appearances,
         'reconstructed_actions': [],
         'action_metric': None,
