@@ -16,7 +16,7 @@
 
 - **#6 AI EV / 8局上下文** — `CurrentAgent = MeldAwareShantenAgent V0.10` 固定为当前前沿；#4 闭环前不并行开新 Agent 版本。
 - **#7 Vision 独立验证** — 旧8局已完成64时点同批状态栏审计并保留 false-valid 错误；新批次先用 `independent_batch_lock.py` 锁 SHA/session/帧位，再人工 truth，最后只跑已冻结 `promotion_gate.py`。
-- **#69 Public Match Reconstruction V0.1** — 只读整局公开动作流水：局号/庄家/开金、双方弃牌、副露、CHI/PENG/KONG、游金状态、胡牌与结算；多源证据冲突必须 fail closed。
+- **#69 Public Match Reconstruction V0.1** — 只读整局公开动作流水。第一局旧录像已完成 source-locked 双河区、相邻牌可见缝隙拆分、378 帧真实 detector→tracker→双 observer→assembler→严格评估；四次候选均因牌身份/独立回合 UNKNOWN 而弃权。下一步独立公共牌身份与回合线索，再扩展跨局；多源证据冲突必须 fail closed。
 
 ## Product
 
