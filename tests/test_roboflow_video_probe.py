@@ -83,7 +83,7 @@ class RoboflowVideoTrialTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "outside source recording"):
                 trial_video(video, expected_sha256=digest,
                             source_group="a", frames=[7])
-            with self.assertRaisesRegex(ValueError, "source"):
+            with self.assertRaisesRegex(ValueError, "MATCH group"):
                 trial_video(video, expected_sha256=digest,
                             source_group=" ", frames=[1])
 
