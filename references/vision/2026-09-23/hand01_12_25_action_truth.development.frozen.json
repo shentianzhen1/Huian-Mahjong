@@ -1,0 +1,78 @@
+{
+  "schema_version": "public_action_attribution_eval_v0_1",
+  "source_session": "match_evidence_001_hand_01",
+  "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+  "review_kind": "development_continuous_video",
+  "truth_frozen": true,
+  "reviewed_intervals": [
+    {
+      "stream_epoch": 0,
+      "start_seconds": 12,
+      "end_seconds": 25,
+      "first_frame": 348,
+      "last_frame": 725,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frames:348-725",
+        "match_evidence_001_hand_01:sha256:1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "timestamp_seconds": 13.931033,
+      "stream_epoch": 0,
+      "frame": 404,
+      "kind": "DISCARD",
+      "actor": "opponent",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:398",
+        "match_evidence_001_hand_01:frame:404",
+        "match_evidence_001_hand_01:frame:416"
+      ]
+    },
+    {
+      "timestamp_seconds": 16.896556,
+      "stream_epoch": 0,
+      "frame": 490,
+      "kind": "DISCARD",
+      "actor": "player",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:478",
+        "match_evidence_001_hand_01:frame:490",
+        "match_evidence_001_hand_01:frame:499"
+      ]
+    },
+    {
+      "timestamp_seconds": 20.241378,
+      "stream_epoch": 0,
+      "frame": 587,
+      "kind": "DISCARD",
+      "actor": "opponent",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:580",
+        "match_evidence_001_hand_01:frame:587",
+        "match_evidence_001_hand_01:frame:600"
+      ]
+    },
+    {
+      "timestamp_seconds": 23.620689,
+      "stream_epoch": 0,
+      "frame": 685,
+      "kind": "DISCARD",
+      "actor": "player",
+      "turn_actor": null,
+      "tile": null,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:667",
+        "match_evidence_001_hand_01:frame:685",
+        "match_evidence_001_hand_01:frame:700"
+      ]
+    }
+  ]
+}
