@@ -99,3 +99,5 @@ jobs:
           path: ${{ runner.temp }}/roboflow_public_cloud.json
           if-no-files-found: ignore
           retention-days: 7
+
+# Manual cloud recheck after repository secret configuration: 2026-09-23
