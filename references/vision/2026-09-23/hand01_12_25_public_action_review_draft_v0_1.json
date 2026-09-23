@@ -1,0 +1,109 @@
+{
+  "schema_version": "public_action_manual_review_draft_v0_1",
+  "source_session": "match_evidence_001_hand_01",
+  "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+  "review_kind": "development_continuous_video",
+  "source_disjoint_holdout": false,
+  "truth_frozen": false,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "video_relative_interval_seconds": [
+    12,
+    25
+  ],
+  "frame_index_base": 0,
+  "source_frame_rate_approx": 29.000227,
+  "review_stage": "first_pass_unfrozen_not_exhaustive",
+  "review_method": "Full original frames at selected anchors, 0.25-second filmstrips, per-frame grayscale change scan of top hand, lower hand, both public-river areas, central action focus and replay progress. The per-frame scan is automated navigation, not human frame-by-frame approval.",
+  "actor_mapping_status": "pending_confirmation_upper_opponent_lower_player",
+  "visible_action_hypotheses": [
+    {
+      "id": "A",
+      "kind_candidate": "DISCARD",
+      "screen_side": "upper",
+      "actor_candidate": "opponent",
+      "actor_verified": false,
+      "tile_label_zh": "中",
+      "onset_frame_candidate": 404,
+      "onset_timestamp_seconds_approx": 13.931,
+      "pre_frame": 398,
+      "post_frame": 416,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:398",
+        "match_evidence_001_hand_01:frame:404",
+        "match_evidence_001_hand_01:frame:416"
+      ],
+      "visual_corroboration": "Upper concealed red 中 at pre_frame; large 中 focus and new small upper-right public 中 become visible at onset; upper concealed 中 absent after.",
+      "turn_actor": null,
+      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+    },
+    {
+      "id": "B",
+      "kind_candidate": "DISCARD",
+      "screen_side": "lower",
+      "actor_candidate": "player",
+      "actor_verified": false,
+      "tile_label_zh": "白板",
+      "onset_frame_candidate": 489,
+      "onset_timestamp_seconds_approx": 16.862,
+      "pre_frame": 478,
+      "post_frame": 499,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:478",
+        "match_evidence_001_hand_01:frame:489",
+        "match_evidence_001_hand_01:frame:499"
+      ],
+      "visual_corroboration": "Bottom-hand final white rectangular tile present before, then absent; matching white tile appears in lower-side left public area. Newly drawn green suit tile at bottom right is separate.",
+      "turn_actor": null,
+      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+    },
+    {
+      "id": "C",
+      "kind_candidate": "DISCARD",
+      "screen_side": "upper",
+      "actor_candidate": "opponent",
+      "actor_verified": false,
+      "tile_label_zh": "北",
+      "onset_frame_candidate": 587,
+      "onset_timestamp_seconds_approx": 20.241,
+      "pre_frame": 580,
+      "post_frame": 600,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:580",
+        "match_evidence_001_hand_01:frame:587",
+        "match_evidence_001_hand_01:frame:600"
+      ],
+      "visual_corroboration": "Upper concealed 北 present before; central enlarged 北 and new small upper-right public 北 at onset; upper concealed 北 absent after.",
+      "turn_actor": null,
+      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+    },
+    {
+      "id": "D",
+      "kind_candidate": "DISCARD",
+      "screen_side": "lower",
+      "actor_candidate": "player",
+      "actor_verified": false,
+      "tile_label_zh": "發",
+      "onset_frame_candidate": 684,
+      "onset_timestamp_seconds_approx": 23.586,
+      "pre_frame": 667,
+      "post_frame": 700,
+      "evidence_refs": [
+        "match_evidence_001_hand_01:frame:667",
+        "match_evidence_001_hand_01:frame:684",
+        "match_evidence_001_hand_01:frame:700"
+      ],
+      "visual_corroboration": "Bottom-hand 發 present before; matching 發 becomes visible in lower-side left public area; bottom concealed 發 absent after.",
+      "turn_actor": null,
+      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+    }
+  ],
+  "evidence_gaps": [
+    "Confirm actual lower-side local player/upper-side opponent mapping from this replay before approving actor labels.",
+    "The video has replay-control overlays. Four candidate action onsets were found, but all intervening frames and possible brief hidden actions have not been independently human-approved.",
+    "Do not automatically transform this draft into frozen TruthBatch, label quiet periods as exhaustively reviewed, or claim measured model performance.",
+    "Determine normalized tile IDs from the repository tile codec rather than inferring them from displayed glyphs.",
+    "Only after approval, freeze an independently reviewed continuous span and then run machine predictions."
+  ],
+  "summary": "Four corroborated screen-side public DISCARD hypotheses: upper 中, lower 白板, upper 北, lower 發. No frozen truth and no real accuracy claims."
+}
