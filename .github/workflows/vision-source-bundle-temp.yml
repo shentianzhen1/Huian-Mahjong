@@ -1,0 +1,24 @@
+# TEMPORARY development source transfer. Remove this workflow before merging.
+name: Temporary Vision Source Bundle
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/vision-source-bundle-temp.yml'
+permissions:
+  contents: read
+jobs:
+  source_bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vision-source-ephemeral
+          path: |
+            workspace/
+            huian/
+            tests/
+            references/vision/
+            pyproject.toml
+            README.md
+          retention-days: 1
