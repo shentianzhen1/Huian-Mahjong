@@ -69,6 +69,15 @@ class SourceRiverGeometryTests(unittest.TestCase):
             self.RiverZone("opponent", (float("nan"), .2, .1, .1),
                            (.024, .03), (.058, .07))
 
+    def test_reviewed_interval_fails_closed(self):
+        scoped = replace(self.manifest, reviewed_frame_span=(5, 8))
+        frame = self.Frame((), (), frame=9, session=SESSION)
+        with self.assertRaisesRegex(ValueError, "outside source-reviewed"):
+            self.qualify(self.Image.new("RGB", SIZE), frame,
+                         manifest=scoped, actual_sha256=SHA)
+        with self.assertRaisesRegex(ValueError, "reviewed_frame_span"):
+            replace(self.manifest, reviewed_frame_span=(9, 5))
+
     def test_negative_hand_animation_and_decorative_candidates(self):
         boxes = (
             (646, 110, 27, 30), (325, 257, 35, 27),  # public rivers
