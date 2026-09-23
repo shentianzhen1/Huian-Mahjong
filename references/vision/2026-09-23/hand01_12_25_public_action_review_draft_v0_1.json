@@ -15,14 +15,14 @@
   "source_frame_rate_approx": 29.000227,
   "review_stage": "first_pass_unfrozen_not_exhaustive",
   "review_method": "Full original frames at selected anchors, 0.25-second filmstrips, per-frame grayscale change scan of top hand, lower hand, both public-river areas, central action focus and replay progress. The per-frame scan is automated navigation, not human frame-by-frame approval.",
-  "actor_mapping_status": "pending_confirmation_upper_opponent_lower_player",
+  "actor_mapping_status": "user_confirmed_for_this_source_upper_opponent_lower_player",
   "visible_action_hypotheses": [
     {
       "id": "A",
       "kind_candidate": "DISCARD",
       "screen_side": "upper",
       "actor_candidate": "opponent",
-      "actor_verified": false,
+      "actor_verified": true,
       "tile_label_zh": "中",
       "onset_frame_candidate": 404,
       "onset_timestamp_seconds_approx": 13.931,
@@ -35,14 +35,15 @@
       ],
       "visual_corroboration": "Upper concealed red 中 at pre_frame; large 中 focus and new small upper-right public 中 become visible at onset; upper concealed 中 absent after.",
       "turn_actor": null,
-      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+      "approval_status": "ACTOR_SIDE_CONFIRMED_ACTION_EVENT_STILL_UNFROZEN",
+      "actor_confirmation_basis": "recording_specific_user_confirmed_screen_side"
     },
     {
       "id": "B",
       "kind_candidate": "DISCARD",
       "screen_side": "lower",
       "actor_candidate": "player",
-      "actor_verified": false,
+      "actor_verified": true,
       "tile_label_zh": "白板",
       "onset_frame_candidate": 489,
       "onset_timestamp_seconds_approx": 16.862,
@@ -55,14 +56,15 @@
       ],
       "visual_corroboration": "Bottom-hand final white rectangular tile present before, then absent; matching white tile appears in lower-side left public area. Newly drawn green suit tile at bottom right is separate.",
       "turn_actor": null,
-      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+      "approval_status": "ACTOR_SIDE_CONFIRMED_ACTION_EVENT_STILL_UNFROZEN",
+      "actor_confirmation_basis": "recording_specific_user_confirmed_screen_side"
     },
     {
       "id": "C",
       "kind_candidate": "DISCARD",
       "screen_side": "upper",
       "actor_candidate": "opponent",
-      "actor_verified": false,
+      "actor_verified": true,
       "tile_label_zh": "北",
       "onset_frame_candidate": 587,
       "onset_timestamp_seconds_approx": 20.241,
@@ -75,14 +77,15 @@
       ],
       "visual_corroboration": "Upper concealed 北 present before; central enlarged 北 and new small upper-right public 北 at onset; upper concealed 北 absent after.",
       "turn_actor": null,
-      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+      "approval_status": "ACTOR_SIDE_CONFIRMED_ACTION_EVENT_STILL_UNFROZEN",
+      "actor_confirmation_basis": "recording_specific_user_confirmed_screen_side"
     },
     {
       "id": "D",
       "kind_candidate": "DISCARD",
       "screen_side": "lower",
       "actor_candidate": "player",
-      "actor_verified": false,
+      "actor_verified": true,
       "tile_label_zh": "發",
       "onset_frame_candidate": 684,
       "onset_timestamp_seconds_approx": 23.586,
@@ -95,15 +98,25 @@
       ],
       "visual_corroboration": "Bottom-hand 發 present before; matching 發 becomes visible in lower-side left public area; bottom concealed 發 absent after.",
       "turn_actor": null,
-      "approval_status": "PENDING_HUMAN_CONFIRMATION"
+      "approval_status": "ACTOR_SIDE_CONFIRMED_ACTION_EVENT_STILL_UNFROZEN",
+      "actor_confirmation_basis": "recording_specific_user_confirmed_screen_side"
     }
   ],
   "evidence_gaps": [
-    "Confirm actual lower-side local player/upper-side opponent mapping from this replay before approving actor labels.",
+    "Screen-side actor mapping has been directly confirmed by user for this verified recording only; do not infer any seat (0/1), transfer the mapping to other sources, or assume that the candidate action itself was user-confirmed.",
     "The video has replay-control overlays. Four candidate action onsets were found, but all intervening frames and possible brief hidden actions have not been independently human-approved.",
     "Do not automatically transform this draft into frozen TruthBatch, label quiet periods as exhaustively reviewed, or claim measured model performance.",
     "Determine normalized tile IDs from the repository tile codec rather than inferring them from displayed glyphs.",
     "Only after approval, freeze an independently reviewed continuous span and then run machine predictions."
   ],
-  "summary": "Four corroborated screen-side public DISCARD hypotheses: upper 中, lower 白板, upper 北, lower 發. No frozen truth and no real accuracy claims."
+  "summary": "Four visually corroborated public DISCARD hypotheses: opponent upper 中, player lower 白板, opponent upper 北, player lower 發. Screen-side actor mapping user-confirmed; action event times/quiet periods still unfrozen and unscored.",
+  "perspective_confirmation": {
+    "scope": "this_verified_recording_only",
+    "confirmed_on": "2026-09-23",
+    "method": "direct_user_confirmation_of_replay_screen_sides",
+    "lower": "player",
+    "upper": "opponent",
+    "player_seat": null,
+    "note": "The user confirmed lower visible detailed hand is theirs and upper hand is opponent. No simulator seat (0/1) established; not a default for other recordings."
+  }
 }
