@@ -1,0 +1,25 @@
+{
+  "schema_version": "source_river_geometry_v0_1",
+  "source_session": "match_evidence_001_hand_01",
+  "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+  "frame_size": [1046, 480],
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "zones": [
+    {
+      "actor": "opponent",
+      "bbox": [0.560, 0.218, 0.110, 0.087],
+      "single_width": [0.024, 0.030],
+      "single_height": [0.058, 0.070]
+    },
+    {
+      "actor": "player",
+      "bbox": [0.297, 0.519, 0.125, 0.083],
+      "single_width": [0.029, 0.037],
+      "single_height": [0.050, 0.066]
+    }
+  ],
+  "calibration_scope": "Previously-reviewed hand-1 geometry, NOT independent or source transferable",
+  "evidence_refs": ["hand01 continuous video frames 348-725: source-hash verified; negative pre-discard frames included"],
+  "safety": "No tile identity, turn, action or event ground truth encoded in these zones."
+}
