@@ -13,12 +13,12 @@ human truth**; four visible actions are preliminary reviewer hypotheses.
 Original video bytes, Drive IDs, and personally identifying UI screenshots
 have **not** been committed to the public repository.
 
-| ID | First-visible source frame | Approx. recording time | Visual evidence | Proposed actor (pending local-seat confirmation) |
+| ID | First-visible source frame | Approx. recording time | Visual evidence | Actor (source-specific, user-confirmed) |
 |---|---:|---:|---|---|
-| A | 404 | 13.931 s | Upper hand loses **中**; public upper-right **中** appears; central enlargement is secondary corroboration | Upper side / opponent? |
-| B | 489 | 16.862 s | Bottom hand loses **白板**; matching left public tile appears | Lower side / player? |
-| C | 587 | 20.241 s | Upper hand loses **北**; public upper-right **北** appears; central enlargement is secondary corroboration | Upper side / opponent? |
-| D | 684 | 23.586 s | Bottom hand loses **發**; matching left public tile appears | Lower side / player? |
+| A | 404 | 13.931 s | Upper hand loses **中**; public upper-right **中** appears; central enlargement is secondary corroboration | opponent (upper) |
+| B | 489 | 16.862 s | Bottom hand loses **白板**; matching left public tile appears | player (lower) |
+| C | 587 | 20.241 s | Upper hand loses **北**; public upper-right **北** appears; central enlargement is secondary corroboration | opponent (upper) |
+| D | 684 | 23.586 s | Bottom hand loses **發**; matching left public tile appears | player (lower) |
 
 Source frames are **zero-based** and all recording-relative. Times refer to
 the **first visibly changed public-zone frame**, not independently measured
@@ -28,21 +28,28 @@ progress moving from 1/18 through 5/18, but **进度 N/18 is replay/action
 progress, not 第N/8局**. The source settlement independently identifies this
 as the first of eight hands.
 
-## Confirmation required before truth freeze
+## Source-specific actor mapping confirmed
 
-The sole immediate user-facing confirmation question is: **in this video,
-does the lower (visible detailed hand) belong to you and the upper hand to the
-opponent?** Never equate upper/lower screen placement with seat number or
-actor until source-specific evidence confirms it.
+The user directly confirmed on **2026-09-23** that, **in this exact
+recording**, the lower detailed-hand UI shows their own hand (`player`) and
+the upper hand is `opponent`. The actor side for A/C is therefore opponent
+and for B/D is player. This confirmation does **not** independently verify
+that all four candidate actions or first-visible frame timestamps are
+correct, and **does not establish simulator seat 0 or seat 1**. Do not apply
+a generic lower=player rule to a different recording.
 
-Once the perspective is confirmed, replay the whole contiguous 12–25 s
-interval without model overlays and check both action frames and quiet
-periods for any obscured/replay-transition events. `review_stage` in the
-companion JSON must remain `first_pass_unfrozen_not_exhaustive` and
-`truth_frozen=false` until that separate review passes. Only afterward
-prepare the strict `public_action_attribution_eval_v0_1` truth batch, lock
-it **before** looking at model predictions, and score the real pipeline.
+## Remaining requirements before truth freeze
 
-No actor precision, turn coverage, event precision, recall, or false-positive
-rate is claimed by this draft. Turn actor remains null for all four candidates
+Review the complete continuous 12–25 s interval without model overlays,
+including all intervening quiet/no-action frames and moments covered by
+replay controls. Confirm that all four proposed discards are the entire set
+of qualifying public actions, or correct the draft if additional or
+obscured actions are found. `review_stage` stays
+`first_pass_unfrozen_not_exhaustive` and `truth_frozen=false` until that
+separate review passes. Then create a strict, independently frozen
+`public_action_attribution_eval_v0_1` truth batch **before** running or
+inspecting model predictions.
+
+No measured actor-attribution precision, turn coverage, event precision,
+recall, or false-positive rate is claimed by this draft. Turn actor remains null for all four candidates
 unless a separate visible turn signal is verified. Executor stays OFF.
