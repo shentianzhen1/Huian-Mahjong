@@ -41,6 +41,7 @@
   - Gold 同批时序：193/196 = **98.47%**，8/8 session 多数票正确；这不是外部泛化率。
   - Runtime Vision V0.2 已加入动态几何、`draw_visual` 时序、session 隔离、只读 runtime reader。
   - Public Match Reconstruction 已进入 observer/detector 阶段：`public_observers.py` 用稳定 river/meld 快照差分生成 `DISCARD` / `MELD_DELTA`；`runtime_public_adapter.py` 已把现有底部 Runtime Vision 接到我方 `MeldSnapshot` / `HAND_DELTA`；`public_tile_detector.py` 做全帧 public tile-like geometry intake；`public_candidate_tracker.py` 再用跨帧稳定性生成 APPEARED / DISAPPEARED 轨迹，并要求显式 CandidateChannel 后才能进入 RiverSnapshot；session/超时断流通过 `stream_epoch` 强制 River/Meld Observer 重新建基线，禁止跨断点推动作。公开牌身份仍保持 UNKNOWN。
+  - **Issue #69 真实录像开发集（2026-09-23）**：第一局 SHA 锁定的 348–725 连续 378 帧已完成来源专属双弃牌河 ROI、可见缝隙拆分、两侧 observer→assembler 机器重放：5,720 原始几何候选帧实例 / 739 合格河区候选；4 条双方弃牌增长候选对应人工真值附近，但独立 tile / turn 未确认，严格评估 0 TP / 4 abstentions / 4 FN；该结果只能作同源开发诊断，绝不计正式 Vision 泛化率。私人录像/截图不上 GitHub，Executor 不变。
   - PublicState 同批8局已补 64 时点状态栏审计：primary remaining 44/63 正确；只在 primary 无法解析时启用右缘收窄 fallback 后为 54/63，63/63 可读。仍有 9 个 false-valid 误读，不能作为 Executor 依据，也不属于独立泛化证据。
   - Phase 5C 已揭示且有 1 个语义区域 gate 失败，因此不能作为正式泛化证据。
   - 独立晋级门与 Phase 5E source-disjoint 锁已落地（#49 / #50）；新增 `independent_batch_lock.py` 作为新录像进入正式盲测前的本地锁定器，先固定 SHA256 / session / 20-50-80% 帧位，再允许人工 truth。
