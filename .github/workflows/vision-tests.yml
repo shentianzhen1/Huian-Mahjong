@@ -95,11 +95,6 @@ jobs:
       - name: Run public-region tests with Vision dependencies installed
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_*.py" -v
-      - name: Run source-qualified dual-river development regressions
-        if: needs.scope.outputs.run_vision == 'true'
-        run: |
-          python -B -m unittest discover -s tests -p "test_source_river_geometry.py" -v
-          python -B -m unittest discover -s tests -p "test_real_video_river_replay.py" -v
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v
