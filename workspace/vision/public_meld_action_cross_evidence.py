@@ -1,9 +1,12 @@
 """Issue #69: strict DEVELOPMENT-ONLY cross-evidence for delayed meld shading.
 
-Independent preceding visible discard -> first reviewed three-face public meld
--> same-track LATER SHADE. The face-wide shadow appears AFTER the action and
-MUST NOT be used as the action time. A successful result is an assistant-reviewed
-candidate for a future owner audit, never a runtime action or blind accuracy.
+Independent preceding visible discard -> first reviewed public meld. For CHI-like
+sequences, a same-track LATER SHADE may identify/confirm the claimed slot. For
+PENG/KONG-like identical-tile groups, owner observation confirms there is no
+useful positional shade: all tiles are identical, so shade is neither required
+nor expected. The face-wide shadow appears AFTER a CHI action and MUST NOT be
+used as the action time. A successful result is an assistant-reviewed candidate
+for a future owner audit, never a runtime action or blind accuracy.
 
 The caller must verify original video hashes and independently inspect the
 discard and missing->new meld transition; this pure gate does not look at pixels.
@@ -108,13 +111,15 @@ def _unverified(reason: str, *, conflict: bool = False) -> DevelopmentMeldEventC
 
 
 def _candidate_shape(ids: tuple[str, ...]) -> str:
-    if len(ids) != 3 or any(
+    if len(ids) not in (3, 4) or any(
         not isinstance(x, str) or (not _NUMERIC.fullmatch(x) and x not in _HONORS)
         for x in ids
     ):
         return "UNKNOWN"
-    if ids[0] == ids[1] == ids[2]:
-        return "PENG_LIKE"
+    if len(set(ids)) == 1:
+        return "PENG_LIKE" if len(ids) == 3 else "KONG_LIKE"
+    if len(ids) != 3:
+        return "UNKNOWN"
     if not all(_NUMERIC.fullmatch(x) for x in ids):
         return "UNKNOWN"
     if len({x[0] for x in ids}) != 1:
@@ -134,10 +139,12 @@ def cross_check_reviewed_meld_event(
 ) -> DevelopmentMeldEventCandidate:
     """Return only a candidate when ALL independent development gates hold.
 
-    Shade frames must cover the same exact SHA/session/epoch/track, starting
-    on the first stable manually reviewed group frame. Use consecutive source
-    frames (or this function abstains). An already-existing row merely changing
-    appearance is NEVER a new event; no 'shadow first frame = CHI' inference.
+    For CHI-like sequences, shade frames must cover the same exact
+    SHA/session/epoch/track starting on the first stable reviewed group frame.
+    For identical PENG/KONG-like groups, shade_frames may be empty because the
+    UI has no useful positional distinction. An already-existing row merely
+    changing appearance is NEVER a new event; no 'shadow first frame = CHI'
+    inference and no 'no shade = PENG/KONG' inference.
     """
     if (
         not _SHA.fullmatch(discard.source_sha256)
@@ -177,6 +184,39 @@ def cross_check_reviewed_meld_event(
     shape = _candidate_shape(meld.face_ids_left_to_right)
     if shape == "UNKNOWN":
         return _unverified("unsupported_or_unverified_meld_shape")
+    if not isinstance(discard.visible_tile_id, str) or not (
+        _NUMERIC.fullmatch(discard.visible_tile_id)
+        or discard.visible_tile_id in _HONORS
+    ):
+        return _unverified("preceding_discard_identity_unverified")
+
+    # Owner-confirmed UI semantics: PENG/KONG use identical tiles, so there is
+    # no meaningful "which tile came from the discard" position to mark.
+    # Absence of shade must never count against an identical-tile claim.
+    if shape in {"PENG_LIKE", "KONG_LIKE"}:
+        claimed = meld.face_ids_left_to_right[0]
+        if discard.visible_tile_id != claimed:
+            return _unverified(
+                "preceding_discard_vs_identical_meld_conflict", conflict=True
+            )
+        return DevelopmentMeldEventCandidate(
+            "DEVELOPMENT_CORROBORATED_CANDIDATE",
+            shape,
+            claimed,
+            None,
+            discard.frame_index,
+            meld.frame_index,
+            None,
+            None,
+            (
+                "identical_tile_claim_does_not_require_positional_shade",
+                "directly_reviewed_source_frames_only_not_owner_event_truth",
+            ),
+        )
+
+    # CHI-like groups contain three different suited tiles. The later shade is
+    # therefore an optional positional UI cue that can corroborate which slot
+    # corresponds to the preceding discard. It is follow-up evidence only.
     if not shade_frames or shade_frames[0].frame_index != meld.frame_index:
         return _unverified("no_same_track_shade_sequence_from_meld_baseline")
     expected = (
@@ -212,11 +252,6 @@ def cross_check_reviewed_meld_event(
     if index >= len(meld.face_ids_left_to_right):
         return _unverified("shaded_face_outside_reviewed_meld")
     claimed = meld.face_ids_left_to_right[index]
-    if not isinstance(discard.visible_tile_id, str) or not (
-        _NUMERIC.fullmatch(discard.visible_tile_id)
-        or discard.visible_tile_id in _HONORS
-    ):
-        return _unverified("preceding_discard_identity_unverified")
     if claimed != discard.visible_tile_id:
         return _unverified("preceding_discard_vs_shaded_face_conflict", conflict=True)
     return DevelopmentMeldEventCandidate(
