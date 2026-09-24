@@ -89,6 +89,24 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
         self.assertEqual(result.faces, ())
         self.assertIn("non_regular_three_face_geometry", result.issues)
 
+    def test_four_adjacent_public_faces_abstain_instead_of_fake_three(self):
+        # Regression from a private eight-hand match: four upright neighbors
+        # can merge into one bright component. Their group-width/height ratio
+        # must not be interpreted as three unusually wide tile faces.
+        group = self.PublicGeometryCandidate(
+            pixel_bbox=(111, 400, 191, 80),
+            normalized_bbox=(0.106119, 0.833333, 0.182600, 0.166667),
+            geometry_kind="bottom_group",
+            confidence=0.82,
+            fill_ratio=0.72,
+            frame=30,
+            session="synthetic",
+        )
+        result = self.segment_regular_meld_faces(group, (1046, 480))
+        self.assertEqual(result.faces, ())
+        self.assertFalse(result.to_dict()["regular_three_face_row"])
+        self.assertIn("non_regular_three_face_geometry", result.issues)
+
     def test_non_meld_candidate_is_never_split(self):
         group = self.PublicGeometryCandidate(
             pixel_bbox=(400, 50, 48, 78),
