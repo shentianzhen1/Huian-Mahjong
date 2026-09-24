@@ -101,6 +101,9 @@ jobs:
       - name: Test source-scoped delayed meld shade onset
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_meld_delayed_shade_review.py" -v
+      - name: Test source-scoped discard to delayed shaded meld cross-evidence
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_public_meld_action_cross_evidence.py" -v
       - name: Verify public meld to identity shadow bridge
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_meld_shadow_bridge.py" -v
