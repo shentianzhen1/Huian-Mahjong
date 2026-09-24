@@ -13,7 +13,15 @@ candidate package checked all **nine video SHA-256 digests**, the
 frame seek/geometry metadata, and the exact PNG crop pixels against the
 source frames: **12/12 development candidate groups, 36/36 crops exact**.
 There were zero mismatched source-frame indices beyond two frames and no
-byte-identical PNG duplicates. This proves **origin/pixel integrity only**;
+byte-identical PNG duplicates.
+
+A second **private local temporal geometry screen** re-read the 12 selected
+group positions at **±0.25 and ±0.50 seconds** around their reference frame.
+The bottom_group-only development detector mirror found **12/12 groups**
+at **all 4/4 adjacent timestamps each**, with per-frame group IoU ≥0.80.
+This demonstrates temporal persistence for these chosen crops, **not**
+generalized exposed-meld detection or evidence of a new CHI/PENG/KONG action:
+concealed-hand/Gold lookalikes can also persist across frames. This proves **origin/pixel integrity only**;
 the 36 identities still require human verification and no CHI/PENG/KONG
 actions have been confirmed by this check.
 
