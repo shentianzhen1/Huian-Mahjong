@@ -92,6 +92,12 @@ jobs:
       - name: Verify source-disjoint public identity shadow contract
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_identity_shadow_v0_2.py" -v
+      - name: Verify real reviewed three-face meld segmentation
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_public_meld_face_segmentation.py" -v
+      - name: Verify public meld to identity shadow bridge
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_public_meld_shadow_bridge.py" -v
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v
