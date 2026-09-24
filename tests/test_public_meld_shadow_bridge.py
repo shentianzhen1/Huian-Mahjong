@@ -87,6 +87,27 @@ class PublicMeldShadowBridgeTests(unittest.TestCase):
                 self.assertFalse(payload["safe_for_runtime"])
                 self.assertFalse(payload["safe_for_executor"])
 
+    def test_reviewed_real_shade_appearance_never_proves_incoming_or_action(self):
+        # Distinguish incoming *appearance* from PR #110's identity
+        # shadow_proposal. User-confirmed private sources are not CI fixtures.
+        for sample in self.regular:
+            with self.subTest(sample=sample.sample_id):
+                probe = self.probe(sample, ROOT, self.bank)
+                self.assertEqual(len(probe.faces), 3)
+                self.assertIsNotNone(probe.shade)
+                appearance = probe.to_dict()["shade_appearance"]
+                self.assertTrue(appearance["development_only"])
+                self.assertIn(appearance["shadow_index"], (None, 0, 1, 2))
+                self.assertFalse(appearance["shade_is_confirmed_incoming_tile"])
+                self.assertTrue(
+                    appearance["requires_independent_discard_corroboration"]
+                )
+                self.assertEqual(appearance["incoming_tile_id"], "UNKNOWN")
+                self.assertEqual(appearance["action_kind"], "UNKNOWN")
+                self.assertEqual(probe.to_dict()["action_kind"], "UNKNOWN")
+                self.assertFalse(probe.to_dict()["safe_for_runtime"])
+                self.assertFalse(probe.to_dict()["safe_for_executor"])
+
     def test_real_stacked_added_kong_does_not_fabricate_four_faces(self):
         result = self.probe(self.kong, ROOT, self.bank)
         self.assertEqual(result.faces, ())
