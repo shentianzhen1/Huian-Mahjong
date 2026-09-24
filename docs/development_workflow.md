@@ -20,13 +20,21 @@
 - 已合并且无独立未合入提交的短期分支应删除；建议仓库启用 *Automatically delete head branches*。清理历史分支前先按 PR 合并关系和 `main` 差异逐条审计；未合并实验、独立证据或仍需复现的分支须保留或先归档，**禁止按名称、日期或“看起来很旧”批量删除**。
 - 流程改动用一份现有文档更新和一个聚焦 PR 验证；不再新增平行的状态页、交接页、路线图或重复任务清单。
 
+## 未合并 PR 的收敛规则
+
+当 Open PR 多于一个时，先在**待合并 PR 正文**列出各 PR 的 base/head SHA、修改文件、必需的前置 PR，以及是否复制了其他 PR 的文件；不要在 `TODO.md` 或 `PROJECT_STATUS.md` 维护第二份易过期的 PR 列表。
+
+独立改动可分别审查；堆叠分支必须在前置 PR 获批合并后，以**最新 main** 校对/rebase，并剔除前置 PR 已合入或从其他 PR 临时复制的文件。任何改动 `.github/workflows/**` 的 PR 都要特别核对其与其他未合并 CI 改动是否重叠，保留原有 required-check job 名称。不得以 GitHub 显示 mergeable 代替已核对最终 diff。
+
+检查必须对应**当前 head SHA**；旧 CI 成功、开发录像回归及尚未合入的分支成果，都不能写作 main 已验收。无明确批准，不合并、关闭、强制改写或批量删除现有 PR/分支。
+
 ## CI 分工（按风险匹配成本）
 
 | 修改类型 | 最小验证 | 不应混淆的晋级结论 |
 | --- | --- | --- |
-| `references/vision/**/*.json`、`references/gameplay/**` | Evidence Contracts：SHA256、标注与校准关联、座位映射、真实帧 | 旧来源开发回归 ≠ 新来源泛化 |
+| `references/vision/**/*.json`、源截图 `png/jpg/jpeg/webp`、`references/gameplay/**` | Evidence Contracts：SHA256、标注与校准关联、座位映射、真实帧 | 旧来源开发回归 ≠ 新来源泛化 |
 | `references/rules/**/*.json`、`tests/fixtures/**/*.json` | Evidence Contracts：UNKNOWN 模板和真实结算 fixture 契约 | fixture 通过 ≠ 新特殊规则确认 |
-| `workspace/vision/**` / `dataset/tiles_*/**` | Vision Regression + 核心代码相关测试 | CI 通过 ≠ Runtime Vision 正式晋级 |
+| `workspace/vision/**` / `dataset/tiles_*/**` / `tests/test_public_*.py` | Vision Regression（含安装视觉依赖后的 root public tests）+ 相关核心测试 | CI 通过 ≠ Runtime Vision 正式晋级 |
 | Rules、Environment、Simulator、AI 代码 | Tests：核心回归、coverage、安装包边界及适用评估 | 单测通过 ≠ 策略提升 |
 | 纯文档 | Tests/Vision 先跑 Scope；原有同名必需 job 执行轻量占位步骤，跳过依赖安装和重型测试；人工审查真相源 | 文档中不得伪造测试或规则证据 |
 
@@ -44,7 +52,7 @@ Tests 和 Vision Regression 对所有 PR 都创建 Scope 检查；为兼容当�
 
 完成 A/B/C 的开发回归也不代表 Vision 正式晋级：Issue #7 的新来源盲测、阈值和 Executor 独立安全门保持不变。
 
-## PR 模板（写在 PR 正文即可）
+## PR 模板（参见 `.github/pull_request_template.md`）
 
 - **Issue / 目标**：具体解决哪个阻塞，哪些功能明确不做。
 - **证据**：来源 session/SHA256，是否开发数据或独立 holdout；若无新证据写明。
