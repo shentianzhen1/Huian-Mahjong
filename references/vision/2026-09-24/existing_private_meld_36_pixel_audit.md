@@ -152,3 +152,60 @@ to address bright-face alignment, varying perspective/blur and
 Gold/concealed-hand false public-meld geometry **offline**, without
 requesting more recordings. Generic live public-meld identity,
 independent turn and complete eight-hand actions remain NOT PASSED.
+
+
+## Existing-material appearance normalization diagnostic (2026-09-24)
+
+A **new development-only, PRIVATE input** CLI
+\`workspace.vision.private_public_face_offline_probe\` now re-verifies the
+**separately held explicit user confirmation and exact reviewed sheet**,
+original source-video SHA **before decoding**, and every approved lossless
+crop against the corresponding decoded source frame. It rejects modified
+approval records, unsafe ZIP entries, wrong match-group provenance, pixel
+tampering, attempts to make the 8 clips from the same original match appear
+independent, and output to the public source checkout.
+
+Only two fixed offline descriptors are compared:
+- Existing PR #110 normalized 32×48 raw grayscale baseline.
+- New *pale-face-only* connected-component crop, 4% inset, 64×96 CLAHE
+  and a deterministic 9-bin 8×8-cell gradient histogram (HOG) computed
+  with NumPy + OpenCV Sobel (no new package dependencies or reliance on
+  optional \`cv2.HOGDescriptor\`).
+
+**Actual LOCAL run using the pre-existing private approved 36-face ZIP,
+external confirmation declaration and original nine video files**:
+
+| Diagnostic | Original raw gray | Face-only fixed HOG |
+| --- | ---: | ---: |
+| Existing clips and original matches source-verified | 9 clips, 2 matches | 9 clips, 2 matches |
+| Source crops pixel-verified | 36/36 | 36/36 |
+| Single shared *cross-original-match* class's first correct rank in 33 gallery faces | 33/33 | 3/33 |
+| First-match **different-clip but same-original-match** top-1 on 17 eligible queries | 6/17 | 11/17 |
+| Other second-match queries lacking any gallery class | 2, abstain | 2, abstain |
+| PR #110 independent other-match-group gate satisfied | 0 queries | 0 queries |
+
+These samples were already inspected **and** the shared-class pair was
+examined while choosing preprocessing: this is a **contaminated development
+comparison**, not an independent blind accuracy number. The improvement
+does not amount to even one validated live tile prediction. Keep all
+runtime public identities and action semantics **UNKNOWN**; a new source
+group would have to be frozen before a legitimate cross-match holdout.
+There is still no generic false-positive discriminator for Gold + concealed
+hand lookalikes, no proven independent public turn cue and no confirmed
+complete eight-hand action ledger.
+
+**CI verification:** dedicated synthetic privacy/provenance, matching-class
+absence, exact-review-sheet and low-texture abstention tests run in the
+Vision workflow; **real private source files are never added to GitHub or
+CI**. The owner should not need to supply more footage until the existing
+sample/negative-control work is exhausted.
+
+To reproduce locally using *private* paths from outside the Git checkout:
+
+\`\`\`bash
+python -m workspace.vision.private_public_face_offline_probe \
+  --confirmed-zip /private/approved_36.zip \
+  --user-declaration /private/external_user_declaration.json \
+  --existing-videos /private/original_clips \
+  --output /private/frozen_normalization_report.json
+\`\`\`
