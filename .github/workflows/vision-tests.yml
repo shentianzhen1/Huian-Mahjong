@@ -95,6 +95,9 @@ jobs:
       - name: Verify real reviewed three-face meld segmentation
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_meld_face_segmentation.py" -v
+      - name: Test read-only shaded public meld face appearance
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_public_meld_incoming_shade.py" -v
       - name: Verify public meld to identity shadow bridge
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_meld_shadow_bridge.py" -v
