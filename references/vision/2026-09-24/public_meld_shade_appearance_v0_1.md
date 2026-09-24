@@ -117,3 +117,44 @@ and any temporal disappearance of river tile. Mark ambiguous animation
 and replay transitions UNKNOWN. Until those source-verified tests pass,
 do not emit `CHI incoming=M5`, `PENG`, or any other action from
 shade alone.
+
+
+## Owner-confirmed delayed shade timing correction
+
+**New direct owner observation (2026-09-24):** the visual darkening on the
+acquired tile does **not** necessarily appear at CHI/PENG/KONG time. It may
+be displayed only **after a perceptible delay following the action**.
+Consequently, an existing unshaded meld changing into a shaded meld is
+**expected UI behavior**, not evidence that another action just occurred.
+The precise delay is not yet measured; do not hardcode an animation duration
+or give SHADE_APPEARED the action's timestamp.
+
+The read-only `public_meld_delayed_shade_review.py` now separately records
+the first source-qualified visible group frame, the first *stable* shaded
+slot observed later, the observed frame difference and (only with independently
+verified video FPS) observed seconds. All output explicitly distinguishes
+`observed_lag_from_first_meld_observation` from the still-UNKNOWN
+`actual_action_to_shade_delay`. There is **no action or incoming tile
+promotion**, even when an appearance slot is stable.
+
+- `newly_observed` group + later stable shade: follow-up appearance only;
+  source time is the first *observed* group, not the verified CHI/PENG/KONG.
+- `pre_existing` group + later stable shade: an unassigned shade change,
+  specifically **not a second meld event**; protects the G12 scenario.
+- A group already shaded when first seen: left-censored; cannot measure
+  onset or delay.
+- Shading for only one frame, changing slots, a discontinuous time window,
+  source/epoch/track changes, a hand/Gold group, or an unverified source
+  frame: fail closed / abstain.
+- No fixed game-specific timing window. To admit deliberately sampled frames
+  the caller specifies the verified maximum frame gap; otherwise stability
+  requires adjacent source frames.
+
+The **next real-footage evidence gate** is still independent: inspect the
+actual preceding discard and hand/meld geometry transitions in the original
+recording, preserving the ordering `discard → meld visibility →
+possibly delayed shade`. The appearance layer must be associated with
+the *same* SHA/source/epoch/meld track and cannot independently identify
+a true action or tile identity. Existing 7/12 shade-detection coverage
+remains appearance-only; 0 verified incoming-tile positions until the
+source-verified per-event discard review is completed.
