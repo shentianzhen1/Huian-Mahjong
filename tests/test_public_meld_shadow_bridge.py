@@ -120,7 +120,13 @@ class PublicMeldShadowBridgeTests(unittest.TestCase):
             with self.subTest(target=non_meld_target):
                 with self.assertRaisesRegex(ValueError, "only previously reviewed"):
                     self.probe(
-                        replace(sample, target=non_meld_target),
+                        replace(
+                            sample,
+                            target=non_meld_target,
+                            expected_tile=(
+                                "P1" if non_meld_target == "discard" else None
+                            ),
+                        ),
                         ROOT,
                         self.bank,
                     )
