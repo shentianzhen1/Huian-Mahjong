@@ -244,3 +244,37 @@ event-timeline pairs, a reproducible source-scoped independent
 machine river/hand/meld-delta correlation, then genuinely untouched
 original-match evaluation. PR #112 stays DRAFT and unmerged;
 Executor stays OFF.
+
+
+## Owner-confirmed distinction: CHI positional shade vs PENG/KONG identical tiles
+
+**Owner clarification (2026-09-25; target app, direct player observation):**
+A CHI sequence contains three distinguishable tile identities, so after the
+claim its eventual shaded slot helps identify WHICH suited tile came from
+the other player's discard. That shading may appear noticeably AFTER the
+actual CHI and is follow-up evidence, never the action timestamp.
+By contrast, **PENG and KONG do not display a meaningful shaded incoming
+slot**: all tiles in an identical triplet/quad are the same identity, so
+distinguishing their physical positions is unnecessary. Missing shade is
+therefore **expected**, not a detector failure and not evidence *for* a
+PENG/KONG action.
+
+Generalized implementation rule: only require a positional UI cue when
+the displayed group has distinguishable member identities and the task
+actually needs source-position disambiguation. For identical-tile groups
+use the independently observed **discard identity**, source-verified
+**newly exposed meld geometry** and **3 vs 4 visible tile identities**.
+Never classify an action from the *absence* of a cue, and never treat a
+4-face-looking bottom component or Gold+hand as a KONG without reviewed
+public-meld provenance. A pre-existing Peng upgraded to added-Kong is
+a separate temporal-delta case and is NOT established by a new-group
+gate alone.
+
+On this draft branch, `public_meld_action_cross_evidence.py` now
+supports **CHI_LIKE** only with later stable shade and **PENG_LIKE /
+KONG_LIKE** identical groups without requiring any shade. All routes
+still demand separately reviewed source SHA, frame pixels, preceding
+public discard, absent→present group evidence and opposite screen
+sides. Output remains **development-only**: no real PENG/KONG events
+have been independently verified, no owner-approved event truth,
+production `action_kind=UNKNOWN`, runtime/executor both disabled.
