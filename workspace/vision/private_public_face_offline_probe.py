@@ -43,6 +43,44 @@ def _normalized(values):
     return (vector / length) if length > 1e-6 else None
 
 
+
+def _portable_hog(gray):
+    """Deterministic 9-bin 8x8-cell HOG; avoids optional cv2.HOGDescriptor."""
+    import cv2
+    import numpy as np
+
+    gray = np.asarray(gray, np.float32)
+    if gray.shape != (96, 64):
+        raise ValueError("normalization expects one fixed public face size")
+    gx = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3)
+    gy = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=3)
+    magnitude = cv2.magnitude(gx, gy)
+    angle = (np.degrees(np.arctan2(gy, gx)) % 180) / 20
+    bin0 = np.floor(angle).astype(np.int32) % 9
+    fraction = angle - np.floor(angle)
+    yy, xx = np.indices(gray.shape)
+    cy, cx = yy // 8, xx // 8
+    histogram = np.zeros((12, 8, 9), np.float32)
+    np.add.at(
+        histogram, (cy.ravel(), cx.ravel(), bin0.ravel()),
+        (magnitude * (1 - fraction)).ravel(),
+    )
+    np.add.at(
+        histogram,
+        (cy.ravel(), cx.ravel(), ((bin0 + 1) % 9).ravel()),
+        (magnitude * fraction).ravel(),
+    )
+    blocks = []
+    for y in range(11):
+        for x in range(7):
+            block = histogram[y:y + 2, x:x + 2].ravel()
+            block = block / max(1e-6, float(np.linalg.norm(block)))
+            block = np.minimum(block, 0.2)
+            block = block / max(1e-6, float(np.linalg.norm(block)))
+            blocks.append(block)
+    return _normalized(np.concatenate(blocks))
+
+
 def _features(image):
     """Two explicitly frozen exploratory features. No learned parameters."""
     import cv2
@@ -84,8 +122,7 @@ def _features(image):
     gray = cv2.cvtColor(face, cv2.COLOR_RGB2GRAY)
     gray = cv2.resize(gray, (64, 96), interpolation=cv2.INTER_LINEAR)
     gray = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(4, 4)).apply(gray)
-    hog = cv2.HOGDescriptor((64, 96), (16, 16), (8, 8), (8, 8), 9)
-    normalized = _normalized(hog.compute(gray))
+    normalized = _portable_hog(gray)
     if normalized is None:
         return baseline, None, "low_texture_face"
     return baseline, normalized, "pale_face_found"
