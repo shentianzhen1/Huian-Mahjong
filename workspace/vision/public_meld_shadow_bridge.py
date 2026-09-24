@@ -25,6 +25,9 @@ from workspace.vision.public_identity_shadow_v0_2 import (
 from workspace.vision.public_meld_face_segmentation import (
     segment_regular_meld_faces,
 )
+from workspace.vision.public_meld_incoming_shade import (
+    MeldShadeEvidence, detect_reviewed_meld_shade,
+)
 from workspace.vision.public_tile_detector import (
     PublicGeometryCandidate, PublicGeometryFrame,
     detect_public_tile_geometry, target_coverage,
@@ -59,6 +62,7 @@ class ShadowMeldProbe:
     group_bbox: tuple[float, float, float, float] | None
     faces: tuple[ShadowMeldFace, ...]
     issues: tuple[str, ...]
+    shade: MeldShadeEvidence | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -69,6 +73,8 @@ class ShadowMeldProbe:
             "group_bbox": list(self.group_bbox) if self.group_bbox else None,
             "faces": [face.to_dict() for face in self.faces],
             "issues": list(self.issues),
+            # Appearance-only, NEVER classified identity or incoming tile fact.
+            "shade_appearance": self.shade.to_dict() if self.shade else None,
             "actor": "UNKNOWN",
             "turn_actor": "UNKNOWN",
             "action_kind": "UNKNOWN",
@@ -154,12 +160,20 @@ def probe_reviewed_meld_shadow(
             group.normalized_bbox, (), segmentation.issues
         )
 
-    faces: list[ShadowMeldFace] = []
+    crops = []
     for face in segmentation.faces:
         x, y, width, height = face.pixel_bbox
+        crops.append(image.crop((x, y, x + width, y + height)))
+    # Only call the appearance detector AFTER source SHA, screenshot SHA,
+    # reviewed target=meld, unique detected group, and 3-face geometry.
+    shade = detect_reviewed_meld_shade(
+        tuple(crops), reviewed_meld_roi=True,
+        layout="regular_three_face",
+    )
+    faces: list[ShadowMeldFace] = []
+    for face, crop in zip(segmentation.faces, crops):
         result = propose_shadow_identity(
-            bank,
-            image.crop((x, y, x + width, y + height)),
+            bank, crop,
             region="public_meld",
             source_session=sample.source_session,
             source_sha256=sample.source_sha256,
@@ -182,7 +196,7 @@ def probe_reviewed_meld_shadow(
         ))
     return ShadowMeldProbe(
         sample.sample_id, sample.frame_index,
-        group.normalized_bbox, tuple(faces), segmentation.issues,
+        group.normalized_bbox, tuple(faces), segmentation.issues, shade,
     )
 
 
@@ -228,6 +242,8 @@ def audit_reviewed_meld_shadow(
     rejected_stack = 0
     proposals = 0
     face_count = 0
+    appearance_shade_groups = 0
+    appearance_abstentions = 0
     for sample in rows:
         result = probe_reviewed_meld_shadow(sample, repository_root, bank)
         labels = sorted(
@@ -236,6 +252,11 @@ def audit_reviewed_meld_shadow(
         )
         approved_total += len(labels)
         face_count += len(result.faces)
+        if len(result.faces) == 3:
+            if result.shade and result.shade.shadow_index is not None:
+                appearance_shade_groups += 1
+            else:
+                appearance_abstentions += 1
         proposals += sum(face.shadow_proposal is not None for face in result.faces)
         for face, label in zip(result.faces, labels):
             if target_coverage(face.normalized_bbox, label.bbox) >= 0.80:
@@ -260,6 +281,9 @@ def audit_reviewed_meld_shadow(
         "stacked_kong_groups_abstained": rejected_stack,
         "shadow_proposals": proposals,
         "shadow_abstentions": face_count - proposals,
+        "appearance_shade_groups": appearance_shade_groups,
+        "appearance_shade_abstentions": appearance_abstentions,
+        "appearance_is_incoming_tile_ground_truth": False,
         "proposal_accuracy": None if proposals == 0 else "not_scored_in_bridge",
         "source_disjoint_holdout": False,
         "formal_promotion_evidence": False,
