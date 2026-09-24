@@ -106,7 +106,7 @@ class PublicMeldShadowBridgeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "only previously reviewed"):
             self.probe(replace(sample, status="fact_only"), ROOT, self.bank)
         with self.assertRaisesRegex(ValueError, "only previously reviewed"):
-            self.probe(replace(sample, bbox=None), ROOT, self.bank)
+            self.probe(replace(sample, status="fact_only", bbox=None), ROOT, self.bank)
         with self.assertRaisesRegex(ValueError, "inside repository"):
             self.probe(replace(sample, image_path="../../secret.mp4"), ROOT, self.bank)
 
