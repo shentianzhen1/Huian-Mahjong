@@ -157,7 +157,7 @@ independent turn and complete eight-hand actions remain NOT PASSED.
 ## Existing-material appearance normalization diagnostic (2026-09-24)
 
 A **new development-only, PRIVATE input** CLI
-\`workspace.vision.private_public_face_offline_probe\` now re-verifies the
+`workspace.vision.private_public_face_offline_probe` now re-verifies the
 **separately held explicit user confirmation and exact reviewed sheet**,
 original source-video SHA **before decoding**, and every approved lossless
 crop against the corresponding decoded source frame. It rejects modified
@@ -170,7 +170,7 @@ Only two fixed offline descriptors are compared:
 - New *pale-face-only* connected-component crop, 4% inset, 64×96 CLAHE
   and a deterministic 9-bin 8×8-cell gradient histogram (HOG) computed
   with NumPy + OpenCV Sobel (no new package dependencies or reliance on
-  optional \`cv2.HOGDescriptor\`).
+  optional `cv2.HOGDescriptor`).
 
 **Actual LOCAL run using the pre-existing private approved 36-face ZIP,
 external confirmation declaration and original nine video files**:
@@ -202,10 +202,10 @@ sample/negative-control work is exhausted.
 
 To reproduce locally using *private* paths from outside the Git checkout:
 
-\`\`\`bash
+```bash
 python -m workspace.vision.private_public_face_offline_probe \
   --confirmed-zip /private/approved_36.zip \
   --user-declaration /private/external_user_declaration.json \
   --existing-videos /private/original_clips \
   --output /private/frozen_normalization_report.json
-\`\`\`
+```
