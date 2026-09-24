@@ -7,6 +7,8 @@ on:
       - "workspace/vision/**"
       - "dataset/tiles_v0_1/**"
       - "dataset/tiles_runtime_v0_2/**"
+      # Root-level public-region tests need OpenCV/Pillow; core-only CI may skip them.
+      - "tests/test_public_*.py"
       - ".github/workflows/vision-tests.yml"
       - "pyproject.toml"
   pull_request:
@@ -52,6 +54,7 @@ jobs:
               "workspace/vision/",
               "dataset/tiles_v0_1/",
               "dataset/tiles_runtime_v0_2/",
+              "tests/test_public_",
           )
           triggers = {".github/workflows/vision-tests.yml", "pyproject.toml"}
           run_vision = any(
@@ -89,9 +92,9 @@ jobs:
       - name: Run Vision V0.1 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_v0_1 -p "test_*.py" -t . -v
-      - name: Verify source-disjoint public identity shadow contract
+      - name: Run public-region tests with Vision dependencies installed
         if: needs.scope.outputs.run_vision == 'true'
-        run: python -B -m unittest discover -s tests -p "test_public_identity_shadow_v0_2.py" -v
+        run: python -B -m unittest discover -s tests -p "test_public_*.py" -v
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v
