@@ -92,8 +92,11 @@ def segment_regular_meld_faces(
             (), ("invalid_group_bbox",), group.normalized_bbox
         )
 
+    # Previously reviewed eight-hand footage contains adjacent FOUR-face rows
+    # whose width/height (~2.39) passed the old 0.82 three-face threshold.
+    # Fail closed until pixels/independent separators support a true face count.
     implied_face_aspect = (width / 3.0) / height
-    if not 0.50 <= implied_face_aspect <= 0.82:
+    if not 0.50 <= implied_face_aspect <= 0.72:
         return PublicMeldFaceSegmentation(
             (),
             (
