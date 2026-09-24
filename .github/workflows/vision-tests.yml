@@ -92,6 +92,9 @@ jobs:
       - name: Audit synthetic private public meld review packet
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_private_meld_review_audit.py" -v
+      - name: Verify explicit private user-confirmed face label gate
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_private_meld_label_confirmation.py" -v
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v
