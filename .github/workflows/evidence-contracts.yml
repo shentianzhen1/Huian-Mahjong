@@ -7,6 +7,11 @@ on:
     branches: [main]
     paths:
       - "references/vision/**/*.json"
+      # A SHA-locked referenced screenshot can change without its manifest.
+      - "references/vision/**/*.png"
+      - "references/vision/**/*.jpg"
+      - "references/vision/**/*.jpeg"
+      - "references/vision/**/*.webp"
       - "references/rules/**/*.json"
       - "references/gameplay/**"
       - "tests/fixtures/**/*.json"
@@ -14,6 +19,11 @@ on:
   pull_request:
     paths:
       - "references/vision/**/*.json"
+      # A SHA-locked referenced screenshot can change without its manifest.
+      - "references/vision/**/*.png"
+      - "references/vision/**/*.jpg"
+      - "references/vision/**/*.jpeg"
+      - "references/vision/**/*.webp"
       - "references/rules/**/*.json"
       - "references/gameplay/**"
       - "tests/fixtures/**/*.json"
