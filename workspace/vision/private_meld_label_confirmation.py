@@ -148,7 +148,7 @@ def confirm_existing_private_faces(
                 name = face.get("relative_crop_file")
                 if (not isinstance(name, str) or "/" in name
                         or f"pending_faces/{name}" not in names
-                        or face.get("index") != proposed.get("face_index") != n
+                        or not (face.get("index") == proposed.get("face_index") == n)
                         or name != proposed.get("crop_file")
                         or face.get("tile_id") != "UNKNOWN"
                         or face.get("review_status") != "pending_human_adjudication"):
