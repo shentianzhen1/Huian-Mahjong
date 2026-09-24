@@ -110,6 +110,21 @@ class PublicMeldShadowBridgeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "inside repository"):
             self.probe(replace(sample, image_path="../../secret.mp4"), ROOT, self.bank)
 
+    def test_non_meld_hand_or_gold_lookalikes_never_enter_bridge(self):
+        # Existing separate-match gameplay also contains three adjacent
+        # Gold/concealed-hand faces shaped like a bright meld row. Geometry
+        # alone is NOT independent evidence of a public meld. Do not import
+        # private pixels or promote unreviewed lookalikes as meld truth.
+        sample = self.regular[0]
+        for non_meld_target in ("hand_reference", "discard"):
+            with self.subTest(target=non_meld_target):
+                with self.assertRaisesRegex(ValueError, "only previously reviewed"):
+                    self.probe(
+                        replace(sample, target=non_meld_target),
+                        ROOT,
+                        self.bank,
+                    )
+
     def test_same_real_frame_cannot_be_selected_from_duplicate_group_candidates(self):
         from PIL import Image
         from workspace.vision.public_tile_detector import (
