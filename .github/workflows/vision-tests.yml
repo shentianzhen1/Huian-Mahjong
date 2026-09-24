@@ -98,6 +98,9 @@ jobs:
       - name: Test read-only shaded public meld face appearance
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_meld_incoming_shade.py" -v
+      - name: Test source-scoped delayed meld shade onset
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_public_meld_delayed_shade_review.py" -v
       - name: Verify public meld to identity shadow bridge
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_meld_shadow_bridge.py" -v
