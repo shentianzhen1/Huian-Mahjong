@@ -95,6 +95,18 @@ jobs:
       - name: Run public-region tests with Vision dependencies installed
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s tests -p "test_public_*.py" -v
+      - name: Audit synthetic private public meld review packet
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_private_meld_review_audit.py" -v
+      - name: Verify explicit private user-confirmed face label gate
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_private_meld_label_confirmation.py" -v
+      - name: Verify user-confirmed private two-match appearance probe
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_private_public_face_offline_probe.py" -v
+      - name: Verify source-public review intake with Vision dependencies
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_source_public_review_samples.py" -v
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v

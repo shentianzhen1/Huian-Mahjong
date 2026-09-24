@@ -1,0 +1,32 @@
+{
+  "schema_version": "public_source_lineage_v0_1",
+  "sources": [
+    {
+      "source_session": "match_evidence_001_hand_01",
+      "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "match_group": "recorded_match_001",
+      "capture_mode": "in_app_replay",
+      "review_exposure": "previously_inspected",
+      "development_only": true,
+      "excluded_from_formal_promotion": true
+    },
+    {
+      "source_session": "match_evidence_001_hand_02",
+      "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "match_group": "recorded_match_001",
+      "capture_mode": "in_app_replay",
+      "review_exposure": "previously_inspected",
+      "development_only": true,
+      "excluded_from_formal_promotion": true
+    },
+    {
+      "source_session": "archived_replay_separate_match_001",
+      "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "match_group": "archived_separate_match_001",
+      "capture_mode": "in_app_replay",
+      "review_exposure": "previously_inspected",
+      "development_only": true,
+      "excluded_from_formal_promotion": true
+    }
+  ]
+}

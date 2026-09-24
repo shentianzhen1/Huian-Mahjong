@@ -1,0 +1,50 @@
+{
+  "schema_version": "source_public_review_samples_v0_1",
+  "source_session": "archived_replay_separate_match_001",
+  "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+  "frame_size": [
+    1046,
+    480
+  ],
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "sampling_note": "Three visually checked face regions in a previously inspected archived replay frame. Manual crops, not machine detections, not action truth.",
+  "samples": [
+    {
+      "sample_id": "archived_upper_single_0350",
+      "frame": 350,
+      "pixel_bbox": [
+        646,
+        111,
+        27,
+        30
+      ],
+      "screen_side_actor": "opponent",
+      "region": "public_single"
+    },
+    {
+      "sample_id": "archived_lower_left_0350",
+      "frame": 350,
+      "pixel_bbox": [
+        321,
+        257,
+        32,
+        28
+      ],
+      "screen_side_actor": "player",
+      "region": "public_single"
+    },
+    {
+      "sample_id": "archived_lower_right_0350",
+      "frame": 350,
+      "pixel_bbox": [
+        353,
+        257,
+        35,
+        28
+      ],
+      "screen_side_actor": "player",
+      "region": "public_single"
+    }
+  ]
+}
