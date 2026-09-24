@@ -52,12 +52,16 @@ class PublicGeometryFrame:
     issues: tuple[str, ...]
     frame: str | int | None
     session: str | None
+    # Non-candidate detector components remain visible to source-qualified
+    # reviewers: an unresolved 3+ face blob must not look like an empty river.
+    oversized_bboxes: tuple[tuple[float, float, float, float], ...] = ()
 
     def to_dict(self) -> dict:
         return {
             "schema_version": "public_tile_detector_v0_1",
             "candidates": [candidate.to_dict() for candidate in self.candidates],
             "issues": list(self.issues),
+            "oversized_bboxes": [list(box) for box in self.oversized_bboxes],
             "frame": self.frame,
             "session": self.session,
             "safe_for_hint": False,
@@ -293,6 +297,7 @@ def detect_public_tile_geometry(
     count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
     candidates: list[PublicGeometryCandidate] = []
     oversized_seen = 0
+    oversized_bboxes: list[tuple[float, float, float, float]] = []
 
     for x, y, box_width, box_height, area in stats[1:count]:
         x, y, box_width, box_height, area = map(
@@ -330,6 +335,7 @@ def detect_public_tile_geometry(
             continue
 
         oversized_seen += 1
+        oversized_bboxes.append(_normalized(raw_bbox, width, height))
 
         # A compact bottom-row wide component can represent a visible public
         # meld group.  This is still only a geometry candidate.
@@ -388,4 +394,5 @@ def detect_public_tile_geometry(
         issues=tuple(issues),
         frame=frame,
         session=session,
+        oversized_bboxes=tuple(oversized_bboxes),
     )

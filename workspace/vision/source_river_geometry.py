@@ -201,6 +201,24 @@ def qualify_river_frame(image: Image.Image, frame: PublicGeometryFrame,
     by_actor: dict[str, list[Any]] = {zone.actor: [] for zone in manifest.zones}
     trusted = {zone.actor: True for zone in manifest.zones}
     issues: list[str] = []
+    # The generic detector previously dropped wide 3+ face components from
+    # single_face candidates. Within a reviewed river, that must invalidate
+    # the actor snapshot rather than silently removing those public tiles.
+    for box in frame.oversized_bboxes:
+        zones = [
+            zone for zone in manifest.zones
+            if zone.contains(box)
+            and zone.single_height[0] <= box[3] <= zone.single_height[1]
+            and box[2] >= zone.single_width[0] * 1.55
+        ]
+        if len(zones) > 1:
+            raise ValueError("ambiguous overlapping oversized river zones")
+        if zones:
+            actor = zones[0].actor
+            trusted[actor] = False
+            issue = f"{actor}:oversized_river_component"
+            if issue not in issues:
+                issues.append(issue)
     for candidate in frame.candidates:
         # Existing detector calls touching faces a single_face until separated.
         # Upper-protrusion art and bottom_group must not become river facts.
