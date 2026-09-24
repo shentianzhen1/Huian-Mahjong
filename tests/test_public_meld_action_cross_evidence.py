@@ -113,17 +113,41 @@ class ReviewedMeldCrossEvidenceTests(unittest.TestCase):
                 self.assertFalse(payload["safe_for_executor"])
                 self.assertIsNone(payload["exact_action_frame"])
 
-    def test_synthetic_peng_is_only_like_without_real_evidence(self):
-        d, m, frames = bundle(
+    def test_identical_peng_does_not_require_positional_shade(self):
+        d, m, _frames = bundle(
             ids=("W", "W", "W"), claimed="W", shade_index=1
         )
-        result = cross_check_reviewed_meld_event(d, m, frames)
+        result = cross_check_reviewed_meld_event(d, m, ())
+        self.assertEqual(result.status, "DEVELOPMENT_CORROBORATED_CANDIDATE")
         self.assertEqual(result.candidate_action_kind, "PENG_LIKE")
+        self.assertEqual(result.reviewed_incoming_tile_candidate, "W")
+        self.assertIsNone(result.shaded_face_index)
+        self.assertIsNone(result.shade_first_stable_frame)
+        self.assertIn("does_not_require_positional_shade", result.issues[0])
         self.assertEqual(result.to_dict()["production_action_kind"], "UNKNOWN")
+
+    def test_identical_kong_does_not_require_positional_shade(self):
+        d, m, _frames = bundle(
+            ids=("P7", "P7", "P7", "P7"), claimed="P7", shade_index=0
+        )
+        result = cross_check_reviewed_meld_event(d, m, ())
+        self.assertEqual(result.status, "DEVELOPMENT_CORROBORATED_CANDIDATE")
+        self.assertEqual(result.candidate_action_kind, "KONG_LIKE")
+        self.assertEqual(result.reviewed_incoming_tile_candidate, "P7")
+        self.assertIsNone(result.shaded_face_index)
+        self.assertIsNone(result.appearance_delay_frames)
+        self.assertEqual(result.to_dict()["production_action_kind"], "UNKNOWN")
+
+    def test_no_shade_never_turns_a_sequence_into_peng_or_kong(self):
+        d, m, _frames = bundle(ids=("P4", "P5", "P6"), claimed="P6")
+        result = cross_check_reviewed_meld_event(d, m, ())
+        self.assertEqual(result.status, "UNKNOWN")
+        self.assertEqual(result.candidate_action_kind, "UNKNOWN")
+        self.assertIn("no_same_track_shade", result.issues[0])
 
     def test_four_face_or_mixed_invalid_shape_abstains(self):
         for ids in (
-            ("P4", "P5", "P6", "P7"),
+            ("P4", "P5", "P6", "P8"),
             ("P4", "P5", "P8"),
             ("P4", "M5", "P6"),
             ("E", "N", "W"),
@@ -135,6 +159,14 @@ class ReviewedMeldCrossEvidenceTests(unittest.TestCase):
                 out = cross_check_reviewed_meld_event(d, m, frames)
                 self.assertEqual(out.status, "UNKNOWN")
                 self.assertEqual(out.candidate_action_kind, "UNKNOWN")
+
+    def test_identical_claim_conflict_is_detected_without_shade(self):
+        d, m, _frames = bundle(ids=("M3", "M3", "M3"), claimed="M3")
+        d = replace(d, visible_tile_id="M4")
+        result = cross_check_reviewed_meld_event(d, m, ())
+        self.assertEqual(result.status, "CONFLICT")
+        self.assertIn("identical_meld_conflict", result.issues[0])
+        self.assertIsNone(result.shaded_face_index)
 
     def test_shaded_slot_not_matching_independently_reviewed_discard_conflicts(self):
         d, m, frames = bundle()
