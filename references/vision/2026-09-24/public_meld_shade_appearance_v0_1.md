@@ -158,3 +158,89 @@ the *same* SHA/source/epoch/meld track and cannot independently identify
 a true action or tile identity. Existing 7/12 shade-detection coverage
 remains appearance-only; 0 verified incoming-tile positions until the
 source-verified per-event discard review is completed.
+
+
+## Seven existing-source upper-discard / new-meld / delayed-shade cross-checks
+
+**2026-09-24 next evidence step; NON-BLIND assistant-reviewed development data.**
+No new footage was requested. The same previously approved private 36-face
+packet was re-read, all **9/9 original-video SHA-256 checks** were repeated,
+and every approved face PNG was compared with its exact decoded source-frame
+pixels (**36/36**). Of the previously identified seven uniquely shaded groups,
+**7/7 now have three manually viewed source-local observations in sequence**:
+
+1. An enlarged **upper-screen public tile** is visibly presented.
+2. A previously absent **lower-screen three-face suited sequence** becomes
+   publicly visible; the user's already approved meld-face identity on the
+   eventual dark slot equals the previously shown upper tile.
+3. The **same** new group remains visible initially unshaded, and the
+   expected slot darkens only **later**, in at least five adjacent original
+   source frames under the original fixed V65 appearance gate.
+
+Six examined groups come from clips of **ONE original eight-hand match**,
+and the seventh from **ONE previously supplied separate replay**, so the
+sample contains only **two original matches**, not seven or nine independent
+matches. All seven reviewed candidate group layouts are CHI-like suited
+sequences; this new audit proves **zero real PENG/KONG cases**. The other
+five earlier reviewed groups without a unique detectable shade remain
+abstentions: do not assign their incoming-tile position by guessing.
+
+The first stable unique shade after the **selected already-stable meld
+screenshot** was observed approximately 0.24–2.19 seconds later across
+the seven pre-inspected examples. This is **not** measured time since
+the true CHI, and the thresholds/samples were already inspected before
+this analysis: no animation delay constant, accuracy estimate, source-
+disjoint blind-test claim or generalization evidence follows.
+
+**Important correction to the earlier isolated G12 counterexample:** the
+unshaded group already exists *by the time the later shadow appears*,
+and consequently the shadow onset itself cannot timestamp a new action.
+Looking farther back in its original source video revealed a preceding
+matching public display and the earlier appearance of the actual new
+three-face group. Thus G12 is also a **development-level prior-discard /
+new-group / delayed-shade correspondence**, not proof of an additional
+action when darkening occurs.
+
+**Owner-approved facts are the 36 face identities only.** The seven
+event-to-discard correspondences are newly **assistant-reviewed** using
+frame-referenced private video and a source-verified private visual
+review packet. They have NOT been independently approved as event truth
+by the owner or validated using *automated* independent RiverSnapshot
+and hand/meld-delta tracking. Canonical public action and claimed-tile
+fields must remain UNKNOWN. A human visual comparison of selected
+examples is not a 7/7 automatic-action recognition score.
+
+### Code and test boundary
+
+New pure read-only
+`workspace.vision.public_meld_action_cross_evidence` consumes
+independently reviewed preceding public tile, absent→new exposed
+meld geometry and a contiguous **same SHA/session/stream_epoch/track**
+sequence from `public_meld_delayed_shade_review`.
+It requires that the explicit displayed tile identity matches the
+**later** shaded position within a legal three-face suited sequence
+(or a synthetic triplet PENG-like shape), and requires a source-verified
+no-intervening-public-action review. If an old group merely changes
+shading, the source/stream changes, time order is reversed, a gap exists,
+or the identities conflict, it fails closed. It NEVER turns the shade
+onset into the actual action timestamp.
+
+Its only successful output is
+`DEVELOPMENT_CORROBORATED_CANDIDATE` with a **CHI_LIKE/PENG_LIKE**
+hypothesis and the original preceding-discard→new-group frame interval;
+`production_action_kind=UNKNOWN`,
+`production_incoming_tile_id=UNKNOWN`,
+`formal_promotion_evidence=false`,
+`safe_for_runtime=false`, and `safe_for_executor=false`
+are unconditional. GitHub CI runs **12 synthetic contracts** (including
+seven layouts matching the inspected development examples, a synthetic
+PENG, changed source/track/epoch, wrong shaded slot, left-censored shade,
+already-existing groups and false new-action prevention). Private
+original source hashes, exact clip timestamps, per-face identities,
+source stills and event-packet images remain OUTSIDE the public repository.
+
+**Remaining separate gates:** human adjudication of the seven private
+event-timeline pairs, a reproducible source-scoped independent
+machine river/hand/meld-delta correlation, then genuinely untouched
+original-match evaluation. PR #112 stays DRAFT and unmerged;
+Executor stays OFF.
