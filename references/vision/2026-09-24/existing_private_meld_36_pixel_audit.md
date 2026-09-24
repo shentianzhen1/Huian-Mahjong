@@ -99,3 +99,56 @@ Executor OFF; no Rules/AI/Simulator/Hint changes.
   the full eight-hand action ledger.
 
 No fresh recording requested at this stage.
+
+
+## Follow-up: user-confirmed identities (2026-09-24)
+
+The user explicitly reviewed the existing G01–G12 visual contact sheet and
+confirmed **all 36/36 individual proposed visible tile identities**. This
+changes the status of the **PRIVATE** labeled-development sidecar only;
+the immutable original candidate packet remains pending/UNKNOWN to prevent
+overwriting provenance. The private approved ZIP binds the exact source
+packet hash, exact displayed contact-sheet hash and the **9 SHA-verified
+existing videos / 12 groups / 36 source-pixel-equal crops**; no private
+SHA, pixel, raw recording or per-face label map is committed to GitHub.
+The reviewer confirmed previously proposed visual identities; this is
+**not** independently blind label collection.
+
+A new pure intake/approval module
+`workspace.vision.private_meld_label_confirmation` accepts a separate
+explicit user declaration bound to the exact ZIP and displayed JPEG,
+verifies the proposed tile class, group/face ordering, each private crop
+hash, original locked external source registry and invokes the existing
+exact-video pixel auditor **before** emitting a development-only
+private approved-label sidecar. It rejects altered packets, unchecked or
+partial approval, swapped crop proposals and attempted writes inside the
+public repository. All issued labels retain UNKNOWN action/actor,
+`safe_for_runtime=false` and `formal_promotion_evidence=false`.
+
+### Offline evaluation, *existing two private original matches only*
+
+Of the 36 now user-confirmed private face IDs, 33 come from the eight
+clips of the **same first match** and three (S2, S3, S4) from the other
+existing replay. There are 20 visible classes in the first and three
+in the second; **only S4 overlaps**. Query the second match S4 against
+the first match's 33 confirmed public crops:
+
+| Frozen exploratory feature | True S4 rank among 33 | Observation |
+|---|---:|---|
+| PR #110 raw 32×48 gray (unchanged) | 33/33 | cosine ~0.180 |
+| Simple CLAHE+HOG edge (offline only) | 8/33 | not reliable |
+
+The other match's S2 and S3 have zero same-class first-match gallery
+examples, so no closed-set success for those queries is valid. For an
+additional **same-original-match only** different-hand diagnostic, 17
+queries had a matching class in other-hand galleries: gray top-1
+**6/17**, HOG top-1 **6/17**. These development diagnostics are NOT
+independent blind accuracy and **do not pass public identity**. Current
+PR #110's two previously inspected public source groups remain a
+separate existing bank; no private samples have been imported into it.
+
+The next development work uses these already-confirmed private samples
+to address bright-face alignment, varying perspective/blur and
+Gold/concealed-hand false public-meld geometry **offline**, without
+requesting more recordings. Generic live public-meld identity,
+independent turn and complete eight-hand actions remain NOT PASSED.
