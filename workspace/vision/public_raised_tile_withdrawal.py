@@ -31,6 +31,11 @@ class RaisedPublicTileWithdrawal:
     prior_candidates: int | None = None
     after_candidates: int | None = None
     before_bbox: tuple[int, int, int, int] | None = None
+    # PRIVATE source-scoped provenance for trusted cross-region joins.
+    # This is intentionally omitted from public serialization.
+    source_session: str | None = None
+    source_sha256: str | None = None
+    stream_epoch: int | None = None
 
     def to_dict(self) -> dict:
         # No original source hash, original video filename, player or crop.
@@ -165,4 +170,7 @@ def probe_adjacent_raised_tile_withdrawal(
         prior_candidates=1,
         after_candidates=0,
         before_bbox=pre[0][:4],
+        source_session=before.source_session,
+        source_sha256=before.source_sha256,
+        stream_epoch=before.stream_epoch,
     )
