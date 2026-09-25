@@ -24,6 +24,7 @@ from workspace.vision.public_meld_action_cross_evidence import (
     cross_check_reviewed_meld_event,
 )
 from workspace.vision.public_meld_delayed_shade_review import SourceScopedShadeFrame
+from workspace.vision.public_meld_adjacent_onset import AdjacentMeldOnsetReview
 
 _SHA256 = re.compile(r"^[a-f0-9]{64}$")
 _CHANNEL_KIND = {
@@ -116,6 +117,7 @@ def corroborate_with_independent_observers(
     *,
     verified_screen_side_actors: dict[str, str] | None = None,
     reviewed_last_frame: int | None = None,
+    verified_adjacent_meld_onset: AdjacentMeldOnsetReview | None = None,
 ) -> ObserverCorroborationAudit:
     """Compare two disjoint evidence streams without promoting an action.
 
@@ -128,6 +130,10 @@ def corroborate_with_independent_observers(
     CHI still needs the later stable positional shade to establish which
     suited face was claimed. Identical PENG/MING_GANG do NOT require shade.
     ADD_KONG is excluded: that requires an independently seen existing PENG.
+    A hand crop, a pre-existing meld receiving delayed shade, or a single
+    unbracketed late screenshot is not independent evidence of a NEW meld.
+    The adjacent onset proof is a separate *source-verified public-region*
+    frame pair, not a hand-shadow inference.
     """
     candidate = cross_check_reviewed_meld_event(
         reviewed_discard, reviewed_meld, shade_frames,
@@ -138,6 +144,27 @@ def corroborate_with_independent_observers(
         or candidate.reviewed_incoming_tile_candidate is None
     ):
         return _stop("manual_development_correspondence_not_source_qualified")
+
+    # A Boolean "group was absent" on a late review sheet cannot establish
+    # source-visible onset. Require separate verified, adjacent original
+    # before/after public-MELD ROI observations, not hand brightness.
+    onset = verified_adjacent_meld_onset
+    if (
+        not isinstance(onset, AdjacentMeldOnsetReview)
+        or onset.status != "NEW_MELD_VISUALLY_BRACKETED_OWNER_ACTION_PENDING"
+        or onset.source_session != reviewed_meld.source_session
+        or onset.source_sha256 != reviewed_meld.source_sha256
+        or onset.stream_epoch != reviewed_meld.stream_epoch
+        or onset.screen_side != reviewed_meld.screen_side
+        or onset.target_track_id != reviewed_meld.meld_track_id
+        or onset.target_face_ids != reviewed_meld.face_ids_left_to_right
+        or type(onset.prior_frame) is not int
+        or type(onset.first_visible_frame) is not int
+        or onset.first_visible_frame != onset.prior_frame + 1
+        or onset.prior_frame < reviewed_discard.frame_index
+        or onset.first_visible_frame > reviewed_meld.frame_index
+    ):
+        return _stop("adjacent_original_frame_public_meld_onset_missing_or_inconsistent")
 
     if not isinstance(verified_screen_side_actors, dict) or (
         set(verified_screen_side_actors) != {"upper", "lower"}
