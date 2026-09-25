@@ -139,3 +139,64 @@ and the optical probe's nine synthetic negative/positive tests are in
 the shared #113 Vision lane. Archive video bytes, the 14 source frames,
 their raw SHA values and the private seven-event registry stay outside
 the public repository.
+
+
+## Source-local upper public raised-tile disappearance (exploratory, no identity)
+
+The same seven PRIVATE original-source adjacent-frame onset pairs now have a
+second, spatially separate, **algorithmic pixel signal**: the enlarged
+upper-side public tile-like component vanishes between the pair while the
+assistant-review lower-side new-meld separation begins. This uses
+**upper-region raw BGR pixels only**, never the concealed-hand brightness
+or the game replay's `重播/暂停/返回/下一步` transport controls.
+
+`workspace/vision/public_raised_tile_withdrawal.py` introduces an
+**exploratory** automatically extracted tall upper bright-component
+withdrawal probe. The module checks original source-video SHA/session/epoch,
+true adjacent source-frame indices, exact recomputed decoded-frame SHA,
+stable dimensions and independently verified unoccluded upper PUBLIC
+region. It demands exactly one prior tall candidate and zero later
+candidates; a still-visible raised tile, absent prior raised shape, two
+competing raised shapes, capture gap, changed source, mismatched frame
+hash or doubtful region all return `UNKNOWN`.
+
+A private source-only recheck, against the **same seven already selected
+onset pairs and the previously frozen source SHA/frame-pixel registry**,
+returned a shape-withdrawal candidate on **7/7 pairs**. Stable-shape
+negatives were separately tested at two pre-event frames and two
+post-event frames per group: **7/7 earlier unchanged pairs still had
+the raised component; 7/7 later unchanged pairs had no raised component**.
+This is fourteen within-source negative *pairs*, all from just two
+original matches. No cropped or raw images or original private frame hashes
+are committed to the public repository; original records remain in the
+private local audit.
+
+**NOT an accuracy claim:** the exploratory ROI and profile were designed
+using these same seven chosen clips. Although the source montage visibly
+shows upper tile withdrawal synchronized with the manually selected new
+lower group in all seven, the full matching between the actual discarded
+tile identity, lower public meld identity and concealed-hand count has
+NOT been automatically verified. The upper tall blob can include both
+the enlarged tile and the flat underlying public river row; its connected
+component bbox is NOT the exact tile bbox or an independent OCR identity.
+An upper animation, replay overlay at another region, another source/UI
+skin or a coinicidental redraw can confound this diagnostic.
+
+Of the seven selected lower-onset samples, the earlier exploratory
+lower-edge gap test returned six source-local optical candidates and
+abstained on one already-separated row. The new upper detector is a
+**separate ROI-based development cue** to help source-frame triage,
+especially when lower-side gaps are already present; it does not
+overrule lower-region abstention or make missing automatic three-channel
+observations complete. CHI/PENG/KONG, incoming tile, actor attribution,
+exact click time and owner event truth all remain `UNKNOWN`.
+No rules, scoring, AI, Hint, Runtime or Executor changes.
+
+`tests/test_public_raised_tile_withdrawal.py` adds ten synthetic
+checks across both approved resolutions and the stable, ambiguous,
+replay-agnostic public region, byte-hash, source, frame-gap, dtype and
+resolution negative cases. Tests are in merged #113's generic root-public
+Vision CI; the private real-video checks are separate from CI. The
+next full acceptance step remains **automatic upper public-tile identity
+and river provenance + stable concealed-hand count loss + independently
+tracked lower meld delta**, reviewed against the owner event labels.
