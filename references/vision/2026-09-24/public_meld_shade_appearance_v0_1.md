@@ -278,3 +278,55 @@ public discard, absent→present group evidence and opposite screen
 sides. Output remains **development-only**: no real PENG/KONG events
 have been independently verified, no owner-approved event truth,
 production `action_kind=UNKNOWN`, runtime/executor both disabled.
+
+
+## Independent automatic observer corroboration — development gate
+
+**2026-09-25 actual implementation, not a completed real-video recognition
+claim.** The privately held original nine video clips were rehashed against
+the previously approved 36-face source registry (**9/9 source SHAs valid**).
+Every one of the **36/36 pre-approved face crops** was extracted afresh at
+the frozen source frame/bbox and matched pixel-for-pixel to its approved PNG.
+This reconfirms the **static face-label provenance only**, not action truth.
+
+A PRIVATE owner-adjudication packet was generated with seven three-stage
+contacts (`G01/G04/G07/G08/G09/G10/G12`): enlarged prior public tile,
+first visible new regular meld context, and later shaded original reviewed
+group. Each uses an explicitly selected original-frame timestamp and a
+copy of the source SHA; the packet contains *only* material held privately
+in the user's conversation, and is **NOT** tracked by the public repo.
+These seven remain candidate CHI-like events from **two original matches**.
+Owner action sign-off is still PENDING; the five unshaded candidate groups
+remain abstentions. This is **not** seven independently validated matches.
+
+The new pure
+`workspace/vision/public_meld_observer_corroboration.py` verifies that
+three **separately produced** source/pixel-verified observation channels
+(automated public river, hand delta, new meld delta) agree with a manual
+review in the **same** SHA/session/stream epoch, verified screen-side actor
+mapping, and explicit reviewed time window. It calls the existing
+`reconstruct_claimed_meld` without changing that module or its runtime
+output. Disjoint evidence references are required: one observation copied
+three times is not independent evidence. Contradictory source/actor/tiles
+fail closed. There is **NO** guessed fixed animation timeout.
+
+For CHI-like suited groups, the pre-existing manually reviewed delayed
+shade gate must still identify a later unique matching claimed slot.
+For identical PENG/MING_KONG-like groups, no shade is needed at all.
+The new-group branch does **not** cover PENG-to-ADD_KONG upgrades, which
+require a proven earlier exposed PENG and a separate hand/meld transition.
+
+`tests/test_public_meld_observer_corroboration.py` exercises both genuine
+three-channel synthetic consistency and negatives for shared provenance,
+wrong source SHA/epoch/actor/time window, wrong removed tiles, absent shade,
+unverified screenshot, unreviewed group onset and premature action
+promotion. The merged #113 Vision CI now runs this new root public test with
+Vision extras; the core matrix runs it under Python 3.10–3.14.
+
+**Critical current limitation:** no source-qualified automatic
+river+hand-delta+meld-delta outputs have yet been demonstrated to satisfy
+this gate on the real seven private candidates. Passing synthetic tests
+only means the gate rejects mismatched evidence correctly. A successful
+development candidate would still be `owner_review_pending`; returned
+`production_action_kind=UNKNOWN`,
+`production_incoming_tile_id=UNKNOWN`, runtime=false, Executor OFF.
