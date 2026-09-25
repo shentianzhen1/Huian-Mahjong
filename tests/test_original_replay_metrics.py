@@ -28,11 +28,11 @@ class ReplayMetricsTests(unittest.TestCase):
         self.assertEqual(result["meld_detection"]["tp"], 2)
         self.assertEqual(result["meld_detection"]["fp"], 1)
         self.assertEqual(result["meld_detection"]["fn"], 1)
-        self.assertEqual(result["complete_action_reconstruction"]["tp"], 1)
-        self.assertEqual(result["complete_action_reconstruction"]["fp"], 2)
-        self.assertEqual(result["complete_action_reconstruction"]["fn"], 2)
+        self.assertEqual(result["action_kind_actor_reconstruction"]["tp"], 1)
+        self.assertEqual(result["action_kind_actor_reconstruction"]["fp"], 2)
+        self.assertEqual(result["action_kind_actor_reconstruction"]["fn"], 2)
         self.assertEqual(result["abstained_predictions"], 1)
-        self.assertFalse(result["formal_source_disjoint_claim"])
+        self.assertIsNone(result["complete_action_reconstruction"])\n        self.assertFalse(result["formal_source_disjoint_claim"])
 
     def test_one_prediction_cannot_cover_two_truth_events(self):
         data = fixture()
