@@ -99,3 +99,43 @@ source-frame public-river, concealed-hand-count and exposed-meld
 observers in the narrowed windows; compare provenance and fail closed
 for incomplete/contradictory results. Do NOT use any replay transport
 button as a live action prompt or call animation onset the click time.
+
+
+## Source-local exploratory optical edge-gap diagnostic
+
+The next low-level pixel check is now implemented in
+`workspace/vision/public_meld_gap_onset.py`, with synthetic tests in
+`tests/test_public_meld_gap_onset.py`. It independently re-hashes
+the **actual decoded consecutive BGR frame pixels** and checks for a
+newly visible **teal background separator near the independently
+reviewed late PUBLIC-MELD group's edge**, never for eligibility
+shading within the concealed hand. It cannot be used if the original
+source/ROI or the later group bbox is not separately authenticated.
+The optical cue alone can never identify a tile or action.
+
+On the SAME seven private original-video onset pairs already inspected
+above, a deliberately provisional HSV edge-gap profile using each
+group's previously approved late bbox produced **six exploratory optical
+appearance candidates** (pre-gaps 0–4px, post-gaps 27–30px). **One pair
+correctly abstained** under this diagnostic: the adjacent pre-frame
+ALREADY had a wider separator in a differently styled row, so a fresh
+new-group gap cannot be distinguished by this feature alone. This
+does **not** mean that the seventh event was not a claim; it requires
+a geometry/track/region signal that can distinguish the earlier
+separated row from the newly exposed group.
+
+**These are 6/7 SAME-EXAMPLE optical diagnostics, not recognition
+accuracy:** the bbox profile and provisional thresholds were inspected
+on these same seven previously selected samples; there is no untouched
+test set, no reliable independent label for the animation frame, no
+owner-approved action event and no independently reproduced automatic
+river+hand+meld triplets yet. A changed UI layout, dimmed tiles or an
+already exposed group may cause false optical gaps. The complete
+three-channel reconstruction still requires the strict verified
+adjacent PUBLIC-MELD track gate and independently observed evidence.
+
+The 14-onset synthetic gate tests + two observer integration negatives,
+and the optical probe's nine synthetic negative/positive tests are in
+the shared #113 Vision lane. Archive video bytes, the 14 source frames,
+their raw SHA values and the private seven-event registry stay outside
+the public repository.
