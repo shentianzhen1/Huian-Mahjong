@@ -330,3 +330,44 @@ only means the gate rejects mismatched evidence correctly. A successful
 development candidate would still be `owner_review_pending`; returned
 `production_action_kind=UNKNOWN`,
 `production_incoming_tile_id=UNKNOWN`, runtime=false, Executor OFF.
+
+
+## 2026-09-25 — Cancel concealed-hand shadow; prefer explicit SYSTEM prompts
+
+**Owner's latest correction overrides the previous proposed pre-claim
+hand-shadow strategy:** visual dimming on the **concealed hand** is unreliable
+as a detector/label and must NOT be used to choose which two tiles were
+consumed, decide CHI/PENG/KONG availability, infer a drawn tile, or create
+public ledger actions. The earlier conjecture that every non-actionable
+hand tile darkens has been **withdrawn as an implementation contract**.
+There is no need to delete the existing hand-face classifier, hand geometry
+or independent `draw_visual` tracker: they do not rely on hand darkness.
+
+New source of *available options*: the target application's visible
+interactive action buttons, e.g. 吃 / 碰 / 杠 / 胡 / 过, reviewed in their
+verified **action-button UI region**, while in a verified live interactive
+view, over multiple stable adjacent frames. One prompt may offer multiple
+actions; it is an **offered-action observation, not execution evidence**.
+The source ROI, full labeling/OCR pipeline and confidence thresholds still
+need real live-popup examples; the supplied September 25 reference is
+displayed in a phone-gallery **video replay** with a large playback overlay
+and therefore cannot be treated as a labeled live-popup source frame.
+
+**摸牌 is handled separately** using the existing temporal
+`draw_visual`/hand-count change tracker, independently of whether the
+UI has a readable `摸` label. An absent prompt is NOT a draw or PASS; a
+visible `过` in a replay is NOT a live response. CHI/PENG/KONG completion
+still requires actual discard, hand delta, new/changed meld and actor
+corroboration, never the offer buttons alone. CHI's later **exposed meld**
+shade remains an optional independent positional clue, not the action
+timestamp. PENG/KONG exposed melds do not require any positional shade.
+
+`workspace/vision/public_action_prompt.py` implements a fail-closed,
+read-only contract for **source-verified system-offered options**. It has
+**no hand-shadow input** and never returns an executed action. It rejects
+replay/overlay lookalikes, uncertain source SHA/session/epoch, frame gaps,
+unverified action-button ROI, incomplete temporal stability, invalid button
+labels and false inferences from no prompt. Its synthetic companion test
+is `tests/test_public_action_prompt.py`; generic root-public Vision CI
+runs it automatically. **This is a preparation layer, not a trained
+pixel/OCR button detector or a verified real-game recognition rate**.
