@@ -6,7 +6,9 @@ brightness. Offered options are not executed actions; the absence of a
 prompt is not a draw. Normal DRAW remains the responsibility of the
 existing draw_visual temporal tracker.
 
-A replay frame, playback controls or an unverified UI region fail closed.
+A replay frame, playback controls, unknown capture mode or unverified UI
+region fail closed. Capture mode must be established WITHOUT reusing the
+candidate action-button labels (otherwise circular proof is possible).
 There is deliberately no fixed source-resolution ROI or OCR truth claim.
 """
 from __future__ import annotations
@@ -35,6 +37,10 @@ class PublicActionPromptFrame:
     live_interactive_view_verified: bool
     replay_controls_visible: bool = False
     obscuring_overlay_visible: bool = False
+    # Capture mode must be attested independently of candidate button labels.
+    # The user's nine archived clips are IN_GAME_REPLAY, not live training data.
+    independently_verified_capture_mode: str = "UNKNOWN"
+    capture_mode_verified_without_buttons: bool = False
 
 
 @dataclass(frozen=True)
@@ -54,6 +60,7 @@ class PromptOfferReview:
             "first_frame": self.first_frame,
             "last_frame": self.last_frame,
             "hand_shadow_used": False,
+            "capture_mode_requires_independent_provenance": True,
             "draw_requires_independent_draw_visual_transition": True,
             "requires_action_completion_evidence": True,
             "executed_action": "UNKNOWN",
@@ -112,6 +119,8 @@ def review_system_prompt(
             frame.source_frame_verified is not True
             or frame.action_button_region_verified is not True
             or frame.live_interactive_view_verified is not True
+            or frame.independently_verified_capture_mode != "LIVE_INTERACTIVE"
+            or frame.capture_mode_verified_without_buttons is not True
             or frame.replay_controls_visible is not False
             or frame.obscuring_overlay_visible is not False
         ):
