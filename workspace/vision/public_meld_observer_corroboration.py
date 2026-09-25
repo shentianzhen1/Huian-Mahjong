@@ -234,7 +234,10 @@ def corroborate_with_independent_observers(
         meld_fact.observation,
     )
     if result.evidence_grade != EvidenceGrade.CORROBORATED:
-        return _stop("independent_observer_action_incomplete_or_conflicting")
+        return _stop(
+            "independent_observer_action_incomplete_or_conflicting",
+            conflict=result.kind == PublicActionKind.EVIDENCE_CONFLICT,
+        )
     if (
         result.kind != _CANDIDATE_TO_ACTION[candidate.candidate_action_kind]
         or result.claimed_tile != candidate.reviewed_incoming_tile_candidate
