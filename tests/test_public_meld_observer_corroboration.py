@@ -206,7 +206,7 @@ class IndependentObserverCorroborationTests(unittest.TestCase):
                 hand, details={"removed_tiles": ["P3", "P4"]}
             ),
         )
-        self.assertEqual(gate(parts).status, "UNKNOWN")
+        self.assertEqual(gate(parts).status, "CONFLICT")
 
     def test_opponent_hand_count_can_only_make_review_pending(self):
         parts = list(bundle())
@@ -236,7 +236,7 @@ class IndependentObserverCorroborationTests(unittest.TestCase):
         parts[5] = replace(
             parts[5], observation=replace(meld, tiles=("P5", "P5", "P5")),
         )
-        self.assertEqual(gate(parts).status, "UNKNOWN")
+        self.assertEqual(gate(parts).status, "CONFLICT")
 
     def test_explicit_timeline_window_is_mandatory_not_hardcoded(self):
         parts = list(bundle())
