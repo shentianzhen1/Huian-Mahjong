@@ -21,6 +21,8 @@ def frame(index=100, labels=("吃", "过"), **overrides):
         source_frame_verified=True,
         action_button_region_verified=True,
         live_interactive_view_verified=True,
+        independently_verified_capture_mode="LIVE_INTERACTIVE",
+        capture_mode_verified_without_buttons=True,
     )
     values.update(overrides)
     return PublicActionPromptFrame(**values)
@@ -85,6 +87,29 @@ class PublicSystemActionPromptTests(unittest.TestCase):
         self.assertEqual(review_system_prompt([
             frame(100), frame(101, obscuring_overlay_visible=True),
         ]).status, "UNKNOWN")
+
+    def test_unknown_or_replay_capture_mode_never_trains_live_prompt(self):
+        # Every one of nine existing original clips includes a replay
+        # transport overlay at its source-video mid-frame. Positive live
+        # button evidence requires independently verified LIVE provenance.
+        for attrs in (
+            {"independently_verified_capture_mode": "UNKNOWN"},
+            {"independently_verified_capture_mode": "IN_GAME_REPLAY"},
+            {"capture_mode_verified_without_buttons": False},
+            {"independently_verified_capture_mode": "LIVE_INTERACTIVE",
+             "capture_mode_verified_without_buttons": False},
+        ):
+            with self.subTest(attrs=attrs):
+                out = review_system_prompt([
+                    frame(100, ("吃", "过"), **attrs),
+                    frame(101, ("吃", "过"), **attrs),
+                ])
+                self.assertEqual(out.status, "UNKNOWN")
+                self.assertEqual(out.to_dict()["executed_action"], "UNKNOWN")
+        live = review_system_prompt([
+            frame(100, ("吃", "过")), frame(101, ("吃", "过")),
+        ])
+        self.assertEqual(live.status, "STABLE_OFFERED_ACTIONS_NOT_EXECUTED")
 
     def test_mo_is_not_assumed_to_be_a_claim_button(self):
         # Ordinary draw needs physical draw_visual evidence.
