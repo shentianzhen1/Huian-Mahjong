@@ -45,8 +45,8 @@ def score_replay(data: dict, *, frame_tolerance: int = 15) -> dict:
     """One-to-one greedy nearest matching with explicit kind and actor.
 
     Detection: time-matched any known meld prediction regardless of kind/actor.
-    Reconstruction: time-matched same kind AND same actor. For reconstruction,
-    a wrong-kind/actor prediction is counted as both FP and FN.
+    Kind+actor: time-matched same kind AND same actor. For this partial metric,
+    a wrong-kind/actor prediction is counted as both FP and FN. Full action\n    reconstruction also needs claimed tile and independent source provenance;\n    it is deliberately unscored here.
     """
     _validate(data)
     if type(frame_tolerance) is not int or frame_tolerance < 0:
@@ -111,7 +111,9 @@ def score_replay(data: dict, *, frame_tolerance: int = 15) -> dict:
         "known_machine_predictions": len(predictions),
         "abstained_predictions": len(data["predictions"]) - len(predictions),
         "meld_detection": metric(det_tp),
-        "complete_action_reconstruction": metric(action_tp),
+        "action_kind_actor_reconstruction": metric(action_tp),
+        "complete_action_reconstruction": None,
+        "complete_action_reason": "claimed_tile_and_independent_discard_hand_meld_provenance_not_scored",
         "by_kind": by_kind,
         "formal_source_disjoint_claim": False,
     }
