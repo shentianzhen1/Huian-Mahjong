@@ -9,6 +9,10 @@ from workspace.vision.public_meld_action_cross_evidence import (
     ManuallyReviewedNewMeld, ManuallyReviewedPublicDiscard,
 )
 from workspace.vision.public_meld_delayed_shade_review import SourceScopedShadeFrame
+from workspace.vision.public_meld_adjacent_onset import (
+    AdjacentPublicMeldSourceFrame, ObservedPublicMeldTrack,
+    review_adjacent_public_meld_onset,
+)
 from workspace.vision.public_meld_observer_corroboration import (
     SourceBoundObserverFact, corroborate_with_independent_observers,
 )
@@ -83,13 +87,98 @@ def remove_one(ids, claimed):
     return tuple(remaining)
 
 
+def verified_onset_for(parts):
+    """Synthetic independent source before/after PUBLIC-MELD snapshots.
+
+    Real audio/video truth is not created by this factory. Private source
+    runners must independently decode the actual adjacent original frames.
+    """
+    d, m = parts[:2]
+    old = ObservedPublicMeldTrack("existing_group", ("E", "E", "E"))
+    new = ObservedPublicMeldTrack(
+        m.meld_track_id, m.face_ids_left_to_right,
+    )
+    def frame(index, tracks, digest):
+        return AdjacentPublicMeldSourceFrame(
+            source_session=m.source_session,
+            source_sha256=m.source_sha256,
+            decoded_frame_sha256=digest,
+            stream_epoch=m.stream_epoch,
+            frame_index=index,
+            screen_side=m.screen_side,
+            frame_size=(1046, 480),
+            public_meld_tracks=tracks,
+            original_video_sha_verified=True,
+            original_frame_pixels_verified=True,
+            public_meld_region_separated_from_hand_gold=True,
+            explicit_source_public_meld_region_verified=True,
+            is_unobscured_source_frame=True,
+        )
+    return review_adjacent_public_meld_onset(
+        frame(m.frame_index - 1, (old,), "b" * 64),
+        frame(m.frame_index, (old, new), "c" * 64),
+        target_track_id=new.track_id,
+        approved_target_face_ids=new.face_ids,
+    )
+
+
 def gate(parts, **kwargs):
-    opts = {"verified_screen_side_actors": SIDES, "reviewed_last_frame": 126}
+    opts = {
+        "verified_screen_side_actors": SIDES,
+        "reviewed_last_frame": 126,
+        "verified_adjacent_meld_onset": verified_onset_for(parts),
+    }
     opts.update(kwargs)
     return corroborate_with_independent_observers(*parts, **opts)
 
 
 class IndependentObserverCorroborationTests(unittest.TestCase):
+    def test_unbracketed_or_preexisting_meld_never_corroborrates_observer_triad(self):
+        parts = bundle()
+        self.assertEqual(
+            gate(parts, verified_adjacent_meld_onset=None).status, "UNKNOWN",
+        )
+        old = ObservedPublicMeldTrack(
+            parts[1].meld_track_id, parts[1].face_ids_left_to_right,
+        )
+        onset = review_adjacent_public_meld_onset(
+            AdjacentPublicMeldSourceFrame(
+                SESSION, SHA, "b" * 64, 3, 119, "lower", (1046, 480),
+                (old,), True, True, True, True, True,
+            ),
+            AdjacentPublicMeldSourceFrame(
+                SESSION, SHA, "c" * 64, 3, 120, "lower", (1046, 480),
+                (old,), True, True, True, True, True,
+            ),
+            target_track_id=old.track_id,
+            approved_target_face_ids=old.face_ids,
+        )
+        self.assertEqual(onset.status, "PREEXISTING_MELD_NO_NEW_ACTION")
+        self.assertEqual(
+            gate(parts, verified_adjacent_meld_onset=onset).status, "UNKNOWN",
+        )
+
+    def test_onset_must_match_reviewed_source_side_track_faces_and_window(self):
+        parts = bundle()
+        good = verified_onset_for(parts)
+        for attrs in (
+            {"source_session": "wrong_original"},
+            {"source_sha256": "e" * 64},
+            {"stream_epoch": 4},
+            {"screen_side": "upper"},
+            {"target_track_id": "old_group"},
+            {"target_face_ids": ("P3", "P4", "P5")},
+            {"prior_frame": 99, "first_visible_frame": 100},
+            {"prior_frame": 120, "first_visible_frame": 121},
+        ):
+            with self.subTest(attrs=attrs):
+                self.assertEqual(
+                    gate(parts, verified_adjacent_meld_onset=replace(
+                        good, **attrs,
+                    )).status,
+                    "UNKNOWN",
+                )
+
     def test_three_distinct_observer_channels_agree_on_synthetic_chi(self):
         result = gate(bundle())
         self.assertEqual(
