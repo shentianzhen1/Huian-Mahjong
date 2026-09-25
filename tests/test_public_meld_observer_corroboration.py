@@ -16,6 +16,12 @@ from workspace.vision.public_meld_adjacent_onset import (
 from workspace.vision.public_meld_observer_corroboration import (
     SourceBoundObserverFact, corroborate_with_independent_observers,
 )
+from workspace.vision.public_claim_hand_count_delta import (
+    SourceScopedStableHandCount, review_new_meld_hand_count_delta,
+)
+from workspace.vision.public_hand_count_fact_adapter import (
+    hand_count_review_to_source_fact,
+)
 
 SHA = "a" * 64
 SESSION = "synthetic_single_original"
@@ -310,6 +316,47 @@ class IndependentObserverCorroborationTests(unittest.TestCase):
         )
         self.assertFalse(result.to_dict()["owner_confirmed_event_truth"])
         self.assertFalse(result.to_dict()["safe_for_runtime"])
+
+    def test_semantic_hand_count_review_bridges_into_three_channel_gate(self):
+        parts = list(bundle())
+        before = SourceScopedStableHandCount(
+            source_session=SESSION, source_sha256=SHA, stream_epoch=3,
+            frame_index=118, actor="player", semantic_concealed_count=16,
+            tracker_state="STABLE_HAND", tracker_trusted=True,
+            tracker_stable=True, hand_geometry_region_verified=True,
+            source_frame_verified=True, evidence_ref="semantic-count:118",
+        )
+        after = SourceScopedStableHandCount(
+            source_session=SESSION, source_sha256=SHA, stream_epoch=3,
+            frame_index=122, actor="player", semantic_concealed_count=14,
+            tracker_state="STABLE_HAND", tracker_trusted=True,
+            tracker_stable=True, hand_geometry_region_verified=True,
+            source_frame_verified=True, evidence_ref="semantic-count:122",
+        )
+        count_review = review_new_meld_hand_count_delta(
+            before, after,
+            new_meld_first_visible_frame=120,
+            new_meld_face_count=3,
+            pre_sample_brackets_onset=True,
+            post_sample_before_followup_discard=True,
+            independent_public_meld_onset_verified=True,
+        )
+        hand_fact = hand_count_review_to_source_fact(
+            before, after, count_review, timestamp_seconds=4.2,
+        )
+        self.assertIsNotNone(hand_fact)
+        parts[4] = hand_fact
+        result = gate(parts)
+        self.assertEqual(
+            result.status, "OBSERVER_CORROBORATED_OWNER_REVIEW_PENDING"
+        )
+        self.assertEqual(result.candidate_action_kind, "CHI_LIKE")
+        self.assertEqual(result.candidate_incoming_tile, "P6")
+        self.assertEqual(result.observation_frames, (101, 122, 123))
+        payload = result.to_dict()
+        self.assertFalse(payload["owner_confirmed_event_truth"])
+        self.assertFalse(payload["safe_for_runtime"])
+        self.assertFalse(payload["safe_for_executor"])
 
     def test_observer_discard_vs_manual_discard_conflict(self):
         parts = list(bundle())
