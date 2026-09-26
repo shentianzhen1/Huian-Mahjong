@@ -108,6 +108,21 @@ class ReplayMetricsTests(unittest.TestCase):
         result = score_replay(data)
         self.assertEqual(result["adjudicated_ground_truth_events"], 2)
 
+    def test_reject_explicit_mixed_source_before_matching(self):
+        for event_list in ("ground_truth", "predictions"):
+            with self.subTest(event_list=event_list):
+                data = fixture()
+                data[event_list][0]["video_id"] = "OTHER_SYNTHETIC_VIDEO"
+                with self.assertRaisesRegex(ValueError, "mixed_source_replay_event"):
+                    score_replay(data)
+
+    def test_matching_explicit_event_source_is_accepted(self):
+        data = fixture()
+        for event_list in ("ground_truth", "predictions"):
+            for event in data[event_list]:
+                event["video_id"] = data["video_id"]
+        self.assertEqual(score_replay(data)["meld_detection"]["tp"], 2)
+
     def test_reject_nonfinite_or_boolean_fps(self):
         for bad_fps in (float("nan"), float("inf"), float("-inf"), True, 0, -30):
             with self.subTest(fps=bad_fps):
