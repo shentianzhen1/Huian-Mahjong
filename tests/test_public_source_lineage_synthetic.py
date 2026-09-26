@@ -90,6 +90,21 @@ class SyntheticSourceLineageTests(unittest.TestCase):
         self.write()
         return self.registry
 
+    def test_reject_nonstring_or_blank_source_identity(self):
+        for field, bad in (
+            ("source_session", 123),
+            ("source_session", "   "),
+            ("match_group", {"unexpected": "object"}),
+            ("match_group", ""),
+            ("source_sha256", 123),
+        ):
+            with self.subTest(field=field, value=bad):
+                self.rows[0][field] = bad
+                self.write()
+                with self.assertRaisesRegex(ValueError, "source requires"):
+                    load_lineage(self.registry)
+                self.rows[0] = row("first_hand", b"synthetic hand one", "match_one")
+
     def test_reject_duplicate_session_and_invalid_digest(self):
         self.rows.append(dict(self.rows[0]))
         self.write()
