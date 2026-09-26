@@ -37,7 +37,11 @@ def _validate(data: dict) -> None:
                     or event.get("kind") not in KINDS | {"UNKNOWN"}
                     or event.get("actor") not in ("SELF", "OPPONENT", "UNKNOWN")):
                 raise ValueError("invalid_event_fields")
-            # Optional per-event provenance must agree with the manifest.\n            # Reject mixed-source predictions before temporal matching.\n            if "video_id" in event and event["video_id"] != data["video_id"]:\n                raise ValueError("mixed_source_replay_event")\n            if key == "ground_truth" and (event["kind"] == "UNKNOWN"
+            # Optional per-event provenance must agree with the manifest.
+            # Reject mixed-source predictions before temporal matching.
+            if "video_id" in event and event["video_id"] != data["video_id"]:
+                raise ValueError("mixed_source_replay_event")
+            if key == "ground_truth" and (event["kind"] == "UNKNOWN"
                     or event["actor"] == "UNKNOWN"):
                 raise ValueError("ground_truth_requires_manual_adjudication")
             if key == "ground_truth":
@@ -88,7 +92,9 @@ def score_replay(data: dict, *, frame_tolerance: int = 15) -> dict:
 
     Detection: time-matched any known meld prediction regardless of kind/actor.
     Kind+actor: time-matched same kind AND same actor. For this partial metric,
-    a wrong-kind/actor prediction is counted as both FP and FN. Full action\n    reconstruction also needs claimed tile and independent source provenance;\n    it is deliberately unscored here.
+    a wrong-kind/actor prediction is counted as both FP and FN. Full action
+    reconstruction also needs claimed tile and independent source provenance;
+    it is deliberately unscored here.
     """
     _validate(data)
     if type(frame_tolerance) is not int or frame_tolerance < 0:
@@ -149,7 +155,8 @@ def main() -> None:
     result = score_replay(
         json.loads(args.manifest.read_text(encoding="utf-8")),
         frame_tolerance=args.frame_tolerance)
-    rendered = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    rendered = json.dumps(result, ensure_ascii=False, indent=2) + "
+"
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")
     else:
