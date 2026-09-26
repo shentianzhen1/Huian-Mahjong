@@ -29,3 +29,10 @@ This is a **development-only integration branch**, NOT main and NOT an authoriza
 - Private footage, screenshots, SHA registry and player/room identifiers must remain outside public GitHub.
 
 This branch is a reproducible **partial** code-integration checkpoint (#114 + #116), not full resolution of #69. #104/#109 and upstream PR deduplication remain outstanding. Do not merge into main without explicit owner approval.
+
+## 2026-09-26 integration progress
+- The #116 imported test had a literal escaped newline causing SyntaxError; corrected only on this integration branch. CI at commit 78697cc: Vision Regression SUCCESS, Tests SUCCESS.
+- #111 segmentation module and its test file have exact matching blob SHAs in #111 and the #114-derived integration tree. No duplicate implementation was added; stacked PR diff cleanup is still required when upstream is merged.
+- #109 detector oversized-bbox reporting, actor-specific river trust/rebaseline and three matching test files were copied into the integration branch unchanged. Its post-import CI must pass at the new integration HEAD before any merge.
+- #104 privacy review found existing public development JSON manifests contain original-video SHA256 and frame-coordinate provenance. These manifests and private audit/probe modules are **not imported** here. Only the pure source-lineage gate, private-only sample export module and synthetic sample tests are imported. The source-lineage original test requires the excluded public real-source manifest; replace it with sanitized synthetic tests before any formal integration of that test. Review existing #104 public files separately for potential exposure; do not reproduce hashes in this branch.
+- No real source footage or original frame pixels were committed. All scoring remains development-only; production action fields remain UNKNOWN.
