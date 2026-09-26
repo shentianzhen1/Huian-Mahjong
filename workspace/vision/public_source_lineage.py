@@ -28,7 +28,9 @@ class SourceRecord:
     excluded_from_formal_promotion: bool
 
     def __post_init__(self) -> None:
-        if (not self.source_session or not self.match_group
+        if (not isinstance(self.source_session, str) or not self.source_session.strip()
+                or not isinstance(self.match_group, str) or not self.match_group.strip()
+                or not isinstance(self.source_sha256, str)
                 or not _SHA.fullmatch(self.source_sha256)):
             raise ValueError("source requires session, match group and exact SHA256")
         if self.capture_mode not in {"in_app_replay", "live_capture"}:
