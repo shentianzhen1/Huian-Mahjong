@@ -28,6 +28,7 @@ def _validate(data: dict) -> None:
     for key in ("ground_truth", "predictions"):
         if not isinstance(data[key], list):
             raise ValueError("invalid_event_list")
+        seen_adjudicated: set[tuple[int, str, str]] = set()
         for event in data[key]:
             if not isinstance(event, dict):
                 raise ValueError("invalid_event")
@@ -39,6 +40,11 @@ def _validate(data: dict) -> None:
             if key == "ground_truth" and (event["kind"] == "UNKNOWN"
                     or event["actor"] == "UNKNOWN"):
                 raise ValueError("ground_truth_requires_manual_adjudication")
+            if key == "ground_truth":
+                identity = (event["frame"], event["kind"], event["actor"])
+                if identity in seen_adjudicated:
+                    raise ValueError("duplicate_adjudicated_ground_truth_event")
+                seen_adjudicated.add(identity)
 
 
 def _maximum_frame_matches(truth: list[dict], predictions: list[dict],
