@@ -37,7 +37,7 @@ def _validate(data: dict) -> None:
                     or event.get("kind") not in KINDS | {"UNKNOWN"}
                     or event.get("actor") not in ("SELF", "OPPONENT", "UNKNOWN")):
                 raise ValueError("invalid_event_fields")
-            if key == "ground_truth" and (event["kind"] == "UNKNOWN"
+            # Optional per-event provenance must agree with the manifest.\n            # Reject mixed-source predictions before temporal matching.\n            if "video_id" in event and event["video_id"] != data["video_id"]:\n                raise ValueError("mixed_source_replay_event")\n            if key == "ground_truth" and (event["kind"] == "UNKNOWN"
                     or event["actor"] == "UNKNOWN"):
                 raise ValueError("ground_truth_requires_manual_adjudication")
             if key == "ground_truth":
