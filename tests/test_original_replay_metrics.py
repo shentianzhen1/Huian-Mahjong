@@ -47,6 +47,36 @@ class ReplayMetricsTests(unittest.TestCase):
         self.assertEqual(result["meld_detection"]["tp"], 1)
         self.assertEqual(result["meld_detection"]["fn"], 1)
 
+    def test_maximum_matching_reassigns_nearest_to_recover_two_events(self):
+        # Greedy nearest pairs frame 10 with prediction 8, leaving frame 0
+        # unmatched; maximum matching uses (0,8) and (10,16).
+        data = fixture()
+        data["ground_truth"] = [
+            {"frame": 0, "kind": "CHI", "actor": "SELF"},
+            {"frame": 10, "kind": "CHI", "actor": "SELF"},
+        ]
+        data["predictions"] = [
+            {"frame": 8, "kind": "CHI", "actor": "SELF"},
+            {"frame": 16, "kind": "CHI", "actor": "SELF"},
+        ]
+        result = score_replay(data, frame_tolerance=8)
+        for key in ("meld_detection", "action_kind_actor_reconstruction"):
+            self.assertEqual(result[key]["tp"], 2)
+            self.assertEqual(result[key]["fp"], 0)
+            self.assertEqual(result[key]["fn"], 0)
+        self.assertEqual(result["by_kind"]["CHI"]["tp"], 2)
+        self.assertIsNone(result["complete_action_reconstruction"])
+
+    def test_actor_mismatch_cannot_be_rescued_by_time_matching(self):
+        data = fixture()
+        data["ground_truth"] = [
+            {"frame": 0, "kind": "CHI", "actor": "SELF"}]
+        data["predictions"] = [
+            {"frame": 0, "kind": "CHI", "actor": "OPPONENT"}]
+        result = score_replay(data, frame_tolerance=0)
+        self.assertEqual(result["meld_detection"]["tp"], 1)
+        self.assertEqual(result["action_kind_actor_reconstruction"]["tp"], 0)
+
     def test_empty_predictions_do_not_invent_accuracy(self):
         data = fixture()
         data["predictions"] = []
