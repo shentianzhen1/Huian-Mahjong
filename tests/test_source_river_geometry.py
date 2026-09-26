@@ -126,5 +126,39 @@ class SourceRiverGeometryTests(unittest.TestCase):
                          [(325, 257, 35, 27)])
 
 
+    def test_detector_reports_three_face_blob_and_qualifier_abstains_by_actor(self):
+        from workspace.vision.public_tile_detector import detect_public_tile_geometry
+        pixels = self.np.empty((480, 1046, 3), dtype=self.np.uint8)
+        pixels[:, :] = (23, 67, 47)
+        pixels[110:140, 606:696] = 237  # 90px / 3 faces, no visible seams
+        pixels[257:284, 325:360] = 237  # independent clear player river tile
+        image = self.Image.fromarray(pixels)
+        detected = detect_public_tile_geometry(image, frame=7, session=SESSION)
+        self.assertTrue(any(box[2] > .085 for box in detected.oversized_bboxes))
+        self.assertTrue(all(row["tile_id"] == "UNKNOWN"
+                            for row in detected.to_dict()["candidates"]))
+        qualified = self.qualify(image, detected, manifest=self.manifest,
+                                 actual_sha256=SHA)
+        self.assertEqual(qualified.actor_trust, {"opponent": False, "player": True})
+        self.assertIn("opponent:oversized_river_component", qualified.issues)
+        self.assertEqual([item.pixel_bbox for item in qualified.filtered_frame.candidates],
+                         [(325, 257, 35, 27)])
+
+    def test_unrelated_oversized_animation_does_not_poison_reviewed_rivers(self):
+        from workspace.vision.public_tile_detector import detect_public_tile_geometry
+        pixels = self.np.empty((480, 1046, 3), dtype=self.np.uint8)
+        pixels[:, :] = (23, 67, 47)
+        pixels[40:70, 606:696] = 237  # outside both source-qualified rivers
+        pixels[110:140, 646:674] = 237
+        pixels[257:284, 325:360] = 237
+        image = self.Image.fromarray(pixels)
+        detected = detect_public_tile_geometry(image, frame=7, session=SESSION)
+        self.assertTrue(detected.oversized_bboxes)
+        qualified = self.qualify(image, detected, manifest=self.manifest,
+                                 actual_sha256=SHA)
+        self.assertTrue(all(qualified.actor_trust.values()))
+        self.assertEqual(len(qualified.filtered_frame.candidates), 2)
+
+
 if __name__ == "__main__":
     unittest.main()
