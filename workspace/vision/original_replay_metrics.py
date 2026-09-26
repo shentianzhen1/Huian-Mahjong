@@ -41,8 +41,44 @@ def _validate(data: dict) -> None:
                 raise ValueError("ground_truth_requires_manual_adjudication")
 
 
+def _maximum_frame_matches(truth: list[dict], predictions: list[dict],
+                           tolerance: int, *, require_kind: bool,
+                           require_actor: bool) -> int:
+    """Maximum one-to-one matches, not greedy nearest (which can lose recall).
+
+    Process the most constrained truth events first; use augmenting paths to
+    reassign an earlier prediction if that permits another valid match.
+    Distance and original index provide deterministic tie ordering.
+    """
+    options: list[list[int]] = []
+    for event in truth:
+        valid = [
+            (abs(event["frame"] - pred["frame"]), pi)
+            for pi, pred in enumerate(predictions)
+            if abs(event["frame"] - pred["frame"]) <= tolerance
+            and (not require_kind or event["kind"] == pred["kind"])
+            and (not require_actor or event["actor"] == pred["actor"])
+        ]
+        options.append([pi for _, pi in sorted(valid)])
+    owners: dict[int, int] = {}
+
+    def augment(ti: int, seen: set[int]) -> bool:
+        for pi in options[ti]:
+            if pi in seen:
+                continue
+            seen.add(pi)
+            if pi not in owners or augment(owners[pi], seen):
+                owners[pi] = ti
+                return True
+        return False
+
+    for ti in sorted(range(len(truth)), key=lambda i: (len(options[i]), i)):
+        augment(ti, set())
+    return len(owners)
+
+
 def score_replay(data: dict, *, frame_tolerance: int = 15) -> dict:
-    """One-to-one greedy nearest matching with explicit kind and actor.
+    """Maximum-cardinality one-to-one matching with explicit kind and actor.
 
     Detection: time-matched any known meld prediction regardless of kind/actor.
     Kind+actor: time-matched same kind AND same actor. For this partial metric,
@@ -53,25 +89,12 @@ def score_replay(data: dict, *, frame_tolerance: int = 15) -> dict:
         raise ValueError("invalid_frame_tolerance")
     truth = data["ground_truth"]
     predictions = [p for p in data["predictions"] if p["kind"] in KINDS]
-    # Deterministic global nearest pairing avoids reusing one prediction.
-    def match(require_identity: bool):
-        pairs = []
-        for ti, t in enumerate(truth):
-            for pi, p in enumerate(predictions):
-                distance = abs(t["frame"] - p["frame"])
-                if distance <= frame_tolerance and (
-                    not require_identity or
-                    (t["kind"], t["actor"]) == (p["kind"], p["actor"])
-                ):
-                    pairs.append((distance, ti, pi))
-        used_truth, used_pred = set(), set()
-        for _, ti, pi in sorted(pairs):
-            if ti not in used_truth and pi not in used_pred:
-                used_truth.add(ti)
-                used_pred.add(pi)
-        return len(used_truth), len(used_pred)
-    det_tp, _ = match(False)
-    action_tp, _ = match(True)
+    det_tp = _maximum_frame_matches(
+        truth, predictions, frame_tolerance,
+        require_kind=False, require_actor=False)
+    action_tp = _maximum_frame_matches(
+        truth, predictions, frame_tolerance,
+        require_kind=True, require_actor=True)
     duration_minutes = data["duration_frames"] / data["fps"] / 60
     def metric(tp):
         fp = len(predictions) - tp
@@ -87,20 +110,12 @@ def score_replay(data: dict, *, frame_tolerance: int = 15) -> dict:
     for kind in sorted(KINDS):
         ts = [t for t in truth if t["kind"] == kind]
         ps = [p for p in predictions if p["kind"] == kind]
-        candidates = sorted(
-            (abs(t["frame"] - p["frame"]), ti, pi)
-            for ti, t in enumerate(ts) for pi, p in enumerate(ps)
-            if abs(t["frame"] - p["frame"]) <= frame_tolerance
-        )
-        used_t, used_p = set(), set()
-        for _, ti, pi in candidates:
-            if ti not in used_t and pi not in used_p:
-                used_t.add(ti)
-                used_p.add(pi)
+        matched = _maximum_frame_matches(
+            ts, ps, frame_tolerance, require_kind=True, require_actor=False)
         by_kind[kind] = {
             "truth": len(ts), "predictions": len(ps),
-            "tp": len(used_t), "fp": len(ps) - len(used_p),
-            "fn": len(ts) - len(used_t),
+            "tp": matched, "fp": len(ps) - matched,
+            "fn": len(ts) - matched,
         }
     return {
         "schema_version": "original_replay_metrics_v0_1",
