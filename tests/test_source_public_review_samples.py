@@ -10,7 +10,6 @@ from unittest.mock import patch
 
 AVAILABLE = all(importlib.util.find_spec(x) is not None for x in ('cv2','numpy','PIL'))
 
-@unittest.skipUnless(AVAILABLE, 'Vision extras optional')
 class PublicReviewSampleTests(unittest.TestCase):
     def setUp(self):
         self.temp=TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
@@ -47,6 +46,7 @@ class PublicReviewSampleTests(unittest.TestCase):
             def release(self):self.released=True
         return Capture()
 
+    @unittest.skipUnless(AVAILABLE, 'Vision extras optional')
     def test_private_unlabeled_pixel_verified_output(self):
         import cv2
         from workspace.vision.source_public_review_samples import export_review_samples
@@ -61,6 +61,7 @@ class PublicReviewSampleTests(unittest.TestCase):
         self.assertFalse(result['formal_promotion_evidence'])
         self.assertFalse(result['safe_for_executor'])
 
+    @unittest.skipUnless(AVAILABLE, 'Vision extras optional')
     def test_wrong_hash_fails_before_decode(self):
         import cv2
         from workspace.vision.source_public_review_samples import export_review_samples
