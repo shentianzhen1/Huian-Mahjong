@@ -9,7 +9,7 @@ false negatives. Use source-disjoint videos only for formal promotion.
 from __future__ import annotations
 import argparse
 import json
-from collections import Counter
+import math
 from pathlib import Path
 
 KINDS = frozenset(("CHI", "PENG", "KONG"))
@@ -21,7 +21,7 @@ def _validate(data: dict) -> None:
         raise ValueError("missing_required_replay_fields")
     if not isinstance(data["video_id"], str) or not data["video_id"]:
         raise ValueError("invalid_video_id")
-    if (type(data["fps"]) not in (int, float) or data["fps"] <= 0
+    if (type(data["fps"]) not in (int, float) or not math.isfinite(data["fps"]) or data["fps"] <= 0
             or type(data["duration_frames"]) is not int
             or data["duration_frames"] <= 0):
         raise ValueError("invalid_duration")
