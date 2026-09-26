@@ -61,6 +61,14 @@ class ReplayMetricsTests(unittest.TestCase):
         result = score_replay(data)
         self.assertIsNone(result["meld_detection"]["recall"])
 
+    def test_reject_nonfinite_or_boolean_fps(self):
+        for bad_fps in (float("nan"), float("inf"), float("-inf"), True, 0, -30):
+            with self.subTest(fps=bad_fps):
+                data = fixture()
+                data["fps"] = bad_fps
+                with self.assertRaisesRegex(ValueError, "invalid_duration"):
+                    score_replay(data)
+
     def test_reject_invalid_truth_and_time(self):
         data = fixture()
         data["ground_truth"][0]["actor"] = "UNKNOWN"
