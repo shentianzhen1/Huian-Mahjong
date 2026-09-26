@@ -41,3 +41,5 @@ This branch is a reproducible **partial** code-integration checkpoint (#114 + #1
 - Commit 9c408c4: **Tests SUCCESS**, **Vision Regression SUCCESS**, including synthetic-only source lineage and cross-module fail-closed contract tests.
 - Offline scorer now rejects NaN/infinite/boolean FPS before computing duration and rates. Added corresponding synthetic negative controls; CI for these latest edits must be checked independently.
 - Integration modules have one-way dependencies: independent hand-count gate → multi-signal review; the replay scorer consumes only explicitly adjudicated ground truth and actual machine predictions. No automatic candidate-to-prediction promotion is allowed.
+
+- Commit 82d6841 CI: Tests SUCCESS; Vision Regression SUCCESS. The offline scorer subsequently received deterministic maximum-cardinality frame matching: greedy nearest matching could miss a valid second action in overlapping tolerance windows. Added synthetic crossing-window and actor-mismatch regressions. Latest CI must pass before claiming this fix verified.
