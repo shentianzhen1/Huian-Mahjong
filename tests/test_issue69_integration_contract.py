@@ -9,6 +9,7 @@ from workspace.vision.public_independent_hand_count import (
 )
 from workspace.vision.public_dual_region_transition import DualRegionSourceReview
 from workspace.vision.public_multi_signal_review import review_multi_signal_window
+from workspace.vision.public_wall_counter import WallCounterTransition
 from workspace.vision.original_replay_metrics import score_replay
 
 _SYNTHETIC_SHA = "0" * 64
@@ -76,6 +77,42 @@ class Issue69IntegrationContractTests(unittest.TestCase):
         self.assertEqual(candidate.to_dict()["action_kind"], "UNKNOWN")
         self.assertFalse(candidate.to_dict()["verified_real_video_event"])
         self.assertFalse(candidate.to_dict()["safe_for_executor"])
+
+    def test_malformed_intervals_and_wall_counter_abstain(self):
+        hand = review_independent_hand_count(hand_frames(), transition_after_frame=3)
+        dual = DualRegionSourceReview(
+            "SYNCHRONIZED_TWO_REGION_APPEARANCE_CANDIDATE_ONLY",
+            "synthetic_only", prior_frame=2, first_visible_frame=3,
+        )
+        kwargs = dict(
+            hand=hand, wall=None,
+            same_original_source_epoch_independently_verified=True,
+            hand_roi_distinct_from_lower_meld_roi=True,
+            wall_roi_distinct_from_both=True,
+            explicit_review_window=(2, 3),
+        )
+        for bad_dual in (
+            DualRegionSourceReview(dual.status, dual.reason, prior_frame=-1,
+                                   first_visible_frame=3),
+            DualRegionSourceReview(dual.status, dual.reason, prior_frame=3,
+                                   first_visible_frame=3),
+        ):
+            with self.subTest(dual=bad_dual):
+                result = review_multi_signal_window(bad_dual, **kwargs)
+                self.assertEqual(result.status, "UNKNOWN")
+        for bad_wall in (
+            WallCounterTransition("WALL_COUNT_DECREASE_AUXILIARY_ONLY",
+                                  "synthetic", delta=1, interval=(2, 3)),
+            WallCounterTransition("WALL_COUNT_DECREASE_AUXILIARY_ONLY",
+                                  "synthetic", delta=-1, interval=(3, 2)),
+        ):
+            with self.subTest(wall=bad_wall):
+                result = review_multi_signal_window(
+                    dual, **{**kwargs, "wall": bad_wall})
+                self.assertEqual(result.status, "UNKNOWN")
+        result = review_multi_signal_window(
+            dual, **{**kwargs, "wall_required": "false"})
+        self.assertEqual(result.reason, "invalid_wall_requirement")
 
     def test_development_candidate_cannot_be_counted_as_prediction(self):
         hand = review_independent_hand_count(hand_frames(), transition_after_frame=3)
