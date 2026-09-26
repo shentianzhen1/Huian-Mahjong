@@ -91,6 +91,23 @@ class ReplayMetricsTests(unittest.TestCase):
         result = score_replay(data)
         self.assertIsNone(result["meld_detection"]["recall"])
 
+    def test_duplicate_adjudicated_truth_rejected_before_scoring(self):
+        data = fixture()
+        data["ground_truth"].append(dict(data["ground_truth"][0]))
+        with self.assertRaisesRegex(
+            ValueError, "duplicate_adjudicated_ground_truth_event"
+        ):
+            score_replay(data)
+
+    def test_distinct_actors_same_frame_are_not_duplicate_truth(self):
+        data = fixture()
+        data["ground_truth"] = [
+            {"frame": 100, "kind": "CHI", "actor": "SELF"},
+            {"frame": 100, "kind": "CHI", "actor": "OPPONENT"},
+        ]
+        result = score_replay(data)
+        self.assertEqual(result["adjudicated_ground_truth_events"], 2)
+
     def test_reject_nonfinite_or_boolean_fps(self):
         for bad_fps in (float("nan"), float("inf"), float("-inf"), True, 0, -30):
             with self.subTest(fps=bad_fps):
