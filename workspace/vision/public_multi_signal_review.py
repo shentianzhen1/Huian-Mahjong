@@ -58,12 +58,18 @@ def review_multi_signal_window(
     if (not isinstance(dual, DualRegionSourceReview)
             or dual.status != "SYNCHRONIZED_TWO_REGION_APPEARANCE_CANDIDATE_ONLY"
             or type(dual.prior_frame) is not int
-            or type(dual.first_visible_frame) is not int):
+            or type(dual.first_visible_frame) is not int
+            or dual.prior_frame < 0
+            or dual.first_visible_frame <= dual.prior_frame):
         return stop("independent_upper_lower_source_review_missing")
     if (not isinstance(hand, HandCountTransition)
             or hand.status != "INDEPENDENT_HAND_COUNT_DELTA_CANDIDATE_ONLY"
-            or hand.interval is None or type(hand.delta) is not int):
+            or hand.interval is None or type(hand.delta) is not int
+            or len(hand.interval) != 2
+            or any(type(v) is not int for v in hand.interval)):
         return stop("independent_hand_count_transition_missing")
+    if type(wall_required) is not bool:
+        return stop("invalid_wall_requirement")
     if (same_original_source_epoch_independently_verified is not True
             or hand_roi_distinct_from_lower_meld_roi is not True):
         return stop("source_or_hand_meld_region_independence_missing")
@@ -85,6 +91,9 @@ def review_multi_signal_window(
         if (not isinstance(wall, WallCounterTransition)
                 or wall.status != "WALL_COUNT_DECREASE_AUXILIARY_ONLY"
                 or wall.interval is None or type(wall.delta) is not int
+                or wall.delta >= 0
+                or len(wall.interval) != 2
+                or any(type(v) is not int for v in wall.interval)
                 or wall_roi_distinct_from_both is not True):
             return stop("unverified_or_nonindependent_wall_counter")
         a, b = wall.interval
