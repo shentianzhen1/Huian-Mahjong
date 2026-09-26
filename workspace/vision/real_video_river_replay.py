@@ -83,6 +83,10 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
     first_pts: float | None = None
     last_pts: float | None = None
     epochs: set[int] = set()
+    # Any unresolved actor-wide blob may conceal one or more missed discards.
+    # Restart only that actor's observer; never compare the next clear river
+    # against a pre-occlusion baseline and invent a single new action.
+    actor_rebaseline_required: set[str] = set()
     try:
         for index in range(first_frame, last_frame + 1):
             success, image_bgr = cap.read()
@@ -108,9 +112,15 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
                 snapshot = river_snapshot_from_channel(tracked,channel=channels[actor],
                                                        actor=actor,timestamp_seconds=pts)
                 if not qualified.actor_trust[actor]:
+                    if actor not in actor_rebaseline_required:
+                        observers[actor] = DiscardRiverObserver(settle_frames=3)
+                        actor_rebaseline_required.add(actor)
+                        counts[actor+"_ambiguity_rebaselines"] += 1
                     snapshot = replace(snapshot, trusted=False)
                     rejected_frames[actor].append(index)
                     counts[actor+"_untrusted_frames"] += 1
+                else:
+                    actor_rebaseline_required.discard(actor)
                 observed = observers[actor].observe(snapshot)
                 for issue in observed.issues:
                     counts[actor+"_"+issue] += 1
