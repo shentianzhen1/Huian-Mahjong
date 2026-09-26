@@ -155,8 +155,7 @@ def main() -> None:
     result = score_replay(
         json.loads(args.manifest.read_text(encoding="utf-8")),
         frame_tolerance=args.frame_tolerance)
-    rendered = json.dumps(result, ensure_ascii=False, indent=2) + "
-"
+    rendered = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")
     else:
