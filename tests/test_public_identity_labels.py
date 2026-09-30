@@ -53,7 +53,7 @@ class PublicIdentityLabelsTests(unittest.TestCase):
 
     def test_region_counts_and_source_coverage(self):
         report = readiness_report(self.manifest)
-        self.assertEqual(report["approved_labels"], 17)
+        self.assertEqual(report["approved_labels"], 26)
         self.assertEqual(report["regions"]["public_action"]["labels"], 4)
         self.assertEqual(report["regions"]["public_action"]["source_sessions"], 2)
         self.assertEqual(report["regions"]["public_single"]["labels"], 1)
@@ -90,9 +90,26 @@ class PublicIdentityLabelsTests(unittest.TestCase):
             for label in self.manifest.labels
             if label.region == "public_meld"
         ]
-        self.assertEqual(len(melds), 12)
-        self.assertTrue(all(label.bbox[2] < 0.05 for label in melds))
-        self.assertTrue(all(label.bbox[3] < 0.15 for label in melds))
+        self.assertEqual(len(melds), 21)
+        full_frame = [
+            label for label in melds
+            if label.image_path.startswith("references/gameplay/")
+        ]
+        privacy_group_crops = [
+            label for label in melds
+            if "public_meld_crops/" in label.image_path
+        ]
+        self.assertEqual(len(full_frame), 12)
+        self.assertEqual(len(privacy_group_crops), 9)
+        self.assertTrue(all(label.bbox[2] < 0.05 for label in full_frame))
+        self.assertTrue(all(label.bbox[3] < 0.15 for label in full_frame))
+        # The privacy assets are already exact three-face group crops, so each
+        # reviewed face occupies roughly one third of that crop rather than a
+        # tiny normalized box in the original 1046x480 frame.
+        self.assertTrue(all(0.30 <= label.bbox[2] <= 0.35
+                            for label in privacy_group_crops))
+        self.assertTrue(all(label.bbox[1] == 0 and label.bbox[3] == 1
+                            for label in privacy_group_crops))
 
     def test_reviewed_stack_kong_is_not_falsely_face_approved(self):
         sample_ids = {
