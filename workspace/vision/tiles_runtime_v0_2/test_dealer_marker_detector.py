@@ -57,8 +57,16 @@ class DealerMarkerDetectorTests(unittest.TestCase):
         cls.samples = tuple(
             row
             for row in data["samples"]
-            if row["target"] in {"discard", "meld"}
+            if (
+                row["target"] in {"discard", "meld"}
+                and row["image_path"].startswith("references/gameplay/")
+            )
         )
+        # Privacy-bounded meld crops intentionally contain only exposed
+        # tile faces and no table-level dealer marker. They remain public
+        # identity evidence but are not valid dealer-marker calibration frames.
+        self_sessions = {row["source_session"] for row in cls.samples}
+        assert self_sessions == {"66fe863f_youjin100", "b3892b34_zimo68"}
         cls.perspective_manifest = load_player_perspective_manifest(PERSPECTIVE)
 
     def test_two_real_sessions_have_opposite_dealer_anchors(self):
