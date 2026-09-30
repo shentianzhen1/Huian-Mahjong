@@ -221,13 +221,25 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
             observed[query["query_id"]] = {
                 "expected": query["expected_tile"],
                 "proposal": result["shadow_proposal"],
+                "runtime_candidate": result["read_only_runtime_candidate"],
                 "score": result["score"],
                 "margin": result["margin"],
                 "reason": result["reason"],
             }
             self.assertEqual(result["eligible_class_count"], 2)
             self.assertEqual(result["tile_id"], "UNKNOWN")
-            self.assertFalse(result["safe_for_runtime"])
+            if result["shadow_proposal"] is not None:
+                self.assertEqual(
+                    result["read_only_runtime_candidate"],
+                    result["shadow_proposal"],
+                )
+                self.assertTrue(result["safe_for_runtime"])
+                self.assertGreaterEqual(
+                    result["winner_independent_match_groups"], 2
+                )
+            else:
+                self.assertIsNone(result["read_only_runtime_candidate"])
+                self.assertFalse(result["safe_for_runtime"])
             self.assertFalse(result["safe_for_executor"])
             self.assertFalse(result["formal_promotion_evidence"])
         print("FIRST_HAND_PUBLIC_SHADOW=" + json.dumps(observed, sort_keys=True))
