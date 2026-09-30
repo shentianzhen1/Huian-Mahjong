@@ -21,12 +21,16 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
         )
         from workspace.vision.public_meld_identity_bridge import (
             classify_public_meld_group,
+            meld_snapshot_from_identity_bridges,
         )
+        from workspace.vision.public_observers import MeldSnapshotObserver
         from workspace.vision.public_tile_detector import PublicGeometryCandidate
 
         cls.Image = Image
         cls.ImageDraw = ImageDraw
         cls.classify = staticmethod(classify_public_meld_group)
+        cls.snapshot_from_bridges = staticmethod(meld_snapshot_from_identity_bridges)
+        cls.MeldSnapshotObserver = MeldSnapshotObserver
         cls.ShadowBank = ShadowBank
         cls.SourceGroup = SourceGroup
         cls.PublicGeometryCandidate = PublicGeometryCandidate
@@ -182,6 +186,87 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
         proposer.assert_not_called()
         self.assertFalse(result.trusted_for_read_only_runtime)
         self.assertIn("public_identity_source_sha_conflict", result.issues)
+
+    def _classified(self, tiles, *, sha="a" * 64):
+        with patch(
+            "workspace.vision.public_meld_identity_bridge.propose_shadow_identity",
+            side_effect=[self._accepted(tile) for tile in tiles],
+        ):
+            return self.classify(
+                self._flat_image(),
+                self._group(),
+                bank=self._bank(sha),
+                source_session="query",
+                source_sha256=sha,
+            )
+
+    def test_snapshot_is_trusted_only_when_all_three_faces_are_complete(self):
+        complete = self._classified(("P4", "P5", "P6"))
+        snapshot = self.snapshot_from_bridges(
+            ((self._group(), complete),),
+            actor="opponent",
+            timestamp_seconds=1.0,
+            frame=10,
+            source_session="query",
+        )
+        self.assertTrue(snapshot.trusted)
+        self.assertEqual(snapshot.groups[0].tiles, ("P4", "P5", "P6"))
+        self.assertEqual(
+            snapshot.evidence_refs,
+            ("public:query:frame:10",),
+        )
+
+        with patch(
+            "workspace.vision.public_meld_identity_bridge.propose_shadow_identity",
+            side_effect=[
+                self._accepted("P4"),
+                self._abstained(),
+                self._accepted("P6"),
+            ],
+        ):
+            incomplete = self.classify(
+                self._flat_image(),
+                self._group(),
+                bank=self._bank("a" * 64),
+                source_session="query",
+                source_sha256="a" * 64,
+            )
+        blocked = self.snapshot_from_bridges(
+            ((self._group(), incomplete),),
+            actor="opponent",
+            timestamp_seconds=1.1,
+            frame=11,
+            source_session="query",
+        )
+        self.assertFalse(blocked.trusted)
+        self.assertEqual(blocked.groups[0].tiles, (None, None, None))
+
+    def test_existing_meld_observer_requires_three_consistent_complete_frames(self):
+        observer = self.MeldSnapshotObserver(settle_frames=3)
+        sequence = [
+            ("P4", "P5", "P6"),
+            ("P4", "P5", "P7"),
+            ("P4", "P5", "P7"),
+            ("P4", "P5", "P7"),
+        ]
+        outputs = []
+        for frame, tiles in enumerate(sequence, start=1):
+            result = self._classified(tiles)
+            snapshot = self.snapshot_from_bridges(
+                ((self._group(), result),),
+                actor="opponent",
+                timestamp_seconds=frame * 0.1,
+                frame=frame,
+                source_session="query",
+            )
+            outputs.append(observer.observe(snapshot))
+
+        self.assertFalse(outputs[0].stable)
+        self.assertFalse(outputs[1].stable)
+        self.assertFalse(outputs[2].stable)
+        self.assertTrue(outputs[3].stable)
+        self.assertTrue(outputs[3].trusted)
+        self.assertIn("meld_baseline_established", outputs[3].issues)
 
     def test_stacked_group_does_not_fabricate_three_face_identity(self):
         with patch(
