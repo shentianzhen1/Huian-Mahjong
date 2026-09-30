@@ -448,10 +448,13 @@ def detect_public_tile_geometry(
         # single-face width gate. Use a row-like aspect signature before that
         # gate so a compact 3-face upper row is not collapsed to one tile.
         component_aspect = box_width / box_height
+        component_center_x = (x + box_width / 2.0) / width
         if (
-            y < height * 0.30
+            y < height * 0.18
+            and component_center_x >= 0.54
             and 1.75 <= component_aspect <= 4.50
             and normalized_width <= 0.18
+            and normalized_height <= 0.12
         ):
             group_bbox = _expand_top_group(raw_bbox, width, height)
             local = mask[
