@@ -93,6 +93,24 @@ def _channel_feature(channel: Any, *, size: tuple[int, int] = (20, 30)) -> Any |
     return _l2(reduced)
 
 
+def _centered_channel(
+    channel: Any,
+    *,
+    size: tuple[int, int] = (20, 30),
+) -> Any:
+    """Return a centered spatial channel; constant chroma is valid zero evidence."""
+    import cv2
+    import numpy as np
+
+    reduced = cv2.resize(channel, size, interpolation=cv2.INTER_AREA)
+    values = np.asarray(reduced, dtype=np.float32).reshape(-1)
+    values = values - float(values.mean())
+    length = float(np.linalg.norm(values))
+    if length < 1e-6:
+        return np.zeros_like(values)
+    return values / length
+
+
 def _gray_edge_feature(image: Any) -> Any | None:
     import cv2
     import numpy as np
@@ -127,21 +145,19 @@ def _lab_chroma_edge_feature(image: Any) -> Any | None:
     sobel_y = cv2.Sobel(luminance, cv2.CV_32F, 0, 1, ksize=3)
     edge = cv2.magnitude(sobel_x, sobel_y)
 
-    pieces = [
-        _channel_feature(luminance),
-        _channel_feature(edge),
-        _channel_feature(a),
-        _channel_feature(b),
-    ]
-    if any(piece is None for piece in pieces):
+    luminance_part = _channel_feature(luminance)
+    edge_part = _channel_feature(edge)
+    if luminance_part is None or edge_part is None:
         return None
+    a_part = _centered_channel(a)
+    b_part = _centered_channel(b)
     return _l2(
         np.concatenate(
             (
-                0.35 * pieces[0],
-                0.90 * pieces[1],
-                0.70 * pieces[2],
-                0.70 * pieces[3],
+                0.35 * luminance_part,
+                0.90 * edge_part,
+                0.70 * a_part,
+                0.70 * b_part,
             )
         )
     )
