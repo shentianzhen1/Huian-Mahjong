@@ -2,14 +2,34 @@ from __future__ import annotations
 
 import unittest
 
+from workspace.vision.public_meld_private_recovery_queue import (
+    load_private_recovery_queue,
+)
 from workspace.vision.public_meld_private_recovery_scan import (
     RecoveryObservation,
     bbox_iou,
     cluster_recovery_observations,
+    find_recovery_item,
 )
 
 
+QUEUE = "references/vision/2026-10-01/public_meld_private_recovery_queue_v0_1.json"
+
+
 class PublicMeldPrivateRecoveryScanTests(unittest.TestCase):
+    def test_queue_item_lookup_is_exact(self):
+        queue = load_private_recovery_queue(QUEUE)
+        self.assertEqual(
+            find_recovery_item(queue, "G04_hand3_m456").expected_tiles,
+            ("M4", "M5", "M6"),
+        )
+        self.assertEqual(
+            find_recovery_item(queue, "G09_hand6_p789").expected_tiles,
+            ("P7", "P8", "P9"),
+        )
+        with self.assertRaisesRegex(ValueError, "not found or ambiguous"):
+            find_recovery_item(queue, "missing")
+
     def test_iou_and_stable_cluster(self):
         base = (0.10, 0.80, 0.12, 0.12)
         observations = [
