@@ -47,18 +47,21 @@ same Runtime report. Optional river and opponent-meld snapshots are joined only
 when actor, source session and stream epoch match; cross-source inputs are
 dropped.
 
-A private real-window smoke check reached the gate and correctly remained
-`BLOCKED` because concealed identities were incomplete and Gold was not trusted.
-This is a connectivity and abstention result, not a real-video accuracy claim.
+The representative first-hand real window at approximately 174 seconds now
+reaches the advisory gate as `PARTIAL` with `SHANTEN` enabled. The same
+three-frame burst trusts all 11 visible concealed tiles and the opened Gold M6.
+A visually incomplete second player meld cluster is preserved only as a
+count-only UNKNOWN meld after the concealed hand count independently implies
+the same two-meld structure. No missing meld tile identity is guessed.
 
-The runtime geometry now retains multiple yellow-skinned faces that occupy
-concealed hand/draw geometry instead of removing one as a standalone Gold
-region. Gold-skin normalization also crops to the dominant tile face before
-ranking, so an adjacent Ting overlay is not treated as part of the tile. In a
-private smoke window, both retained copies ranked the same expected candidate,
-but both remained `UNKNOWN` because their scores were below the acceptance
-threshold. The snapshot therefore remained `BLOCKED`; this is still an
-abstention check, not an accuracy claim.
+For that real snapshot the ordinary structural shanten bridge returns `-1`
+(`POST_DRAW_COMPLETE`). This means only that the ordinary 5-meld + pair
+structure is complete under the current Gold wildcard model; it is not a claim
+that every Huian special-state or Youjin condition is satisfied.
+
+Public remaining-copy and danger capabilities remain closed because river and
+exposed-meld identities are not yet complete/trusted. This is therefore a real
+basic-shanten checkpoint, not a formal Vision promotion or Executor gate.
 
 ## Gold identity cross-session gate
 
@@ -69,10 +72,21 @@ identity gate therefore aggregates approved base-tile evidence across
 least two distinct source sessions. Multiple crops from one match cannot
 self-validate.
 
-A separate older replay was reviewed and contains visible M6 concealed faces,
-but that replay renderer does not preserve the live yellow Gold skin. Those
-frames are only candidates for base M6 identity intake; they are **not**
-Gold-skin appearance evidence and are not counted as an approved template until
-the privacy-reviewed crop and source-session provenance are added to the
-dataset. The live confidence threshold remains `0.82`; no threshold was lowered
-to make the current M6 candidate pass.
+M6 Gold-skin identity is now closed for the representative first-hand window
+without lowering the live confidence threshold of `0.82`.
+
+Evidence roles are deliberately separated:
+
+- the current runtime session is still excluded from classifier templates and
+  from cross-session identity support, so the reviewed yellow M6 crop cannot
+  self-match;
+- a reviewed `gold_skin_only` crop is only proof that the class has been seen
+  under the real yellow UI skin;
+- exact M6 identity still has to pass confidence/category gates and retain at
+  least two non-target logical source sessions of identity support.
+
+With that separation, the two yellow M6 copies in the 174-second window are
+accepted at approximately `0.8317` and `0.8213` while the target session is
+excluded from training. Source-disjoint Gold evaluation also keeps the reviewed
+real yellow M6 as top-1 M6 at approximately `0.8265`, above `0.82`, with
+runtime-gated accepted accuracy remaining 100% in the development report.
