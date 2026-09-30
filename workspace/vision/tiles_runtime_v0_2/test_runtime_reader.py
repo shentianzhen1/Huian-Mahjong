@@ -127,6 +127,81 @@ class RuntimeReaderGateTests(unittest.TestCase):
         _, _, cross_session = _coverage(labels)
         self.assertNotIn("M6", cross_session["gold_identity"])
 
+    def test_current_session_gold_skin_qualifies_appearance_only(self) -> None:
+        labels = [
+            {
+                "tile_id": "M6",
+                "approved": True,
+                "region": "draw_visual",
+                "source_session": "session_base_a",
+            },
+            {
+                "tile_id": "M6",
+                "approved": True,
+                "region": "hand_region",
+                "source_session": "session_base_b",
+            },
+            {
+                "tile_id": "M6",
+                "approved": True,
+                "region": "hand_region",
+                "source_session": "session_target",
+                "gold_skin_only": True,
+            },
+        ]
+        training = _training_labels(labels, "session_target")
+        _, covered_by_region, cross_session = _coverage(training)
+
+        # The reviewed yellow crop is excluded from the target-session
+        # classifier/template bank and therefore cannot self-match.
+        self.assertEqual(_gold_skin_covered_classes(training), set())
+        # It may still qualify the class as having a reviewed real Gold skin.
+        self.assertEqual(_gold_skin_covered_classes(labels), {"M6"})
+        # Exact identity must independently survive two non-target sessions.
+        self.assertIn("M6", cross_session["gold_identity"])
+        self.assertEqual(
+            identity_gate(
+                "M6",
+                0.90,
+                region="gold_identity",
+                covered_classes=covered_by_region["gold_identity"],
+                cross_session_classes=cross_session,
+                confidence_threshold=0.82,
+            ),
+            ("M6", "accepted"),
+        )
+
+    def test_gold_skin_review_cannot_replace_independent_identity_support(self) -> None:
+        labels = [
+            {
+                "tile_id": "M6",
+                "approved": True,
+                "region": "hand_region",
+                "source_session": "session_base_a",
+            },
+            {
+                "tile_id": "M6",
+                "approved": True,
+                "region": "hand_region",
+                "source_session": "session_target",
+                "gold_skin_only": True,
+            },
+        ]
+        training = _training_labels(labels, "session_target")
+        _, covered_by_region, cross_session = _coverage(training)
+        self.assertEqual(_gold_skin_covered_classes(labels), {"M6"})
+        self.assertEqual(
+            identity_gate(
+                "M6",
+                0.99,
+                region="gold_identity",
+                covered_classes=covered_by_region["gold_identity"],
+                cross_session_classes=cross_session,
+                confidence_threshold=0.82,
+            ),
+            ("UNKNOWN", "class_not_cross_session_validated_in_region"),
+        )
+
     def test_real_gold_skin_coverage_requires_explicit_reviewed_sample(self) -> None:
         labels = [
             {
