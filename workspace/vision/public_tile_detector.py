@@ -247,6 +247,87 @@ def _upper_protrusions(
     return results
 
 
+def _bottom_group_cluster_bboxes(
+    components: list[tuple[int, int, int, int]],
+    frame_width: int,
+    frame_height: int,
+) -> tuple[tuple[int, int, int, int], ...]:
+    """Rejoin split bright components that belong to one lower exposed meld.
+
+    At higher capture resolutions, shadows/gaps can split one visual meld into
+    two connected components even though the same UI at 960/1046 widths formed
+    one wide component. Grouping is deliberately restricted to the reviewed
+    lower-left exposed zone and requires strong vertical overlap plus x
+    adjacency/overlap. Separate melds remain separate when the inter-group gap
+    exceeds the scale-relative adjacency limit.
+    """
+    if not components:
+        return ()
+
+    gap_limit = max(2, int(round(frame_width * 0.005)))
+
+    def related(
+        first: tuple[int, int, int, int],
+        second: tuple[int, int, int, int],
+    ) -> bool:
+        ax, ay, aw, ah = first
+        bx, by, bw, bh = second
+        a_right = ax + aw
+        b_right = bx + bw
+        horizontal_gap = max(0, bx - a_right, ax - b_right)
+        vertical_overlap = max(
+            0,
+            min(ay + ah, by + bh) - max(ay, by),
+        )
+        overlap_ratio = vertical_overlap / min(ah, bh)
+        return horizontal_gap <= gap_limit and overlap_ratio >= 0.55
+
+    remaining = set(range(len(components)))
+    clusters: list[list[tuple[int, int, int, int]]] = []
+    while remaining:
+        seed = remaining.pop()
+        indexes = [seed]
+        stack = [seed]
+        while stack:
+            current = stack.pop()
+            linked = [
+                other
+                for other in tuple(remaining)
+                if related(components[current], components[other])
+            ]
+            for other in linked:
+                remaining.remove(other)
+                indexes.append(other)
+                stack.append(other)
+        clusters.append([components[index] for index in indexes])
+
+    results: list[tuple[int, int, int, int]] = []
+    for cluster in clusters:
+        # Single wide components are already handled by the legacy detector
+        # path. This helper exists only for resolution-induced fragmentation.
+        if len(cluster) < 2:
+            continue
+        left = min(box[0] for box in cluster)
+        top = min(box[1] for box in cluster)
+        right = max(box[0] + box[2] for box in cluster)
+        bottom = max(box[1] + box[3] for box in cluster)
+        width = right - left
+        height = bottom - top
+        if width <= 0 or height <= 0:
+            continue
+        normalized_width = width / frame_width
+        normalized_height = height / frame_height
+        aspect = width / height
+        if not (
+            0.05 <= normalized_width <= 0.18
+            and 0.07 <= normalized_height <= 0.22
+            and 1.55 <= aspect <= 4.50
+        ):
+            continue
+        results.append((left, top, width, height))
+    return tuple(results)
+
+
 def _dedupe(
     candidates: Iterable[PublicGeometryCandidate],
 ) -> tuple[PublicGeometryCandidate, ...]:
@@ -317,6 +398,7 @@ def detect_public_tile_geometry(
 
     count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
     candidates: list[PublicGeometryCandidate] = []
+    lower_meld_components: list[tuple[int, int, int, int]] = []
     oversized_seen = 0
     oversized_bboxes: list[tuple[float, float, float, float]] = []
 
@@ -339,6 +421,18 @@ def detect_public_tile_geometry(
             continue
 
         raw_bbox = (x, y, box_width, box_height)
+
+        # Preserve lower-left bright components before the single-face width
+        # gate. On high-resolution captures one meld can fragment into two
+        # overlapping/adjacent components even though the lower-resolution UI
+        # produced one wide component.
+        if (
+            y > height * 0.72
+            and x < width * 0.45
+            and normalized_width <= 0.18
+            and normalized_height <= 0.22
+        ):
+            lower_meld_components.append(raw_bbox)
 
         # Dense public rows can touch an animation or an adjacent meld and
         # exceed the candidate intake limit. Preserve their bounds for a
@@ -440,6 +534,29 @@ def detect_public_tile_geometry(
                     session,
                 )
             )
+
+    for raw_group_bbox in _bottom_group_cluster_bboxes(
+        lower_meld_components,
+        width,
+        height,
+    ):
+        group_bbox = _expand_bottom_group(raw_group_bbox, width, height)
+        local = mask[
+            group_bbox[1] : group_bbox[1] + group_bbox[3],
+            group_bbox[0] : group_bbox[0] + group_bbox[2],
+        ]
+        group_fill = float(local.mean()) if local.size else 0.0
+        candidates.append(
+            PublicGeometryCandidate(
+                group_bbox,
+                _normalized(group_bbox, width, height),
+                "bottom_group",
+                round(min(0.86, 0.58 + group_fill * 0.36), 6),
+                round(group_fill, 6),
+                frame,
+                session,
+            )
+        )
 
     deduped = _dedupe(candidates)
     issues = ["candidate_intake_only"]
