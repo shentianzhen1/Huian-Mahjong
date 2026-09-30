@@ -81,6 +81,32 @@ def classify_public_meld_group(
             issues=(reason,),
         )
 
+    if not source_session or not source_sha256:
+        return PublicMeldIdentityBridgeResult(
+            prepared=prepared,
+            face_results=(),
+            tile_ids=(None, None, None),
+            trusted_for_read_only_runtime=False,
+            issues=("public_identity_source_scope_missing",),
+        )
+    source = bank.sources.get(source_session)
+    if source is None:
+        return PublicMeldIdentityBridgeResult(
+            prepared=prepared,
+            face_results=(),
+            tile_ids=(None, None, None),
+            trusted_for_read_only_runtime=False,
+            issues=("public_identity_source_not_registered",),
+        )
+    if source.source_sha256 != source_sha256:
+        return PublicMeldIdentityBridgeResult(
+            prepared=prepared,
+            face_results=(),
+            tile_ids=(None, None, None),
+            trusted_for_read_only_runtime=False,
+            issues=("public_identity_source_sha_conflict",),
+        )
+
     face_results: list[dict[str, Any]] = []
     tile_ids: list[str | None] = []
     for face in prepared.face_images:
