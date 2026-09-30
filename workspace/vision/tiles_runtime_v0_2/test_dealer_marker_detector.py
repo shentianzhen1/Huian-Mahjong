@@ -59,7 +59,7 @@ class DealerMarkerDetectorTests(unittest.TestCase):
             for row in data["samples"]
             if (
                 row["target"] in {"discard", "meld"}
-                and row["image_path"].startswith("references/gameplay/")
+                and row.get("context_scope", "full_frame") == "full_frame"
             )
         )
         # Privacy-bounded meld crops intentionally contain only exposed
