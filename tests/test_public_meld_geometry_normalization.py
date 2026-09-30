@@ -131,13 +131,21 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
     def test_reviewed_player_added_kong_is_stacked(self):
         image, group = self._reviewed("66fe_player_added_kong_p1_070s")
         normalized = self.normalize(image, group)
-        self.assertEqual(normalized.analysis.stack_state, self.STACKED)
+        self.assertEqual(
+            normalized.analysis.stack_state,
+            self.STACKED,
+            repr(normalized.analysis),
+        )
         self.assertEqual(self.split(normalized), ())
 
     def test_reviewed_player_chi_is_flat(self):
         image, group = self._reviewed("66fe_player_chi_s789_082s")
         normalized = self.normalize(image, group)
-        self.assertEqual(normalized.analysis.stack_state, self.FLAT)
+        self.assertEqual(
+            normalized.analysis.stack_state,
+            self.FLAT,
+            repr(normalized.analysis),
+        )
         self.assertEqual(len(self.split(normalized)), 3)
 
 
