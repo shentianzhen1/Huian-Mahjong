@@ -43,6 +43,33 @@ def _identity(item: dict[str, Any]) -> str | None:
     return str(value)
 
 
+def _meld_identity(item: dict[str, Any]) -> str | None:
+    """Accept only identities produced by the strict read-only public-meld gate."""
+    result = item.get("public_identity_result")
+    if not isinstance(result, dict):
+        return None
+    tile_id = result.get("read_only_runtime_candidate")
+    if (
+        not isinstance(tile_id, str)
+        or not tile_id
+        or result.get("region") != "public_meld"
+        or result.get("safe_for_runtime") is not True
+        or result.get("safe_for_executor") is not False
+        or result.get("formal_promotion_evidence") is not False
+        or result.get("winner_independent_match_groups", 0) < 2
+        or result.get("eligible_class_count", 0) < 2
+    ):
+        return None
+    try:
+        score = float(result.get("score"))
+        margin = float(result.get("margin"))
+    except (TypeError, ValueError):
+        return None
+    if score < 0.93 or margin < 0.075:
+        return None
+    return tile_id
+
+
 def _snapshot_scope_matches(
     snapshot: RiverSnapshot | MeldSnapshot,
     *,
@@ -372,7 +399,7 @@ def player_meld_snapshot_from_runtime(
         groups.append(
             MeldGroup(
                 normalized_bbox=_union_bbox(boxes),
-                tiles=tuple(_identity(item) for item in cluster),
+                tiles=tuple(_meld_identity(item) for item in cluster),
                 confidence=min(_component_confidence(item) for item in cluster),
                 evidence_refs=_runtime_refs(report, cluster),
             )
