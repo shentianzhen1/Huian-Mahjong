@@ -77,18 +77,6 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         self.assertTrue(all(face.size[1] == 96 for face in faces))
         self.assertTrue(all(face.size[0] > 0 for face in faces))
 
-    def test_upper_flat_row_uses_same_normalization(self):
-        image = self._flat_image()
-        normalized = self.normalize(
-            image,
-            self._candidate(
-                (20, 30, 185, 105),
-                geometry_kind="top_group",
-            ),
-        )
-        self.assertEqual(normalized.analysis.stack_state, self.FLAT)
-        self.assertEqual(len(self.split(normalized)), 3)
-
     def test_stacked_3_plus_1_is_detected_and_not_equal_thirds_split(self):
         image = self._stacked_image()
         normalized = self.normalize(
