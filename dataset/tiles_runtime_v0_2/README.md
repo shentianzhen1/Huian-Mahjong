@@ -34,8 +34,10 @@ The output directory MUST be outside the Git repository. The tool stores only
 tile-sized candidate crops plus a local JSON review sheet; it does not copy the
 full frame or video into the repository.
 
-For the current first-hand M6 diagnostic, scan the already observed ~110 second
-window at a low sampling rate:
+For the current first-hand M6 review target, use the stronger late-hand
+human-reviewed window: **170–176 seconds**. The 174–175 second frames visibly
+retain both yellow M6 Gold copies. This target belongs to the existing logical
+session `session_eight_hand_match_a`; do not create a new session for this clip.
 
 ```powershell
 python -m workspace.vision.tiles_runtime_v0_2.gold_skin_review_queue `
