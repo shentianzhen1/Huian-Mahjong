@@ -157,7 +157,12 @@ def read_stable_frames(
     labels = approved_labels(root)
     training_labels = _training_labels(labels, session)
     covered, covered_by_region, cross_session = _coverage(training_labels)
-    gold_skin_covered = _gold_skin_covered_classes(training_labels)
+    # Gold-skin review is an appearance qualification, not an identity
+    # template. Keep the current runtime session excluded from classifier
+    # training and cross-session identity support, but allow any approved
+    # reviewed Gold-skin crop to prove that this class has been observed under
+    # the target yellow UI skin. This cannot make a class pass identity_gate().
+    gold_skin_covered = _gold_skin_covered_classes(labels)
     classifier = TemplateTileClassifier.from_labels(root, training_labels)
     geometry_frames = [
         detect_dynamic_geometry(image, frame=frame_id, session=session)
