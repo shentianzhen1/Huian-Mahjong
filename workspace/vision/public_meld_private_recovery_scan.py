@@ -1,23 +1,26 @@
 """Recover stable public-meld geometry near a reviewed private timestamp.
 
-This is a local development utility for already-inspected material. It verifies
-the exact source SHA first, scans a small time window with the repository's
-geometry detector, keeps only regular 3-face meld groups, and clusters stable
-bboxes. It NEVER assigns tile identities or action semantics.
+Local development utility for already-inspected material. It verifies exact
+source SHA first, scans a bounded time window with the repository geometry
+detector, keeps only regular three-face meld groups, and clusters stable bboxes.
+It NEVER assigns tile identities or action semantics.
 
 Recovered pixels must still be compared against the private user-confirmed
 review packet before becoming template-eligible.
 """
 from __future__ import annotations
 
+import argparse
 from dataclasses import dataclass
+import json
 import math
 from pathlib import Path
 from typing import Any
 
 from workspace.vision.public_meld_private_recovery_queue import (
     RecoveryItem,
-    qualify_recovered_item,
+    RecoveryQueue,
+    load_private_recovery_queue,
 )
 from workspace.vision.private_video_chunking import sha256_file
 
@@ -62,6 +65,15 @@ class RecoveryCluster:
             "safe_for_hint": False,
             "safe_for_executor": False,
         }
+
+
+def find_recovery_item(queue: RecoveryQueue, recovery_id: str) -> RecoveryItem:
+    if not isinstance(recovery_id, str) or not recovery_id:
+        raise ValueError("recovery_id is required")
+    matches = [item for item in queue.items if item.recovery_id == recovery_id]
+    if len(matches) != 1:
+        raise ValueError(f"recovery_id not found or ambiguous: {recovery_id}")
+    return matches[0]
 
 
 def bbox_iou(
@@ -125,7 +137,13 @@ def cluster_recovery_observations(
             continue
         representative = max(
             group,
-            key=lambda row: (row.confidence, -abs(row.timestamp_seconds - group[len(group)//2].timestamp_seconds)),
+            key=lambda row: (
+                row.confidence,
+                -abs(
+                    row.timestamp_seconds
+                    - group[len(group) // 2].timestamp_seconds
+                ),
+            ),
         )
         results.append(
             RecoveryCluster(
@@ -143,7 +161,11 @@ def cluster_recovery_observations(
     return tuple(
         sorted(
             results,
-            key=lambda row: (-row.observation_count, -row.mean_confidence, row.geometry_kind),
+            key=lambda row: (
+                -row.observation_count,
+                -row.mean_confidence,
+                row.geometry_kind,
+            ),
         )
     )
 
@@ -184,14 +206,19 @@ def scan_recovery_window(
         capture.release()
         raise ValueError("source video metadata is invalid")
 
-    first_frame = max(0, int(math.floor((item.timestamp_seconds - radius_seconds) * fps)))
+    first_frame = max(
+        0,
+        int(math.floor((item.timestamp_seconds - radius_seconds) * fps)),
+    )
     last_frame = min(
         frame_count - 1,
         int(math.ceil((item.timestamp_seconds + radius_seconds) * fps)),
     )
     observations: list[RecoveryObservation] = []
     try:
-        for frame_index in range(first_frame, last_frame + 1, sample_stride_frames):
+        for frame_index in range(
+            first_frame, last_frame + 1, sample_stride_frames
+        ):
             if not capture.set(cv2.CAP_PROP_POS_FRAMES, frame_index):
                 raise ValueError("cannot seek recovery frame")
             ok, bgr = capture.read()
@@ -236,7 +263,10 @@ def scan_recovery_window(
         "source_sha256": actual_sha,
         "expected_tiles": list(item.expected_tiles),
         "window_seconds": [
-            round(max(0.0, item.timestamp_seconds - radius_seconds), 6),
+            round(
+                max(0.0, item.timestamp_seconds - radius_seconds),
+                6,
+            ),
             round(item.timestamp_seconds + radius_seconds, 6),
         ],
         "sample_stride_frames": sample_stride_frames,
@@ -251,3 +281,48 @@ def scan_recovery_window(
         "safe_for_hint": False,
         "safe_for_executor": False,
     }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--video", type=Path, required=True)
+    parser.add_argument("--queue", type=Path, required=True)
+    parser.add_argument("--recovery-id", required=True)
+    parser.add_argument("--radius-seconds", type=float, default=2.0)
+    parser.add_argument("--sample-stride-frames", type=int, default=3)
+    parser.add_argument("--minimum-observations", type=int, default=3)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+
+    queue = load_private_recovery_queue(args.queue)
+    item = find_recovery_item(queue, args.recovery_id)
+    report = scan_recovery_window(
+        args.video,
+        item,
+        radius_seconds=args.radius_seconds,
+        sample_stride_frames=args.sample_stride_frames,
+        minimum_observations=args.minimum_observations,
+    )
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        json.dumps(
+            {
+                "recovery_id": report["recovery_id"],
+                "regular_group_observations": report[
+                    "regular_group_observations"
+                ],
+                "stable_cluster_count": len(report["stable_clusters"]),
+                "template_eligible": False,
+                "safe_for_executor": False,
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()
