@@ -11,8 +11,16 @@ reviewed geometry exists.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from workspace.vision.public_tile_detector import PublicGeometryCandidate
+from workspace.vision.public_meld_geometry_normalization import (
+    FLAT,
+    STACKED,
+    PublicMeldGeometryAnalysis,
+    normalize_public_meld_crop,
+    split_flat_meld_faces,
+)
 
 
 @dataclass(frozen=True)
@@ -50,6 +58,51 @@ class PublicMeldFaceSegmentation:
             "safe_for_hint": False,
             "safe_for_executor": False,
         }
+
+
+@dataclass(frozen=True)
+class PreparedPublicMeldFaces:
+    """Classifier-ready normalized faces plus geometry-only structure state."""
+
+    geometry: PublicMeldGeometryAnalysis
+    face_images: tuple[Any, ...]
+
+    def to_dict(self) -> dict:
+        return {
+            "schema_version": "prepared_public_meld_faces_v0_1",
+            "geometry": self.geometry.to_dict(),
+            "normalized_face_count": len(self.face_images),
+            "classifier_ready": (
+                self.geometry.stack_state == FLAT
+                and len(self.face_images) == 3
+            ),
+            "stacked_structure_detected": (
+                self.geometry.stack_state == STACKED
+            ),
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_runtime_identity": False,
+            "safe_for_hint": False,
+            "safe_for_executor": False,
+        }
+
+
+def prepare_public_meld_faces(
+    image: Any,
+    group: PublicGeometryCandidate,
+) -> PreparedPublicMeldFaces:
+    """Normalize first, then split only a trusted FLAT three-face row.
+
+    This is the canonical geometry entry point for public-meld identity work.
+    STACKED and UNKNOWN layouts intentionally yield no classifier-ready face
+    crops; the overlaid fourth face needs its own reviewed stack-specific
+    splitter and must not be fabricated by equal-width slicing.
+    """
+    normalized = normalize_public_meld_crop(image, group)
+    return PreparedPublicMeldFaces(
+        geometry=normalized.analysis,
+        face_images=split_flat_meld_faces(normalized),
+    )
 
 
 def _normalized(
