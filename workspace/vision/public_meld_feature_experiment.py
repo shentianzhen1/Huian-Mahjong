@@ -18,7 +18,7 @@ from collections import defaultdict
 import hashlib
 import json
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from PIL import Image
 
@@ -35,6 +35,27 @@ from workspace.vision.public_identity_shadow_v0_2 import (
 
 
 FEATURES = ("legacy_gray", "gray_edge", "lab_chroma_edge")
+QUERY_INSET_RATIOS = (0.0, 0.12)
+VARIANTS = tuple(
+    (f"{feature_name}@inset{inset_ratio:.2f}", feature_name, inset_ratio)
+    for feature_name in FEATURES
+    for inset_ratio in QUERY_INSET_RATIOS
+)
+
+
+def _center_zoom(image: Any, inset_ratio: float) -> Any:
+    if inset_ratio == 0:
+        return image.copy()
+    if not 0 <= inset_ratio < 0.5:
+        raise ValueError("query inset_ratio must be in [0, 0.5)")
+    width, height = image.size
+    dx = max(1, int(round(width * inset_ratio)))
+    dy = max(1, int(round(height * inset_ratio)))
+    if dx * 2 >= width or dy * 2 >= height:
+        raise ValueError("query inset removes the full image")
+    return image.crop((dx, dy, width - dx, height - dy)).resize(
+        (width, height), Image.Resampling.LANCZOS
+    )
 
 
 def _l2(values: Any) -> Any | None:
@@ -291,7 +312,7 @@ def evaluate_public_meld_features(
             )
 
     reports: dict[str, Any] = {}
-    for feature_name in FEATURES:
+    for variant_name, feature_name, inset_ratio in VARIANTS:
         query_rows = []
         for query in fixture.get("queries", ()):
             if query.get("region") != "public_meld":
@@ -304,7 +325,8 @@ def evaluate_public_meld_features(
                 raise ValueError(f"query image SHA mismatch: {query['query_id']}")
             with Image.open(image_path) as original:
                 image = original.convert("RGB")
-            feature = extract_public_meld_feature(image, feature_name)
+            transformed = _center_zoom(image, inset_ratio)
+            feature = extract_public_meld_feature(transformed, feature_name)
             if feature is None:
                 query_rows.append(
                     {
@@ -331,7 +353,9 @@ def evaluate_public_meld_features(
             for row in query_rows
             if row.get("top1_correct") and row.get("margin") is not None
         ]
-        reports[feature_name] = {
+        reports[variant_name] = {
+            "feature_name": feature_name,
+            "query_inset_ratio": inset_ratio,
             "query_count": len(query_rows),
             "top1_correct_count": correct,
             "top1_accuracy": (
@@ -345,16 +369,20 @@ def evaluate_public_meld_features(
 
     return {
         "schema_version": "public_meld_feature_experiment_v0_1",
-        "feature_variants": list(FEATURES),
+        "feature_variants": [name for name, _, _ in VARIANTS],
+        "base_features": list(FEATURES),
+        "query_inset_ratios": list(QUERY_INSET_RATIOS),
         "template_public_meld_label_count": len(labels),
         "query_fixture": Path(query_fixture_path).name,
         "query_match_group_excluded": True,
         "minimum_other_match_groups_per_class": 2,
         "results": reports,
         "interpretation_policy": (
-            "Diagnostic ranking only. Do not transfer numeric thresholds across "
-            "feature families; do not change Runtime until more independent "
-            "match support exists and a separately reviewed gate is frozen."
+            "Diagnostic ranking only. The 0.12 query inset was selected after "
+            "inspecting the same development queries and is therefore not "
+            "promotion evidence. Do not transfer numeric thresholds across "
+            "feature families or change Runtime until more independent match "
+            "support exists and a separately reviewed gate is frozen."
         ),
         "changes_runtime_behavior": False,
         "formal_promotion_evidence": False,
