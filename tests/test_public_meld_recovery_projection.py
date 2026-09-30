@@ -8,7 +8,7 @@ from workspace.vision.public_meld_recovery_projection import (
 
 
 class PublicMeldRecoveryProjectionTests(unittest.TestCase):
-    def test_projection_separates_all_queued_from_source_verified(self):
+    def test_projection_separates_queued_verified_and_recovered_private(self):
         report = project_public_meld_recovery_coverage(
             manifest_path=(
                 "references/vision/2026-09-22/"
@@ -26,7 +26,12 @@ class PublicMeldRecoveryProjectionTests(unittest.TestCase):
                 "references/vision/2026-10-01/"
                 "public_meld_private_recovery_source_check_v0_1.json"
             ),
+            recovery_result_path=(
+                "references/vision/2026-10-01/"
+                "public_meld_private_recovery_result_v0_1.json"
+            ),
         )
+
         self.assertEqual(
             report["all_queued_newly_new_match_query_supported_classes"],
             ["M4", "M5", "M6", "P7", "P8"],
@@ -36,15 +41,15 @@ class PublicMeldRecoveryProjectionTests(unittest.TestCase):
             ["P7", "P8"],
         )
         self.assertEqual(
-            report["all_queued_newly_introduced_classes"],
+            report["recovered_private_newly_new_match_query_supported_classes"],
+            ["P7", "P8"],
+        )
+        self.assertEqual(
+            report["recovered_private_newly_introduced_classes"],
             ["P9"],
         )
         self.assertEqual(
-            report["source_verified_newly_introduced_classes"],
-            ["P9"],
-        )
-        self.assertEqual(
-            report["source_verified_recovery_ids"],
+            report["recovered_private_template_ids"],
             ["G09_hand6_p789"],
         )
         self.assertEqual(
@@ -56,42 +61,32 @@ class PublicMeldRecoveryProjectionTests(unittest.TestCase):
         for tile in ("P7", "P8"):
             with self.subTest(tile=tile):
                 self.assertEqual(
-                    rows[tile]["before_independent_match_group_count"], 1
-                )
-                self.assertEqual(
-                    rows[tile][
-                        "source_verified_projected_independent_match_group_count"
-                    ],
+                    rows[tile]["recovered_private_independent_match_group_count"],
                     2,
                 )
                 self.assertTrue(
-                    rows[tile][
-                        "source_verified_projected_new_match_query_support"
-                    ]
-                )
-        for tile in ("M4", "M5", "M6"):
-            with self.subTest(tile=tile):
-                self.assertEqual(
-                    rows[tile][
-                        "source_verified_projected_independent_match_group_count"
-                    ],
-                    1,
-                )
-                self.assertFalse(
-                    rows[tile][
-                        "source_verified_projected_new_match_query_support"
-                    ]
+                    rows[tile]["recovered_private_new_match_query_support"]
                 )
 
         self.assertEqual(
-            rows["P9"]["source_verified_projected_independent_match_group_count"],
+            rows["P9"]["recovered_private_independent_match_group_count"],
             1,
         )
         self.assertFalse(
-            rows["P9"]["source_verified_projected_new_match_query_support"]
+            rows["P9"]["recovered_private_new_match_query_support"]
         )
+        for tile in ("M4", "M5", "M6"):
+            with self.subTest(tile=tile):
+                self.assertEqual(
+                    rows[tile]["recovered_private_independent_match_group_count"],
+                    1,
+                )
+                self.assertFalse(
+                    rows[tile]["recovered_private_new_match_query_support"]
+                )
+
         self.assertTrue(
-            report["source_verified_projection_is_not_template_eligibility"]
+            report["private_recovered_pixels_stay_outside_public_repo"]
         )
         self.assertFalse(report["formal_promotion_evidence"])
         self.assertFalse(report["safe_for_executor"])
