@@ -28,6 +28,16 @@ from workspace.vision.public_identity_shadow_v0_2 import (
 )
 
 
+SIFT_SCALE_FACTOR = 3.0
+SIFT_CLAHE_CLIP_LIMIT = 2.0
+SIFT_CLAHE_TILE_GRID = (8, 8)
+SIFT_NFEATURES = 100
+SIFT_KNN_K = 2
+SIFT_RATIO_TEST = 0.80
+SIFT_FALLBACK_RAW_MATCHES = 5
+SIFT_MINIMUM_OTHER_MATCH_GROUPS = 2
+
+
 @dataclass(frozen=True)
 class PublicMeldSiftTemplate:
     tile_id: str
@@ -53,15 +63,15 @@ def _sift_descriptors(image: Any) -> Any | None:
     gray = cv2.resize(
         gray,
         None,
-        fx=3.0,
-        fy=3.0,
+        fx=SIFT_SCALE_FACTOR,
+        fy=SIFT_SCALE_FACTOR,
         interpolation=cv2.INTER_CUBIC,
     )
     gray = cv2.createCLAHE(
-        clipLimit=2.0,
-        tileGridSize=(8, 8),
+        clipLimit=SIFT_CLAHE_CLIP_LIMIT,
+        tileGridSize=SIFT_CLAHE_TILE_GRID,
     ).apply(gray)
-    detector = cv2.SIFT_create(nfeatures=100)
+    detector = cv2.SIFT_create(nfeatures=SIFT_NFEATURES)
     _keypoints, descriptors = detector.detectAndCompute(gray, None)
     if descriptors is None or len(descriptors) < 2:
         return None
@@ -81,20 +91,22 @@ def _descriptor_similarity(first: Any, second: Any) -> float | None:
     if first is None or second is None or len(first) < 2 or len(second) < 2:
         return None
     matcher = cv2.BFMatcher(cv2.NORM_L2, crossCheck=False)
-    pairs = matcher.knnMatch(first, second, k=2)
+    pairs = matcher.knnMatch(first, second, k=SIFT_KNN_K)
     good_distances: list[float] = []
     for pair in pairs:
-        if len(pair) != 2:
+        if len(pair) != SIFT_KNN_K:
             continue
         best, runner = pair
-        if best.distance < 0.80 * runner.distance:
+        if best.distance < SIFT_RATIO_TEST * runner.distance:
             good_distances.append(float(best.distance))
 
     if not good_distances:
         raw = matcher.match(first, second)
         if not raw:
             return None
-        best_raw = sorted(float(match.distance) for match in raw)[:5]
+        best_raw = sorted(float(match.distance) for match in raw)[
+            :SIFT_FALLBACK_RAW_MATCHES
+        ]
         good_distances = best_raw
 
     mean_distance = float(np.mean(good_distances))
@@ -152,7 +164,7 @@ def rank_public_meld_sift(
     *,
     source_session: str,
     source_sha256: str,
-    minimum_other_match_groups: int = 2,
+    minimum_other_match_groups: int = SIFT_MINIMUM_OTHER_MATCH_GROUPS,
 ) -> dict[str, Any]:
     """Rank source-disjoint classes using independent original-match support."""
     if (
