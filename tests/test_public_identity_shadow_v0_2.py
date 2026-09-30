@@ -201,21 +201,24 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "identical video bytes"):
             load_development_sources(self.reg)
 
-    def test_real_17_labels_have_no_cross_match_eligible_class(self):
+    def test_real_reviewed_labels_remain_development_only(self):
         from workspace.vision.public_identity_labels import load_public_identity_manifest
         from workspace.vision.public_identity_shadow_v0_2 import evaluate_reviewed_development
         report = evaluate_reviewed_development(
             load_public_identity_manifest(REAL_LABELS), REPO, REAL_GROUPS,
         )
-        self.assertEqual(report["approved_label_count"], 17)
-        self.assertEqual(report["source_match_groups"], 2)
+        self.assertEqual(report["approved_label_count"], 26)
+        self.assertEqual(report["source_match_groups"], 4)
+        # P6 and S4 now each have two independent development match groups,
+        # but leave-one-match-out review still has only one *other* group for
+        # each reviewed query. Nothing is promoted from the reviewed bank itself.
         self.assertEqual(report["eligible_queries"], 0)
         self.assertEqual(report["shadow_proposals"], 0)
-        self.assertEqual(report["shadow_abstentions"], 17)
+        self.assertEqual(report["shadow_abstentions"], 26)
         self.assertIsNone(report["shadow_accuracy_on_proposals"])
         self.assertFalse(report["formal_promotion_evidence"])
         self.assertFalse(report["safe_for_runtime"])
-        self.assertEqual(report["by_region"]["public_meld"]["reviewed"], 12)
+        self.assertEqual(report["by_region"]["public_meld"]["reviewed"], 21)
 
 
 if __name__ == "__main__":
