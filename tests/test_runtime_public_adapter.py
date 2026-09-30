@@ -108,6 +108,40 @@ class RuntimePublicAdapterMeldTests(unittest.TestCase):
         self.assertEqual(len(snapshot.groups), 2)
         self.assertTrue(all(len(group.tiles) == 3 for group in snapshot.groups))
 
+    def test_incomplete_second_cluster_preserves_count_when_hand_size_agrees(self):
+        source = report(
+            [
+                component(0.05, "meld"),
+                component(0.09, "meld"),
+                component(0.13, "meld"),
+                component(0.17, "meld"),
+                component(0.32, "meld"),
+                component(0.36, "meld"),
+            ],
+            concealed_count=11,
+        )
+        snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
+        self.assertTrue(snapshot.trusted)
+        self.assertEqual(len(snapshot.groups), 2)
+        self.assertEqual(len(snapshot.groups[0].tiles), 4)
+        self.assertEqual(snapshot.groups[1].tiles, (None, None, None))
+        self.assertFalse(snapshot.groups[1].identities_complete)
+
+    def test_incomplete_cluster_is_not_promoted_without_hand_count_corroboration(self):
+        source = report(
+            [
+                component(0.05, "meld"),
+                component(0.09, "meld"),
+                component(0.13, "meld"),
+                component(0.17, "meld"),
+                component(0.32, "meld"),
+                component(0.36, "meld"),
+            ],
+            concealed_count=13,
+        )
+        snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
+        self.assertEqual(len(snapshot.groups), 1)
+
     def test_stacked_four_face_group_stays_one_group(self):
         source = report(
             [
