@@ -42,7 +42,7 @@ class PublicIdentityLabelsTests(unittest.TestCase):
 
     def test_manifest_is_separate_development_only_public_domain(self):
         self.assertTrue(self.manifest.excluded_from_formal_promotion)
-        self.assertEqual(len(self.manifest.labels), 17)
+        self.assertEqual(len(self.manifest.labels), 26)
         self.assertEqual(
             {label.region for label in self.manifest.labels},
             PUBLIC_REGIONS,
@@ -58,14 +58,14 @@ class PublicIdentityLabelsTests(unittest.TestCase):
         self.assertEqual(report["regions"]["public_action"]["source_sessions"], 2)
         self.assertEqual(report["regions"]["public_single"]["labels"], 1)
         self.assertEqual(report["regions"]["public_single"]["source_sessions"], 1)
-        self.assertEqual(report["regions"]["public_meld"]["labels"], 12)
-        self.assertEqual(report["regions"]["public_meld"]["source_sessions"], 2)
+        self.assertEqual(report["regions"]["public_meld"]["labels"], 21)
+        self.assertEqual(report["regions"]["public_meld"]["source_sessions"], 5)
 
     def test_initial_labels_cover_only_a_small_subset_of_standard_classes(self):
         report = readiness_report(self.manifest)
-        self.assertEqual(report["standard_class_coverage"]["covered"], 11)
+        self.assertEqual(report["standard_class_coverage"]["covered"], 18)
         self.assertEqual(report["standard_class_coverage"]["total"], 34)
-        self.assertEqual(report["cross_session_class_count"], 0)
+        self.assertEqual(report["cross_session_class_count"], 2)
         self.assertFalse(report["runtime_identity_ready"])
         self.assertFalse(report["formal_promotion_eligible"])
 
