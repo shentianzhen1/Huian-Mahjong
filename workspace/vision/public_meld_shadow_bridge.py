@@ -125,8 +125,13 @@ def probe_reviewed_meld_shadow(
     """
     from PIL import Image
 
-    if sample.target != "meld" or sample.status != "bbox_reviewed" or not sample.bbox:
-        raise ValueError("only previously reviewed source-scoped meld bboxes")
+    if (
+        sample.target != "meld"
+        or sample.status != "bbox_reviewed"
+        or not sample.bbox
+        or sample.context_scope != "full_frame"
+    ):
+        raise ValueError("only previously reviewed full-frame source-scoped meld bboxes")
     source = bank.sources.get(sample.source_session)
     if source is None or source.source_sha256 != sample.source_sha256:
         raise ValueError("source session/SHA is not locked in shadow bank")
@@ -235,7 +240,10 @@ def audit_reviewed_meld_shadow(
         if label.region == "public_meld":
             expected_by_sample.setdefault(label.source_calibration_sample_id, []).append(label)
 
-    rows = [sample for sample in calibration.samples if sample.target == "meld"]
+    rows = [
+        sample for sample in calibration.samples
+        if sample.target == "meld" and sample.context_scope == "full_frame"
+    ]
     checked: list[dict[str, Any]] = []
     covered = 0
     approved_total = 0
