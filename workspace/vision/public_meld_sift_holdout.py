@@ -21,8 +21,12 @@ from workspace.vision.public_identity_shadow_v0_2 import (
     load_development_sources,
 )
 from workspace.vision.public_meld_identity_sift import (
+    PublicMeldSiftBank,
     build_public_meld_sift_bank,
     rank_public_meld_sift,
+)
+from workspace.vision.public_meld_private_sift_loader import (
+    augment_public_meld_sift_bank_from_private_zip,
 )
 from workspace.vision.public_meld_sift_candidate import (
     assert_future_sift_holdout_eligible,
@@ -74,7 +78,7 @@ def _assert_no_template_leakage(
     *,
     manifest: Any,
 ) -> None:
-    """Reject a holdout if any query source/pixel is already an identity template."""
+    """Reject a holdout if any query source/pixel is already a public template."""
     template_paths = {
         label.image_path
         for label in approved_labels(manifest)
@@ -108,6 +112,28 @@ def _assert_no_template_leakage(
             raise ValueError("SIFT holdout query pixels are already a template")
 
 
+def _assert_no_augmented_bank_source_leakage(
+    packet: dict[str, Any],
+    *,
+    bank: PublicMeldSiftBank,
+) -> None:
+    """Include local private templates in source/match leakage checks."""
+    template_source_hashes = {
+        template.source_sha256 for template in bank.templates
+    }
+    template_match_groups = {
+        template.match_group for template in bank.templates
+    }
+    if packet["source_sha256"] in template_source_hashes:
+        raise ValueError(
+            "SIFT holdout source video already supplies public/private templates"
+        )
+    if packet["match_group"] in template_match_groups:
+        raise ValueError(
+            "SIFT holdout match group already supplies public/private templates"
+        )
+
+
 def evaluate_frozen_public_meld_sift_holdout(
     repository_root: str | Path,
     query_packet_path: str | Path,
@@ -122,6 +148,11 @@ def evaluate_frozen_public_meld_sift_holdout(
     registry_path: str | Path = (
         "references/vision/2026-09-24/"
         "public_identity_source_groups.development.json"
+    ),
+    private_template_zip_path: str | Path | None = None,
+    private_recovery_result_path: str | Path = (
+        "references/vision/2026-10-01/"
+        "public_meld_private_recovery_result_v0_1.json"
     ),
 ) -> dict[str, Any]:
     """Score a frozen SIFT candidate on a genuinely new query-only match."""
@@ -152,6 +183,15 @@ def evaluate_frozen_public_meld_sift_holdout(
         root,
         root / registry_path,
     )
+    private_load_report = None
+    if private_template_zip_path is not None:
+        bank, private_load_report = augment_public_meld_sift_bank_from_private_zip(
+            bank,
+            private_zip_path=private_template_zip_path,
+            recovery_result_path=root / private_recovery_result_path,
+            repository_root=root,
+        )
+    _assert_no_augmented_bank_source_leakage(packet, bank=bank)
 
     from PIL import Image
 
@@ -186,7 +226,7 @@ def evaluate_frozen_public_meld_sift_holdout(
 
     top1_correct = sum(bool(row["top1_correct"]) for row in rows)
     return {
-        "schema_version": "public_meld_sift_holdout_eval_v0_1",
+        "schema_version": "public_meld_sift_holdout_eval_v0_2",
         "candidate_id": candidate.candidate_id,
         "candidate_frozen_on": candidate.frozen_on,
         "candidate_changed_after_freeze": False,
@@ -198,6 +238,7 @@ def evaluate_frozen_public_meld_sift_holdout(
             round(top1_correct / len(rows), 6) if rows else None
         ),
         "queries": rows,
+        "private_template_load": private_load_report,
         "holdout_eligible_under_frozen_candidate_contract": True,
         "development_only": True,
         "source_disjoint_holdout": True,
@@ -226,6 +267,17 @@ def main() -> None:
         "references/vision/2026-09-24/"
         "public_identity_source_groups.development.json"
     ))
+    parser.add_argument(
+        "--private-template-zip",
+        help="local private reviewed template ZIP; must remain outside repository",
+    )
+    parser.add_argument(
+        "--private-recovery-result",
+        default=(
+            "references/vision/2026-10-01/"
+            "public_meld_private_recovery_result_v0_1.json"
+        ),
+    )
     args = parser.parse_args()
 
     report = evaluate_frozen_public_meld_sift_holdout(
@@ -234,6 +286,8 @@ def main() -> None:
         candidate_path=args.candidate,
         identity_manifest_path=args.manifest,
         registry_path=args.registry,
+        private_template_zip_path=args.private_template_zip,
+        private_recovery_result_path=args.private_recovery_result,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
