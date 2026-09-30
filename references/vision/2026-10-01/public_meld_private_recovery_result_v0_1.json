@@ -20,6 +20,8 @@
       "frame_index": 1740,
       "frame_lineage_mode": "direct_source_frame_no_derivative",
       "group_bbox": [96, 403, 131, 73],
+      "private_label_manifest_name": "private_approved_labels.json",
+      "private_label_manifest_sha256": "9d89e9cf2f7859a2a24bebce91632e854299df2404c92f0fdf9a96e3a2884427",
       "faces": [
         {
           "tile_id": "P7",
