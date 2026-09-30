@@ -236,6 +236,80 @@ def propose_shadow_identity(
     return result
 
 
+def propose_shadow_feature(
+    bank: ShadowBank, feature: Any, *, region: str,
+    source_session: str, source_sha256: str,
+    minimum_score: float = 0.93, minimum_margin: float = 0.075,
+) -> dict[str, Any]:
+    """Score a precomputed query-only public-face feature.
+
+    This is intentionally equivalent to the pixel path after feature extraction.
+    It exists so a reviewed target match can be evaluated without committing
+    the target crop itself as a training/template asset. Output identity stays
+    UNKNOWN and is never runtime/executor-safe.
+    """
+    import numpy as np
+
+    if region not in PUBLIC_REGIONS:
+        raise ValueError("public identity region must be explicit")
+    source = bank.sources.get(source_session)
+    if source is None or source.source_sha256 != source_sha256:
+        raise ValueError("query source session/SHA not in locked registry")
+    if not 0 < minimum_score <= 1 or not 0 < minimum_margin <= 2:
+        raise ValueError("invalid shadow thresholds")
+    query = np.asarray(feature, dtype=np.float32).reshape(-1)
+    result: dict[str, Any] = {
+        "tile_id": UNKNOWN, "shadow_proposal": None, "region": region,
+        "eligible_class_count": 0, "score": None, "margin": None,
+        "evidence_grade": UNKNOWN, "safe_for_runtime": False,
+        "safe_for_executor": False, "formal_promotion_evidence": False,
+        "reason": "insufficient_cross_match_class_support",
+    }
+    if query.size == 0 or not np.isfinite(query).all():
+        result["reason"] = "invalid_query_feature"
+        return result
+    length = float(np.linalg.norm(query))
+    if length < 1e-5:
+        result["reason"] = "blank_or_low_texture_public_face"
+        return result
+    query = query / length
+
+    best_by_class_and_group: dict[str, dict[str, float]] = defaultdict(dict)
+    for template in bank.templates:
+        if (template.region != region
+                or template.match_group == source.match_group
+                or template.source_sha256 == source_sha256):
+            continue
+        if template.feature.size != query.size:
+            raise ValueError("query/template public feature size mismatch")
+        score = float(np.dot(query, template.feature))
+        old = best_by_class_and_group[template.tile_id].get(
+            template.match_group, -2.0
+        )
+        best_by_class_and_group[template.tile_id][template.match_group] = max(
+            old, score
+        )
+    eligible = sorted(
+        ((tile, sorted(scores.values(), reverse=True)[1])
+         for tile, scores in best_by_class_and_group.items()
+         if len(scores) >= 2),
+        key=lambda row: (-row[1], row[0]),
+    )
+    result["eligible_class_count"] = len(eligible)
+    if len(eligible) < 2:
+        return result
+    winner, score = eligible[0]
+    margin = score - eligible[1][1]
+    result["score"] = round(score, 6)
+    result["margin"] = round(margin, 6)
+    if score >= minimum_score and margin >= minimum_margin:
+        result["shadow_proposal"] = winner
+        result["reason"] = "development_shadow_only_not_runtime_identity"
+    else:
+        result["reason"] = "low_score_or_ambiguous_public_face"
+    return result
+
+
 def evaluate_reviewed_development(
     manifest: PublicIdentityManifest, repository_root: str | Path,
     registry_path: str | Path,
