@@ -22,6 +22,48 @@ labeling authority. Runtime assets remain `safe_for_executor=false` until a
 separate verified evaluation is complete.
 
 
+## Private Gold-skin review queue
+
+When a real recording contains yellow Gold-skinned concealed tiles but the
+exact source frame/bbox is not yet frozen, first build a **private review
+queue**. This step is deliberately non-authoritative: it never edits
+`labels.jsonl`, never marks a crop approved, and every exported candidate is
+`safe_for_hint=false` / `safe_for_executor=false`.
+
+The output directory MUST be outside the Git repository. The tool stores only
+tile-sized candidate crops plus a local JSON review sheet; it does not copy the
+full frame or video into the repository.
+
+For the current first-hand M6 diagnostic, scan the already observed ~110 second
+window at a low sampling rate:
+
+```powershell
+python -m workspace.vision.tiles_runtime_v0_2.gold_skin_review_queue `
+  --video "D:\path\to\private_match.mp4" `
+  --dataset dataset/tiles_runtime_v0_2 `
+  --output-dir "D:\HuianPrivateReview\gold_m6" `
+  --source-session "<existing logical session for that match>" `
+  --start-seconds 105 `
+  --end-seconds 115 `
+  --sample-fps 2 `
+  --target-tile M6 `
+  --max-candidates 12
+```
+
+`source_session` must describe the **logical match/source group**, not the
+clip filename. If this Gold crop comes from a match already represented in the
+Runtime bank, reuse that match's existing session; do not create a new session
+just because the video is a different clip.
+
+The queue sorts M6 top-1 proposals first, then by classifier confidence, but a
+machine proposal is never labeling authority. Open the exported tile crops and
+the original source frame, confirm that the selected crop is genuinely M6 and
+contains only the yellow tile face, then admit exactly that reviewed crop with
+`reviewed_tile_intake --gold-skin-only`.
+
+After intake, rerun the source-disjoint Gold identity report and Runtime smoke
+at the unchanged `0.82` threshold before considering any promotion.
+
 ## Reviewed single-tile intake
 
 Use `workspace.vision.tiles_runtime_v0_2.reviewed_tile_intake` only after a
