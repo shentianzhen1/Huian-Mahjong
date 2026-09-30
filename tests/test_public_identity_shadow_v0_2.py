@@ -109,7 +109,9 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
             self.assertEqual(result["shadow_proposal"], tile)
             self.assertEqual(result["tile_id"], "UNKNOWN")
             self.assertEqual(result["evidence_grade"], "UNKNOWN")
-            self.assertFalse(result["safe_for_runtime"])
+            self.assertTrue(result["safe_for_runtime"])
+            self.assertEqual(result["read_only_runtime_candidate"], tile)
+            self.assertGreaterEqual(result["winner_independent_match_groups"], 2)
             self.assertFalse(result["safe_for_executor"])
             self.assertFalse(result["formal_promotion_evidence"])
 
@@ -229,6 +231,38 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
             self.assertFalse(result["safe_for_executor"])
             self.assertFalse(result["formal_promotion_evidence"])
         print("FIRST_HAND_PUBLIC_SHADOW=" + json.dumps(observed, sort_keys=True))
+
+    def test_runtime_candidate_requires_public_meld_two_other_groups_and_margin(self):
+        from workspace.vision.public_identity_shadow_v0_2 import propose_shadow_identity
+        for source in ("train_A", "train_B"):
+            for tile in ("M1", "M2"):
+                self.add(source, source, tile)
+        target_sha = self.source("heldout", "new_match")
+        bank, _ = self.bank()
+
+        accepted = propose_shadow_identity(
+            bank, self.face("M1"), region="public_meld",
+            source_session="heldout", source_sha256=target_sha,
+        )
+        self.assertEqual(accepted["read_only_runtime_candidate"], "M1")
+        self.assertTrue(accepted["safe_for_runtime"])
+        self.assertFalse(accepted["formal_promotion_evidence"])
+        self.assertFalse(accepted["safe_for_executor"])
+
+        wrong_region = propose_shadow_identity(
+            bank, self.face("M1"), region="public_action",
+            source_session="heldout", source_sha256=target_sha,
+        )
+        self.assertIsNone(wrong_region["read_only_runtime_candidate"])
+        self.assertFalse(wrong_region["safe_for_runtime"])
+
+        ambiguous = propose_shadow_identity(
+            bank, self.face("M1"), region="public_meld",
+            source_session="heldout", source_sha256=target_sha,
+            minimum_margin=1.5,
+        )
+        self.assertIsNone(ambiguous["read_only_runtime_candidate"])
+        self.assertFalse(ambiguous["safe_for_runtime"])
 
     def test_region_isolation_unknown_and_source_identity_guard(self):
         from workspace.vision.public_identity_shadow_v0_2 import propose_shadow_identity
