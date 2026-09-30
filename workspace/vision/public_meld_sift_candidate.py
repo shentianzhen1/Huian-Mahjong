@@ -8,6 +8,13 @@ from pathlib import Path
 
 SCHEMA_VERSION = "public_meld_sift_candidate_v0_1"
 CANDIDATE_ID = "public_meld_sift_local_keypoints_v0_1"
+FROZEN_SELECTION_MATCH_GROUPS = (
+    "reviewed_recording_66fe",
+    "reviewed_recording_b389",
+    "reviewed_match_2026_09_19_eight_hand",
+    "reviewed_recording_14",
+    "reviewed_match_2026_09_26_first_hand",
+)
 
 
 @dataclass(frozen=True)
@@ -23,6 +30,7 @@ class PublicMeldSiftCandidate:
     ratio_test: float
     fallback_best_raw_matches: int
     minimum_other_match_groups: int
+    selection_match_groups: tuple[str, ...]
     selected_after_reviewing_results: bool
     future_holdout_must_be_new_independent_match_group: bool
     future_holdout_must_not_change_candidate: bool
@@ -67,6 +75,9 @@ def load_public_meld_sift_candidate(path: str | Path) -> PublicMeldSiftCandidate
         ratio_test=float(matcher.get("ratio_test")),
         fallback_best_raw_matches=int(matcher.get("fallback_best_raw_matches")),
         minimum_other_match_groups=int(aggregation.get("minimum_other_match_groups")),
+        selection_match_groups=tuple(
+            str(value) for value in selection.get("selection_match_groups", ())
+        ),
         selected_after_reviewing_results=bool(
             selection.get("selected_after_reviewing_these_results")
         ),
@@ -105,6 +116,7 @@ def validate_frozen_public_meld_sift_candidate(
         "ratio_test": 0.8,
         "fallback_best_raw_matches": 5,
         "minimum_other_match_groups": 2,
+        "selection_match_groups": FROZEN_SELECTION_MATCH_GROUPS,
         "selected_after_reviewing_results": True,
         "future_holdout_must_be_new_independent_match_group": True,
         "future_holdout_must_not_change_candidate": True,
@@ -126,14 +138,13 @@ def assert_future_sift_holdout_eligible(
     candidate: PublicMeldSiftCandidate,
     *,
     holdout_match_group: str,
-    known_development_match_groups: set[str],
     candidate_changed_after_freeze: bool,
     query_pixels_used_as_templates: bool,
 ) -> None:
     validate_frozen_public_meld_sift_candidate(candidate)
     if not holdout_match_group:
         raise ValueError("holdout_match_group is required")
-    if holdout_match_group in known_development_match_groups:
+    if holdout_match_group in candidate.selection_match_groups:
         raise ValueError("SIFT holdout must be a new independent match group")
     if candidate_changed_after_freeze:
         raise ValueError("SIFT candidate changed after freeze")
