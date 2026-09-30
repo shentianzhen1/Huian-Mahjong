@@ -121,7 +121,7 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
         self.assertEqual(result.faces, ())
         self.assertEqual(result.issues, ("not_bottom_group",))
 
-    def test_four_reviewed_regular_melds_cover_all_twelve_approved_faces(self):
+    def test_four_full_frame_regular_melds_cover_twelve_approved_faces(self):
         labels_by_sample = {}
         for label in self.labels.labels:
             if label.region == "public_meld":
@@ -129,7 +129,11 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
 
         clean_samples = [
             row for row in self.calibration["samples"]
-            if row["target"] == "meld" and len(row["expected_tiles"]) == 3
+            if (
+                row["target"] == "meld"
+                and len(row["expected_tiles"]) == 3
+                and row.get("context_scope", "full_frame") == "full_frame"
+            )
         ]
         self.assertEqual(len(clean_samples), 4)
 
