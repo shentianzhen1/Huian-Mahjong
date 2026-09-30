@@ -120,6 +120,19 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         )
         self.assertEqual(self.split(normalized), ())
 
+    def test_upper_flat_row_uses_same_normalization_and_split(self):
+        image = self._flat_image()
+        normalized = self.normalize(
+            image,
+            self._candidate(
+                (20, 30, 185, 105),
+                geometry_kind="top_group",
+            ),
+        )
+        self.assertEqual(normalized.analysis.stack_state, self.FLAT)
+        self.assertEqual(normalized.analysis.normalized_size[1], 96)
+        self.assertEqual(len(self.split(normalized)), 3)
+
     def test_non_bottom_group_remains_unknown(self):
         image = self._flat_image()
         group = self.PublicGeometryCandidate(
