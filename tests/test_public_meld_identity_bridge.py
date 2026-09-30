@@ -15,6 +15,10 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from PIL import Image, ImageDraw
+        from workspace.vision.public_identity_shadow_v0_2 import (
+            ShadowBank,
+            SourceGroup,
+        )
         from workspace.vision.public_meld_identity_bridge import (
             classify_public_meld_group,
         )
@@ -23,6 +27,8 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
         cls.Image = Image
         cls.ImageDraw = ImageDraw
         cls.classify = staticmethod(classify_public_meld_group)
+        cls.ShadowBank = ShadowBank
+        cls.SourceGroup = SourceGroup
         cls.PublicGeometryCandidate = PublicGeometryCandidate
 
     def _group(self, bbox=(20, 30, 185, 105)):
@@ -50,6 +56,18 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
             draw.rectangle((x, 70, x + 54, 155), fill=(235, 235, 225))
         draw.rectangle((85, 15, 139, 100), fill=(235, 235, 225))
         return image
+
+    def _bank(self, sha):
+        return self.ShadowBank(
+            sources={
+                "query": self.SourceGroup(
+                    session="query",
+                    source_sha256=sha,
+                    match_group="query-match",
+                )
+            },
+            templates=(),
+        )
 
     @staticmethod
     def _accepted(tile):
@@ -97,7 +115,7 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
             result = self.classify(
                 self._flat_image(),
                 self._group(),
-                bank=object(),
+                bank=self._bank("a" * 64),
                 source_session="query",
                 source_sha256="a" * 64,
             )
@@ -122,7 +140,7 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
             result = self.classify(
                 self._flat_image(),
                 self._group(),
-                bank=object(),
+                bank=self._bank("b" * 64),
                 source_session="query",
                 source_sha256="b" * 64,
             )
@@ -131,6 +149,40 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
         self.assertEqual(result.tile_ids, ("S3", None, "S5"))
         self.assertIn("one_or_more_meld_faces_untrusted", result.issues)
 
+    def test_unknown_source_scope_abstains_before_classifier(self):
+        bank = self.ShadowBank(sources={}, templates=())
+        with patch(
+            "workspace.vision.public_meld_identity_bridge.propose_shadow_identity",
+        ) as proposer:
+            result = self.classify(
+                self._flat_image(),
+                self._group(),
+                bank=bank,
+                source_session="new-live-session",
+                source_sha256="d" * 64,
+            )
+
+        proposer.assert_not_called()
+        self.assertFalse(result.trusted_for_read_only_runtime)
+        self.assertEqual(result.tile_ids, (None, None, None))
+        self.assertIn("public_identity_source_not_registered", result.issues)
+
+    def test_source_sha_conflict_abstains_before_classifier(self):
+        with patch(
+            "workspace.vision.public_meld_identity_bridge.propose_shadow_identity",
+        ) as proposer:
+            result = self.classify(
+                self._flat_image(),
+                self._group(),
+                bank=self._bank("e" * 64),
+                source_session="query",
+                source_sha256="f" * 64,
+            )
+
+        proposer.assert_not_called()
+        self.assertFalse(result.trusted_for_read_only_runtime)
+        self.assertIn("public_identity_source_sha_conflict", result.issues)
+
     def test_stacked_group_does_not_fabricate_three_face_identity(self):
         with patch(
             "workspace.vision.public_meld_identity_bridge.propose_shadow_identity",
@@ -138,7 +190,7 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
             result = self.classify(
                 self._stacked_image(),
                 self._group((20, 10, 185, 150)),
-                bank=object(),
+                bank=self._bank("c" * 64),
                 source_session="query",
                 source_sha256="c" * 64,
             )
