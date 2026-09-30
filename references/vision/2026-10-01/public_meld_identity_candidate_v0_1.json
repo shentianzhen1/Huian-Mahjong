@@ -1,0 +1,36 @@
+{
+  "schema_version": "public_meld_identity_candidate_v0_1",
+  "candidate_id": "legacy_gray_center_inset_0_12",
+  "status": "frozen_development_candidate",
+  "frozen_on": "2026-10-01",
+  "feature_family": "legacy_public_gray",
+  "normalization": {
+    "method": "center_inset_then_resize",
+    "inset_ratio": 0.12
+  },
+  "selection_evidence": {
+    "query_ids": [
+      "first_hand_174s_p6",
+      "first_hand_174s_s4"
+    ],
+    "query_match_group": "reviewed_match_2026_09_26_first_hand",
+    "selected_on_these_queries": true
+  },
+  "validation_policy": {
+    "future_holdout_must_be_source_disjoint": true,
+    "future_holdout_must_not_change_candidate": true,
+    "future_holdout_query_pixels_template_eligible": false,
+    "identity_threshold_lowering_allowed": false,
+    "minimum_independent_holdout_match_groups": 1
+  },
+  "runtime_policy": {
+    "wire_into_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false,
+    "formal_promotion_evidence": false
+  },
+  "notes": [
+    "P6/S4 2-of-2 is candidate-selection evidence only, not holdout validation accuracy.",
+    "Any parameter or feature change creates a new candidate_id and restarts holdout eligibility."
+  ]
+}
