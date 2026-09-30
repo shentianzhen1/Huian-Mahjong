@@ -192,6 +192,8 @@ def propose_shadow_identity(
     result: dict[str, Any] = {
         "tile_id": UNKNOWN, "shadow_proposal": None, "region": region,
         "eligible_class_count": 0, "score": None, "margin": None,
+        "winner_independent_match_groups": 0,
+        "read_only_runtime_candidate": None,
         "evidence_grade": UNKNOWN, "safe_for_runtime": False,
         "safe_for_executor": False, "formal_promotion_evidence": False,
         "reason": "insufficient_cross_match_class_support",
@@ -226,11 +228,22 @@ def propose_shadow_identity(
         return result
     winner, score = eligible[0]
     margin = score - eligible[1][1]
+    winner_groups = len(best_by_class_and_group[winner])
     result["score"] = round(score, 6)
     result["margin"] = round(margin, 6)
+    result["winner_independent_match_groups"] = winner_groups
     if score >= minimum_score and margin >= minimum_margin:
         result["shadow_proposal"] = winner
-        result["reason"] = "development_shadow_only_not_runtime_identity"
+        # Internal read-only advisory candidate only. The query match was
+        # excluded above, and the winner must be supported by >=2 other match
+        # groups. This does not constitute formal Vision promotion and can
+        # never be used by Executor.
+        if region == "public_meld" and winner_groups >= 2:
+            result["read_only_runtime_candidate"] = winner
+            result["safe_for_runtime"] = True
+            result["reason"] = "development_read_only_runtime_candidate"
+        else:
+            result["reason"] = "development_shadow_only_not_runtime_identity"
     else:
         result["reason"] = "low_score_or_ambiguous_public_face"
     return result
