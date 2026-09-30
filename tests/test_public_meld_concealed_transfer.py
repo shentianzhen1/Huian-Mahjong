@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 from pathlib import Path
 import unittest
 
@@ -30,24 +29,7 @@ class PublicMeldConcealedTransferEvaluationTests(unittest.TestCase):
         self.assertFalse(report["safe_for_hint"])
         self.assertFalse(report["safe_for_executor"])
 
-        # Temporary concise CI diagnostic for the A/B decision. Keep values
-        # visible without dumping source paths or per-face data.
-        print(
-            "PUBLIC_MELD_CONCEALED_TRANSFER="
-            + json.dumps(
-                {
-                    "prepared_groups": report["prepared_group_count"],
-                    "scored_faces": report["scored_face_count"],
-                    "raw_exact_accuracy": report["raw_exact_accuracy"],
-                    "accepted_count": report["runtime_gate_accepted_count"],
-                    "accepted_accuracy": report["runtime_gate_accepted_accuracy"],
-                    "exact_session_exclusion_effective": report[
-                        "exact_session_exclusion_effective"
-                    ],
-                },
-                sort_keys=True,
-            )
-        )
+
 
 
 if __name__ == "__main__":
