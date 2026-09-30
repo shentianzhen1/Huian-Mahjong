@@ -162,6 +162,42 @@ jobs:
           }
           print("PUBLIC_MELD_FEATURE_EXPERIMENT=" + json.dumps(compact, sort_keys=True))
           PY
+      - name: Evaluate synthetic hand-to-meld transfer
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_synthetic_transfer \
+            --output /tmp/runtime-v0-2-reports/public_meld_synthetic_transfer_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_synthetic_transfer.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_synthetic_transfer_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "selected_hand_template_count": report["selected_hand_template_count"],
+              "selected_hand_class_count": report["selected_hand_class_count"],
+              "target_group_count": report["target_group_count"],
+              "scored_group_count": report["scored_group_count"],
+              "target_face_count": report["target_face_count"],
+              "scored_face_count": report["scored_face_count"],
+              "baseline": report["baseline"],
+              "synthetic": report["synthetic"],
+              "face_accuracy_delta": report["face_accuracy_delta"],
+              "group_accuracy_delta": report["group_accuracy_delta"],
+              "opponent_top_group_accuracy_measured": report[
+                  "opponent_top_group_accuracy_measured"
+              ],
+              "groups": report["groups"],
+          }
+          print(
+              "PUBLIC_MELD_SYNTHETIC_TRANSFER="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
