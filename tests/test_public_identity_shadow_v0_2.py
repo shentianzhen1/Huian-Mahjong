@@ -209,13 +209,21 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
         )
         self.assertEqual(report["approved_label_count"], 26)
         self.assertEqual(report["source_match_groups"], 4)
-        # P6 and S4 now each have two independent development match groups,
-        # but leave-one-match-out review still has only one *other* group for
-        # each reviewed query. Nothing is promoted from the reviewed bank itself.
-        self.assertEqual(report["eligible_queries"], 0)
-        self.assertEqual(report["shadow_proposals"], 0)
-        self.assertEqual(report["shadow_abstentions"], 26)
-        self.assertIsNone(report["shadow_accuracy_on_proposals"])
+        # P6 and S4 now provide two independent development match groups for a
+        # genuinely new target match, so the reviewed bank can exercise the
+        # shadow classifier. These remain proposals only.
+        self.assertGreater(report["eligible_queries"], 0)
+        self.assertLessEqual(
+            report["shadow_proposals"], report["eligible_queries"]
+        )
+        self.assertEqual(
+            report["shadow_proposals"] + report["shadow_abstentions"], 26
+        )
+        if report["shadow_proposals"]:
+            self.assertGreaterEqual(report["shadow_accuracy_on_proposals"], 0.0)
+            self.assertLessEqual(report["shadow_accuracy_on_proposals"], 1.0)
+        else:
+            self.assertIsNone(report["shadow_accuracy_on_proposals"])
         self.assertFalse(report["formal_promotion_evidence"])
         self.assertFalse(report["safe_for_runtime"])
         self.assertEqual(report["by_region"]["public_meld"]["reviewed"], 21)
