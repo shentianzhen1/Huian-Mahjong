@@ -11,8 +11,13 @@ from dataclasses import dataclass
 from statistics import median
 from typing import Any, Iterable
 
+from workspace.vision.current_state_snapshot import CurrentTableSnapshot
 from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
-from workspace.vision.public_observers import MeldGroup, MeldSnapshot
+from workspace.vision.public_observers import (
+    MeldGroup,
+    MeldSnapshot,
+    RiverSnapshot,
+)
 
 
 def _bbox(item: dict[str, Any]) -> tuple[float, float, float, float]:
@@ -36,6 +41,194 @@ def _identity(item: dict[str, Any]) -> str | None:
     if not value or value == "UNKNOWN":
         return None
     return str(value)
+
+
+def _snapshot_scope_matches(
+    snapshot: RiverSnapshot | MeldSnapshot,
+    *,
+    source_session: str | None,
+    stream_epoch: int,
+) -> bool:
+    return (
+        bool(source_session)
+        and snapshot.source_session == source_session
+        and snapshot.stream_epoch == stream_epoch
+    )
+
+
+def _river_values(
+    snapshot: RiverSnapshot | None,
+    *,
+    actor: str,
+    source_session: str | None,
+    stream_epoch: int,
+    issues: list[str],
+) -> tuple[tuple[str | None, ...], bool]:
+    if snapshot is None:
+        issues.append(f"{actor}_river_missing")
+        return (), False
+    if snapshot.actor != actor:
+        issues.append(f"{actor}_river_actor_conflict")
+        return (), False
+    if not _snapshot_scope_matches(
+        snapshot,
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+    ):
+        issues.append(f"{actor}_river_source_conflict")
+        return (), False
+    return tuple(tile.tile_id for tile in snapshot.tiles), snapshot.trusted
+
+
+def _meld_values(
+    snapshot: MeldSnapshot | None,
+    *,
+    actor: str,
+    source_session: str | None,
+    stream_epoch: int,
+    issues: list[str],
+) -> tuple[tuple[tuple[str | None, ...], ...], bool]:
+    if snapshot is None:
+        issues.append(f"{actor}_meld_missing")
+        return (), False
+    if snapshot.actor != actor:
+        issues.append(f"{actor}_meld_actor_conflict")
+        return (), False
+    if not _snapshot_scope_matches(
+        snapshot,
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+    ):
+        issues.append(f"{actor}_meld_source_conflict")
+        return (), False
+    return tuple(group.tiles for group in snapshot.groups), snapshot.trusted
+
+
+def current_snapshot_from_runtime(
+    report: dict[str, Any],
+    *,
+    timestamp_seconds: float,
+    player_river: RiverSnapshot | None = None,
+    opponent_river: RiverSnapshot | None = None,
+    opponent_meld: MeldSnapshot | None = None,
+) -> CurrentTableSnapshot:
+    """Convert one Runtime burst and optional public observers into a snapshot.
+
+    The player hand, opened Gold and player meld count come only from the same
+    Runtime report.  Optional public observations are accepted only when actor,
+    source session and stream epoch match.  Mismatched inputs are dropped rather
+    than joined across recordings.
+    """
+    if not isinstance(report, dict):
+        raise TypeError("report must be a dictionary")
+    source_session = report.get("session")
+    stream_epoch = report.get("stream_epoch", 0)
+    if isinstance(stream_epoch, bool) or not isinstance(stream_epoch, int):
+        stream_epoch = -1
+
+    issues: list[str] = []
+    geometry_trusted = not bool(report.get("geometry_untrusted", True))
+    components = report.get("components")
+    if not isinstance(components, list):
+        components = []
+        issues.append("runtime_components_missing")
+
+    concealed = [
+        item
+        for item in components
+        if isinstance(item, dict)
+        and item.get("region_candidate") in {"hand", "draw_visual"}
+    ]
+    own_hand = tuple(_identity(item) for item in concealed)
+    declared_count = report.get("concealed_tile_count")
+    hand_trusted = bool(
+        geometry_trusted
+        and report.get("all_concealed_tile_ids_trusted") is True
+        and isinstance(declared_count, int)
+        and not isinstance(declared_count, bool)
+        and declared_count == len(concealed)
+        and concealed
+        and all(tile is not None for tile in own_hand)
+    )
+    if not hand_trusted:
+        issues.append("runtime_hand_not_fully_trusted")
+
+    gold_components = [
+        item
+        for item in components
+        if isinstance(item, dict)
+        and (
+            item.get("region_candidate") == "gold"
+            or item.get("gold_skin") is True
+        )
+    ]
+    gold_identities = {_identity(item) for item in gold_components}
+    gold_identities.discard(None)
+    gold_tile = next(iter(gold_identities)) if len(gold_identities) == 1 else None
+    gold_trusted = bool(
+        geometry_trusted
+        and gold_components
+        and gold_tile is not None
+        and all(
+            _identity(item) == gold_tile
+            and item.get("identity_reason") == "accepted"
+            for item in gold_components
+        )
+    )
+    if not gold_trusted:
+        issues.append("runtime_gold_not_fully_trusted")
+
+    frames = report.get("frames")
+    stable_frames = len(set(frames)) if isinstance(frames, (list, tuple)) else 0
+    player_meld = player_meld_snapshot_from_runtime(
+        report,
+        timestamp_seconds=timestamp_seconds,
+    )
+
+    player_river_values, player_river_trusted = _river_values(
+        player_river,
+        actor="player",
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+        issues=issues,
+    )
+    opponent_river_values, opponent_river_trusted = _river_values(
+        opponent_river,
+        actor="opponent",
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+        issues=issues,
+    )
+    player_meld_values, player_meld_trusted = _meld_values(
+        player_meld,
+        actor="player",
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+        issues=issues,
+    )
+    opponent_meld_values, opponent_meld_trusted = _meld_values(
+        opponent_meld,
+        actor="opponent",
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+        issues=issues,
+    )
+
+    return CurrentTableSnapshot(
+        timestamp_seconds=timestamp_seconds,
+        source_session=source_session,
+        stream_epoch=stream_epoch,
+        stable_frames=stable_frames,
+        own_hand=own_hand,
+        gold_tile=gold_tile,
+        rivers=(player_river_values, opponent_river_values),
+        melds=(player_meld_values, opponent_meld_values),
+        hand_trusted=hand_trusted,
+        gold_trusted=gold_trusted,
+        river_trusted=(player_river_trusted, opponent_river_trusted),
+        meld_trusted=(player_meld_trusted, opponent_meld_trusted),
+        adapter_issues=tuple(issues),
+    )
 
 
 def _centre_y(box: tuple[float, float, float, float]) -> float:

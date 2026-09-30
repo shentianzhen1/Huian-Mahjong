@@ -98,6 +98,47 @@ jobs:
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v
+      - name: Regenerate Runtime V0.2 validation reports
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.tiles_v0_1.evaluate_tiles \
+            --dataset dataset/tiles_runtime_v0_2 \
+            --confidence 0.82 \
+            --template-scope same_region \
+            --output /tmp/runtime-v0-2-reports/phase6_tile_template_validation_v0_2.json \
+            >/tmp/runtime-v0-2-reports/template_eval.log
+          python -m workspace.vision.tiles_runtime_v0_2.evaluate_concealed_identity \
+            --dataset dataset/tiles_runtime_v0_2 \
+            --confidence 0.82 \
+            --output /tmp/runtime-v0-2-reports/phase6_concealed_identity_validation_v0_2.json \
+            >/tmp/runtime-v0-2-reports/concealed_eval.log
+          python -m workspace.vision.tiles_runtime_v0_2.evaluate_gold_identity \
+            --dataset dataset/tiles_runtime_v0_2 \
+            --confidence 0.82 \
+            --output /tmp/runtime-v0-2-reports/phase6_gold_identity_validation_v0_2.json \
+            >/tmp/runtime-v0-2-reports/gold_identity_eval.log
+          cp dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_template_validation_v0_2.json \
+            /tmp/runtime-v0-2-reports/tracked_phase6_tile_template_validation_before_refresh.json
+          cp /tmp/runtime-v0-2-reports/phase6_tile_template_validation_v0_2.json \
+            dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_template_validation_v0_2.json
+          python -m workspace.vision.tiles_runtime_v0_2.phase6_dataset_audit \
+            --dataset dataset/tiles_runtime_v0_2 \
+            >/tmp/runtime-v0-2-reports/audit.log
+          cp dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_dataset_audit_v0_2.json \
+            /tmp/runtime-v0-2-reports/phase6_tile_dataset_audit_v0_2.json
+      - name: Upload Runtime V0.2 validation reports
+        if: needs.scope.outputs.run_vision == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-v0-2-validation-${{ github.sha }}
+          path: |
+            /tmp/runtime-v0-2-reports/
+            dataset/tiles_runtime_v0_2/labels.jsonl
+            dataset/tiles_runtime_v0_2/templates/
+            workspace/vision/
+          if-no-files-found: error
+          retention-days: 7
       - name: Import Vision outside repository root
         if: needs.scope.outputs.run_vision == 'true'
         working-directory: /tmp

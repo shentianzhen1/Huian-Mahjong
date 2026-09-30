@@ -1,0 +1,19 @@
+{
+  "schema_version": "public_identity_source_groups_development_v0_1",
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "sources": [
+    {
+      "source_session": "66fe863f_youjin100",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "match_group": "reviewed_recording_66fe",
+      "review_exposure": "previously_inspected"
+    },
+    {
+      "source_session": "b3892b34_zimo68",
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "match_group": "reviewed_recording_b389",
+      "review_exposure": "previously_inspected"
+    }
+  ]
+}

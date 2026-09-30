@@ -31,8 +31,10 @@ from workspace.vision.capture_validator.backend import (
     windows,
 )
 from workspace.vision.capture_validator.media import FrameHealth
+from workspace.vision.runtime_public_adapter import current_snapshot_from_runtime
 from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 
+from .current_snapshot_advisor import analyze_snapshot_shanten
 from .evidence import EvidenceSession
 
 
@@ -41,13 +43,16 @@ OUTPUT = PROJECT_ROOT / "data" / "hint_alpha"
 
 
 class HintAlphaApp(tk.Tk):
-    def __init__(self, demo=False):
+    def __init__(self, demo=False, experimental_runtime_advisory=False):
         super().__init__()
         self.title("惠安麻将 Hint Alpha V0.1 内测")
         self.geometry("1220x760")
         self.minsize(980, 620)
         self.demo = demo
-
+        self.experimental_runtime_advisory = bool(experimental_runtime_advisory)
+        if self.experimental_runtime_advisory:
+            self.title("惠安麻将 Hint Alpha V0.1 内测 [UNPROMOTED Runtime]")
+        
         self.session = None
         self.target = None
         self.entries = []
@@ -71,12 +76,19 @@ class HintAlphaApp(tk.Tk):
         self.public_result_queue = queue.Queue(maxsize=1)
         self.last_public_started = 0.0
 
+        self.runtime_frames = deque(maxlen=3)
+        self.runtime_busy = False
+        self.runtime_result_queue = queue.Queue(maxsize=1)
+        self.last_runtime_started = 0.0
+        self.last_runtime_event_key = None
+
         self.backend = tk.StringVar(value="WGC")
         self.auto_record = tk.BooleanVar(value=True)
         self.capture_status = tk.StringVar(value="等待选择开心麻将窗口")
         self.vision_status = tk.StringVar(value="PublicState：等待画面")
+        self.runtime_status = tk.StringVar(value="Runtime Vision：等待稳定3帧")
         self.hint_status = tk.StringVar(
-            value="AI提示：等待实时手牌→GameState桥接；当前不会猜测"
+            value="向听提示：等待可信手牌/金牌；Executor OFF"
         )
         self.evidence_status = tk.StringVar(value=f"证据目录：{OUTPUT}")
         self.version_status = tk.StringVar(
@@ -132,6 +144,7 @@ class HintAlphaApp(tk.Tk):
         for variable in (
             self.capture_status,
             self.vision_status,
+            self.runtime_status,
             self.hint_status,
             self.evidence_status,
             self.version_status,
@@ -190,6 +203,7 @@ class HintAlphaApp(tk.Tk):
                 "synthetic": self.demo,
                 "capture_only": False,
                 "advisory_only": True,
+                "experimental_runtime_advisory": self.experimental_runtime_advisory,
             },
         )
         self.evidence_status.set(f"证据会话：{self.evidence.path}")
@@ -219,6 +233,13 @@ class HintAlphaApp(tk.Tk):
             self.public_previous = None
             self.public_frames.clear()
             self.public_disabled = False
+            self.public_result_queue = queue.Queue(maxsize=1)
+            self.runtime_frames.clear()
+            self.runtime_busy = False
+            self.runtime_result_queue = queue.Queue(maxsize=1)
+            self.last_runtime_event_key = None
+            self.runtime_status.set("Runtime Vision：等待稳定3帧")
+            self.hint_status.set("向听提示：等待可信手牌/金牌；Executor OFF")
             self._start_evidence()
             self.capture_status.set("正在连接窗口……")
         except Exception as exc:
@@ -311,6 +332,188 @@ class HintAlphaApp(tk.Tk):
             daemon=True,
         ).start()
 
+    def _runtime_worker(self, samples, session_id):
+        try:
+            # Lazy import keeps non-Vision Hint Alpha utilities importable
+            # without forcing OpenCV into every core-only process.
+            from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
+                read_stable_frames,
+            )
+
+            frame_ids = tuple(sequence for sequence, _ in samples)
+            images = tuple(image for _, image in samples)
+            report = read_stable_frames(
+                images,
+                PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
+                frame_ids=frame_ids,
+                session=session_id,
+                confidence_threshold=0.82,
+            )
+            payload = ("ok", session_id, report)
+        except Exception as exc:
+            payload = ("error", session_id, f"{type(exc).__name__}: {exc}")
+        try:
+            self.runtime_result_queue.put_nowait(payload)
+        except queue.Full:
+            pass
+
+    def _schedule_runtime_read(self, now):
+        if (
+            self.demo
+            or self.runtime_busy
+            or len(self.runtime_frames) < 3
+            or now - self.last_runtime_started < 0.8
+            or self.evidence is None
+        ):
+            return
+        self.runtime_busy = True
+        self.last_runtime_started = now
+        samples = tuple(
+            (sequence, image.copy())
+            for sequence, image in self.runtime_frames
+        )
+        threading.Thread(
+            target=self._runtime_worker,
+            args=(samples, self.evidence.session_id),
+            daemon=True,
+        ).start()
+
+    @staticmethod
+    def _format_shanten_hint(result):
+        if not result.allowed:
+            issues = ",".join(result.issues[:3]) or "snapshot_untrusted"
+            return f"向听提示：BLOCKED（{issues}）"
+
+        if result.phase == "PRE_DRAW":
+            if result.effective_tiles:
+                effective = " ".join(
+                    f"{item.tile}×{item.remaining}"
+                    for item in result.effective_tiles[:8]
+                )
+                if len(result.effective_tiles) > 8:
+                    effective += " …"
+                return (
+                    f"向听提示：{result.shanten}向听 | "
+                    f"有效牌 {effective} | 公开剩余张数已启用"
+                )
+            return (
+                f"向听提示：{result.shanten}向听 | "
+                "仅结构计算；公开牌未完全可信"
+            )
+
+        if result.phase == "POST_DRAW_COMPLETE":
+            return "向听提示：普通结构已完成；仍需规则层确认是否可胡"
+
+        if result.phase == "POST_DRAW":
+            choices = []
+            for item in result.best_discards[:8]:
+                text = f"{item.discard}(向听{item.shanten}"
+                if item.total_live_copies is not None:
+                    text += f",活{item.total_live_copies}"
+                choices.append(text + ")")
+            suffix = " …" if len(result.best_discards) > 8 else ""
+            mode = (
+                "公开剩余张数已启用"
+                if result.visible_remainders_used
+                else "仅结构最小向听"
+            )
+            return f"向听提示：可考虑 {' '.join(choices)}{suffix} | {mode}"
+
+        return "向听提示：状态暂不可解释；不输出建议"
+
+    def _consume_runtime_result(self):
+        try:
+            kind, source_session, value = self.runtime_result_queue.get_nowait()
+        except queue.Empty:
+            return
+        self.runtime_busy = False
+        current_session = self.evidence.session_id if self.evidence else None
+        if source_session != current_session:
+            return
+        if kind == "error":
+            self.runtime_status.set(f"Runtime Vision暂不可用：{value}")
+            self.hint_status.set("向听提示：BLOCKED（Runtime Vision错误）")
+            event_key = ("error", value)
+            if self.evidence and event_key != self.last_runtime_event_key:
+                self.evidence.mark("RUNTIME_VISION_ERROR", {"error": value})
+                self.last_runtime_event_key = event_key
+            return
+
+        report = value
+        snapshot = current_snapshot_from_runtime(
+            report,
+            timestamp_seconds=time.monotonic(),
+        )
+        result = analyze_snapshot_shanten(snapshot)
+        issues = ",".join(result.issues[:4]) or "none"
+        global_coverage = report.get("standard_class_coverage") or {}
+        domains = report.get("classification_domain_coverage") or {}
+        concealed_coverage = domains.get("concealed_identity") or global_coverage
+        concealed_missing = ",".join(
+            concealed_coverage.get("missing") or ()
+        ) or "none"
+        self.runtime_status.set(
+            "Runtime Vision："
+            f"{result.status} 手牌={len(snapshot.own_hand)} "
+            f"金={snapshot.gold_tile or '?'} "
+            f"concealed_missing={concealed_missing} "
+            f"issues={issues}"
+        )
+        runtime_promoted_for_hint = report.get("safe_for_hint") is True
+        display_allowed = (
+            runtime_promoted_for_hint or self.experimental_runtime_advisory
+        )
+        if display_allowed:
+            prefix = (
+                "实验 "
+                if self.experimental_runtime_advisory
+                and not runtime_promoted_for_hint
+                else ""
+            )
+            self.hint_status.set(prefix + self._format_shanten_hint(result))
+        else:
+            self.hint_status.set(
+                "向听提示：BLOCKED（Runtime Vision尚未正式promotion；"
+                "仅可用开发开关做内部验证）"
+            )
+
+        event_key = (
+            result.status,
+            result.phase,
+            result.shanten,
+            display_allowed,
+            tuple((item.discard, item.shanten) for item in result.best_discards),
+            snapshot.gold_tile,
+            snapshot.own_hand,
+            result.issues,
+        )
+        if self.evidence and event_key != self.last_runtime_event_key:
+            self.evidence.mark(
+                "CURRENT_SNAPSHOT_HINT",
+                {
+                    "status": result.status,
+                    "phase": result.phase,
+                    "shanten": result.shanten,
+                    "hand": list(snapshot.own_hand),
+                    "gold_tile": snapshot.gold_tile,
+                    "best_discards": [
+                        {
+                            "tile": item.discard,
+                            "shanten": item.shanten,
+                            "live": item.total_live_copies,
+                        }
+                        for item in result.best_discards
+                    ],
+                    "issues": list(result.issues),
+                    "runtime_safe_for_hint": runtime_promoted_for_hint,
+                    "experimental_runtime_advisory": self.experimental_runtime_advisory,
+                    "display_allowed": display_allowed,
+                    "safe_for_executor": False,
+                },
+                source=self.source,
+            )
+            self.last_runtime_event_key = event_key
+
     def _consume_public_result(self):
         try:
             kind, value = self.public_result_queue.get_nowait()
@@ -359,6 +562,7 @@ class HintAlphaApp(tk.Tk):
                 self.evidence.mark("BLACK_FRAME", source=self.source)
             return
         self.public_frames.append(self.frame.copy())
+        self.runtime_frames.append((sequence, self.frame.copy()))
         self._ensure_auto_recorder()
         if self.auto_recorder:
             path = self.auto_recorder.process(
@@ -368,6 +572,7 @@ class HintAlphaApp(tk.Tk):
                 self.evidence.mark(
                     "HAND_RECORDING_SAVED", {"path": str(path)}, source=self.source
                 )
+        self._schedule_runtime_read(captured)
         self._schedule_public_read(captured)
         self.capture_status.set(
             f"{self.backend_name} | {size[0]}×{size[1]} | "
@@ -431,6 +636,7 @@ class HintAlphaApp(tk.Tk):
     def tick(self):
         try:
             self._consume_public_result()
+            self._consume_runtime_result()
             if self.demo:
                 from PIL import ImageDraw
 
@@ -487,9 +693,20 @@ def main():
     parser.add_argument(
         "--demo", action="store_true", help="只运行合成画面，验证内测壳与证据记录"
     )
+    parser.add_argument(
+        "--experimental-runtime-advisory",
+        action="store_true",
+        help=(
+            "内部开发验证：允许未正式promotion的Runtime Vision驱动只读向听显示；"
+            "不会启用Executor"
+        ),
+    )
     args = parser.parse_args()
     dpi_awareness()
-    HintAlphaApp(demo=args.demo).mainloop()
+    HintAlphaApp(
+        demo=args.demo,
+        experimental_runtime_advisory=args.experimental_runtime_advisory,
+    ).mainloop()
 
 
 if __name__ == "__main__":
