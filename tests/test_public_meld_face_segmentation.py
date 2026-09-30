@@ -38,6 +38,7 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
         from PIL import Image
         from workspace.vision.public_identity_labels import load_public_identity_manifest
         from workspace.vision.public_meld_face_segmentation import (
+            prepare_public_meld_faces,
             segment_regular_meld_faces,
         )
         from workspace.vision.public_tile_detector import (
@@ -48,6 +49,7 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
 
         cls.Image = Image
         cls.segment_regular_meld_faces = staticmethod(segment_regular_meld_faces)
+        cls.prepare_public_meld_faces = staticmethod(prepare_public_meld_faces)
         cls.PublicGeometryCandidate = PublicGeometryCandidate
         cls.detect_public_tile_geometry = staticmethod(detect_public_tile_geometry)
         cls.target_coverage = staticmethod(target_coverage)
@@ -183,6 +185,51 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
         split = self.segment_regular_meld_faces(group, image.size)
         self.assertEqual(split.faces, ())
         self.assertIn("non_regular_three_face_geometry", split.issues)
+
+
+    def test_prepare_entrypoint_normalizes_reviewed_peng_for_identity(self):
+        sample = next(
+            row for row in self.calibration["samples"]
+            if row["sample_id"] == "66fe_player_peng_p1_040s"
+        )
+        image = self.Image.open(ROOT / sample["image_path"]).convert("RGB")
+        detection = self.detect_public_tile_geometry(
+            image,
+            frame=sample["frame_index"],
+            session=sample["source_session"],
+        )
+        group = _best_bottom_group(detection, tuple(sample["bbox"]))
+        self.assertIsNotNone(group)
+        assert group is not None
+        prepared = self.prepare_public_meld_faces(image, group)
+        report = prepared.to_dict()
+        self.assertEqual(prepared.geometry.stack_state, "FLAT")
+        self.assertEqual(len(prepared.face_images), 3)
+        self.assertTrue(report["classifier_ready"])
+        self.assertFalse(report["safe_for_runtime_identity"])
+        self.assertFalse(report["safe_for_executor"])
+
+    def test_prepare_entrypoint_marks_reviewed_added_kong_stacked(self):
+        sample = next(
+            row for row in self.calibration["samples"]
+            if row["sample_id"] == "66fe_player_added_kong_p1_070s"
+        )
+        image = self.Image.open(ROOT / sample["image_path"]).convert("RGB")
+        detection = self.detect_public_tile_geometry(
+            image,
+            frame=sample["frame_index"],
+            session=sample["source_session"],
+        )
+        group = _best_bottom_group(detection, tuple(sample["bbox"]))
+        self.assertIsNotNone(group)
+        assert group is not None
+        prepared = self.prepare_public_meld_faces(image, group)
+        report = prepared.to_dict()
+        self.assertEqual(prepared.geometry.stack_state, "STACKED")
+        self.assertEqual(prepared.face_images, ())
+        self.assertTrue(report["stacked_structure_detected"])
+        self.assertFalse(report["classifier_ready"])
+        self.assertEqual(report["action_kind"], "UNKNOWN")
 
 
 if __name__ == "__main__":
