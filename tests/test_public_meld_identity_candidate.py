@@ -22,6 +22,8 @@ class PublicMeldIdentityCandidateTests(unittest.TestCase):
             ("first_hand_174s_p6", "first_hand_174s_s4"),
         )
         self.assertTrue(candidate.selected_on_selection_queries)
+        self.assertEqual(candidate.normalization_scope, "query_side_split_face_only")
+        self.assertFalse(candidate.template_bank_preprocessing_allowed)
         self.assertFalse(candidate.wire_into_runtime)
         self.assertFalse(candidate.safe_for_hint)
         self.assertFalse(candidate.safe_for_executor)
