@@ -49,6 +49,21 @@ class GoldIdentityEvaluationTests(unittest.TestCase):
             self.assertEqual(report["gold_skin_only_subset"]["scorable_labels"], 1)
             self.assertEqual(report["template_scope"], "gold_identity")
 
+    def test_tracked_real_gold_m6_clears_gate_without_false_accepts(self) -> None:
+        root = Path(__file__).resolve().parents[3] / "dataset" / "tiles_runtime_v0_2"
+        report = evaluate_gold_identity(root, confidence_threshold=0.82)
+        gold_rows = [
+            row for row in report["rows"]
+            if row.get("gold_skin_only") and row["true_tile"] == "M6"
+        ]
+        self.assertEqual(len(gold_rows), 1)
+        row = gold_rows[0]
+        self.assertEqual(row["predicted_tile"], "M6")
+        self.assertGreaterEqual(row["confidence"], 0.82)
+        self.assertTrue(row["runtime_gate_accepted"])
+        self.assertEqual(report["runtime_gate"]["accepted_accuracy"], 1.0)
+        self.assertGreaterEqual(report["runtime_gate"]["accepted_labels"], 43)
+
     def test_single_session_true_class_is_unscorable_not_false_accuracy(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
