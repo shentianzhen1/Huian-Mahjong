@@ -453,7 +453,9 @@ def detect_public_tile_geometry(
             y < height * 0.18
             and component_center_x >= 0.54
             and 1.75 <= component_aspect <= 4.50
-            and normalized_width <= 0.18
+            # This path exists specifically for compact upper rows that would
+            # otherwise fall through the legacy single-face width gate.
+            and normalized_width <= 0.085
             and normalized_height <= 0.12
         ):
             # Keep the raw multi-face blob visible to source-qualified river
