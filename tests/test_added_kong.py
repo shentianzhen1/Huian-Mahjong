@@ -2,8 +2,9 @@
 
 ADD_KONG means an existing Peng upgraded with a self-drawn fourth tile. It is
 robbable. MING_GANG means 大明杠 from an opponent discard and is not robbable;
-AN_GANG is concealed and is not robbable. Kongs have no independent fee;
-only their fan contribution and still-unresolved special Hu scoring matter.
+AN_GANG is concealed and is not robbable. Kongs have no independent fee.
+Gang-Hu/An-Gang-Hu use ordinary self-draw scoring; the Kong contributes only
+its normal additive fan.
 """
 from collections import Counter
 from copy import deepcopy
@@ -385,41 +386,47 @@ class AddedKongTests(unittest.TestCase):
         self.assertEqual(replay.state.hands, original.hands)
         self.assert_conserved(replay.state)
 
-    def test_two_special_scoring_unknowns_keep_declaration_audit(self):
-        cases = (
-            (added_kong_state(rob=True), True, "ROB_KONG_SCORING_UNKNOWN",
-             "ROB_KONG_HU_DECLARED", 1, "rob_kong", 2),
-            (added_kong_state(kong_hu=True, tail=("E",)), False,
-             "GANG_HU_SCORING_UNKNOWN", "HU_DECLARED", 0, "kong_tail_draw", 4),
+    def test_rob_kong_scoring_unknown_keeps_declaration_audit(self):
+        instances = []
+
+        def factory(**options):
+            instance = HuianEnvironment(**options)
+            instances.append(instance)
+            return instance
+
+        result = Simulator(factory).run_normal_hand(
+            seed=17,
+            initial_state=added_kong_state(rob=True),
+            agent=AddedKongFixtureAgent(True),
+            max_steps=2,
         )
-        for state, rob, reason, phase, winner, source, steps in cases:
-            with self.subTest(reason=reason):
-                instances = []
-                def factory(**options):
-                    instance = HuianEnvironment(**options)
-                    instances.append(instance)
-                    return instance
-                result = Simulator(factory).run_normal_hand(
-                    seed=17, initial_state=state, agent=AddedKongFixtureAgent(rob),
-                    max_steps=steps)
-                self.assertEqual(result.status, "STOPPED_UNKNOWN")
-                self.assertEqual(result.unresolved, (reason,))
-                self.assertEqual(result.stop_reason, "unresolved_rule")
-                self.assertEqual(result.phase, phase)
-                self.assertEqual(result.winner, winner)
-                self.assertEqual(result.win_source, source)
-                self.assertEqual(result.steps, steps)
-                self.assertEqual(result.rewards, (0, 0))
-                self.assertFalse(instances[0].state.terminal)
-                self.assertIsNone(result.terminal_reason)
-                self.assertNotIn("END_HAND", [e["action"]["type"] for e in result.events])
-                previous_hash = result.initial_state_hash
-                for event in result.events:
-                    self.assertEqual(event["before_hash"], previous_hash)
-                    previous_hash = event["after_hash"]
-                    self.assertTrue(event["decision"]["reason"])
-                self.assertEqual(previous_hash, result.state_hash)
-                self.assert_conserved(instances[0].state)
+        self.assertEqual(result.status, "STOPPED_UNKNOWN")
+        self.assertEqual(result.unresolved, ("ROB_KONG_SCORING_UNKNOWN",))
+        self.assertEqual(result.stop_reason, "unresolved_rule")
+        self.assertEqual(result.phase, "ROB_KONG_HU_DECLARED")
+        self.assertEqual(result.winner, 1)
+        self.assertEqual(result.win_source, "rob_kong")
+        self.assertEqual(result.steps, 2)
+        self.assertEqual(result.rewards, (0, 0))
+        self.assertFalse(instances[0].state.terminal)
+        self.assertNotIn("END_HAND", [e["action"]["type"] for e in result.events])
+        self.assert_conserved(instances[0].state)
+
+    def test_gang_hu_simulation_uses_ordinary_zimo_multiplier(self):
+        instance = environment(added_kong_state(kong_hu=True, tail=("E",)))
+        self.declare(instance)
+        instance.step(env.Action(1, env.ActionType.PASS))
+        instance.step(action_of(instance, env.ActionType.DRAW))
+        instance.step(action_of(instance, env.ActionType.HU))
+
+        state = instance.finalize_simulation_only_outcome()
+        self.assertTrue(state.terminal)
+        self.assertEqual(state.terminal_reason, "SIMULATION_ZIMO")
+        self.assertEqual(state.rewards, [2, -2])
+        end = instance.events[-1]["action"]["metadata"]
+        self.assertEqual(end["multiplier"], 2)
+        self.assertEqual(end["hu_declaration"]["source"], "kong_tail_draw")
+        self.assertEqual(end["hu_declaration"]["kong_kind"], "ADDED_GANG")
 
     def test_completed_added_kong_no_longer_stops_ordinary_simulation(self):
         result = Simulator().run_normal_hand(
@@ -431,37 +438,48 @@ class AddedKongTests(unittest.TestCase):
         self.assertEqual(result.phase, "AFTER_DRAW")
         self.assertIsNone(result.terminal_reason)
 
-    def test_special_kong_scores_cannot_be_finalized_as_observed_ordinary_wins(self):
-        for branch, reason, winner, win_type in (
-            ("rob", "ROB_KONG_SCORING_UNKNOWN", 1, "PINGHU"),
-            ("gang_hu", "GANG_HU_SCORING_UNKNOWN", 0, "ZIMO"),
-        ):
-            with self.subTest(branch=branch):
-                instance = environment(added_kong_state(
-                    rob=branch == "rob", kong_hu=branch == "gang_hu",
-                    tail=("E",) if branch == "gang_hu" else ("P8",)))
-                self.declare(instance)
-                if branch == "rob":
-                    instance.step(action_of(instance, env.ActionType.ROB_KONG_HU))
-                else:
-                    instance.step(env.Action(1, env.ActionType.PASS))
-                    instance.step(action_of(instance, env.ActionType.DRAW))
-                    if branch == "gang_hu":
-                        instance.step(action_of(instance, env.ActionType.HU))
-                before, events = instance.state.state_hash(), instance.events
-                with self.assertRaises(UnknownRuleError) as caught:
-                    instance.finalize_observed_outcome(
-                        winner=winner, current_dealer_base=10, winner_fan=1,
-                        win_type=win_type)
-                self.assertEqual(caught.exception.rule_ids, (reason,))
-                self.assertEqual(instance.state.state_hash(), before)
-                self.assertEqual(instance.events, events)
+    def test_rob_kong_cannot_be_finalized_as_observed_ordinary_win(self):
+        instance = environment(added_kong_state(rob=True))
+        self.declare(instance)
+        instance.step(action_of(instance, env.ActionType.ROB_KONG_HU))
+        before, events = instance.state.state_hash(), instance.events
+        with self.assertRaises(UnknownRuleError) as caught:
+            instance.finalize_observed_outcome(
+                winner=1, current_dealer_base=10, winner_fan=1,
+                win_type="PINGHU")
+        self.assertEqual(caught.exception.rule_ids, ("ROB_KONG_SCORING_UNKNOWN",))
+        self.assertEqual(instance.state.state_hash(), before)
+        self.assertEqual(instance.events, events)
 
-    def test_ming_and_an_tail_draw_cannot_bypass_gang_scoring_without_hu(self):
+    def test_added_kong_tail_hu_uses_normal_zimo_and_additive_kong_fan(self):
+        instance = environment(added_kong_state(kong_hu=True, tail=("E",)))
+        self.declare(instance)
+        instance.step(env.Action(1, env.ActionType.PASS))
+        instance.step(action_of(instance, env.ActionType.DRAW))
+        instance.step(action_of(instance, env.ActionType.HU))
+
+        state, event = instance.finalize_ordinary_outcome(current_dealer_base=10)
+        metadata = event["action"]["metadata"]
+        self.assertTrue(state.terminal)
+        self.assertEqual(state.terminal_reason, "AUTO_ZIMO")
+        self.assertEqual(metadata["win_type"], "ZIMO")
+        self.assertEqual(metadata["multiplier"], 2)
+        # Added suited Kong P1 = 2 fan; concealed honor triplet EEE = 2 fan.
+        self.assertEqual(metadata["winner_fan"], 4)
+        self.assertEqual(state.rewards, [28, -28])
+        self.assertTrue(any(
+            component["category"] == "kong"
+            and component["fan"] == 2
+            and component["detail"] == "ADDED_GANG:P1"
+            for component in metadata["fan_components"]
+        ))
+
+    def test_ming_and_an_tail_draw_use_observed_zimo_without_extra_multiplier(self):
         for kind in ("MING_GANG", "AN_GANG"):
             with self.subTest(kong_kind=kind):
-                # Import only the already-completed kong, after its response
-                # resolution; this does not assume that every kong is unrobbable.
+                # Import only the already-completed Kong, then perform its
+                # required wall-tail draw. Observed settlement verifies the
+                # scoring contract without inventing an unobserved Hu action.
                 state = added_kong_state()
                 state.hands[0].remove(KONG_TILE)
                 state.melds[0][0] = env.Meld(
@@ -472,22 +490,20 @@ class AddedKongTests(unittest.TestCase):
                     tiles=(KONG_TILE,) * 4).to_dict()
                 instance = environment(state)
                 instance.step(action_of(instance, env.ActionType.DRAW))
-                self.assertEqual(instance.state.phase, "AFTER_DRAW")
-                self.assertIsNone(instance.state.pending_hu)
-                self.assertEqual(instance.state.last_action["metadata"]["source"],
-                                 "wall_tail")
-                self.assertEqual(instance.state.last_action["metadata"]["kong_kind"],
-                                 kind)
-                before, events = instance.state.state_hash(), instance.events
-                with self.assertRaises(UnknownRuleError) as caught:
-                    instance.finalize_observed_outcome(
-                        winner=0, current_dealer_base=10, winner_fan=1,
-                        win_type="ZIMO")
-                self.assertEqual(caught.exception.rule_ids,
-                                 ("GANG_HU_SCORING_UNKNOWN",))
-                self.assertEqual(instance.state.state_hash(), before)
-                self.assertEqual(instance.events, events)
-                self.assert_conserved(instance.state)
+                self.assertEqual(
+                    instance.state.last_action["metadata"]["source"], "wall_tail")
+                self.assertEqual(
+                    instance.state.last_action["metadata"]["kong_kind"], kind)
+
+                settled, event = instance.finalize_observed_outcome(
+                    winner=0, current_dealer_base=10, winner_fan=1,
+                    win_type="ZIMO")
+                self.assertTrue(settled.terminal)
+                self.assertEqual(settled.terminal_reason, "OBSERVED_ZIMO")
+                self.assertEqual(settled.rewards, [22, -22])
+                self.assertEqual(event["action"]["metadata"]["multiplier"], 2)
+                self.assertEqual(event["action"]["metadata"]["winner_fan"], 1)
+                self.assert_conserved(settled)
 
     def test_added_kong_does_not_make_observed_terminal_invalid_by_itself(self):
         instance = environment(added_kong_state())

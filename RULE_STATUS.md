@@ -1,5 +1,19 @@
 # Huian Two-Player Rules Status
 
+## 2026-09-30 Gang-Hu / An-Gang-Hu scoring confirmed
+
+Player confirmation closes the remaining ordinary Kong-tail Hu scoring gap:
+
+- **Gang-Hu after Ming-Gang or Added-Gang has no special extra multiplier.**
+- **An-Gang-Hu after a concealed Kong also has no special extra multiplier.**
+- The completed Kong contributes only its existing normal Kong fan to the winner fan total.
+- The tail-draw Hu is still a self-draw, so settlement uses the already-confirmed ordinary Zimo multiplier ×2.
+- Therefore the formula is the normal ordinary self-draw formula: `(current dealer base + total winner fan, including Kong fan) × 2`.
+- No extra “Gang-Hu ×N” or “An-Gang-Hu ×N” layer is stacked on top.
+- Rob-Kong Hu remains a separate response path and is unchanged.
+
+This retires `GANG_HU_SCORING_UNKNOWN` / `gang_hu_scoring` and enables ordinary automatic settlement for `WinSource.KONG_TAIL_DRAW` across `MING_GANG`, `ADDED_GANG`, and `AN_GANG`.
+
 ## 2026-09-20 Youjin own-turn flowers / concealed Kong / added Kong confirmed
 
 Latest player confirmation extends the established Youjin/Double-You own progression turn without changing the non-Kong path:
@@ -12,7 +26,7 @@ Latest player confirmation extends the established Youjin/Double-You own progres
 - **Kong-tail ordinary tile:** when no ordinary Hu/special-settlement/upgrade is selected, the player must discard one non-Jin tile. The current Youjin stage is preserved and play returns to the opponent's one-draw response window; the discard is a Youjin-chain discard and opens no ordinary Chi/Peng/Gang/discard-Hu claim window.
 - **Kong-tail tile that genuinely completes an ordinary Hu:** the player may choose ordinary self-draw Hu, or choose to settle the current Youjin stage instead. Ordinary Hu eligibility must have a legal decomposition beyond the trivial "roaming Jin + just-drawn tail tile as the pair"; otherwise every Kong-tail tile would be falsely treated as an ordinary Hu.
 - **Kong fan remains additive** in any later settlement; there is still no independent immediate Kong fee.
-- The ordinary Gang-Hu scoring formula remains `GANG_HU_SCORING_UNKNOWN`. Allowing the Hu action does not invent its multiplier/stacking.
+- **Updated 2026-09-30:** ordinary Gang-Hu / An-Gang-Hu has no special extra multiplier; Kong fan remains additive and the tail-draw Hu uses ordinary Zimo ×2.
 
 Implementation uses `YOUJIN_KONG_CHOICE` and `YOUJIN_KONG_AFTER_DRAW`; declining the Kong explicitly returns to the pre-existing progression logic.
 
@@ -136,7 +150,7 @@ A re-review of the archived Huian two-player replay evidence separates **direct 
 - **Sanjindao ×3 — confirmed as the adopted target-room multiplier from player confirmation plus the in-game page, but its direct settlement/payment/dealer flow is still unresolved.** Multiplier evidence and executable settlement readiness remain separate.
 - **Rob-Kong Hu ×2 — CONFIRMED multiplier.** Player confirmation establishes that 抢杠胡 uses the same Hu multiplier as ordinary self-draw, therefore ×2; the Huian in-game rules page independently lists 抢杠 ×2. `ROB_KONG_SCORING_UNKNOWN` is narrowed to the remaining payment/dealer-continuation and settlement-flow details, so automatic settlement remains disabled until those details are closed.
 - **Eight-Flower You:** collecting all eight flowers and the DECLARE/PASS window are confirmed; PASS keeps 8 ordinary flower fan. Project working rule updated 2026-09-20: DECLARE uses the in-game “八花齐16番” as a **fixed special 16 fan**, applies no extra Hu multiplier (×1), and does not stack the ordinary +8 flower fan or other additive fan. This remains WORKING until a real target-room Eight-Flower terminal settlement is captured.
-- **Qiangjin and Gang-Hu multipliers remain UNKNOWN.** No archived target-room settlement or sufficiently scoped in-game multiplier rule closes those branches.
+- **Qiangjin multiplier remains UNKNOWN.** Gang-Hu / An-Gang-Hu was resolved by player confirmation on 2026-09-30: no special extra multiplier, normal Kong fan + ordinary Zimo ×2.
 - The in-game page also lists **Tianhu ×4** and **Tianting ×4**, but current two-player target-room enablement/trigger semantics are not confirmed, so they are evidence leads only and are not enabled as executable special outcomes.
 - The two ~57.47s Triple-You evidence records (`21d61237...` and `7bc12fa...`) are treated as likely duplicate representations of the same hand unless future source hashing proves otherwise; they must not be counted as two independent settlement samples.
 
@@ -176,9 +190,9 @@ The current implementation request defines an added-kong-only response path. Thi
 - Declaration enters `ROB_KONG_WINDOW`. The original Peng and fourth hand tile remain unchanged; `pending_kong` is a logical reference, not another physical tile. Only this added-kong window offers `ROB_KONG_HU` when Rules establishes eligibility, or `PASS`.
 - `PASS` commits the fourth tile once, forming `ADDED_GANG`, then requires a `wall_tail` draw through the existing flower replacement pipeline. A successful rob records winner/source and keeps the original Peng and tile accounting; it does not complete the kong or draw a replacement.
 - `enable_added_kong=True` is the default. False disables added-kong candidates. Simulator `enable_rob_kong=False` remains the broad unsupported scope switch; setting it True does not enable Ming/An rob-kong.
-- Kong fan table is now the **current adopted engineering rule**, subject to revision if stronger direct video evidence conflicts: 大明杠/MING_GANG 普通牌2番、字牌3番；补杠/蓄杠/加杠 ADD_KONG 按同一明杠表（普通牌2番、字牌3番）；暗杠/AN_GANG 普通牌3番、字牌4番。普通牌 ADD_KONG=2番有 66fe863f 真实录像直接支持；其余格来自惠安游戏内规则页并按用户 2026-09-18 指示先采用。2026-09-18 玩家进一步确认：**不存在独立杠费**，大明杠/暗杠/补杠都不会在杠成立时另外即时收分，流局也没有需要保留或返还的杠费；杠只通过既有杠番进入最终胡牌番数。仍 UNKNOWN 的杠类计分仅剩：抢杠胡的付款/庄位/终局流程 `ROB_KONG_SCORING_UNKNOWN`（倍率×2已确认）、杠上胡结算 `GANG_HU_SCORING_UNKNOWN`。
+- Kong fan table is now the **current adopted engineering rule**, subject to revision if stronger direct video evidence conflicts: 大明杠/MING_GANG 普通牌2番、字牌3番；补杠/蓄杠/加杠 ADD_KONG 按同一明杠表（普通牌2番、字牌3番）；暗杠/AN_GANG 普通牌3番、字牌4番。普通牌 ADD_KONG=2番有 66fe863f 真实录像直接支持；其余格来自惠安游戏内规则页并按用户 2026-09-18 指示先采用。2026-09-18 玩家进一步确认：**不存在独立杠费**，大明杠/暗杠/补杠都不会在杠成立时另外即时收分，流局也没有需要保留或返还的杠费；杠只通过既有杠番进入最终胡牌番数。仍 UNKNOWN 的杠类计分仅剩抢杠胡的付款/庄位/终局流程 `ROB_KONG_SCORING_UNKNOWN`（倍率×2已确认）。2026-09-30 已确认杠胡/暗杠胡无额外倍率，仅按杠番加番并走普通自摸×2。
 
-Remaining evidence gaps: actual-room added-kong (补/蓄/加杠) response/decline footage, independent kong fees, boundary settlement and all rob-kong/Gang-Hu scoring. Rob scope is no longer a gap: ADD_KONG is robbable; 大明杠/MING_GANG and 暗杠/AN_GANG are not. Implemented transitions and passing tests do not promote the remaining gaps to confirmed rules.
+Remaining evidence gaps: actual-room added-kong (补/蓄/加杠) response/decline footage and the remaining rob-kong payment/dealer/terminal details. Independent Kong fees and Gang-Hu/An-Gang-Hu scoring are resolved. Rob scope is no longer a gap: ADD_KONG is robbable; 大明杠/MING_GANG and 暗杠/AN_GANG are not.
 
 ## Latest direct replay evidence — 66fe863f, 2026-09-15
 
@@ -224,7 +238,7 @@ Regression: `tests/fixtures/settlement_b3892b34.json`, `tests/test_b3892b34_evid
 - Confirmed system interaction (player confirmation, 2026-09-15): flower replacement is dealt automatically by the mini-program and the interface has no obvious tile-by-tile dealing animation. Environment must model replacement as a system event rather than a player action. Vision/Recorder must infer it from the next stable state—hand count, flower count, wall remaining and opening-gold phase—not from animation presence. This observation rule does not change the confirmed wall-tail replacement source.
 - Added kong after Peng is allowed.
 - Current adopted kong fan table (2026-09-18; revise if later direct video conflicts): suited 大明杠=2, honor 大明杠=3; suited 补/蓄/加杠=2, honor 补/蓄/加杠=3; suited 暗杠=3, honor 暗杠=4. The suited added-kong=2 cell is directly confirmed by replay 66fe863f; the remaining cells are supported by the in-game Huian rule page and are operationally adopted by player instruction.
-- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). Rob-kong is a separate response path. Updated player confirmation (2026-09-18): Added-Gang/ADD_KONG (补杠=蓄杠=加杠, existing Peng + self-drawn fourth tile) is an exposed-kong upgrade and can be robbed. Big Ming-Gang/MING_GANG (opponent discard + three matching hand tiles) cannot be robbed; An-Gang/AN_GANG cannot be robbed. Actual-room response footage and rob-kong scoring remain incomplete.
+- Player confirmation (2026-09-14): a Hu by the kong declarer after the tail draw for any completed Ming-Gang, An-Gang, or Added-Gang is classified uniformly as Gang-Hu (杠胡). Rob-kong is a separate response path. Updated player confirmation (2026-09-18): Added-Gang/ADD_KONG (补杠=蓄杠=加杠, existing Peng + self-drawn fourth tile) is an exposed-kong upgrade and can be robbed. Big Ming-Gang/MING_GANG (opponent discard + three matching hand tiles) cannot be robbed; An-Gang/AN_GANG cannot be robbed. Actual-room rob-kong response footage and rob-kong settlement details remain incomplete; Gang-Hu/An-Gang-Hu ordinary scoring is confirmed.
 - Gold cannot participate in Chi/Peng/Ming-Gang/An-Gang.
 - **开出的金牌是4张同牌中的一张实体牌，并固定留在开金区，不能回到牌墙或摸牌区。** 因此开金后剩余可操作金最多3张；Environment 必须把开出的那张金从可摸牌墙移出但继续计入144张实体牌守恒。
 - If opponent discards the current gold tile, it cannot be Chi/Peng/Gang/Hu.

@@ -280,10 +280,6 @@ class Simulator:
                 if state.phase == "ROB_KONG_HU_DECLARED":
                     return finish("STOPPED_UNKNOWN", ("ROB_KONG_SCORING_UNKNOWN",),
                                   "unresolved_rule")
-                if (state.phase == "HU_DECLARED"
-                        and state.pending_hu["source"] == "kong_tail_draw"):
-                    return finish("STOPPED_UNKNOWN", ("GANG_HU_SCORING_UNKNOWN",),
-                                  "unresolved_rule")
                 if (profile.enable_youjin
                         and state.phase == "YOUJIN_SETTLEMENT_READY"):
                     game.finalize_youjin_outcome(

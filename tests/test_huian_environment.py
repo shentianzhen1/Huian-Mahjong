@@ -1078,7 +1078,7 @@ class EnvironmentTests(unittest.TestCase):
                   if action.type == env.ActionType.HU)
         self.assertEqual(hu.tile, "E")
 
-    def test_kong_tail_hu_declaration_preserves_kind_and_blocks_scoring(self):
+    def test_an_gang_tail_hu_preserves_kind_and_uses_normal_zimo_scoring(self):
         state = HuianGameState(phase="AFTER_AN_GANG", gold_tile="P9",
                                special_states=["NORMAL", "NORMAL"])
         state.hands[0] = ["M1", "M1", "M2", "M3", "M4", "M5", "M6",
@@ -1104,12 +1104,17 @@ class EnvironmentTests(unittest.TestCase):
         })
         declared, _ = instance.step(hu)
         self.assertEqual(declared.pending_hu["kong_kind"], "AN_GANG")
-        before = declared.state_hash()
-        with self.assertRaises(UnknownRuleError):
-            instance.finalize_observed_outcome(
-                winner=0, current_dealer_base=10, winner_fan=1, win_type="ZIMO"
-            )
-        self.assertEqual(instance.state.state_hash(), before)
+
+        settled, event = instance.finalize_observed_outcome(
+            winner=0, current_dealer_base=10, winner_fan=1, win_type="ZIMO"
+        )
+        self.assertTrue(settled.terminal)
+        self.assertEqual(settled.terminal_reason, "OBSERVED_ZIMO")
+        self.assertEqual(settled.rewards, [22, -22])
+        metadata = event["action"]["metadata"]
+        self.assertEqual(metadata["multiplier"], 2)
+        self.assertEqual(metadata["winner_fan"], 1)
+        self.assertEqual(metadata["hu_declaration"]["kong_kind"], "AN_GANG")
 
     def test_pass_known_and_startup_remains_unknown(self):
         instance = game(scenario())

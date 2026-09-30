@@ -29,11 +29,11 @@ class RuleRegistryTests(unittest.TestCase):
         )
 
     def test_research_override_is_isolated_and_changes_fingerprint(self):
-        original = DEFAULT_RULE_SNAPSHOT.get("settlement.gang_hu")
+        original = DEFAULT_RULE_SNAPSHOT.get("settlement.qiangjin_full")
         experimental = DEFAULT_RULE_SNAPSHOT.with_overrides(
             label="research-only",
             overrides={
-                "settlement.gang_hu": {
+                "settlement.qiangjin_full": {
                     "status": EvidenceStatus.WORKING,
                     "revision": original.revision + 1,
                     "value": {"multiplier": 2},
@@ -42,13 +42,13 @@ class RuleRegistryTests(unittest.TestCase):
                 }
             },
         )
-        self.assertIsNone(DEFAULT_RULE_SNAPSHOT.get("settlement.gang_hu").value)
+        self.assertIsNone(DEFAULT_RULE_SNAPSHOT.get("settlement.qiangjin_full").value)
         self.assertEqual(
-            DEFAULT_RULE_SNAPSHOT.get("settlement.gang_hu").status,
+            DEFAULT_RULE_SNAPSHOT.get("settlement.qiangjin_full").status,
             EvidenceStatus.UNKNOWN,
         )
         self.assertNotEqual(experimental.fingerprint, DEFAULT_RULE_SNAPSHOT.fingerprint)
-        self.assertEqual(experimental.get("settlement.gang_hu").value, {"multiplier": 2})
+        self.assertEqual(experimental.get("settlement.qiangjin_full").value, {"multiplier": 2})
 
     def test_confirmed_gate_rejects_working_and_unknown(self):
         confirmed = DEFAULT_RULE_SNAPSHOT.require_confirmed(
@@ -56,7 +56,7 @@ class RuleRegistryTests(unittest.TestCase):
         )
         self.assertEqual(confirmed.value, 4)
         for rule_id in (
-            "settlement.gang_hu",
+            "settlement.qiangjin_full",
             "settlement.eight_flower_working_fixed_fan",
         ):
             with self.subTest(rule_id=rule_id):
@@ -93,6 +93,23 @@ class RuleRegistryTests(unittest.TestCase):
                     special_outcome_profile(outcome).multiplier,
                     multiplier,
                 )
+
+    def test_gang_hu_is_confirmed_as_ordinary_zimo_with_additive_kong_fan(self):
+        rule = DEFAULT_RULE_SNAPSHOT.require_confirmed("settlement.gang_hu")
+        self.assertEqual(rule.value, {
+            "uses_ordinary_zimo_multiplier": True,
+            "extra_multiplier": 1,
+            "kong_fan_additive": True,
+        })
+        self.assertEqual(
+            rule.depends_on,
+            ("settlement.ordinary_zimo_multiplier",),
+        )
+        profile = special_outcome_profile("GANG_HU")
+        self.assertTrue(profile.settlement_ready)
+        self.assertEqual(profile.multiplier, 2)
+        self.assertEqual(profile.multiplier_status, EvidenceStatus.CONFIRMED)
+        self.assertIsNone(profile.settlement_rule_id)
 
     def test_target_room_defaults_match_registry(self):
         self.assertEqual(

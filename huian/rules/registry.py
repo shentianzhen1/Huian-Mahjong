@@ -271,9 +271,18 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "settlement.gang_hu": _record(
         "settlement.gang_hu", RuleDomain.SETTLEMENT,
-        EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.CRITICAL,
-        (), "huian.rules.special_outcomes",
-        note="Multiplier, stacking and terminal settlement unresolved.",
+        EvidenceStatus.CONFIRMED, 2, {
+            "uses_ordinary_zimo_multiplier": True,
+            "extra_multiplier": 1,
+            "kong_fan_additive": True,
+        }, ImpactLevel.CRITICAL,
+        ("player_2026-09-30",), "huian.environment",
+        depends_on=("settlement.ordinary_zimo_multiplier",),
+        note=(
+            "Gang-Hu after Ming/Added Kong and An-Gang-Hu have no special extra "
+            "multiplier. The kong contributes only its normal kong fan, and the "
+            "tail-draw Hu settles through the ordinary self-draw x2 formula."
+        ),
     ),
     "settlement.sanjindao_multiplier": _record(
         "settlement.sanjindao_multiplier", RuleDomain.SETTLEMENT,
@@ -318,6 +327,6 @@ RULE_REGISTRY = MappingProxyType({
 
 
 DEFAULT_RULE_SNAPSHOT = RuleSnapshot(
-    label="huian-target-2026-09-20-r1",
+    label="huian-target-2026-09-30-r2",
     records=RULE_REGISTRY,
 )

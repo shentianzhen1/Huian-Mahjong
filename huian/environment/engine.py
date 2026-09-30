@@ -144,9 +144,6 @@ class HuianEnvironment:
         if pending["source"] == WinSource.ROB_KONG.value:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
-        if pending["source"] == WinSource.KONG_TAIL_DRAW.value:
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
         winner = pending["winner"]
         multiplier = 1 if pending["source"] == WinSource.DISCARD.value else 2
         candidate = deepcopy(self._state)
@@ -168,11 +165,11 @@ class HuianEnvironment:
         self._seen.add(self._position(candidate))
         return self.state
     def finalize_ordinary_outcome(self, *, current_dealer_base):
-        """Automatically fan-count and settle a declared ordinary Pinghu/Zimo.
+        """Automatically fan-count and settle Pinghu/Zimo, including Gang-Hu.
 
-        This real-scoring path derives winner fan from the current audited
-        state instead of accepting caller-supplied fan. Completed kongs affect
-        winner fan through FanAggregator only; there is no independent kong fee.
+        Kong-tail Hu from Ming/Added/An Kong uses the ordinary self-draw
+        multiplier. Completed kongs affect winner fan through FanAggregator
+        only; there is no independent fee or special Gang-Hu multiplier.
         """
         self._require_state()
         if self._state.terminal:
@@ -185,10 +182,8 @@ class HuianEnvironment:
         if source == WinSource.ROB_KONG:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
-        if source == WinSource.KONG_TAIL_DRAW:
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
-        if source not in (WinSource.DISCARD, WinSource.SELF_DRAW):
+        if source not in (
+                WinSource.DISCARD, WinSource.SELF_DRAW, WinSource.KONG_TAIL_DRAW):
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("win_declaration_and_settlement")
 
@@ -200,7 +195,15 @@ class HuianEnvironment:
             # accounting; add a virtual copy only for structural/fan analysis.
             hand.append(winning_tile)
 
-        context = HuContext(source, winning_tile=winning_tile)
+        context = HuContext(
+            source,
+            winning_tile=winning_tile,
+            kong_kind=(
+                declaration.get("kong_kind")
+                if source == WinSource.KONG_TAIL_DRAW
+                else None
+            ),
+        )
         hu_result = self.rules.rules.analyze_hu(
             hand,
             self._state.gold_tile,
@@ -585,22 +588,15 @@ class HuianEnvironment:
             if source == WinSource.ROB_KONG:
                 from huian.rules.config import UnknownRuleError
                 raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
-            if source == WinSource.KONG_TAIL_DRAW:
-                from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
             expected = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
             if win_type != expected:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
         if self._state.pending_kong is not None:
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
-        last = self._state.last_action
-        if (self._state.phase in ("AFTER_DRAW", "NEED_FLOWER_REPLACE")
-                and isinstance(last, dict) and last.get("type") == env.ActionType.DRAW.value):
-            context = HuContext.from_draw_metadata(last.get("metadata", {}))
-            if context.is_gang_hu:
-                from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("GANG_HU_SCORING_UNKNOWN")
+        # A verified wall-tail Hu after any completed Kong uses the
+        # ordinary Zimo settlement formula. The Kong itself contributes only
+        # through the caller-provided/aggregated normal fan total.
         result = self.settlement.settle(
             winner=winner,
             current_dealer_base=current_dealer_base,

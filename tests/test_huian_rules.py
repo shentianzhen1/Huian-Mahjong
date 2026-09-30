@@ -192,6 +192,8 @@ class HuianRulesTests(unittest.TestCase):
         self.assertNotIn("sanjinyou_relation", UNKNOWN_RULES)
         self.assertIn("sanjindao_settlement", UNKNOWN_RULES)
         self.assertNotIn("sanjinyou_multiplier", UNKNOWN_RULES)
+        self.assertNotIn("gang_hu_scoring", UNKNOWN_RULES)
+        self.assertNotIn("GANG_HU_SCORING_UNKNOWN", UNKNOWN_RULES)
 
     def test_youjin_ready_reserves_one_gold_and_uses_other_golds_as_wildcards(self):
         # Five complete concealed groups after reserving one roaming P9:
