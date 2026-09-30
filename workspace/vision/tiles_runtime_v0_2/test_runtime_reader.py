@@ -130,15 +130,18 @@ class RuntimeReaderGateTests(unittest.TestCase):
     def test_current_session_gold_skin_qualifies_appearance_only(self) -> None:
         labels = [
             {
-                "tile_id": "M6",
+                "tile_id": f"M{rank}",
                 "approved": True,
-                "region": "draw_visual",
+                "region": "hand_region",
                 "source_session": "session_base_a",
-            },
+            }
+            for rank in range(1, 10)
+        ]
+        labels.extend([
             {
                 "tile_id": "M6",
                 "approved": True,
-                "region": "hand_region",
+                "region": "draw_visual",
                 "source_session": "session_base_b",
             },
             {
@@ -148,7 +151,7 @@ class RuntimeReaderGateTests(unittest.TestCase):
                 "source_session": "session_target",
                 "gold_skin_only": True,
             },
-        ]
+        ])
         training = _training_labels(labels, "session_target")
         _, covered_by_region, cross_session = _coverage(training)
 
@@ -174,19 +177,20 @@ class RuntimeReaderGateTests(unittest.TestCase):
     def test_gold_skin_review_cannot_replace_independent_identity_support(self) -> None:
         labels = [
             {
-                "tile_id": "M6",
+                "tile_id": f"M{rank}",
                 "approved": True,
                 "region": "hand_region",
                 "source_session": "session_base_a",
-            },
-            {
-                "tile_id": "M6",
-                "approved": True,
-                "region": "hand_region",
-                "source_session": "session_target",
-                "gold_skin_only": True,
-            },
+            }
+            for rank in range(1, 10)
         ]
+        labels.append({
+            "tile_id": "M6",
+            "approved": True,
+            "region": "hand_region",
+            "source_session": "session_target",
+            "gold_skin_only": True,
+        })
         training = _training_labels(labels, "session_target")
         _, covered_by_region, cross_session = _coverage(training)
         self.assertEqual(_gold_skin_covered_classes(labels), {"M6"})
