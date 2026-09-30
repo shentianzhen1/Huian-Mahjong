@@ -24,7 +24,7 @@ UNKNOWN = "UNKNOWN"
 # Development-only geometry gates. Stacked layouts need BOTH vertical excess
 # and a narrow upper lobe; this avoids treating a tall but ordinary PENG crop
 # as a Kong merely because its reviewed bbox has extra border/shadow.
-_STACKED_MIN_HEIGHT_SCORE = 1.62
+_STACKED_MIN_HEIGHT_SCORE = 1.58
 _STACKED_MAX_TOP_TO_MID = 0.60
 _STACKED_STRONG_HEIGHT_SCORE = 1.90
 _STACKED_STRONG_HEIGHT_MAX_TOP_TO_MID = 0.78
@@ -173,8 +173,8 @@ def normalize_public_meld_crop(
     """
     if canonical_height < 32:
         raise ValueError("canonical_height must be at least 32")
-    if group.geometry_kind != "bottom_group":
-        return NormalizedPublicMeld(image=None, analysis=_unknown("not_bottom_group"))
+    if group.geometry_kind not in {"bottom_group", "top_group"}:
+        return NormalizedPublicMeld(image=None, analysis=_unknown("not_meld_group"))
 
     x, y, width, height = group.pixel_bbox
     if width <= 0 or height <= 0:
