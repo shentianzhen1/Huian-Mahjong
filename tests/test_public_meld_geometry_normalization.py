@@ -38,11 +38,11 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         cls.PublicGeometryCandidate = PublicGeometryCandidate
         cls.calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))
 
-    def _candidate(self, bbox, *, confidence=0.9):
+    def _candidate(self, bbox, *, confidence=0.9, geometry_kind="bottom_group"):
         return self.PublicGeometryCandidate(
             pixel_bbox=bbox,
             normalized_bbox=(0.0, 0.0, 1.0, 1.0),
-            geometry_kind="bottom_group",
+            geometry_kind=geometry_kind,
             confidence=confidence,
             fill_ratio=0.8,
             frame="synthetic",
@@ -77,6 +77,18 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         self.assertTrue(all(face.size[1] == 96 for face in faces))
         self.assertTrue(all(face.size[0] > 0 for face in faces))
 
+    def test_upper_flat_row_uses_same_normalization(self):
+        image = self._flat_image()
+        normalized = self.normalize(
+            image,
+            self._candidate(
+                (20, 30, 185, 105),
+                geometry_kind="top_group",
+            ),
+        )
+        self.assertEqual(normalized.analysis.stack_state, self.FLAT)
+        self.assertEqual(len(self.split(normalized)), 3)
+
     def test_stacked_3_plus_1_is_detected_and_not_equal_thirds_split(self):
         image = self._stacked_image()
         normalized = self.normalize(
@@ -90,6 +102,23 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
             "stacked_3_plus_1_geometry_candidate",
             normalized.analysis.issues,
         )
+
+    def test_moderate_height_stack_is_not_lost(self):
+        image = self.Image.new("RGB", (300, 180), (0, 75, 78))
+        draw = self.ImageDraw.Draw(image)
+        for x in (20, 105, 190):
+            draw.rectangle((x, 65, x + 74, 145), fill=(235, 235, 225))
+        draw.rectangle((105, 15, 179, 95), fill=(235, 235, 225))
+        normalized = self.normalize(
+            image,
+            self._candidate((15, 10, 255, 145)),
+        )
+        self.assertEqual(
+            normalized.analysis.stack_state,
+            self.STACKED,
+            repr(normalized.analysis),
+        )
+        self.assertEqual(self.split(normalized), ())
 
     def test_non_bottom_group_remains_unknown(self):
         image = self._flat_image()
@@ -105,7 +134,7 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         normalized = self.normalize(image, group)
         self.assertEqual(normalized.analysis.stack_state, self.UNKNOWN)
         self.assertIsNone(normalized.image)
-        self.assertEqual(normalized.analysis.issues, ("not_bottom_group",))
+        self.assertEqual(normalized.analysis.issues, ("not_meld_group",))
 
     def _reviewed(self, sample_id):
         row = next(
