@@ -30,6 +30,8 @@ class PublicMeldIdentityCandidate:
     frozen_on: str
     feature_family: str
     inset_ratio: float
+    normalization_scope: str
+    template_bank_preprocessing_allowed: bool
     selection_query_ids: tuple[str, ...]
     selection_match_group: str
     selected_on_selection_queries: bool
@@ -66,6 +68,10 @@ def load_public_meld_identity_candidate(
         frozen_on=str(payload.get("frozen_on", "")),
         feature_family=str(payload.get("feature_family", "")),
         inset_ratio=float(normalization.get("inset_ratio")),
+        normalization_scope=str(normalization.get("scope", "")),
+        template_bank_preprocessing_allowed=bool(
+            normalization.get("template_bank_preprocessing_allowed")
+        ),
         selection_query_ids=tuple(str(x) for x in selection.get("query_ids", ())),
         selection_match_group=str(selection.get("query_match_group", "")),
         selected_on_selection_queries=bool(selection.get("selected_on_these_queries")),
@@ -101,6 +107,8 @@ def validate_frozen_public_meld_identity_candidate(
         "status": "frozen_development_candidate",
         "feature_family": FROZEN_FEATURE_FAMILY,
         "inset_ratio": FROZEN_INSET_RATIO,
+        "normalization_scope": "query_side_split_face_only",
+        "template_bank_preprocessing_allowed": False,
         "selection_query_ids": FROZEN_SELECTION_QUERY_IDS,
         "selection_match_group": FROZEN_SELECTION_MATCH_GROUP,
         "selected_on_selection_queries": True,
