@@ -42,7 +42,7 @@ jobs:
           )
           print(json.dumps({k: d[k] for k in keys}, indent=2))
           PY
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: youjin-special-aware-5pairs
           path: data/evaluations/youjin-special-aware/
