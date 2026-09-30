@@ -156,6 +156,27 @@ def _expand_bottom_group(
     return left, top, right - left, bottom - top
 
 
+def _expand_top_group(
+    bbox: tuple[int, int, int, int],
+    frame_width: int,
+    frame_height: int,
+) -> tuple[int, int, int, int]:
+    """Restore borders around a compact opponent-side exposed row.
+
+    Opponent melds are rendered smaller than player-side melds, so padding is
+    intentionally lighter. This remains geometry-only; screen-side/actor
+    semantics are supplied by a separate channel/profile layer.
+    """
+    x, y, width, height = bbox
+    pad_x = max(1, int(round(frame_width * 0.0015)))
+    pad_y = max(2, int(round(frame_height * 0.006)))
+    left = max(0, x - pad_x)
+    top = max(0, y - pad_y)
+    right = min(frame_width, x + width + pad_x)
+    bottom = min(frame_height, y + height + pad_y)
+    return left, top, right - left, bottom - top
+
+
 def _upper_protrusions(
     mask: np.ndarray,
     bbox: tuple[int, int, int, int],
@@ -326,6 +347,35 @@ def detect_public_tile_geometry(
         if normalized_width > 0.25:
             oversized_seen += 1
             oversized_bboxes.append(_normalized(raw_bbox, width, height))
+            continue
+
+        # Opponent-side exposed groups are rendered much smaller than the
+        # player-side row. Their total width can therefore fall inside the old
+        # single-face width gate. Use a row-like aspect signature before that
+        # gate so a compact 3-face upper row is not collapsed to one tile.
+        component_aspect = box_width / box_height
+        if (
+            y < height * 0.30
+            and 1.75 <= component_aspect <= 4.50
+            and normalized_width <= 0.18
+        ):
+            group_bbox = _expand_top_group(raw_bbox, width, height)
+            local = mask[
+                group_bbox[1] : group_bbox[1] + group_bbox[3],
+                group_bbox[0] : group_bbox[0] + group_bbox[2],
+            ]
+            group_fill = float(local.mean()) if local.size else 0.0
+            candidates.append(
+                PublicGeometryCandidate(
+                    group_bbox,
+                    _normalized(group_bbox, width, height),
+                    "top_group",
+                    round(min(0.86, 0.58 + group_fill * 0.36), 6),
+                    round(group_fill, 6),
+                    frame,
+                    session,
+                )
+            )
             continue
 
         if normalized_width <= 0.085:
