@@ -258,8 +258,9 @@ def propose_shadow_feature(
 
     This is intentionally equivalent to the pixel path after feature extraction.
     It exists so a reviewed target match can be evaluated without committing
-    the target crop itself as a training/template asset. Output identity stays
-    UNKNOWN and is never runtime/executor-safe.
+    the target crop itself as a training/template asset. The public tile_id
+    field remains UNKNOWN, but a strictly source-disjoint public_meld candidate
+    may be exposed for internal read-only Runtime use. Executor stays forbidden.
     """
     import numpy as np
 
@@ -274,6 +275,8 @@ def propose_shadow_feature(
     result: dict[str, Any] = {
         "tile_id": UNKNOWN, "shadow_proposal": None, "region": region,
         "eligible_class_count": 0, "score": None, "margin": None,
+        "winner_independent_match_groups": 0,
+        "read_only_runtime_candidate": None,
         "evidence_grade": UNKNOWN, "safe_for_runtime": False,
         "safe_for_executor": False, "formal_promotion_evidence": False,
         "reason": "insufficient_cross_match_class_support",
@@ -313,11 +316,18 @@ def propose_shadow_feature(
         return result
     winner, score = eligible[0]
     margin = score - eligible[1][1]
+    winner_groups = len(best_by_class_and_group[winner])
     result["score"] = round(score, 6)
     result["margin"] = round(margin, 6)
+    result["winner_independent_match_groups"] = winner_groups
     if score >= minimum_score and margin >= minimum_margin:
         result["shadow_proposal"] = winner
-        result["reason"] = "development_shadow_only_not_runtime_identity"
+        if region == "public_meld" and winner_groups >= 2:
+            result["read_only_runtime_candidate"] = winner
+            result["safe_for_runtime"] = True
+            result["reason"] = "development_read_only_runtime_candidate"
+        else:
+            result["reason"] = "development_shadow_only_not_runtime_identity"
     else:
         result["reason"] = "low_score_or_ambiguous_public_face"
     return result
