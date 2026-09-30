@@ -29,7 +29,7 @@ from workspace.vision.public_meld_identity_candidate import (
     load_public_meld_identity_candidate,
 )
 from workspace.vision.public_meld_identity_normalization import (
-    normalize_public_meld_identity_face,
+    normalize_public_meld_identity_query_face,
 )
 
 
@@ -198,7 +198,7 @@ def evaluate_frozen_public_meld_holdout(
 
         with Image.open(image_path) as original:
             raw = original.convert("RGB")
-        normalized = normalize_public_meld_identity_face(
+        normalized = normalize_public_meld_identity_query_face(
             raw,
             inset_ratio=candidate.inset_ratio,
         )
