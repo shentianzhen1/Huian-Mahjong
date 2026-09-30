@@ -51,23 +51,39 @@ class PublicDetectorCalibrationManifestTests(unittest.TestCase):
         self.assertEqual(report["by_target"]["youjin_state"], 1)
         self.assertEqual(report["by_target"]["settlement"], 2)
         self.assertEqual(report["source_sessions_by_target"]["discard"], 2)
-        self.assertEqual(report["source_sessions_by_target"]["meld"], 5)
+        self.assertEqual(report["source_sessions_by_target"]["meld"], 2)
+        self.assertEqual(report["by_context_scope"], {
+            "full_frame": 16,
+            "identity_crop": 3,
+        })
 
-    def test_thirteen_detector_targets_have_reviewed_bboxes(self):
+    def test_ten_full_frame_detector_targets_have_reviewed_bboxes(self):
         pending = pending_bbox_samples(self.manifest)
         self.assertEqual(pending, ())
         reviewed = [
             sample
             for sample in self.manifest.samples
-            if sample.target in {"discard", "meld"}
+            if (
+                sample.target in {"discard", "meld"}
+                and sample.context_scope == "full_frame"
+            )
         ]
-        self.assertEqual(len(reviewed), 13)
+        self.assertEqual(len(reviewed), 10)
         self.assertTrue(all(sample.bbox is not None for sample in reviewed))
         self.assertTrue(all(sample.status == "bbox_reviewed" for sample in reviewed))
         report = readiness_report(self.manifest)
         self.assertEqual(report["bbox_ready_by_target"]["discard"], 5)
-        self.assertEqual(report["bbox_ready_by_target"]["meld"], 8)
+        self.assertEqual(report["bbox_ready_by_target"]["meld"], 5)
         self.assertTrue(report["public_tile_detector_bbox_ready"])
+
+    def test_identity_crops_are_not_detector_context(self):
+        crops = [
+            sample for sample in self.manifest.samples
+            if sample.context_scope == "identity_crop"
+        ]
+        self.assertEqual(len(crops), 3)
+        self.assertTrue(all(sample.target == "meld" for sample in crops))
+        self.assertTrue(all(sample.status == "bbox_reviewed" for sample in crops))
 
     def test_real_committed_evidence_files_match_locked_hashes(self):
         self.assertEqual(
