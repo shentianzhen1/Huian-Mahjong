@@ -31,23 +31,29 @@ class PublicDetectorCalibrationManifestTests(unittest.TestCase):
     def test_manifest_locks_real_reviewed_development_sources(self):
         manifest = self.manifest
         self.assertTrue(manifest.excluded_from_formal_promotion)
-        self.assertEqual(len(manifest.samples), 16)
+        self.assertEqual(len(manifest.samples), 19)
         self.assertEqual(
             {sample.source_session for sample in manifest.samples},
-            {"66fe863f_youjin100", "b3892b34_zimo68"},
+            {
+                "66fe863f_youjin100",
+                "b3892b34_zimo68",
+                "eight_hand_match_a_hand7",
+                "eight_hand_match_a_hand4",
+                "special_14_match",
+            },
         )
 
-    def test_manifest_has_five_discard_and_five_meld_calibration_frames(self):
+    def test_manifest_has_five_discard_and_eight_meld_calibration_frames(self):
         report = readiness_report(self.manifest)
         self.assertEqual(report["by_target"]["discard"], 5)
-        self.assertEqual(report["by_target"]["meld"], 5)
+        self.assertEqual(report["by_target"]["meld"], 8)
         self.assertEqual(report["by_target"]["hand_reference"], 3)
         self.assertEqual(report["by_target"]["youjin_state"], 1)
         self.assertEqual(report["by_target"]["settlement"], 2)
         self.assertEqual(report["source_sessions_by_target"]["discard"], 2)
-        self.assertEqual(report["source_sessions_by_target"]["meld"], 2)
+        self.assertEqual(report["source_sessions_by_target"]["meld"], 5)
 
-    def test_ten_detector_targets_have_pixel_reviewed_bboxes(self):
+    def test_thirteen_detector_targets_have_reviewed_bboxes(self):
         pending = pending_bbox_samples(self.manifest)
         self.assertEqual(pending, ())
         reviewed = [
@@ -55,12 +61,12 @@ class PublicDetectorCalibrationManifestTests(unittest.TestCase):
             for sample in self.manifest.samples
             if sample.target in {"discard", "meld"}
         ]
-        self.assertEqual(len(reviewed), 10)
+        self.assertEqual(len(reviewed), 13)
         self.assertTrue(all(sample.bbox is not None for sample in reviewed))
         self.assertTrue(all(sample.status == "bbox_reviewed" for sample in reviewed))
         report = readiness_report(self.manifest)
         self.assertEqual(report["bbox_ready_by_target"]["discard"], 5)
-        self.assertEqual(report["bbox_ready_by_target"]["meld"], 5)
+        self.assertEqual(report["bbox_ready_by_target"]["meld"], 8)
         self.assertTrue(report["public_tile_detector_bbox_ready"])
 
     def test_real_committed_evidence_files_match_locked_hashes(self):
@@ -128,6 +134,9 @@ class PublicDetectorCalibrationManifestTests(unittest.TestCase):
         self.assertIn(("S7", "S8", "S9"), {sample.expected_tiles for sample in melds})
         self.assertIn(("M4", "M5", "M6"), {sample.expected_tiles for sample in melds})
         self.assertIn(("P6", "P7", "P8"), {sample.expected_tiles for sample in melds})
+        self.assertIn(("P4", "P5", "P6"), {sample.expected_tiles for sample in melds})
+        self.assertIn(("S4", "S5", "S6"), {sample.expected_tiles for sample in melds})
+        self.assertIn(("S2", "S3", "S4"), {sample.expected_tiles for sample in melds})
 
 
 if __name__ == "__main__":
