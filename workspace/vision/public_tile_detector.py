@@ -456,6 +456,12 @@ def detect_public_tile_geometry(
             and normalized_width <= 0.18
             and normalized_height <= 0.12
         ):
+            # Keep the raw multi-face blob visible to source-qualified river
+            # safety checks even when it is also useful as top-group geometry.
+            # This prevents an unrelated upper animation/group from silently
+            # weakening the existing oversized-river fail-closed contract.
+            oversized_seen += 1
+            oversized_bboxes.append(_normalized(raw_bbox, width, height))
             group_bbox = _expand_top_group(raw_bbox, width, height)
             local = mask[
                 group_bbox[1] : group_bbox[1] + group_bbox[3],
