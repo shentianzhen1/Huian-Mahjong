@@ -18,7 +18,7 @@
       "expected_tile": "P6",
       "region": "public_meld",
       "image_path": "references/vision/2026-09-30/public_query_crops/first_hand_174s_p6.jpg",
-      "image_sha256": "4336b19fac342b6a44bfb42533d954a13a171595e0f3f3f3e5ae2d4573157458",
+      "image_sha256": "612cce1ba08ef4678cf3df918e5fe2d041f47aa88f23165706628e3fa93171dc",
       "image_size": [
         110,
         170
@@ -29,7 +29,7 @@
       "expected_tile": "S4",
       "region": "public_meld",
       "image_path": "references/vision/2026-09-30/public_query_crops/first_hand_174s_s4.jpg",
-      "image_sha256": "9fc912dd99a6032bdcd58b834e3892c35576639a467a4504cdd00a1a29d14c16",
+      "image_sha256": "300d85889e5e0c8cfe5c25c7b3b99fae342ce07771b477be8fe5f09591db855c",
       "image_size": [
         115,
         170
