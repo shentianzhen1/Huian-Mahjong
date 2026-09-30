@@ -15,7 +15,7 @@ VISION = all(importlib.util.find_spec(m) is not None for m in ("numpy", "PIL"))
 REPO = Path(__file__).resolve().parents[1]
 REAL_LABELS = REPO / "references/vision/2026-09-22/public_identity_labels_v0_1.json"
 REAL_GROUPS = REPO / "references/vision/2026-09-24/public_identity_source_groups.development.json"
-REAL_QUERY_FEATURES = REPO / "references/vision/2026-09-30/first_hand_public_query_features_v0_1.json"
+REAL_QUERY_IMAGES = REPO / "references/vision/2026-09-30/first_hand_public_query_features_v0_1.json"
 
 
 @unittest.skipUnless(VISION, "Pillow/numpy are optional in core-only installs")
@@ -185,39 +185,37 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
         self.assertFalse(coverage["formal_promotion_evidence"])
 
 
-    def test_first_hand_real_p6_s4_query_features_are_shadow_only(self):
-        import numpy as np
+    def test_first_hand_real_p6_s4_query_images_are_fail_closed(self):
+        from PIL import Image
         from workspace.vision.public_identity_labels import load_public_identity_manifest
         from workspace.vision.public_identity_shadow_v0_2 import (
-            build_shadow_bank, propose_shadow_feature,
+            build_shadow_bank, propose_shadow_identity,
         )
-        fixture = json.loads(REAL_QUERY_FEATURES.read_text(encoding="utf-8"))
+        fixture = json.loads(REAL_QUERY_IMAGES.read_text(encoding="utf-8"))
+        self.assertEqual(
+            fixture["schema_version"],
+            "public_identity_query_images_v0_1",
+        )
         self.assertTrue(fixture["development_only"])
-        self.assertEqual(fixture["feature_extractor"], {
-            "grayscale_resize": [32, 48],
-            "inner_crop": [2, -2, 2, -2],
-            "normalization": "zero_mean_l2",
-            "dtype": "float32_le",
-        })
+        self.assertTrue(fixture["query_only"])
+        self.assertTrue(fixture["excluded_from_formal_promotion"])
         bank = build_shadow_bank(
             load_public_identity_manifest(REAL_LABELS), REPO, REAL_GROUPS
         )
         observed = {}
         for query in fixture["queries"]:
-            encoded = query["feature_zlib_f32_le_b64"]
-            encoded += "=" * (-len(encoded) % 4)
-            raw = zlib.decompress(base64.b64decode(encoded))
-            self.assertEqual(
-                hashlib.sha256(raw).hexdigest(), query["feature_sha256"]
-            )
-            feature = np.frombuffer(raw, dtype="<f4")
-            self.assertEqual(feature.size, query["feature_length"])
-            result = propose_shadow_feature(
-                bank, feature,
-                region=query["region"],
-                source_session=fixture["source_session"],
-                source_sha256=fixture["source_sha256"],
-            )
+            image_path = REPO / query["image_path"]
+            raw = image_path.read_bytes()
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), query["image_sha256"])
+            with Image.open(image_path) as original:
+                image = original.convert("RGB")
+                self.assertEqual(list(image.size), query["image_size"])
+                result = propose_shadow_identity(
+                    bank, image,
+                    region=query["region"],
+                    source_session=fixture["source_session"],
+                    source_sha256=fixture["source_sha256"],
+                )
             observed[query["query_id"]] = {
                 "expected": query["expected_tile"],
                 "proposal": result["shadow_proposal"],
@@ -228,20 +226,25 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
             }
             self.assertEqual(result["eligible_class_count"], 2)
             self.assertEqual(result["tile_id"], "UNKNOWN")
-            if result["shadow_proposal"] is not None:
+            self.assertFalse(result["safe_for_executor"])
+            self.assertFalse(result["formal_promotion_evidence"])
+            if result["read_only_runtime_candidate"] is None:
+                self.assertFalse(result["safe_for_runtime"])
+            else:
+                # A high-confidence read-only candidate may never be a false
+                # acceptance on this human-reviewed target query.
+                self.assertTrue(result["safe_for_runtime"])
                 self.assertEqual(
                     result["read_only_runtime_candidate"],
-                    result["shadow_proposal"],
+                    query["expected_tile"],
                 )
-                self.assertTrue(result["safe_for_runtime"])
+                self.assertEqual(
+                    result["shadow_proposal"],
+                    query["expected_tile"],
+                )
                 self.assertGreaterEqual(
                     result["winner_independent_match_groups"], 2
                 )
-            else:
-                self.assertIsNone(result["read_only_runtime_candidate"])
-                self.assertFalse(result["safe_for_runtime"])
-            self.assertFalse(result["safe_for_executor"])
-            self.assertFalse(result["formal_promotion_evidence"])
         print("FIRST_HAND_PUBLIC_SHADOW=" + json.dumps(observed, sort_keys=True))
 
     def test_runtime_candidate_requires_public_meld_two_other_groups_and_margin(self):
