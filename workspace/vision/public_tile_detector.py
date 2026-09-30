@@ -264,7 +264,7 @@ def _bottom_group_cluster_bboxes(
     if not components:
         return ()
 
-    gap_limit = max(2, int(round(frame_width * 0.005)))
+    gap_limit = max(2, int(round(frame_width * 0.008)))
 
     def related(
         first: tuple[int, int, int, int],
@@ -321,7 +321,7 @@ def _bottom_group_cluster_bboxes(
         if not (
             0.05 <= normalized_width <= 0.18
             and 0.07 <= normalized_height <= 0.22
-            and 1.55 <= aspect <= 4.50
+            and 1.50 <= aspect <= 4.50
         ):
             continue
         results.append((left, top, width, height))
