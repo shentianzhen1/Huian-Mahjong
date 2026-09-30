@@ -167,10 +167,15 @@ _SPECIAL_OUTCOMES = {
     "GANG_HU": SpecialOutcomeProfile(
         key="GANG_HU",
         declaration_phase="HU_DECLARED",
-        multiplier=None,
-        multiplier_status=EvidenceStatus.UNKNOWN,
-        settlement_rule_id="GANG_HU_SCORING_UNKNOWN",
-        settlement_ready=False,
+        multiplier=_rule_value("settlement.ordinary_zimo_multiplier"),
+        multiplier_status=EvidenceStatus.CONFIRMED,
+        settlement_rule_id=None,
+        settlement_ready=True,
+        note=(
+            "Player confirmation 2026-09-30: Gang-Hu after Ming/Added Kong and "
+            "An-Gang-Hu have no special extra multiplier. The completed kong adds "
+            "only its normal kong fan; the tail-draw Hu uses ordinary self-draw x2."
+        ),
     ),
 }
 

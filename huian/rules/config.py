@@ -13,7 +13,6 @@ class EvidenceStatus(str, Enum):
 # Evidence authority: RULE_STATUS.md, not legacy KNOWN_RULES.md.
 UNKNOWN_RULES = MappingProxyType({
     "ROB_KONG_SCORING_UNKNOWN": "Payment/dealer continuation and remaining settlement flow for a declared added-kong robbery; Hu multiplier x2 is confirmed",
-    "GANG_HU_SCORING_UNKNOWN": "Settlement for a declared kong-tail win",
     # No independent kong fee: confirmed by player 2026-09-18.
     # Legacy ADD_KONG_SCORING_UNKNOWN retired 2026-09-18: completed added-kong
     # no longer blocks ordinary simulation merely because it occurred.
@@ -24,7 +23,6 @@ UNKNOWN_RULES = MappingProxyType({
     # Sanjindao timing: one-shot opening 3+ gold check or mid-hand 2->3 gold arrival; PASS closes it.
     "sanjindao_settlement": "Non-flower base, payment, terminal flow and dealer result after the confirmed x3 declaration",
     "sanjinyou_trigger": "Exact executable steps shared by Erjin-You and Sanjin-You",
-    "gang_hu_scoring": "Fan, multiplier and stacking for a confirmed kong-tail Hu",
     "youjin_trigger": "UI/action timing and remaining edge cases around the confirmed groups-plus-one-roaming-gold structural entry condition",
     "double_you_entry": "Whether any rare direct Double-You entry exists outside the confirmed sequential Youjin upgrade path",
     "youjin_permissions": "Remaining edge interactions outside the confirmed sequential Youjin/Double-/Triple-You chain",
