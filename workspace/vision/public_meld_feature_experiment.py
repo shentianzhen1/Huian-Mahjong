@@ -33,7 +33,7 @@ from workspace.vision.public_identity_shadow_v0_2 import (
     load_development_sources,
 )
 from workspace.vision.public_meld_identity_normalization import (
-    normalize_public_meld_identity_face,
+    normalize_public_meld_identity_query_face,
 )
 
 
@@ -313,7 +313,7 @@ def evaluate_public_meld_features(
                 raise ValueError(f"query image SHA mismatch: {query['query_id']}")
             with Image.open(image_path) as original:
                 image = original.convert("RGB")
-            transformed = normalize_public_meld_identity_face(
+            transformed = normalize_public_meld_identity_query_face(
                 image,
                 inset_ratio=inset_ratio,
             ).image
