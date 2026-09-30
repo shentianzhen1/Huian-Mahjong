@@ -204,9 +204,9 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
         )
         observed = {}
         for query in fixture["queries"]:
-            raw = zlib.decompress(base64.b64decode(
-                query["feature_zlib_f32_le_b64"]
-            ))
+            encoded = query["feature_zlib_f32_le_b64"]
+            encoded += "=" * (-len(encoded) % 4)
+            raw = zlib.decompress(base64.b64decode(encoded))
             self.assertEqual(
                 hashlib.sha256(raw).hexdigest(), query["feature_sha256"]
             )
