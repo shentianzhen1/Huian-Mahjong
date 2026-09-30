@@ -1,18 +1,21 @@
 """No-private-video contract for Issue #69 public-region shadow classification."""
 from __future__ import annotations
 
+import base64
 import hashlib
 import importlib.util
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+import zlib
 from unittest.mock import patch
 
 VISION = all(importlib.util.find_spec(m) is not None for m in ("numpy", "PIL"))
 REPO = Path(__file__).resolve().parents[1]
 REAL_LABELS = REPO / "references/vision/2026-09-22/public_identity_labels_v0_1.json"
 REAL_GROUPS = REPO / "references/vision/2026-09-24/public_identity_source_groups.development.json"
+REAL_QUERY_FEATURES = REPO / "references/vision/2026-09-30/first_hand_public_query_features_v0_1.json"
 
 
 @unittest.skipUnless(VISION, "Pillow/numpy are optional in core-only installs")
@@ -178,6 +181,54 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
         self.assertTrue(coverage["can_attempt_shadow_proposal"])
         self.assertEqual(coverage["tile_id_policy"], "UNKNOWN")
         self.assertFalse(coverage["formal_promotion_evidence"])
+
+
+    def test_first_hand_real_p6_s4_query_features_are_shadow_only(self):
+        import numpy as np
+        from workspace.vision.public_identity_labels import load_public_identity_manifest
+        from workspace.vision.public_identity_shadow_v0_2 import (
+            build_shadow_bank, propose_shadow_feature,
+        )
+        fixture = json.loads(REAL_QUERY_FEATURES.read_text(encoding="utf-8"))
+        self.assertTrue(fixture["development_only"])
+        self.assertEqual(fixture["feature_extractor"], {
+            "grayscale_resize": [32, 48],
+            "inner_crop": [2, -2, 2, -2],
+            "normalization": "zero_mean_l2",
+            "dtype": "float32_le",
+        })
+        bank = build_shadow_bank(
+            load_public_identity_manifest(REAL_LABELS), REPO, REAL_GROUPS
+        )
+        observed = {}
+        for query in fixture["queries"]:
+            raw = zlib.decompress(base64.b64decode(
+                query["feature_zlib_f32_le_b64"]
+            ))
+            self.assertEqual(
+                hashlib.sha256(raw).hexdigest(), query["feature_sha256"]
+            )
+            feature = np.frombuffer(raw, dtype="<f4")
+            self.assertEqual(feature.size, query["feature_length"])
+            result = propose_shadow_feature(
+                bank, feature,
+                region=query["region"],
+                source_session=fixture["source_session"],
+                source_sha256=fixture["source_sha256"],
+            )
+            observed[query["query_id"]] = {
+                "expected": query["expected_tile"],
+                "proposal": result["shadow_proposal"],
+                "score": result["score"],
+                "margin": result["margin"],
+                "reason": result["reason"],
+            }
+            self.assertEqual(result["eligible_class_count"], 2)
+            self.assertEqual(result["tile_id"], "UNKNOWN")
+            self.assertFalse(result["safe_for_runtime"])
+            self.assertFalse(result["safe_for_executor"])
+            self.assertFalse(result["formal_promotion_evidence"])
+        print("FIRST_HAND_PUBLIC_SHADOW=" + json.dumps(observed, sort_keys=True))
 
     def test_region_isolation_unknown_and_source_identity_guard(self):
         from workspace.vision.public_identity_shadow_v0_2 import propose_shadow_identity
