@@ -118,6 +118,30 @@ class PublicTileDetectorCalibrationTests(unittest.TestCase):
                 sample.sample_id,
             )
 
+    def test_split_lower_components_reassemble_one_player_group(self):
+        from PIL import ImageDraw
+
+        image = Image.new("RGB", (1000, 500), (0, 70, 72))
+        draw = ImageDraw.Draw(image)
+        # One exposed group may be split into two bright connected components
+        # by the game's shadow/gap rendering at high resolution.
+        draw.rectangle((90, 390, 169, 475), fill=(235, 235, 225))
+        draw.rectangle((176, 392, 329, 475), fill=(235, 235, 225))
+        detection = detect_public_tile_geometry(
+            image, frame="synthetic-split-player-meld", session="synthetic"
+        )
+        groups = [
+            candidate
+            for candidate in detection.candidates
+            if candidate.geometry_kind == "bottom_group"
+        ]
+        self.assertEqual(len(groups), 1)
+        self.assertLessEqual(groups[0].pixel_bbox[0], 90)
+        self.assertGreaterEqual(
+            groups[0].pixel_bbox[0] + groups[0].pixel_bbox[2],
+            330,
+        )
+
     def test_compact_upper_row_is_group_not_single_face(self):
         from PIL import ImageDraw
 
