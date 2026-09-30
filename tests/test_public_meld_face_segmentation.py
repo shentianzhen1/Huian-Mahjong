@@ -77,6 +77,20 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
         self.assertFalse(report["safe_for_runtime_identity"])
         self.assertFalse(report["safe_for_executor"])
 
+    def test_regular_top_group_can_use_same_three_face_split(self):
+        group = self.PublicGeometryCandidate(
+            pixel_bbox=(600, 40, 132, 66),
+            normalized_bbox=(0.60, 0.08, 0.132, 0.132),
+            geometry_kind="top_group",
+            confidence=0.91,
+            fill_ratio=0.88,
+            frame=11,
+            session="synthetic",
+        )
+        result = self.segment_regular_meld_faces(group, (1000, 500))
+        self.assertEqual(len(result.faces), 3)
+        self.assertTrue(result.to_dict()["regular_three_face_row"])
+
     def test_stacked_kong_like_geometry_abstains(self):
         group = self.PublicGeometryCandidate(
             pixel_bbox=(96, 376, 136, 101),
@@ -121,7 +135,7 @@ class PublicMeldFaceSegmentationTests(unittest.TestCase):
         )
         result = self.segment_regular_meld_faces(group, (1000, 500))
         self.assertEqual(result.faces, ())
-        self.assertEqual(result.issues, ("not_bottom_group",))
+        self.assertEqual(result.issues, ("not_meld_group",))
 
     def test_four_full_frame_regular_melds_cover_twelve_approved_faces(self):
         labels_by_sample = {}
