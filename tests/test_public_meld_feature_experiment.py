@@ -16,13 +16,20 @@ class PublicMeldFeatureExperimentTests(unittest.TestCase):
     def test_real_query_experiment_is_source_disjoint_and_read_only(self):
         from workspace.vision.public_meld_feature_experiment import (
             FEATURES,
+            QUERY_INSET_RATIOS,
+            VARIANTS,
             evaluate_public_meld_features,
         )
 
         report = evaluate_public_meld_features(REPO)
 
         self.assertEqual(report["schema_version"], "public_meld_feature_experiment_v0_1")
-        self.assertEqual(tuple(report["feature_variants"]), FEATURES)
+        self.assertEqual(
+            tuple(report["feature_variants"]),
+            tuple(name for name, _, _ in VARIANTS),
+        )
+        self.assertEqual(tuple(report["base_features"]), FEATURES)
+        self.assertEqual(tuple(report["query_inset_ratios"]), QUERY_INSET_RATIOS)
         self.assertEqual(report["template_public_meld_label_count"], 21)
         self.assertTrue(report["query_match_group_excluded"])
         self.assertEqual(report["minimum_other_match_groups_per_class"], 2)
@@ -31,8 +38,10 @@ class PublicMeldFeatureExperimentTests(unittest.TestCase):
         self.assertFalse(report["safe_for_hint"])
         self.assertFalse(report["safe_for_executor"])
 
-        for feature_name in FEATURES:
-            row = report["results"][feature_name]
+        for variant_name, feature_name, inset_ratio in VARIANTS:
+            row = report["results"][variant_name]
+            self.assertEqual(row["feature_name"], feature_name)
+            self.assertEqual(row["query_inset_ratio"], inset_ratio)
             self.assertEqual(row["query_count"], 2)
             self.assertGreaterEqual(row["top1_correct_count"], 0)
             self.assertLessEqual(row["top1_correct_count"], 2)
