@@ -29,6 +29,8 @@ class RecoveredPrivateTemplate:
     frame_index: int
     timestamp_seconds: float
     match_group: str
+    private_label_manifest_name: str
+    private_label_manifest_sha256: str
     tile_ids: tuple[str, ...]
     crop_sha256: tuple[str, ...]
     private_template_eligible: bool
@@ -102,6 +104,13 @@ def load_private_recovery_results(
         if not isinstance(match_group, str) or not match_group:
             raise ValueError("match_group is required")
 
+        manifest_name = row.get("private_label_manifest_name")
+        manifest_sha = row.get("private_label_manifest_sha256")
+        if manifest_name != "private_approved_labels.json":
+            raise ValueError("unexpected private label manifest name")
+        if not isinstance(manifest_sha, str) or not _SHA256.fullmatch(manifest_sha):
+            raise ValueError("private label manifest SHA256 is invalid")
+
         faces = row.get("faces")
         if not isinstance(faces, list) or len(faces) != 3:
             raise ValueError("recovered regular meld must have exactly three faces")
@@ -136,6 +145,8 @@ def load_private_recovery_results(
             frame_index=frame_index,
             timestamp_seconds=float(timestamp),
             match_group=match_group,
+            private_label_manifest_name=manifest_name,
+            private_label_manifest_sha256=manifest_sha,
             tile_ids=tuple(tile_ids),
             crop_sha256=tuple(crop_hashes),
             private_template_eligible=True,
