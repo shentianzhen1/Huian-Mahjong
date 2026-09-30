@@ -4,7 +4,6 @@ import unittest
 
 from workspace.vision.public_meld_private_recovery_result import (
     BLOCKED,
-    RECOVERED,
     BlockedPrivateRecovery,
     RecoveredPrivateTemplate,
     load_private_recovery_results,
@@ -30,6 +29,10 @@ class PublicMeldPrivateRecoveryResultTests(unittest.TestCase):
             "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
         )
         self.assertEqual(g09.frame_index, 1740)
+        self.assertEqual(
+            g09.private_label_manifest_sha256,
+            "9d89e9cf2f7859a2a24bebce91632e854299df2404c92f0fdf9a96e3a2884427",
+        )
 
         g04 = results["G04_hand3_m456"]
         self.assertIsInstance(g04, BlockedPrivateRecovery)
