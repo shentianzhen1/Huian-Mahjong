@@ -25,9 +25,11 @@ UNKNOWN = "UNKNOWN"
 # and a narrow upper lobe; this avoids treating a tall but ordinary PENG crop
 # as a Kong merely because its reviewed bbox has extra border/shadow.
 _STACKED_MIN_HEIGHT_SCORE = 1.62
-_STACKED_MAX_TOP_TO_MID = 0.68
+_STACKED_MAX_TOP_TO_MID = 0.60
+_STACKED_STRONG_HEIGHT_SCORE = 1.90
+_STACKED_STRONG_HEIGHT_MAX_TOP_TO_MID = 0.78
 _FLAT_MAX_HEIGHT_SCORE = 1.80
-_FLAT_MIN_TOP_TO_MID = 0.82
+_FLAT_MIN_TOP_TO_MID = 0.72
 _CANONICAL_HEIGHT = 96
 
 
@@ -135,7 +137,15 @@ def _classify_stack_state(
     height_score: float,
     top_to_mid_span_ratio: float,
 ) -> str:
+    # Two independent stacked signatures are accepted:
+    # 1) a very tall 3+1 group with a still-narrower upper band; or
+    # 2) moderate vertical excess with a strongly collapsed upper lobe.
+    # The first covers reviewed added-Kong geometry; the second covers the
+    # larger player-side tilted stack seen in current target-room captures.
     if (
+        height_score >= _STACKED_STRONG_HEIGHT_SCORE
+        and top_to_mid_span_ratio <= _STACKED_STRONG_HEIGHT_MAX_TOP_TO_MID
+    ) or (
         height_score >= _STACKED_MIN_HEIGHT_SCORE
         and top_to_mid_span_ratio <= _STACKED_MAX_TOP_TO_MID
     ):
