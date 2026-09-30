@@ -306,6 +306,17 @@ def _cluster_meld_components(
     return groups
 
 
+def _open_meld_count_from_concealed_count(value: Any) -> int | None:
+    """Infer only the exposed-meld count implied by a valid 16/17-tile hand size."""
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    for open_melds in range(6):
+        concealed_target = (5 - open_melds) * 3 + 2
+        if value in {concealed_target - 1, concealed_target}:
+            return open_melds
+    return None
+
+
 def player_meld_snapshot_from_runtime(
     report: dict[str, Any],
     *,
@@ -326,11 +337,36 @@ def player_meld_snapshot_from_runtime(
     if not trusted:
         components = []
 
+    clusters = _cluster_meld_components(components)
+    expected_count = _open_meld_count_from_concealed_count(
+        report.get("concealed_tile_count")
+    )
+    preserve_count_only_incomplete = bool(
+        expected_count is not None
+        and expected_count == len(clusters)
+        and all(2 <= len(cluster) <= 4 for cluster in clusters)
+    )
+
     groups: list[MeldGroup] = []
-    for cluster in _cluster_meld_components(components):
+    for cluster in clusters:
         if len(cluster) not in {3, 4}:
-            # Keep the snapshot trusted at the report level, but do not turn an
-            # incomplete geometric cluster into a semantic meld group.
+            if not preserve_count_only_incomplete:
+                # Do not invent a semantic meld from weak geometry alone.
+                continue
+            # Concealed count and independently separated meld geometry agree
+            # on the exposed-meld count. Preserve that count only; never guess
+            # the missing tile identity or whether the incomplete group was a
+            # chi/peng/kong. Three UNKNOWN entries represent one legal meld
+            # slot for shanten structure while keeping public identity blocked.
+            boxes = [_bbox(item) for item in cluster]
+            groups.append(
+                MeldGroup(
+                    normalized_bbox=_union_bbox(boxes),
+                    tiles=(None, None, None),
+                    confidence=min(_component_confidence(item) for item in cluster),
+                    evidence_refs=_runtime_refs(report, cluster),
+                )
+            )
             continue
         boxes = [_bbox(item) for item in cluster]
         groups.append(
