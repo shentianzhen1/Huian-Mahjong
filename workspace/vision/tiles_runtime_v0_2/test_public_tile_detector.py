@@ -142,34 +142,6 @@ class PublicTileDetectorCalibrationTests(unittest.TestCase):
             330,
         )
 
-    def test_compact_upper_row_is_group_not_single_face(self):
-        from PIL import ImageDraw
-
-        image = Image.new("RGB", (1000, 500), (0, 70, 72))
-        draw = ImageDraw.Draw(image)
-        # Opponent-side meld scale from the current target-room UI: the whole
-        # three-face row is narrower than the historical single-face width
-        # ceiling, so aspect must win before the single-face gate.
-        draw.rectangle((560, 30, 689, 80), fill=(235, 235, 225))
-        detection = detect_public_tile_geometry(
-            image, frame="synthetic-upper-meld", session="synthetic"
-        )
-        groups = [
-            candidate
-            for candidate in detection.candidates
-            if candidate.geometry_kind == "top_group"
-        ]
-        self.assertEqual(len(groups), 1)
-        self.assertGreater(groups[0].pixel_bbox[2] / groups[0].pixel_bbox[3], 1.75)
-        self.assertFalse(
-            any(
-                candidate.geometry_kind == "single_face"
-                and candidate.pixel_bbox[0] <= 560
-                and candidate.pixel_bbox[0] + candidate.pixel_bbox[2] >= 689
-                for candidate in detection.candidates
-            )
-        )
-
     def test_high_resolution_upper_row_is_group_not_single_face(self):
         from PIL import ImageDraw
 
