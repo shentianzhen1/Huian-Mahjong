@@ -11,7 +11,7 @@ remain UNKNOWN and Executor is always forbidden.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Sequence
 
 from workspace.vision.public_identity_shadow_v0_2 import (
     ShadowBank,
@@ -22,6 +22,7 @@ from workspace.vision.public_meld_face_segmentation import (
     prepare_public_meld_faces,
 )
 from workspace.vision.public_tile_detector import PublicGeometryCandidate
+from workspace.vision.public_observers import MeldGroup, MeldSnapshot
 
 
 @dataclass(frozen=True)
@@ -143,4 +144,72 @@ def classify_public_meld_group(
         tile_ids=tuple(tile_ids),
         trusted_for_read_only_runtime=all_trusted,
         issues=tuple(issues),
+    )
+
+
+def meld_snapshot_from_identity_bridges(
+    entries: Sequence[
+        tuple[PublicGeometryCandidate, PublicMeldIdentityBridgeResult]
+    ],
+    *,
+    actor: str,
+    timestamp_seconds: float,
+    frame: str | int | None,
+    source_session: str,
+    stream_epoch: int = 0,
+) -> MeldSnapshot:
+    """Build one identity-strict meld snapshot for the existing temporal observer.
+
+    Only a frame where EVERY visible meld group has a complete, read-only
+    identity is marked trusted. Incomplete/stacked groups are retained as
+    UNKNOWN geometry so they cannot disappear silently, but the whole snapshot
+    is untrusted and therefore cannot advance MeldSnapshotObserver's
+    settle-frame streak.
+    """
+    groups: list[MeldGroup] = []
+    refs: list[str] = []
+    if frame is not None:
+        refs.append(f"public:{source_session}:frame:{frame}")
+
+    all_complete = bool(entries)
+    for group, result in entries:
+        if (
+            result.trusted_for_read_only_runtime
+            and len(result.tile_ids) == 3
+            and all(tile is not None for tile in result.tile_ids)
+        ):
+            tiles = tuple(result.tile_ids)
+        elif result.prepared.geometry.stack_state == "STACKED":
+            tiles = (None, None, None, None)
+            all_complete = False
+        else:
+            tiles = (None, None, None)
+            all_complete = False
+
+        confidence_values = [float(group.confidence)]
+        for face_result in result.face_results:
+            try:
+                score = float(face_result.get("score"))
+            except (TypeError, ValueError):
+                continue
+            confidence_values.append(max(0.0, min(1.0, score)))
+
+        groups.append(
+            MeldGroup(
+                normalized_bbox=group.normalized_bbox,
+                tiles=tiles,
+                confidence=min(confidence_values),
+                evidence_refs=tuple(refs),
+            )
+        )
+
+    return MeldSnapshot(
+        timestamp_seconds=timestamp_seconds,
+        actor=actor,
+        groups=tuple(groups),
+        frame=frame,
+        trusted=all_complete,
+        evidence_refs=tuple(refs),
+        stream_epoch=stream_epoch,
+        source_session=source_session or None,
     )
