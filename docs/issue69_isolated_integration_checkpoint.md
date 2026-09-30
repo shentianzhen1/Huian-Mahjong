@@ -1,5 +1,15 @@
 # Issue #69 isolated integration checkpoint (2026-09-26)
 
+> **Superseded integration topology — 2026-09-30 cleanup.** PR #117 has now
+> been rebuilt directly on the current `main` and no longer depends on the
+> #110 → #112 → #114 stacked ancestry. The former stack content, plus the
+> selected #109/#111 integration work, was content-reconciled onto main as one
+> 117-path change set; only `.github/workflows/vision-tests.yml` overlapped
+> with main and was manually checked to preserve main's public-region CI while
+> retaining #117's Runtime V0.2 validation-report steps. This document below is
+> retained as historical evidence of how the earlier integration was assembled,
+> not as the current PR dependency map.
+
 This is a **development-only integration branch**, NOT main and NOT an authorization to merge upstream PRs. It starts from #114's stacked branch, which carries #112/#110 and a temporary copy of #111. The two unchanged #116 scorer/test files are imported here for same-tree CI. No production Runtime/Hint/Executor, Rules, Simulator or AI changes.
 
 ## Live open-PR inventory and deduplication
