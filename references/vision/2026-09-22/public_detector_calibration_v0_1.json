@@ -421,7 +421,8 @@
       "notes": [
         "exact exposed-group crop only; original full frame remains private",
         "same match_group as the other older eight-hand clips; must not count as an independent match"
-      ]
+      ],
+      "context_scope": "identity_crop"
     },
     {
       "sample_id": "eight_hand_hand4_player_chi_s456_064s",
@@ -450,7 +451,8 @@
       "notes": [
         "exact exposed-group crop only; original full frame remains private",
         "same match_group as the other older eight-hand clips; must not count as an independent match"
-      ]
+      ],
+      "context_scope": "identity_crop"
     },
     {
       "sample_id": "special14_player_chi_s234_088s",
@@ -479,7 +481,8 @@
       "notes": [
         "exact exposed-group crop only; original full frame remains private",
         "distinct match_group from the older eight-hand match"
-      ]
+      ],
+      "context_scope": "identity_crop"
     }
   ]
 }
