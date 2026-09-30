@@ -37,7 +37,7 @@ full frame or video into the repository.
 For the current first-hand M6 review target, use the stronger late-hand
 human-reviewed window: **170–176 seconds**. The 174–175 second frames visibly
 retain both yellow M6 Gold copies. This target belongs to the existing logical
-session `session_eight_hand_match_a`; do not create a new session for this clip.
+session `session_fba5f67d244fb5bd`; do not create a new session for this clip.
 
 ```powershell
 python -m workspace.vision.tiles_runtime_v0_2.gold_skin_review_queue `
@@ -188,7 +188,7 @@ cross-session gate. Existing classes retain their own confidence and
 multi-session gates.
 
 M6 now has a second reviewed concealed-domain sample under
-`session_eight_hand_match_a`, distinct from the earlier approved M6
+`session_fba5f67d244fb5bd`, distinct from the earlier approved M6
 `draw_visual` session. This satisfies the stored cross-session support count
 for M6 in the pooled concealed domain, but does not by itself prove that live
 Gold-skinned M6 will cross the 0.82 confidence threshold.
