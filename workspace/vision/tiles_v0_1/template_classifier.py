@@ -69,9 +69,13 @@ def _normalize_gold_face(image):
         x, y, width, height = face_box
         image = image.crop((x, y, x + width, y + height))
     width, height = image.size
-    left = int(round(width * 0.06))
-    top = int(round(height * 0.04))
-    right = int(round(width * 0.94))
+    # Slightly tighter side/top trim removes more of the yellow UI rim while
+    # preserving the underlying glyph. This was selected only after a
+    # source-disjoint Runtime V0.2 check improved Gold exact accuracy and kept
+    # runtime-gated accepted accuracy at 100%; the 0.82 threshold is unchanged.
+    left = int(round(width * 0.075))
+    top = int(round(height * 0.045))
+    right = int(round(width * 0.925))
     bottom = int(round(height * 0.94))
     if right - left >= 8 and bottom - top >= 12:
         image = image.crop((left, top, right, bottom))
