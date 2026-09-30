@@ -1,13 +1,15 @@
-"""Development-only identity-face normalization for exposed meld crops.
+"""Development-only QUERY-side identity normalization for exposed meld faces.
 
 Geometry normalization answers "where is the meld and where are its faces?".
-This layer answers a narrower identity-domain question: after a regular face has
-already been split, should excess outer border be removed before identity
-feature extraction?
+This layer is deliberately narrower: after a Runtime/development query face has
+already been split, it can test whether excess outer border causes an identity
+crop-domain mismatch.
 
-The current 0.12 inset is a development candidate selected after inspecting the
-same two first-hand P6/S4 query crops. It is therefore NOT a Runtime threshold,
-NOT formal promotion evidence, and must not be enabled implicitly.
+The current 0.12 inset was selected after inspecting the same two first-hand
+P6/S4 development queries. A separate private 36-face check showed that applying
+this inset to already-tight reviewed crops does NOT improve identity retrieval.
+Therefore this transform is query-side only: it must not preprocess the
+reviewed template bank and is NOT a Runtime threshold or promotion result.
 """
 from __future__ import annotations
 
@@ -35,6 +37,8 @@ class PublicMeldIdentityNormalization:
             "issues": list(self.issues),
             "development_only": True,
             "selected_on_reviewed_queries": True,
+            "intended_scope": "query_side_split_face_only",
+            "template_bank_preprocessing_allowed": False,
             "formal_promotion_evidence": False,
             "safe_for_runtime": False,
             "safe_for_hint": False,
@@ -42,15 +46,15 @@ class PublicMeldIdentityNormalization:
         }
 
 
-def normalize_public_meld_identity_face(
+def normalize_public_meld_identity_query_face(
     image: Any,
     *,
     inset_ratio: float = DEVELOPMENT_IDENTITY_INSET_RATIO,
 ) -> PublicMeldIdentityNormalization:
-    """Center-inset one already-split face and restore the original dimensions.
+    """Center-inset one already-split QUERY face and restore its dimensions.
 
-    This function intentionally does not inspect tile identity, confidence, or
-    class labels. It is a deterministic pixel transform only.
+    This deterministic transform never inspects tile identity or class labels.
+    It is intentionally not a template-bank preprocessing function.
     """
     from PIL import Image
 
@@ -71,7 +75,7 @@ def normalize_public_meld_identity_face(
             inset_ratio=0.0,
             input_size=(width, height),
             output_size=(width, height),
-            issues=("identity_face_inset_disabled",),
+            issues=("query_identity_face_inset_disabled",),
         )
 
     dx = max(1, int(round(width * inset_ratio)))
@@ -87,5 +91,5 @@ def normalize_public_meld_identity_face(
         inset_ratio=inset_ratio,
         input_size=(width, height),
         output_size=(width, height),
-        issues=("development_identity_face_center_inset",),
+        issues=("development_query_identity_face_center_inset",),
     )
