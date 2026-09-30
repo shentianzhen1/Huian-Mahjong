@@ -1,6 +1,6 @@
 """Issue #69: conservative face segmentation for regular exposed meld groups.
 
-This module accepts an already-detected public bottom_group and exposes
+This module accepts an already-detected public meld group and exposes
 individual geometry-only face slots when the group looks like a regular
 three-face row. It does not infer tile identity, actor intent, CHI/PENG/KONG,
 or hidden/overlapped faces.
@@ -134,9 +134,9 @@ def segment_regular_meld_faces(
     if image_width <= 0 or image_height <= 0:
         raise ValueError("image_size must be positive")
 
-    if group.geometry_kind != "bottom_group":
+    if group.geometry_kind not in {"bottom_group", "top_group"}:
         return PublicMeldFaceSegmentation(
-            (), ("not_bottom_group",), group.normalized_bbox
+            (), ("not_meld_group",), group.normalized_bbox
         )
 
     x, y, width, height = group.pixel_bbox
