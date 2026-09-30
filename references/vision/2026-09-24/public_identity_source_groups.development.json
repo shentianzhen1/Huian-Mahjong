@@ -32,6 +32,12 @@
       "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
       "match_group": "reviewed_recording_14",
       "review_exposure": "previously_inspected"
+    },
+    {
+      "source_session": "session_fba5f67d244fb5bd",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "review_exposure": "previously_inspected"
     }
   ]
 }
