@@ -9,7 +9,12 @@ from workspace.vision.public_identity_labels import (
     PublicIdentityLabel,
     PublicIdentityManifest,
 )
+from workspace.vision.public_meld_identity_sift import (
+    PublicMeldSiftBank,
+    PublicMeldSiftTemplate,
+)
 from workspace.vision.public_meld_sift_holdout import (
+    _assert_no_augmented_bank_source_leakage,
     _assert_no_template_leakage,
     _load_sift_holdout_packet,
     evaluate_frozen_public_meld_sift_holdout,
@@ -115,6 +120,26 @@ class PublicMeldSiftHoldoutTests(unittest.TestCase):
         payload["queries"][0]["image_sha256"] = "d" * 64
         with self.assertRaisesRegex(ValueError, "pixels"):
             _assert_no_template_leakage(payload, manifest=manifest)
+
+    def test_augmented_private_bank_source_or_match_leakage_is_rejected(self):
+        template = PublicMeldSiftTemplate(
+            tile_id="P7",
+            source_session="private_g09",
+            source_sha256="a" * 64,
+            match_group="private_match",
+            descriptors=None,
+        )
+        bank = PublicMeldSiftBank(sources={}, templates=(template,))
+
+        payload = _packet()
+        with self.assertRaisesRegex(ValueError, "source video"):
+            _assert_no_augmented_bank_source_leakage(payload, bank=bank)
+
+        payload = _packet()
+        payload["source_sha256"] = "c" * 64
+        payload["match_group"] = "private_match"
+        with self.assertRaisesRegex(ValueError, "match group"):
+            _assert_no_augmented_bank_source_leakage(payload, bank=bank)
 
 
 if __name__ == "__main__":
