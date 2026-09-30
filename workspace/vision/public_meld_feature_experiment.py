@@ -32,6 +32,9 @@ from workspace.vision.public_identity_shadow_v0_2 import (
     _feature as legacy_public_feature,
     load_development_sources,
 )
+from workspace.vision.public_meld_identity_normalization import (
+    normalize_public_meld_identity_face,
+)
 
 
 FEATURES = ("legacy_gray", "gray_edge", "lab_chroma_edge")
@@ -41,21 +44,6 @@ VARIANTS = tuple(
     for feature_name in FEATURES
     for inset_ratio in QUERY_INSET_RATIOS
 )
-
-
-def _center_zoom(image: Any, inset_ratio: float) -> Any:
-    if inset_ratio == 0:
-        return image.copy()
-    if not 0 <= inset_ratio < 0.5:
-        raise ValueError("query inset_ratio must be in [0, 0.5)")
-    width, height = image.size
-    dx = max(1, int(round(width * inset_ratio)))
-    dy = max(1, int(round(height * inset_ratio)))
-    if dx * 2 >= width or dy * 2 >= height:
-        raise ValueError("query inset removes the full image")
-    return image.crop((dx, dy, width - dx, height - dy)).resize(
-        (width, height), Image.Resampling.LANCZOS
-    )
 
 
 def _l2(values: Any) -> Any | None:
@@ -325,7 +313,10 @@ def evaluate_public_meld_features(
                 raise ValueError(f"query image SHA mismatch: {query['query_id']}")
             with Image.open(image_path) as original:
                 image = original.convert("RGB")
-            transformed = _center_zoom(image, inset_ratio)
+            transformed = normalize_public_meld_identity_face(
+                image,
+                inset_ratio=inset_ratio,
+            ).image
             feature = extract_public_meld_feature(transformed, feature_name)
             if feature is None:
                 query_rows.append(
