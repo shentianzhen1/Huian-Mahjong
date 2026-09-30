@@ -74,16 +74,44 @@ inspecting these same two development queries, so the 2/2 result is in-sample
 development evidence and cannot justify Runtime promotion or a new confidence
 threshold.
 
+## Private tight-crop negative control
+
+A pre-existing private review package containing 36 already-tight approved face
+crops from 12 groups / two original matches was restored locally. No private
+pixels, source hashes, room/player metadata, or crop registry were added to the
+public repository.
+
+Using the unchanged legacy gray feature and keeping templates unmodified:
+
+- same-original-match, cross-clip queries with another same-class reference:
+  baseline **6/17** top-1; query-side 12% inset **4/17** top-1;
+- the one shared cross-original-match S4 query ranked **33/33** in the opposite
+  33-face gallery at baseline and **22/33** after query-side 12% inset, but its
+  matching score dropped from about **0.180** to about **-0.010**;
+- in the reverse 3-face gallery, the matching S4 remained **3/3** and its score
+  also decreased.
+
+This is a useful negative control: the 12% transform is **not** a generally
+better public-meld preprocessing rule. It appears useful specifically as a
+candidate compensation for query crops with excess outer border. Already-tight
+reviewed template crops must stay unchanged.
+
+These checks remain development-only and are not accuracy or promotion
+evidence.
+
 ## Engineering decision
 
 Add a separate deterministic
 `public_meld_identity_normalization` layer after regular face splitting and
-before identity feature extraction. Keep it development-only for now.
+before identity feature extraction, but scope it explicitly to the **query
+side**. Keep it development-only for now. The reviewed template bank must not
+pass through this 12% transform.
 
 Do not:
 
 - change the existing public identity score/margin gate;
 - lower the concealed Runtime 0.82 threshold;
+- apply the 12% transform to the reviewed template bank or already-tight crops;
 - wire the 12% candidate into Runtime/Hint/Executor by default;
 - call 2/2 a validation accuracy result;
 - count multiple hands/clips from one original match as independent evidence.
