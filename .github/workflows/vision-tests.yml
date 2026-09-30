@@ -127,6 +127,41 @@ jobs:
             >/tmp/runtime-v0-2-reports/audit.log
           cp dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_dataset_audit_v0_2.json \
             /tmp/runtime-v0-2-reports/phase6_tile_dataset_audit_v0_2.json
+      - name: Evaluate public meld identity feature variants
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_feature_experiment \
+            --output /tmp/runtime-v0-2-reports/public_meld_feature_experiment_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_feature_experiment.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_feature_experiment_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              name: {
+                  "top1_accuracy": row["top1_accuracy"],
+                  "minimum_correct_margin": row["minimum_correct_margin"],
+                  "queries": [
+                      {
+                          "query_id": query["query_id"],
+                          "expected_tile": query["expected_tile"],
+                          "winner": query["winner"],
+                          "winner_score": query["winner_score"],
+                          "margin": query["margin"],
+                          "top1_correct": query["top1_correct"],
+                      }
+                      for query in row["queries"]
+                  ],
+              }
+              for name, row in report["results"].items()
+          }
+          print("PUBLIC_MELD_FEATURE_EXPERIMENT=" + json.dumps(compact, sort_keys=True))
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
