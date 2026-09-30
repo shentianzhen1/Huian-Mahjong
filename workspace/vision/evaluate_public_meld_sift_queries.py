@@ -12,6 +12,9 @@ from workspace.vision.public_meld_identity_sift import (
     build_public_meld_sift_bank,
     rank_public_meld_sift,
 )
+from workspace.vision.public_meld_private_sift_loader import (
+    augment_public_meld_sift_bank_from_private_zip,
+)
 
 
 QUERY_SCHEMA = "public_identity_query_images_v0_1"
@@ -32,6 +35,11 @@ def evaluate_public_meld_sift_queries(
     ),
     *,
     minimum_other_match_groups: int = 2,
+    private_template_zip_path: str | Path | None = None,
+    private_recovery_result_path: str | Path = (
+        "references/vision/2026-10-01/"
+        "public_meld_private_recovery_result_v0_1.json"
+    ),
 ) -> dict[str, Any]:
     from PIL import Image
 
@@ -51,6 +59,14 @@ def evaluate_public_meld_sift_queries(
         root,
         root / registry_path,
     )
+    private_load_report = None
+    if private_template_zip_path is not None:
+        bank, private_load_report = augment_public_meld_sift_bank_from_private_zip(
+            bank,
+            private_zip_path=private_template_zip_path,
+            recovery_result_path=root / private_recovery_result_path,
+            repository_root=root,
+        )
 
     rows: list[dict[str, Any]] = []
     for query in packet.get("queries", ()):
@@ -83,10 +99,12 @@ def evaluate_public_meld_sift_queries(
         )
 
     return {
-        "schema_version": "public_meld_sift_query_eval_v0_1",
+        "schema_version": "public_meld_sift_query_eval_v0_2",
         "query_count": len(rows),
         "top1_correct_count": sum(bool(row["top1_correct"]) for row in rows),
         "queries": rows,
+        "private_template_load": private_load_report,
+        "private_template_zip_required_by_default": False,
         "development_only": True,
         "query_only": True,
         "training_template_eligible": False,
@@ -106,11 +124,24 @@ def main() -> None:
         "first_hand_public_query_features_v0_1.json"
     ))
     parser.add_argument("--minimum-other-match-groups", type=int, default=2)
+    parser.add_argument(
+        "--private-template-zip",
+        help="local private reviewed template ZIP; must remain outside repository",
+    )
+    parser.add_argument(
+        "--private-recovery-result",
+        default=(
+            "references/vision/2026-10-01/"
+            "public_meld_private_recovery_result_v0_1.json"
+        ),
+    )
     args = parser.parse_args()
     report = evaluate_public_meld_sift_queries(
         args.repository_root,
         args.queries,
         minimum_other_match_groups=args.minimum_other_match_groups,
+        private_template_zip_path=args.private_template_zip,
+        private_recovery_result_path=args.private_recovery_result,
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
