@@ -156,6 +156,29 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
                 source_sha256="0" * 64,
             )
 
+    def test_first_hand_query_has_two_cross_match_public_meld_classes(self):
+        from workspace.vision.public_identity_labels import load_public_identity_manifest
+        from workspace.vision.public_identity_shadow_v0_2 import (
+            build_shadow_bank,
+            summarize_shadow_coverage,
+        )
+        bank = build_shadow_bank(
+            load_public_identity_manifest(REAL_LABELS), REPO, REAL_GROUPS
+        )
+        coverage = summarize_shadow_coverage(
+            bank,
+            region="public_meld",
+            source_session="session_fba5f67d244fb5bd",
+            source_sha256=(
+                "fba5f67d244fb5bdc916f24707de288f"
+                "ef939a9444fa66bec21347e52bd64fc3"
+            ),
+        )
+        self.assertEqual(coverage["eligible_competing_class_count"], 2)
+        self.assertTrue(coverage["can_attempt_shadow_proposal"])
+        self.assertEqual(coverage["tile_id_policy"], "UNKNOWN")
+        self.assertFalse(coverage["formal_promotion_evidence"])
+
     def test_region_isolation_unknown_and_source_identity_guard(self):
         from workspace.vision.public_identity_shadow_v0_2 import propose_shadow_identity
         for source in ("train_A", "train_B"):
@@ -208,7 +231,7 @@ class PublicIdentityShadowV02Tests(unittest.TestCase):
             load_public_identity_manifest(REAL_LABELS), REPO, REAL_GROUPS,
         )
         self.assertEqual(report["approved_label_count"], 26)
-        self.assertEqual(report["source_match_groups"], 4)
+        self.assertEqual(report["source_match_groups"], 5)
         # P6 and S4 now provide two independent development match groups for a
         # genuinely new target match, so the reviewed bank can exercise the
         # shadow classifier. These remain proposals only.
