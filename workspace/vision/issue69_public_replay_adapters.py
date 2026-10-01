@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from workspace.vision.issue69_public_replay_orchestrator import PublicReplayCandidate
+from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
 
 
 def river_report_candidates(report: dict) -> tuple[PublicReplayCandidate, ...]:
@@ -66,3 +67,44 @@ def _frame_from_refs(refs: tuple[str, ...]) -> int:
             if token.isdigit():
                 return int(token)
     raise ValueError("river evidence refs do not expose exact source frame")
+
+
+def meld_observation_candidate(
+    observation: RawObservation,
+    *,
+    source_sha256: str,
+) -> PublicReplayCandidate:
+    """Adapt one stable MeldSnapshotObserver output without adding semantics."""
+    if not isinstance(observation, RawObservation):
+        raise ValueError("RawObservation required")
+    if observation.kind != ObservationKind.MELD_DELTA:
+        raise ValueError("only MELD_DELTA observations belong in meld channel")
+    session = observation.details.get("source_session")
+    epoch = observation.details.get("stream_epoch")
+    frame = observation.details.get("frame")
+    if not isinstance(session, str) or not session:
+        raise ValueError("meld observation missing source_session")
+    if type(epoch) is not int or epoch < 0:
+        raise ValueError("meld observation missing stream_epoch")
+    if type(frame) is not int or frame < 0:
+        raise ValueError("meld observation missing exact source frame")
+    refs = tuple(observation.evidence_refs)
+    if not refs:
+        raise ValueError("meld observation missing evidence provenance")
+    # Identity is exposed only when the observer explicitly marked the whole
+    # group complete. Partial identity must remain UNKNOWN at ledger level.
+    tile = None
+    if observation.details.get("tile_identity_complete") is True and observation.tiles:
+        tile = ",".join(observation.tiles)
+    return PublicReplayCandidate(
+        channel="meld",
+        timestamp_seconds=float(observation.timestamp_seconds),
+        frame_index=frame,
+        actor_hint=observation.actor,
+        kind="MELD_DELTA",
+        source_session=session,
+        source_sha256=source_sha256,
+        stream_epoch=epoch,
+        evidence_refs=tuple(f"meld:{ref}" for ref in refs),
+        tile=tile,
+    )
