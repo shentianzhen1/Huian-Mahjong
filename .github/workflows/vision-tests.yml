@@ -243,6 +243,59 @@ jobs:
               + json.dumps(compact, sort_keys=True)
           )
           PY
+      - name: Evaluate public meld MobileNet embedding
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.8.0 torchvision==0.23.0
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_mobilenet_embedding \
+            --output /tmp/runtime-v0-2-reports/public_meld_mobilenet_embedding_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_mobilenet_embedding.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_mobilenet_embedding_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "real_reviewed_face_count": report["real_reviewed_face_count"],
+              "real_reviewed_group_count": report["real_reviewed_group_count"],
+              "independent_match_group_count": report[
+                  "independent_match_group_count"
+              ],
+              "synthetic_face_count": report["synthetic_face_count"],
+              "synthetic_class_count": report["synthetic_class_count"],
+              "aggregate": report["aggregate"],
+              "folds": [
+                  {
+                      "held_out_match_group": fold["held_out_match_group"],
+                      "query_face_count": fold["query_face_count"],
+                      "query_group_count": fold["query_group_count"],
+                      "synthetic_only_face_correct": fold[
+                          "synthetic_only_face_correct"
+                      ],
+                      "real_first_face_correct": fold[
+                          "real_first_face_correct"
+                      ],
+                      "synthetic_only_group_correct": fold[
+                          "synthetic_only_group_correct"
+                      ],
+                      "real_first_group_correct": fold[
+                          "real_first_group_correct"
+                      ],
+                      "groups": fold["groups"],
+                  }
+                  for fold in report["folds"]
+              ],
+          }
+          print(
+              "PUBLIC_MELD_MOBILENET_EMBEDDING="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
