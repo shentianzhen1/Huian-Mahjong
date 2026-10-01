@@ -62,6 +62,26 @@
       "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
       "match_group": "reviewed_match_2026_09_26_first_hand",
       "evidence_path": "references/vision/2026-09-24/public_identity_source_groups.development.json"
+    },
+    {
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "match_group": "reviewed_match_concealed_recovery_b",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
     }
   ]
 }
