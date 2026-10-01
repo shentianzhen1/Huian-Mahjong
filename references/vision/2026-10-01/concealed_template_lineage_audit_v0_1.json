@@ -1,0 +1,61 @@
+{
+  "schema_version": "concealed_template_lineage_audit_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "query_match_group": "reviewed_recording_14",
+  "policy": {
+    "lineage_key": "exact_source_sha256",
+    "source_session_counts_as_independent_match": false,
+    "unknown_lineage_is_template_eligible": false,
+    "same_original_match_is_template_eligible": false
+  },
+  "runtime_dataset": {
+    "approved_non_gold_hand_label_count": 128,
+    "exact_sha_lineage_qualified_label_count": 5,
+    "excluded_missing_original_match_lineage_count": 123,
+    "excluded_same_original_match_count": 0,
+    "qualified_class_count": 5,
+    "qualified_classes": [
+      "M2",
+      "M6",
+      "N",
+      "P3",
+      "P8"
+    ],
+    "qualified_original_match_groups": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ]
+  },
+  "current_opponent_query": {
+    "review_id": "opp_meld_14_m123",
+    "expected_tiles": [
+      "M1",
+      "M2",
+      "M3"
+    ],
+    "lineage_qualified_expected_classes": [
+      "M2"
+    ],
+    "missing_lineage_qualified_expected_classes": [
+      "M1",
+      "M3"
+    ],
+    "status": "BLOCKED_BEFORE_MODEL_LOAD"
+  },
+  "interpretation": [
+    "Runtime source_session values identify stored sessions but do not prove independent original matches.",
+    "The previous MobileNet prototype bank used 68 selected hand labels even though their original-match lineage was unresolved.",
+    "After exact-SHA lineage qualification, only five approved non-Gold hand labels are currently eligible for this cross-match development query.",
+    "M1 and M3 have no lineage-qualified concealed template in the current repository evidence, so a new MobileNet measurement on this query must stop before model loading rather than reuse uncertain templates."
+  ],
+  "next_gate": [
+    "Recover explicit original-match lineage for reviewed concealed M1 and M3 templates using existing source evidence, without grouping by session name alone.",
+    "If that provenance cannot be recovered, collect or review a new source whose original-match identity and SHA are explicit before using it as a cross-match template.",
+    "Do not lower the Runtime 0.82 identity threshold and do not treat this development audit as formal Vision promotion evidence."
+  ],
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
