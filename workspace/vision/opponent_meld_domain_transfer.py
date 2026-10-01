@@ -130,6 +130,70 @@ def load_opponent_meld_domain_profile(
     )
 
 
+
+def qualify_opponent_meld_domain_profile(
+    profile: OpponentMeldDomainProfile,
+    review_queue_payload: dict[str, Any],
+) -> dict[str, Any]:
+    """Require a classifier-ready, exact-source-verified queue item.
+
+    A measured pixel size alone is not enough. The measurement must come from
+    the locked opponent review queue after the corresponding settled top_group
+    has passed the normalizer/splitter and its source bytes were exact-verified.
+    """
+    result = {
+        "schema_version": "opponent_meld_domain_profile_qualification_v0_1",
+        "qualified": False,
+        "reason": "profile_pending_measurement",
+        "measurement_source_review_id": profile.measurement_source_review_id,
+        "changes_runtime_behavior": False,
+        "formal_promotion_evidence": False,
+        "safe_for_runtime": False,
+        "safe_for_hint": False,
+        "safe_for_executor": False,
+    }
+    if not profile.ready or profile.measurement_source_review_id is None:
+        return result
+
+    items = review_queue_payload.get("items")
+    if not isinstance(items, list):
+        result["reason"] = "review_queue_missing_items"
+        return result
+    matches = [
+        row
+        for row in items
+        if isinstance(row, dict)
+        and row.get("review_id") == profile.measurement_source_review_id
+    ]
+    if len(matches) != 1:
+        result["reason"] = "measurement_source_not_unique_in_review_queue"
+        return result
+
+    row = matches[0]
+    verification = row.get("source_verification")
+    if not (
+        isinstance(verification, str)
+        and verification.startswith("SHA256_EXACT_VERIFIED")
+    ):
+        result["reason"] = "measurement_source_not_exact_sha_verified"
+        return result
+    if row.get("crop_status") != "CLASSIFIER_READY":
+        result["reason"] = "measurement_source_crop_not_classifier_ready"
+        return result
+
+    measured = row.get("measured_source_face_size_px")
+    if (
+        not isinstance(measured, list)
+        or len(measured) != 2
+        or tuple(measured) != profile.measured_source_face_size_px
+    ):
+        result["reason"] = "profile_dimensions_do_not_match_review_queue"
+        return result
+
+    result["qualified"] = True
+    result["reason"] = "measured_source_exact_verified_and_classifier_ready"
+    return result
+
 def simulate_opponent_source_resolution_loss(
     image: Any,
     profile: OpponentMeldDomainProfile,
