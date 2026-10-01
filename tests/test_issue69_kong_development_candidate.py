@@ -6,6 +6,7 @@ import unittest
 from workspace.vision.issue69_kong_development_candidate import (
     build_hand1_candidate_from_repository,
     build_kong_development_candidate,
+    candidate_to_ledger_event,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,6 +48,24 @@ class Issue69KongDevelopmentCandidateTests(unittest.TestCase):
         self.assertFalse(out["safe_for_runtime"])
         self.assertFalse(out["safe_for_hint"])
         self.assertFalse(out["safe_for_executor"])
+
+    def test_real_candidate_projects_to_non_runtime_ledger_event(self):
+        candidate = build_hand1_candidate_from_repository(ROOT)
+        event = candidate_to_ledger_event(
+            candidate,
+            clip_timestamp_seconds=11.9333333333,
+            hand_number=1,
+            total_hands=8,
+        )
+        self.assertEqual(event["hand_number"], 1)
+        self.assertEqual(event["kind"], "MING_GANG")
+        self.assertEqual(event["tile"], "P6")
+        self.assertEqual(event["evidence_level"], "development_candidate")
+        self.assertFalse(event["claimed_discard_directly_observed"])
+        self.assertFalse(event["machine_confirmed"])
+        self.assertFalse(event["runtime_action"])
+        self.assertFalse(event["safe_for_runtime"])
+        self.assertFalse(event["safe_for_executor"])
 
     def test_cross_source_identity_fails_closed(self):
         identity = copy.deepcopy(self.identity)
