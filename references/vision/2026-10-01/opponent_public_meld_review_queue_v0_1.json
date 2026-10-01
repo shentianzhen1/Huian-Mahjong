@@ -94,10 +94,32 @@
         83.5
       ],
       "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
-      "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
+      "crop_status": "CLASSIFIER_READY",
       "independent_match_group": true,
       "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
-      "source_verification": "LOCKED_EXISTING_FIRST_HAND_LINEAGE_PENDING_REFETCH_IF_CROPPED"
+      "source_verification": "SHA256_EXACT_VERIFIED_FROM_CONNECTED_DRIVE_RAW_BYTES_2026_10_01",
+      "measured_source_face_size_px": [
+        23,
+        26
+      ],
+      "stable_measurement_crop_count": 5,
+      "measurement_report": "references/vision/2026-10-01/opponent_meld_0926_hand1_s456_geometry_result_v0_1.json",
+      "identity_runtime_status": "UNKNOWN",
+      "measurement_crop_storage": "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA",
+      "public_evaluation_asset": {
+        "path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s456_5frame_strip.webp",
+        "sha256": "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+        "layout": "vertical_strip_5x_71x33",
+        "frame_count": 5,
+        "frame_size_px": [
+          71,
+          33
+        ],
+        "content_scope": "opponent_exposed_meld_tiles_only",
+        "player_or_room_metadata": false,
+        "encoding": "webp_lossless",
+        "file_size_bytes": 9214
+      }
     },
     {
       "review_id": "opp_meld_0926_hand1_s123",
@@ -135,8 +157,8 @@
   "current_counts": {
     "queued_groups": 3,
     "independent_original_match_groups": 2,
-    "classifier_ready_groups": 1,
-    "source_verified_groups": 1
+    "classifier_ready_groups": 2,
+    "source_verified_groups": 2
   },
   "changes_runtime_behavior": false,
   "formal_promotion_evidence": false,
