@@ -166,3 +166,64 @@ def build_hand1_candidate_from_repository(repository_root: str | Path = ".") -> 
     structure = json.loads((root / _STRUCTURE).read_text(encoding="utf-8"))
     identity = json.loads((root / _IDENTITY).read_text(encoding="utf-8"))
     return build_kong_development_candidate(hand, structure, identity)
+
+
+def candidate_to_ledger_event(
+    candidate: dict[str, Any],
+    *,
+    clip_timestamp_seconds: float,
+    hand_number: int = 1,
+    total_hands: int = 8,
+) -> dict[str, Any]:
+    """Project one development candidate into the unified offline ledger."""
+    if clip_timestamp_seconds < 0:
+        raise ValueError("clip_timestamp_seconds must be nonnegative")
+    if hand_number < 1 or total_hands < hand_number:
+        raise ValueError("invalid hand number")
+
+    status = candidate.get("status")
+    if status != "DEVELOPMENT_MING_GANG_CANDIDATE":
+        return {
+            "schema_version": "issue69_development_action_event_v0_1",
+            "hand_number": hand_number,
+            "total_hands": total_hands,
+            "clip_timestamp_seconds": clip_timestamp_seconds,
+            "actor": candidate.get("actor", "UNKNOWN"),
+            "kind": "UNKNOWN_ACTION",
+            "tile": None,
+            "evidence_level": "unknown",
+            "candidate_status": status or "UNKNOWN",
+            "machine_confirmed": False,
+            "runtime_action": False,
+            "formal_promotion_evidence": False,
+            "safe_for_runtime": False,
+            "safe_for_hint": False,
+            "safe_for_executor": False,
+        }
+
+    return {
+        "schema_version": "issue69_development_action_event_v0_1",
+        "hand_number": hand_number,
+        "total_hands": total_hands,
+        "clip_timestamp_seconds": clip_timestamp_seconds,
+        "actor": candidate["actor"],
+        "kind": candidate["action_candidate"],
+        "tile": candidate["tile_candidate"],
+        "evidence_level": "development_candidate",
+        "candidate_status": candidate["status"],
+        "source_sha256": candidate["source_sha256"],
+        "original_match_group": candidate["original_match_group"],
+        "claimed_discard_directly_observed": candidate[
+            "claimed_discard_directly_observed"
+        ],
+        "machine_confirmed": False,
+        "runtime_action": False,
+        "formal_promotion_evidence": False,
+        "safe_for_runtime": False,
+        "safe_for_hint": False,
+        "safe_for_executor": False,
+        "evidence": {
+            "structure": candidate["structure_evidence"],
+            "identity": candidate["identity_evidence"],
+        },
+    }
