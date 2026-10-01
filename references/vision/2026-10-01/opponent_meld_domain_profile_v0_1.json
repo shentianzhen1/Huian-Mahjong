@@ -1,0 +1,38 @@
+{
+  "schema_version": "opponent_meld_domain_profile_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "status": "PENDING_REAL_TOP_GROUP_MEASUREMENT",
+  "purpose": "parameterize opponent exposed-meld source-resolution loss before shared public-meld identity classification",
+  "canonical_classifier_face_size": [
+    56,
+    96
+  ],
+  "measured_source_face_size_px": null,
+  "measurement_source_review_id": null,
+  "measurement_requirements": [
+    "source SHA256 exact-verified",
+    "settled opponent top_group frame; not CHI animation",
+    "existing geometry normalization classifies group FLAT",
+    "exactly three classifier-ready faces",
+    "record pre-normalization single-face pixel width and height from the same settled group"
+  ],
+  "rendering_policy": {
+    "downsample": "area",
+    "restore_to_canonical": "bicubic",
+    "extra_blur": false,
+    "jpeg_recompression": false,
+    "rotation_or_perspective": "none_here_existing_geometry_normalizer_handles_it",
+    "random_jitter": false
+  },
+  "rationale": [
+    "top_group and bottom_group already share deskew/tight-crop/96px-height normalization",
+    "opponent tiles are visually smaller before normalization, so lost spatial detail is the primary additional domain gap to simulate first",
+    "do not invent a pixel size before a real settled top_group is measured"
+  ],
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
