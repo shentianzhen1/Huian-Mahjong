@@ -198,6 +198,51 @@ jobs:
               + json.dumps(compact, sort_keys=True)
           )
           PY
+      - name: Evaluate real plus synthetic public meld SIFT fusion
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_sift_fusion \
+            --output /tmp/runtime-v0-2-reports/public_meld_sift_fusion_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_sift_fusion.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_sift_fusion_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "real_template_face_count": report["real_template_face_count"],
+              "synthetic_hand_template_count": report[
+                  "synthetic_hand_template_count"
+              ],
+              "target_group_count": report["target_group_count"],
+              "scored_group_count": report["scored_group_count"],
+              "scored_face_count": report["scored_face_count"],
+              "real": report["real"],
+              "synthetic": report["synthetic"],
+              "fusion": report["fusion"],
+              "fusion_face_delta_vs_real": report[
+                  "fusion_face_delta_vs_real"
+              ],
+              "fusion_group_delta_vs_real": report[
+                  "fusion_group_delta_vs_real"
+              ],
+              "fusion_face_delta_vs_synthetic": report[
+                  "fusion_face_delta_vs_synthetic"
+              ],
+              "fusion_group_delta_vs_synthetic": report[
+                  "fusion_group_delta_vs_synthetic"
+              ],
+              "groups": report["groups"],
+          }
+          print(
+              "PUBLIC_MELD_SIFT_FUSION="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
