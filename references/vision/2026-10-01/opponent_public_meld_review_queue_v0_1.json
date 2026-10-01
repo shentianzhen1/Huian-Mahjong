@@ -59,7 +59,9 @@
       ],
       "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
       "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
-      "independent_match_group": true
+      "independent_match_group": true,
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "source_verification": "LOCKED_EXISTING_FIRST_HAND_LINEAGE_PENDING_REFETCH_IF_CROPPED"
     },
     {
       "review_id": "opp_meld_0926_hand1_s123",
@@ -81,7 +83,9 @@
       "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
       "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
       "independent_match_group": false,
-      "note": "same original match as opp_meld_0926_hand1_s456; counts as additional coverage, not independent validation"
+      "note": "same original match as opp_meld_0926_hand1_s456; counts as additional coverage, not independent validation",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "source_verification": "LOCKED_EXISTING_FIRST_HAND_LINEAGE_PENDING_REFETCH_IF_CROPPED"
     }
   ],
   "qualification_rules": [
