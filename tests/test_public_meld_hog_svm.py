@@ -2,23 +2,19 @@ import importlib.util
 import unittest
 
 
-VISION = all(
+EXPERIMENT = all(
     importlib.util.find_spec(name) is not None
-    for name in ("cv2", "numpy")
+    for name in ("numpy", "sklearn")
 )
 
 
-@unittest.skipUnless(VISION, "OpenCV/numpy are optional in core-only installs")
+@unittest.skipUnless(EXPERIMENT, "scikit-learn is experiment-only")
 class PublicMeldHogSvmTests(unittest.TestCase):
-    def test_fixed_ovr_svm_separates_simple_classes(self):
-        import cv2
+    def test_fixed_linear_svc_separates_simple_classes(self):
         import numpy as np
 
-        if not hasattr(cv2, "ml") or not hasattr(cv2.ml, "SVM_create"):
-            self.skipTest("OpenCV ml.SVM is unavailable")
-
         from workspace.vision.public_meld_hog_svm import (
-            _fit_ovr_models,
+            _fit_classifier,
             _svm_scores,
         )
 
@@ -34,24 +30,27 @@ class PublicMeldHogSvmTests(unittest.TestCase):
             dtype=np.float32,
         )
         labels = ["P1", "P1", "P1", "P2", "P2", "P2"]
-        models = _fit_ovr_models(features, labels)
-        self.assertEqual(set(models), {"P1", "P2"})
+        classifier = _fit_classifier(features, labels)
 
-        first = _svm_scores(np.asarray([1.0, 0.0], dtype=np.float32), models)
-        second = _svm_scores(np.asarray([0.0, 1.0], dtype=np.float32), models)
+        first = _svm_scores(np.asarray([1.0, 0.0], dtype=np.float32), classifier)
+        second = _svm_scores(np.asarray([0.0, 1.0], dtype=np.float32), classifier)
         self.assertGreater(first["P1"], first["P2"])
         self.assertGreater(second["P2"], second["P1"])
 
     def test_configuration_is_fixed_without_search(self):
         from workspace.vision.public_meld_hog_svm import (
-            NEGATIVE_TO_POSITIVE_RATIO,
             SVM_C,
+            SVM_CLASS_WEIGHT,
+            SVM_DUAL,
             SVM_MAX_ITERATIONS,
+            SVM_RANDOM_STATE,
         )
 
         self.assertEqual(SVM_C, 1.0)
-        self.assertEqual(NEGATIVE_TO_POSITIVE_RATIO, 3)
-        self.assertEqual(SVM_MAX_ITERATIONS, 500)
+        self.assertEqual(SVM_CLASS_WEIGHT, "balanced")
+        self.assertEqual(SVM_DUAL, "auto")
+        self.assertEqual(SVM_MAX_ITERATIONS, 5000)
+        self.assertEqual(SVM_RANDOM_STATE, 0)
 
 
 if __name__ == "__main__":
