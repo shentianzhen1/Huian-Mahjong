@@ -42,12 +42,19 @@ class OpponentMeldRealPublicQueueConsistencyTests(unittest.TestCase):
         )
         self.assertEqual(item["real_public_probe"]["status"], gate["status"])
 
-    def test_s123_remains_blocked_pending_exact_crop(self):
+    def test_s123_queue_matches_cross_match_reference_gate(self):
         item = self._item("opp_meld_0926_hand1_s123")
         self.assertFalse(item["real_public_probe"]["eligible"])
+        gate = self.eligibility["s123"]
         self.assertEqual(
-            item["real_public_probe"]["status"],
-            "BLOCKED_PENDING_EXACT_CROP_AND_CROSS_MATCH_REFERENCE_AUDIT",
+            item["real_public_probe"]["eligible"],
+            gate["real_public_probe_eligible"],
+        )
+        self.assertEqual(item["real_public_probe"]["status"], gate["status"])
+        self.assertEqual(item["crop_status"], "CLASSIFIER_READY")
+        self.assertEqual(
+            item["real_public_probe"]["missing_tiles"],
+            ["S1"],
         )
 
 
