@@ -7,6 +7,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json"
+IDENTITY_RESULT = ROOT / "references/vision/2026-10-01/opponent_public_meld_mobilenet_result_v0_1.json"
 PROFILE = ROOT / "references/vision/2026-10-01/opponent_meld_domain_profile_v0_1.json"
 QUEUE = ROOT / "references/vision/2026-10-01/opponent_public_meld_review_queue_v0_1.json"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -17,6 +18,7 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.report = json.loads(REPORT.read_text(encoding="utf-8"))
+        cls.identity = json.loads(IDENTITY_RESULT.read_text(encoding="utf-8"))
         cls.profile = json.loads(PROFILE.read_text(encoding="utf-8"))
         cls.queue = json.loads(QUEUE.read_text(encoding="utf-8"))
 
@@ -35,9 +37,7 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
         self.assertFalse(self.report["safe_for_hint"])
         self.assertFalse(self.report["safe_for_executor"])
 
-    def test_only_privacy_bounded_lossless_strip_is_committed(self):
-        from PIL import Image
-
+    def test_privacy_bounded_asset_contract_is_core_safe(self):
         privacy = self.report["privacy"]
         self.assertFalse(privacy["raw_video_committed"])
         self.assertFalse(privacy["full_frame_committed"])
@@ -53,10 +53,6 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
         self.assertEqual(asset["frame_size_px"], [71, 33])
         self.assertFalse(asset["player_or_room_metadata"])
         self.assertEqual(hashlib.sha256(ASSET.read_bytes()).hexdigest(), asset["sha256"])
-        with Image.open(ASSET) as source:
-            rgb = source.convert("RGB")
-        self.assertEqual(rgb.size, (71, 165))
-        self.assertEqual(hashlib.sha256(rgb.tobytes()).hexdigest(), asset["decoded_rgb_sha256"])
 
         self.assertEqual(len(self.report["stable_samples"]), 5)
         for sample in self.report["stable_samples"]:
@@ -65,6 +61,21 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
             self.assertLess(sample["bytes"], 10_000)
             self.assertEqual(sample["crop_size_px"], [71, 33])
             self.assertEqual(sample["stack_state"], "FLAT")
+
+    def test_first_opponent_identity_batch_stays_unknown(self):
+        self.assertEqual(self.identity["review_id"], "opp_meld_14_m123")
+        self.assertEqual(self.identity["expected_tiles"], ["M1", "M2", "M3"])
+        self.assertEqual(self.identity["frame_metrics"]["frame_count"], 5)
+        self.assertEqual(self.identity["frame_metrics"]["raw_unordered_top1_exact_count"], 0)
+        self.assertEqual(self.identity["frame_metrics"]["unordered_top3_expected_coverage_count"], 0)
+        self.assertEqual(self.identity["frame_metrics"]["legal_group_top1_correct_count"], 0)
+        self.assertEqual(self.identity["multi_frame"]["legal_group_top_tiles"], ["M6", "M6", "M6"])
+        self.assertEqual(self.identity["identity_runtime_status"], "UNKNOWN")
+        self.assertIsNone(self.identity["mobilenet_acceptance_threshold"])
+        self.assertEqual(self.identity["runtime_identity_threshold_unchanged"], 0.82)
+        self.assertFalse(self.identity["safe_for_runtime"])
+        self.assertFalse(self.identity["safe_for_hint"])
+        self.assertFalse(self.identity["safe_for_executor"])
 
     def test_profile_and_queue_use_same_measured_dimensions(self):
         self.assertEqual(self.profile["status"], "MEASURED_REAL_TOP_GROUP")

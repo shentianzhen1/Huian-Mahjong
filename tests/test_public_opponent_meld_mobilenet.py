@@ -82,5 +82,28 @@ class OpponentPublicMeldMobileNetLogicTests(unittest.TestCase):
         )
 
 
+    def test_lossless_public_strip_decodes_to_locked_rgb(self):
+        import hashlib
+        from pathlib import Path
+        from PIL import Image
+
+        root = Path(__file__).resolve().parents[1]
+        asset = (
+            root
+            / "references/vision/2026-10-01/opponent_meld_crops/"
+            "opp_meld_14_m123_5frame_strip.webp"
+        )
+        self.assertEqual(
+            hashlib.sha256(asset.read_bytes()).hexdigest(),
+            "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9",
+        )
+        with Image.open(asset) as source:
+            rgb = source.convert("RGB")
+        self.assertEqual(rgb.size, (71, 165))
+        self.assertEqual(
+            hashlib.sha256(rgb.tobytes()).hexdigest(),
+            "ddcfa7a367f3a379e16b7324b745759a29625fd9e223c45de84cc28d5d416ec3",
+        )
+
 if __name__ == "__main__":
     unittest.main()

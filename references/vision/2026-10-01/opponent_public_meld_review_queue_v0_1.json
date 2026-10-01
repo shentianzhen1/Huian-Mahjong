@@ -62,6 +62,18 @@
         "decoded_rgb_sha256": "ddcfa7a367f3a379e16b7324b745759a29625fd9e223c45de84cc28d5d416ec3",
         "decoded_rgb_matches_original_png": true,
         "file_size_bytes": 9720
+      },
+      "latest_identity_evaluation": {
+        "path": "references/vision/2026-10-01/opponent_public_meld_mobilenet_result_v0_1.json",
+        "status": "DEVELOPMENT_TRANSFER_FAILED_CURRENT_BATCH",
+        "frame_legal_group_top1_correct": "0/5",
+        "frame_unordered_top3_expected_coverage": "0/5",
+        "multi_frame_legal_group_top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "identity_runtime_status": "UNKNOWN"
       }
     },
     {
