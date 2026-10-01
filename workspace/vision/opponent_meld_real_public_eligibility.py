@@ -22,6 +22,11 @@ QUERIES = {
         "query_match_group": "reviewed_match_2026_09_26_first_hand",
         "expected_tiles": ("S4", "S5", "S6"),
     },
+    "s123": {
+        "review_id": "opp_meld_0926_hand1_s123",
+        "query_match_group": "reviewed_match_2026_09_26_first_hand",
+        "expected_tiles": ("S1", "S2", "S3"),
+    },
 }
 
 
