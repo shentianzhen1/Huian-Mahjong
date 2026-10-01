@@ -5,7 +5,6 @@ facts needed to decide whether a HandIdentityDelta may be attempted.
 """
 from __future__ import annotations
 import argparse, hashlib, json, math
-import cv2
 from pathlib import Path
 
 from workspace.vision.tiles_runtime_v0_2.runtime_reader import _video_frames, read_stable_frames
@@ -21,7 +20,7 @@ def sha256(path: Path) -> str:
 def frame_for_second(video: Path, second: float) -> tuple[int, float]:
     if isinstance(second,bool) or not isinstance(second,(int,float)) or not math.isfinite(second) or second < 0:
         raise ValueError("second must be nonnegative and finite")
-    cap=cv2.VideoCapture(str(video))
+    import cv2\n    cap=cv2.VideoCapture(str(video))
     try:
         fps=float(cap.get(cv2.CAP_PROP_FPS))
     finally:
