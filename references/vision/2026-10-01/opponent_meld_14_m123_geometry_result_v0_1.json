@@ -32,87 +32,202 @@
     {
       "source_frame_estimate": 1726,
       "source_time_seconds_estimate": 59.517241,
-      "group_bbox_px": [622, 11, 71, 33],
+      "group_bbox_px": [
+        622,
+        11,
+        71,
+        33
+      ],
       "fill_ratio": 0.700811,
       "rotation_degrees": 1.1691,
-      "tight_bbox_in_group_px": [2, 2, 67, 29],
+      "tight_bbox_in_group_px": [
+        2,
+        2,
+        67,
+        29
+      ],
       "stack_state": "FLAT",
       "height_score": 1.298507,
       "top_to_mid_span_ratio": 0.781276,
-      "normalized_size_px": [222, 96],
+      "normalized_size_px": [
+        222,
+        96
+      ],
       "sha256": "fe256bb96f1aa9eb812d778d409c5d4bbfd3a559dbca7f19ddaf81e31238a907",
       "bytes": 4543,
-      "crop_size_px": [71, 33],
-      "effective_source_face_widths_px": [22, 23, 22],
-      "representative_source_face_size_px": [22, 29]
+      "crop_size_px": [
+        71,
+        33
+      ],
+      "effective_source_face_widths_px": [
+        22,
+        23,
+        22
+      ],
+      "representative_source_face_size_px": [
+        22,
+        29
+      ]
     },
     {
       "source_frame_estimate": 1728,
       "source_time_seconds_estimate": 59.586207,
-      "group_bbox_px": [622, 11, 71, 33],
+      "group_bbox_px": [
+        622,
+        11,
+        71,
+        33
+      ],
       "fill_ratio": 0.700811,
       "rotation_degrees": 1.1691,
-      "tight_bbox_in_group_px": [2, 2, 67, 29],
+      "tight_bbox_in_group_px": [
+        2,
+        2,
+        67,
+        29
+      ],
       "stack_state": "FLAT",
       "height_score": 1.298507,
       "top_to_mid_span_ratio": 0.781276,
-      "normalized_size_px": [222, 96],
+      "normalized_size_px": [
+        222,
+        96
+      ],
       "sha256": "0f909ccec20ce6664943a33498f359b0910b06dcd9257eb89aecb2e1025c05cb",
       "bytes": 4529,
-      "crop_size_px": [71, 33],
-      "effective_source_face_widths_px": [22, 23, 22],
-      "representative_source_face_size_px": [22, 29]
+      "crop_size_px": [
+        71,
+        33
+      ],
+      "effective_source_face_widths_px": [
+        22,
+        23,
+        22
+      ],
+      "representative_source_face_size_px": [
+        22,
+        29
+      ]
     },
     {
       "source_frame_estimate": 1730,
       "source_time_seconds_estimate": 59.655172,
-      "group_bbox_px": [622, 11, 71, 33],
+      "group_bbox_px": [
+        622,
+        11,
+        71,
+        33
+      ],
       "fill_ratio": 0.700811,
       "rotation_degrees": 1.1691,
-      "tight_bbox_in_group_px": [2, 2, 67, 29],
+      "tight_bbox_in_group_px": [
+        2,
+        2,
+        67,
+        29
+      ],
       "stack_state": "FLAT",
       "height_score": 1.298507,
       "top_to_mid_span_ratio": 0.781276,
-      "normalized_size_px": [222, 96],
+      "normalized_size_px": [
+        222,
+        96
+      ],
       "sha256": "3813c81ab1695b472a0c5f9a7c115baa43034cdc86c25c3243dc17b251708807",
       "bytes": 4537,
-      "crop_size_px": [71, 33],
-      "effective_source_face_widths_px": [22, 23, 22],
-      "representative_source_face_size_px": [22, 29]
+      "crop_size_px": [
+        71,
+        33
+      ],
+      "effective_source_face_widths_px": [
+        22,
+        23,
+        22
+      ],
+      "representative_source_face_size_px": [
+        22,
+        29
+      ]
     },
     {
       "source_frame_estimate": 1732,
       "source_time_seconds_estimate": 59.724138,
-      "group_bbox_px": [622, 11, 71, 33],
+      "group_bbox_px": [
+        622,
+        11,
+        71,
+        33
+      ],
       "fill_ratio": 0.700811,
       "rotation_degrees": 1.1691,
-      "tight_bbox_in_group_px": [2, 2, 67, 29],
+      "tight_bbox_in_group_px": [
+        2,
+        2,
+        67,
+        29
+      ],
       "stack_state": "FLAT",
       "height_score": 1.298507,
       "top_to_mid_span_ratio": 0.781276,
-      "normalized_size_px": [222, 96],
+      "normalized_size_px": [
+        222,
+        96
+      ],
       "sha256": "005525f495d5d0eb6869abb8d522d4a3e557d953f96ca1ed68970dfb653fc47c",
       "bytes": 4522,
-      "crop_size_px": [71, 33],
-      "effective_source_face_widths_px": [22, 23, 22],
-      "representative_source_face_size_px": [22, 29]
+      "crop_size_px": [
+        71,
+        33
+      ],
+      "effective_source_face_widths_px": [
+        22,
+        23,
+        22
+      ],
+      "representative_source_face_size_px": [
+        22,
+        29
+      ]
     },
     {
       "source_frame_estimate": 1734,
       "source_time_seconds_estimate": 59.793103,
-      "group_bbox_px": [622, 11, 71, 33],
+      "group_bbox_px": [
+        622,
+        11,
+        71,
+        33
+      ],
       "fill_ratio": 0.700384,
       "rotation_degrees": 1.1691,
-      "tight_bbox_in_group_px": [2, 2, 67, 29],
+      "tight_bbox_in_group_px": [
+        2,
+        2,
+        67,
+        29
+      ],
       "stack_state": "FLAT",
       "height_score": 1.298507,
       "top_to_mid_span_ratio": 0.781276,
-      "normalized_size_px": [222, 96],
+      "normalized_size_px": [
+        222,
+        96
+      ],
       "sha256": "6b58902599839786855386db81343103672a7521b4380ada19004300150db7b5",
       "bytes": 4564,
-      "crop_size_px": [71, 33],
-      "effective_source_face_widths_px": [22, 23, 22],
-      "representative_source_face_size_px": [22, 29]
+      "crop_size_px": [
+        71,
+        33
+      ],
+      "effective_source_face_widths_px": [
+        22,
+        23,
+        22
+      ],
+      "representative_source_face_size_px": [
+        22,
+        29
+      ]
     }
   ],
   "aggregate": {
@@ -120,18 +235,32 @@
     "all_same_group_bbox": true,
     "all_flat": true,
     "all_classifier_ready_three_face_geometry": true,
-    "detected_group_size_px": [71, 33],
-    "tight_group_size_px": [67, 29],
-    "effective_source_face_widths_px": [22, 23, 22],
-    "representative_source_face_size_px": [22, 29],
+    "detected_group_size_px": [
+      71,
+      33
+    ],
+    "tight_group_size_px": [
+      67,
+      29
+    ],
+    "effective_source_face_widths_px": [
+      22,
+      23,
+      22
+    ],
+    "representative_source_face_size_px": [
+      22,
+      29
+    ],
     "rotation_degrees": 1.1691
   },
   "privacy": {
     "raw_video_committed": false,
     "full_frame_committed": false,
-    "derived_crop_pixels_committed": false,
-    "measurement_crop_scope": "private_tile_only_opponent_meld_group",
-    "player_or_room_metadata_published": false
+    "derived_crop_pixels_committed": true,
+    "measurement_crop_scope": "public_privacy_bounded_tile_only_5frame_strip",
+    "player_or_room_metadata_published": false,
+    "public_asset_contains_player_or_room_metadata": false
   },
   "identity_runtime_status": "UNKNOWN",
   "runtime_identity_threshold_unchanged": 0.82,
@@ -140,5 +269,17 @@
   "safe_for_runtime": false,
   "safe_for_hint": false,
   "safe_for_executor": false,
-  "evidence_storage": "PUBLIC_METADATA_ONLY_PRIVATE_PIXELS_RETAINED_OUTSIDE_REPOSITORY"
+  "evidence_storage": "PUBLIC_TILE_ONLY_STRIP_PLUS_METADATA_PRIVATE_RAW_VIDEO_AND_FULL_FRAMES",
+  "public_evaluation_asset": {
+    "path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.png",
+    "sha256": "2c5f2edbc126f1c09ec63241f0096f086da8aed825a5826f20ac79a579185cac",
+    "layout": "vertical_strip_5x_71x33",
+    "frame_count": 5,
+    "frame_size_px": [
+      71,
+      33
+    ],
+    "content_scope": "opponent_exposed_meld_tiles_only",
+    "player_or_room_metadata": false
+  }
 }

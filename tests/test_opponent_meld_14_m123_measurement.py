@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -8,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json"
 PROFILE = ROOT / "references/vision/2026-10-01/opponent_meld_domain_profile_v0_1.json"
 QUEUE = ROOT / "references/vision/2026-10-01/opponent_public_meld_review_queue_v0_1.json"
-SHA256 = re.compile(r"^[0-9a-f]{64}$")
+SHA256 = re.compile(r"^[0-9a-f]{64}$")\nASSET = ROOT / "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.png"
 
 
 class OpponentMeldM123MeasurementTests(unittest.TestCase):
@@ -33,16 +34,24 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
         self.assertFalse(self.report["safe_for_hint"])
         self.assertFalse(self.report["safe_for_executor"])
 
-    def test_private_pixels_are_not_committed_and_crop_hashes_are_locked(self):
+    def test_only_privacy_bounded_tile_strip_is_committed_and_hashes_are_locked(self):
         privacy = self.report["privacy"]
         self.assertFalse(privacy["raw_video_committed"])
         self.assertFalse(privacy["full_frame_committed"])
-        self.assertFalse(privacy["derived_crop_pixels_committed"])
+        self.assertTrue(privacy["derived_crop_pixels_committed"])
         self.assertFalse(privacy["player_or_room_metadata_published"])
+        self.assertFalse(privacy["public_asset_contains_player_or_room_metadata"])
         self.assertEqual(
             self.report["evidence_storage"],
-            "PUBLIC_METADATA_ONLY_PRIVATE_PIXELS_RETAINED_OUTSIDE_REPOSITORY",
+            "PUBLIC_TILE_ONLY_STRIP_PLUS_METADATA_PRIVATE_RAW_VIDEO_AND_FULL_FRAMES",
         )
+        asset = self.report["public_evaluation_asset"]
+        self.assertEqual(asset["path"], ASSET.relative_to(ROOT).as_posix())
+        self.assertEqual(asset["frame_count"], 5)
+        self.assertEqual(asset["frame_size_px"], [71, 33])
+        self.assertFalse(asset["player_or_room_metadata"])
+        digest = hashlib.sha256(ASSET.read_bytes()).hexdigest()
+        self.assertEqual(digest, asset["sha256"])
         self.assertEqual(len(self.report["stable_samples"]), 5)
         for row in self.report["stable_samples"]:
             self.assertTrue(SHA256.fullmatch(row["sha256"]))
@@ -61,7 +70,7 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
         self.assertEqual(row["stable_measurement_crop_count"], 5)
         self.assertEqual(
             row["measurement_crop_storage"],
-            "PRIVATE_ONLY_TILE_BOUNDED_CROPS_NOT_COMMITTED",
+            "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA",
         )
         self.assertEqual(row["identity_runtime_status"], "UNKNOWN")
 

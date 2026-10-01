@@ -89,6 +89,13 @@ jobs:
       - name: Install project with Vision dependencies
         if: needs.scope.outputs.run_vision == 'true'
         run: python -m pip install -e ".[vision]"
+      - name: Install one-shot opponent MobileNet dependencies
+        if: needs.scope.outputs.run_vision == 'true' && hashFiles('references/vision/2026-10-01/RUN_OPPONENT_MOBILENET_V0_1') != ''
+        run: |
+          python -m pip install --no-cache-dir \
+            --index-url https://download.pytorch.org/whl/cpu \
+            --extra-index-url https://pypi.org/simple \
+            "torch>=2.5,<3" "torchvision>=0.20,<1"
       - name: Run Vision V0.1 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_v0_1 -p "test_*.py" -t . -v
@@ -242,6 +249,49 @@ jobs:
               "PUBLIC_MELD_SIFT_FUSION="
               + json.dumps(compact, sort_keys=True)
           )
+          PY
+      - name: Evaluate measured opponent meld MobileNet once
+        if: needs.scope.outputs.run_vision == 'true' && hashFiles('references/vision/2026-10-01/RUN_OPPONENT_MOBILENET_V0_1') != ''
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.opponent_public_meld_mobilenet \
+            --output /tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          aggregate = report["multi_frame_mean_scores"]
+          compact = {
+              "model": report["model"],
+              "synthetic_bank": report["synthetic_bank"],
+              "frame_metrics": report["frame_metrics"],
+              "multi_frame": {
+                  "raw_unordered_top1_exact": aggregate["raw_unordered_top1_exact"],
+                  "unordered_top3_expected_coverage": aggregate[
+                      "unordered_top3_expected_coverage"
+                  ],
+                  "legal_group_top_tiles": aggregate["legal_group"]["top_tiles"],
+                  "legal_group_top_score": aggregate["legal_group"]["top_score"],
+                  "legal_group_runner_up_tiles": aggregate["legal_group"][
+                      "runner_up_tiles"
+                  ],
+                  "legal_group_margin": aggregate["legal_group"]["margin"],
+                  "legal_group_correct": aggregate["legal_group_correct"],
+              },
+              "identity_runtime_status": report["identity_runtime_status"],
+              "runtime_identity_threshold_unchanged": report[
+                  "runtime_identity_threshold_unchanged"
+              ],
+              "mobilenet_acceptance_threshold": report[
+                  "mobilenet_acceptance_threshold"
+              ],
+          }
+          print("OPPONENT_MELD_MOBILENET=" + json.dumps(compact, sort_keys=True))
           PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'

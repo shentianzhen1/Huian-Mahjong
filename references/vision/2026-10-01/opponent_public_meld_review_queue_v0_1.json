@@ -3,7 +3,7 @@
   "date": "2026-10-01",
   "issue": 69,
   "purpose": "first reviewed opponent top_group identity batch",
-  "privacy": "raw video/full frames and derived crops remain private in this measurement step; public repo receives only anonymous geometry/provenance metadata",
+  "privacy": "raw video/full frames remain private; one privacy-bounded five-frame strip contains only the opponent exposed meld tiles for reproducible development evaluation",
   "items": [
     {
       "review_id": "opp_meld_14_m123",
@@ -46,7 +46,19 @@
       "stable_measurement_crop_count": 5,
       "measurement_report": "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json",
       "identity_runtime_status": "UNKNOWN",
-      "measurement_crop_storage": "PRIVATE_ONLY_TILE_BOUNDED_CROPS_NOT_COMMITTED"
+      "measurement_crop_storage": "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA",
+      "public_evaluation_asset": {
+        "path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.png",
+        "sha256": "2c5f2edbc126f1c09ec63241f0096f086da8aed825a5826f20ac79a579185cac",
+        "layout": "vertical_strip_5x_71x33",
+        "frame_count": 5,
+        "frame_size_px": [
+          71,
+          33
+        ],
+        "content_scope": "opponent_exposed_meld_tiles_only",
+        "player_or_room_metadata": false
+      }
     },
     {
       "review_id": "opp_meld_0926_hand1_s456",
@@ -102,7 +114,7 @@
     "single-tile segmentation must return exactly three classifier-ready faces",
     "tile identities remain human-confirmed truth; detector predictions may not rewrite labels",
     "same original match contributes one match_group for validation",
-    "raw private video/full frames and derived crop pixels are not committed in this measurement step"
+    "raw private video/full frames remain private; only privacy-bounded tile-only crops may be committed for reproducible development evaluation"
   ],
   "current_counts": {
     "queued_groups": 3,
