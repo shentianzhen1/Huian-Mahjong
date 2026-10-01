@@ -1,0 +1,80 @@
+{
+  "schema_version": "concealed_template_lineage_recovery_queue_v0_1",
+  "development_only": true,
+  "match_group_inference_allowed": false,
+  "items": [
+    {
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "source_sessions": [
+        "session_5d8a0e3c"
+      ],
+      "tile_classes": [
+        "M3"
+      ],
+      "approved_label_count": 1,
+      "source_frames": [
+        3654
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    },
+    {
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "source_sessions": [
+        "session_4d68a8e72498d729"
+      ],
+      "tile_classes": [
+        "M1",
+        "M3"
+      ],
+      "approved_label_count": 3,
+      "source_frames": [
+        120
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    },
+    {
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "source_sessions": [
+        "session_627b6c2022d3f910"
+      ],
+      "tile_classes": [
+        "M3"
+      ],
+      "approved_label_count": 2,
+      "source_frames": [
+        60,
+        720
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    },
+    {
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "source_sessions": [
+        "session_dcac8580c55879a2"
+      ],
+      "tile_classes": [
+        "M1",
+        "M3"
+      ],
+      "approved_label_count": 2,
+      "source_frames": [
+        60
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    }
+  ],
+  "unresolved_source_count": 4,
+  "unresolved_label_count": 8,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
