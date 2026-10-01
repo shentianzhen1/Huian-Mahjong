@@ -23,8 +23,8 @@ class OpponentPublicMeldReviewQueueTests(unittest.TestCase):
         self.assertTrue(result["valid"], result["issues"])
         self.assertEqual(result["queued_group_count"], 3)
         self.assertEqual(result["independent_match_group_count"], 2)
-        self.assertEqual(result["source_verified_group_count"], 1)
-        self.assertEqual(result["classifier_ready_group_count"], 1)
+        self.assertEqual(result["source_verified_group_count"], 2)
+        self.assertEqual(result["classifier_ready_group_count"], 2)
         self.assertFalse(result["safe_for_runtime"])
         self.assertFalse(result["safe_for_hint"])
         self.assertFalse(result["safe_for_executor"])
@@ -35,6 +35,22 @@ class OpponentPublicMeldReviewQueueTests(unittest.TestCase):
         self.assertEqual(row["measured_source_face_size_px"], [22, 29])
         self.assertEqual(row["stable_measurement_crop_count"], 5)
         self.assertEqual(row["identity_runtime_status"], "UNKNOWN")
+
+    def test_s456_is_exact_sha_verified_and_classifier_ready(self):
+        row = next(
+            item
+            for item in self.payload["items"]
+            if item["review_id"] == "opp_meld_0926_hand1_s456"
+        )
+        self.assertEqual(row["crop_status"], "CLASSIFIER_READY")
+        self.assertTrue(row["source_verification"].startswith("SHA256_EXACT_VERIFIED"))
+        self.assertEqual(row["stable_measurement_crop_count"], 5)
+        self.assertEqual(row["expected_tiles"], ["S4", "S5", "S6"])
+        self.assertEqual(row["identity_runtime_status"], "UNKNOWN")
+        self.assertEqual(
+            row["public_evaluation_asset"]["sha256"],
+            "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+        )
 
     def test_same_match_groups_are_not_counted_as_independent(self):
         payload = copy.deepcopy(self.payload)
