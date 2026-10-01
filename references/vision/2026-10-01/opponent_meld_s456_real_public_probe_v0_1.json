@@ -1,0 +1,40 @@
+{
+  "schema_version": "opponent_meld_real_public_probe_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_0926_hand1_s456",
+  "query_match_group": "reviewed_match_2026_09_26_first_hand",
+  "query_public_strip_sha256": "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+  "expected_tiles": ["S4","S5","S6"],
+  "reference_policy": "real_public_meld_prototype_from_other_match_groups_first_otherwise_lineage_qualified_synthetic_fallback",
+  "real_reference_query_match_excluded": true,
+  "real_reference_coverage": {
+    "S4": {"real_face_count":2,"independent_match_group_count":2,"labels_by_match_group":{"reviewed_match_2026_09_19_eight_hand":1,"reviewed_recording_14":1},"real_prototype_available":true},
+    "S5": {"real_face_count":1,"independent_match_group_count":1,"labels_by_match_group":{"reviewed_match_2026_09_19_eight_hand":1},"real_prototype_available":true},
+    "S6": {"real_face_count":1,"independent_match_group_count":1,"labels_by_match_group":{"reviewed_match_2026_09_19_eight_hand":1},"real_prototype_available":true}
+  },
+  "real_reference_face_count": 21,
+  "real_reference_group_count": 7,
+  "real_reference_match_groups": ["reviewed_match_2026_09_19_eight_hand","reviewed_recording_14","reviewed_recording_66fe","reviewed_recording_b389"],
+  "model": {"name":"mobilenet_v3_small_imagenet1k_v1","weights":"MobileNet_V3_Small_Weights.IMAGENET1K_V1","fine_tuned":false,"synthetic_prototype_class_count":25,"real_prototype_class_count":17,"real_first_prototype_class_count":27},
+  "synthetic_only": {
+    "frame_metrics":{"frame_count":5,"raw_unordered_top1_exact_count":0,"unordered_top3_expected_coverage_count":0,"legal_group_top1_correct_count":0},
+    "multi_frame_mean_scores":{"legal_group":{"top_tiles":["S4","S4","S4"],"top_score":0.8113236,"runner_up_tiles":["S6","S5","S4"],"runner_up_score":0.78598439,"margin":0.02533922},"legal_group_correct":false}
+  },
+  "real_public_first": {
+    "frame_metrics":{"frame_count":5,"raw_unordered_top1_exact_count":4,"unordered_top3_expected_coverage_count":5,"legal_group_top1_correct_count":5},
+    "multi_frame_mean_scores":{"face_top1":[{"tile":"S6","score":0.89258885},{"tile":"S5","score":0.83838288},{"tile":"S4","score":0.84125884}],"legal_group":{"top_tiles":["S6","S5","S4"],"top_score":0.85741019,"runner_up_tiles":["S6","S6","S6"],"runner_up_score":0.82315051,"margin":0.03425968},"legal_group_correct":true}
+  },
+  "interpretation_role": "diagnose whether cross-match real public-meld pixels reduce the opponent-domain gap; not a promotion gate",
+  "evidence_role": "development_selection_only",
+  "blind_validation": false,
+  "mobilenet_acceptance_threshold": null,
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "reviewed_real_groups_seen_during_selection": 7
+}
