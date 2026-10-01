@@ -12,6 +12,7 @@ from typing import Iterable, Sequence
 from workspace.vision.action_assembler import AssemblyConfig, TemporalActionAssembler
 from workspace.vision.issue69_public_replay_orchestrator import PublicReplayCandidate
 from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
+from workspace.vision.public_meld_observer_corroboration import SourceBoundObserverFact
 
 
 @dataclass(frozen=True)
@@ -32,12 +33,14 @@ def reconstruct_public_candidates(
     public_candidates: Sequence[PublicReplayCandidate] | Iterable[PublicReplayCandidate],
     *,
     hand_deltas: Sequence[HandDeltaCandidate] | Iterable[HandDeltaCandidate] = (),
+    hand_facts: Sequence[SourceBoundObserverFact] | Iterable[SourceBoundObserverFact] = (),
     claim_window_seconds: float,
     assembly_delay_seconds: float,
 ) -> dict:
     public = tuple(public_candidates)
     hands = tuple(hand_deltas)
-    scope = _single_scope(public, hands)
+    facts = tuple(hand_facts)
+    scope = _single_scope(public, hands, facts)
     observations = []
     excluded_context = []
 
@@ -99,6 +102,17 @@ def reconstruct_public_candidates(
             details=details,
         ))
 
+    for fact in facts:
+        if fact.channel != "hand" or fact.observation.kind is not ObservationKind.HAND_DELTA:
+            raise ValueError("hand_facts must contain only source-bound HAND_DELTA facts")
+        if not (
+            fact.original_frame_verified
+            and fact.stable_source_observation
+            and fact.independent_public_region_verified
+        ):
+            raise ValueError("hand fact must remain source-verified and stable")
+        observations.append(fact.observation)
+
     observations.sort(key=lambda item: (
         item.timestamp_seconds,
         int(item.details.get("frame", 0)),
@@ -133,13 +147,16 @@ def reconstruct_public_candidates(
     }
 
 
-def _single_scope(public, hands):
+def _single_scope(public, hands, facts=()):
     scopes = {
         (row.source_session, row.source_sha256, row.stream_epoch)
         for row in public
     } | {
         (row.source_session, row.source_sha256, row.stream_epoch)
         for row in hands
+    } | {
+        (row.source_session, row.source_sha256, row.stream_epoch)
+        for row in facts
     }
     if len(scopes) > 1:
         raise ValueError("all reconstruction inputs must share exact source scope")
