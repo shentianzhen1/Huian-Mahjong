@@ -1,21 +1,17 @@
-"""Development-only linear-SVM check for exposed-meld identity.
+"""Development-only LinearSVC check for exposed-meld identity.
 
 This is the final cheap learned-boundary experiment before considering a compact
 CNN. It reuses the fixed manual-HOG embedding and the same synthetic
-hand-to-player-meld rendering. One-vs-rest linear SVMs are trained with a fixed
-configuration; no parameter search is performed on the reviewed meld queries.
+hand-to-player-meld rendering. A fixed scikit-learn LinearSVC is trained only
+on synthetic transforms of reviewed concealed-hand crops; reviewed public-meld
+queries are evaluation-only.
 
-Per-class raw margins are oriented and linearly calibrated from their training
-positive/negative means so the existing Mahjong-valid three-face group decoder
-can consume comparable class scores.
-
-Development evidence only: Runtime/Hint/Executor remain unchanged.
+scikit-learn is an experiment-only CI dependency and is not added to Runtime,
+Hint Alpha, or the package's normal Vision dependency set.
 """
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
-from dataclasses import dataclass
 import json
 from pathlib import Path
 from typing import Any
@@ -37,17 +33,10 @@ from workspace.vision.public_tile_detector import PublicGeometryCandidate
 
 
 SVM_C = 1.0
-SVM_MAX_ITERATIONS = 500
-NEGATIVE_TO_POSITIVE_RATIO = 3
-
-
-@dataclass
-class OneVsRestModel:
-    tile_id: str
-    model: Any
-    orientation: float
-    negative_mean: float
-    positive_mean: float
+SVM_MAX_ITERATIONS = 5000
+SVM_CLASS_WEIGHT = "balanced"
+SVM_DUAL = "auto"
+SVM_RANDOM_STATE = 0
 
 
 def _training_rows(dataset_root: Path) -> tuple[Any, list[str]]:
@@ -76,105 +65,35 @@ def _training_rows(dataset_root: Path) -> tuple[Any, list[str]]:
     return np.stack(vectors).astype("float32", copy=False), labels
 
 
-def _balanced_binary_indices(
-    labels: list[str],
-    positive_tile: str,
-) -> tuple[list[int], list[int]]:
-    positives = [index for index, tile in enumerate(labels) if tile == positive_tile]
-    if not positives:
-        return [], []
+def _fit_classifier(features: Any, labels: list[str]) -> Any:
+    from sklearn.svm import LinearSVC
 
-    by_negative_class: dict[str, list[int]] = defaultdict(list)
-    for index, tile in enumerate(labels):
-        if tile != positive_tile:
-            by_negative_class[tile].append(index)
-
-    target = min(
-        sum(len(rows) for rows in by_negative_class.values()),
-        len(positives) * NEGATIVE_TO_POSITIVE_RATIO,
+    classifier = LinearSVC(
+        C=SVM_C,
+        class_weight=SVM_CLASS_WEIGHT,
+        dual=SVM_DUAL,
+        max_iter=SVM_MAX_ITERATIONS,
+        random_state=SVM_RANDOM_STATE,
     )
-    negatives: list[int] = []
-    class_names = sorted(by_negative_class)
-    offset = 0
-    while len(negatives) < target:
-        added = False
-        for tile in class_names:
-            rows = by_negative_class[tile]
-            if offset < len(rows):
-                negatives.append(rows[offset])
-                added = True
-                if len(negatives) >= target:
-                    break
-        if not added:
-            break
-        offset += 1
-    return positives, negatives
+    classifier.fit(features, labels)
+    return classifier
 
 
-def _fit_ovr_models(features: Any, labels: list[str]) -> dict[str, OneVsRestModel]:
-    import cv2
-    import numpy as np
-
-    if not hasattr(cv2, "ml") or not hasattr(cv2.ml, "SVM_create"):
-        raise RuntimeError("OpenCV ml.SVM is unavailable")
-
-    models: dict[str, OneVsRestModel] = {}
-    for tile_id in sorted(set(labels)):
-        positives, negatives = _balanced_binary_indices(labels, tile_id)
-        if not positives or not negatives:
-            continue
-        indices = positives + negatives
-        x = features[indices].astype("float32", copy=False)
-        y = np.asarray(
-            [1] * len(positives) + [-1] * len(negatives),
-            dtype=np.int32,
-        ).reshape(-1, 1)
-
-        svm = cv2.ml.SVM_create()
-        svm.setType(cv2.ml.SVM_C_SVC)
-        svm.setKernel(cv2.ml.SVM_LINEAR)
-        svm.setC(SVM_C)
-        svm.setTermCriteria(
-            (cv2.TERM_CRITERIA_MAX_ITER, SVM_MAX_ITERATIONS, 1e-6)
-        )
-        if not svm.train(x, cv2.ml.ROW_SAMPLE, y):
-            continue
-
-        _, raw = svm.predict(x, flags=cv2.ml.STAT_MODEL_RAW_OUTPUT)
-        raw_values = raw.reshape(-1).astype("float64", copy=False)
-        positive_raw = raw_values[: len(positives)]
-        negative_raw = raw_values[len(positives) :]
-        raw_pos_mean = float(np.mean(positive_raw))
-        raw_neg_mean = float(np.mean(negative_raw))
-        orientation = 1.0 if raw_pos_mean > raw_neg_mean else -1.0
-        positive_mean = orientation * raw_pos_mean
-        negative_mean = orientation * raw_neg_mean
-        if positive_mean - negative_mean <= 1e-9:
-            continue
-        models[tile_id] = OneVsRestModel(
-            tile_id=tile_id,
-            model=svm,
-            orientation=orientation,
-            negative_mean=negative_mean,
-            positive_mean=positive_mean,
-        )
-    return models
-
-
-def _svm_scores(query: Any, models: dict[str, OneVsRestModel]) -> dict[str, float]:
-    import cv2
+def _svm_scores(query: Any, classifier: Any) -> dict[str, float]:
     import numpy as np
 
     if query is None:
         return {}
     row = np.asarray(query, dtype=np.float32).reshape(1, -1)
-    scores: dict[str, float] = {}
-    for tile_id, record in models.items():
-        _, raw = record.model.predict(row, flags=cv2.ml.STAT_MODEL_RAW_OUTPUT)
-        margin = record.orientation * float(raw.reshape(-1)[0])
-        scale = record.positive_mean - record.negative_mean
-        scores[tile_id] = (margin - record.negative_mean) / scale
-    return scores
+    raw = classifier.decision_function(row)
+    values = np.asarray(raw, dtype=np.float64)
+    if values.ndim == 1:
+        values = values.reshape(1, -1)
+    return {
+        str(tile_id): float(score)
+        for tile_id, score in zip(classifier.classes_, values[0])
+        if np.isfinite(score)
+    }
 
 
 def _top1(scores: dict[str, float]) -> tuple[str | None, float | None]:
@@ -196,9 +115,7 @@ def evaluate_public_meld_hog_svm(
     calibration = json.loads((root / calibration_path).read_text(encoding="utf-8"))
     samples = _regular_player_meld_samples(calibration)
     train_x, train_labels = _training_rows(dataset)
-    models = _fit_ovr_models(train_x, train_labels)
-    if not models:
-        raise ValueError("no HOG SVM models trained")
+    classifier = _fit_classifier(train_x, train_labels)
 
     face_rows: list[dict[str, Any]] = []
     group_rows: list[dict[str, Any]] = []
@@ -238,7 +155,7 @@ def evaluate_public_meld_hog_svm(
             zip(prepared.face_images, sample["expected_tiles"])
         ):
             query = _hog_embedding(face)
-            scores = _svm_scores(query, models)
+            scores = _svm_scores(query, classifier)
             predicted, score = _top1(scores)
             face_scores.append(scores)
             face_rows.append(
@@ -280,18 +197,19 @@ def evaluate_public_meld_hog_svm(
     group_correct = sum(bool(row["group_correct"]) for row in scorable_groups)
 
     return {
-        "schema_version": "public_meld_hog_svm_v0_1",
-        "method": "synthetic_meld_manual_hog_one_vs_rest_linear_svm",
+        "schema_version": "public_meld_hog_svm_v0_2",
+        "method": "synthetic_meld_manual_hog_sklearn_linear_svc",
         "fixed_profile": {
             "svm_c": SVM_C,
+            "class_weight": SVM_CLASS_WEIGHT,
+            "dual": SVM_DUAL,
             "maximum_iterations": SVM_MAX_ITERATIONS,
-            "negative_to_positive_ratio": NEGATIVE_TO_POSITIVE_RATIO,
-            "margin_calibration": "oriented_train_negative_mean_to_positive_mean",
+            "random_state": SVM_RANDOM_STATE,
             "parameter_search": False,
         },
         "training_sample_count": int(train_x.shape[0]),
         "training_class_count": len(set(train_labels)),
-        "trained_model_count": len(models),
+        "trained_class_count": len(classifier.classes_),
         "target_group_count": len(samples),
         "scored_group_count": group_count,
         "scored_face_count": face_count,
@@ -306,6 +224,7 @@ def evaluate_public_meld_hog_svm(
         "evidence_role": "development_selection_only",
         "blind_validation": False,
         "opponent_top_group_accuracy_measured": False,
+        "experiment_only_dependency": "scikit-learn",
         "changes_runtime_behavior": False,
         "formal_promotion_evidence": False,
         "safe_for_runtime": False,
