@@ -97,11 +97,14 @@ class Issue69TemporalReconstructionTests(unittest.TestCase):
             rows, hand_facts=[fact], claim_window_seconds=1.0,
             assembly_delay_seconds=0.0,
         )
-        # Count-only evidence is allowed into the assembler but must not invent
-        # removed tile identities. Until an independent identity fact exists,
-        # the claim remains fail-closed.
-        unknown = [row for row in report["actions"] if row["kind"] == "UNKNOWN_ACTION"]
-        self.assertEqual(len(unknown), 1)
+        # Exact removed identities are redundant when the independently
+        # observed discard and complete new meld already determine the
+        # consumed multiset. A verified count delta may corroborate the claim
+        # without pretending that hand identities were observed.
+        gang = next(row for row in report["actions"] if row["kind"] == "MING_GANG")
+        self.assertEqual(gang["claimed_tile"], "P6")
+        self.assertEqual(gang["meld"], ["P6"] * 4)
+        self.assertEqual(gang["evidence_grade"], "CORROBORATED")
         self.assertEqual(report["input_observation_count"], 3)
 
     def test_identity_qualified_hand_fact_closes_ming_gang(self):
