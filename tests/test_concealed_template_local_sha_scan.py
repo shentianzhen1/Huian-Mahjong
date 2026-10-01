@@ -20,14 +20,12 @@ QUEUE = (
 
 
 class ConcealedTemplateLocalShaScanTests(unittest.TestCase):
-    def test_frozen_queue_exposes_four_exact_targets(self):
-        targets = load_target_shas(QUEUE)
+    def test_resolved_frozen_queue_has_no_scan_targets(self):
         frozen = json.loads(QUEUE.read_text(encoding="utf-8"))
-        self.assertEqual(len(targets), 4)
-        self.assertEqual(
-            targets,
-            {item["source_sha256"] for item in frozen["items"]},
-        )
+        self.assertEqual(frozen["unresolved_source_count"], 0)
+        self.assertEqual(frozen["items"], [])
+        with self.assertRaisesRegex(ValueError, "no unresolved SHA256 targets"):
+            load_target_shas(QUEUE)
 
     def test_scan_only_reports_exact_sha_matches_and_never_auto_binds(self):
         with tempfile.TemporaryDirectory() as tmp:
