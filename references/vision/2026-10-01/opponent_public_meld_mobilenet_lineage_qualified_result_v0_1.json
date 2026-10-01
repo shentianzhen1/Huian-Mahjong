@@ -1,0 +1,657 @@
+{
+  "schema_version": "opponent_public_meld_mobilenet_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_14_m123",
+  "query_match_group": "reviewed_recording_14",
+  "expected_tiles": [
+    "M1",
+    "M2",
+    "M3"
+  ],
+  "query": {
+    "stable_frame_count": 5,
+    "source_frame_estimates": [
+      1726,
+      1728,
+      1730,
+      1732,
+      1734
+    ],
+    "public_strip_path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.webp",
+    "public_strip_sha256": "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9",
+    "frame_size_px": [
+      71,
+      33
+    ],
+    "prepared_face_observation_count": 15,
+    "human_truth_scope": "group_identity_only_no_left_to_right_truth_assumed"
+  },
+  "opponent_domain_profile": {
+    "status": "MEASURED_REAL_TOP_GROUP",
+    "measured_source_face_size_px": [
+      22,
+      29
+    ],
+    "qualification": {
+      "schema_version": "opponent_meld_domain_profile_qualification_v0_1",
+      "qualified": true,
+      "reason": "measured_source_exact_verified_and_classifier_ready",
+      "measurement_source_review_id": "opp_meld_14_m123",
+      "changes_runtime_behavior": false,
+      "formal_promotion_evidence": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    }
+  },
+  "synthetic_bank": {
+    "candidate_hand_label_count": 128,
+    "lineage_qualified_hand_label_count": 57,
+    "balanced_hand_label_count": 43,
+    "used_hand_label_count": 43,
+    "synthetic_variant_count": 430,
+    "synthetic_class_count": 25,
+    "lineage": {
+      "input_label_count": 128,
+      "lineage_qualified_label_count": 57,
+      "excluded_missing_original_match_lineage_count": 71,
+      "excluded_same_original_match_count": 0,
+      "excluded_malformed_source_sha_count": 0,
+      "qualified_original_match_group_count": 3,
+      "lineage_key": "exact_source_sha256",
+      "source_session_used_as_independence_signal": false,
+      "development_only": true,
+      "formal_promotion_evidence": false
+    }
+  },
+  "model": {
+    "name": "mobilenet_v3_small_imagenet1k_v1",
+    "weights": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+    "fine_tuned": false,
+    "torch_version": "2.14.1+cpu",
+    "torchvision_version": "0.29.1+cpu",
+    "prototype_class_count": 25
+  },
+  "frames": [
+    {
+      "source_frame_estimate": 1726,
+      "face_top1": [
+        {
+          "tile": "M6",
+          "score": 0.8462255
+        },
+        {
+          "tile": "M6",
+          "score": 0.84356886
+        },
+        {
+          "tile": "M6",
+          "score": 0.83628094
+        }
+      ],
+      "face_top3": [
+        [
+          {
+            "tile": "M6",
+            "score": 0.8462255
+          },
+          {
+            "tile": "M2",
+            "score": 0.84273446
+          },
+          {
+            "tile": "M3",
+            "score": 0.81120384
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.84356886
+          },
+          {
+            "tile": "M2",
+            "score": 0.83385646
+          },
+          {
+            "tile": "M1",
+            "score": 0.83121216
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.83628094
+          },
+          {
+            "tile": "M4",
+            "score": 0.83253968
+          },
+          {
+            "tile": "M2",
+            "score": 0.82996106
+          }
+        ]
+      ],
+      "raw_unordered_top1_exact": false,
+      "unordered_top3_expected_coverage": true,
+      "legal_group": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "top_score": 0.8420251,
+        "runner_up_tiles": [
+          "M2",
+          "M2",
+          "M2"
+        ],
+        "runner_up_score": 0.83551733,
+        "margin": 0.00650777,
+        "canonical_candidate_count": 37,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      },
+      "legal_group_correct": false
+    },
+    {
+      "source_frame_estimate": 1728,
+      "face_top1": [
+        {
+          "tile": "M6",
+          "score": 0.84891844
+        },
+        {
+          "tile": "M6",
+          "score": 0.84724337
+        },
+        {
+          "tile": "M6",
+          "score": 0.83677697
+        }
+      ],
+      "face_top3": [
+        [
+          {
+            "tile": "M6",
+            "score": 0.84891844
+          },
+          {
+            "tile": "M2",
+            "score": 0.84469378
+          },
+          {
+            "tile": "M3",
+            "score": 0.81567025
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.84724337
+          },
+          {
+            "tile": "M2",
+            "score": 0.83621097
+          },
+          {
+            "tile": "M1",
+            "score": 0.83412766
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.83677697
+          },
+          {
+            "tile": "M4",
+            "score": 0.83357573
+          },
+          {
+            "tile": "M2",
+            "score": 0.83201629
+          }
+        ]
+      ],
+      "raw_unordered_top1_exact": false,
+      "unordered_top3_expected_coverage": true,
+      "legal_group": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "top_score": 0.84431293,
+        "runner_up_tiles": [
+          "M2",
+          "M2",
+          "M2"
+        ],
+        "runner_up_score": 0.83764035,
+        "margin": 0.00667258,
+        "canonical_candidate_count": 37,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      },
+      "legal_group_correct": false
+    },
+    {
+      "source_frame_estimate": 1730,
+      "face_top1": [
+        {
+          "tile": "M6",
+          "score": 0.8534807
+        },
+        {
+          "tile": "M6",
+          "score": 0.84989631
+        },
+        {
+          "tile": "M6",
+          "score": 0.83509868
+        }
+      ],
+      "face_top3": [
+        [
+          {
+            "tile": "M6",
+            "score": 0.8534807
+          },
+          {
+            "tile": "M2",
+            "score": 0.84745866
+          },
+          {
+            "tile": "M3",
+            "score": 0.81803095
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.84989631
+          },
+          {
+            "tile": "M2",
+            "score": 0.8361569
+          },
+          {
+            "tile": "M1",
+            "score": 0.83591408
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.83509868
+          },
+          {
+            "tile": "M4",
+            "score": 0.83394837
+          },
+          {
+            "tile": "M2",
+            "score": 0.83083063
+          }
+        ]
+      ],
+      "raw_unordered_top1_exact": false,
+      "unordered_top3_expected_coverage": true,
+      "legal_group": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "top_score": 0.84615856,
+        "runner_up_tiles": [
+          "M2",
+          "M2",
+          "M2"
+        ],
+        "runner_up_score": 0.83814873,
+        "margin": 0.00800983,
+        "canonical_candidate_count": 37,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      },
+      "legal_group_correct": false
+    },
+    {
+      "source_frame_estimate": 1732,
+      "face_top1": [
+        {
+          "tile": "M6",
+          "score": 0.86145616
+        },
+        {
+          "tile": "M6",
+          "score": 0.84854376
+        },
+        {
+          "tile": "M6",
+          "score": 0.83634615
+        }
+      ],
+      "face_top3": [
+        [
+          {
+            "tile": "M6",
+            "score": 0.86145616
+          },
+          {
+            "tile": "M2",
+            "score": 0.85435867
+          },
+          {
+            "tile": "M3",
+            "score": 0.82834041
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.84854376
+          },
+          {
+            "tile": "M1",
+            "score": 0.83482623
+          },
+          {
+            "tile": "M2",
+            "score": 0.83481276
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.83634615
+          },
+          {
+            "tile": "M4",
+            "score": 0.83518243
+          },
+          {
+            "tile": "M2",
+            "score": 0.83127677
+          }
+        ]
+      ],
+      "raw_unordered_top1_exact": false,
+      "unordered_top3_expected_coverage": true,
+      "legal_group": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "top_score": 0.84878202,
+        "runner_up_tiles": [
+          "M2",
+          "M2",
+          "M2"
+        ],
+        "runner_up_score": 0.8401494,
+        "margin": 0.00863262,
+        "canonical_candidate_count": 37,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      },
+      "legal_group_correct": false
+    },
+    {
+      "source_frame_estimate": 1734,
+      "face_top1": [
+        {
+          "tile": "M6",
+          "score": 0.86439949
+        },
+        {
+          "tile": "M6",
+          "score": 0.85002619
+        },
+        {
+          "tile": "M4",
+          "score": 0.83564061
+        }
+      ],
+      "face_top3": [
+        [
+          {
+            "tile": "M6",
+            "score": 0.86439949
+          },
+          {
+            "tile": "M2",
+            "score": 0.85542476
+          },
+          {
+            "tile": "M3",
+            "score": 0.82917142
+          }
+        ],
+        [
+          {
+            "tile": "M6",
+            "score": 0.85002619
+          },
+          {
+            "tile": "M2",
+            "score": 0.83658576
+          },
+          {
+            "tile": "M1",
+            "score": 0.83588135
+          }
+        ],
+        [
+          {
+            "tile": "M4",
+            "score": 0.83564061
+          },
+          {
+            "tile": "M6",
+            "score": 0.83553064
+          },
+          {
+            "tile": "M2",
+            "score": 0.83022845
+          }
+        ]
+      ],
+      "raw_unordered_top1_exact": false,
+      "unordered_top3_expected_coverage": true,
+      "legal_group": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "top_score": 0.84998544,
+        "runner_up_tiles": [
+          "M2",
+          "M2",
+          "M2"
+        ],
+        "runner_up_score": 0.84074632,
+        "margin": 0.00923912,
+        "canonical_candidate_count": 37,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      },
+      "legal_group_correct": false
+    }
+  ],
+  "frame_metrics": {
+    "frame_count": 5,
+    "raw_unordered_top1_exact_count": 0,
+    "unordered_top3_expected_coverage_count": 5,
+    "legal_group_top1_correct_count": 0
+  },
+  "multi_frame_mean_scores": {
+    "face_top1": [
+      {
+        "tile": "M6",
+        "score": 0.85489606
+      },
+      {
+        "tile": "M6",
+        "score": 0.8478557
+      },
+      {
+        "tile": "M6",
+        "score": 0.83600668
+      }
+    ],
+    "face_top3": [
+      [
+        {
+          "tile": "M6",
+          "score": 0.85489606
+        },
+        {
+          "tile": "M2",
+          "score": 0.84893407
+        },
+        {
+          "tile": "M3",
+          "score": 0.82048337
+        }
+      ],
+      [
+        {
+          "tile": "M6",
+          "score": 0.8478557
+        },
+        {
+          "tile": "M2",
+          "score": 0.83552457
+        },
+        {
+          "tile": "M1",
+          "score": 0.8343923
+        }
+      ],
+      [
+        {
+          "tile": "M6",
+          "score": 0.83600668
+        },
+        {
+          "tile": "M4",
+          "score": 0.83417736
+        },
+        {
+          "tile": "M2",
+          "score": 0.83086264
+        }
+      ]
+    ],
+    "raw_unordered_top1_exact": false,
+    "unordered_top3_expected_coverage": true,
+    "legal_group": {
+      "schema_version": "public_meld_group_identity_ranking_v0_1",
+      "top_tiles": [
+        "M6",
+        "M6",
+        "M6"
+      ],
+      "top_score": 0.84625281,
+      "runner_up_tiles": [
+        "M2",
+        "M2",
+        "M2"
+      ],
+      "runner_up_score": 0.83844043,
+      "margin": 0.00781238,
+      "canonical_candidate_count": 37,
+      "development_proposal_tiles": null,
+      "action_kind": "UNKNOWN",
+      "development_only": true,
+      "changes_runtime_behavior": false,
+      "formal_promotion_evidence": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false,
+      "issues": [
+        "mahjong_valid_group_identity_ranked",
+        "development_margin_gate_not_configured"
+      ]
+    },
+    "legal_group_correct": false
+  },
+  "evidence_role": "development_measurement_only",
+  "blind_validation": false,
+  "blind_validation_blockers": [
+    "the same reviewed opponent match supplied the source-resolution measurement",
+    "concealed hand templates without exact-SHA original-match lineage are excluded from the bank",
+    "only one opponent match group is measured in this batch"
+  ],
+  "independent_opponent_match_group_count": 1,
+  "mobilenet_acceptance_threshold": null,
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
