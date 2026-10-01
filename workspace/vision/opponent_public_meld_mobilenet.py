@@ -625,7 +625,7 @@ def evaluate_opponent_public_meld_mobilenet(
                 Path(effective_strip_path).as_posix()
             ),
             "public_strip_sha256": (
-                DEFAULT_STRIP_SHA256
+                query_spec.strip_sha256
             ),
             "frame_size_px": [
                 query_spec.frame_width,
