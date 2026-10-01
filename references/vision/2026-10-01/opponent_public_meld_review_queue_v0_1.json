@@ -210,7 +210,7 @@
   "current_counts": {
     "queued_groups": 3,
     "independent_original_match_groups": 2,
-    "classifier_ready_groups": 2,
+    "classifier_ready_groups": 3,
     "source_verified_groups": 2
   },
   "changes_runtime_behavior": false,
