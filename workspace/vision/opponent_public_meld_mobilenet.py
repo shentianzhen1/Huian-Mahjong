@@ -87,7 +87,7 @@ QUERY_SPECS = {"m123": M123_QUERY, "s456": S456_QUERY}
 REVIEW_ID = M123_QUERY.review_id
 QUERY_MATCH_GROUP = M123_QUERY.query_match_group
 DEFAULT_STRIP = M123_QUERY.strip_path
-DEFAULT_STRIP_SHA256 = M123_QUERY.strip_sha256
+query_spec.strip_sha256 = M123_QUERY.strip_sha256
 FRAME_WIDTH = M123_QUERY.frame_width
 FRAME_HEIGHT = M123_QUERY.frame_height
 SOURCE_FRAME_ESTIMATES = M123_QUERY.source_frame_estimates
@@ -187,12 +187,12 @@ def _mean_score_rows(
     return result
 
 
-def _find_review_row(queue: dict[str, Any]) -> dict[str, Any]:
+def _find_review_row(queue: dict[str, Any], review_id: str = REVIEW_ID) -> dict[str, Any]:
     matches = [
         row
         for row in queue.get("items", ())
         if isinstance(row, dict)
-        and row.get("review_id") == REVIEW_ID
+        and row.get("review_id") == review_id
     ]
     if len(matches) != 1:
         raise ValueError(
@@ -204,16 +204,17 @@ def _find_review_row(queue: dict[str, Any]) -> dict[str, Any]:
 def _load_query_frames(
     strip_path: Path,
     expected_count: int,
+    query_spec: QuerySpec = M123_QUERY,
 ) -> list[Image.Image]:
-    if _sha256(strip_path) != DEFAULT_STRIP_SHA256:
+    if _sha256(strip_path) != query_spec.strip_sha256:
         raise ValueError(
             "opponent five-frame strip SHA256 mismatch"
         )
     with Image.open(strip_path) as source:
         strip = source.convert("RGB")
     if strip.size != (
-        FRAME_WIDTH,
-        FRAME_HEIGHT * expected_count,
+        query_spec.frame_width,
+        query_spec.frame_height * expected_count,
     ):
         raise ValueError(
             "opponent five-frame strip dimensions drifted"
@@ -222,9 +223,9 @@ def _load_query_frames(
         strip.crop(
             (
                 0,
-                index * FRAME_HEIGHT,
-                FRAME_WIDTH,
-                (index + 1) * FRAME_HEIGHT,
+                index * query_spec.frame_height,
+                query_spec.frame_width,
+                (index + 1) * query_spec.frame_height,
             )
         )
         for index in range(expected_count)
@@ -233,17 +234,18 @@ def _load_query_frames(
 
 def _prepare_query_faces(
     frames: Sequence[Image.Image],
+    query_spec: QuerySpec = M123_QUERY,
 ) -> list[list[Any]]:
     prepared_frames: list[list[Any]] = []
     for index, frame in enumerate(frames):
         candidate = PublicGeometryCandidate(
-            pixel_bbox=(0, 0, FRAME_WIDTH, FRAME_HEIGHT),
+            pixel_bbox=(0, 0, query_spec.frame_width, query_spec.frame_height),
             normalized_bbox=(0.0, 0.0, 1.0, 1.0),
             geometry_kind="top_group",
             confidence=1.0,
             fill_ratio=1.0,
-            frame=SOURCE_FRAME_ESTIMATES[index],
-            session=REVIEW_ID,
+            frame=query_spec.source_frame_estimates[index],
+            session=query_spec.review_id,
         )
         prepared = prepare_public_meld_faces(
             frame,
@@ -311,6 +313,7 @@ def _synthetic_opponent_domain_bank(
     dataset_root: Path,
     lineage_registry: Path,
     profile: Any,
+    query_match_group: str = QUERY_MATCH_GROUP,
 ) -> tuple[list[str], list[Any], dict[str, Any]]:
     lineage = load_concealed_template_lineage(lineage_registry)
     candidate_labels = [
@@ -322,7 +325,7 @@ def _synthetic_opponent_domain_bank(
     qualified_labels, lineage_info = qualify_concealed_template_labels(
         candidate_labels,
         lineage,
-        query_match_group=QUERY_MATCH_GROUP,
+        query_match_group=query_match_group,
     )
     labels = _balance_lineage_qualified_hand_labels(qualified_labels)
 
@@ -439,7 +442,8 @@ def evaluate_opponent_public_meld_mobilenet(
         "references/vision/2026-10-01/"
         "concealed_template_match_lineage.development.json"
     ),
-    strip_path: str | Path = DEFAULT_STRIP,
+    strip_path: str | Path | None = None,
+    query_spec: QuerySpec = M123_QUERY,
 ) -> dict[str, Any]:
     root = Path(repository_root).resolve()
     dataset = (root / dataset_root).resolve()
@@ -448,7 +452,8 @@ def evaluate_opponent_public_meld_mobilenet(
     lineage_file = (
         root / template_lineage_path
     ).resolve()
-    strip_file = (root / strip_path).resolve()
+    effective_strip_path = strip_path or query_spec.strip_path
+    strip_file = (root / effective_strip_path).resolve()
 
     for path in (
         dataset,
@@ -479,14 +484,14 @@ def evaluate_opponent_public_meld_mobilenet(
             "opponent domain profile is not "
             "source-qualified"
         )
-    review = _find_review_row(queue)
+    review = _find_review_row(queue, query_spec.review_id)
     expected_tiles = tuple(
         review["expected_tiles"]
     )
     stable_count = int(
         review["stable_measurement_crop_count"]
     )
-    if stable_count != len(SOURCE_FRAME_ESTIMATES):
+    if stable_count != len(query_spec.source_frame_estimates):
         raise ValueError(
             "stable opponent frame count drifted"
         )
@@ -494,8 +499,9 @@ def evaluate_opponent_public_meld_mobilenet(
     frames = _load_query_frames(
         strip_file,
         stable_count,
+        query_spec,
     )
-    prepared_frames = _prepare_query_faces(frames)
+    prepared_frames = _prepare_query_faces(frames, query_spec)
 
     (
         synthetic_tile_ids,
@@ -505,6 +511,7 @@ def evaluate_opponent_public_meld_mobilenet(
         dataset,
         lineage_file,
         profile,
+        query_spec.query_match_group,
     )
     if not synthetic_images:
         raise ValueError(
@@ -575,7 +582,7 @@ def evaluate_opponent_public_meld_mobilenet(
         frames_report.append(
             {
                 "source_frame_estimate": (
-                    SOURCE_FRAME_ESTIMATES[
+                    query_spec.source_frame_estimates[
                         frame_index
                     ]
                 ),
@@ -603,23 +610,23 @@ def evaluate_opponent_public_meld_mobilenet(
         ),
         "date": "2026-10-01",
         "issue": 69,
-        "review_id": REVIEW_ID,
-        "query_match_group": QUERY_MATCH_GROUP,
+        "review_id": query_spec.review_id,
+        "query_match_group": query_spec.query_match_group,
         "expected_tiles": list(expected_tiles),
         "query": {
             "stable_frame_count": stable_count,
             "source_frame_estimates": list(
-                SOURCE_FRAME_ESTIMATES
+                query_spec.source_frame_estimates
             ),
             "public_strip_path": (
-                Path(strip_path).as_posix()
+                Path(effective_strip_path).as_posix()
             ),
             "public_strip_sha256": (
                 DEFAULT_STRIP_SHA256
             ),
             "frame_size_px": [
-                FRAME_WIDTH,
-                FRAME_HEIGHT,
+                query_spec.frame_width,
+                query_spec.frame_height,
             ],
             "prepared_face_observation_count": (
                 len(query_images)
@@ -745,8 +752,13 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--query",
+        choices=tuple(QUERY_SPECS),
+        default="m123",
+    )
+    parser.add_argument(
         "--strip",
-        default=DEFAULT_STRIP,
+        default=None,
     )
     parser.add_argument("--output")
     args = parser.parse_args()
@@ -758,6 +770,7 @@ def main() -> None:
             args.queue,
             args.template_lineage,
             args.strip,
+            QUERY_SPECS[args.query],
         )
     )
     rendered = json.dumps(
