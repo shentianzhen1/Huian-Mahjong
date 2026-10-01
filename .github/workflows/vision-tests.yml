@@ -271,6 +271,29 @@ jobs:
           }
           print("OPPONENT_MELD_S456_MOBILENET=" + json.dumps(compact, sort_keys=True))
           PY
+      - name: Diagnose S456 split-boundary sensitivity
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_boundary_diagnostic \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_s456_boundary_diagnostic_v0_1.json \
+            --radius 6 \
+            >/tmp/runtime-v0-2-reports/opponent_meld_s456_boundary_diagnostic.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/opponent_meld_s456_boundary_diagnostic_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "candidate_count": report["candidate_count"],
+              "correct_candidate_count": report["correct_candidate_count"],
+              "baseline": report["baseline"],
+              "best_correct_candidates": report["best_correct_candidates"],
+          }
+          print("S456_BOUNDARY_DIAGNOSTIC=" + json.dumps(compact, sort_keys=True))
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
