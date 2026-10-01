@@ -20,7 +20,9 @@
         0,
         30
       ],
-      "purpose": "before hand snapshot; opponent P6 claim context begins"
+      "purpose": "claim context only; response UI/dimming prevents a complete identity-qualified before-hand snapshot from this derived clip",
+      "identity_qualified": false,
+      "status": "NOT_IDENTITY_QUALIFIED_FROM_THIS_CLIP"
     },
     {
       "name": "response_ui",
@@ -73,6 +75,7 @@
   ],
   "conservation_target": "before + independently_observed(M3) - after = P6,P6,P6",
   "warnings": [
+    "The derived clip does not contain a clean complete pre-claim hand identity burst; obtain the before snapshot from the exact full source recording.",
     "Do not use response_ui frames as stable concealed-hand snapshots.",
     "Do not count this derived clip as a new independent match group.",
     "Do not infer M3 from kong rules; require draw-region identity observation."
@@ -80,5 +83,11 @@
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "clip_capability": {
+    "supports_meld_transition_review": true,
+    "supports_replacement_draw_identity_review": true,
+    "supports_complete_before_hand_identity": false,
+    "supports_standalone_ming_gang_machine_closure": false
+  }
 }
