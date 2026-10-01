@@ -280,6 +280,8 @@ jobs:
       - name: Evaluate public meld HOG linear SVM
         if: needs.scope.outputs.run_vision == 'true'
         run: |
+          python -m pip install "scikit-learn>=1.5,<2"
+          python -B -m unittest tests/test_public_meld_hog_svm.py -v
           mkdir -p /tmp/runtime-v0-2-reports
           python -m workspace.vision.public_meld_hog_svm \
             --output /tmp/runtime-v0-2-reports/public_meld_hog_svm_v0_1.json \
@@ -295,7 +297,7 @@ jobs:
           compact = {
               "training_sample_count": report["training_sample_count"],
               "training_class_count": report["training_class_count"],
-              "trained_model_count": report["trained_model_count"],
+              "trained_class_count": report["trained_class_count"],
               "target_group_count": report["target_group_count"],
               "scored_group_count": report["scored_group_count"],
               "scored_face_count": report["scored_face_count"],
