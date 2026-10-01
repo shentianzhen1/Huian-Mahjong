@@ -301,6 +301,13 @@ jobs:
             --output /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage_v0_1.json \
             >/tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
           cat /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
+      - name: Audit real-public opponent meld probe eligibility
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_real_public_eligibility \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_real_public_eligibility_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_meld_real_public_eligibility.log
+          cat /tmp/runtime-v0-2-reports/opponent_meld_real_public_eligibility.log
       - name: Probe real-public references for S456 opponent identity
         if: needs.scope.outputs.run_vision == 'true'
         run: |
