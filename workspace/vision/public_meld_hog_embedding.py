@@ -59,17 +59,53 @@ def _hog_embedding(image: Any) -> Any:
         tileGridSize=HOG_CLAHE_GRID,
     )
     normalized = clahe.apply(gray)
-    hog = cv2.HOGDescriptor(
-        HOG_WIN_SIZE,
-        HOG_BLOCK_SIZE,
-        HOG_BLOCK_STRIDE,
-        HOG_CELL_SIZE,
-        HOG_BINS,
-    )
-    descriptor = hog.compute(normalized)
-    if descriptor is None or descriptor.size == 0:
+    field = normalized.astype("float32", copy=False)
+    gradient_y, gradient_x = np.gradient(field)
+    magnitude = np.hypot(gradient_x, gradient_y)
+    angle = (np.degrees(np.arctan2(gradient_y, gradient_x)) % 180.0)
+
+    cell_w, cell_h = HOG_CELL_SIZE
+    width, height = HOG_WIN_SIZE
+    cells_x = width // cell_w
+    cells_y = height // cell_h
+    hist = np.zeros((cells_y, cells_x, HOG_BINS), dtype=np.float32)
+    bin_width = 180.0 / HOG_BINS
+
+    for cell_y in range(cells_y):
+        y0 = cell_y * cell_h
+        y1 = y0 + cell_h
+        for cell_x in range(cells_x):
+            x0 = cell_x * cell_w
+            x1 = x0 + cell_w
+            cell_angles = angle[y0:y1, x0:x1].reshape(-1)
+            cell_magnitude = magnitude[y0:y1, x0:x1].reshape(-1)
+            bins = np.floor(cell_angles / bin_width).astype(np.int32) % HOG_BINS
+            hist[cell_y, cell_x] = np.bincount(
+                bins,
+                weights=cell_magnitude,
+                minlength=HOG_BINS,
+            )[:HOG_BINS]
+
+    block_cells_x = HOG_BLOCK_SIZE[0] // cell_w
+    block_cells_y = HOG_BLOCK_SIZE[1] // cell_h
+    stride_cells_x = HOG_BLOCK_STRIDE[0] // cell_w
+    stride_cells_y = HOG_BLOCK_STRIDE[1] // cell_h
+    blocks: list[Any] = []
+    for cell_y in range(0, cells_y - block_cells_y + 1, stride_cells_y):
+        for cell_x in range(0, cells_x - block_cells_x + 1, stride_cells_x):
+            block = hist[
+                cell_y : cell_y + block_cells_y,
+                cell_x : cell_x + block_cells_x,
+            ].reshape(-1)
+            norm = float(np.sqrt(np.dot(block, block) + 1e-6))
+            block = block / norm
+            block = np.minimum(block, 0.2)
+            norm = float(np.sqrt(np.dot(block, block) + 1e-6))
+            blocks.append((block / norm).astype("float32", copy=False))
+
+    if not blocks:
         return None
-    vector = descriptor.reshape(-1).astype("float32", copy=False)
+    vector = np.concatenate(blocks).astype("float32", copy=False)
     norm = float(np.linalg.norm(vector))
     if norm <= 1e-12:
         return None
