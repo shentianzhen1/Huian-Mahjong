@@ -2,14 +2,17 @@
   "schema_version": "opponent_meld_domain_profile_v0_1",
   "date": "2026-10-01",
   "issue": 69,
-  "status": "PENDING_REAL_TOP_GROUP_MEASUREMENT",
+  "status": "MEASURED_REAL_TOP_GROUP",
   "purpose": "parameterize opponent exposed-meld source-resolution loss before shared public-meld identity classification",
   "canonical_classifier_face_size": [
     56,
     96
   ],
-  "measured_source_face_size_px": null,
-  "measurement_source_review_id": null,
+  "measured_source_face_size_px": [
+    22,
+    29
+  ],
+  "measurement_source_review_id": "opp_meld_14_m123",
   "measurement_requirements": [
     "source SHA256 exact-verified",
     "settled opponent top_group frame; not CHI animation",
@@ -17,6 +20,33 @@
     "exactly three classifier-ready faces",
     "record pre-normalization single-face pixel width and height from the same settled group"
   ],
+  "measurement_summary": {
+    "stable_crop_count": 5,
+    "source_frame_size_px": [
+      1046,
+      480
+    ],
+    "detected_group_size_px": [
+      71,
+      33
+    ],
+    "tight_group_size_px": [
+      67,
+      29
+    ],
+    "per_face_width_pattern_px": [
+      22,
+      23,
+      22
+    ],
+    "representative_source_face_size_px": [
+      22,
+      29
+    ],
+    "rotation_degrees": 1.1691,
+    "stack_state": "FLAT",
+    "measurement_report": "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json"
+  },
   "rendering_policy": {
     "downsample": "area",
     "restore_to_canonical": "bicubic",
@@ -27,8 +57,9 @@
   },
   "rationale": [
     "top_group and bottom_group already share deskew/tight-crop/96px-height normalization",
-    "opponent tiles are visually smaller before normalization, so lost spatial detail is the primary additional domain gap to simulate first",
-    "do not invent a pixel size before a real settled top_group is measured"
+    "the exact-verified opponent source produced a stable 67x29px tight FLAT row across five privacy-bounded crops",
+    "equal three-face source slicing is 22/23/22px wide, so the deterministic source-loss profile uses the median 22x29px face size",
+    "this profile models source-resolution loss only; it does not calibrate identity acceptance"
   ],
   "changes_runtime_behavior": false,
   "formal_promotion_evidence": false,

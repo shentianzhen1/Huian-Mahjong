@@ -3,7 +3,7 @@
   "date": "2026-10-01",
   "issue": 69,
   "purpose": "first reviewed opponent top_group identity batch",
-  "privacy": "raw video/full frames remain private; only privacy-bounded meld crops may later enter public development assets",
+  "privacy": "raw video/full frames and derived crops remain private in this measurement step; public repo receives only anonymous geometry/provenance metadata",
   "items": [
     {
       "review_id": "opp_meld_14_m123",
@@ -35,10 +35,18 @@
         1711
       ],
       "evidence_status": "USER_REVIEWED_EVENT_AND_EXISTING_PRIVATE_CONTACT_SHEET",
-      "crop_status": "SOURCE_VERIFIED_PENDING_EXACT_TOP_GROUP_CROP",
+      "crop_status": "CLASSIFIER_READY",
       "independent_match_group": true,
       "source_verification": "SHA256_EXACT_VERIFIED_FROM_CONNECTED_DRIVE_RAW_BYTES_2026_10_01",
-      "source_size_bytes": 10709355
+      "source_size_bytes": 10709355,
+      "measured_source_face_size_px": [
+        22,
+        29
+      ],
+      "stable_measurement_crop_count": 5,
+      "measurement_report": "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json",
+      "identity_runtime_status": "UNKNOWN",
+      "measurement_crop_storage": "PRIVATE_ONLY_TILE_BOUNDED_CROPS_NOT_COMMITTED"
     },
     {
       "review_id": "opp_meld_0926_hand1_s456",
@@ -94,12 +102,12 @@
     "single-tile segmentation must return exactly three classifier-ready faces",
     "tile identities remain human-confirmed truth; detector predictions may not rewrite labels",
     "same original match contributes one match_group for validation",
-    "raw private pixels are not committed; only privacy-bounded crops may be considered later"
+    "raw private video/full frames and derived crop pixels are not committed in this measurement step"
   ],
   "current_counts": {
     "queued_groups": 3,
     "independent_original_match_groups": 2,
-    "classifier_ready_groups": 0,
+    "classifier_ready_groups": 1,
     "source_verified_groups": 1
   },
   "changes_runtime_behavior": false,
