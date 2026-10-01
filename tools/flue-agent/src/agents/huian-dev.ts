@@ -43,17 +43,17 @@ export function HuianMahjongDevAgent() {
       nextStep: v.string(),
       blockers: v.optional(v.string()),
     }),
-    async run(input) {
+    async run({ data }) {
       const next = {
-        verifiedRef: input.verifiedRef,
-        focus: input.focus,
-        completed: input.completed,
-        nextStep: input.nextStep,
-        blockers: input.blockers ?? '',
+        verifiedRef: data.verifiedRef,
+        focus: data.focus,
+        completed: data.completed,
+        nextStep: data.nextStep,
+        blockers: data.blockers ?? '',
         savedAt: new Date().toISOString(),
       };
       setCheckpoint(next);
-      return next;
+      return { output: next };
     },
   });
 
