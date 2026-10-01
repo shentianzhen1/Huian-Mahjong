@@ -7,8 +7,6 @@ from __future__ import annotations
 import argparse, hashlib, json, math
 from pathlib import Path
 
-from workspace.vision.tiles_runtime_v0_2.runtime_reader import _video_frames, read_stable_frames
-
 
 def sha256(path: Path) -> str:
     h=hashlib.sha256()
@@ -33,6 +31,7 @@ def frame_for_second(video: Path, second: float) -> tuple[int, float]:
 
 def _burst(video: Path, start: int, *, dataset: str, session: str,
            frames: int, stride: int, threshold: float) -> dict:
+    from workspace.vision.tiles_runtime_v0_2.runtime_reader import _video_frames, read_stable_frames
     images, ids = _video_frames(video,start,frames,stride)
     out=read_stable_frames(images,dataset,frame_ids=ids,session=session,
                            confidence_threshold=threshold)
