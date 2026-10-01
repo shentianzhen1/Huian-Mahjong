@@ -13,7 +13,10 @@
     "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json",
     "references/vision/2026-09-24/public_identity_source_groups.development.json",
     "dataset/tiles_runtime_v0_2/manifest.json",
-    "dataset/tiles_runtime_v0_2/labels.jsonl"
+    "dataset/tiles_runtime_v0_2/labels.jsonl",
+    "PR #48 commit 5e9b06801f003772fef9f31c52cbc89ba26d69ea (feat(vision): add runtime smoke reader and reviewed assets)",
+    "dataset/tiles_runtime_v0_2/validation/reports/recovery_scope_v0_2.json",
+    "dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_dataset_audit_v0_2.json"
   ],
   "items": [
     {
@@ -87,5 +90,14 @@
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "historical_provenance": {
+    "asset_introduction_commit": "5e9b06801f003772fef9f31c52cbc89ba26d69ea",
+    "asset_introduction_pr": 48,
+    "finding": "All four unresolved SHA256 values are present in the reviewed Runtime Vision V0.2 asset batch introduced by PR #48.",
+    "source_retention_policy": "PR #48 recovery_scope_v0_2 keeps source video, full screenshots, contact sheets, and temporary crops local-only; tracked labels retain anonymous source_id/source_session and SHA256, not original local paths.",
+    "lineage_implication": "This proves asset-batch provenance only. It does not establish an exact original match_group for any unresolved SHA256.",
+    "drive_inventory_check": "The connected Huian folder currently exposes the known 2026-09-19 clips and 2026-09-26 screen recordings, but no reviewed text registry that binds these four exact SHA256 values to an original match_group.",
+    "status": "INSUFFICIENT_FOR_MATCH_GROUP_BINDING"
+  }
 }
