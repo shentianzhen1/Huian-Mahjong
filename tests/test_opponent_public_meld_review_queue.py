@@ -24,7 +24,7 @@ class OpponentPublicMeldReviewQueueTests(unittest.TestCase):
         self.assertEqual(result["queued_group_count"], 3)
         self.assertEqual(result["independent_match_group_count"], 2)
         self.assertEqual(result["source_verified_group_count"], 2)
-        self.assertEqual(result["classifier_ready_group_count"], 2)
+        self.assertEqual(result["classifier_ready_group_count"], 3)
         self.assertFalse(result["safe_for_runtime"])
         self.assertFalse(result["safe_for_hint"])
         self.assertFalse(result["safe_for_executor"])
