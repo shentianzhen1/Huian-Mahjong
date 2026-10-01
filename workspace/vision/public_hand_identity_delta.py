@@ -52,6 +52,49 @@ class HandIdentityDelta:
         }
 
 
+def review_hand_identity_delta_with_intervening_draw(
+    before: StableHandIdentitySnapshot,
+    after: StableHandIdentitySnapshot,
+    count_review: ClaimHandCountDeltaReview,
+    *,
+    intervening_draw_tiles: tuple[str, ...],
+) -> HandIdentityDelta:
+    """Recover removed identities when a replacement/normal draw occurs first.
+
+    Conservation: before + intervening draws - removed = after.
+    The draw identities must be independently observed; this function never
+    infers them from Mahjong rules or the meld identity.
+    """
+    if not intervening_draw_tiles or any(not tile for tile in intervening_draw_tiles):
+        return HandIdentityDelta("UNKNOWN", "intervening_draw_identity_not_observed")
+    # Reuse all source/threshold/count gates, but compare the after snapshot
+    # against a virtual before multiset that includes independently observed
+    # intervening draw identities.
+    virtual_before = StableHandIdentitySnapshot(
+        source_session=before.source_session,
+        source_sha256=before.source_sha256,
+        stream_epoch=before.stream_epoch,
+        frame_index=before.frame_index,
+        actor=before.actor,
+        tiles=tuple(before.tiles) + tuple(intervening_draw_tiles),
+        minimum_identity_confidence=before.minimum_identity_confidence,
+        identity_threshold=before.identity_threshold,
+        source_frame_verified=before.source_frame_verified,
+        stable_geometry=before.stable_geometry,
+        complete_concealed_snapshot=before.complete_concealed_snapshot,
+        draw_region_separately_accounted=before.draw_region_separately_accounted,
+        evidence_ref=before.evidence_ref,
+    )
+    out = review_hand_identity_delta(virtual_before, after, count_review)
+    if out.status != "IDENTITY_QUALIFIED_HAND_DELTA":
+        return out
+    return HandIdentityDelta(
+        out.status,
+        "same_source_conservation_with_independently_observed_intervening_draw",
+        out.removed_tiles,
+    )
+
+
 def review_hand_identity_delta(before: StableHandIdentitySnapshot,
                                after: StableHandIdentitySnapshot,
                                count_review: ClaimHandCountDeltaReview) -> HandIdentityDelta:
