@@ -67,6 +67,42 @@ class Issue69KongDevelopmentCandidateTests(unittest.TestCase):
         self.assertFalse(event["safe_for_runtime"])
         self.assertFalse(event["safe_for_executor"])
 
+    def test_versioned_hand1_ledger_matches_generated_candidate(self):
+        candidate = build_hand1_candidate_from_repository(ROOT)
+        generated = candidate_to_ledger_event(
+            candidate,
+            clip_timestamp_seconds=11.9333333333,
+            hand_number=1,
+            total_hands=8,
+        )
+        ledger = load(
+            "references/vision/2026-10-01/"
+            "issue69_hand1_development_action_ledger_v0_1.json"
+        )
+        event = ledger["events"][0]
+        self.assertEqual(event["kind"], generated["kind"])
+        self.assertEqual(event["tile"], generated["tile"])
+        self.assertEqual(
+            event["evidence_level"],
+            generated["evidence_level"],
+        )
+        self.assertEqual(
+            event["clip_timestamp_seconds"],
+            generated["clip_timestamp_seconds"],
+        )
+        self.assertEqual(
+            event["candidate_status"],
+            generated["candidate_status"],
+        )
+        self.assertEqual(
+            event["claimed_discard_directly_observed"],
+            generated["claimed_discard_directly_observed"],
+        )
+        self.assertEqual(event["runtime_action"], generated["runtime_action"])
+        self.assertFalse(ledger["formal_promotion_evidence"])
+        self.assertFalse(ledger["safe_for_runtime"])
+        self.assertFalse(ledger["safe_for_executor"])
+
     def test_cross_source_identity_fails_closed(self):
         identity = copy.deepcopy(self.identity)
         identity["source"]["sha256"] = "0" * 64
