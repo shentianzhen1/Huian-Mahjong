@@ -243,6 +243,40 @@ jobs:
               + json.dumps(compact, sort_keys=True)
           )
           PY
+      - name: Evaluate public meld HOG embedding prototype
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_hog_embedding \
+            --output /tmp/runtime-v0-2-reports/public_meld_hog_embedding_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_hog_embedding.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_hog_embedding_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "raw_hand_prototype_class_count": report[
+                  "raw_hand_prototype_class_count"
+              ],
+              "synthetic_meld_prototype_class_count": report[
+                  "synthetic_meld_prototype_class_count"
+              ],
+              "target_group_count": report["target_group_count"],
+              "scored_group_count": report["scored_group_count"],
+              "scored_face_count": report["scored_face_count"],
+              "raw_hand_hog": report["raw_hand_hog"],
+              "synthetic_meld_hog": report["synthetic_meld_hog"],
+              "groups": report["groups"],
+          }
+          print(
+              "PUBLIC_MELD_HOG_EMBEDDING="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
