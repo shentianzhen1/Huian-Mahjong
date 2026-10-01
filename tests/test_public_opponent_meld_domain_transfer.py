@@ -10,6 +10,10 @@ PROFILE = (
     ROOT
     / "references/vision/2026-10-01/opponent_meld_domain_profile_v0_1.json"
 )
+QUEUE = (
+    ROOT
+    / "references/vision/2026-10-01/opponent_public_meld_review_queue_v0_1.json"
+)
 VISION = all(
     importlib.util.find_spec(name) is not None
     for name in ("PIL", "cv2", "numpy")
@@ -48,6 +52,39 @@ class OpponentMeldDomainProfileTests(unittest.TestCase):
                 "pending profile cannot contain measured dimensions",
             ):
                 load_opponent_meld_domain_profile(path)
+
+    def test_pending_profile_cannot_qualify_against_review_queue(self):
+        from workspace.vision.opponent_meld_domain_transfer import (
+            load_opponent_meld_domain_profile,
+            qualify_opponent_meld_domain_profile,
+        )
+
+        profile = load_opponent_meld_domain_profile(PROFILE)
+        queue = json.loads(QUEUE.read_text(encoding="utf-8"))
+        result = qualify_opponent_meld_domain_profile(profile, queue)
+        self.assertFalse(result["qualified"])
+        self.assertEqual(result["reason"], "profile_pending_measurement")
+
+    def test_measured_profile_still_needs_classifier_ready_queue_crop(self):
+        from workspace.vision.opponent_meld_domain_transfer import (
+            MEASURED,
+            OpponentMeldDomainProfile,
+            qualify_opponent_meld_domain_profile,
+        )
+
+        queue = json.loads(QUEUE.read_text(encoding="utf-8"))
+        profile = OpponentMeldDomainProfile(
+            status=MEASURED,
+            canonical_face_size=(56, 96),
+            measured_source_face_size_px=(28, 48),
+            measurement_source_review_id="opp_meld_14_m123",
+        )
+        result = qualify_opponent_meld_domain_profile(profile, queue)
+        self.assertFalse(result["qualified"])
+        self.assertEqual(
+            result["reason"],
+            "measurement_source_crop_not_classifier_ready",
+        )
 
     def test_measured_profile_requires_smaller_source_face(self):
         from workspace.vision.opponent_meld_domain_transfer import (
