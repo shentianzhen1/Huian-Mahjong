@@ -6,6 +6,7 @@ from workspace.vision.public_claim_hand_count_delta import (
 )
 from workspace.vision.public_hand_identity_delta import (
     StableHandIdentitySnapshot, review_hand_identity_delta,
+    review_hand_identity_delta_with_intervening_draw,
 )
 
 SHA = "a" * 64
@@ -44,6 +45,25 @@ class PublicHandIdentityDeltaTests(unittest.TestCase):
         self.assertEqual(out.removed_tiles, ("P6","P6","P6"))
         self.assertFalse(out.to_dict()["safe_for_runtime"])
         self.assertFalse(out.to_dict()["safe_for_executor"])
+
+    def test_replacement_draw_can_be_accounted_without_guessing(self):
+        before = snap(100, ["P6","P6","P6","M1","M2"])
+        after = snap(103, ["M1","M2","M3"])
+        out = review_hand_identity_delta_with_intervening_draw(
+            before, after, count_review(), intervening_draw_tiles=("M3",),
+        )
+        self.assertEqual(out.status, "IDENTITY_QUALIFIED_HAND_DELTA")
+        self.assertEqual(out.removed_tiles, ("P6","P6","P6"))
+        self.assertIn("intervening_draw", out.reason)
+
+    def test_replacement_draw_must_be_independently_observed(self):
+        out = review_hand_identity_delta_with_intervening_draw(
+            snap(100, ["P6","P6","P6","M1","M2"]),
+            snap(103, ["M1","M2","M3"]),
+            count_review(), intervening_draw_tiles=(),
+        )
+        self.assertEqual(out.status, "UNKNOWN")
+        self.assertIn("not_observed", out.reason)
 
     def test_below_threshold_abstains(self):
         out = review_hand_identity_delta(
