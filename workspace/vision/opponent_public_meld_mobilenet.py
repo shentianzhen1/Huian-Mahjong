@@ -206,9 +206,12 @@ def _load_query_frames(
     expected_count: int,
     query_spec: QuerySpec = M123_QUERY,
 ) -> list[Image.Image]:
-    if _sha256(strip_path) != query_spec.strip_sha256:
+    actual_sha256 = _sha256(strip_path)
+    if actual_sha256 != query_spec.strip_sha256:
         raise ValueError(
-            "opponent five-frame strip SHA256 mismatch"
+            "opponent five-frame strip SHA256 mismatch: "
+            f"actual={actual_sha256} expected={query_spec.strip_sha256} "
+            f"bytes={strip_path.stat().st_size}"
         )
     with Image.open(strip_path) as source:
         strip = source.convert("RGB")
