@@ -12,6 +12,7 @@ from itertools import permutations
 import hashlib
 import json
 from pathlib import Path
+from dataclasses import dataclass
 from typing import Any, Mapping, Sequence
 
 from PIL import Image
@@ -45,16 +46,51 @@ from workspace.vision.tiles_v0_1.labels import approved_labels
 from workspace.vision.public_tile_detector import PublicGeometryCandidate
 
 
-REVIEW_ID = "opp_meld_14_m123"
-QUERY_MATCH_GROUP = "reviewed_recording_14"
-DEFAULT_STRIP = (
-    "references/vision/2026-10-01/opponent_meld_crops/"
-    "opp_meld_14_m123_5frame_strip.webp"
+@dataclass(frozen=True)
+class QuerySpec:
+    review_id: str
+    query_match_group: str
+    strip_path: str
+    strip_sha256: str
+    frame_width: int
+    frame_height: int
+    source_frame_estimates: tuple[int, ...]
+
+
+M123_QUERY = QuerySpec(
+    review_id="opp_meld_14_m123",
+    query_match_group="reviewed_recording_14",
+    strip_path=(
+        "references/vision/2026-10-01/opponent_meld_crops/"
+        "opp_meld_14_m123_5frame_strip.webp"
+    ),
+    strip_sha256="d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9",
+    frame_width=71,
+    frame_height=33,
+    source_frame_estimates=(1726, 1728, 1730, 1732, 1734),
 )
-DEFAULT_STRIP_SHA256 = "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9"
-FRAME_WIDTH = 71
-FRAME_HEIGHT = 33
-SOURCE_FRAME_ESTIMATES = (1726, 1728, 1730, 1732, 1734)
+S456_QUERY = QuerySpec(
+    review_id="opp_meld_0926_hand1_s456",
+    query_match_group="reviewed_match_2026_09_26_first_hand",
+    strip_path=(
+        "references/vision/2026-10-01/opponent_meld_crops/"
+        "opp_meld_0926_hand1_s456_5frame_strip.webp"
+    ),
+    strip_sha256="e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+    frame_width=71,
+    frame_height=33,
+    source_frame_estimates=(4904, 4908, 4913, 4918, 4923),
+)
+QUERY_SPECS = {"m123": M123_QUERY, "s456": S456_QUERY}
+
+# Backward-compatible aliases for the original M123 evaluator contract.
+REVIEW_ID = M123_QUERY.review_id
+QUERY_MATCH_GROUP = M123_QUERY.query_match_group
+DEFAULT_STRIP = M123_QUERY.strip_path
+DEFAULT_STRIP_SHA256 = M123_QUERY.strip_sha256
+FRAME_WIDTH = M123_QUERY.frame_width
+FRAME_HEIGHT = M123_QUERY.frame_height
+SOURCE_FRAME_ESTIMATES = M123_QUERY.source_frame_estimates
 RUNTIME_IDENTITY_THRESHOLD = 0.82
 
 
