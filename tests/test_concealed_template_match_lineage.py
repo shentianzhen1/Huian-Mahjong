@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 import unittest
 
+from workspace.vision.concealed_template_lineage_recovery import (
+    build_lineage_recovery_queue,
+)
 from workspace.vision.concealed_template_match_lineage import (
     load_concealed_template_lineage,
     qualify_concealed_template_labels,
@@ -21,6 +24,11 @@ AUDIT = (
     "concealed_template_lineage_audit_v0_1.json"
 )
 LABELS = ROOT / "dataset/tiles_runtime_v0_2/labels.jsonl"
+RECOVERY_QUEUE = (
+    ROOT
+    / "references/vision/2026-10-01/"
+    "concealed_template_lineage_recovery_queue_v0_1.json"
+)
 
 
 def _approved_non_gold_hand_labels():
@@ -115,6 +123,32 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
         )
         self.assertEqual(accepted, [])
         self.assertEqual(report["excluded_same_original_match_count"], 1)
+
+    def test_m1_m3_recovery_queue_is_reproducible_and_fail_closed(self):
+        labels = [
+            json.loads(line)
+            for line in LABELS.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        generated = build_lineage_recovery_queue(
+            labels,
+            self.registry,
+            target_classes={"M1", "M3"},
+        )
+        frozen = json.loads(
+            RECOVERY_QUEUE.read_text(encoding="utf-8")
+        )
+        self.assertEqual(generated, frozen)
+        self.assertEqual(generated["unresolved_source_count"], 4)
+        self.assertEqual(generated["unresolved_label_count"], 8)
+        self.assertFalse(generated["match_group_inference_allowed"])
+        self.assertTrue(
+            all(
+                item["status"] == "UNKNOWN_ORIGINAL_MATCH"
+                and item["session_name_is_not_evidence"]
+                for item in generated["items"]
+            )
+        )
 
     def test_frozen_audit_matches_current_runtime_labels(self):
         labels = _approved_non_gold_hand_labels()
