@@ -18,8 +18,8 @@
       "query_id": "hand1_p6_kong_frame360_public_meld_face",
       "expected_tile": "P6",
       "region": "public_meld",
-      "image_path": "references/vision/2026-10-01/public_meld_crops/hand1_p6_kong_public_face_frame360.png",
-      "image_sha256": "351220d155536fc23d68b2e2ba9bde65f1d5187126a6ea41972e9b96a0dbd23b",
+      "image_path": "references/vision/2026-10-01/public_meld_crops/hand1_p6_kong_public_face_frame360.pgm",
+      "image_sha256": "63ccd947fc38d97564f6393e650e1696ba9529ac5255b76fa3dcbbb336da99c8",
       "image_size": [
         60,
         72
