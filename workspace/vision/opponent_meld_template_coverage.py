@@ -49,6 +49,9 @@ def run(repository_root: str | Path = ".") -> dict:
             "labels_by_match_group": dict(sorted(counts[tile].items())),
             "examples": examples[tile],
         }
+    minimum_groups = min(
+        row["independent_match_group_count"] for row in per_tile.values()
+    )
     return {
         "schema_version": "opponent_meld_template_coverage_v0_1",
         "date": "2026-10-01",
@@ -57,6 +60,12 @@ def run(repository_root: str | Path = ".") -> dict:
         "query_match_group_excluded": QUERY_MATCH_GROUP,
         "target_tiles": list(TARGETS),
         "per_tile": per_tile,
+        "minimum_independent_match_groups_across_targets": minimum_groups,
+        "interpretation_gate": (
+            "DATA_COVERAGE_THIN"
+            if minimum_groups < 2
+            else "MULTI_MATCH_COVERAGE_PRESENT"
+        ),
         "lineage_qualification": info,
         "evidence_role": "development_measurement_only",
         "changes_runtime_behavior": False,
