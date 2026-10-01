@@ -3,7 +3,9 @@ import unittest
 from workspace.vision.issue69_public_replay_adapters import (
     action_area_report_candidates,
     river_report_candidates,
+    meld_observation_candidate,
 )
+from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
 
 
 class Issue69PublicReplayAdapterTests(unittest.TestCase):
@@ -60,6 +62,46 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         self.assertEqual(rows[0].channel, "action_area")
         self.assertEqual(rows[0].kind, "ACTION_AREA_ONSET")
         self.assertIsNone(rows[0].tile)
+
+
+    def test_meld_observation_preserves_complete_group_identity(self):
+        obs = RawObservation(
+            timestamp_seconds=20.5,
+            actor="opponent",
+            kind=ObservationKind.MELD_DELTA,
+            confidence=.9,
+            tiles=("S1", "S2", "S3"),
+            evidence_refs=("meld-track-7",),
+            details={
+                "frame": 777,
+                "source_session": "s",
+                "stream_epoch": 0,
+                "tile_identity_complete": True,
+            },
+        )
+        row = meld_observation_candidate(obs, source_sha256="c" * 64)
+        self.assertEqual(row.channel, "meld")
+        self.assertEqual(row.frame_index, 777)
+        self.assertEqual(row.tile, "S1,S2,S3")
+
+    def test_meld_partial_identity_remains_unknown(self):
+        obs = RawObservation(
+            timestamp_seconds=20.5,
+            actor="player",
+            kind=ObservationKind.MELD_DELTA,
+            confidence=.7,
+            tiles=(),
+            evidence_refs=("meld-track-8",),
+            details={
+                "frame": 778,
+                "source_session": "s",
+                "stream_epoch": 0,
+                "tile_identity_complete": False,
+            },
+        )
+        row = meld_observation_candidate(obs, source_sha256="d" * 64)
+        self.assertIsNone(row.tile)
+
 
 
 if __name__ == "__main__":
