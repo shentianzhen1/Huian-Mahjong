@@ -1,0 +1,103 @@
+{
+  "schema_version": "opponent_public_meld_review_queue_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "purpose": "first reviewed opponent top_group identity batch",
+  "privacy": "raw video/full frames remain private; only privacy-bounded meld crops may later enter public development assets",
+  "items": [
+    {
+      "review_id": "opp_meld_14_m123",
+      "source_role": "private_development_video",
+      "source_name_public_alias": "14.mp4",
+      "match_group": "reviewed_recording_14",
+      "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "event": "CHI",
+      "actor": "opponent",
+      "expected_tiles": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "incoming_tile": "M3",
+      "candidate_window_seconds": [
+        58,
+        60
+      ],
+      "candidate_window_frames": [
+        1682,
+        1740
+      ],
+      "strongest_transition_frames": [
+        1700,
+        1706,
+        1707,
+        1723,
+        1711
+      ],
+      "evidence_status": "USER_REVIEWED_EVENT_AND_EXISTING_PRIVATE_CONTACT_SHEET",
+      "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
+      "independent_match_group": true
+    },
+    {
+      "review_id": "opp_meld_0926_hand1_s456",
+      "source_role": "private_first_hand_video",
+      "source_name_public_alias": "2026-09-26 first-hand recording",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "event": "CHI",
+      "actor": "opponent",
+      "expected_tiles": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "incoming_tile": "S5",
+      "candidate_window_seconds": [
+        82,
+        83.5
+      ],
+      "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
+      "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
+      "independent_match_group": true
+    },
+    {
+      "review_id": "opp_meld_0926_hand1_s123",
+      "source_role": "private_first_hand_video",
+      "source_name_public_alias": "2026-09-26 first-hand recording",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "event": "CHI",
+      "actor": "opponent",
+      "expected_tiles": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "incoming_tile": "S2",
+      "candidate_window_seconds": [
+        125,
+        126.5
+      ],
+      "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
+      "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
+      "independent_match_group": false,
+      "note": "same original match as opp_meld_0926_hand1_s456; counts as additional coverage, not independent validation"
+    }
+  ],
+  "qualification_rules": [
+    "exact source SHA must be verified before frame extraction",
+    "top_group must be visibly settled rather than in CHI animation",
+    "single-tile segmentation must return exactly three classifier-ready faces",
+    "tile identities remain human-confirmed truth; detector predictions may not rewrite labels",
+    "same original match contributes one match_group for validation",
+    "raw private pixels are not committed; only privacy-bounded crops may be considered later"
+  ],
+  "current_counts": {
+    "queued_groups": 3,
+    "independent_original_match_groups": 2,
+    "classifier_ready_groups": 0
+  },
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
