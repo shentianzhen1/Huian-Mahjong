@@ -29,6 +29,11 @@ RECOVERY_QUEUE = (
     / "references/vision/2026-10-01/"
     "concealed_template_lineage_recovery_queue_v0_1.json"
 )
+RECOVERY_AUDIT = (
+    ROOT
+    / "references/vision/2026-10-01/"
+    "concealed_template_lineage_recovery_audit_v0_1.json"
+)
 
 
 def _approved_non_gold_hand_labels():
