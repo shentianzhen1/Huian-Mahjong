@@ -193,6 +193,33 @@ def _orientation_deviation(mask: np.ndarray, box: tuple[int, int, int, int]) -> 
     return min(abs(angle), abs(180.0 - angle))
 
 
+def _split_embedded_meld_prefix(
+    hand: list[tuple[int, int, int, int]], typical_width: float
+) -> tuple[list[tuple[int, int, int, int]], list[tuple[int, int, int, int]]]:
+    """Split a compact exposed-meld prefix accidentally joined to the hand.
+
+    Some UI scales place the left exposed meld almost flush with the upright
+    concealed run.  A spacing-only cluster therefore merges both regions.
+    Split only when a short prefix is consistently shorter/raised than a long
+    upright suffix; no absolute x coordinate or expected hand count is used.
+    """
+    ordered=sorted(hand)
+    if len(ordered) < 11:
+        return [], ordered
+    for cut in range(3, min(5, len(ordered)-8)+1):
+        prefix,suffix=ordered[:cut],ordered[cut:]
+        ph=median(b[3] for b in prefix); sh=median(b[3] for b in suffix)
+        pb=median(b[1]+b[3] for b in prefix); sb=median(b[1]+b[3] for b in suffix)
+        suffix_spread=(max(b[3] for b in suffix)-min(b[3] for b in suffix))/max(sh,1)
+        height_deviates=ph <= sh*0.88
+        baseline_deviates=abs(pb-sb) >= sh*0.08
+        local_gap=suffix[0][0]-(prefix[-1][0]+prefix[-1][2])
+        locally_contiguous=local_gap <= typical_width*0.40
+        if height_deviates and baseline_deviates and locally_contiguous and suffix_spread <= 0.28:
+            return prefix,suffix
+    return [],ordered
+
+
 def _meld_like_group(
     group: list[tuple[int, int, int, int]],
     hand: list[tuple[int, int, int, int]],
@@ -380,6 +407,7 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
     # or a preselected hand count.
     clusters = _clusters(boxes, typical_width, gap_limit=0.32) if typical_width else []
     hand = max(clusters, key=len, default=[])
+    embedded_meld, hand = _split_embedded_meld_prefix(hand, typical_width)
     hand_set = set(hand)
     right_edge = max((box[0] + box[2] for box in hand), default=-1)
     draw = None
@@ -393,7 +421,7 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
             break
 
     remainder = [box for box in boxes if box not in hand_set and box != draw]
-    meld = []
+    meld = list(embedded_meld)
     stacked_recovered = []
     gap_recovered = []
     # A meld may have more relaxed within-group spacing than the concealed
