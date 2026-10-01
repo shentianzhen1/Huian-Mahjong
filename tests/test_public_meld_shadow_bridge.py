@@ -72,7 +72,15 @@ class PublicMeldShadowBridgeTests(unittest.TestCase):
 
     def test_individual_four_real_groups_emit_only_unknown_face_ids(self):
         self.assertEqual(len(self.regular), 4)
-        self.assertEqual(len(self.bank.sources), 6)
+        self.assertEqual(len(self.bank.sources), 7)
+        self.assertEqual(
+            len({source.match_group for source in self.bank.sources.values()}),
+            5,
+        )
+        self.assertEqual(
+            self.bank.sources["session_c4d1b879367aeca8"].match_group,
+            "reviewed_match_2026_09_26_first_hand",
+        )
         for sample in self.regular:
             with self.subTest(sample=sample.sample_id):
                 result = self.probe(sample, ROOT, self.bank)
