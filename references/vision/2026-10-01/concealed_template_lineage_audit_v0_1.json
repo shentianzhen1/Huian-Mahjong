@@ -11,19 +11,41 @@
   },
   "runtime_dataset": {
     "approved_non_gold_hand_label_count": 128,
-    "exact_sha_lineage_qualified_label_count": 5,
-    "excluded_missing_original_match_lineage_count": 123,
+    "exact_sha_lineage_qualified_label_count": 57,
+    "excluded_missing_original_match_lineage_count": 71,
     "excluded_same_original_match_count": 0,
-    "qualified_class_count": 5,
+    "qualified_class_count": 25,
     "qualified_classes": [
+      "B",
+      "E",
+      "M1",
       "M2",
+      "M3",
+      "M4",
+      "M5",
       "M6",
       "N",
+      "P1",
       "P3",
-      "P8"
+      "P4",
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9",
+      "R",
+      "S1",
+      "S2",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8"
     ],
     "qualified_original_match_groups": [
-      "reviewed_match_2026_09_19_eight_hand"
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_match_concealed_recovery_a",
+      "reviewed_match_concealed_recovery_b"
     ]
   },
   "current_opponent_query": {
