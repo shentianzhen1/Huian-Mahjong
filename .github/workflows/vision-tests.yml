@@ -89,6 +89,29 @@ jobs:
       - name: Install project with Vision dependencies
         if: needs.scope.outputs.run_vision == 'true'
         run: python -m pip install -e ".[vision]"
+      - name: Verify one-shot opponent strip integrity
+        if: needs.scope.outputs.run_vision == 'true' && hashFiles('references/vision/2026-10-01/RUN_OPPONENT_MOBILENET_V0_1') != ''
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          from PIL import Image
+
+          path = Path("references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.webp")
+          expected = "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9"
+          actual = hashlib.sha256(path.read_bytes()).hexdigest()
+          print(f"opponent strip sha256={actual}")
+          if actual != expected:
+              raise SystemExit("opponent strip SHA256 mismatch before torch install")
+          with Image.open(path) as source:
+              rgb = source.convert("RGB")
+          if rgb.size != (71, 165):
+              raise SystemExit(f"unexpected strip size: {rgb.size}")
+          decoded = hashlib.sha256(rgb.tobytes()).hexdigest()
+          if decoded != "ddcfa7a367f3a379e16b7324b745759a29625fd9e223c45de84cc28d5d416ec3":
+              raise SystemExit("lossless decoded RGB mismatch")
+          print("opponent strip integrity OK")
+          PY
       - name: Install one-shot opponent MobileNet dependencies
         if: needs.scope.outputs.run_vision == 'true' && hashFiles('references/vision/2026-10-01/RUN_OPPONENT_MOBILENET_V0_1') != ''
         run: |

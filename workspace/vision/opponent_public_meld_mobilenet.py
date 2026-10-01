@@ -45,9 +45,9 @@ REVIEW_ID = "opp_meld_14_m123"
 QUERY_MATCH_GROUP = "reviewed_recording_14"
 DEFAULT_STRIP = (
     "references/vision/2026-10-01/opponent_meld_crops/"
-    "opp_meld_14_m123_5frame_strip.png"
+    "opp_meld_14_m123_5frame_strip.webp"
 )
-DEFAULT_STRIP_SHA256 = "2c5f2edbc126f1c09ec63241f0096f086da8aed825a5826f20ac79a579185cac"
+DEFAULT_STRIP_SHA256 = "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9"
 FRAME_WIDTH = 71
 FRAME_HEIGHT = 33
 SOURCE_FRAME_ESTIMATES = (1726, 1728, 1730, 1732, 1734)

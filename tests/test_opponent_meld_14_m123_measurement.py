@@ -9,7 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json"
 PROFILE = ROOT / "references/vision/2026-10-01/opponent_meld_domain_profile_v0_1.json"
 QUEUE = ROOT / "references/vision/2026-10-01/opponent_public_meld_review_queue_v0_1.json"
-SHA256 = re.compile(r"^[0-9a-f]{64}$")\nASSET = ROOT / "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.png"
+SHA256 = re.compile(r"^[0-9a-f]{64}$")
+ASSET = ROOT / "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.webp"
 
 
 class OpponentMeldM123MeasurementTests(unittest.TestCase):
@@ -34,31 +35,36 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
         self.assertFalse(self.report["safe_for_hint"])
         self.assertFalse(self.report["safe_for_executor"])
 
-    def test_only_privacy_bounded_tile_strip_is_committed_and_hashes_are_locked(self):
+    def test_only_privacy_bounded_lossless_strip_is_committed(self):
+        from PIL import Image
+
         privacy = self.report["privacy"]
         self.assertFalse(privacy["raw_video_committed"])
         self.assertFalse(privacy["full_frame_committed"])
         self.assertTrue(privacy["derived_crop_pixels_committed"])
         self.assertFalse(privacy["player_or_room_metadata_published"])
         self.assertFalse(privacy["public_asset_contains_player_or_room_metadata"])
-        self.assertEqual(
-            self.report["evidence_storage"],
-            "PUBLIC_TILE_ONLY_STRIP_PLUS_METADATA_PRIVATE_RAW_VIDEO_AND_FULL_FRAMES",
-        )
+
         asset = self.report["public_evaluation_asset"]
         self.assertEqual(asset["path"], ASSET.relative_to(ROOT).as_posix())
+        self.assertEqual(asset["encoding"], "webp_lossless")
+        self.assertTrue(asset["decoded_rgb_matches_original_png"])
         self.assertEqual(asset["frame_count"], 5)
         self.assertEqual(asset["frame_size_px"], [71, 33])
         self.assertFalse(asset["player_or_room_metadata"])
-        digest = hashlib.sha256(ASSET.read_bytes()).hexdigest()
-        self.assertEqual(digest, asset["sha256"])
+        self.assertEqual(hashlib.sha256(ASSET.read_bytes()).hexdigest(), asset["sha256"])
+        with Image.open(ASSET) as source:
+            rgb = source.convert("RGB")
+        self.assertEqual(rgb.size, (71, 165))
+        self.assertEqual(hashlib.sha256(rgb.tobytes()).hexdigest(), asset["decoded_rgb_sha256"])
+
         self.assertEqual(len(self.report["stable_samples"]), 5)
-        for row in self.report["stable_samples"]:
-            self.assertTrue(SHA256.fullmatch(row["sha256"]))
-            self.assertGreater(row["bytes"], 0)
-            self.assertLess(row["bytes"], 10_000)
-            self.assertEqual(row["crop_size_px"], [71, 33])
-            self.assertEqual(row["stack_state"], "FLAT")
+        for sample in self.report["stable_samples"]:
+            self.assertTrue(SHA256.fullmatch(sample["sha256"]))
+            self.assertGreater(sample["bytes"], 0)
+            self.assertLess(sample["bytes"], 10_000)
+            self.assertEqual(sample["crop_size_px"], [71, 33])
+            self.assertEqual(sample["stack_state"], "FLAT")
 
     def test_profile_and_queue_use_same_measured_dimensions(self):
         self.assertEqual(self.profile["status"], "MEASURED_REAL_TOP_GROUP")
@@ -68,10 +74,8 @@ class OpponentMeldM123MeasurementTests(unittest.TestCase):
         self.assertEqual(row["crop_status"], "CLASSIFIER_READY")
         self.assertEqual(row["measured_source_face_size_px"], [22, 29])
         self.assertEqual(row["stable_measurement_crop_count"], 5)
-        self.assertEqual(
-            row["measurement_crop_storage"],
-            "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA",
-        )
+        self.assertEqual(row["measurement_crop_storage"], "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA")
+        self.assertEqual(row["public_evaluation_asset"]["sha256"], "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9")
         self.assertEqual(row["identity_runtime_status"], "UNKNOWN")
 
 
