@@ -243,6 +243,31 @@ jobs:
               + json.dumps(compact, sort_keys=True)
           )
           PY
+      - name: Evaluate lineage-qualified S456 opponent meld MobileNet
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.opponent_public_meld_mobilenet \
+            --query s456 \
+            --output /tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_s456_result_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_s456.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_s456_result_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "review_id": report["review_id"],
+              "query_match_group": report["query_match_group"],
+              "frame_metrics": report["frame_metrics"],
+              "multi_frame_mean_scores": report["multi_frame_mean_scores"],
+              "identity_runtime_status": report["identity_runtime_status"],
+          }
+          print("OPPONENT_MELD_S456_MOBILENET=" + json.dumps(compact, sort_keys=True))
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
