@@ -309,6 +309,13 @@ jobs:
             --output /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage_v0_1.json \
             >/tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
           cat /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
+      - name: Probe real-public references for S456 opponent identity
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_real_public_probe \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_s456_real_public_probe_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_meld_s456_real_public_probe.log
+          cat /tmp/runtime-v0-2-reports/opponent_meld_s456_real_public_probe.log
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
