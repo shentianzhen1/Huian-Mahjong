@@ -86,12 +86,19 @@ def _svm_scores(query: Any, classifier: Any) -> dict[str, float]:
         return {}
     row = np.asarray(query, dtype=np.float32).reshape(1, -1)
     raw = classifier.decision_function(row)
+    classes = [str(tile_id) for tile_id in classifier.classes_]
     values = np.asarray(raw, dtype=np.float64)
+    if len(classes) == 2:
+        margin = float(values.reshape(-1)[0])
+        return {
+            classes[0]: -margin,
+            classes[1]: margin,
+        }
     if values.ndim == 1:
         values = values.reshape(1, -1)
     return {
-        str(tile_id): float(score)
-        for tile_id, score in zip(classifier.classes_, values[0])
+        tile_id: float(score)
+        for tile_id, score in zip(classes, values[0])
         if np.isfinite(score)
     }
 
