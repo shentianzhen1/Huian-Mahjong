@@ -1,0 +1,30 @@
+{
+  "schema_version": "public_identity_query_images_v0_1",
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "query_only": true,
+  "training_template_eligible": false,
+  "source_session": "session_c4d1b879367aeca8",
+  "source_sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+  "match_group": "reviewed_match_2026_09_26_first_hand",
+  "independent_match_group_credit": false,
+  "notes": [
+    "Privacy-safe single public-meld face crop from the user-uploaded derived clip.",
+    "Derived clip belongs to reviewed_match_2026_09_26_first_hand and contributes no new independent match-group credit.",
+    "Query is excluded from the template bank and from formal promotion evidence."
+  ],
+  "queries": [
+    {
+      "query_id": "hand1_p6_kong_frame360_public_meld_face",
+      "expected_tile": "P6",
+      "region": "public_meld",
+      "image_path": "references/vision/2026-10-01/public_meld_crops/hand1_p6_kong_public_face_frame360.png",
+      "image_sha256": "4cbc05c9b58af8644598efb6628288e39639b6746530e7fe0c6975174643dca7",
+      "image_size": [
+        60,
+        72
+      ],
+      "reviewed_truth_only": true
+    }
+  ]
+}
