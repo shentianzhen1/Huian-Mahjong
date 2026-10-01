@@ -38,6 +38,13 @@
       "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
       "match_group": "reviewed_match_2026_09_26_first_hand",
       "review_exposure": "previously_inspected"
+    },
+    {
+      "source_session": "session_c4d1b879367aeca8",
+      "source_sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "review_exposure": "user_uploaded_derived_clip_same_original_match",
+      "independent_match_group_credit": false
     }
   ]
 }
