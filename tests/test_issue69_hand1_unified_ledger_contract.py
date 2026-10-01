@@ -36,10 +36,10 @@ class Issue69Hand1UnifiedLedgerContractTests(unittest.TestCase):
             candidate("meld", 47.7, 2822, "player", "MELD_DELTA", "m:p6", "P6,P6,P6,P6"),
             candidate("river", 48.4, 2863, "player", "DISCARD", "r:m3", "M3"),
             candidate("river", 59.0, 3490, "opponent", "DISCARD", "r:p8", "P8"),
-            candidate("river", 82.5, 4880, "opponent", "DISCARD", "r:s5", "S5"),
+            candidate("river", 82.5, 4880, "player", "DISCARD", "r:s5", "S5"),
             candidate("action_area", 82.7, 4892, "opponent", "ACTION_AREA_ONSET", "a:s456"),
             candidate("meld", 83.2, 4922, "opponent", "MELD_DELTA", "m:s456", "S4,S5,S6"),
-            candidate("river", 125.5, 7425, "opponent", "DISCARD", "r:s2", "S2"),
+            candidate("river", 125.5, 7425, "player", "DISCARD", "r:s2", "S2"),
             candidate("action_area", 125.7, 7437, "opponent", "ACTION_AREA_ONSET", "a:s123"),
             candidate("meld", 126.2, 7467, "opponent", "MELD_DELTA", "m:s123", "S1,S2,S3"),
         ])
@@ -47,6 +47,14 @@ class Issue69Hand1UnifiedLedgerContractTests(unittest.TestCase):
         self.assertEqual(len(report["ledger"]), 11)
         times = [row["timestamp_seconds"] for row in report["ledger"]]
         self.assertEqual(times, sorted(times))
+        # Reviewed claim pairs must come from the other actor. Otherwise the
+        # later temporal assembler would correctly reject them as self-claims.
+        by_ref = {row["candidate_kind"] + ":" + str(row["frame_index"]): row
+                  for row in report["ledger"]}
+        self.assertEqual(report["ledger"][5]["actor_hint"], "player")
+        self.assertEqual(report["ledger"][7]["actor_hint"], "opponent")
+        self.assertEqual(report["ledger"][8]["actor_hint"], "player")
+        self.assertEqual(report["ledger"][10]["actor_hint"], "opponent")
         onset_rows = [row for row in report["ledger"] if row["channel"] == "action_area"]
         self.assertTrue(onset_rows)
         self.assertTrue(all(row["ledger_kind"] == "UNKNOWN" for row in onset_rows))
