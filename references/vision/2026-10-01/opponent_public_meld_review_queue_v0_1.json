@@ -35,8 +35,10 @@
         1711
       ],
       "evidence_status": "USER_REVIEWED_EVENT_AND_EXISTING_PRIVATE_CONTACT_SHEET",
-      "crop_status": "PENDING_EXACT_TOP_GROUP_CROP",
-      "independent_match_group": true
+      "crop_status": "SOURCE_VERIFIED_PENDING_EXACT_TOP_GROUP_CROP",
+      "independent_match_group": true,
+      "source_verification": "SHA256_EXACT_VERIFIED_FROM_CONNECTED_DRIVE_RAW_BYTES_2026_10_01",
+      "source_size_bytes": 10709355
     },
     {
       "review_id": "opp_meld_0926_hand1_s456",
@@ -93,7 +95,8 @@
   "current_counts": {
     "queued_groups": 3,
     "independent_original_match_groups": 2,
-    "classifier_ready_groups": 0
+    "classifier_ready_groups": 0,
+    "source_verified_groups": 1
   },
   "changes_runtime_behavior": false,
   "formal_promotion_evidence": false,
