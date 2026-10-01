@@ -61,7 +61,7 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
         cls.audit = json.loads(AUDIT.read_text(encoding="utf-8"))
 
     def test_registry_is_exact_sha_and_evidence_paths_exist(self):
-        self.assertEqual(len(self.registry), 12)
+        self.assertEqual(len(self.registry), 16)
         self.assertEqual(verify_lineage_evidence_paths(self.registry, ROOT), [])
 
         old_match_shas = {
@@ -144,16 +144,10 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
             RECOVERY_QUEUE.read_text(encoding="utf-8")
         )
         self.assertEqual(generated, frozen)
-        self.assertEqual(generated["unresolved_source_count"], 4)
-        self.assertEqual(generated["unresolved_label_count"], 8)
+        self.assertEqual(generated["unresolved_source_count"], 0)
+        self.assertEqual(generated["unresolved_label_count"], 0)
         self.assertFalse(generated["match_group_inference_allowed"])
-        self.assertTrue(
-            all(
-                item["status"] == "UNKNOWN_ORIGINAL_MATCH"
-                and item["session_name_is_not_evidence"]
-                for item in generated["items"]
-            )
-        )
+        self.assertEqual(generated["items"], [])
 
     def test_recovery_audit_preserves_all_unresolved_sources(self):
         recovery = json.loads(RECOVERY_QUEUE.read_text(encoding="utf-8"))
@@ -161,20 +155,21 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
 
         queued = {item["source_sha256"] for item in recovery["items"]}
         audited = {item["source_sha256"] for item in audit["items"]}
-        self.assertEqual(audited, queued)
-        self.assertEqual(audit["result"]["recovered_source_count"], 0)
-        self.assertEqual(audit["result"]["unresolved_source_count"], 4)
-        self.assertFalse(audit["result"]["m1_lineage_ready"])
-        self.assertFalse(audit["result"]["m3_lineage_ready"])
+        self.assertEqual(queued, set())
+        self.assertEqual(len(audited), 4)
+        self.assertEqual(audit["result"]["recovered_source_count"], 4)
+        self.assertEqual(audit["result"]["unresolved_source_count"], 0)
+        self.assertTrue(audit["result"]["m1_lineage_ready"])
+        self.assertTrue(audit["result"]["m3_lineage_ready"])
         self.assertEqual(
             audit["result"]["mobilenet_m123_rerun_status"],
-            "BLOCKED_BEFORE_MODEL_LOAD",
+            "READY_DEVELOPMENT_ONLY",
         )
         self.assertTrue(
             all(
-                item["status"] == "UNKNOWN_ORIGINAL_MATCH"
-                and item["recovered_match_group"] is None
-                and item["exact_sha_match_in_reviewed_source_records"] is False
+                item["status"] == "RECOVERED_REVIEWED_LINEAGE"
+                and item["recovered_match_group"] is not None
+                and item["exact_sha_match_in_reviewed_source_records"] is True
                 for item in audit["items"]
             )
         )
