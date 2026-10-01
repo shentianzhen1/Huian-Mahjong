@@ -150,6 +150,34 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
             )
         )
 
+    def test_recovery_audit_preserves_all_unresolved_sources(self):
+        recovery = json.loads(RECOVERY_QUEUE.read_text(encoding="utf-8"))
+        audit = json.loads(RECOVERY_AUDIT.read_text(encoding="utf-8"))
+
+        queued = {item["source_sha256"] for item in recovery["items"]}
+        audited = {item["source_sha256"] for item in audit["items"]}
+        self.assertEqual(audited, queued)
+        self.assertEqual(audit["result"]["recovered_source_count"], 0)
+        self.assertEqual(audit["result"]["unresolved_source_count"], 4)
+        self.assertFalse(audit["result"]["m1_lineage_ready"])
+        self.assertFalse(audit["result"]["m3_lineage_ready"])
+        self.assertEqual(
+            audit["result"]["mobilenet_m123_rerun_status"],
+            "BLOCKED_BEFORE_MODEL_LOAD",
+        )
+        self.assertTrue(
+            all(
+                item["status"] == "UNKNOWN_ORIGINAL_MATCH"
+                and item["recovered_match_group"] is None
+                and item["exact_sha_match_in_reviewed_source_records"] is False
+                for item in audit["items"]
+            )
+        )
+        self.assertTrue(audit["policy"]["source_session_is_not_match_evidence"])
+        self.assertFalse(audit["safe_for_runtime"])
+        self.assertFalse(audit["safe_for_hint"])
+        self.assertFalse(audit["safe_for_executor"])
+
     def test_frozen_audit_matches_current_runtime_labels(self):
         labels = _approved_non_gold_hand_labels()
         accepted, report = qualify_concealed_template_labels(
