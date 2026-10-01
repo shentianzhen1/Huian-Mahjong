@@ -277,6 +277,39 @@ jobs:
               + json.dumps(compact, sort_keys=True)
           )
           PY
+      - name: Evaluate public meld HOG linear SVM
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_hog_svm \
+            --output /tmp/runtime-v0-2-reports/public_meld_hog_svm_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_hog_svm.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_hog_svm_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "training_sample_count": report["training_sample_count"],
+              "training_class_count": report["training_class_count"],
+              "trained_model_count": report["trained_model_count"],
+              "target_group_count": report["target_group_count"],
+              "scored_group_count": report["scored_group_count"],
+              "scored_face_count": report["scored_face_count"],
+              "face_top1_correct": report["face_top1_correct"],
+              "face_top1_accuracy": report["face_top1_accuracy"],
+              "group_top1_correct": report["group_top1_correct"],
+              "group_top1_accuracy": report["group_top1_accuracy"],
+              "groups": report["groups"],
+          }
+          print(
+              "PUBLIC_MELD_HOG_SVM="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
