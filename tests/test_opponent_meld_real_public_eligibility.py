@@ -35,6 +35,18 @@ class OpponentMeldRealPublicEligibilityTests(unittest.TestCase):
             self.assertEqual(coverage["cross_match_real_face_count"], 0)
             self.assertEqual(coverage["independent_match_group_count"], 0)
 
+    def test_s123_is_blocked_only_by_missing_s1_real_public_reference(self):
+        row = self.report["queries"]["s123"]
+        self.assertFalse(row["real_public_probe_eligible"])
+        self.assertEqual(
+            row["status"],
+            "BLOCKED_MISSING_CROSS_MATCH_REAL_PUBLIC_REFERENCE",
+        )
+        coverage = row["cross_match_real_reference_coverage"]
+        self.assertEqual(coverage["S1"]["cross_match_real_face_count"], 0)
+        self.assertGreaterEqual(coverage["S2"]["cross_match_real_face_count"], 1)
+        self.assertGreaterEqual(coverage["S3"]["cross_match_real_face_count"], 1)
+
     def test_gate_is_development_only(self):
         self.assertTrue(self.report["same_match_reference_forbidden"])
         self.assertFalse(self.report["changes_runtime_behavior"])
