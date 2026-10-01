@@ -3,6 +3,8 @@ import unittest
 from workspace.vision.issue69_public_replay_orchestrator import PublicReplayCandidate
 from workspace.vision.public_claim_hand_count_delta import SourceScopedStableHandCount, review_new_meld_hand_count_delta
 from workspace.vision.public_hand_count_fact_adapter import hand_count_review_to_source_fact
+from workspace.vision.public_hand_identity_delta import StableHandIdentitySnapshot, review_hand_identity_delta
+from workspace.vision.public_hand_identity_fact_adapter import identity_delta_to_hand_fact
 from workspace.vision.issue69_temporal_reconstruction import (
     HandDeltaCandidate,
     reconstruct_public_candidates,
@@ -101,6 +103,41 @@ class Issue69TemporalReconstructionTests(unittest.TestCase):
         unknown = [row for row in report["actions"] if row["kind"] == "UNKNOWN_ACTION"]
         self.assertEqual(len(unknown), 1)
         self.assertEqual(report["input_observation_count"], 3)
+
+    def test_identity_qualified_hand_fact_closes_ming_gang(self):
+        def count_sample(frame, count, ref):
+            return SourceScopedStableHandCount(
+                SESSION, SHA, 0, frame, "player", count, "STABLE_HAND",
+                True, True, True, True, evidence_ref=ref,
+            )
+        cb, ca = count_sample(100, 16, "cb"), count_sample(102, 13, "ca")
+        cr = review_new_meld_hand_count_delta(
+            cb, ca, new_meld_first_visible_frame=101, new_meld_face_count=4,
+            pre_sample_brackets_onset=True, post_sample_before_followup_discard=True,
+            independent_public_meld_onset_verified=True,
+        )
+        before = StableHandIdentitySnapshot(
+            SESSION, SHA, 0, 100, "player", ("P6","P6","P6","M1"),
+            .90, .82, True, True, True, True, "identity:before",
+        )
+        after = StableHandIdentitySnapshot(
+            SESSION, SHA, 0, 102, "player", ("M1",),
+            .91, .82, True, True, True, True, "identity:after",
+        )
+        delta = review_hand_identity_delta(before, after, cr)
+        fact = identity_delta_to_hand_fact(before, after, delta, timestamp_seconds=47.4)
+        rows = [
+            public("river", 47.0, 90, "opponent", "DISCARD", "river:p6", "P6"),
+            public("meld", 47.5, 105, "player", "MELD_DELTA", "meld:p6", "P6,P6,P6,P6"),
+        ]
+        report = reconstruct_public_candidates(
+            rows, hand_facts=[fact], claim_window_seconds=1.0,
+            assembly_delay_seconds=0.0,
+        )
+        gang = next(row for row in report["actions"] if row["kind"] == "MING_GANG")
+        self.assertEqual(gang["claimed_tile"], "P6")
+        self.assertEqual(gang["meld"], ["P6"] * 4)
+        self.assertEqual(gang["evidence_grade"], "CORROBORATED")
 
     def test_cross_source_hand_evidence_is_rejected(self):
         rows = [public("meld", 2, 20, "player", "MELD_DELTA", "m", "S1,S2,S3")]
