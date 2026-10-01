@@ -1,6 +1,12 @@
+import importlib.util
 import unittest
-from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import _split_embedded_meld_prefix
 
+CV2_AVAILABLE = importlib.util.find_spec("cv2") is not None
+if CV2_AVAILABLE:
+    from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import _split_embedded_meld_prefix
+
+
+@unittest.skipUnless(CV2_AVAILABLE, "opencv is exercised by the vision regression job")
 
 class EmbeddedMeldPrefixTests(unittest.TestCase):
     def test_plain_upright_hand_is_not_split(self):
