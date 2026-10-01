@@ -475,6 +475,15 @@ def evaluate_opponent_public_meld_mobilenet(
             "opponent-domain synthetic template bank "
             "is empty"
         )
+    missing_lineage_expected = sorted(
+        set(expected_tiles) - set(synthetic_tile_ids)
+    )
+    if missing_lineage_expected:
+        raise ValueError(
+            "lineage-qualified opponent template bank "
+            "is missing expected classes: "
+            + ",".join(missing_lineage_expected)
+        )
 
     model, transform, weight_name = _load_model()
     synthetic_embeddings = _embed_images(
