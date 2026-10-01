@@ -302,6 +302,13 @@ jobs:
           }
           print("S456_BOUNDARY_DIAGNOSTIC=" + json.dumps(compact, sort_keys=True))
           PY
+      - name: Audit S456 lineage-qualified template coverage
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_template_coverage \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
+          cat /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
       - name: Upload Runtime V0.2 validation reports
         if: needs.scope.outputs.run_vision == 'true'
         uses: actions/upload-artifact@v4
