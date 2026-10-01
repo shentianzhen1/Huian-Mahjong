@@ -52,6 +52,21 @@ class OpponentPublicMeldReviewQueueTests(unittest.TestCase):
             "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
         )
 
+    def test_s456_is_classifier_ready_but_identity_remains_unknown(self):
+        row = next(
+            item
+            for item in self.payload["items"]
+            if item["review_id"] == "opp_meld_0926_hand1_s456"
+        )
+        self.assertEqual(row["crop_status"], "CLASSIFIER_READY")
+        self.assertTrue(row["source_verification"].startswith("SHA256_EXACT_VERIFIED"))
+        self.assertEqual(row["stable_measurement_crop_count"], 5)
+        self.assertEqual(row["identity_runtime_status"], "UNKNOWN")
+        self.assertEqual(
+            row["public_evaluation_asset"]["sha256"],
+            "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+        )
+
     def test_same_match_groups_are_not_counted_as_independent(self):
         payload = copy.deepcopy(self.payload)
         payload["current_counts"]["independent_original_match_groups"] = 3
