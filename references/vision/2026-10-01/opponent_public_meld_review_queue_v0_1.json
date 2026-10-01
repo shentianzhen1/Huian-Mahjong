@@ -64,7 +64,7 @@
         "file_size_bytes": 9720
       },
       "latest_identity_evaluation": {
-        "path": "references/vision/2026-10-01/opponent_public_meld_mobilenet_result_v0_1.json",
+        "path": "references/vision/2026-10-01/opponent_public_meld_mobilenet_lineage_qualified_result_v0_1.json",
         "status": "DEVELOPMENT_TRANSFER_FAILED_CURRENT_BATCH",
         "frame_legal_group_top1_correct": "0/5",
         "frame_unordered_top3_expected_coverage": "0/5",
@@ -119,6 +119,24 @@
         "player_or_room_metadata": false,
         "encoding": "webp_lossless",
         "file_size_bytes": 9214
+      },
+      "latest_identity_evaluation": {
+        "path": "references/vision/2026-10-01/opponent_public_meld_mobilenet_s456_result_v0_1.json",
+        "status": "DEVELOPMENT_TRANSFER_FAILED_CURRENT_BATCH",
+        "frame_legal_group_top1_correct": "0/5",
+        "frame_unordered_top3_expected_coverage": "0/5",
+        "multi_frame_legal_group_top_tiles": [
+          "S4",
+          "S4",
+          "S4"
+        ],
+        "multi_frame_runner_up_tiles": [
+          "S6",
+          "S5",
+          "S4"
+        ],
+        "multi_frame_margin": 0.02533916,
+        "identity_runtime_status": "UNKNOWN"
       }
     },
     {
