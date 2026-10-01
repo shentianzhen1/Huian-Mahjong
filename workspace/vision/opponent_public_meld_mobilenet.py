@@ -21,7 +21,10 @@ from workspace.vision.opponent_meld_domain_transfer import (
     qualify_opponent_meld_domain_profile,
     simulate_opponent_source_resolution_loss,
 )
-from workspace.vision.public_identity_shadow_v0_2 import load_development_sources
+from workspace.vision.concealed_template_match_lineage import (
+    load_concealed_template_lineage,
+    qualify_concealed_template_labels,
+)
 from workspace.vision.public_meld_face_segmentation import prepare_public_meld_faces
 from workspace.vision.public_meld_group_identity_decoder import (
     rank_regular_public_meld_identity,
@@ -35,9 +38,10 @@ from workspace.vision.public_meld_mobilenet_embedding import (
     _square_tile_canvas,
 )
 from workspace.vision.public_meld_synthetic_transfer import (
-    _balanced_hand_labels,
+    MAX_HAND_TEMPLATES_PER_CLASS,
     render_self_meld_variants,
 )
+from workspace.vision.tiles_v0_1.labels import approved_labels
 from workspace.vision.public_tile_detector import PublicGeometryCandidate
 
 
@@ -223,41 +227,81 @@ def _prepare_query_faces(
     return prepared_frames
 
 
+def _balance_lineage_qualified_hand_labels(
+    labels: Sequence[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in labels:
+        tile_id = row.get("tile_id")
+        image_path = row.get("image")
+        if not isinstance(tile_id, str) or not isinstance(image_path, str):
+            continue
+        grouped.setdefault(tile_id, []).append(row)
+
+    selected: list[dict[str, Any]] = []
+    for tile_id in sorted(grouped):
+        rows = sorted(
+            grouped[tile_id],
+            key=lambda row: (
+                str(row.get("_original_match_group") or ""),
+                str(row.get("source_session") or ""),
+                str(row.get("image") or ""),
+                int(row.get("source_frame") or -1),
+            ),
+        )
+        chosen: list[dict[str, Any]] = []
+        used_groups: set[str] = set()
+        for row in rows:
+            group = str(row.get("_original_match_group") or "")
+            if group and group in used_groups:
+                continue
+            chosen.append(row)
+            if group:
+                used_groups.add(group)
+            if len(chosen) >= MAX_HAND_TEMPLATES_PER_CLASS:
+                break
+        if len(chosen) < MAX_HAND_TEMPLATES_PER_CLASS:
+            for row in rows:
+                if row in chosen:
+                    continue
+                chosen.append(row)
+                if len(chosen) >= MAX_HAND_TEMPLATES_PER_CLASS:
+                    break
+        selected.extend(chosen)
+    return selected
+
+
 def _synthetic_opponent_domain_bank(
     dataset_root: Path,
-    source_registry: Path,
+    lineage_registry: Path,
     profile: Any,
 ) -> tuple[list[str], list[Any], dict[str, Any]]:
-    sources = load_development_sources(source_registry)
-    labels = _balanced_hand_labels(dataset_root)
+    lineage = load_concealed_template_lineage(lineage_registry)
+    candidate_labels = [
+        row
+        for row in approved_labels(dataset_root)
+        if row.get("region") == "hand_region"
+        and not row.get("gold_skin_only")
+    ]
+    qualified_labels, lineage_info = qualify_concealed_template_labels(
+        candidate_labels,
+        lineage,
+        query_match_group=QUERY_MATCH_GROUP,
+    )
+    labels = _balance_lineage_qualified_hand_labels(qualified_labels)
+
     tile_ids: list[str] = []
     images: list[Any] = []
-    excluded_same_match_labels = 0
-    missing_lineage_labels = 0
     used_label_count = 0
 
     for label in labels:
         tile_id = label.get("tile_id")
         image_value = label.get("image")
-        source_session = label.get("source_session")
         if (
             not isinstance(tile_id, str)
             or not isinstance(image_value, str)
         ):
             continue
-        source = (
-            sources.get(source_session)
-            if isinstance(source_session, str)
-            else None
-        )
-        if (
-            source is not None
-            and source.match_group == QUERY_MATCH_GROUP
-        ):
-            excluded_same_match_labels += 1
-            continue
-        if source is None:
-            missing_lineage_labels += 1
 
         path = (dataset_root / image_value).resolve()
         if dataset_root.resolve() not in path.parents:
@@ -280,18 +324,14 @@ def _synthetic_opponent_domain_bank(
             )
 
     return tile_ids, images, {
+        "candidate_hand_label_count": len(candidate_labels),
+        "lineage_qualified_hand_label_count": len(qualified_labels),
         "balanced_hand_label_count": len(labels),
         "used_hand_label_count": used_label_count,
-        "excluded_same_match_hand_label_count": (
-            excluded_same_match_labels
-        ),
-        "missing_original_match_lineage_hand_label_count": (
-            missing_lineage_labels
-        ),
         "synthetic_variant_count": len(images),
         "synthetic_class_count": len(set(tile_ids)),
+        "lineage": lineage_info,
     }
-
 
 def _frame_summary(
     score_rows: Sequence[Mapping[str, float]],
@@ -359,9 +399,9 @@ def evaluate_opponent_public_meld_mobilenet(
         "references/vision/2026-10-01/"
         "opponent_public_meld_review_queue_v0_1.json"
     ),
-    source_registry_path: str | Path = (
-        "references/vision/2026-09-24/"
-        "public_identity_source_groups.development.json"
+    template_lineage_path: str | Path = (
+        "references/vision/2026-10-01/"
+        "concealed_template_match_lineage.development.json"
     ),
     strip_path: str | Path = DEFAULT_STRIP,
 ) -> dict[str, Any]:
@@ -369,8 +409,8 @@ def evaluate_opponent_public_meld_mobilenet(
     dataset = (root / dataset_root).resolve()
     profile_file = (root / profile_path).resolve()
     queue_file = (root / queue_path).resolve()
-    registry_file = (
-        root / source_registry_path
+    lineage_file = (
+        root / template_lineage_path
     ).resolve()
     strip_file = (root / strip_path).resolve()
 
@@ -378,7 +418,7 @@ def evaluate_opponent_public_meld_mobilenet(
         dataset,
         profile_file,
         queue_file,
-        registry_file,
+        lineage_file,
         strip_file,
     ):
         if root != path and root not in path.parents:
@@ -427,7 +467,7 @@ def evaluate_opponent_public_meld_mobilenet(
         bank_info,
     ) = _synthetic_opponent_domain_bank(
         dataset,
-        registry_file,
+        lineage_file,
         profile,
     )
     if not synthetic_images:
@@ -603,9 +643,9 @@ def evaluate_opponent_public_meld_mobilenet(
                 "measurement"
             ),
             (
-                "concealed hand-template original-"
-                "match lineage is incomplete for "
-                "some selected labels"
+                "concealed hand templates without "
+                "exact-SHA original-match lineage "
+                "are excluded from the bank"
             ),
             (
                 "only one opponent match group is "
@@ -653,10 +693,10 @@ def main() -> None:
         ),
     )
     parser.add_argument(
-        "--source-registry",
+        "--template-lineage",
         default=(
-            "references/vision/2026-09-24/"
-            "public_identity_source_groups.development.json"
+            "references/vision/2026-10-01/"
+            "concealed_template_match_lineage.development.json"
         ),
     )
     parser.add_argument(
@@ -671,7 +711,7 @@ def main() -> None:
             args.dataset,
             args.profile,
             args.queue,
-            args.source_registry,
+            args.template_lineage,
             args.strip,
         )
     )
