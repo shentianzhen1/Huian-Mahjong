@@ -34,24 +34,22 @@
       "M3"
     ],
     "lineage_qualified_expected_classes": [
-      "M2"
-    ],
-    "missing_lineage_qualified_expected_classes": [
       "M1",
+      "M2",
       "M3"
     ],
-    "status": "BLOCKED_BEFORE_MODEL_LOAD"
+    "missing_lineage_qualified_expected_classes": [],
+    "status": "READY_DEVELOPMENT_ONLY"
   },
   "interpretation": [
-    "Runtime source_session values identify stored sessions but do not prove independent original matches.",
-    "The previous MobileNet prototype bank used 68 selected hand labels even though their original-match lineage was unresolved.",
-    "After exact-SHA lineage qualification, only five approved non-Gold hand labels are currently eligible for this cross-match development query.",
-    "M1 and M3 have no lineage-qualified concealed template in the current repository evidence, so a new MobileNet measurement on this query must stop before model loading rather than reuse uncertain templates."
+    "Runtime source_session values remain storage/session identifiers and are not used as independent-match evidence.",
+    "Exact-SHA reviewed lineage now covers M1 and M3 through two recovered original match groups; fragments from recovery_a count as one match_group.",
+    "M2 remains lineage-qualified from the existing reviewed 2026-09-19 match evidence.",
+    "The M123 MobileNet query may now be rerun development-only while excluding reviewed_recording_14; this does not promote runtime identity capability."
   ],
   "next_gate": [
-    "Recover explicit original-match lineage for reviewed concealed M1 and M3 templates using existing source evidence, without grouping by session name alone.",
-    "If that provenance cannot be recovered, collect or review a new source whose original-match identity and SHA are explicit before using it as a cross-match template.",
-    "Do not lower the Runtime 0.82 identity threshold and do not treat this development audit as formal Vision promotion evidence."
+    "Rerun the frozen M123 MobileNet development experiment with query match_group reviewed_recording_14 excluded and report face Top1/Top3, legal-group Top1, multi-frame stability, and group margin.",
+    "Do not lower the Runtime 0.82 identity threshold and do not treat the rerun as formal Vision promotion evidence."
   ],
   "changes_runtime_behavior": false,
   "formal_promotion_evidence": false,
