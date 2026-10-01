@@ -20,7 +20,8 @@ def sha256(path: Path) -> str:
 def frame_for_second(video: Path, second: float) -> tuple[int, float]:
     if isinstance(second,bool) or not isinstance(second,(int,float)) or not math.isfinite(second) or second < 0:
         raise ValueError("second must be nonnegative and finite")
-    import cv2\n    cap=cv2.VideoCapture(str(video))
+    import cv2
+    cap=cv2.VideoCapture(str(video))
     try:
         fps=float(cap.get(cv2.CAP_PROP_FPS))
     finally:
