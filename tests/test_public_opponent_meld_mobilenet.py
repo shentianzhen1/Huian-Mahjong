@@ -71,6 +71,26 @@ class OpponentPublicMeldMobileNetLogicTests(unittest.TestCase):
         self.assertAlmostEqual(mean[1]["M2"], 0.6)
         self.assertAlmostEqual(mean[2]["M3"], 0.7)
 
+    def test_query_specs_preserve_m123_and_lock_s456_lineage(self):
+        from workspace.vision.opponent_public_meld_mobilenet import (
+            M123_QUERY,
+            S456_QUERY,
+        )
+
+        self.assertEqual(M123_QUERY.review_id, "opp_meld_14_m123")
+        self.assertEqual(M123_QUERY.query_match_group, "reviewed_recording_14")
+        self.assertEqual(M123_QUERY.source_frame_estimates, (1726, 1728, 1730, 1732, 1734))
+        self.assertEqual(S456_QUERY.review_id, "opp_meld_0926_hand1_s456")
+        self.assertEqual(
+            S456_QUERY.query_match_group,
+            "reviewed_match_2026_09_26_first_hand",
+        )
+        self.assertEqual(S456_QUERY.source_frame_estimates, (4904, 4908, 4913, 4918, 4923))
+        self.assertEqual(
+            S456_QUERY.strip_sha256,
+            "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+        )
+
     def test_runtime_acceptance_is_not_calibrated_by_this_evaluator(self):
         from workspace.vision.opponent_public_meld_mobilenet import (
             RUNTIME_IDENTITY_THRESHOLD,
