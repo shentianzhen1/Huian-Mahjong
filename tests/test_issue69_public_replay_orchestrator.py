@@ -69,7 +69,26 @@ class Issue69PublicReplayOrchestratorTests(unittest.TestCase):
             "conflicting_public_actor_hints_same_frame",
         )
 
-    def test_correlates_removed_river_tile_with_opposite_actor_peng(self):\n        report = assemble_public_replay_candidates([\n            row("river", 115.0, 3450, "opponent", "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3450"),\n            row("meld", 115.4, 3462, "player", "MELD_DELTA", "meld:3462", tiles=("M9","M9","M9")),\n        ])\n        claim = report["corroborated_claims"][0]\n        self.assertEqual(claim["action"], "PENG")\n        self.assertEqual(claim["actor"], "player")\n        self.assertEqual(claim["claimed_from_actor"], "opponent")\n        self.assertFalse(report["safe_for_runtime"])\n        self.assertFalse(report["safe_for_executor"])\n\n    def test_incomplete_meld_identity_remains_unknown_claim(self):\n        report = assemble_public_replay_candidates([\n            row("river", 129.0, 3870, "opponent", "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3870"),\n            row("meld", 129.4, 3882, "player", "MELD_DELTA", "meld:3882", tiles=(None,"S3","S4")),\n        ])\n        self.assertEqual(report["corroborated_claims"][0]["action"], "UNKNOWN_CLAIM")\n\n    def test_empty_input_fails_closed(self):
+    def test_correlates_removed_river_tile_with_opposite_actor_peng(self):
+        report = assemble_public_replay_candidates([
+            row("river", 115.0, 3450, "opponent", "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3450"),
+            row("meld", 115.4, 3462, "player", "MELD_DELTA", "meld:3462", tiles=("M9","M9","M9")),
+        ])
+        claim = report["corroborated_claims"][0]
+        self.assertEqual(claim["action"], "PENG")
+        self.assertEqual(claim["actor"], "player")
+        self.assertEqual(claim["claimed_from_actor"], "opponent")
+        self.assertFalse(report["safe_for_runtime"])
+        self.assertFalse(report["safe_for_executor"])
+
+    def test_incomplete_meld_identity_remains_unknown_claim(self):
+        report = assemble_public_replay_candidates([
+            row("river", 129.0, 3870, "opponent", "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3870"),
+            row("meld", 129.4, 3882, "player", "MELD_DELTA", "meld:3882", tiles=(None,"S3","S4")),
+        ])
+        self.assertEqual(report["corroborated_claims"][0]["action"], "UNKNOWN_CLAIM")
+
+    def test_empty_input_fails_closed(self):
         report = assemble_public_replay_candidates([])
         self.assertEqual(report["status"], "EMPTY")
         self.assertEqual(report["ledger"], [])
