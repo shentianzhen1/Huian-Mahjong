@@ -472,6 +472,45 @@ class DiscardRiverObserver:
         # A claimed discard may disappear from the river. The visual change is
         # real, but it is not sufficient by itself to classify CHI/PENG/KONG.
         if (
+            len(stable_snapshot.tiles) == len(previous.tiles) - 1
+            and len(unmatched_previous) == 1
+            and len(unmatched_current) == 0
+            and len(matches) == len(stable_snapshot.tiles)
+        ):
+            removed_tile = previous.tiles[unmatched_previous[0]]
+            refs = _merge_refs([
+                previous.evidence_refs,
+                stable_snapshot.evidence_refs,
+                removed_tile.evidence_refs,
+            ])
+            observation = RawObservation(
+                timestamp_seconds=stable_snapshot.timestamp_seconds,
+                actor=stable_snapshot.actor,
+                kind=ObservationKind.RIVER_REMOVAL,
+                tile=removed_tile.tile_id,
+                confidence=removed_tile.confidence,
+                evidence_refs=refs,
+                details={
+                    "frame": stable_snapshot.frame,
+                    "previous_river_count": len(previous.tiles),
+                    "current_river_count": len(stable_snapshot.tiles),
+                    "removed_tile_bbox": list(removed_tile.normalized_bbox),
+                    "tile_identity_observed": removed_tile.tile_id is not None,
+                    "observer": "discard_river_v0_1",
+                    "source_session": stable_snapshot.source_session,
+                    "stream_epoch": stable_snapshot.stream_epoch,
+                },
+            )
+            self._accepted = stable_snapshot
+            return ObserverOutput(
+                observation=observation,
+                stable=True,
+                trusted=True,
+                issues=("river_tile_removed_or_claimed",),
+                baseline_rebased=True,
+            )
+
+        if (
             len(stable_snapshot.tiles) < len(previous.tiles)
             and len(unmatched_current) == 0
         ):
@@ -479,8 +518,8 @@ class DiscardRiverObserver:
             return ObserverOutput(
                 observation=None,
                 stable=True,
-                trusted=True,
-                issues=("river_tile_removed_or_claimed",),
+                trusted=False,
+                issues=("river_multi_tile_removal_ambiguous",),
                 baseline_rebased=True,
             )
 
