@@ -8,7 +8,9 @@ from workspace.vision.issue69_public_replay_orchestrator import (
 SHA = "a" * 64
 
 
-def row(channel, ts, frame, actor, kind, ref, tile=None, *, tiles=(), sha=SHA, epoch=0):
+def row(channel, ts, frame, actor, kind, ref, tile=None, *, tiles=(), sha=SHA,
+        epoch=0, meld_group_size=None, previous_meld=(),
+        previous_meld_group_size=None):
     return PublicReplayCandidate(
         channel=channel,
         timestamp_seconds=ts,
@@ -21,6 +23,9 @@ def row(channel, ts, frame, actor, kind, ref, tile=None, *, tiles=(), sha=SHA, e
         evidence_refs=(ref,),
         tile=tile,
         tiles=tiles,
+        meld_group_size=meld_group_size,
+        previous_meld=previous_meld,
+        previous_meld_group_size=previous_meld_group_size,
     )
 
 
@@ -88,6 +93,20 @@ class Issue69PublicReplayOrchestratorTests(unittest.TestCase):
             row("meld", 129.4, 3882, "player", "MELD_DELTA", "meld:3882", tiles=(None,"S3","S4")),
         ])
         self.assertEqual(report["corroborated_claims"][0]["action"], "UNKNOWN_CLAIM")
+
+    def test_three_to_four_upgrade_is_audited_but_not_river_claim_correlated(self):
+        report = assemble_public_replay_candidates([
+            row("river", 111.9, 3357, "opponent",
+                "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3357"),
+            row("meld", 112.1, 3363, "player", "MELD_DELTA", "meld:3363",
+                tiles=("S8",) * 4, meld_group_size=4,
+                previous_meld=("S8",) * 3, previous_meld_group_size=3),
+        ])
+        meld_row = next(x for x in report["ledger"] if x["channel"] == "meld")
+        self.assertEqual(meld_row["meld_transition"], "GROUP_GROWTH_3_TO_4")
+        self.assertEqual(meld_row["previous_meld_group_size"], 3)
+        self.assertEqual(report["corroborated_claims"], [])
+        self.assertEqual(len(report["unmatched_claim_removals"]), 1)
 
     def test_empty_input_fails_closed(self):
         report = assemble_public_replay_candidates([])
