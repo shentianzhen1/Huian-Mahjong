@@ -1,0 +1,101 @@
+{
+  "schema_version": "issue69_hand2_dual_track_evaluation_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4"
+  },
+  "tracks": {
+    "ground_truth": {
+      "producer": "human_visual_review",
+      "status": "IN_PROGRESS",
+      "reference": "references/vision/2026-10-02/issue69_hand2_action_windows_v0_1.json"
+    },
+    "machine": {
+      "producer": "runtime_vision_v0_2_public_replay_stack",
+      "status": "NOT_YET_EXECUTED_IN_CURRENT_RUNTIME",
+      "required_pipeline": [
+        "tiles_runtime_v0_2.runtime_reader",
+        "runtime_public_adapter",
+        "public_observers",
+        "action_assembler",
+        "issue69_public_replay_orchestrator"
+      ],
+      "identity_threshold": 0.82,
+      "threshold_frozen": true
+    }
+  },
+  "scoring_policy": {
+    "unit": "event",
+    "categories": [
+      "EXACT",
+      "STRUCTURE_ONLY",
+      "IDENTITY_WRONG",
+      "MISSED",
+      "SPURIOUS",
+      "ABSTAIN_UNKNOWN"
+    ],
+    "unknown_is_not_correct": true,
+    "abstention_is_preserved": true,
+    "human_review_must_not_fill_machine_fields": true,
+    "same_match_development_evidence_not_formal_promotion": true
+  },
+  "current_reviewed_anchors": [
+    {
+      "window_seconds": [
+        21,
+        23
+      ],
+      "truth_action": "PENG",
+      "truth_tile_identity_status": "REVIEWED",
+      "machine_action": "UNKNOWN",
+      "machine_tile": "UNKNOWN"
+    },
+    {
+      "window_seconds": [
+        29,
+        31
+      ],
+      "truth_action": "PENG",
+      "truth_tile_identity_status": "REVIEWED",
+      "machine_action": "UNKNOWN",
+      "machine_tile": "UNKNOWN"
+    },
+    {
+      "window_seconds": [
+        35.5,
+        37
+      ],
+      "truth_action": "CHI",
+      "truth_tile_identity_status": "REVIEWED",
+      "machine_action": "UNKNOWN",
+      "machine_tile": "UNKNOWN"
+    },
+    {
+      "window_seconds": [
+        51,
+        53
+      ],
+      "truth_action": "CHI",
+      "truth_tile_identity_status": "REVIEWED",
+      "machine_action": "UNKNOWN",
+      "machine_tile": "UNKNOWN"
+    },
+    {
+      "window_seconds": [
+        78.5,
+        81
+      ],
+      "truth_action": "HU",
+      "truth_tile_identity_status": "PENDING",
+      "machine_action": "UNKNOWN",
+      "machine_tile": "UNKNOWN"
+    }
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
