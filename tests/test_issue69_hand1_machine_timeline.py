@@ -12,7 +12,7 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         self.assertEqual(data["schema_version"], "issue69_hand1_machine_timeline_v0_1")
         self.assertEqual(data["hand_number"], 1)
         events = data["events"]
-        self.assertEqual([row["order"] for row in events], [1, 2, 3, 4, 5])
+        self.assertEqual([row["order"] for row in events], [1, 2, 3, 4, 5, 6])
         self.assertEqual(
             [row["kind"] for row in events],
             [
@@ -21,10 +21,11 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
                 "CROSS_ACTOR_CLAIM_SEQUENCE",
                 "POST_CLAIM_TURN_SEQUENCE_TO_DRAW",
                 "CHAIN_TO_SECOND_OPPONENT_MELD",
+                "TING_PROMPT_SEQUENCE",
             ],
         )
 
-        kong, pass_draw, first_chi, post_chi, second_chi = events
+        kong, pass_draw, first_chi, post_chi, second_chi, ting = events
         self.assertEqual(kong["tile"], "P6")
         self.assertFalse(kong["machine_confirmed"])
 
@@ -88,8 +89,18 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         )
         self.assertFalse(second_chi["machine_confirmed"])
 
+        self.assertFalse(ting["machine"]["ting_prompt_observed"])
+        self.assertFalse(ting["machine"]["rules_engine_tenpai_confirmed"])
+        self.assertEqual(ting["machine"]["opponent_discard"], "UNKNOWN")
+        self.assertEqual(ting["machine"]["player_draw"], "UNKNOWN")
+        self.assertEqual(ting["machine"]["player_discard"], "UNKNOWN")
+        self.assertTrue(
+            ting["human_reviewed_truth"]["ting_prompt_visible_before_discard"]
+        )
+        self.assertFalse(ting["machine_confirmed"])
+
         self.assertEqual(data["machine_closed_event_count"], 0)
-        self.assertEqual(data["development_candidate_event_count"], 5)
+        self.assertEqual(data["development_candidate_event_count"], 6)
         self.assertFalse(data["formal_promotion_evidence"])
         self.assertFalse(data["safe_for_runtime"])
         self.assertFalse(data["safe_for_hint"])
