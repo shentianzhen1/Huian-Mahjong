@@ -85,15 +85,44 @@
       "evidence_refs": [
         "references/vision/2026-10-02/issue69_hand1_m9_draw_s4_discard_s5_chi_s456_chain_v0_1.json"
       ]
+    },
+    {
+      "order": 4,
+      "kind": "POST_CLAIM_TURN_SEQUENCE_TO_DRAW",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "source_locked_event_order",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "first_opponent_discard": "UNKNOWN",
+        "player_draw": "UNKNOWN",
+        "player_discard": "UNKNOWN",
+        "second_opponent_discard": "UNKNOWN",
+        "final_player_draw": "UNKNOWN",
+        "final_player_draw_is_gold": false
+      },
+      "human_reviewed_truth": {
+        "first_opponent_discard": "M8",
+        "player_draw": "N",
+        "player_discard": "N",
+        "second_opponent_discard": "M8",
+        "final_player_draw": "M6_GOLD"
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_post_s456_to_gold_draw_window_v0_1.json"
+      ]
     }
   ],
   "machine_closed_event_count": 0,
-  "development_candidate_event_count": 3,
+  "development_candidate_event_count": 4,
   "caveats": [
     "The P6 MING_GANG event is development evidence and remains non-runtime.",
     "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
     "Derived clips and the exact full source belong to the same original match group and do not add independent-match credit.",
-    "The third event preserves claimed S5 as UNKNOWN at machine level because it is consumed quickly by the opponent chi; S456 uses the existing development-only meld evidence."
+    "The third event preserves claimed S5 as UNKNOWN at machine level because it is consumed quickly by the opponent chi; S456 uses the existing development-only meld evidence.",
+    "The fourth event source-locks the post-S456 turn order through the next player draw; M8/N/M8/M6-gold identities remain human-reviewed truth here."
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
