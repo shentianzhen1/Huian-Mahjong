@@ -67,7 +67,51 @@
       "machine_confirmed": false,
       "evidence_refs": [
         "references/vision/2026-10-02/issue69_hand2_action_windows_v0_1.json"
-      ]
+      ],
+      "human_reviewed_meld_sequence": [
+        {
+          "actor": "opponent",
+          "action": "PENG",
+          "claimed_tile": "S3",
+          "meld": [
+            "S3",
+            "S3",
+            "S3"
+          ]
+        },
+        {
+          "actor": "opponent",
+          "action": "PENG",
+          "claimed_tile": "M9",
+          "meld": [
+            "M9",
+            "M9",
+            "M9"
+          ]
+        },
+        {
+          "actor": "player",
+          "action": "CHI",
+          "claimed_tile": "M6",
+          "meld": [
+            "M4",
+            "M5",
+            "M6"
+          ]
+        },
+        {
+          "actor": "player",
+          "action": "CHI",
+          "claimed_tile": "S3",
+          "meld": [
+            "S3",
+            "S4",
+            "S5"
+          ]
+        }
+      ],
+      "human_reviewed_identity_complete_for_these_melds": true,
+      "machine_identity_complete_for_these_melds": false
     },
     {
       "order": 3,
