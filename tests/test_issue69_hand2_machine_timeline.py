@@ -13,6 +13,17 @@ class Issue69Hand2TimelineTests(unittest.TestCase):
         actions=data["events"][1]
         self.assertEqual(actions["observed_actions"], ["PENG","PENG","CHI","CHI"])
         self.assertFalse(actions["tile_identities_confirmed"])
+        self.assertEqual(
+            [(x["actor"], x["action"], x["claimed_tile"], x["meld"]) for x in actions["human_reviewed_meld_sequence"]],
+            [
+                ("opponent", "PENG", "S3", ["S3","S3","S3"]),
+                ("opponent", "PENG", "M9", ["M9","M9","M9"]),
+                ("player", "CHI", "M6", ["M4","M5","M6"]),
+                ("player", "CHI", "S3", ["S3","S4","S5"]),
+            ],
+        )
+        self.assertTrue(actions["human_reviewed_identity_complete_for_these_melds"])
+        self.assertFalse(actions["machine_identity_complete_for_these_melds"])
         self.assertTrue(all(x["selected_action"]=="UNKNOWN" for x in actions["response_windows"]))
         self.assertEqual(data["machine_closed_event_count"], 0)
         self.assertFalse(data["formal_promotion_evidence"])
