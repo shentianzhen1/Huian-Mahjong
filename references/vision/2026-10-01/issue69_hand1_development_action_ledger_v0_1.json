@@ -61,13 +61,33 @@
           "winner_other_match_groups": 2,
           "production_acceptance_threshold": null
         },
-        "replacement_draw_first_frame": 363
-      }
+        "replacement_draw_first_frame": 363,
+        "claimed_discard_display": {
+          "status": "DIRECT_DISPLAY_P6_DEVELOPMENT",
+          "tile_candidate": "P6",
+          "valid_frame_votes": 6,
+          "source_frames": [
+            315,
+            318,
+            321,
+            324,
+            327,
+            330
+          ],
+          "layout": "2_columns_x_3_rows",
+          "color_signature": "top_two_green_lower_four_red",
+          "action_kind_inferred": false
+        }
+      },
+      "claimed_discard_identity_directly_observed": true,
+      "claimed_discard_display_directly_observed": true,
+      "river_growth_directly_observed": false
     }
   ],
   "caveats": [
-    "The P6 identity is a source-disjoint development ranking from a match already inspected during candidate selection; it is not blind validation.",
-    "The claimed opponent discard is not yet a directly machine-identified river observation in this derived clip.",
+    "The P6 meld identity is a source-disjoint development ranking from a match already inspected during candidate selection; it is not blind validation.",
+    "The claimed discard identity is directly visible as P6 in the system response-window display across six stable source frames; this is separate from river-growth detection.",
+    "River growth itself is not yet directly machine-observed for this derived clip.",
     "Do not promote this event to Runtime/Hint/Executor without the existing runtime evidence gates."
   ],
   "formal_promotion_evidence": false,
