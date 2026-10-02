@@ -8,7 +8,7 @@
     {
       "window_seconds": [115.9, 116.8],
       "event": {"actor": "SELF", "action": "DISCARD", "tile_id": "P7"},
-      "evidence": "post-PENG hand transition followed by newly visible P8 in self river with current-discard marker before opponent CHI onset"
+      "evidence": "human-verified correction: post-PENG discard is P7; prior visual P8 reading is rejected and must not be used as ground truth"
     },
     {
       "window_seconds": [132.5, 132.75],
