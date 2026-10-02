@@ -43,6 +43,17 @@ class Issue69KongDevelopmentCandidateTests(unittest.TestCase):
         self.assertEqual(out["identity_evidence"]["winner_other_match_groups"], 2)
         self.assertAlmostEqual(out["identity_evidence"]["margin"], 0.12319498)
         self.assertFalse(out["claimed_discard_directly_observed"])
+        self.assertTrue(out["claimed_discard_identity_directly_observed"])
+        self.assertTrue(out["claimed_discard_display_directly_observed"])
+        self.assertFalse(out["river_growth_directly_observed"])
+        self.assertEqual(
+            out["claimed_discard_display_evidence"]["tile_candidate"],
+            "P6",
+        )
+        self.assertEqual(
+            out["claimed_discard_display_evidence"]["valid_frame_votes"],
+            6,
+        )
         self.assertFalse(out["machine_confirmed"])
         self.assertFalse(out["runtime_eligible"])
         self.assertFalse(out["safe_for_runtime"])
@@ -62,6 +73,13 @@ class Issue69KongDevelopmentCandidateTests(unittest.TestCase):
         self.assertEqual(event["tile"], "P6")
         self.assertEqual(event["evidence_level"], "development_candidate")
         self.assertFalse(event["claimed_discard_directly_observed"])
+        self.assertTrue(event["claimed_discard_identity_directly_observed"])
+        self.assertTrue(event["claimed_discard_display_directly_observed"])
+        self.assertFalse(event["river_growth_directly_observed"])
+        self.assertEqual(
+            event["evidence"]["claimed_discard_display"]["tile_candidate"],
+            "P6",
+        )
         self.assertFalse(event["machine_confirmed"])
         self.assertFalse(event["runtime_action"])
         self.assertFalse(event["safe_for_runtime"])
@@ -99,6 +117,22 @@ class Issue69KongDevelopmentCandidateTests(unittest.TestCase):
             generated["claimed_discard_directly_observed"],
         )
         self.assertEqual(event["runtime_action"], generated["runtime_action"])
+        self.assertEqual(
+            event["claimed_discard_identity_directly_observed"],
+            generated["claimed_discard_identity_directly_observed"],
+        )
+        self.assertEqual(
+            event["claimed_discard_display_directly_observed"],
+            generated["claimed_discard_display_directly_observed"],
+        )
+        self.assertEqual(
+            event["river_growth_directly_observed"],
+            generated["river_growth_directly_observed"],
+        )
+        self.assertEqual(
+            event["evidence"]["claimed_discard_display"],
+            generated["evidence"]["claimed_discard_display"],
+        )
         self.assertFalse(ledger["formal_promotion_evidence"])
         self.assertFalse(ledger["safe_for_runtime"])
         self.assertFalse(ledger["safe_for_executor"])
@@ -121,6 +155,19 @@ class Issue69KongDevelopmentCandidateTests(unittest.TestCase):
         )
         self.assertEqual(out["status"], "UNKNOWN")
         self.assertEqual(out["reason"], "hand_count_gate_not_satisfied")
+
+    def test_claimed_display_and_meld_identity_conflict_fails_closed(self):
+        identity = copy.deepcopy(self.identity)
+        identity["ranking"]["top1_tile"] = "S4"
+        claimed = load(
+            "references/vision/2026-10-02/"
+            "issue69_hand1_claimed_discard_p6_display_v0_1.json"
+        )
+        out = build_kong_development_candidate(
+            self.hand, self.structure, identity, claimed
+        )
+        self.assertEqual(out["status"], "UNKNOWN")
+        self.assertEqual(out["reason"], "claimed_discard_identity_conflict")
 
     def test_insufficient_cross_match_identity_support_fails_closed(self):
         identity = copy.deepcopy(self.identity)
