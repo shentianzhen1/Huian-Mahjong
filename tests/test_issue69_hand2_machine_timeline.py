@@ -6,9 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 P = ROOT / "references/vision/2026-10-02/issue69_hand2_machine_timeline_v0_1.json"
 
 class Issue69Hand2TimelineTests(unittest.TestCase):
-    def test_partial_source_and_action_boundaries_stay_fail_closed(self):
+    def test_post_opening_start_and_action_boundaries_stay_fail_closed(self):
         data=json.loads(P.read_text(encoding="utf-8"))
-        self.assertEqual(data["source"]["boundary_status"], "PARTIAL_SOURCE_START")
+        self.assertEqual(data["source"]["boundary_status"], "HAND_START_POST_OPENING_ANIMATION")
         self.assertEqual([e["order"] for e in data["events"]], [1,2,3])
         actions=data["events"][1]
         self.assertEqual(actions["observed_actions"], ["PENG","PENG","CHI","CHI"])
