@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('root', 'private-zip', 'recovery', 'query-dir', 'output'):
         parser.add_argument('--' + name, required=True)
+    parser.add_argument('--canvas-policy', choices=('native', 'canonical'), default='native')
     args = parser.parse_args()
     root = Path(args.root)
     manifest = load_public_identity_manifest(root / 'references/vision/2026-09-22/public_identity_labels_v0_1.json')
@@ -67,7 +68,11 @@ def main():
 
     def canvas(image):
         image = image.copy()
-        image.thumbnail((160, 192), Image.Resampling.BICUBIC)
+        if args.canvas_policy == 'canonical':
+            scale = min(160 / image.width, 192 / image.height)
+            image = image.resize((max(1, round(image.width*scale)), max(1, round(image.height*scale))), Image.Resampling.BICUBIC)
+        else:
+            image.thumbnail((160, 192), Image.Resampling.BICUBIC)
         result = Image.new('RGB', (224, 224), 'white')
         result.paste(image, ((224-image.width)//2, (224-image.height)//2))
         return result
@@ -114,6 +119,7 @@ def main():
             rows.append({'query_id': name, 'expected_tile': truth, 'expected_class_eligible': truth in classes, 'top1_tile': classes[order[0]], 'top1_correct': classes[order[0]] == truth, 'untrained_embedding_top1': prototype_ranking[0][0], 'untrained_embedding_correct': prototype_ranking[0][0] == truth, 'ranked_logits': [{'tile_id': classes[i], 'logit': round(scores[i].item(), 6)} for i in order]})
     report = {'schema_version': 'public_meld_linear_head_development_v0_1', 'model': 'mobilenet_v3_small_imagenet1k_v1', 'backbone_frozen': True, 'trained_component': 'linear_head_only', 'seed': 69, 'epochs': 200, 'learning_rate': 0.01, 'weight_decay': 0.01, 'classes': classes, 'original_training_faces': len(images), 'augmented_training_faces': len(train), 'training_augmentation': {'sizes': [None, [24, 27], [32, 36]], 'blur_sigma': [0.0, 0.5]}, 'query_original_match_excluded_from_training': True, 'query_group_count': 1, 'query_pixels_used_in_training': False, 'previously_inspected_development_queries': True, 'rows': rows, 'correct': sum(r['top1_correct'] for r in rows), 'query_count': len(rows), 'torch_version': torch.__version__, 'torchvision_version': torchvision.__version__, 'scores_are_calibrated_probabilities': False, 'development_only': True, 'formal_promotion_evidence': False, 'changes_runtime_behavior': False, 'safe_for_runtime': False, 'safe_for_hint': False, 'safe_for_executor': False}
     report['untrained_embedding_correct'] = sum(r['untrained_embedding_correct'] for r in rows)
+    report['canvas_policy'] = args.canvas_policy
     report['pretrained_weight_sha256'] = hashlib.sha256((Path(torch.hub.get_dir())/'checkpoints/mobilenet_v3_small-047dcff4.pth').read_bytes()).hexdigest()
     report['query_file_sha256'] = {name: hashlib.sha256((query_dir/name).read_bytes()).hexdigest() for name in ('first_hand_174s_p6.jpg', 'first_hand_174s_s4.jpg', 'round8_new_meld_normalized.png')}
     Path(args.output).write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
