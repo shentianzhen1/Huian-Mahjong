@@ -29,6 +29,22 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         self.assertEqual(rows[0].actor_hint, "opponent")
         self.assertIsNone(rows[0].tile)
 
+    def test_river_report_includes_exact_single_removal(self):
+        report = {
+            "schema_version": "source_river_action_replay_v0_1",
+            "source_session": "s", "source_sha256": "a" * 64,
+            "machine_predictions": {"actions": []},
+            "river_removals": [{
+                "timestamp_seconds": 117.2, "frame_index": 3516,
+                "stream_epoch": 0, "actor": "player",
+                "evidence_refs": ["public:s:frame:3516"], "tile": None,
+            }],
+        }
+        rows = river_report_candidates(report)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0].kind, "RIVER_TILE_REMOVED_OR_CLAIMED")
+        self.assertEqual(rows[0].actor_hint, "player")
+
     def test_river_report_refuses_to_guess_missing_frame(self):
         report = {
             "schema_version": "source_river_action_replay_v0_1",
@@ -109,7 +125,7 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         row = meld_observation_candidate(obs, source_sha256="c" * 64)
         self.assertEqual(row.channel, "meld")
         self.assertEqual(row.frame_index, 777)
-        self.assertEqual(row.tile, "S1,S2,S3")\n        self.assertEqual(row.tiles, ("S1", "S2", "S3"))
+        self.assertEqual(row.tile, "S1,S2,S3")\n        self.assertEqual(row.tiles, ("S1", "S2", "S3"))\n        self.assertEqual(row.tiles, ("S1", "S2", "S3"))
 
     def test_meld_partial_identity_remains_unknown(self):
         obs = RawObservation(
