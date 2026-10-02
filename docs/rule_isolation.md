@@ -100,7 +100,7 @@ Code that needs a real target-room value should use
 
 This is especially important for:
 
-- Gang-Hu
+- Ordinary Gang-Hu / An-Gang-Hu: CONFIRMED normal Kong fan + Zimo ×2; preserve the confirmed gate
 - Rob-Kong full settlement
 - Qiangjin settlement
 - Sanjindao full settlement

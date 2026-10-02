@@ -2,7 +2,7 @@
 
 以真实对局证据驱动的惠安双人麻将工程。Rules、Environment、Simulator、AI、Vision 与 Executor 分层；UNKNOWN 规则不会被硬编码。
 
-仓库当前为公开仓库，可直接 `git clone`。旧名 `Maj` 仍会重定向到现仓库。
+仓库可直接 `git clone`。以下能力描述以 `main` 为准；未合并的开发成果见 [Draft PR #117](https://github.com/shentianzhen1/Huian-Mahjong/pull/117)。
 
 ## 5 分钟上手
 
@@ -35,20 +35,22 @@ python -B -m unittest discover -s tests -v
 - Settlement / Match：普通平胡×1、自摸×2使用真实番数和当前庄底结算；8局从1000/1000开始累积零和分数，match_evidence_001完整8局fixture可逐局回放到1113/887。
 - 庄底：新庄当前结算底10；同一庄家连庄每局+5且不上封顶直到第8局；庄输换庄后新庄重置10。
 - Simulator：固定牌墙/seed、交换座位、UNKNOWN证据包、8局真实普通规则MatchRunner，以及统一的整场A/B评估（最终分、分差、点炮、自摸/点炮来源、UNKNOWN）。
-- AI：当前正式前沿为 **`CurrentAgent = MeldAwareShantenAgent V0.10`**；`TenpaiRiskTieBreakAgent V0.6` 保留为固定主对照，`ShantenAgent V0.3` 保留为牌效消融基线。V0.10继承V0.6弃牌策略，只在CHI/PENG窗口比较PASS与副露后的最优强制弃牌，并且只有普通进攻元组严格改善时才副露。两批独立评估合计200个seed pair / 400场完整8局：V0.10为239胜、V0.6为159胜、2平，平均配对最终分差+54.805。KONG已接入只读影子审计，显式标注抢杠/杠胡未知项，不改变当前策略。新策略必须使用固定牌墙+正反换座+Agent身份稳定RNG，直接击败V0.10才能晋级。
+- AI：当前正式前沿为 **`CurrentAgent = MeldAwareShantenAgent V0.10`**；`TenpaiRiskTieBreakAgent V0.6` 保留为固定主对照，`ShantenAgent V0.3` 保留为牌效消融基线。V0.10继承V0.6弃牌策略，只在CHI/PENG窗口比较PASS与副露后的最优强制弃牌，并且只有普通进攻元组严格改善时才副露。两批独立评估合计200个seed pair / 400场完整8局：V0.10为239胜、V0.6为159胜、2平，平均配对最终分差+54.805。KONG已接入只读影子审计，显式标注剩余抢杠胡结算未知项，不改变当前策略。新策略必须使用固定牌墙+正反换座+Agent身份稳定RNG，直接击败V0.10才能晋级。
 - Recorder / Vision：Recorder V0.2按局录像。Vision已用8局真实回放建立严格 `same_region + leave-session-out` 基线；修正1条人工错标后，hand+draw为147/149=**98.66%**，置信度≥0.80的127个样本为127/127正确。Gold V0.1在当前8局196个可检测帧中193帧正确=**98.47%**，8/8局多数票正确，但这仍是同批录像时序结果，不是外部泛化率。PublicState V0.1已实现比分/局数/剩余牌的多帧融合与物理约束。
 
 ## 当前整局流水主线（Issue #69）
 
 公开整局重建已合并 HandTimeline/中文 Match Ledger、public river/meld observer、Runtime Vision bridge、Temporal Action Assembler、公共牌几何检测与跨帧追踪、Hand Context、庄家标记和 Player Perspective V0.1。两份已审计开发录像可以显式映射本地玩家座位，但新来源没有证据时仍保持 UNKNOWN。
 
-**这还不是完整真实对局自动识别。** 当前 public identity 的初始开发标签为 17 个、覆盖 11/34 个标准牌类，同类跨来源重复为 0；公共牌候选身份仍保持 UNKNOWN。下一阶段优先用新来源标注和连续真实帧测量误轨迹、actor/turn 与真正的 RiverSnapshot，再将可靠动作接入整场流水。正式 Vision 晋级仍须通过 Issue #7 的独立盲测；Hint Alpha 只读，Executor 关闭。
+**这还不是完整真实对局自动识别。** main 提供观察、追踪、差分与动作组装基础；[Issue #69](https://github.com/shentianzhen1/Huian-Mahjong/issues/69) 保持开放。活跃集成在未合并的 #117：当前桌面状态门、手牌/副露几何与牌面实验、真实录像回归均属于开发成果，不能写成 main 已完成能力。
+
+#117 的 V0.1 测试目标为可信当前桌面状态上的只读向听数与公共危险提示；完整八局流水保留为离线回归目标。缺失公共牌身份时必须关闭剩余张数与危险提示。正式 Vision 晋级仍须通过 [Issue #7](https://github.com/shentianzhen1/Huian-Mahjong/issues/7) 的独立盲测；Hint Alpha 只读，Executor 关闭。
 
 开发顺序、证据检查与 PR 验收说明见 [开发与证据流程](docs/development_workflow.md)。
 
 ## 当前还不能做什么
 
-- 抢金的精确资格/真实结算、三金倒真实终局、抢杠胡/杠胡结算、八花游真实倍率仍未闭环；游金主链（响应弃牌、单→双→三游、花牌与杠续行）已实现，剩余主要受杠胡/抢杠胡计分缺口阻塞；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
+- 抢金的精确资格/真实结算、三金倒真实终局、抢杠胡付款/庄位/完整终局、八花游真实结算仍未闭环；游金主链（响应弃牌、单→双→三游、花牌与杠续行）已实现。普通杠胡/暗杠胡已确认正常杠番加普通自摸×2，并进入自动结算；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
 - AI已经接通公开8局比赛上下文（当前比分、剩余局数、庄位、庄底、连庄次数）和点炮统计。V0.11/V0.12的“排除金等待后再做即时score-aware”路径已验证为结构性几乎不可触发，因此不再沿这条死门槛继续堆版本。下一阶段优先研究有金时的副露/特殊状态EV、KONG决策，以及不依赖该死门槛的多步/整场EV；见 Issue #6。
 - Vision 已有真实牌面基线以及 Score Reader / Status Reader V0.1，但仍缺新的独立录屏批次、部分牌类覆盖、更多draw连续序列、状态栏整段多时点统计和缩放/移动/遮挡压力测试。当前同批离线高分不等于端到端泛化；见 Issue #7。
 - Executor 未接入。Vision达到量化准确率、置信度和多帧稳定性门槛之前，不启用自动点击。
