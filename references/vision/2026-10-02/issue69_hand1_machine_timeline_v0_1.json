@@ -234,10 +234,90 @@
       "evidence_refs": [
         "references/vision/2026-10-02/issue69_hand1_repeated_green_dragon_pending_v0_1.json"
       ]
+    },
+    {
+      "order": 8,
+      "kind": "PRE_YOUJIN_ORDINARY_TURN_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "human_reviewed_pending_machine_identity",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "event_order_confirmed": false,
+        "tile_identities_confirmed": false
+      },
+      "human_reviewed_truth": {
+        "sequence": [
+          {
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "M2"
+          },
+          {
+            "actor": "player",
+            "event": "DRAW_DISCARD",
+            "tile": "S8"
+          },
+          {
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "S8"
+          },
+          {
+            "actor": "player",
+            "event": "DRAW_DISCARD",
+            "tile": "M3"
+          },
+          {
+            "actor": "player",
+            "event": "DRAW_INTO_HAND",
+            "tile": "P8"
+          }
+        ]
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_youjin_terminal_chain_v0_1.json"
+      ]
+    },
+    {
+      "order": 9,
+      "kind": "YOUJIN_TERMINAL_STATE_CHAIN",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "reviewed_real_match_rule_anchor",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "full_frame_identity_complete": false,
+        "runtime_action_ready": false
+      },
+      "reviewed_rule_chain": [
+        "PLAYER_DISCARD_P5_ENTER_YOUJIN",
+        "OPPONENT_RESPONSE_DRAW",
+        "OPPONENT_MANDATORY_DISCARD_M3",
+        "PLAYER_CONTINUATION_DRAW_P4",
+        "PLAYER_DECLARE_YOUJIN",
+        "SETTLEMENT_PLUS_68"
+      ],
+      "settlement": {
+        "base": 10,
+        "gold_fan": 2,
+        "flower_fan": 3,
+        "kong_fan": 2,
+        "multiplier": 4,
+        "net_score": 68
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_youjin_terminal_chain_v0_1.json",
+        "RULE_EVIDENCE_MATRIX.md"
+      ]
     }
   ],
   "machine_closed_event_count": 0,
-  "development_candidate_event_count": 7,
+  "development_candidate_event_count": 9,
   "caveats": [
     "The P6 MING_GANG event is development evidence and remains non-runtime.",
     "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
@@ -246,7 +326,8 @@
     "The fourth event source-locks the post-S456 turn order through the next player draw; M8/N/M8/M6-gold identities remain human-reviewed truth here.",
     "The fifth event is intentionally partial: the S123 structural anchor is machine-reviewed, while the preceding M6-gold/P8/S3/S345/S2 chain remains pending exact-source review.",
     "The sixth event reserves the reviewed S5→P5→TING prompt→S2 sequence, but the TING UI remains pending exact-source observation and is not a rules-engine tenpai claim.",
-    "The seventh event preserves two separately reviewed player F discards as distinct temporal occurrences; exact-source machine verification is still pending."
+    "The seventh event preserves two separately reviewed player F discards as distinct temporal occurrences; exact-source machine verification is still pending.",
+    "The terminal Youjin chain is a reviewed real-match rule anchor, not a claim that every tile identity is machine-recognized frame-by-frame."
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
