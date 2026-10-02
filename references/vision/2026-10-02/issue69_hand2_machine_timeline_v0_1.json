@@ -9,7 +9,13 @@
     "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
     "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4",
     "segment_start_seconds": 0,
-    "boundary_status": "PARTIAL_SOURCE_START"
+    "boundary_status": "HAND_START_POST_OPENING_ANIMATION",
+    "source_start_semantics": "ACTUAL_HAND_PLAY_START",
+    "missing_before_source": [
+      "OPENING_ANIMATION",
+      "DEAL_ANIMATION",
+      "GOLD_FLIP_ANIMATION"
+    ]
   },
   "events": [
     {
@@ -87,7 +93,7 @@
   "safe_for_hint": false,
   "safe_for_executor": false,
   "caveats": [
-    "Hand 2 begins mid-hand in this source; HAND_START/OPEN_GOLD must not be synthesized.",
+    "Hand 2 source begins at the actual hand-play start after the unrecorded opening/deal/gold-flip animation; do not synthesize missing opening animation or OPEN_GOLD identity.",
     "Observed PENG/CHI/HU banners establish visual action anchors only; tile identities remain UNKNOWN.",
     "Response options PENG/PASS do not establish which option was selected."
   ]
