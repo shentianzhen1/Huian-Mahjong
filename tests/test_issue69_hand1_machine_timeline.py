@@ -1,0 +1,53 @@
+import json
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+TIMELINE = ROOT / "references/vision/2026-10-02/issue69_hand1_machine_timeline_v0_1.json"
+
+
+class Issue69Hand1MachineTimelineTests(unittest.TestCase):
+    def test_first_three_events_remain_fail_closed_and_ordered(self):
+        data = json.loads(TIMELINE.read_text(encoding="utf-8"))
+        self.assertEqual(data["schema_version"], "issue69_hand1_machine_timeline_v0_1")
+        self.assertEqual(data["hand_number"], 1)
+        events = data["events"]
+        self.assertEqual([row["order"] for row in events], [1, 2, 3])
+        self.assertEqual(
+            [row["kind"] for row in events],
+            ["MING_GANG", "RESPONSE_DRAW_DISCARD_SEQUENCE", "DISCARD_TO_CLAIM_SEQUENCE"],
+        )
+
+        kong, pass_draw, first_chi = events
+        self.assertEqual(kong["tile"], "P6")
+        self.assertFalse(kong["machine_confirmed"])
+
+        self.assertEqual(pass_draw["response_choice"], "UNKNOWN")
+        self.assertEqual(pass_draw["draw_tile"], "UNKNOWN")
+        self.assertEqual(pass_draw["discard_tile"], "UNKNOWN")
+        self.assertFalse(pass_draw["machine_confirmed"])
+
+        self.assertEqual(first_chi["machine"]["opponent_discard_tile"], "UNKNOWN")
+        self.assertEqual(first_chi["machine"]["player_draw_tile"], "UNKNOWN")
+        self.assertEqual(first_chi["machine"]["player_discard_tile"], "UNKNOWN")
+        self.assertEqual(first_chi["machine"]["opponent_claim_kind"], "UNKNOWN")
+        self.assertEqual(first_chi["machine"]["opponent_meld_identity"], "UNKNOWN")
+        self.assertTrue(first_chi["machine"]["opponent_new_meld_observed"])
+        self.assertFalse(first_chi["machine_confirmed"])
+
+        self.assertEqual(first_chi["human_reviewed_truth"]["opponent_discard_tile"], "M9")
+        self.assertEqual(first_chi["human_reviewed_truth"]["player_draw_tile"], "S4")
+        self.assertEqual(first_chi["human_reviewed_truth"]["player_discard_tile"], "S5")
+        self.assertEqual(first_chi["human_reviewed_truth"]["opponent_action"], "CHI")
+        self.assertEqual(first_chi["human_reviewed_truth"]["opponent_meld"], ["S4", "S5", "S6"])
+
+        self.assertEqual(data["machine_closed_event_count"], 0)
+        self.assertEqual(data["development_candidate_event_count"], 3)
+        self.assertFalse(data["formal_promotion_evidence"])
+        self.assertFalse(data["safe_for_runtime"])
+        self.assertFalse(data["safe_for_hint"])
+        self.assertFalse(data["safe_for_executor"])
+
+
+if __name__ == "__main__":
+    unittest.main()
