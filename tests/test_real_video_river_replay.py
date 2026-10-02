@@ -194,6 +194,34 @@ class RiverReplayTests(unittest.TestCase):
                 replay_rivers(video, manifest_path=self.manifest(sha),
                               first_frame=0, last_frame=50, dense_profiles=profiles)
 
+    def test_private_dense_manifest_requires_exact_source_and_review(self):
+        from workspace.vision.real_video_river_replay import load_dense_profile_manifest
+        from workspace.vision.source_river_geometry import load_river_manifest
+
+        sha = "a" * 64
+        manifest = load_river_manifest(self.manifest(sha))
+        path = self.root / "private_slots.json"
+        data = {
+            "schema_version": "source_dense_river_slots_dev_v0_1",
+            "source_session": SESSION,
+            "source_sha256": sha,
+            "frame_size": [WIDTH, HEIGHT],
+            "development_only": True,
+            "slots_independently_reviewed": True,
+            "profiles": [
+                {"actor": "player", "slots": [[.1, .2, .1, .1]]},
+                {"actor": "opponent", "slots": [[.5, .2, .1, .1]]},
+            ],
+        }
+        path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertEqual(len(load_dense_profile_manifest(path, manifest)), 2)
+        for change in ({"source_sha256": "b" * 64},
+                       {"slots_independently_reviewed": False},
+                       {"frame_size": [1, 1]}):
+            path.write_text(json.dumps({**data, **change}), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "exact video source"):
+                load_dense_profile_manifest(path, manifest)
+
 
     def test_oversized_river_gap_abstains_and_rebases_only_affected_actor(self):
         from workspace.vision.real_video_river_replay import replay_rivers

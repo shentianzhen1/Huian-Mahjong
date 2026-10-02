@@ -21,6 +21,38 @@ from workspace.vision.source_river_geometry import load_river_manifest, qualify_
 SCHEMA_VERSION = "source_river_action_replay_v0_1"
 
 
+def load_dense_profile_manifest(path: str | Path, river_manifest) -> tuple:
+    """Load a private, exact-source development profile; never export slots."""
+    from workspace.vision.public_dense_river_slots import DenseRiverSlotProfile
+
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if (not isinstance(data, dict)
+            or data.get("schema_version") != "source_dense_river_slots_dev_v0_1"
+            or data.get("development_only") is not True
+            or data.get("slots_independently_reviewed") is not True
+            or data.get("source_sha256") != river_manifest.source_sha256
+            or data.get("source_session") != river_manifest.source_session
+            or data.get("frame_size") != list(river_manifest.frame_size)
+            or not isinstance(data.get("profiles"), list)
+            or len(data["profiles"]) != 2):
+        raise ValueError("dense profile must be reviewed and match the exact video source")
+    try:
+        profiles = tuple(DenseRiverSlotProfile(
+            actor=item["actor"],
+            slots=tuple(tuple(slot) for slot in item["slots"]),
+            maximum_saturation=item.get("maximum_saturation", 150),
+            minimum_value=item.get("minimum_value", 145),
+            empty_fraction_maximum=item.get("empty_fraction_maximum", .12),
+            occupied_fraction_minimum=item.get("occupied_fraction_minimum", .42),
+            interior_trim_ratio=item.get("interior_trim_ratio", .12),
+        ) for item in data["profiles"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("invalid dense profile fields") from exc
+    if {profile.actor for profile in profiles} != {"player", "opponent"}:
+        raise ValueError("dense profile requires player and opponent slots")
+    return profiles
+
+
 def replay_rivers(video: str | Path, *, manifest_path: str | Path,
                   first_frame: int, last_frame: int,
                   truth_path: str | Path | None = None,
@@ -221,13 +253,18 @@ def main() -> None:
     parser.add_argument("--first-frame",type=int,required=True)
     parser.add_argument("--last-frame",type=int,required=True)
     parser.add_argument("--truth",help="Optional frozen development truth; loaded only after prediction assembly")
+    parser.add_argument("--dense-profile", help="Private, exact-source reviewed slot manifest; diagnostic only")
     parser.add_argument("--output",required=True,help="PRIVATE local full trace; never commit video identifiers/crops")
     args=parser.parse_args()
+    profiles = (load_dense_profile_manifest(args.dense_profile, load_river_manifest(args.manifest))
+                if args.dense_profile else None)
     result=replay_rivers(args.video,manifest_path=args.manifest,first_frame=args.first_frame,
-                         last_frame=args.last_frame,truth_path=args.truth)
+                         last_frame=args.last_frame,truth_path=args.truth,
+                         dense_profiles=profiles,
+                         dense_slots_independently_reviewed=profiles is not None)
     Path(args.output).write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({key:result[key] for key in ("frames_decoded","stream_epochs","counts",
-          "development_evaluation","safe_for_executor")},ensure_ascii=False))
+          "dense_river_diagnostic", "development_evaluation","safe_for_executor")},ensure_ascii=False))
 
 if __name__=="__main__":
     main()
