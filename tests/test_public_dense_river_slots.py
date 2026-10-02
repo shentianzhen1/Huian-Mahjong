@@ -2,10 +2,12 @@
 import hashlib
 from dataclasses import replace
 
-try:
-    import numpy as np
-except ModuleNotFoundError:  # Optional Vision dependency; core unittest only imports.
-    np = None
+import pytest
+
+# This module is pytest-only. Core installs skip it; the dedicated Vision job
+# installs and executes it with real numpy/OpenCV instead of reporting a false pass.
+np = pytest.importorskip("numpy")
+pytest.importorskip("cv2")
 
 from workspace.vision.public_dense_river_slots import (
     DenseRiverMaskFrame,

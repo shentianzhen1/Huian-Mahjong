@@ -103,6 +103,29 @@ jobs:
           python -m coverage run --source=huian.rules,huian.environment -m unittest discover -s tests -v
           python -m coverage report --show-missing --skip-covered --fail-under=85
 
+  dense-river-vision:
+    needs: scope
+    name: Dense river Vision function tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Complete stable required check without expensive tests
+        if: needs.scope.outputs.run_full != 'true'
+        run: echo "No relevant code or workflow changes; expensive steps omitted."
+      - uses: actions/checkout@v7
+        if: needs.scope.outputs.run_full == 'true'
+      - uses: actions/setup-python@v7
+        if: needs.scope.outputs.run_full == 'true'
+        with:
+          python-version: "3.12"
+      - name: Install Vision and test dependencies
+        if: needs.scope.outputs.run_full == 'true'
+        run: python -m pip install -e ".[vision]" "pytest>=8,<10"
+      - name: Run dense river function tests with real Vision dependencies
+        if: needs.scope.outputs.run_full == 'true'
+        run: |
+          python -c "import cv2, numpy"
+          python -B -m pytest -q tests/test_public_dense_river_slots.py
+
   legacy-advisory:
     needs: scope
     name: Legacy baseline (advisory)
