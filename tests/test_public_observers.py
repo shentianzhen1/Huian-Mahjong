@@ -15,7 +15,15 @@ from workspace.vision.public_observers import (
     MeldSnapshotObserver,
     PublicTile,
     RiverSnapshot,
+    _merge_refs,
 )
+
+
+class EvidenceReferenceTests(unittest.TestCase):
+    def test_merge_preserves_first_seen_order_for_long_replay(self):
+        first = tuple(f"frame:{index}" for index in range(1000))
+        merged = _merge_refs((first, first[500:], ("", "frame:1000", "frame:0")))
+        self.assertEqual(merged, first + ("frame:1000",))
 
 
 def tile(x: float, tile_id: str | None, *, confidence: float = 0.99, ref: str = "") -> PublicTile:

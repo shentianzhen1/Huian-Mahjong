@@ -44,9 +44,11 @@ def _validate_confidence(confidence: float) -> float:
 
 def _merge_refs(items: Iterable[Sequence[str]]) -> tuple[str, ...]:
     refs: list[str] = []
+    seen: set[str] = set()
     for group in items:
         for ref in group:
-            if ref and ref not in refs:
+            if ref and ref not in seen:
+                seen.add(ref)
                 refs.append(ref)
     return tuple(refs)
 
