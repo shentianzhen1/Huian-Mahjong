@@ -1,11 +1,19 @@
 # PROJECT_STATUS — Current Snapshot
 
-**Snapshot date:** 2026-09-23  
+**Snapshot date:** 2026-10-02
 **Execution truth:** GitHub Issues  
 **Rule truth:** `RULE_STATUS.md` + `RULE_EVIDENCE_MATRIX.md`  
 **History:** `CHANGELOG.md` only
 
 本文件只保留一页当前快照，不复制 TODO / Issue 正文。
+
+## Issue #69 integration update (2026-10-02)
+
+- Draft PR #117 on `integration/issue69-replay-stack-20260926` is the active read-only integration branch; it has not been merged into `main`.
+- Hand 2 source-locked 0–2399 frame replay produced 7 `UNKNOWN`-grade river-growth actions, with no known tile identity. Dense connected rows caused 1731 opponent and 945 player untrusted frames; this is development diagnosis, not real-action accuracy.
+- The dense-slot prefix diagnostic is an optional, separately reported supplement requiring independently reviewed actor slots. Its growth candidates never become `RawObservation`, `DISCARD`, Hint, or Executor input. The private slot layout is not in this repository, so the optional path does not run for Hand 2 from a fresh checkout.
+- Issue #69 validation scope is representative Hand 1 closure, scenario coverage for Hands 2–8, and eight-hand automated replay. It does not require exhaustive manual transcription of all eight hands. New-source blind evaluation remains separate from same-source development.
+- Core CI now collects function-style pytest tests as well as unittest classes; the coverage job retains its separate Rules/Environment floor.
 
 ## Current Baselines
 
@@ -60,7 +68,7 @@ P0 只保留真实结算证据缺口：
 P1：
 - **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
 - **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger、Public Tile Detector、Candidate Tracker、development channel calibration 与 Hand Context Assembler 已落地。开局可由 PublicState + 独立庄家/Gold 证据生成 `HAND_START / OPEN_GOLD`；公开 identity 独立标签域仍只有 17 个 approved 开发标签、11/34 类，runtime identity 继续 `UNKNOWN`。dealer-marker 真实视觉输入已落地；66fe/b389 的 player-seat/session 映射由结算 fixture 显式锁定，未知新来源仍需配置。**PR #98 首次 SHA 锁定第一局连续 378 帧全链路**：双弃牌河源限定 ROI、可见牌缝拆分、真实 detector → tracker → 双 RiverObserver → ActionAssembler → 冻结真值评估；上/下各 2 次几何河增长，但牌身份和独立回合仍 UNKNOWN，严格评估 **4/4 弃权、4 漏检、0 个可认证真阳性**，不属于独立 Vision 晋级证据。Issue #69 保持开放：后续多牌粘连、跨来源公开牌身份和独立回合验证。
+- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger、Public Tile Detector、Candidate Tracker 与 Hand Context Assembler 已落地。开局需 PublicState + 独立庄家/Gold 证据；公开牌身份和回合仍需独立验证。PR #98 的第一局 378 帧全链路是历史开发基线（4/4 弃权、4 漏检、0 个可认证真阳性）。当前 PR #117 的 Hand 2 0–2399 帧河牌链路为 7 个 `UNKNOWN` 动作；密集槽位诊断仅是候选，不属于独立 Vision 晋级证据。Issue #69 继续开放。
 
 Product / P2：
 - **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
@@ -71,7 +79,7 @@ Product / P2：
 
 1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
 2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：PR #98 已跑通首段 source-scoped 双弃牌河 + 真实连续流水线，但 4 次机器输出均因 identity/turn UNKNOWN 被严格评估器计弃权。下一步先让多牌粘连 fail closed、扩充跨-session public identity 覆盖，再取得独立 turn 信号并做新的 source-disjoint 盲测；不把几何匹配计作端到端准确率。
+3. 推进 #69 Public Match Reconstruction V0.1：PR #117 的 Hand 2 盲跑已确认密集河牌漏检和 identity/turn UNKNOWN。先以单独诊断候选补密集河牌变化，再取得独立牌面与 turn 信号并做新的 source-disjoint 盲测；不把几何匹配计作端到端准确率。
 4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
 5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
 6. #4 未闭环前，不开启新的 Agent 版本线。

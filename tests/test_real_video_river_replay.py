@@ -157,6 +157,43 @@ class RiverReplayTests(unittest.TestCase):
         self.assertEqual(metrics["true_positives"], 0)
         self.assertIsNone(metrics["actor_accuracy_on_aligned"])
 
+    def test_dense_slot_diagnostic_never_changes_assembled_actions(self):
+        from workspace.vision.public_dense_river_slots import DenseRiverSlotProfile
+        from workspace.vision.real_video_river_replay import replay_rivers
+
+        video = self.root / "synthetic_dense.mp4"
+        video.write_bytes(b"synthetic dense slot source")
+        sha = hashlib.sha256(video.read_bytes()).hexdigest()
+        profiles = (
+            DenseRiverSlotProfile("opponent", (
+                (646 / WIDTH, 110 / HEIGHT, 28 / WIDTH, 30 / HEIGHT),
+                (618 / WIDTH, 110 / HEIGHT, 28 / WIDTH, 30 / HEIGHT),
+            )),
+            DenseRiverSlotProfile("player", (
+                (325 / WIDTH, 257 / HEIGHT, 35 / WIDTH, 27 / HEIGHT),
+                (360 / WIDTH, 257 / HEIGHT, 35 / WIDTH, 27 / HEIGHT),
+            )),
+        )
+        with patch.object(self.cv2, "VideoCapture", side_effect=lambda _: self.capture()):
+            plain = replay_rivers(video, manifest_path=self.manifest(sha),
+                                  first_frame=0, last_frame=50)
+            augmented = replay_rivers(
+                video, manifest_path=self.manifest(sha), first_frame=0,
+                last_frame=50, dense_profiles=profiles,
+                dense_slots_independently_reviewed=True,
+            )
+        self.assertEqual(plain["machine_predictions"], augmented["machine_predictions"])
+        self.assertIsNone(plain["dense_river_diagnostic"])
+        for actor in ("opponent", "player"):
+            diagnostic = augmented["dense_river_diagnostic"][actor]
+            self.assertGreaterEqual(len(diagnostic["candidate_prefix_growth"]), 1)
+            self.assertEqual(diagnostic["actual_actions_emitted"], 0)
+            self.assertEqual(diagnostic["tile_identity"], "UNKNOWN")
+        with patch.object(self.cv2, "VideoCapture", side_effect=lambda _: self.capture()):
+            with self.assertRaisesRegex(ValueError, "independently reviewed"):
+                replay_rivers(video, manifest_path=self.manifest(sha),
+                              first_frame=0, last_frame=50, dense_profiles=profiles)
+
 
     def test_oversized_river_gap_abstains_and_rebases_only_affected_actor(self):
         from workspace.vision.real_video_river_replay import replay_rivers

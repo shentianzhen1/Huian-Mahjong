@@ -12,6 +12,7 @@ from workspace.vision.public_dense_river_slots import (
     DenseRiverPrefixGrowth,
     DenseRiverSlotProfile,
     audit_dense_river_stable_masks,
+    audit_dense_river_prefix_sequence,
     dense_river_delta_to_transition_fact,
     dense_river_prefix_growth_to_transition_fact,
     probe_anchor_local_river_growth,
@@ -26,6 +27,32 @@ PROFILE = DenseRiverSlotProfile(
     "player",
     ((.10, .20, .10, .20), (.20, .20, .10, .20), (.30, .20, .10, .20)),
 )
+
+
+def test_continuous_prefix_sequence_is_candidate_only_and_reappearance_abstains():
+    masks = (
+        [(False, False, False)] * 3
+        + [(True, False, False)] * 3
+        + [(False, False, False)] * 3
+        + [(True, False, False)] * 3
+        + [(True, True, False)] * 3
+    )
+    frames = tuple(DenseRiverMaskFrame("hand-01", SHA, 0, index, mask, True)
+                   for index, mask in enumerate(masks))
+    result = audit_dense_river_prefix_sequence(
+        frames, profile=PROFILE, slots_independently_reviewed=True,
+    )
+    assert result.candidate_prefix_growth == ((3, 0, 1), (12, 1, 2))
+    assert result.suppressed_reappearances == 1
+    assert result.to_dict()["actual_actions_emitted"] == 0
+    assert result.to_dict()["formal_accuracy_eligible"] is False
+    assert audit_dense_river_prefix_sequence(
+        (frames[0], *frames[2:]), profile=PROFILE,
+        slots_independently_reviewed=True,
+    ).status == "UNKNOWN"
+    assert audit_dense_river_prefix_sequence(
+        frames, profile=PROFILE, slots_independently_reviewed=False,
+    ).status == "UNKNOWN"
 
 
 def pixels(mask):

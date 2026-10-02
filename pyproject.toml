@@ -21,6 +21,7 @@ dev = [
     "ruff>=0.6",
     "black>=24.0",
     "coverage>=7,<8",
+    "pytest>=8,<10",
 ]
 vision = [
     "opencv-python-headless>=4.10,<6",

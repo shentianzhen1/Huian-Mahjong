@@ -94,6 +94,30 @@ class DenseRiverSequenceAudit:
 
 
 @dataclass(frozen=True)
+class DenseRiverPrefixSequenceAudit:
+    status: str
+    candidate_prefix_growth: tuple[tuple[int, int, int], ...]
+    ambiguous_transitions: int
+    suppressed_reappearances: int
+
+    def to_dict(self) -> dict:
+        return {
+            "schema_version": "public_dense_river_prefix_sequence_dev_v0_1",
+            "development_only": True,
+            "status": self.status,
+            "candidate_prefix_growth": [list(item) for item in self.candidate_prefix_growth],
+            "ambiguous_transitions": self.ambiguous_transitions,
+            "suppressed_reappearances": self.suppressed_reappearances,
+            "actual_actions_emitted": 0,
+            "tile_identity": "UNKNOWN",
+            "actual_action_kind": "UNKNOWN",
+            "formal_accuracy_eligible": False,
+            "safe_for_runtime": False,
+            "safe_for_executor": False,
+        }
+
+
+@dataclass(frozen=True)
 class DenseRiverMaskFrame:
     """Ephemeral reviewed mask; construct from a verified decoded frame."""
 
@@ -282,6 +306,71 @@ def _valid_mask_frame(frame: DenseRiverMaskFrame, slot_count: int) -> bool:
         and isinstance(frame.slot_mask, tuple)
         and len(frame.slot_mask) == slot_count
         and all(value is None or type(value) is bool for value in frame.slot_mask)
+    )
+
+
+def audit_dense_river_prefix_sequence(
+    frames: Sequence[DenseRiverMaskFrame],
+    *,
+    profile: DenseRiverSlotProfile,
+    slots_independently_reviewed: bool,
+    stable_frames: int = 3,
+) -> DenseRiverPrefixSequenceAudit:
+    """Report new stable prefix cells, never public actions or exact totals.
+
+    Reappearing cells and non-unit jumps are refused. Every decoded frame must
+    be present so a source gap cannot quietly become a new growth candidate.
+    """
+    unknown = DenseRiverPrefixSequenceAudit("UNKNOWN", (), 0, 0)
+    if (not _valid_profile(profile) or slots_independently_reviewed is not True
+            or type(stable_frames) is not int or stable_frames < 3
+            or not frames or any(not _valid_mask_frame(frame, len(profile.slots))
+                                  for frame in frames)):
+        return unknown
+    first = frames[0]
+    scope = (first.source_session, first.source_sha256, first.stream_epoch)
+    if any(
+        (later.source_session, later.source_sha256, later.stream_epoch) != scope
+        or later.frame_index != earlier.frame_index + 1
+        for earlier, later in zip(frames, frames[1:])
+    ):
+        return unknown
+
+    def prefix(mask: tuple[bool | None, ...]) -> int:
+        return next((i for i, value in enumerate(mask) if value is not True), len(mask))
+
+    first_seen: dict[int, int] = {}
+    stable_prefix: int | None = None
+    candidates: list[tuple[int, int, int]] = []
+    ambiguous = 0
+    reappearances = 0
+    for index, frame in enumerate(frames):
+        for slot, value in enumerate(frame.slot_mask):
+            if value is True:
+                first_seen.setdefault(slot, frame.frame_index)
+        if index + 1 < stable_frames:
+            continue
+        window = frames[index + 1 - stable_frames:index + 1]
+        if any(item.slot_mask != frame.slot_mask for item in window):
+            continue
+        current = prefix(frame.slot_mask)
+        if stable_prefix is None:
+            stable_prefix = current
+        elif current > stable_prefix:
+            if (current == stable_prefix + 1
+                    and first_seen[stable_prefix] == window[0].frame_index):
+                candidates.append((window[0].frame_index, stable_prefix, current))
+            elif current == stable_prefix + 1:
+                reappearances += 1
+            else:
+                ambiguous += 1
+            stable_prefix = current
+        elif current < stable_prefix:
+            ambiguous += 1
+            stable_prefix = current
+    return DenseRiverPrefixSequenceAudit(
+        "DENSE_RIVER_PREFIX_SEQUENCE_CANDIDATES_ONLY",
+        tuple(candidates), ambiguous, reappearances,
     )
 
 

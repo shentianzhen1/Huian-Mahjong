@@ -23,7 +23,9 @@ SCHEMA_VERSION = "source_river_action_replay_v0_1"
 
 def replay_rivers(video: str | Path, *, manifest_path: str | Path,
                   first_frame: int, last_frame: int,
-                  truth_path: str | Path | None = None) -> dict[str, Any]:
+                  truth_path: str | Path | None = None,
+                  dense_profiles: tuple | None = None,
+                  dense_slots_independently_reviewed: bool = False) -> dict[str, Any]:
     """Return machine-generated predictions and optional post-run development eval.
 
     No raw video, crop, private file URI, or screenshots are included in output.
@@ -53,6 +55,20 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
     )
     from workspace.vision.public_observers import DiscardRiverObserver
     from workspace.vision.public_tile_detector import detect_public_tile_geometry
+    from workspace.vision.public_dense_river_slots import (
+        DenseRiverSlotProfile, audit_dense_river_prefix_sequence,
+        source_scoped_dense_river_mask,
+    )
+    from workspace.vision.public_meld_gap_onset import SourceScopedOpticalFrame
+    import hashlib
+
+    if dense_profiles is not None:
+        if (dense_slots_independently_reviewed is not True
+                or len(dense_profiles) != 2
+                or {p.actor for p in dense_profiles if isinstance(p, DenseRiverSlotProfile)}
+                != {"player", "opponent"}):
+            raise ValueError("dense diagnostic requires two independently reviewed actor profiles")
+    dense_masks = {p.actor: [] for p in dense_profiles or ()}
 
     cap = cv2.VideoCapture(str(video))
     if not cap.isOpened():
@@ -99,6 +115,17 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
             first_pts = pts if first_pts is None else first_pts
             last_pts = pts
             image = Image.fromarray(cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB))
+            if dense_profiles is not None:
+                optical = SourceScopedOpticalFrame(
+                    manifest.source_session, actual_hash, 0, index,
+                    hashlib.sha256(image_bgr.tobytes()).hexdigest(), image_bgr,
+                    True, True,
+                )
+                for profile in dense_profiles:
+                    mask = source_scoped_dense_river_mask(optical, profile)
+                    if mask is None:
+                        raise ValueError("invalid dense slot profile or decoded source frame")
+                    dense_masks[profile.actor].append(mask)
             detected = detect_public_tile_geometry(image, frame=index, session=manifest.source_session)
             qualified = qualify_river_frame(image, detected, manifest=manifest, actual_sha256=actual_hash)
             tracked = tracker.observe(qualified.filtered_frame, timestamp_seconds=pts)
@@ -143,6 +170,14 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
     counts["assembled_actions"] = len(actions)
     counts["unknown_graded_actions"] = sum(a.evidence_grade.value == "UNKNOWN" for a in actions)
     counts["known_tile_actions"] = sum(a.tile is not None for a in actions)
+    dense_diagnostic = None
+    if dense_profiles is not None:
+        dense_diagnostic = {
+            p.actor: audit_dense_river_prefix_sequence(
+                dense_masks[p.actor], profile=p,
+                slots_independently_reviewed=True,
+            ).to_dict() for p in dense_profiles
+        }
     return {
         "schema_version": SCHEMA_VERSION,
         "source_session": manifest.source_session,
@@ -170,6 +205,7 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
             } for p in predictions],
         },
         "development_evaluation": evaluation,
+        "dense_river_diagnostic": dense_diagnostic,
         "tile_identity_policy": "UNKNOWN until independent public tile identity evidence",
         "turn_actor_policy": "UNKNOWN until independent turn evidence",
         "source_disjoint_holdout": False,
