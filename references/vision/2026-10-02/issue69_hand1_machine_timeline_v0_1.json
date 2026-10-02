@@ -179,10 +179,65 @@
       "evidence_refs": [
         "references/vision/2026-10-02/issue69_hand1_ting_prompt_pending_v0_1.json"
       ]
+    },
+    {
+      "order": 7,
+      "kind": "REPEATED_TILE_TURN_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "pending_exact_source_review",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "event_order_confirmed": false,
+        "tile_identities_confirmed": false,
+        "repeated_same_tile_count_confirmed": false
+      },
+      "human_reviewed_truth": {
+        "sequence": [
+          {
+            "id": "h1_seq7_01",
+            "actor": "player",
+            "event": "DRAW_DISCARD",
+            "tile": "P1"
+          },
+          {
+            "id": "h1_seq7_02",
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "M2"
+          },
+          {
+            "id": "h1_seq7_03",
+            "actor": "player",
+            "event": "DISCARD",
+            "tile": "F",
+            "occurrence": 1
+          },
+          {
+            "id": "h1_seq7_04",
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "E"
+          },
+          {
+            "id": "h1_seq7_05",
+            "actor": "player",
+            "event": "DISCARD",
+            "tile": "F",
+            "occurrence": 2
+          }
+        ]
+      },
+      "replay_invariant": "DO_NOT_DEDUPE_REPEATED_TILE_EVENTS_BY_ACTOR_AND_TILE",
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_repeated_green_dragon_pending_v0_1.json"
+      ]
     }
   ],
   "machine_closed_event_count": 0,
-  "development_candidate_event_count": 6,
+  "development_candidate_event_count": 7,
   "caveats": [
     "The P6 MING_GANG event is development evidence and remains non-runtime.",
     "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
@@ -190,7 +245,8 @@
     "The third event preserves claimed S5 as UNKNOWN at machine level because it is consumed quickly by the opponent chi; S456 uses the existing development-only meld evidence.",
     "The fourth event source-locks the post-S456 turn order through the next player draw; M8/N/M8/M6-gold identities remain human-reviewed truth here.",
     "The fifth event is intentionally partial: the S123 structural anchor is machine-reviewed, while the preceding M6-gold/P8/S3/S345/S2 chain remains pending exact-source review.",
-    "The sixth event reserves the reviewed S5→P5→TING prompt→S2 sequence, but the TING UI remains pending exact-source observation and is not a rules-engine tenpai claim."
+    "The sixth event reserves the reviewed S5→P5→TING prompt→S2 sequence, but the TING UI remains pending exact-source observation and is not a rules-engine tenpai claim.",
+    "The seventh event preserves two separately reviewed player F discards as distinct temporal occurrences; exact-source machine verification is still pending."
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
