@@ -15,7 +15,7 @@
     },
     "machine": {
       "producer": "runtime_vision_v0_2_public_replay_stack",
-      "status": "NOT_YET_EXECUTED_IN_CURRENT_RUNTIME",
+      "status": "RIVER_REPLAY_EXECUTED_FULL_IDENTITY_STACK_PENDING",
       "required_pipeline": [
         "tiles_runtime_v0_2.runtime_reader",
         "runtime_public_adapter",
@@ -24,7 +24,47 @@
         "issue69_public_replay_orchestrator"
       ],
       "identity_threshold": 0.82,
-      "threshold_frozen": true
+      "threshold_frozen": true,
+      "river_replay_blind_run": {
+        "entrypoint": "workspace.vision.real_video_river_replay",
+        "manifest": "references/vision/2026-10-02/issue69_hand2_river_geometry.development.json",
+        "truth_loaded_before_prediction": false,
+        "frame_range": [
+          0,
+          2399
+        ],
+        "frames_decoded": 2400,
+        "stream_epochs": [
+          0
+        ],
+        "counts": {
+          "detector_candidate_frame_instances": 20425,
+          "qualified_river_candidate_frame_instances": 4004,
+          "stable_track_frame_instances": 3986,
+          "player_river_growth_observations": 5,
+          "opponent_river_growth_observations": 2,
+          "assembled_actions": 7,
+          "unknown_graded_actions": 7,
+          "known_tile_actions": 0,
+          "opponent_untrusted_frames": 1731,
+          "player_untrusted_frames": 945
+        },
+        "development_evaluation": null,
+        "interpretation": "The source-scoped river replay ran without human truth. All seven assembled actions remained UNKNOWN-grade and identity-free. Dense connected river rows caused sustained fail-closed untrusted intervals, so this is diagnostic evidence only."
+      },
+      "dense_river_supplement": {
+        "module": "workspace.vision.public_dense_river_slots",
+        "status": "LOCAL_DEVELOPMENT_DIAGNOSTIC_EXECUTED",
+        "private_slot_layout_committed": false,
+        "raw_observation_emitted": false,
+        "action_kind_emitted": false,
+        "tile_identity_emitted": false,
+        "opponent_record_prefix_growth_candidates": 8,
+        "opponent_max_confirmed_prefix": 8,
+        "player_record_prefix_growth_candidates": 9,
+        "player_max_confirmed_prefix": 9,
+        "interpretation": "Stable source-scoped dense-slot prefix growth recovered later river-count transitions without weakening wide-component seam gates. These are public-zone transition candidates only, not DISCARD truth."
+      }
     }
   },
   "scoring_policy": {
