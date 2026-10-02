@@ -12,7 +12,7 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         self.assertEqual(data["schema_version"], "issue69_hand1_machine_timeline_v0_1")
         self.assertEqual(data["hand_number"], 1)
         events = data["events"]
-        self.assertEqual([row["order"] for row in events], [1, 2, 3, 4])
+        self.assertEqual([row["order"] for row in events], [1, 2, 3, 4, 5])
         self.assertEqual(
             [row["kind"] for row in events],
             [
@@ -20,10 +20,11 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
                 "RESPONSE_DRAW_DISCARD_SEQUENCE",
                 "CROSS_ACTOR_CLAIM_SEQUENCE",
                 "POST_CLAIM_TURN_SEQUENCE_TO_DRAW",
+                "CHAIN_TO_SECOND_OPPONENT_MELD",
             ],
         )
 
-        kong, pass_draw, first_chi, post_chi = events
+        kong, pass_draw, first_chi, post_chi, second_chi = events
         self.assertEqual(kong["tile"], "P6")
         self.assertFalse(kong["machine_confirmed"])
 
@@ -72,8 +73,23 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         )
         self.assertFalse(post_chi["machine_confirmed"])
 
+        self.assertEqual(
+            second_chi["machine"]["preceding_chain_status"],
+            "PENDING_SOURCE_REVIEW",
+        )
+        self.assertTrue(second_chi["machine"]["opponent_new_meld_observed"])
+        self.assertEqual(second_chi["machine"]["opponent_new_meld_geometry"], "FLAT")
+        self.assertEqual(second_chi["machine"]["opponent_new_meld_identity"], "UNKNOWN")
+        self.assertEqual(second_chi["machine"]["opponent_action_kind"], "UNKNOWN")
+        self.assertEqual(second_chi["machine"]["claimed_tile"], "UNKNOWN")
+        self.assertEqual(
+            second_chi["human_reviewed_truth"]["opponent_meld"],
+            ["S1", "S2", "S3"],
+        )
+        self.assertFalse(second_chi["machine_confirmed"])
+
         self.assertEqual(data["machine_closed_event_count"], 0)
-        self.assertEqual(data["development_candidate_event_count"], 4)
+        self.assertEqual(data["development_candidate_event_count"], 5)
         self.assertFalse(data["formal_promotion_evidence"])
         self.assertFalse(data["safe_for_runtime"])
         self.assertFalse(data["safe_for_hint"])
