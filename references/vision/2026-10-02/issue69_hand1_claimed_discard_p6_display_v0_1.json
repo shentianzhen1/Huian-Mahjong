@@ -1,0 +1,338 @@
+{
+  "schema_version": "issue69_claimed_discard_display_pips_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "source_session": "session_c4d1b879367aeca8",
+    "sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "independent_match_group_credit": false,
+    "frame_size": [
+      1108,
+      512
+    ],
+    "fps": 30
+  },
+  "region": {
+    "semantic_role": "claimed_discard_display",
+    "crop_bbox_pixels": [
+      517,
+      40,
+      65,
+      90
+    ],
+    "crop_bbox_normalized": [
+      0.4666064982,
+      0.078125,
+      0.0586642599,
+      0.17578125
+    ],
+    "privacy_scope": "tile_face_only"
+  },
+  "extractor": {
+    "grayscale_blur_kernel": [
+      5,
+      5
+    ],
+    "grayscale_blur_sigma": 1,
+    "hough_circle": {
+      "method": "HOUGH_GRADIENT",
+      "dp": 1,
+      "min_dist": 14,
+      "param1": 80,
+      "param2": 22,
+      "min_radius": 7,
+      "max_radius": 12
+    },
+    "hue_measurement": {
+      "color_space": "OpenCV_HSV",
+      "minimum_saturation": 60,
+      "green_hue_range": [
+        55,
+        85
+      ],
+      "red_hue_ranges": [
+        [
+          0,
+          20
+        ],
+        [
+          165,
+          179
+        ]
+      ]
+    }
+  },
+  "observations": [
+    {
+      "frame": 315,
+      "second": 10.5,
+      "circles": [
+        [
+          23.5,
+          32.5,
+          8.8,
+          67
+        ],
+        [
+          41.5,
+          32.5,
+          8.8,
+          66
+        ],
+        [
+          23.5,
+          56.5,
+          9.1,
+          176.5
+        ],
+        [
+          41.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          23.5,
+          72.5,
+          9.1,
+          18
+        ],
+        [
+          41.5,
+          72.5,
+          9.1,
+          2
+        ]
+      ]
+    },
+    {
+      "frame": 318,
+      "second": 10.6,
+      "circles": [
+        [
+          23.5,
+          32.5,
+          8.8,
+          67
+        ],
+        [
+          41.5,
+          32.5,
+          8.8,
+          66
+        ],
+        [
+          23.5,
+          56.5,
+          9.1,
+          176.5
+        ],
+        [
+          41.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          23.5,
+          72.5,
+          9.1,
+          3
+        ],
+        [
+          41.5,
+          72.5,
+          9.1,
+          2
+        ]
+      ]
+    },
+    {
+      "frame": 321,
+      "second": 10.7,
+      "circles": [
+        [
+          41.5,
+          32.5,
+          8.8,
+          66
+        ],
+        [
+          23.5,
+          33.5,
+          9,
+          68
+        ],
+        [
+          23.5,
+          56.5,
+          9.1,
+          5
+        ],
+        [
+          41.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          23.5,
+          72.5,
+          9.1,
+          3
+        ],
+        [
+          41.5,
+          72.5,
+          9.1,
+          3
+        ]
+      ]
+    },
+    {
+      "frame": 324,
+      "second": 10.8,
+      "circles": [
+        [
+          23.5,
+          32.5,
+          9.1,
+          68
+        ],
+        [
+          41.5,
+          32.5,
+          8.8,
+          66
+        ],
+        [
+          23.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          41.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          23.5,
+          72.5,
+          9.1,
+          5
+        ],
+        [
+          41.5,
+          72.5,
+          9.1,
+          3
+        ]
+      ]
+    },
+    {
+      "frame": 327,
+      "second": 10.9,
+      "circles": [
+        [
+          23.5,
+          32.5,
+          9.1,
+          68
+        ],
+        [
+          41.5,
+          32.5,
+          8.8,
+          66
+        ],
+        [
+          23.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          41.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          22.5,
+          71.5,
+          8,
+          4
+        ],
+        [
+          41.5,
+          72.5,
+          9.1,
+          3
+        ]
+      ]
+    },
+    {
+      "frame": 330,
+      "second": 11,
+      "circles": [
+        [
+          23.5,
+          32.5,
+          9.1,
+          68
+        ],
+        [
+          41.5,
+          32.5,
+          8.8,
+          66
+        ],
+        [
+          23.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          41.5,
+          56.5,
+          9.1,
+          3
+        ],
+        [
+          23.5,
+          72.5,
+          9.1,
+          5
+        ],
+        [
+          41.5,
+          72.5,
+          9.1,
+          3
+        ]
+      ]
+    }
+  ],
+  "expected_review": {
+    "stable_frame_votes": "6/6",
+    "circle_count": 6,
+    "layout": "2_columns_x_3_rows",
+    "color_signature": "top_two_green_lower_four_red",
+    "tile_candidate": "P6"
+  },
+  "semantic_boundary": {
+    "claimed_discard_display_directly_observed": true,
+    "river_growth_directly_observed": false,
+    "action_kind_inferred_from_this_region": false,
+    "runtime_identity_ready": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}
