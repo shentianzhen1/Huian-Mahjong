@@ -28,6 +28,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - name: Check all tracked active Python syntax before dependency installation
+        run: python scripts/check_python_syntax.py
       - name: Skip costly matrix for documentation/evidence-only PRs
         id: detect
         env:
