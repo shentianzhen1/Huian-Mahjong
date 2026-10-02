@@ -541,7 +541,12 @@ class DiscardRiverObserver:
 
 
 class MeldSnapshotObserver:
-    """Turn stable exposed-meld snapshot changes into MELD_DELTA observations."""
+    """Turn stable exposed-meld snapshot changes into MELD_DELTA observations.
+
+    Missing, conflicting, or shrinking old groups do not replace the accepted
+    baseline. They remain untrusted observations until recovery or an explicit
+    source/session epoch reset; retained history is not a trusted current view.
+    """
 
     def __init__(self, settle_frames: int = 3):
         if settle_frames < 2:
@@ -628,6 +633,19 @@ class MeldSnapshotObserver:
             new = stable_snapshot.groups[new_index]
             if len(old.tiles) != len(new.tiles):
                 changed_pairs.append((old, new))
+
+        if unmatched_previous or any(
+            len(new.tiles) < len(old.tiles) for old, new in changed_pairs
+        ):
+            # A settled detection failure must not erase old exposed groups or
+            # turn their later recovery into a new-meld event. Fail closed on
+            # the current observation while keeping the prior baseline.
+            return ObserverOutput(
+                observation=None,
+                stable=True,
+                trusted=False,
+                issues=("meld_transition_ambiguous",),
+            )
 
         if (
             not unmatched_previous

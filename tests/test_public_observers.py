@@ -504,6 +504,63 @@ class MeldSnapshotObserverTests(unittest.TestCase):
         self.assertTrue(output.baseline_rebased)
         self.assertEqual(output.issues, ("meld_transition_ambiguous",))
 
+    def test_missing_or_conflicting_meld_preserves_baseline_until_recovery(self):
+        peng = meld(0.10, ("M9", "M9", "M9"))
+        other = meld(0.30, ("P3", "P4", "P5"))
+        kong = meld(0.10, ("M9", "M9", "M9", "M9"))
+        cases = (
+            ("all_missing", (peng,), ()),
+            ("one_group_missing", (peng, other), (other,)),
+            ("identity_conflict", (peng,), (meld(0.10, ("P9", "P9", "P9")),)),
+            ("kong_shrinks", (kong,), (peng,)),
+        )
+        for name, baseline, inconsistent in cases:
+            with self.subTest(name=name):
+                observer = MeldSnapshotObserver(settle_frames=2)
+                self._settle(
+                    observer,
+                    lambda i: meld_frame(1 + i * 0.1, "player", baseline, frame=10 + i),
+                )
+                # Repeated stable bad observations must not delete old groups.
+                for attempt in range(3):
+                    output = self._settle(
+                        observer,
+                        lambda i: meld_frame(
+                            2 + attempt + i * 0.1, "player", inconsistent,
+                            frame=20 + attempt * 10 + i,
+                        ),
+                    )
+                    self.assertIsNone(output.observation)
+                    self.assertFalse(output.trusted)
+                    self.assertFalse(output.baseline_rebased)
+                    self.assertIn("meld_transition_ambiguous", output.issues)
+                recovered = self._settle(
+                    observer,
+                    lambda i: meld_frame(6 + i * 0.1, "player", baseline, frame=60 + i),
+                )
+                self.assertTrue(recovered.trusted)
+                self.assertIsNone(recovered.observation)
+                self.assertFalse(recovered.baseline_rebased)
+
+    def test_missing_peng_does_not_erase_previous_meld_for_later_kong(self):
+        observer = MeldSnapshotObserver(settle_frames=2)
+        self._settle(
+            observer,
+            lambda i: meld_frame(1 + i * 0.1, "player", (meld(0.10, ("M9",) * 3),), frame=10 + i),
+        )
+        self._settle(observer, lambda i: meld_frame(2 + i * 0.1, "player", (), frame=20 + i))
+        output = self._settle(
+            observer,
+            lambda i: meld_frame(3 + i * 0.1, "player", (meld(0.10, ("M9",) * 4),), frame=30 + i),
+        )
+        self.assertIsNotNone(output.observation)
+        self.assertEqual(output.observation.details["previous_meld"], ["M9"] * 3)
+        repeated = self._settle(
+            observer,
+            lambda i: meld_frame(4 + i * 0.1, "player", (meld(0.10, ("M9",) * 4),), frame=40 + i),
+        )
+        self.assertIsNone(repeated.observation)
+
     def test_stream_epoch_change_reestablishes_meld_baseline(self):
         observer = MeldSnapshotObserver(settle_frames=2)
         self._settle(
