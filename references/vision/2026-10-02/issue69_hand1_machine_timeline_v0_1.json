@@ -113,16 +113,57 @@
       "evidence_refs": [
         "references/vision/2026-10-02/issue69_hand1_post_s456_to_gold_draw_window_v0_1.json"
       ]
+    },
+    {
+      "order": 5,
+      "kind": "CHAIN_TO_SECOND_OPPONENT_MELD",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "partial_source_anchor_existing_s123_geometry",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "preceding_chain_status": "PENDING_SOURCE_REVIEW",
+        "opponent_new_meld_observed": true,
+        "opponent_new_meld_geometry": "FLAT",
+        "opponent_new_meld_identity": "UNKNOWN",
+        "opponent_action_kind": "UNKNOWN",
+        "claimed_tile": "UNKNOWN"
+      },
+      "human_reviewed_truth": {
+        "player_draw": "M6_GOLD",
+        "player_discard": "P8",
+        "opponent_discard": "S3",
+        "player_action": "CHI",
+        "player_meld": [
+          "S3",
+          "S4",
+          "S5"
+        ],
+        "player_next_discard": "S2",
+        "opponent_action": "CHI",
+        "opponent_meld": [
+          "S1",
+          "S2",
+          "S3"
+        ]
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_second_chi_s123_anchor_v0_1.json",
+        "references/vision/2026-10-01/opponent_meld_0926_hand1_s123_geometry_result_v0_1.json"
+      ]
     }
   ],
   "machine_closed_event_count": 0,
-  "development_candidate_event_count": 4,
+  "development_candidate_event_count": 5,
   "caveats": [
     "The P6 MING_GANG event is development evidence and remains non-runtime.",
     "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
     "Derived clips and the exact full source belong to the same original match group and do not add independent-match credit.",
     "The third event preserves claimed S5 as UNKNOWN at machine level because it is consumed quickly by the opponent chi; S456 uses the existing development-only meld evidence.",
-    "The fourth event source-locks the post-S456 turn order through the next player draw; M8/N/M8/M6-gold identities remain human-reviewed truth here."
+    "The fourth event source-locks the post-S456 turn order through the next player draw; M8/N/M8/M6-gold identities remain human-reviewed truth here.",
+    "The fifth event is intentionally partial: the S123 structural anchor is machine-reviewed, while the preceding M6-gold/P8/S3/S345/S2 chain remains pending exact-source review."
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
