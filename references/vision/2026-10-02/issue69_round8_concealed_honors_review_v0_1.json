@@ -1,0 +1,48 @@
+{
+  "schema_version": "issue69_round8_concealed_honors_review_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "status": "DEVELOPMENT_REVIEWED_CANDIDATES",
+  "source": {
+    "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "video_dimensions": [1108, 512],
+    "fps": 30.0,
+    "logical_session_policy": "all clips from this eight-hand match must reuse one source_session"
+  },
+  "reviewed_frame": {
+    "seconds": 99.0,
+    "source_frame": 2970,
+    "region": "hand_region",
+    "candidates": [
+      {
+        "tile_id": "N",
+        "human_reviewed_name": "北风",
+        "bbox_xywh": [765, 439, 49, 68],
+        "purpose": "ordinary-white concealed honor regression"
+      },
+      {
+        "tile_id": "Z",
+        "human_reviewed_name": "红中",
+        "bbox_xywh": [815, 439, 48, 68],
+        "purpose": "ordinary-white concealed honor regression"
+      }
+    ]
+  },
+  "green_dragon": {
+    "tile_id": "F",
+    "human_reviewed_name": "发财",
+    "status": "PENDING_EXACT_FRAME_AND_BBOX",
+    "note": "Do not substitute another honor tile or a different visual domain."
+  },
+  "intake_policy": {
+    "approved_template_intake": false,
+    "reason": "metadata is frozen first; reviewed tile crop intake and runtime regression remain separate steps",
+    "identity_threshold_must_remain": 0.82,
+    "cross_domain_substitution_forbidden": true,
+    "same_match_must_not_count_as_independent_session": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
