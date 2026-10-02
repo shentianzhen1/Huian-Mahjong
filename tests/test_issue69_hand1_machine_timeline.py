@@ -27,19 +27,34 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         self.assertEqual(pass_draw["discard_tile"], "UNKNOWN")
         self.assertFalse(pass_draw["machine_confirmed"])
 
-        self.assertEqual(first_chi["machine"]["opponent_discard_tile"], "UNKNOWN")
-        self.assertEqual(first_chi["machine"]["player_draw_tile"], "UNKNOWN")
-        self.assertEqual(first_chi["machine"]["player_discard_tile"], "UNKNOWN")
-        self.assertEqual(first_chi["machine"]["opponent_claim_kind"], "UNKNOWN")
-        self.assertEqual(first_chi["machine"]["opponent_meld_identity"], "UNKNOWN")
-        self.assertTrue(first_chi["machine"]["opponent_new_meld_observed"])
+        self.assertEqual(first_chi["kind"], "CROSS_ACTOR_CLAIM_SEQUENCE")
+        self.assertEqual(
+            first_chi["machine_identity"]["opponent_discard"], "UNKNOWN"
+        )
+        self.assertEqual(first_chi["machine_identity"]["player_draw"], "UNKNOWN")
+        self.assertEqual(
+            first_chi["machine_identity"]["claimed_discard"], "UNKNOWN"
+        )
+        self.assertEqual(
+            first_chi["machine_identity"]["opponent_meld"],
+            "S456_DEVELOPMENT_ONLY",
+        )
+        self.assertIn("OPPONENT_CHI_ANIMATION_VISIBLE", first_chi["machine_sequence"])
+        self.assertIn("OPPONENT_NEW_MELD_VISIBLE", first_chi["machine_sequence"])
         self.assertFalse(first_chi["machine_confirmed"])
 
-        self.assertEqual(first_chi["human_reviewed_truth"]["opponent_discard_tile"], "M9")
-        self.assertEqual(first_chi["human_reviewed_truth"]["player_draw_tile"], "S4")
-        self.assertEqual(first_chi["human_reviewed_truth"]["player_discard_tile"], "S5")
+        self.assertEqual(
+            first_chi["human_reviewed_truth"]["opponent_discard"], "M9"
+        )
+        self.assertEqual(first_chi["human_reviewed_truth"]["player_draw"], "S4")
+        self.assertEqual(
+            first_chi["human_reviewed_truth"]["player_discard"], "S5"
+        )
         self.assertEqual(first_chi["human_reviewed_truth"]["opponent_action"], "CHI")
-        self.assertEqual(first_chi["human_reviewed_truth"]["opponent_meld"], ["S4", "S5", "S6"])
+        self.assertEqual(
+            first_chi["human_reviewed_truth"]["opponent_meld"],
+            ["S4", "S5", "S6"],
+        )
 
         self.assertEqual(data["machine_closed_event_count"], 0)
         self.assertEqual(data["development_candidate_event_count"], 3)
