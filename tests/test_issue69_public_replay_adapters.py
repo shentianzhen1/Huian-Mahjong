@@ -46,6 +46,22 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "exact source frame"):
             river_report_candidates(report)
 
+    def test_accumulated_river_refs_use_explicit_event_frame(self):
+        report = {
+            "schema_version": "source_river_action_replay_v0_1",
+            "source_session": "s", "source_sha256": "a" * 64,
+            "machine_predictions": {"actions": [{
+                "timestamp_seconds": 3.8, "frame_index": 114,
+                "stream_epoch": 0, "kind": "DISCARD", "actor": "player",
+                "evidence_refs": ["public:s:frame:19", "public:s:frame:114"],
+                "tile": None,
+            }]},
+        }
+        self.assertEqual(river_report_candidates(report)[0].frame_index, 114)
+        del report["machine_predictions"]["actions"][0]["frame_index"]
+        with self.assertRaisesRegex(ValueError, "one exact source frame"):
+            river_report_candidates(report)
+
     def test_action_area_stays_context_only(self):
         report = {
             "schema_version": "source_action_area_geometry_v0_1",
@@ -53,6 +69,7 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
             "source_sha256": "b" * 64,
             "candidates": [{
                 "frame": 444,
+                "timestamp_seconds": 14.8,
                 "region_actor_hint": "player",
                 "tile": "UNKNOWN",
                 "action_kind": "UNKNOWN",
@@ -61,7 +78,17 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         rows = action_area_report_candidates(report)
         self.assertEqual(rows[0].channel, "action_area")
         self.assertEqual(rows[0].kind, "ACTION_AREA_ONSET")
+        self.assertEqual(rows[0].timestamp_seconds, 14.8)
         self.assertIsNone(rows[0].tile)
+
+    def test_action_area_legacy_frame_as_seconds_is_rejected(self):
+        report = {
+            "schema_version": "source_action_area_geometry_v0_1",
+            "source_session": "s", "source_sha256": "b" * 64,
+            "candidates": [{"frame": 444, "region_actor_hint": "player"}],
+        }
+        with self.assertRaisesRegex(ValueError, "source PTS seconds"):
+            action_area_report_candidates(report)
 
 
     def test_meld_observation_preserves_complete_group_identity(self):

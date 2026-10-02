@@ -14,6 +14,7 @@
 - The dense-slot prefix diagnostic is an optional, separately reported supplement requiring independently reviewed actor slots. Its growth candidates never become `RawObservation`, `DISCARD`, Hint, or Executor input. The private slot layout is not in this repository, so the optional path does not run for Hand 2 from a fresh checkout. Local replay accepts `--dense-profile <private-json>` with schema `source_dense_river_slots_dev_v0_1`, exact source SHA/session/frame size, reviewed flag, and normalized player/opponent slot profiles; never commit that JSON.
 - Issue #69 validation scope is representative Hand 1 closure, scenario coverage for Hands 2–8, and eight-hand automated replay. It does not require exhaustive manual transcription of all eight hands. New-source blind evaluation remains separate from same-source development.
 - Core CI now collects function-style pytest tests as well as unittest classes; the coverage job retains its separate Rules/Environment floor.
+- Cross-channel replay alignment now carries the river observer's explicit stable-confirmation frame and the action-area video's source PTS seconds. Legacy multi-frame river refs and action-area reports without PTS fail closed; neither signal establishes tile identity or independent turn ownership.
 
 ## Current Baselines
 

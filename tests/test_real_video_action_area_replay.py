@@ -67,6 +67,22 @@ class RealVideoActionAreaReplayTests(unittest.TestCase):
         self.assertFalse(report["safe_for_runtime"])
         self.assertFalse(report["safe_for_executor"])
 
+    def test_source_pts_is_carried_without_treating_frame_as_seconds(self):
+        frames = [
+            (index, image, index / 30)
+            for index, image in enumerate((
+                pixels(), pixels(tile=(620, 250)), pixels(tile=(500, 220)),
+                pixels(tile=(400, 210)), pixels(), pixels(),
+            ))
+        ]
+        report = scan_decoded_action_area_frames(frames, manifest())
+        self.assertTrue(all(item["timestamp_seconds"] is not None
+                            and item["timestamp_seconds"] < 1
+                            for item in report["candidates"]))
+        frames[2] = (2, frames[2][1], frames[1][2])
+        with self.assertRaisesRegex(ValueError, "strictly increasing"):
+            scan_decoded_action_area_frames(frames, manifest())
+
     def test_manifest_loader_and_development_guards(self):
         row = {
             "schema_version": "source_action_area_geometry_v0_1",

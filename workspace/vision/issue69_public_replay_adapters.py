@@ -1,6 +1,8 @@
 """Adapters from existing #69 replay reports into the public replay ledger."""
 from __future__ import annotations
 
+import math
+
 from workspace.vision.issue69_public_replay_orchestrator import PublicReplayCandidate
 from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
 
@@ -18,7 +20,11 @@ def river_report_candidates(report: dict) -> tuple[PublicReplayCandidate, ...]:
         refs = tuple(action.get("evidence_refs") or ())
         if not refs:
             raise ValueError("river prediction missing evidence provenance")
-        frame = _frame_from_refs(refs)
+        frame = action.get("frame_index")
+        if frame is None:
+            frame = _frame_from_refs(refs)
+        elif type(frame) is not int or frame < 0:
+            raise ValueError("river prediction frame_index must be an exact nonnegative frame")
         rows.append(PublicReplayCandidate(
             channel="river",
             timestamp_seconds=float(action["timestamp_seconds"]),
@@ -44,9 +50,13 @@ def action_area_report_candidates(report: dict) -> tuple[PublicReplayCandidate, 
         frame = item.get("frame")
         if type(frame) is not int:
             raise ValueError("action-area candidate missing exact frame")
+        timestamp = item.get("timestamp_seconds")
+        if (isinstance(timestamp, bool) or not isinstance(timestamp, (int, float))
+                or not math.isfinite(timestamp) or timestamp < 0):
+            raise ValueError("action-area candidate requires source PTS seconds")
         rows.append(PublicReplayCandidate(
             channel="action_area",
-            timestamp_seconds=float(frame),
+            timestamp_seconds=float(timestamp),
             frame_index=frame,
             actor_hint=item.get("region_actor_hint", "UNKNOWN"),
             kind="ACTION_AREA_ONSET",
@@ -59,14 +69,17 @@ def action_area_report_candidates(report: dict) -> tuple[PublicReplayCandidate, 
 
 
 def _frame_from_refs(refs: tuple[str, ...]) -> int:
-    # Existing river observations encode exact frame provenance as a trailing
-    # integer in at least one evidence ref. Do not guess when absent.
+    # Legacy reports may omit frame_index. A single distinct source frame is
+    # unambiguous; accumulated river refs are not an event timestamp.
+    frames: set[int] = set()
     for ref in refs:
         parts = ref.replace("=", ":").split(":")
-        for token in reversed(parts):
-            if token.isdigit():
-                return int(token)
-    raise ValueError("river evidence refs do not expose exact source frame")
+        for index, token in enumerate(parts[:-1]):
+            if token == "frame" and parts[index + 1].isdigit():
+                frames.add(int(parts[index + 1]))
+    if len(frames) == 1:
+        return next(iter(frames))
+    raise ValueError("river evidence refs do not expose one exact source frame")
 
 
 def meld_observation_candidate(

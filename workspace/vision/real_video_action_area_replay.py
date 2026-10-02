@@ -11,6 +11,7 @@ from collections import deque
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 
@@ -108,16 +109,29 @@ def load_action_area_manifest(path: str | Path) -> ActionAreaManifest:
 
 
 def scan_decoded_action_area_frames(frames, manifest: ActionAreaManifest) -> dict:
-    """Scan ordered ``(frame_index, BGR ndarray)`` values from one source."""
+    """Scan ordered frames; optional third value is source PTS in seconds."""
     if not isinstance(manifest, ActionAreaManifest):
         raise ValueError("validated ActionAreaManifest required")
     queue = deque(maxlen=3)
     raw = {profile.actor: [] for profile in manifest.profiles}
     decoded = 0
     expected = None
-    for frame_index, pixels in frames:
+    frame_pts: dict[int, float] = {}
+    previous_pts: float | None = None
+    for item in frames:
+        if len(item) not in (2, 3):
+            raise ValueError("decoded frame must contain index, pixels and optional PTS")
+        frame_index, pixels = item[:2]
         if type(frame_index) is not int or (expected is not None and frame_index != expected):
             raise ValueError("decoded frames must be strictly contiguous")
+        if len(item) == 3:
+            pts = item[2]
+            if (isinstance(pts, bool) or not isinstance(pts, (int, float))
+                    or not math.isfinite(pts) or pts < 0
+                    or previous_pts is not None and pts <= previous_pts):
+                raise ValueError("source PTS must be finite and strictly increasing")
+            previous_pts = float(pts)
+            frame_pts[frame_index] = previous_pts
         expected = frame_index + 1
         if not manifest.reviewed_frame_span[0] <= frame_index <= manifest.reviewed_frame_span[1]:
             raise ValueError("decoded frame outside reviewed span")
@@ -156,6 +170,7 @@ def scan_decoded_action_area_frames(frames, manifest: ActionAreaManifest) -> dic
         "collapsed_candidate_counts": {actor: len(values) for actor, values in collapsed.items()},
         "candidates": [
             {"frame": item.first_visible_frame,
+             "timestamp_seconds": frame_pts.get(item.first_visible_frame),
              "region_actor_hint": item.region_actor_hint,
              "tile": "UNKNOWN", "action_kind": "UNKNOWN"}
             for actor in ("player", "opponent") for item in collapsed.get(actor, ())
@@ -187,7 +202,7 @@ def replay_action_areas(video_path: str | Path, manifest_path: str | Path) -> di
                 if not ok:
                     break
                 if first <= index <= last:
-                    yield index, pixels
+                    yield index, pixels, capture.get(cv2.CAP_PROP_POS_MSEC) / 1000
                 if index >= last:
                     break
                 index += 1

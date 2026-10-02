@@ -130,6 +130,7 @@ class RiverReplayTests(unittest.TestCase):
         self.assertTrue(all(p["tile"] is None and p["turn_actor"] is None
                             and p["evidence_grade"] == "UNKNOWN"
                             for p in predictions))
+        self.assertTrue(all(type(p["frame_index"]) is int for p in predictions))
         self.assertEqual(result["counts"]["opponent_river_growth_observations"], 2)
         self.assertEqual(result["counts"]["player_river_growth_observations"], 2)
 
