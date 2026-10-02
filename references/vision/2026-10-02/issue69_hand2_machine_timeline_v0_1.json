@@ -24,24 +24,71 @@
     },
     {
       "order": 2,
+      "kind": "OBSERVED_ACTION_SEQUENCE",
+      "actor": "mixed",
+      "evidence_level": "source_locked_visual_action_banners",
+      "observed_actions": [
+        "PENG",
+        "PENG",
+        "CHI",
+        "CHI"
+      ],
+      "response_windows": [
+        {
+          "window_seconds": [
+            31,
+            32
+          ],
+          "options": [
+            "PENG",
+            "PASS"
+          ],
+          "selected_action": "UNKNOWN"
+        },
+        {
+          "window_seconds": [
+            64,
+            68
+          ],
+          "options": [
+            "PENG",
+            "PASS"
+          ],
+          "selected_action": "UNKNOWN"
+        }
+      ],
+      "tile_identities_confirmed": false,
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand2_action_windows_v0_1.json"
+      ]
+    },
+    {
+      "order": 3,
       "kind": "HU_TO_SETTLEMENT_TERMINAL",
       "actor": "mixed",
       "evidence_level": "source_locked_visual_terminal_anchor",
       "window_seconds": [
-        79,
+        78.5,
         82
       ],
       "machine_tile_identity_complete": false,
       "machine_confirmed": false,
       "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand2_action_windows_v0_1.json",
         "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json"
       ]
     }
   ],
   "machine_closed_event_count": 0,
-  "development_candidate_event_count": 2,
+  "development_candidate_event_count": 3,
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "caveats": [
+    "Hand 2 begins mid-hand in this source; HAND_START/OPEN_GOLD must not be synthesized.",
+    "Observed PENG/CHI/HU banners establish visual action anchors only; tile identities remain UNKNOWN.",
+    "Response options PENG/PASS do not establish which option was selected."
+  ]
 }
