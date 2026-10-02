@@ -18,14 +18,20 @@
     {
       "hand_number": 2,
       "source_start_seconds": 0,
-      "boundary_status": "PARTIAL_SOURCE_START",
+      "boundary_status": "HAND_START_POST_OPENING_ANIMATION",
       "terminal_window_seconds": [
         79,
         82
       ],
       "terminal_observation": "HU_THEN_SETTLEMENT_VISIBLE",
       "next_hand_start_seconds": 83,
-      "machine_tile_identity_complete": false
+      "machine_tile_identity_complete": false,
+      "source_start_semantics": "ACTUAL_HAND_PLAY_START",
+      "missing_before_source": [
+        "OPENING_ANIMATION",
+        "DEAL_ANIMATION",
+        "GOLD_FLIP_ANIMATION"
+      ]
     },
     {
       "hand_number": 3,
