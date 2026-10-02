@@ -80,6 +80,43 @@
       "evidence_refs": [
         "references/vision/2026-10-02/issue69_hand1_m9_s4_s5_s456_window_v0_1.json"
       ]
+    },
+    {
+      "order": 3,
+      "kind": "CROSS_ACTOR_CLAIM_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "source_locked_order_plus_existing_s456_development_evidence",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine_sequence": [
+        "OPPONENT_DISCARD_DISPLAY_VISIBLE",
+        "PLAYER_DRAW_REGION_VISIBLE",
+        "PLAYER_CLAIMED_DISCARD_TRANSITION",
+        "OPPONENT_CHI_ANIMATION_VISIBLE",
+        "OPPONENT_NEW_MELD_VISIBLE"
+      ],
+      "machine_identity": {
+        "opponent_discard": "UNKNOWN",
+        "player_draw": "UNKNOWN",
+        "claimed_discard": "UNKNOWN",
+        "opponent_meld": "S456_DEVELOPMENT_ONLY"
+      },
+      "human_reviewed_truth": {
+        "opponent_discard": "M9",
+        "player_draw": "S4",
+        "player_discard": "S5",
+        "opponent_action": "CHI",
+        "opponent_meld": [
+          "S4",
+          "S5",
+          "S6"
+        ]
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_m9_draw_s4_discard_s5_chi_s456_chain_v0_1.json"
+      ]
     }
   ],
   "machine_closed_event_count": 0,
@@ -88,7 +125,8 @@
     "The P6 MING_GANG event is development evidence and remains non-runtime.",
     "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
     "Derived clips and the exact full source belong to the same original match group and do not add independent-match credit.",
-    "The third event source-locks discard/claim/meld order only; M9/S4/S5/S456 identities remain separate human-reviewed or classifier evidence until independently qualified."
+    "The third event source-locks discard/claim/meld order only; M9/S4/S5/S456 identities remain separate human-reviewed or classifier evidence until independently qualified.",
+    "The third event preserves claimed S5 as UNKNOWN at machine level because it is consumed quickly by the opponent chi; S456 uses the existing development-only meld evidence."
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
