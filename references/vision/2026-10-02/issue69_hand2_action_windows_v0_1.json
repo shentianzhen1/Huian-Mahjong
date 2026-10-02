@@ -6,7 +6,13 @@
   "source": {
     "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
     "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4",
-    "boundary_status": "PARTIAL_SOURCE_START"
+    "boundary_status": "HAND_START_POST_OPENING_ANIMATION",
+    "source_start_semantics": "ACTUAL_HAND_PLAY_START",
+    "missing_before_source": [
+      "OPENING_ANIMATION",
+      "DEAL_ANIMATION",
+      "GOLD_FLIP_ANIMATION"
+    ]
   },
   "observations": [
     {
@@ -100,7 +106,7 @@
   "invariants": [
     "RESPONSE_OPTIONS_DO_NOT_IMPLY_SELECTED_ACTION",
     "ACTION_BANNER_DOES_NOT_IMPLY_TILE_IDENTITY",
-    "PARTIAL_SOURCE_START_MUST_NOT_SYNTHESIZE_HAND_START"
+    "HAND_START_POST_OPENING_ANIMATION_MUST_NOT_SYNTHESIZE_HAND_START"
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
