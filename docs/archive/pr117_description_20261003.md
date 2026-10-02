@@ -302,4 +302,3 @@ Exact head `b806e73` CI:
 - Tests **SUCCESS** including Python 3.10-3.14, Rules/Environment coverage, installed-package smoke and legacy advisory.
 
 Next data step: locally segment the 2026-09-26 rounds 2-8 source recordings, scan for stable public meld groups, and add only source-qualified reviewed identity evidence. Do not count multiple chunks/hands from that same eight-hand match as independent validation sources.
-
