@@ -194,6 +194,13 @@ def build_kong_development_candidate(
                 "status": claimed_review["status"],
                 "tile_candidate": claimed_review["tile_candidate"],
                 "valid_frame_votes": claimed_review["valid_frame_votes"],
+                "source_frames": [
+                    row["frame"] for row in claimed_display["observations"]
+                ],
+                "layout": claimed_display["expected_review"]["layout"],
+                "color_signature": claimed_display["expected_review"][
+                    "color_signature"
+                ],
                 "action_kind_inferred": claimed_review["action_kind_inferred"],
             }
             if claimed_review is not None
