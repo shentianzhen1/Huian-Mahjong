@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import re
-from typing import Iterable, Sequence\n\nfrom workspace.vision.issue69_claim_correlation import correlate_claims
+from typing import Iterable, Sequence
+
+from workspace.vision.issue69_claim_correlation import correlate_claims
 
 _SHA = re.compile(r"^[a-f0-9]{64}$")
 _CHANNEL_ORDER = {"river": 0, "meld": 1, "action_area": 2}
@@ -30,6 +32,7 @@ class PublicReplayCandidate:
     evidence_refs: tuple[str, ...]
     tile: str | None = None
     status: str = "CANDIDATE_ONLY"
+    tiles: tuple[str | None, ...] = ()
 
     def __post_init__(self) -> None:
         if self.channel not in _CHANNELS:
@@ -46,7 +49,8 @@ class PublicReplayCandidate:
             raise ValueError("stream epoch must be nonnegative integer")
         if not self.kind or not self.evidence_refs:
             raise ValueError("kind and evidence provenance required")
-        object.__setattr__(self, "tiles", tuple(self.tiles))\n        if self.status != "CANDIDATE_ONLY":
+        object.__setattr__(self, "tiles", tuple(self.tiles))
+        if self.status != "CANDIDATE_ONLY":
             raise ValueError("orchestrator accepts candidate-only inputs")
 
 
@@ -111,17 +115,34 @@ def assemble_public_replay_candidates(
             "actor_hint": row.actor_hint,
             "candidate_kind": row.kind,
             "ledger_kind": semantic_kind,
-            "tile": row.tile if row.channel in ("river", "meld") else None,\n            "tiles": list(row.tiles) if row.channel == "meld" else [],
+            "tile": row.tile if row.channel in ("river", "meld") else None,
+            "tiles": list(row.tiles) if row.channel == "meld" else [],
             "evidence_grade": "UNKNOWN",
             "runtime_action": False,
         })
+    claim_correlation = correlate_claims(
+        [
+            {"timestamp_seconds": row.timestamp_seconds, "actor": row.actor_hint,
+             "kind": row.kind, "trusted": row.actor_hint != "UNKNOWN"}
+            for row in ordered if row.channel == "river"
+        ],
+        [
+            {"timestamp_seconds": row.timestamp_seconds, "actor": row.actor_hint,
+             "kind": row.kind, "tiles": row.tiles,
+             "trusted": row.actor_hint != "UNKNOWN"}
+            for row in ordered if row.channel == "meld"
+        ],
+    )
     return {
         "schema_version": "issue69_public_replay_orchestrator_v0_1",
         "status": "CONFLICT" if conflicts else "ORDERED_CANDIDATES_ONLY",
         "source_session": ordered[0].source_session,
         "stream_epoch": ordered[0].stream_epoch,
         "ledger": ledger,
-        "conflicts": conflicts,\n        "corroborated_claims": claim_correlation["claims"],\n        "unmatched_claim_removals": claim_correlation["unmatched_removals"],\n        "unmatched_claim_melds": claim_correlation["unmatched_melds"],
+        "conflicts": conflicts,
+        "corroborated_claims": claim_correlation["claims"],
+        "unmatched_claim_removals": claim_correlation["unmatched_removals"],
+        "unmatched_claim_melds": claim_correlation["unmatched_melds"],
         "action_area_policy": "onset_is_context_only_never_action_truth",
         "formal_promotion_evidence": False,
         "safe_for_runtime": False,

@@ -20,6 +20,7 @@ def row(channel, ts, frame, actor, kind, ref, tile=None, *, tiles=(), sha=SHA, e
         stream_epoch=epoch,
         evidence_refs=(ref,),
         tile=tile,
+        tiles=tiles,
     )
 
 
