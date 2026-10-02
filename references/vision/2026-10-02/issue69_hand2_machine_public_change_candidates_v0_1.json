@@ -59,10 +59,40 @@
     "frame_difference_never_confirms_discard": true,
     "actor_requires_river_assignment": true,
     "tile_requires_identity_gate": true,
-    "human_ground_truth_not_used_as_machine_input": true
+    "human_ground_truth_not_used_as_machine_input": true,
+    "persistence_is_not_actor_or_discard_proof": true
   },
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "persistence_diagnostic": {
+    "method": "pre/post public-region MAD with post-state persistence",
+    "roi_role": "broad diagnostic only; not tile identity",
+    "results": [
+      {
+        "timestamp_seconds": 2.25,
+        "upper_public_persistence_ratio": 0.148,
+        "interpretation": "PERSISTENT_UPPER_PUBLIC_CHANGE",
+        "discard_confirmed": false
+      },
+      {
+        "timestamp_seconds": 3.5,
+        "upper_public_persistence_ratio": 0.204,
+        "interpretation": "PERSISTENT_UPPER_PUBLIC_CHANGE",
+        "discard_confirmed": false
+      },
+      {
+        "timestamp_seconds": 9.25,
+        "upper_public_persistence_ratio": 0.14,
+        "interpretation": "PERSISTENT_UPPER_PUBLIC_CHANGE",
+        "discard_confirmed": false
+      },
+      {
+        "timestamp_seconds": 17,
+        "interpretation": "REQUIRES_TIGHT_ROI_REVIEW_NEAR_PRE_PENG_INTERACTION",
+        "discard_confirmed": false
+      }
+    ]
+  }
 }
