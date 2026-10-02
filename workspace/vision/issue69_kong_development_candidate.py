@@ -11,10 +11,15 @@ import json
 from pathlib import Path
 from typing import Any
 
+from workspace.vision.issue69_claimed_discard_display import (
+    review_claimed_discard_display,
+)
+
 
 _HAND = "references/vision/2026-10-01/issue69_hand1_p6_ming_gang_hand_count_v0_1.json"
 _STRUCTURE = "references/vision/2026-10-01/issue69_hand1_p6_ming_gang_structure_v0_1.json"
 _IDENTITY = "references/vision/2026-10-01/issue69_hand1_p6_public_meld_sift_result_v0_1.json"
+_CLAIMED_DISPLAY = "references/vision/2026-10-02/issue69_hand1_claimed_discard_p6_display_v0_1.json"
 
 
 def _unknown(reason: str, *, source_sha256: str | None = None) -> dict[str, Any]:
@@ -26,6 +31,9 @@ def _unknown(reason: str, *, source_sha256: str | None = None) -> dict[str, Any]
         "tile_candidate": None,
         "source_sha256": source_sha256,
         "claimed_discard_directly_observed": False,
+        "claimed_discard_identity_directly_observed": False,
+        "claimed_discard_display_directly_observed": False,
+        "river_growth_directly_observed": False,
         "machine_confirmed": False,
         "runtime_eligible": False,
         "formal_promotion_evidence": False,
@@ -39,8 +47,9 @@ def build_kong_development_candidate(
     hand_count: dict[str, Any],
     structure: dict[str, Any],
     identity: dict[str, Any],
+    claimed_display: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Return a fail-closed development candidate from three evidence layers."""
+    """Return a fail-closed development candidate from independent evidence layers."""
     for name, payload in (
         ("hand_count", hand_count),
         ("structure", structure),
@@ -118,6 +127,28 @@ def build_kong_development_candidate(
     ):
         return _unknown("identity_evidence_boundary_changed", source_sha256=source_sha)
 
+    claimed_review = None
+    if claimed_display is not None:
+        claimed_review = review_claimed_discard_display(claimed_display)
+        if claimed_review.get("status") != "DIRECT_DISPLAY_P6_DEVELOPMENT":
+            return _unknown(
+                "claimed_discard_display_not_qualified",
+                source_sha256=source_sha,
+            )
+        if (
+            claimed_review.get("source_sha256") != source_sha
+            or claimed_review.get("original_match_group") != match_group
+        ):
+            return _unknown(
+                "claimed_discard_display_source_mismatch",
+                source_sha256=source_sha,
+            )
+        if claimed_review.get("tile_candidate") != tile:
+            return _unknown(
+                "claimed_discard_identity_conflict",
+                source_sha256=source_sha,
+            )
+
     return {
         "schema_version": "issue69_kong_development_candidate_v0_1",
         "status": "DEVELOPMENT_MING_GANG_CANDIDATE",
@@ -149,7 +180,22 @@ def build_kong_development_candidate(
             "source_disjoint_ranking": True,
             "production_acceptance_threshold": None,
         },
+        # Legacy flag remains river-growth specific. The more precise fields
+        # below distinguish direct response-window identity from river growth.
         "claimed_discard_directly_observed": False,
+        "claimed_discard_identity_directly_observed": claimed_review is not None,
+        "claimed_discard_display_directly_observed": claimed_review is not None,
+        "river_growth_directly_observed": False,
+        "claimed_discard_display_evidence": (
+            {
+                "status": claimed_review["status"],
+                "tile_candidate": claimed_review["tile_candidate"],
+                "valid_frame_votes": claimed_review["valid_frame_votes"],
+                "action_kind_inferred": claimed_review["action_kind_inferred"],
+            }
+            if claimed_review is not None
+            else None
+        ),
         "machine_confirmed": False,
         "runtime_eligible": False,
         "development_only": True,
@@ -165,7 +211,12 @@ def build_hand1_candidate_from_repository(repository_root: str | Path = ".") -> 
     hand = json.loads((root / _HAND).read_text(encoding="utf-8"))
     structure = json.loads((root / _STRUCTURE).read_text(encoding="utf-8"))
     identity = json.loads((root / _IDENTITY).read_text(encoding="utf-8"))
-    return build_kong_development_candidate(hand, structure, identity)
+    claimed_display = json.loads(
+        (root / _CLAIMED_DISPLAY).read_text(encoding="utf-8")
+    )
+    return build_kong_development_candidate(
+        hand, structure, identity, claimed_display
+    )
 
 
 def candidate_to_ledger_event(
@@ -193,6 +244,9 @@ def candidate_to_ledger_event(
             "tile": None,
             "evidence_level": "unknown",
             "candidate_status": status or "UNKNOWN",
+            "claimed_discard_identity_directly_observed": False,
+            "claimed_discard_display_directly_observed": False,
+            "river_growth_directly_observed": False,
             "machine_confirmed": False,
             "runtime_action": False,
             "formal_promotion_evidence": False,
@@ -216,6 +270,15 @@ def candidate_to_ledger_event(
         "claimed_discard_directly_observed": candidate[
             "claimed_discard_directly_observed"
         ],
+        "claimed_discard_identity_directly_observed": candidate[
+            "claimed_discard_identity_directly_observed"
+        ],
+        "claimed_discard_display_directly_observed": candidate[
+            "claimed_discard_display_directly_observed"
+        ],
+        "river_growth_directly_observed": candidate[
+            "river_growth_directly_observed"
+        ],
         "machine_confirmed": False,
         "runtime_action": False,
         "formal_promotion_evidence": False,
@@ -225,5 +288,8 @@ def candidate_to_ledger_event(
         "evidence": {
             "structure": candidate["structure_evidence"],
             "identity": candidate["identity_evidence"],
+            "claimed_discard_display": candidate[
+                "claimed_discard_display_evidence"
+            ],
         },
     }
