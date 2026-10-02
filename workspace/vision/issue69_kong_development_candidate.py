@@ -152,7 +152,10 @@ def build_kong_development_candidate(
     return {
         "schema_version": "issue69_kong_development_candidate_v0_1",
         "status": "DEVELOPMENT_MING_GANG_CANDIDATE",
-        "reason": "stacked_four_face_meld_plus_hand_minus_three_plus_source_disjoint_top1",
+        "reason": (
+            "stacked_four_face_meld_plus_hand_minus_three_plus_source_disjoint_top1"
+            + ("_plus_direct_claimed_display" if claimed_review is not None else "")
+        ),
         "action_candidate": "MING_GANG",
         "tile_candidate": tile,
         "actor": "player",
