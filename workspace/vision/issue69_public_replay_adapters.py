@@ -37,6 +37,24 @@ def river_report_candidates(report: dict) -> tuple[PublicReplayCandidate, ...]:
             evidence_refs=tuple(f"river:{index}:{ref}" for ref in refs),
             tile=action.get("tile"),
         ))
+    for index, removal in enumerate(report.get("river_removals", ())):
+        refs = tuple(removal.get("evidence_refs") or ())
+        frame = removal.get("frame_index")
+        if not refs or type(frame) is not int or frame < 0:
+            raise ValueError("river removal missing exact provenance")
+        rows.append(PublicReplayCandidate(
+            channel="river",
+            timestamp_seconds=float(removal["timestamp_seconds"]),
+            frame_index=frame,
+            actor_hint=removal.get("actor", "UNKNOWN"),
+            kind="RIVER_TILE_REMOVED_OR_CLAIMED",
+            source_session=source_session,
+            source_sha256=source_sha,
+            stream_epoch=int(removal.get("stream_epoch", 0)),
+            evidence_refs=tuple(f"river_removal:{index}:{ref}" for ref in refs),
+            tile=removal.get("tile"),
+        ))
+
     return tuple(rows)
 
 
@@ -120,4 +138,5 @@ def meld_observation_candidate(
         stream_epoch=epoch,
         evidence_refs=tuple(f"meld:{ref}" for ref in refs),
         tile=tile,
+        tiles=(tuple(observation.tiles) if observation.details.get("tile_identity_complete") is True else tuple(None for _ in observation.details.get("tile_candidates", ()))),
     )
