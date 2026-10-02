@@ -14,11 +14,16 @@ SHA = "a" * 64
 SESSION = "hand1"
 
 
-def public(channel, ts, frame, actor, kind, ref, tile=None):
+def public(channel, ts, frame, actor, kind, ref, tile=None, *, tiles=(),
+           meld_group_size=None, previous_meld=(),
+           previous_meld_group_size=None):
     return PublicReplayCandidate(
         channel=channel, timestamp_seconds=ts, frame_index=frame,
         actor_hint=actor, kind=kind, source_session=SESSION,
         source_sha256=SHA, stream_epoch=0, evidence_refs=(ref,), tile=tile,
+        tiles=tiles, meld_group_size=meld_group_size,
+        previous_meld=previous_meld,
+        previous_meld_group_size=previous_meld_group_size,
     )
 
 
@@ -97,10 +102,6 @@ class Issue69TemporalReconstructionTests(unittest.TestCase):
             rows, hand_facts=[fact], claim_window_seconds=1.0,
             assembly_delay_seconds=0.0,
         )
-        # Exact removed identities are redundant when the independently
-        # observed discard and complete new meld already determine the
-        # consumed multiset. A verified count delta may corroborate the claim
-        # without pretending that hand identities were observed.
         gang = next(row for row in report["actions"] if row["kind"] == "MING_GANG")
         self.assertEqual(gang["claimed_tile"], "P6")
         self.assertEqual(gang["meld"], ["P6"] * 4)
@@ -153,6 +154,48 @@ class Issue69TemporalReconstructionTests(unittest.TestCase):
                 rows, hand_deltas=[hand], claim_window_seconds=1,
                 assembly_delay_seconds=0,
             )
+
+    def test_replay_metadata_closes_exact_identity_add_kong(self):
+        rows = [public(
+            "meld", 112.1, 3363, "player", "MELD_DELTA", "meld:add-kong",
+            tiles=("S8",) * 4, meld_group_size=4,
+            previous_meld=("S8",) * 3, previous_meld_group_size=3,
+        )]
+        hand = HandDeltaCandidate(
+            112.0, 3360, "player", SESSION, SHA, 0, ("hand:removed1",),
+            removed_tiles=("S8",),
+        )
+        report = reconstruct_public_candidates(
+            rows, hand_deltas=[hand], claim_window_seconds=1.0,
+            assembly_delay_seconds=0.0,
+        )
+        add_kong = next(row for row in report["actions"] if row["kind"] == "ADD_KONG")
+        self.assertEqual(add_kong["tile"], "S8")
+        self.assertEqual(add_kong["meld"], ["S8"] * 4)
+        self.assertEqual(add_kong["evidence_grade"], "CORROBORATED")
+
+    def test_unknown_identity_three_to_four_stays_unknown(self):
+        rows = [public(
+            "meld", 112.1, 3363, "player", "MELD_DELTA",
+            "meld:add-kong-unknown", tiles=(None, None, None, None),
+            meld_group_size=4, previous_meld=(), previous_meld_group_size=3,
+        )]
+        hand = HandDeltaCandidate(
+            112.0, 3360, "player", SESSION, SHA, 0, ("hand:removed1",),
+            removed_count=1,
+        )
+        report = reconstruct_public_candidates(
+            rows, hand_deltas=[hand], claim_window_seconds=1.0,
+            assembly_delay_seconds=0.0,
+        )
+        self.assertFalse(any(row["kind"] == "ADD_KONG" for row in report["actions"]))
+        self.assertTrue(any(row["kind"] == "UNKNOWN_ACTION" for row in report["actions"]))
+        self.assertEqual(len(report["meld_upgrade_candidates"]), 1)
+        upgrade = report["meld_upgrade_candidates"][0]
+        self.assertEqual(upgrade["previous_group_size"], 3)
+        self.assertEqual(upgrade["current_group_size"], 4)
+        self.assertFalse(upgrade["tile_identity_complete"])
+        self.assertEqual(upgrade["action_kind"], "UNKNOWN")
 
 
 if __name__ == "__main__":
