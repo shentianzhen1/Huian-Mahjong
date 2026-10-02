@@ -1,0 +1,38 @@
+{
+  "schema_version": "issue69_round8_replay_consistency_review_v0_1",
+  "source_session": "reviewed_match_2026_09_26_eight_hand",
+  "hand": 8,
+  "checker": "issue69_replay_consistency_v0_1",
+  "status": "CONFLICT",
+  "interpretation": "The reviewed skeleton is incomplete, not evidence that the real hand is illegal.",
+  "issues": [
+    {
+      "event_index": 2,
+      "event": "OPPONENT CHI around 117s",
+      "reason": "claim_on_own_discard",
+      "root_cause": "missing SELF post-PENG discard between the confirmed SELF PENG M9 and OPPONENT CHI"
+    },
+    {
+      "event_index": 5,
+      "event": "SELF DRAW around 164s",
+      "reason": "draw_before_post_claim_discard",
+      "root_cause": "missing SELF post-CHI discard after the confirmed SELF CHI around 129-130s"
+    }
+  ],
+  "verified_terminal_chain": {
+    "status": "PASS",
+    "events": [
+      {"actor": "SELF", "action": "DISCARD", "tile_id": "P4"},
+      {"actor": "OPPONENT", "action": "HU", "tile_id": "P4", "hu_source": "DISCARD"}
+    ]
+  },
+  "next_evidence_targets": [
+    "identify the SELF discard after PENG M9 and before the OPPONENT CHI around 117s",
+    "identify the SELF discard immediately after the SELF CHI around 129-130s"
+  ],
+  "identity_policy": "UNKNOWN is allowed; do not guess tile identity to satisfy consistency.",
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
