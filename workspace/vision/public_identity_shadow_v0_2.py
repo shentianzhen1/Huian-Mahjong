@@ -10,6 +10,7 @@ import argparse
 from collections import defaultdict
 from dataclasses import dataclass
 import json
+import math
 from pathlib import Path
 import re
 from typing import Any
@@ -166,6 +167,65 @@ def summarize_shadow_coverage(
         "can_attempt_shadow_proposal": histogram["two_or_more"] >= 2,
         "tile_id_policy": UNKNOWN,
         "formal_promotion_evidence": False,
+    }
+
+
+def summarize_shadow_score_feasibility(
+    bank: ShadowBank, *, region: str, source_session: str,
+    source_sha256: str, minimum_score: float = 0.93,
+) -> dict[str, Any]:
+    """Upper-bound a two-independent-match cosine gate without query pixels.
+
+    For unit template vectors a,b, no unit query can score at least t against
+    both unless dot(a,b) >= 2*t*t-1. The best cross-group pair gives a generous
+    ceiling: failure proves impossibility, success does NOT prove accuracy.
+    Multiple templates from one original match never count as two groups.
+    """
+    import numpy as np
+
+    if region not in PUBLIC_REGIONS or not 0 < minimum_score <= 1:
+        raise ValueError("invalid public region or feasibility threshold")
+    source = bank.sources.get(source_session)
+    if source is None or source.source_sha256 != source_sha256:
+        raise ValueError("query source session/SHA not in locked registry")
+    by_class: dict[str, list[tuple[str, Any]]] = defaultdict(list)
+    for template in bank.templates:
+        if (template.region != region or template.match_group == source.match_group
+                or template.source_sha256 == source_sha256):
+            continue
+        feature = np.asarray(template.feature, dtype=np.float64).reshape(-1)
+        if not feature.size or not np.isfinite(feature).all():
+            raise ValueError("invalid public template feature")
+        norm = float(np.linalg.norm(feature))
+        if norm < 1e-5:
+            raise ValueError("blank public template feature")
+        by_class[template.tile_id].append((template.match_group, feature / norm))
+    ceilings = []
+    for rows in by_class.values():
+        best: float | None = None
+        for i, (first_group, first) in enumerate(rows):
+            for second_group, second in rows[i + 1:]:
+                if first_group == second_group:
+                    continue
+                if first.size != second.size:
+                    raise ValueError("public template feature sizes differ")
+                similarity = float(np.dot(first, second))
+                best = similarity if best is None else max(best, similarity)
+        if best is not None:
+            ceilings.append(math.sqrt(max(0.0, (1.0 + min(best, 1.0)) / 2.0)))
+    possible = sum(ceiling + 1e-12 >= minimum_score for ceiling in ceilings)
+    return {
+        "region": region, "minimum_score": minimum_score,
+        "eligible_class_count": len(ceilings),
+        "mathematically_possible_class_count": possible,
+        "impossible_class_count": len(ceilings) - possible,
+        "highest_impossible_score_ceiling": (
+            round(max((v for v in ceilings if v + 1e-12 < minimum_score), default=0.0), 6)
+            if possible < len(ceilings) else None
+        ),
+        "diagnostic_only": True, "formal_promotion_evidence": False,
+        "safe_for_runtime": False, "safe_for_executor": False,
+        "interpretation": "upper bound only; possible does not imply reliable identity",
     }
 
 
