@@ -1,29 +1,42 @@
 {
-  "schema_version": "issue69_round8_concealed_honors_review_v0_1",
+  "schema_version": "issue69_concealed_honors_review_v0_2",
   "date": "2026-10-02",
   "issue": 69,
   "status": "DEVELOPMENT_REVIEWED_CANDIDATES",
   "source": {
     "original_match_group": "reviewed_match_2026_09_26_eight_hand",
-    "video_dimensions": [1108, 512],
-    "fps": 30.0,
+    "video_dimensions": [
+      1108,
+      512
+    ],
+    "fps": 30,
     "logical_session_policy": "all clips from this eight-hand match must reuse one source_session"
   },
   "reviewed_frame": {
-    "seconds": 99.0,
+    "seconds": 99,
     "source_frame": 2970,
     "region": "hand_region",
     "candidates": [
       {
         "tile_id": "N",
         "human_reviewed_name": "北风",
-        "bbox_xywh": [765, 439, 49, 68],
+        "bbox_xywh": [
+          765,
+          439,
+          49,
+          68
+        ],
         "purpose": "ordinary-white concealed honor regression"
       },
       {
         "tile_id": "Z",
         "human_reviewed_name": "红中",
-        "bbox_xywh": [815, 439, 48, 68],
+        "bbox_xywh": [
+          815,
+          439,
+          48,
+          68
+        ],
         "purpose": "ordinary-white concealed honor regression"
       }
     ]
@@ -31,8 +44,9 @@
   "green_dragon": {
     "tile_id": "F",
     "human_reviewed_name": "发财",
-    "status": "PENDING_EXACT_FRAME_AND_BBOX",
-    "note": "Do not substitute another honor tile or a different visual domain."
+    "status": "EXACT_FRAME_AND_BBOX_FROZEN_FROM_ROUND7",
+    "source_frame": 60,
+    "seconds": 2
   },
   "intake_policy": {
     "approved_template_intake": false,
@@ -44,5 +58,38 @@
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "round7_green_dragon": {
+    "status": "DEVELOPMENT_REVIEWED_CANDIDATES",
+    "seconds": 2,
+    "source_frame": 60,
+    "region": "hand_region",
+    "candidates": [
+      {
+        "tile_id": "F",
+        "human_reviewed_name": "发财",
+        "bbox_xywh": [
+          813,
+          439,
+          49,
+          68
+        ],
+        "occurrence_in_hand": 1,
+        "purpose": "ordinary-white concealed honor regression"
+      },
+      {
+        "tile_id": "F",
+        "human_reviewed_name": "发财",
+        "bbox_xywh": [
+          864,
+          439,
+          49,
+          68
+        ],
+        "occurrence_in_hand": 2,
+        "purpose": "ordinary-white concealed honor regression"
+      }
+    ],
+    "note": "Two adjacent ordinary-white concealed green dragons are clearly visible in Round 7. Same original eight-hand match; must not be counted as an independent logical session."
+  }
 }
