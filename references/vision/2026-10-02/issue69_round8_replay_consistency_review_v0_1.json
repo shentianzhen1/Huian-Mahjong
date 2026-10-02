@@ -7,7 +7,7 @@
   "resolved_gaps": [
     {
       "window_seconds": [115.9, 116.8],
-      "event": {"actor": "SELF", "action": "DISCARD", "tile_id": "P8"},
+      "event": {"actor": "SELF", "action": "DISCARD", "tile_id": "P7"},
       "evidence": "post-PENG hand transition followed by newly visible P8 in self river with current-discard marker before opponent CHI onset"
     },
     {
@@ -19,8 +19,8 @@
   "reviewed_chain": [
     {"actor":"OPPONENT","action":"DISCARD","tile_id":"M9"},
     {"actor":"SELF","action":"PENG","tile_id":"M9"},
-    {"actor":"SELF","action":"DISCARD","tile_id":"P8"},
-    {"actor":"OPPONENT","action":"CHI","tile_id":"P8"},
+    {"actor":"SELF","action":"DISCARD","tile_id":"P7"},
+    {"actor":"OPPONENT","action":"CHI","tile_id":"P7"},
     {"actor":"OPPONENT","action":"DISCARD","tile_id":"UNKNOWN"},
     {"actor":"SELF","action":"CHI","tile_id":"UNKNOWN"},
     {"actor":"SELF","action":"DISCARD","tile_id":"M7"},
