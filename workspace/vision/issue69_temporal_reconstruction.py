@@ -83,6 +83,19 @@ def reconstruct_public_candidates(
                 tile not in (None, "UNKNOWN") for tile in candidates
             )
             tiles = tuple(candidates) if complete else ()
+            meld_details = {
+                "frame": row.frame_index,
+                "source_session": row.source_session,
+                "stream_epoch": row.stream_epoch,
+                "tile_identity_complete": complete,
+                "tile_candidates": list(candidates),
+            }
+            if row.meld_group_size is not None:
+                meld_details["group_size"] = row.meld_group_size
+            if row.previous_meld_group_size is not None:
+                meld_details["previous_group_size"] = row.previous_meld_group_size
+            if row.previous_meld:
+                meld_details["previous_meld"] = list(row.previous_meld)
             observations.append(RawObservation(
                 timestamp_seconds=row.timestamp_seconds,
                 actor=row.actor_hint.lower(),
@@ -90,13 +103,7 @@ def reconstruct_public_candidates(
                 tiles=tiles,
                 confidence=1.0,
                 evidence_refs=row.evidence_refs,
-                details={
-                    "frame": row.frame_index,
-                    "source_session": row.source_session,
-                    "stream_epoch": row.stream_epoch,
-                    "tile_identity_complete": complete,
-                    "tile_candidates": list(candidates),
-                },
+                details=meld_details,
             ))
 
     for hand in hands:
@@ -145,6 +152,26 @@ def reconstruct_public_candidates(
         "source_session": scope[0] if scope else None,
         "input_observation_count": len(observations),
         "excluded_context": excluded_context,
+        "meld_upgrade_candidates": [{
+            "timestamp_seconds": row.timestamp_seconds,
+            "frame_index": row.frame_index,
+            "actor": row.actor_hint.lower(),
+            "previous_group_size": row.previous_meld_group_size,
+            "current_group_size": row.meld_group_size,
+            "previous_meld": list(row.previous_meld),
+            "current_tiles": list(row.tiles),
+            "tile_identity_complete": bool(row.tiles) and all(
+                tile not in (None, "UNKNOWN") for tile in row.tiles
+            ),
+            "action_kind": "UNKNOWN",
+            "formal_promotion_evidence": False,
+            "safe_for_runtime": False,
+            "safe_for_executor": False,
+        } for row in public if (
+            row.channel == "meld"
+            and row.previous_meld_group_size == 3
+            and row.meld_group_size == 4
+        )],
         "actions": [{
             "timestamp_seconds": action.timestamp_seconds,
             "actor": action.actor,
@@ -177,4 +204,3 @@ def _single_scope(public, hands, facts=()):
     if len(scopes) > 1:
         raise ValueError("all reconstruction inputs must share exact source scope")
     return next(iter(scopes), None)
-
