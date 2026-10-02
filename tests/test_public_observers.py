@@ -232,7 +232,10 @@ class DiscardRiverObserverTests(unittest.TestCase):
                 frame=20 + i,
             ),
         )
-        self.assertIsNone(output.observation)
+        self.assertIsNotNone(output.observation)
+        self.assertEqual(output.observation.kind, ObservationKind.RIVER_REMOVAL)
+        self.assertEqual(output.observation.actor, "opponent")
+        self.assertEqual(output.observation.tile, "P5")
         self.assertTrue(output.baseline_rebased)
         self.assertIn("river_tile_removed_or_claimed", output.issues)
 
