@@ -127,6 +127,9 @@ def meld_observation_candidate(
     tile = None
     if observation.details.get("tile_identity_complete") is True and observation.tiles:
         tile = ",".join(observation.tiles)
+    group_size = observation.details.get("group_size")
+    previous_group_size = observation.details.get("previous_group_size")
+    previous_meld = tuple(observation.details.get("previous_meld") or ())
     return PublicReplayCandidate(
         channel="meld",
         timestamp_seconds=float(observation.timestamp_seconds),
@@ -139,4 +142,7 @@ def meld_observation_candidate(
         evidence_refs=tuple(f"meld:{ref}" for ref in refs),
         tile=tile,
         tiles=(tuple(observation.tiles) if observation.details.get("tile_identity_complete") is True else tuple(None for _ in observation.details.get("tile_candidates", ()))),
+        meld_group_size=group_size,
+        previous_meld=previous_meld,
+        previous_meld_group_size=previous_group_size,
     )
