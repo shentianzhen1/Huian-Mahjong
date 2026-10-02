@@ -124,6 +124,7 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
     ) for z in manifest.zones}
     assembler = TemporalActionAssembler(AssemblyConfig(claim_window_seconds=.9, assembly_delay_seconds=.15))
     observations = []
+    river_removals = []
     actions = []
     counts: Counter[str] = Counter()
     rejected_frames: dict[str,list[int]] = {a:[] for a in observers}
