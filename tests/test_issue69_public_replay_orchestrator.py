@@ -8,7 +8,7 @@ from workspace.vision.issue69_public_replay_orchestrator import (
 SHA = "a" * 64
 
 
-def row(channel, ts, frame, actor, kind, ref, tile=None, *, sha=SHA, epoch=0):
+def row(channel, ts, frame, actor, kind, ref, tile=None, *, tiles=(), sha=SHA, epoch=0):
     return PublicReplayCandidate(
         channel=channel,
         timestamp_seconds=ts,
@@ -69,7 +69,7 @@ class Issue69PublicReplayOrchestratorTests(unittest.TestCase):
             "conflicting_public_actor_hints_same_frame",
         )
 
-    def test_empty_input_fails_closed(self):
+    def test_correlates_removed_river_tile_with_opposite_actor_peng(self):\n        report = assemble_public_replay_candidates([\n            row("river", 115.0, 3450, "opponent", "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3450"),\n            row("meld", 115.4, 3462, "player", "MELD_DELTA", "meld:3462", tiles=("M9","M9","M9")),\n        ])\n        claim = report["corroborated_claims"][0]\n        self.assertEqual(claim["action"], "PENG")\n        self.assertEqual(claim["actor"], "player")\n        self.assertEqual(claim["claimed_from_actor"], "opponent")\n        self.assertFalse(report["safe_for_runtime"])\n        self.assertFalse(report["safe_for_executor"])\n\n    def test_incomplete_meld_identity_remains_unknown_claim(self):\n        report = assemble_public_replay_candidates([\n            row("river", 129.0, 3870, "opponent", "RIVER_TILE_REMOVED_OR_CLAIMED", "river:3870"),\n            row("meld", 129.4, 3882, "player", "MELD_DELTA", "meld:3882", tiles=(None,"S3","S4")),\n        ])\n        self.assertEqual(report["corroborated_claims"][0]["action"], "UNKNOWN_CLAIM")\n\n    def test_empty_input_fails_closed(self):
         report = assemble_public_replay_candidates([])
         self.assertEqual(report["status"], "EMPTY")
         self.assertEqual(report["ledger"], [])
