@@ -106,7 +106,6 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "source PTS seconds"):
             action_area_report_candidates(report)
 
-
     def test_meld_observation_preserves_complete_group_identity(self):
         obs = RawObservation(
             timestamp_seconds=20.5,
@@ -146,6 +145,39 @@ class Issue69PublicReplayAdapterTests(unittest.TestCase):
         row = meld_observation_candidate(obs, source_sha256="d" * 64)
         self.assertIsNone(row.tile)
 
+    def test_meld_three_to_four_upgrade_preserves_previous_group_metadata(self):
+        obs = RawObservation(
+            timestamp_seconds=112.1, actor="player", kind=ObservationKind.MELD_DELTA,
+            confidence=.9, tiles=("S8",) * 4, evidence_refs=("meld-upgrade",),
+            details={
+                "frame": 3363, "source_session": "s", "stream_epoch": 0,
+                "group_size": 4, "previous_group_size": 3,
+                "previous_meld": ["S8"] * 3, "tile_identity_complete": True,
+                "tile_candidates": ["S8"] * 4,
+            },
+        )
+        row = meld_observation_candidate(obs, source_sha256="e" * 64)
+        self.assertEqual(row.meld_group_size, 4)
+        self.assertEqual(row.previous_meld_group_size, 3)
+        self.assertEqual(row.previous_meld, ("S8",) * 3)
+        self.assertEqual(row.tiles, ("S8",) * 4)
+
+    def test_meld_unknown_identity_still_preserves_three_to_four_shape(self):
+        obs = RawObservation(
+            timestamp_seconds=112.1, actor="player", kind=ObservationKind.MELD_DELTA,
+            confidence=.9, tiles=(), evidence_refs=("meld-upgrade-unknown",),
+            details={
+                "frame": 3363, "source_session": "s", "stream_epoch": 0,
+                "group_size": 4, "previous_group_size": 3, "previous_meld": [],
+                "tile_identity_complete": False,
+                "tile_candidates": [None, None, None, None],
+            },
+        )
+        row = meld_observation_candidate(obs, source_sha256="f" * 64)
+        self.assertEqual(row.tiles, (None, None, None, None))
+        self.assertEqual(row.meld_group_size, 4)
+        self.assertEqual(row.previous_meld_group_size, 3)
+        self.assertEqual(row.previous_meld, ())
 
 
 if __name__ == "__main__":
