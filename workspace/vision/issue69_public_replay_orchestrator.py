@@ -33,6 +33,9 @@ class PublicReplayCandidate:
     tile: str | None = None
     status: str = "CANDIDATE_ONLY"
     tiles: tuple[str | None, ...] = ()
+    meld_group_size: int | None = None
+    previous_meld: tuple[str, ...] = ()
+    previous_meld_group_size: int | None = None
 
     def __post_init__(self) -> None:
         if self.channel not in _CHANNELS:
@@ -50,6 +53,32 @@ class PublicReplayCandidate:
         if not self.kind or not self.evidence_refs:
             raise ValueError("kind and evidence provenance required")
         object.__setattr__(self, "tiles", tuple(self.tiles))
+        object.__setattr__(self, "previous_meld", tuple(self.previous_meld))
+        for name, value in (
+            ("meld_group_size", self.meld_group_size),
+            ("previous_meld_group_size", self.previous_meld_group_size),
+        ):
+            if value is not None and (
+                type(value) is not int or value not in (3, 4)
+            ):
+                raise ValueError(f"{name} must be 3, 4, or None")
+        if self.channel != "meld" and (
+            self.meld_group_size is not None
+            or self.previous_meld
+            or self.previous_meld_group_size is not None
+        ):
+            raise ValueError("meld transition metadata belongs only to meld channel")
+        if (
+            self.meld_group_size is not None
+            and self.tiles
+            and len(self.tiles) != self.meld_group_size
+        ):
+            raise ValueError("meld_group_size conflicts with visible meld faces")
+        if self.previous_meld and (
+            self.previous_meld_group_size is None
+            or len(self.previous_meld) != self.previous_meld_group_size
+        ):
+            raise ValueError("previous_meld conflicts with previous_meld_group_size")
         if self.status != "CANDIDATE_ONLY":
             raise ValueError("orchestrator accepts candidate-only inputs")
 
@@ -117,6 +146,23 @@ def assemble_public_replay_candidates(
             "ledger_kind": semantic_kind,
             "tile": row.tile if row.channel in ("river", "meld") else None,
             "tiles": list(row.tiles) if row.channel == "meld" else [],
+            "meld_group_size": (
+                row.meld_group_size if row.channel == "meld" else None
+            ),
+            "previous_meld": (
+                list(row.previous_meld) if row.channel == "meld" else []
+            ),
+            "previous_meld_group_size": (
+                row.previous_meld_group_size
+                if row.channel == "meld" else None
+            ),
+            "meld_transition": (
+                "GROUP_GROWTH_3_TO_4"
+                if row.channel == "meld"
+                and row.previous_meld_group_size == 3
+                and row.meld_group_size == 4
+                else None
+            ),
             "evidence_grade": "UNKNOWN",
             "runtime_action": False,
         })
@@ -130,7 +176,12 @@ def assemble_public_replay_candidates(
             {"timestamp_seconds": row.timestamp_seconds, "actor": row.actor_hint,
              "kind": row.kind, "tiles": row.tiles,
              "trusted": row.actor_hint != "UNKNOWN"}
-            for row in ordered if row.channel == "meld"
+            for row in ordered
+            if row.channel == "meld"
+            and not (
+                row.previous_meld_group_size == 3
+                and row.meld_group_size == 4
+            )
         ],
     )
     return {
