@@ -184,9 +184,13 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
                 for issue in observed.issues:
                     counts[actor+"_"+issue] += 1
                 if observed.observation is not None:
-                    counts[actor+"_river_growth_observations"] += 1
-                    observations.append(observed.observation)
-                    actions.extend(assembler.ingest(observed.observation))
+                    if observed.observation.kind.value == "RIVER_REMOVAL":
+                        counts[actor+"_river_removal_observations"] += 1
+                        river_removals.append(observed.observation)
+                    else:
+                        counts[actor+"_river_growth_observations"] += 1
+                        observations.append(observed.observation)
+                        actions.extend(assembler.ingest(observed.observation))
             actions.extend(assembler.advance_time(pts))
         actions.extend(assembler.flush())
     finally:
@@ -220,6 +224,15 @@ def replay_rivers(video: str | Path, *, manifest_path: str | Path,
         "stream_epochs": sorted(epochs),
         "counts": dict(counts),
         "untrusted_frame_indexes_by_actor": rejected_frames,
+        "river_removals": [{
+            "timestamp_seconds": o.timestamp_seconds,
+            "frame_index": o.details.get("frame"),
+            "actor": o.actor,
+            "kind": "RIVER_TILE_REMOVED_OR_CLAIMED",
+            "tile": o.tile,
+            "evidence_refs": list(o.evidence_refs),
+            "stream_epoch": o.details.get("stream_epoch", 0),
+        } for o in river_removals],
         "machine_predictions": {
             "schema_version": "public_action_attribution_eval_v0_1",
             "source_sha256": actual_hash,
