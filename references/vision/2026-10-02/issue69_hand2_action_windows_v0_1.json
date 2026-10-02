@@ -23,7 +23,15 @@
       ],
       "observed_action_banner": "PENG",
       "tile_identity": "UNKNOWN",
-      "machine_confirmed": false
+      "machine_confirmed": false,
+      "actor": "opponent",
+      "claimed_tile": "S3",
+      "resulting_meld": [
+        "S3",
+        "S3",
+        "S3"
+      ],
+      "review_status": "HUMAN_VISUAL_REVIEWED"
     },
     {
       "id": "h2_a02",
@@ -33,7 +41,15 @@
       ],
       "observed_action_banner": "PENG",
       "tile_identity": "UNKNOWN",
-      "machine_confirmed": false
+      "machine_confirmed": false,
+      "actor": "opponent",
+      "claimed_tile": "M9",
+      "resulting_meld": [
+        "M9",
+        "M9",
+        "M9"
+      ],
+      "review_status": "HUMAN_VISUAL_REVIEWED"
     },
     {
       "id": "h2_a03",
@@ -57,7 +73,27 @@
       ],
       "observed_action_banner": "CHI",
       "tile_identity": "UNKNOWN",
-      "machine_confirmed": false
+      "machine_confirmed": false,
+      "actor": "player",
+      "claimed_tile": "M6",
+      "resulting_meld": [
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "review_status": "HUMAN_VISUAL_REVIEWED",
+      "response_choices": [
+        [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        [
+          "M5",
+          "M6",
+          "M7"
+        ]
+      ]
     },
     {
       "id": "h2_a05",
@@ -67,7 +103,15 @@
       ],
       "observed_action_banner": "CHI",
       "tile_identity": "UNKNOWN",
-      "machine_confirmed": false
+      "machine_confirmed": false,
+      "actor": "player",
+      "claimed_tile": "S3",
+      "resulting_meld": [
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "review_status": "HUMAN_VISUAL_REVIEWED"
     },
     {
       "id": "h2_a06",
@@ -106,7 +150,8 @@
   "invariants": [
     "RESPONSE_OPTIONS_DO_NOT_IMPLY_SELECTED_ACTION",
     "ACTION_BANNER_DOES_NOT_IMPLY_TILE_IDENTITY",
-    "HAND_START_POST_OPENING_ANIMATION_MUST_NOT_SYNTHESIZE_HAND_START"
+    "HAND_START_POST_OPENING_ANIMATION_MUST_NOT_SYNTHESIZE_HAND_START",
+    "HUMAN_VISUAL_REVIEWED_TILE_IDENTITY_IS_NOT_MACHINE_CONFIRMED"
   ],
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
