@@ -1,0 +1,64 @@
+{
+  "schema_version": "issue69_hand1_machine_timeline_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 1,
+  "total_hands": 8,
+  "source_policy": "exact_source_scoped_fail_closed",
+  "events": [
+    {
+      "order": 1,
+      "kind": "MING_GANG",
+      "actor": "player",
+      "tile": "P6",
+      "evidence_level": "development_candidate_with_direct_claimed_display",
+      "source_sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-01/issue69_hand1_development_action_ledger_v0_1.json",
+        "references/vision/2026-10-02/issue69_hand1_claimed_discard_p6_display_v0_1.json"
+      ]
+    },
+    {
+      "order": 2,
+      "kind": "RESPONSE_DRAW_DISCARD_SEQUENCE",
+      "actor": "player",
+      "tile": null,
+      "response_choice": "UNKNOWN",
+      "draw_tile": "UNKNOWN",
+      "discard_tile": "UNKNOWN",
+      "evidence_level": "source_locked_event_order",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "frames": {
+        "response_visible": 4022,
+        "response_cleared": 4028,
+        "draw_region_visible": 4034,
+        "discard_transition": 4271,
+        "discard_display_stable": 4277
+      },
+      "human_reviewed_truth": {
+        "opponent_response_tile": "P8",
+        "response_choice": "PASS",
+        "draw_tile": "S9",
+        "discard_tile": "S9"
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_pass_draw_s9_window_v0_1.json"
+      ]
+    }
+  ],
+  "machine_closed_event_count": 0,
+  "development_candidate_event_count": 2,
+  "caveats": [
+    "The P6 MING_GANG event is development evidence and remains non-runtime.",
+    "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
+    "Derived clips and the exact full source belong to the same original match group and do not add independent-match credit."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
