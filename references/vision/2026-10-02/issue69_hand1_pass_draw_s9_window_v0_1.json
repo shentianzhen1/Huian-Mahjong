@@ -1,0 +1,79 @@
+{
+  "schema_version": "issue69_hand1_pass_draw_discard_window_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "role": "exact_full_source_recording",
+    "source_session": "session_fba5f67d244fb5bd",
+    "sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "bytes": 189952700,
+    "fps": 59.15134447182431,
+    "resolution": [
+      2796,
+      1290
+    ],
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "independent_match_group_credit": false
+  },
+  "event_window": {
+    "response_visible": {
+      "frame": 4022,
+      "source_time_seconds": 67.99,
+      "state": "RESPONSE_UI_VISIBLE"
+    },
+    "response_cleared": {
+      "frame": 4028,
+      "source_time_seconds": 68.0983333333,
+      "state": "RESPONSE_UI_CLEARED"
+    },
+    "draw_region_visible": {
+      "frame": 4034,
+      "source_time_seconds": 68.1983333333,
+      "state": "RIGHT_DRAW_COMPONENT_VISIBLE"
+    },
+    "discard_transition": {
+      "frame": 4271,
+      "source_time_seconds": 72.2083333333,
+      "state": "DRAW_TILE_ENTERING_DISCARD_TRANSITION"
+    },
+    "discard_display_stable": {
+      "frame": 4277,
+      "source_time_seconds": 72.3083333333,
+      "state": "TOP_DISCARD_DISPLAY_VISIBLE"
+    }
+  },
+  "machine_safe_sequence": [
+    "RESPONSE_UI_VISIBLE",
+    "RESPONSE_UI_CLEARED",
+    "RIGHT_DRAW_COMPONENT_VISIBLE",
+    "DRAW_TILE_ENTERING_DISCARD_TRANSITION",
+    "TOP_DISCARD_DISPLAY_VISIBLE"
+  ],
+  "machine_interpretation": {
+    "response_resolution_observed": true,
+    "response_choice_identity": "UNKNOWN",
+    "pass_action_machine_confirmed": false,
+    "draw_event_observed": true,
+    "draw_tile_identity": "UNKNOWN",
+    "discard_event_observed": true,
+    "discard_tile_identity": "UNKNOWN",
+    "same_draw_then_discard_identity_machine_confirmed": false
+  },
+  "human_reviewed_truth": {
+    "opponent_claimed_response_tile": "P8",
+    "player_choice": "PASS",
+    "player_draw_tile": "S9",
+    "player_discard_tile": "S9",
+    "used_for_runtime_promotion": false
+  },
+  "privacy": {
+    "full_source_committed": false,
+    "full_frame_committed": false,
+    "metadata_only": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
