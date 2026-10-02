@@ -167,6 +167,90 @@ def _unknown(reason: str, actor: str = "UNKNOWN") -> DenseRiverCountDelta:
     return DenseRiverCountDelta("UNKNOWN", reason, actor)
 
 
+def audit_dense_river_occupancy_sequence(
+    frames: Sequence[DenseRiverMaskFrame],
+    *,
+    profile: DenseRiverSlotProfile,
+    slots_independently_reviewed: bool,
+    stable_frames: int = 3,
+) -> dict:
+    """Audit unit occupancy changes, including removal and reused cells.
+
+    Cell order may span multiple reviewed rows. These are geometry diagnostics,
+    never action facts: animation can occupy a cell and a claimed cell can be
+    reused. Unknown intervening masks are explicitly retained as uncertainty.
+    """
+    result = {
+        "schema_version": "public_dense_river_occupancy_sequence_dev_v0_1",
+        "status": "UNKNOWN",
+        "transitions": [],
+        "ambiguous_changes": 0,
+        "actual_actions_emitted": 0,
+        "tile_identity": "UNKNOWN",
+        "actual_action_kind": "UNKNOWN",
+        "formal_accuracy_eligible": False,
+        "safe_for_runtime": False,
+        "safe_for_hint": False,
+        "safe_for_executor": False,
+    }
+    if (not _valid_profile(profile) or slots_independently_reviewed is not True
+            or type(stable_frames) is not int or stable_frames < 3
+            or not frames or any(not _valid_mask_frame(f, len(profile.slots))
+                                 for f in frames)):
+        return result
+    first = frames[0]
+    scope = (first.source_session, first.source_sha256, first.stream_epoch)
+    if any((b.source_session, b.source_sha256, b.stream_epoch) != scope
+           or b.frame_index != a.frame_index + 1
+           for a, b in zip(frames, frames[1:])):
+        return result
+    baseline = None
+    baseline_frame = None
+    pending = None
+    streak = 0
+    seen = set()
+    obscured = False
+    for frame in frames:
+        mask = frame.slot_mask
+        seen_before = set(seen)
+        seen.update(i for i, value in enumerate(mask) if value is True)
+        if any(value is None for value in mask):
+            pending = None
+            streak = 0
+            obscured = True
+            continue
+        if mask != pending:
+            pending, streak = mask, 1
+            pending_start = frame.frame_index
+            pending_seen = seen_before
+        else:
+            streak += 1
+        if streak != stable_frames:
+            continue
+        if baseline is not None and baseline != mask:
+            changes = [i for i, (a, b) in enumerate(zip(baseline, mask)) if a != b]
+            if len(changes) == 1:
+                slot = changes[0]
+                increased = mask[slot] is True
+                result["transitions"].append({
+                    "baseline_confirmation_frame": baseline_frame,
+                    "first_stable_after_frame": pending_start,
+                    "confirmation_frame": frame.frame_index,
+                    "before_count": sum(baseline),
+                    "after_count": sum(mask),
+                    "change": "OCCUPANCY_INCREASE" if increased else "OCCUPANCY_DECREASE",
+                    "reused_cell": increased and slot in pending_seen,
+                    "intervening_unknown_mask": obscured,
+                    "evidence_grade": "UNKNOWN",
+                })
+            else:
+                result["ambiguous_changes"] += 1
+        baseline, baseline_frame = mask, frame.frame_index
+        obscured = False
+    result["status"] = "OCCUPANCY_TRANSITIONS_DIAGNOSTIC_ONLY"
+    return result
+
+
 def _valid_profile(profile: DenseRiverSlotProfile) -> bool:
     if not isinstance(profile, DenseRiverSlotProfile) or profile.actor not in _ACTORS:
         return False
