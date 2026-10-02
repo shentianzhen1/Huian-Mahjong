@@ -52,6 +52,14 @@ def reconstruct_public_candidates(
             })
             continue
         if row.channel == "river":
+            if row.kind != "DISCARD":
+                excluded_context.append({
+                    "frame_index": row.frame_index,
+                    "candidate_kind": row.kind,
+                    "reason": "river_non_discard_context_never_discard_evidence",
+                    "evidence_refs": list(row.evidence_refs),
+                })
+                continue
             observations.append(RawObservation(
                 timestamp_seconds=row.timestamp_seconds,
                 actor=row.actor_hint.lower(),
@@ -67,7 +75,14 @@ def reconstruct_public_candidates(
             ))
             continue
         if row.channel == "meld":
-            tiles = tuple(row.tile.split(",")) if row.tile else ()
+            legacy_tiles = tuple(row.tile.split(",")) if row.tile else ()
+            if row.tiles and legacy_tiles and row.tiles != legacy_tiles:
+                raise ValueError("structured and legacy meld identities conflict")
+            candidates = row.tiles or legacy_tiles
+            complete = bool(candidates) and all(
+                tile not in (None, "UNKNOWN") for tile in candidates
+            )
+            tiles = tuple(candidates) if complete else ()
             observations.append(RawObservation(
                 timestamp_seconds=row.timestamp_seconds,
                 actor=row.actor_hint.lower(),
@@ -79,7 +94,8 @@ def reconstruct_public_candidates(
                     "frame": row.frame_index,
                     "source_session": row.source_session,
                     "stream_epoch": row.stream_epoch,
-                    "tile_identity_complete": bool(tiles),
+                    "tile_identity_complete": complete,
+                    "tile_candidates": list(candidates),
                 },
             ))
 
@@ -161,3 +177,4 @@ def _single_scope(public, hands, facts=()):
     if len(scopes) > 1:
         raise ValueError("all reconstruction inputs must share exact source scope")
     return next(iter(scopes), None)
+
