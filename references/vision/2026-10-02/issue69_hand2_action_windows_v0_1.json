@@ -1,0 +1,109 @@
+{
+  "schema_version": "issue69_hand2_action_windows_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4",
+    "boundary_status": "PARTIAL_SOURCE_START"
+  },
+  "observations": [
+    {
+      "id": "h2_a01",
+      "window_seconds": [
+        21,
+        23
+      ],
+      "observed_action_banner": "PENG",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a02",
+      "window_seconds": [
+        29,
+        31
+      ],
+      "observed_action_banner": "PENG",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a03",
+      "window_seconds": [
+        31,
+        32
+      ],
+      "observed_response_options": [
+        "PENG",
+        "PASS"
+      ],
+      "selected_action": "UNKNOWN",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a04",
+      "window_seconds": [
+        35.5,
+        37
+      ],
+      "observed_action_banner": "CHI",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a05",
+      "window_seconds": [
+        51,
+        53
+      ],
+      "observed_action_banner": "CHI",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a06",
+      "window_seconds": [
+        64,
+        68
+      ],
+      "observed_response_options": [
+        "PENG",
+        "PASS"
+      ],
+      "selected_action": "UNKNOWN",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a07",
+      "window_seconds": [
+        78.5,
+        81
+      ],
+      "observed_action_banner": "HU",
+      "tile_identity": "UNKNOWN",
+      "machine_confirmed": false
+    },
+    {
+      "id": "h2_a08",
+      "window_seconds": [
+        81.5,
+        82
+      ],
+      "observed_terminal_screen": "SETTLEMENT",
+      "machine_confirmed": false
+    }
+  ],
+  "invariants": [
+    "RESPONSE_OPTIONS_DO_NOT_IMPLY_SELECTED_ACTION",
+    "ACTION_BANNER_DOES_NOT_IMPLY_TILE_IDENTITY",
+    "PARTIAL_SOURCE_START_MUST_NOT_SYNTHESIZE_HAND_START"
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
