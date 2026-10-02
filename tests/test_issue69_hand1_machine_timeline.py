@@ -12,7 +12,7 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         self.assertEqual(data["schema_version"], "issue69_hand1_machine_timeline_v0_1")
         self.assertEqual(data["hand_number"], 1)
         events = data["events"]
-        self.assertEqual([row["order"] for row in events], [1, 2, 3, 4, 5, 6, 7])
+        self.assertEqual([row["order"] for row in events], [1, 2, 3, 4, 5, 6, 7, 8, 9])
         self.assertEqual(
             [row["kind"] for row in events],
             [
@@ -23,10 +23,15 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
                 "CHAIN_TO_SECOND_OPPONENT_MELD",
                 "TING_PROMPT_SEQUENCE",
                 "REPEATED_TILE_TURN_SEQUENCE",
+                "PRE_YOUJIN_ORDINARY_TURN_SEQUENCE",
+                "YOUJIN_TERMINAL_STATE_CHAIN",
             ],
         )
 
-        kong, pass_draw, first_chi, post_chi, second_chi, ting, repeated = events
+        (
+            kong, pass_draw, first_chi, post_chi, second_chi,
+            ting, repeated, pre_youjin, youjin
+        ) = events
         self.assertEqual(kong["tile"], "P6")
         self.assertFalse(kong["machine_confirmed"])
 
@@ -114,8 +119,37 @@ class Issue69Hand1MachineTimelineTests(unittest.TestCase):
         )
         self.assertFalse(repeated["machine_confirmed"])
 
+        self.assertFalse(pre_youjin["machine"]["event_order_confirmed"])
+        self.assertFalse(pre_youjin["machine"]["tile_identities_confirmed"])
+        self.assertEqual(
+            pre_youjin["human_reviewed_truth"]["sequence"][-1]["tile"], "P8"
+        )
+        self.assertFalse(pre_youjin["machine_confirmed"])
+
+        self.assertEqual(youjin["kind"], "YOUJIN_TERMINAL_STATE_CHAIN")
+        self.assertEqual(
+            youjin["reviewed_rule_chain"],
+            [
+                "PLAYER_DISCARD_P5_ENTER_YOUJIN",
+                "OPPONENT_RESPONSE_DRAW",
+                "OPPONENT_MANDATORY_DISCARD_M3",
+                "PLAYER_CONTINUATION_DRAW_P4",
+                "PLAYER_DECLARE_YOUJIN",
+                "SETTLEMENT_PLUS_68",
+            ],
+        )
+        self.assertEqual(youjin["settlement"]["base"], 10)
+        self.assertEqual(youjin["settlement"]["gold_fan"], 2)
+        self.assertEqual(youjin["settlement"]["flower_fan"], 3)
+        self.assertEqual(youjin["settlement"]["kong_fan"], 2)
+        self.assertEqual(youjin["settlement"]["multiplier"], 4)
+        self.assertEqual(youjin["settlement"]["net_score"], 68)
+        self.assertFalse(youjin["machine"]["full_frame_identity_complete"])
+        self.assertFalse(youjin["machine"]["runtime_action_ready"])
+        self.assertFalse(youjin["machine_confirmed"])
+
         self.assertEqual(data["machine_closed_event_count"], 0)
-        self.assertEqual(data["development_candidate_event_count"], 7)
+        self.assertEqual(data["development_candidate_event_count"], 9)
         self.assertFalse(data["formal_promotion_evidence"])
         self.assertFalse(data["safe_for_runtime"])
         self.assertFalse(data["safe_for_hint"])
