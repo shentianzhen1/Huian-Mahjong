@@ -1,0 +1,41 @@
+{
+  "schema_version": "issue69_round8_reviewed_benchmark_v0_1",
+  "source_session": "reviewed_match_2026_09_26_eight_hand",
+  "hand": 8,
+  "scope_seconds": [96.0, 188.6],
+  "ground_truth_policy": {
+    "action_identity_decoupled": true,
+    "unknown_identity_allowed": true,
+    "do_not_invent_intermediate_events": true,
+    "settlement_outranks_sparse_hu_animation": true
+  },
+  "events": [
+    {"time_seconds":97.75,"actor":"SYSTEM","action":"OPEN_GOLD","tile_id":"P4","evidence_grade":"REVIEWED"},
+    {"time_seconds":112.5,"actor":"OPPONENT","action":"PENG","tile_id":"UNKNOWN","evidence_grade":"REVIEWED"},
+    {"time_seconds":114.0,"actor":"OPPONENT","action":"DISCARD","tile_id":"M9","evidence_grade":"REVIEWED"},
+    {"time_seconds":115.0,"actor":"SELF","action":"PENG","tile_id":"M9","evidence_grade":"REVIEWED"},
+    {"time_seconds":116.8,"actor":"SELF","action":"DISCARD","tile_id":"P7","evidence_grade":"HUMAN_VERIFIED"},
+    {"time_seconds":117.0,"actor":"OPPONENT","action":"CHI","tile_id":"P7","evidence_grade":"REVIEWED"},
+    {"time_seconds":128.0,"actor":"OPPONENT","action":"DISCARD","tile_id":"UNKNOWN","evidence_grade":"REVIEWED"},
+    {"time_seconds":129.5,"actor":"SELF","action":"CHI","tile_id":"UNKNOWN","evidence_grade":"REVIEWED"},
+    {"time_seconds":132.75,"actor":"SELF","action":"DISCARD","tile_id":"M7","evidence_grade":"REVIEWED"},
+    {"time_seconds":164.0,"actor":"SELF","action":"DRAW","tile_id":"UNKNOWN","evidence_grade":"REVIEWED"},
+    {"time_seconds":177.5,"actor":"SELF","action":"DISCARD","tile_id":"P4","evidence_grade":"HUMAN_VERIFIED"},
+    {"time_seconds":178.0,"actor":"OPPONENT","action":"HU","tile_id":"P4","hu_source":"DISCARD","hu_type":"PING_HU","evidence_grade":"HUMAN_VERIFIED"},
+    {"time_seconds":185.5,"actor":"SYSTEM","action":"SETTLEMENT","winner":"OPPONENT","opponent_fan":7,"opponent_delta":12,"self_fan":3,"self_delta":-12,"evidence_grade":"REVIEWED"}
+  ],
+  "negative_truth": {
+    "youjin_observed": false,
+    "new_meld_after_130_seconds_observed": false,
+    "final_match_settlement_page_available": false
+  },
+  "known_rejected_interpretations": [
+    {"window_seconds":[115.9,116.8],"rejected_tile_id":"P8","correct_tile_id":"P7","reason":"human correction"},
+    {"window_seconds":[178.0,186.0],"rejected_hu_source":"TSUMO","correct_hu_source":"DISCARD","reason":"final discard plus settlement"}
+  ],
+  "benchmark_status": "PARTIAL_GROUND_TRUTH_READY",
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
