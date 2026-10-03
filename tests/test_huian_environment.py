@@ -36,6 +36,32 @@ def scenario(phase="AFTER_DISCARD", hand=None, discard="M3"):
     return state
 
 
+
+def rob_kong_scenario():
+    """A has an M3 PENG plus the fourth M3; B is waiting on that M3."""
+    state = HuianGameState(
+        phase="AFTER_DRAW", gold_tile="P9",
+        special_states=["NORMAL", "NORMAL"], current_player=0,
+    )
+    state.hands[0] = [
+        "M3", "M7", "M8", "M9",
+        "P4", "P5", "P6", "P7", "P8",
+        "S4", "S5", "S6", "W", "R",
+    ]
+    state.melds[0] = [env.Meld("PENG", ["M3"] * 3, 1)]
+    state.hands[1] = [
+        "M1", "M2", "M4", "M5", "M6",
+        "P1", "P2", "P3",
+        "S1", "S2", "S3",
+        "E", "E", "E", "N", "N",
+    ]
+    state.reserved_tiles = ["P9"]
+    remaining = env.full_wall()
+    for tile in state.physical_tiles():
+        remaining.remove(tile)
+    state.wall = remaining
+    return state
+
 def youjin_offer_scenario(response_hand=None):
     """17-tile action node with exactly one known single-Youjin entry discard."""
     state = HuianGameState(
@@ -139,6 +165,73 @@ def complete_youjin_response_miss(instance):
 
 
 class EnvironmentTests(unittest.TestCase):
+    def test_robbed_added_kong_is_cancelled_and_settles_as_x2_hu(self):
+        instance = game(rob_kong_scenario())
+        add_kong = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.ADD_KONG and action.tile == "M3"
+        )
+        window, _ = instance.step(add_kong)
+        self.assertEqual(window.phase, "ROB_KONG_WINDOW")
+        self.assertEqual(window.melds[0][0].kind, "PENG")
+        self.assertEqual(window.hands[0].count("M3"), 1)
+
+        rob = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.ROB_KONG_HU
+        )
+        declared, _ = instance.step(rob)
+        self.assertEqual(declared.phase, "ROB_KONG_HU_DECLARED")
+        self.assertEqual(declared.melds[0][0].kind, "PENG")
+        self.assertEqual(declared.hands[0].count("M3"), 1)
+
+        terminal, event = instance.finalize_ordinary_outcome(
+            current_dealer_base=10
+        )
+        metadata = event["action"]["metadata"]
+        self.assertEqual(terminal.terminal_reason, "AUTO_ZIMO")
+        self.assertEqual(metadata["multiplier"], 2)
+        self.assertEqual(metadata["hu_declaration"]["source"], "rob_kong")
+        self.assertEqual(metadata["winner_fan"], 2)
+        self.assertEqual(terminal.rewards, [-24, 24])
+        self.assertEqual(terminal.melds[0][0].kind, "PENG")
+        self.assertEqual(terminal.hands[0].count("M3"), 1)
+        self.assertIsNone(terminal.pending_kong)
+        self.assertFalse(any(
+            component["category"] == "kong"
+            for component in metadata["fan_components"]
+        ))
+
+
+    def test_observed_rob_kong_outcome_uses_zimo_and_cancels_pending_kong(self):
+        instance = game(rob_kong_scenario())
+        add_kong = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.ADD_KONG and action.tile == "M3"
+        )
+        instance.step(add_kong)
+        rob = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.ROB_KONG_HU
+        )
+        instance.step(rob)
+
+        terminal, event = instance.finalize_observed_outcome(
+            winner=1,
+            current_dealer_base=10,
+            winner_fan=2,
+            win_type="ZIMO",
+        )
+        metadata = event["action"]["metadata"]
+        self.assertEqual(terminal.terminal_reason, "OBSERVED_ZIMO")
+        self.assertEqual(terminal.rewards, [-24, 24])
+        self.assertEqual(metadata["multiplier"], 2)
+        self.assertEqual(metadata["hu_declaration"]["source"], "rob_kong")
+        self.assertEqual(terminal.melds[0][0].kind, "PENG")
+        self.assertEqual(terminal.hands[0].count("M3"), 1)
+        self.assertIsNone(terminal.pending_kong)
+
+
     def test_single_youjin_offer_coexists_with_same_ordinary_discard(self):
         instance = game(youjin_offer_scenario())
         actions = instance.legal_actions()
