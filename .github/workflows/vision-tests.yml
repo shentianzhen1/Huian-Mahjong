@@ -171,6 +171,20 @@ jobs:
             --output-metadata /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank_v0_1.json \
             >/tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank.log
           cat /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank.log
+      - name: Download frozen spatial-repro wheels
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports/spatial-repro-wheels
+          python -m pip download \
+            --dest /tmp/runtime-v0-2-reports/spatial-repro-wheels \
+            --only-binary=:all: \
+            --python-version 3.13 \
+            --implementation cp \
+            --abi cp313 \
+            "opencv-python-headless==5.0.0.93" \
+            "numpy==2.5.3" \
+            >/tmp/runtime-v0-2-reports/spatial-repro-wheels.log
+          cat /tmp/runtime-v0-2-reports/spatial-repro-wheels.log
       - name: Evaluate synthetic hand-to-meld transfer
         if: needs.scope.outputs.run_vision == 'true'
         run: |
