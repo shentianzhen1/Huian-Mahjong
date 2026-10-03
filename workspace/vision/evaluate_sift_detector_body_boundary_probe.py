@@ -68,7 +68,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
     from workspace.vision.public_meld_private_sift_loader import augment_public_meld_sift_bank_from_private_zip
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
     from workspace.vision.evaluate_sift_group_split_geometry_probe import frozen_score
-    if score_policy not in ('frozen', 'spatial_affine', 'spatial_window_affine'):
+    if score_policy not in ('frozen', 'spatial_affine', 'spatial_window_affine', 'spatial_window_affine_reference_complete'):
         raise ValueError('unknown score policy')
     spatial = None
     extract_descriptors = _sift_descriptors
@@ -76,7 +76,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         if not reference_geometry:
             raise ValueError('spatial comparison requires symmetric reference geometry')
         from workspace.vision.sift_spatial_consistency_probe import PositionedSift
-        spatial = PositionedSift(local_window=score_policy=='spatial_window_affine')
+        spatial = PositionedSift(local_window=score_policy in ('spatial_window_affine', 'spatial_window_affine_reference_complete'))
         extract_descriptors = spatial.extract
     from workspace.vision.public_tile_detector import detect_public_tile_geometry, target_coverage
     spec_path = Path(spec_file)
@@ -154,7 +154,15 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
                     best_references={}
                     spatial_audits={}
                     for t in templates:
-                        score=spatial.score(query,t.descriptors) if spatial else frozen_score(query,t.descriptors)
+                        if spatial:
+                            base_score = spatial.score(query, t.descriptors)
+                            if score_policy == 'spatial_window_affine_reference_complete':
+                                from workspace.vision.sift_spatial_consistency_probe import reference_completeness_score
+                                score = reference_completeness_score(base_score, spatial.last_audit)
+                            else:
+                                score = base_score
+                        else:
+                            score = frozen_score(query,t.descriptors)
                         if score is not None:
                             if score > scores.get(t.tile_id,float('-inf')):
                                 scores[t.tile_id]=score
@@ -198,6 +206,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'opponent_reference_supplement': reference_supplement,
         'bottom_reference_supplement': bottom_supplement,
         'query_geometry_normalized': True, 'scorer_changed': score_policy != 'frozen', 'score_policy':score_policy,
+        'reference_completeness_reweighted': score_policy == 'spatial_window_affine_reference_complete',
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
         'input_sha256':{str(spec_path):hashlib.sha256(spec_path.read_bytes()).hexdigest(),
             'private_template_zip':hashlib.sha256(Path(private_template_zip).read_bytes()).hexdigest()},
@@ -216,7 +225,7 @@ if __name__=='__main__':
     p.add_argument('--opponent-s123-reference', action='store_true')
     p.add_argument('--bottom-reference-video')
     p.add_argument('--bottom-reference-rectified', action='store_true')
-    p.add_argument('--score-policy', choices=('frozen','spatial_affine','spatial_window_affine'), default='frozen')
+    p.add_argument('--score-policy', choices=('frozen','spatial_affine','spatial_window_affine','spatial_window_affine_reference_complete'), default='frozen')
     args=p.parse_args();result=evaluate(args.video,args.private_template_zip,reference_geometry=args.reference_geometry,
         spec_file=args.spec_file, source_index=args.source_index, group_index=args.group_index,
         opponent_s123_reference=args.opponent_s123_reference, bottom_reference_video=args.bottom_reference_video,
