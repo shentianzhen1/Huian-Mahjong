@@ -141,9 +141,6 @@ class HuianEnvironment:
         self.rules.validate_state(self._state)
         before = self._state.state_hash()
         pending = deepcopy(self._state.pending_hu)
-        if pending["source"] == WinSource.ROB_KONG.value:
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
         winner = pending["winner"]
         multiplier = 1 if pending["source"] == WinSource.DISCARD.value else 2
         candidate = deepcopy(self._state)
@@ -174,25 +171,25 @@ class HuianEnvironment:
         self._require_state()
         if self._state.terminal:
             raise ValueError("Hand is already terminal")
-        if self._state.phase != "HU_DECLARED" or not isinstance(self._state.pending_hu, dict):
-            raise ValueError("Automatic ordinary settlement requires HU_DECLARED")
+        if (self._state.phase not in ("HU_DECLARED", "ROB_KONG_HU_DECLARED")
+                or not isinstance(self._state.pending_hu, dict)):
+            raise ValueError("Automatic ordinary settlement requires a Hu declaration")
 
         declaration = deepcopy(self._state.pending_hu)
         source = WinSource(declaration["source"])
-        if source == WinSource.ROB_KONG:
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
         if source not in (
-                WinSource.DISCARD, WinSource.SELF_DRAW, WinSource.KONG_TAIL_DRAW):
+                WinSource.DISCARD, WinSource.SELF_DRAW,
+                WinSource.KONG_TAIL_DRAW, WinSource.ROB_KONG):
             from huian.rules.config import UnknownRuleError
             raise UnknownRuleError("win_declaration_and_settlement")
 
         winner = declaration["winner"]
         winning_tile = declaration["winning_tile"]
         hand = list(self._state.hands[winner])
-        if source == WinSource.DISCARD:
-            # The winning discard remains in the source river for physical-tile
-            # accounting; add a virtual copy only for structural/fan analysis.
+        if source in (WinSource.DISCARD, WinSource.ROB_KONG):
+            # A discard remains in the source river. A robbed added-kong tile
+            # remains in the declarer's hand because the kong never completes.
+            # In both cases add a virtual copy only for Hu/fan analysis.
             hand.append(winning_tile)
 
         context = HuContext(
@@ -240,6 +237,7 @@ class HuianEnvironment:
         candidate.terminal_reason = "AUTO_" + result.win_type
         candidate.pending_discard = None
         candidate.pending_hu = None
+        candidate.pending_kong = None
         self.rules.validate_state(candidate)
 
         fan_components = [{
@@ -585,15 +583,13 @@ class HuianEnvironment:
                 if profile.settlement_rule_id is None:
                     raise
                 raise UnknownRuleError(profile.settlement_rule_id)
-            if source == WinSource.ROB_KONG:
-                from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
             expected = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
             if win_type != expected:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
         if self._state.pending_kong is not None:
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
+            if declaration is None or WinSource(declaration["source"]) != WinSource.ROB_KONG:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
         # A verified wall-tail Hu after any completed Kong uses the
         # ordinary Zimo settlement formula. The Kong itself contributes only
         # through the caller-provided/aggregated normal fan total.
@@ -611,6 +607,8 @@ class HuianEnvironment:
         candidate.terminal_reason = "OBSERVED_" + result.win_type
         candidate.pending_discard = None
         candidate.pending_hu = None
+        if declaration is not None and WinSource(declaration["source"]) == WinSource.ROB_KONG:
+            candidate.pending_kong = None
         self.rules.validate_state(candidate)
         metadata = {"source": "observed", "win_type": result.win_type,
                     "current_dealer_base": current_dealer_base,
