@@ -24,7 +24,8 @@
       "face_plane_seam_boxes",
       "face_plane_seam_rectified",
       "face_plane_full_rectified"
-    ]
+    ],
+    "reference_support_radius_normalized": 0.08
   },
   "sources": [
     {
