@@ -1,4 +1,4 @@
-"""One inspected within-Wan upper-half diagnostic, not 34-class recognition."""
+"""Fixed within-Wan diagnostic in both source directions, not 34-class recognition."""
 from __future__ import annotations
 
 import argparse
@@ -37,6 +37,7 @@ def evaluate_wan_probe(*, private_template_zip: str | Path, repository_root: str
         return image.crop((0, 0, image.width, max(1, image.height // 2)))
 
     records = []
+    private_queries = []
     for label in approved_labels(manifest):
         if label.region != "public_meld" or not label.tile_id.startswith("M"):
             continue
@@ -67,7 +68,9 @@ def evaluate_wan_probe(*, private_template_zip: str | Path, repository_root: str
                 if hashlib.sha256(raw).hexdigest() != item.crop_sha256[index]:
                     raise ValueError("private numerator crop hash mismatch")
                 with Image.open(io.BytesIO(raw)) as source:
-                    descriptors = _sift_descriptors(upper(source.convert("RGB")))
+                    face_image = source.convert("RGB")
+                private_queries.append((item, index, tile, session, face_image))
+                descriptors = _sift_descriptors(upper(face_image))
                 if descriptors is not None:
                     records.append(PublicMeldSiftTemplate(tile, session, item.source_sha256, item.match_group, descriptors))
 
@@ -85,17 +88,47 @@ def evaluate_wan_probe(*, private_template_zip: str | Path, repository_root: str
     if len(faces) != 3:
         raise ValueError("reviewed FLAT query must yield three faces")
     numeral_bank = PublicMeldSiftBank(bank.sources, tuple(records))
+    whole_wan_bank = PublicMeldSiftBank(bank.sources, tuple(t for t in bank.templates if t.tile_id.startswith("M")))
     modes = {}
     for mode, selected_bank, transform in (
         ("whole_face_all_classes", bank, lambda face: face),
-        ("whole_face_wan_only", PublicMeldSiftBank(bank.sources, tuple(t for t in bank.templates if t.tile_id.startswith("M"))), lambda face: face),
+        ("whole_face_wan_only", whole_wan_bank, lambda face: face),
         ("upper_half_wan_only", numeral_bank, upper),
     ):
         ranks = [rank_public_meld_sift(selected_bank, transform(face), source_session=sample["source_session"],
             source_sha256=sample["source_sha256"], minimum_other_match_groups=1, include_class_scores=True) for face in faces]
         modes[mode] = {"face_rankings": ranks,
                        "group_ranking": rank_regular_public_meld_identity([row["class_scores"] for row in ranks]).to_dict()}
-    return {"schema_version": "wan_numeral_upper_half_probe_dev_v0_1", "sample_id": sample["sample_id"],
+    reverse_rows = []
+    for item, index, tile, session, face in private_queries:
+        row = {"recovery_id": item.recovery_id, "face_index": index, "expected_tile": tile,
+               "query_original_match": item.match_group, "query_source_sha256": item.source_sha256,
+               "crop_sha256": item.crop_sha256[index], "modes": {}}
+        for mode, selected_bank, transform in (
+            ("whole_face_wan_only", whole_wan_bank, lambda image: image),
+            ("upper_half_wan_only", numeral_bank, upper),
+        ):
+            rank = rank_public_meld_sift(selected_bank, transform(face), source_session=session,
+                source_sha256=item.source_sha256, minimum_other_match_groups=1, include_class_scores=True)
+            # Keep missing true-class support separate from an incorrect winner.
+            supported = tile in rank["class_scores"]
+            row["modes"][mode] = {"ranking": rank, "expected_class_scorable": supported,
+                "top1_correct_when_scorable": rank["top1_tile"] == tile if supported else None}
+        reverse_rows.append(row)
+    paired = [row for row in reverse_rows if all(mode["expected_class_scorable"] for mode in row["modes"].values())]
+    reverse_summary = {"total_reviewed_faces": len(reverse_rows), "paired_scorable_faces": len(paired),
+        "query_original_match_count": len({row["query_original_match"] for row in reverse_rows}),
+        "paired_scorable_group_count": len({row["recovery_id"] for row in paired}),
+        "correct_by_mode": {mode: sum(row["modes"][mode]["top1_correct_when_scorable"] for row in paired)
+            for mode in ("whole_face_wan_only", "upper_half_wan_only")},
+        "improved_faces": sum(not row["modes"]["whole_face_wan_only"]["top1_correct_when_scorable"] and
+            row["modes"]["upper_half_wan_only"]["top1_correct_when_scorable"] for row in paired),
+        "regressed_faces": sum(row["modes"]["whole_face_wan_only"]["top1_correct_when_scorable"] and
+            not row["modes"]["upper_half_wan_only"]["top1_correct_when_scorable"] for row in paired),
+        "fully_scorable_private_groups": sum(all(all(mode["expected_class_scorable"] for mode in row["modes"].values())
+            for row in reverse_rows if row["recovery_id"] == group_id) for group_id in {row["recovery_id"] for row in reverse_rows})}
+    return {"schema_version": "wan_numeral_upper_half_probe_dev_v0_2", "sample_id": sample["sample_id"],
+        "reverse_direction_face_rows": reverse_rows, "reverse_direction_summary": reverse_summary,
         "reviewed_expected_tiles": sample["expected_tiles"], "modes": modes, "upper_crop_fraction": .5,
         "crop_ratio_search_performed": False, "private_template_load": loaded,
         "within_suit_only": True, "suit_recognition_measured": False, "scorer_parameters_changed": False,

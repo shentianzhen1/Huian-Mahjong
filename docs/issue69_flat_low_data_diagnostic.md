@@ -51,8 +51,35 @@ Reproduce:
 python -m workspace.vision.evaluate_wan_numeral_probe --private-template-zip /path/outside/repository/verified.zip --output /tmp/wan_numeral.json
 ```
 
-Results: `references/vision/2026-10-03/flat_meld_sift_low_data_diagnostic_v0_1.json`
-and `wan_numeral_upper_half_probe_v0_1.json`. Raw private reference pixels remain
-outside the repository. Next: test a fixed numeral branch on additional
-source-qualified Wan queries, preserving original-match exclusions and a
-separate suit decision. Do not replace the general scorer or tune on this group.
+## Fixed transform, reverse source direction
+
+The v0.2 evaluator also uses the verified private Wan crops as queries, excludes
+their entire original match and exact SHA, and compares whole-face/Wan-only with
+the unchanged upper-half/Wan-only transform. No ratio or scorer tuning followed
+inspection of these results. The independent public recording supplies M4/M5/M6.
+
+| Private query group | Expected face | Whole-face winner | Upper-half winner |
+|---|---|---|---|
+| G02, M345 | M4 | M4 | M4 |
+| G02, M345 | M5 | M5 | M5 |
+| G08, M567 | M5 | M5 | M5 |
+| G08, M567 | M6 | M6 | M6 |
+
+Both modes rank all four supported faces correctly: zero improvements and zero
+regressions. These are four observations in two groups from **one** original
+match, not four independent matches. The upper-half raw score gaps are smaller
+on all four; those gaps are not calibrated confidence and must not justify
+acceptance thresholds. Five other reviewed Wan faces (M1/M2/M3/M3/M7) have no
+independent true-class support and are reported separately. None of the three
+private groups is fully scorable, so there is no reverse-direction whole-group
+success claim. The crops were previously inspected, not a blind holdout.
+
+This provides a limited no-new-error check for the fixed transform, not evidence
+of a general gain. Keep the branch offline and preserve the whole-face control.
+Next: extend independent real-template coverage, then evaluate a separate suit
+decision and digit ranking together. Do not tune on either inspected recording.
+
+Results: `references/vision/2026-10-03/flat_meld_sift_low_data_diagnostic_v0_1.json`,
+`wan_numeral_upper_half_probe_v0_1.json` (initial inspected query), and
+`wan_numeral_upper_half_probe_v0_2.json` (both directions). Raw private reference
+pixels remain outside the repository. Runtime identities remain UNKNOWN.
