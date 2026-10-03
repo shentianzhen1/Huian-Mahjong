@@ -1,0 +1,1211 @@
+{
+  "schema_version": "bamboo8_fixed_reference_reverse_probe_dev_v0_1",
+  "summary": {
+    "public_face_rows": 21,
+    "paired_scorable_faces": 9,
+    "baseline_correct_on_paired": 9,
+    "augmented_correct_on_paired": 9,
+    "newly_supported_faces": 1,
+    "newly_supported_correct": 1,
+    "regressed_label_ids": []
+  },
+  "reference_rows": [
+    {
+      "group_id": "hand7_bamboo8",
+      "frame_index": 1800,
+      "face_index": 0,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "crop_sha256": "a3ed54c25cfb2f4d7801f99b058db9e41f46edcc31e93a53387f042d2b036b06",
+      "match_group": "reviewed_match_2026_09_26_eight_hand"
+    },
+    {
+      "group_id": "hand7_bamboo8",
+      "frame_index": 1800,
+      "face_index": 1,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "crop_sha256": "4a496340c4cb76d68746cce992ec4259033915c0cda07fcf0f21b0b3066e8558",
+      "match_group": "reviewed_match_2026_09_26_eight_hand"
+    },
+    {
+      "group_id": "hand7_bamboo8",
+      "frame_index": 1800,
+      "face_index": 2,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "crop_sha256": "23b8f9d74e6b573c6842421810f56dff65f3be93ef4af7805f8717b56f28dd0e",
+      "match_group": "reviewed_match_2026_09_26_eight_hand"
+    }
+  ],
+  "rows": [
+    {
+      "label_id": "public_meld_p1_a",
+      "expected_tile": "P1",
+      "query_match_group": "reviewed_recording_66fe",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.06982533,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.0371899,
+            "margin": 0.03263543,
+            "eligible_class_count": 19,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.06982533,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.0371899,
+            "margin": 0.03263543,
+            "eligible_class_count": 20,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_p1_b",
+      "expected_tile": "P1",
+      "query_match_group": "reviewed_recording_66fe",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.06097112,
+            "runner_up_tile": "S3",
+            "runner_up_score": 0.03720786,
+            "margin": 0.02376327,
+            "eligible_class_count": 19,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.06097112,
+            "runner_up_tile": "S3",
+            "runner_up_score": 0.03720786,
+            "margin": 0.02376327,
+            "eligible_class_count": 20,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_p1_c",
+      "expected_tile": "P1",
+      "query_match_group": "reviewed_recording_66fe",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.06547577,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.04079058,
+            "margin": 0.02468519,
+            "eligible_class_count": 19,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.06547577,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.04079058,
+            "margin": 0.02468519,
+            "eligible_class_count": 20,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_s7",
+      "expected_tile": "S7",
+      "query_match_group": "reviewed_recording_66fe",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S3",
+            "top1_score": 0.09252311,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.09148287,
+            "margin": 0.00104024,
+            "eligible_class_count": 19,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S3",
+            "top1_score": 0.09252311,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.09148287,
+            "margin": 0.00104024,
+            "eligible_class_count": 20,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_s8",
+      "expected_tile": "S8",
+      "query_match_group": "reviewed_recording_66fe",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.05161672,
+            "runner_up_tile": "S2",
+            "runner_up_score": 0.03632064,
+            "margin": 0.01529609,
+            "eligible_class_count": 19,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S8",
+            "top1_score": 0.34794389,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.05161672,
+            "margin": 0.29632716,
+            "eligible_class_count": 20,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_s9",
+      "expected_tile": "S9",
+      "query_match_group": "reviewed_recording_66fe",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.13246757,
+            "runner_up_tile": "S2",
+            "runner_up_score": 0.13021327,
+            "margin": 0.0022543,
+            "eligible_class_count": 19,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.13246757,
+            "runner_up_tile": "S2",
+            "runner_up_score": 0.13021327,
+            "margin": 0.0022543,
+            "eligible_class_count": 20,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 2
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_m4",
+      "expected_tile": "M4",
+      "query_match_group": "reviewed_recording_b389",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M4",
+            "top1_score": 0.28738767,
+            "runner_up_tile": "M3",
+            "runner_up_score": 0.2060432,
+            "margin": 0.08134447,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M4",
+            "top1_score": 0.28738767,
+            "runner_up_tile": "M3",
+            "runner_up_score": 0.2060432,
+            "margin": 0.08134447,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_m5",
+      "expected_tile": "M5",
+      "query_match_group": "reviewed_recording_b389",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.34420527,
+            "runner_up_tile": "M3",
+            "runner_up_score": 0.20947012,
+            "margin": 0.13473516,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.34420527,
+            "runner_up_tile": "M3",
+            "runner_up_score": 0.20947012,
+            "margin": 0.13473516,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_m6",
+      "expected_tile": "M6",
+      "query_match_group": "reviewed_recording_b389",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.25388397,
+            "runner_up_tile": "M3",
+            "runner_up_score": 0.22897149,
+            "margin": 0.02491248,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.25388397,
+            "runner_up_tile": "M3",
+            "runner_up_score": 0.22897149,
+            "margin": 0.02491248,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_p6",
+      "expected_tile": "P6",
+      "query_match_group": "reviewed_recording_b389",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P6",
+            "top1_score": 0.15660041,
+            "runner_up_tile": "P7",
+            "runner_up_score": 0.13865373,
+            "margin": 0.01794668,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P6",
+            "top1_score": 0.15660041,
+            "runner_up_tile": "P7",
+            "runner_up_score": 0.13865373,
+            "margin": 0.01794668,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_p7",
+      "expected_tile": "P7",
+      "query_match_group": "reviewed_recording_b389",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P7",
+            "top1_score": 0.19941192,
+            "runner_up_tile": "P8",
+            "runner_up_score": 0.12928126,
+            "margin": 0.07013066,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P7",
+            "top1_score": 0.19941192,
+            "runner_up_tile": "P8",
+            "runner_up_score": 0.12928126,
+            "margin": 0.07013066,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "public_meld_p8",
+      "expected_tile": "P8",
+      "query_match_group": "reviewed_recording_b389",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P8",
+            "top1_score": 0.30443022,
+            "runner_up_tile": "P7",
+            "runner_up_score": 0.25489349,
+            "margin": 0.04953672,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P8",
+            "top1_score": 0.30443022,
+            "runner_up_tile": "P7",
+            "runner_up_score": 0.25489349,
+            "margin": 0.04953672,
+            "eligible_class_count": 23,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "eight_hand_h7_p456_p4_0",
+      "expected_tile": "P4",
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P7",
+            "top1_score": 0.11164858,
+            "runner_up_tile": "P6",
+            "runner_up_score": 0.07398284,
+            "margin": 0.03766574,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P7",
+            "top1_score": 0.11164858,
+            "runner_up_tile": "P6",
+            "runner_up_score": 0.07398284,
+            "margin": 0.03766574,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "eight_hand_h7_p456_p5_1",
+      "expected_tile": "P5",
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P7",
+            "top1_score": 0.06422904,
+            "runner_up_tile": "P6",
+            "runner_up_score": 0.02971437,
+            "margin": 0.03451467,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P7",
+            "top1_score": 0.06422904,
+            "runner_up_tile": "P6",
+            "runner_up_score": 0.02971437,
+            "margin": 0.03451467,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "eight_hand_h7_p456_p6_2",
+      "expected_tile": "P6",
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P6",
+            "top1_score": 0.23826414,
+            "runner_up_tile": "P7",
+            "runner_up_score": 0.15074394,
+            "margin": 0.0875202,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "P6",
+            "top1_score": 0.23826414,
+            "runner_up_tile": "P7",
+            "runner_up_score": 0.15074394,
+            "margin": 0.0875202,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "eight_hand_h4_s456_s4_0",
+      "expected_tile": "S4",
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.32337243,
+            "runner_up_tile": "S3",
+            "runner_up_score": 0.15155871,
+            "margin": 0.17181372,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.32337243,
+            "runner_up_tile": "S3",
+            "runner_up_score": 0.15155871,
+            "margin": 0.17181372,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "label_id": "eight_hand_h4_s456_s5_1",
+      "expected_tile": "S5",
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.19078536,
+            "runner_up_tile": "S2",
+            "runner_up_score": 0.14551515,
+            "margin": 0.04527021,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.19078536,
+            "runner_up_tile": "S2",
+            "runner_up_score": 0.14551515,
+            "margin": 0.04527021,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "eight_hand_h4_s456_s6_2",
+      "expected_tile": "S6",
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S3",
+            "top1_score": 0.1858426,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.12425787,
+            "margin": 0.06158473,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S3",
+            "top1_score": 0.1858426,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.12425787,
+            "margin": 0.06158473,
+            "eligible_class_count": 13,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "special14_s234_s2_0",
+      "expected_tile": "S2",
+      "query_match_group": "reviewed_recording_14",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S5",
+            "top1_score": 0.14275201,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.1037536,
+            "margin": 0.03899841,
+            "eligible_class_count": 21,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S5",
+            "top1_score": 0.14275201,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.1037536,
+            "margin": 0.03899841,
+            "eligible_class_count": 21,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "special14_s234_s3_1",
+      "expected_tile": "S3",
+      "query_match_group": "reviewed_recording_14",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S5",
+            "top1_score": 0.15105975,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.13384652,
+            "margin": 0.01721322,
+            "eligible_class_count": 21,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S5",
+            "top1_score": 0.15105975,
+            "runner_up_tile": "S4",
+            "runner_up_score": 0.13384652,
+            "margin": 0.01721322,
+            "eligible_class_count": 21,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "label_id": "special14_s234_s4_2",
+      "expected_tile": "S4",
+      "query_match_group": "reviewed_recording_14",
+      "modes": {
+        "baseline": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.32756958,
+            "runner_up_tile": "S5",
+            "runner_up_score": 0.22316291,
+            "margin": 0.10440668,
+            "eligible_class_count": 21,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "fixed_s8_experimental_reference": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "S4",
+            "top1_score": 0.32756958,
+            "runner_up_tile": "S5",
+            "runner_up_score": 0.22316291,
+            "margin": 0.10440668,
+            "eligible_class_count": 21,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    }
+  ],
+  "private_template_load": {
+    "schema_version": "public_meld_private_sift_load_v0_1",
+    "private_template_count": 15,
+    "recovery_ids": [
+      "G02_hand2_m345",
+      "G03_hand2_m123",
+      "G07_hand5_p345",
+      "G08_hand5_m567",
+      "G09_hand6_p789"
+    ],
+    "tile_ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M3",
+      "M4",
+      "M5",
+      "M5",
+      "M6",
+      "M7",
+      "P3",
+      "P4",
+      "P5",
+      "P7",
+      "P8",
+      "P9"
+    ],
+    "private_pixels_committed_to_repository": false,
+    "source_disjoint_holdout": false,
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  },
+  "input_sha256": {
+    "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+    "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json": "c076878ea205ed4cc33f8934a8ad7b1ca4ac054b12085b75402911fbcfc42018",
+    "references/vision/2026-10-03/existing_video_meld_face_intake_v0_1.json": "2e4c95918ead1527372e71fe4066a3a0bc3ead1513026eb779831d7175f2ee78",
+    "references/vision/2026-09-24/public_identity_source_groups.development.json": "5eaa25861b77925739dec39c18da0dfef9450cf9729e9a2a8d4f5ddde9924248",
+    "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json": "6cf0d63b66215f0833f822170e066123ff8c5286834030c74eab1d912295a744"
+  },
+  "reference_selection": "all three faces of already-reviewed frame1800; no frame/crop/parameter search",
+  "experimental_reference_original_match_count": 1,
+  "reference_label_authority": "assistant_visual_review",
+  "same_match_aliases_collapsed": [
+    "reviewed_match_2026_09_26_eight_hand",
+    "reviewed_match_2026_09_26_first_hand"
+  ],
+  "minimum_other_original_matches": 1,
+  "default_bank_modified": false,
+  "scorer_parameters_changed": false,
+  "blind_validation": false,
+  "formal_promotion_evidence": false,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

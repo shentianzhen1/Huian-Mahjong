@@ -29,6 +29,9 @@ def harvest(spec: dict, video_directory: str | Path, output_zip: str | Path) -> 
         cap = cv2.VideoCapture(str(path))
         try:
             for group in source["groups"]:
+                tiles = group["reviewed_candidate_tiles"] if "reviewed_candidate_tiles" in group else [group["reviewed_candidate_tile"]] * len(group["face_bboxes"])
+                if len(tiles) != len(group["face_bboxes"]):
+                    raise ValueError("reviewed identity list must match face count")
                 for frame in group["frame_indices"]:
                     if frame < 0 or frame >= int(cap.get(cv2.CAP_PROP_FRAME_COUNT)):
                         raise ValueError("reviewed frame outside source")
@@ -53,7 +56,7 @@ def harvest(spec: dict, video_directory: str | Path, output_zip: str | Path) -> 
                             "match_group": spec["conservative_original_match_group"],
                             "source_session": source["source_session"], "face_index": index,
                             "bbox": bbox, "image_size": list(image.size),
-                            "reviewed_candidate_tile": group["reviewed_candidate_tile"],
+                            "reviewed_candidate_tile": tiles[index],
                             "crop_file": filename,
                             "crop_sha256": hashlib.sha256(raw.getvalue()).hexdigest(),
                             "review": "assistant_visual_review_not_user_confirmation",

@@ -76,3 +76,46 @@ North/bamboo-1/Wan-9 are useful candidate
 material for other-match experiments, pending the same lineage and crop review
 required of existing templates. Do not search thresholds on these viewed crops.
 Runtime identities remain UNKNOWN, Hint read-only, Executor off.
+
+## Fixed-reference reverse direction and a second query group
+
+The three already reviewed S8 faces at frame 1800 were locked as experimental
+references before the reverse run. No frame or crop search occurred. The
+reference intake metadata and crop hashes are pinned to the public intake
+record; this does not promote these assistant-reviewed manual ROIs into the
+default template bank. First-hand/eight-hand match aliases are collapsed.
+
+Adding these three faces from one original match gives the corrected 66fe S8
+query independent true-class support and a correct S8 Top1. Nine other public
+faces with true-class support before and after remain 9/9 correct. Eleven
+other public faces still lack true-class support; their winners are not counted
+as correct or incorrect classification outcomes. These controls span previously
+inspected material and do not constitute a blind holdout.
+
+A separate inspected query from Hand 8 was then harvested at the same fixed
+4794/4797/4800/4803/4806 frames used for its Wan-9 intake. The second group is
+visibly S7/S8/S9. It is scored against the unchanged corrected public + verified
+private bank, excluding the entire September 26 match. The Hand 7 experimental
+S8 references are not used for this same-match query.
+
+| Hand 8, one-other-match diagnostic | Result |
+|---|---|
+| S7 independent face ranking | 5/5 S7 |
+| S8 independent face ranking | 5/5 S8 |
+| S9 independent face ranking | 0/5 S9; all five rank S2 |
+| Legal group ranking | 4/5 S789; last frame ranks S678 |
+| Two-other-match true-class support | none |
+
+The final wrong group has a raw top-two score gap of 0.00048522. None of these
+scores is calibrated Runtime confidence. Ranking a legal group does not establish
+identity: all outputs and actions remain UNKNOWN. The five frames belong to one
+group in the same September 26 original match as Hand 7; they do not add another
+independent source. The next targeted inspection is S9 versus S2, preserving
+these fixed crops, bank, and scorer settings as the baseline.
+
+Reproduce reverse direction with `workspace.vision.evaluate_bamboo8_reverse_probe`
+using the original intake zip and verified private-template zip. Reproduce
+the Hand 8 group with `hand8_s789_harvest_spec_v0_1.json` and
+`workspace.vision.evaluate_existing_meld_intake --include-group-rankings`.
+Reports: `bamboo8_fixed_reference_reverse_probe_v0_1.json`,
+`hand8_s789_intake_v0_1.json`, and `hand8_s789_fixed_sift_probe_v0_1.json`.
