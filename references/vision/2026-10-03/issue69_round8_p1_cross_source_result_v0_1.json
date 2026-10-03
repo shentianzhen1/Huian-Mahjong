@@ -1,0 +1,62 @@
+{
+  "schema_version": "issue69_round8_p1_cross_source_result_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "pre_score_pin": "references/vision/2026-10-03/issue69_round8_p1_peng_cross_source_pre_score_pin_v0_1.json",
+  "query": {
+    "hand": 8,
+    "frames": [
+      3534,
+      3535,
+      3536,
+      3537,
+      3538
+    ],
+    "actor": "opponent",
+    "truth": [
+      "P1",
+      "P1",
+      "P1"
+    ],
+    "faces": 15,
+    "groups": 5,
+    "truth_basis": "direct_visual_review_before_weighted_scoring"
+  },
+  "eligibility": {
+    "excluded_match": "reviewed_match_2026_09_26_eight_hand",
+    "minimum_other_match_groups": 2,
+    "P1_other_match_groups": 1,
+    "P1_eligible": false
+  },
+  "result": {
+    "correct": 0,
+    "wrong": 0,
+    "unknown": 15,
+    "exact_groups_correct": 0,
+    "groups": 5,
+    "accuracy_measured": false,
+    "reason": "P1 lacks two other independent original-match reference groups"
+  },
+  "historical_context": {
+    "older_stable_top1": [
+      "P7",
+      "P6",
+      "P8"
+    ],
+    "older_output_is_not_truth": true,
+    "note": "P1 was absent from the old eligible class set; temporal stability does not repair missing class coverage"
+  },
+  "candidate": {
+    "name": "spatial_window_affine_reference_complete",
+    "formula_changed": false,
+    "parameters_changed": false,
+    "weighted_accuracy_claimed": false
+  },
+  "next_step": "Search existing independent recordings for a second non-query P1 exposed-meld reference before rerunning the unchanged candidate.",
+  "blind_holdout": false,
+  "formal_promotion_evidence": false,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
