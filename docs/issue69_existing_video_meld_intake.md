@@ -297,6 +297,17 @@ remain S9. These measurements localize a substantial S9 input-image change;
 they do not prove whether the cause is crop boundary, resizing/interpolation,
 or their interaction. No scorer or threshold changed.
 
+The dependency-free coordinate audit
+`references/vision/2026-10-03/hand8_split_boundary_overlap_audit_v0_1.json`
+maps the already pinned manual ROIs into the recorded normalized group: x ranges
+0–75, 72–146 and 141–216, versus current equal thirds 0–72, 72–144 and
+144–216. Thus equal thirds omit 3, 2 and 3 normalized pixels from those
+rectangles in every fixed frame. The manual rectangles overlap and are not
+certified tile polygons; this establishes a reproducible geometric discrepancy,
+not a corrected boundary or causal explanation. The recorded local diagnostic
+environment lacked OpenCV, so the fixed manual-boundary identity counterfactual
+has not been reranked; do not infer whether that boundary change improves identity.
+
 Decision: reject this group-crop/split candidate for these fixed Hand 8 queries.
 This does not invalidate the separate symmetric single-face A/B, nor prove the
 group normalizer generally wrong. Next isolate the loss by reviewing actual
