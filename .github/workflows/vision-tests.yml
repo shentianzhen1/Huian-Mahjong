@@ -2,7 +2,7 @@ name: Vision Regression
 
 on:
   push:
-    branches: [main]
+    branches: [main, integration/issue69-replay-stack-20260926]
     paths:
       - "workspace/vision/**"
       - "dataset/tiles_v0_1/**"
