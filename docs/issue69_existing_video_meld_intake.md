@@ -119,3 +119,43 @@ the Hand 8 group with `hand8_s789_harvest_spec_v0_1.json` and
 `workspace.vision.evaluate_existing_meld_intake --include-group-rankings`.
 Reports: `bamboo8_fixed_reference_reverse_probe_v0_1.json`,
 `hand8_s789_intake_v0_1.json`, and `hand8_s789_fixed_sift_probe_v0_1.json`.
+
+## One fixed reference-descriptor deduplication experiment
+
+The representative frame 4800 S9 query has 23 ratio-filtered matches to S2,
+but only eight distinct template descriptor indices; ten matches reuse one
+reference descriptor. Its S9 reference has nine matches to seven distinct
+indices. The original matcher counts each query match independently. This can
+inflate a wrong reference's score through many-to-one matches on repeated local
+patterns; it does not by itself prove which matching geometry is correct.
+
+One fixed variant was run: for each template descriptor index (`trainIdx`),
+keep only the smallest matched distance before calculating the same score.
+Feature extraction, crop pixels, bank, source exclusions, ratio threshold and
+raw-fallback selection are unchanged. No alternative variants or threshold
+search followed the results. The scorer callback is temporarily replaced only
+inside this offline harness and restored even on exceptions; the frozen module
+and default Runtime path are not modified.
+
+| Inspected comparison | Frozen baseline | Deduplicated reference matches |
+|---|---:|---:|
+| Hand 8 S7 faces | 5/5 | 5/5 |
+| Hand 8 S8 faces | 5/5 | 5/5 |
+| Hand 8 S9 faces | 0/5 | 3/5 |
+| Hand 8 legal group ranking | 4/5 | 5/5 |
+| Earlier Hand 7 S8 faces | 15/15 | 15/15 |
+| Reverse 66fe S8 query | 1/1 | 1/1 |
+| Nine paired scorable public face controls | 9/9 | 9/9 |
+
+The remaining two S9 errors become S7, not S2. A correct group ranking can mask
+those wrong individual winners; both metrics must remain separate. Many frames
+are correlated observations of the same groups, and unsupported classes still
+have no accuracy denominator. These inspected development comparisons do not
+establish general improvement, two-other-match readiness or Runtime confidence.
+Different orientation descriptors at the same coordinates are still distinct;
+no reciprocal matching or spatial-consistency check was implemented.
+
+Reproduce with `workspace.vision.evaluate_sift_reference_dedup_probe`, supplying
+`--hand8-intake-zip`, `--original-intake-zip`, `--private-template-zip`, and
+`--output`. The pinned result is
+`sift_reference_descriptor_dedup_probe_v0_1.json`. Keep this variant offline.
