@@ -583,15 +583,13 @@ class HuianEnvironment:
                 if profile.settlement_rule_id is None:
                     raise
                 raise UnknownRuleError(profile.settlement_rule_id)
-            if source == WinSource.ROB_KONG:
-                from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
             expected = "PINGHU" if source == WinSource.DISCARD else "ZIMO"
             if win_type != expected:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
         if self._state.pending_kong is not None:
-            from huian.rules.config import UnknownRuleError
-            raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
+            if declaration is None or WinSource(declaration["source"]) != WinSource.ROB_KONG:
+                from huian.rules.config import UnknownRuleError
+                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
         # A verified wall-tail Hu after any completed Kong uses the
         # ordinary Zimo settlement formula. The Kong itself contributes only
         # through the caller-provided/aggregated normal fan total.
@@ -609,6 +607,8 @@ class HuianEnvironment:
         candidate.terminal_reason = "OBSERVED_" + result.win_type
         candidate.pending_discard = None
         candidate.pending_hu = None
+        if declaration is not None and WinSource(declaration["source"]) == WinSource.ROB_KONG:
+            candidate.pending_kong = None
         self.rules.validate_state(candidate)
         metadata = {"source": "observed", "win_type": result.win_type,
                     "current_dealer_base": current_dealer_base,
