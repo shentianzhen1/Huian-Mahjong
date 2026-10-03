@@ -27,6 +27,8 @@ def export_public_meld_spatial_reference_bank(
     output_npz: str | Path,
     output_metadata: str | Path,
 ) -> dict[str, Any]:
+    import importlib.metadata
+    import cv2
     import numpy as np
     from PIL import Image
 
@@ -118,6 +120,13 @@ def export_public_meld_spatial_reference_bank(
             str(source_path.relative_to(root)): hashlib.sha256(source_path.read_bytes()).hexdigest(),
         },
         "npz_sha256": hashlib.sha256(output_npz.read_bytes()).hexdigest(),
+        "dependency_versions": {
+            "opencv_cv2": cv2.__version__,
+            "opencv_python_headless_distribution": importlib.metadata.version(
+                "opencv-python-headless"
+            ),
+            "numpy": np.__version__,
+        },
         "descriptor_extractor": "PositionedSift.extract",
         "symmetric_single_face_normalization": True,
         "local_window_radius": 0.2,
@@ -151,6 +160,7 @@ def main() -> None:
         "reference_count": report["reference_count"],
         "tile_ids": report["tile_ids"],
         "npz_sha256": report["npz_sha256"],
+        "dependency_versions": report["dependency_versions"],
         "source_pixels_exported": report["source_pixels_exported"],
     }, ensure_ascii=False))
 
