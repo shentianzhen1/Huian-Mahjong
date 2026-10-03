@@ -65,7 +65,35 @@ cover leftmost recovery with/without a touching animation, missing peers,
 distant bright components, and duplicate prevention. Generic detector inputs
 remain unchanged. Synthetic tests do not establish real-video recall.
 
-Next audit the SHA-pinned old and new N/M9 faces for label, glyph, perspective,
-and descriptor mismatch while keeping this reference selection and scorer
-frozen. Record any later feature or geometry alternative as a separate
-development comparison; no score-driven replacement of the frozen references.
+## Resolution and digit-feature follow-up
+
+The old N/M9 crops visually retain the named glyphs. The next comparison keeps
+the same reference frames and projects their frozen automatic 1046x480 crop
+boxes into the 2796x1290 native frame; it does not search for new boundaries.
+
+| Candidate | N | M9 | Material regression or limit |
+| --- | --- | --- | --- |
+| Downsampled references, existing geometry | 5/15 | 0/15 | Prior development baseline |
+| Native references, existing geometry | 14/15 | 0/15 | S1 drops from 15/15 to 14/15 |
+| Native references, global 72x96 aspect | 15/15 | 0/15 | M6 and P8 public controls regress; reject global use |
+| Native references, upper-half 72x96 feature within Wan | Not tested | 15/15 | Suit is specified by review; not 34-class recognition |
+
+The within-Wan candidate reuses the existing fixed 0.5 upper fraction, applies
+the same transform to references and queries, and retains the frozen SIFT
+extractor/scorer. A reverse-source check uses all three old M9 faces from
+already pinned frame 4794 as references and the three new native 73s faces as
+queries; all three rank as M9 after excluding new-match templates. M4/M5/M6
+controls remain 3/3. These are correlated, previously inspected samples.
+
+Retain this as a limited digit-feature experiment. Neither global aspect
+normalization nor wholesale native-reference substitution is admitted. Suit
+recognition, M8 support, another other-original-match reference for N/M9, and
+automatic old-query crop validation remain unresolved. SIFT ranks are not
+Runtime confidence and do not open advisory capabilities.
+
+- [Native pixel reference pin](../references/vision/2026-10-04/new_match_native_reference_candidate_pin_v0_1.json)
+- [Resolution and within-Wan diagnostic](../references/vision/2026-10-04/new_match_north_wan_resolution_feature_diagnostic_v0_1.json)
+
+Next validate a real, abstaining suit-family observation before applying a
+Wan-only digit head; use broader source-disjoint Wan controls and include M8.
+Keep the inspected diagnostic separate from future blind promotion evidence.
