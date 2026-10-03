@@ -308,6 +308,16 @@ not a corrected boundary or causal explanation. The recorded local diagnostic
 environment lacked OpenCV, so the fixed manual-boundary identity counterfactual
 has not been reranked; do not infer whether that boundary change improves identity.
 
+The development probe now has a pending third mode that projects those same
+SHA-pinned rectangular boundaries into the actual normalized group image. Its
+projection has a dependency-free regression check, while the SIFT ranking still
+requires OpenCV and has **not** been executed for this third mode. Run it only
+with the private video, intake ZIP, and template ZIP in a Python environment
+where `python -m pip install -e ".[vision]"` succeeds. Choose a fresh output
+filename such as `sift_group_split_geometry_probe_v0_2.json`; the CLI refuses
+to overwrite the existing v0.1 evidence. This mode is a manual-boundary
+counterfactual, not an automatic splitter or a Runtime identity result.
+
 As an independent source-integrity check, FFmpeg decoded the locked original
 video and all 15 SHA-pinned face rectangles compared pixel-for-pixel equal to
 the private intake crops. See

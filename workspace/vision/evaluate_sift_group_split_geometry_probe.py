@@ -3,10 +3,28 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import io
 import json
 from pathlib import Path
 from zipfile import ZipFile
+
+
+def project_pinned_face_box(*, face_box, group_box, tight_box, normalized_size):
+    """Project a pinned rectangular ROI into an unrotated normalized group."""
+    x, y, width, height = face_box
+    left, top, _, _ = group_box
+    tight_x, tight_y, tight_width, tight_height = tight_box
+    normalized_width, normalized_height = normalized_size
+    if min(width, height, tight_width, tight_height, normalized_width, normalized_height) <= 0:
+        raise ValueError("invalid fixed ROI projection dimensions")
+    x0 = max(0, round((x - left - tight_x) * normalized_width / tight_width))
+    x1 = min(normalized_width, round((x + width - left - tight_x) * normalized_width / tight_width))
+    y0 = max(0, round((y - top - tight_y) * normalized_height / tight_height))
+    y1 = min(normalized_height, round((y + height - top - tight_y) * normalized_height / tight_height))
+    if x1 <= x0 or y1 <= y0:
+        raise ValueError("pinned ROI maps outside normalized group")
+    return x0, y0, x1 - x0, y1 - y0
 
 
 def evaluate(*, intake_zip, private_template_zip, video_path):
@@ -95,15 +113,39 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             ids = [_sift_descriptors(normalize_single_face(face)[0]) for face in faces]
             if any(desc is None for desc in ids):
                 raise ValueError(f"frame {frame}: split face has insufficient descriptors")
+            # Boundary-only counterfactual: map the already pinned/manual ROI
+            # edges into the very same normalized group image. No pixel/frame
+            # search; overlapping manual ROIs remain overlapping for diagnosis.
+            tight_box = normalized.analysis.tight_bbox_in_group
+            if tight_box is None or normalized.image is None:
+                raise ValueError("fixed ROI projection requires a normalized image and tight bbox")
+            review_faces = []
+            mapped_boxes = []
+            if abs(normalized.analysis.rotation_degrees) > 0.01:
+                raise ValueError("fixed ROI coordinate projection only supports the pinned zero-rotation case")
+            for box in boxes:
+                x0, y0, w, h = project_pinned_face_box(
+                    face_box=box,
+                    group_box=(left, top, right-left, bottom-top),
+                    tight_box=tight_box,
+                    normalized_size=normalized.image.size,
+                )
+                x1, y1 = x0 + w, y0 + h
+                mapped_boxes.append([x0, y0, w, h])
+                face, _ = normalize_single_face(normalized.image.crop((x0, y0, x1, y1)))
+                review_faces.append(_sift_descriptors(face))
+            if any(desc is None for desc in review_faces):
+                raise ValueError(f"frame {frame}: reviewed-boundary split lacks descriptors")
             geometry.append({"frame": frame, "group_bbox": [left, top, right-left, bottom-top],
                 "stack_state": normalized.analysis.stack_state,
                 "normalized_group_size": list(normalized.image.size),
                 "split_face_sizes": [list(f.size) for f in faces],
+                "manual_roi_mapped_split_boxes": mapped_boxes,
                 "rotation_degrees": normalized.analysis.rotation_degrees,
                 "tight_bbox_in_group": normalized.analysis.tight_bbox_in_group,
                 "face_identity_crop_sha256": [r["crop_sha256"] for r in rows_for_frame],
                 "input_faces_were_manual_rois_not_verified_splitter_outputs": all(not r["automatic_splitter_verified"] for r in rows_for_frame)})
-            for i, (row, group_descriptors) in enumerate(zip(rows_for_frame, ids)):
+            for i, (row, group_descriptors, reviewed_descriptors) in enumerate(zip(rows_for_frame, ids, review_faces)):
                 with ZipFile(intake_zip) as archive:
                     with Image.open(io.BytesIO(archive.read(row["crop_file"]))) as direct:
                         direct_face, _ = normalize_single_face(direct.convert("RGB"))
@@ -119,7 +161,8 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 expected = row["reviewed_candidate_tile"]
                 row_scores = {}
                 for mode, query in (("direct_face_symmetric_geometry", direct_descriptors),
-                                    ("group_normalize_split_then_face_geometry", group_descriptors)):
+                                    ("group_normalize_split_then_face_geometry", group_descriptors),
+                                    ("group_normalize_manual_roi_boundary_counterfactual", reviewed_descriptors)):
                     by_class_group = defaultdict(dict)
                     if query is not None:
                         source_lineage = sources[row["source_session"]]
@@ -152,7 +195,8 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
     finally:
         cap.release()
     summaries = {}
-    for mode in ("direct_face_symmetric_geometry", "group_normalize_split_then_face_geometry"):
+    for mode in ("direct_face_symmetric_geometry", "group_normalize_split_then_face_geometry",
+                 "group_normalize_manual_roi_boundary_counterfactual"):
         selected = [r for r in rows if r["modes"][mode]["scorable"]]
         summaries[mode] = {"faces": len(rows), "scorable_faces": len(selected),
             "correct_when_scorable": sum(r["modes"][mode]["top1_correct"] is True for r in selected),
@@ -184,6 +228,9 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             "workspace/vision/public_meld_geometry_normalization.py": hashlib.sha256(Path("workspace/vision/public_meld_geometry_normalization.py").read_bytes()).hexdigest(),
             "workspace/vision/public_meld_identity_sift.py": hashlib.sha256(Path("workspace/vision/public_meld_identity_sift.py").read_bytes()).hexdigest()},
         "group_crop_policy": "bounding union of three SHA-pinned face ROIs",
+        "boundary_counterfactual": "same normalized group image cropped using fixed ledger ROI edges mapped into normalized coordinates",
+        "boundary_counterfactual_is_automatic_splitter": False,
+        "boundary_counterfactual_is_new_training_data": False,
         "identity_scoring_completed": True, "candidate_decision": decision,
         "minimum_other_original_match_groups": 1,
         "identity_top1_is_development_ranking_not_runtime_confidence": True,
@@ -219,6 +266,10 @@ def main():
     parser.add_argument("--video", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
+    if importlib.util.find_spec("cv2") is None:
+        parser.error("OpenCV is missing from this Python environment; install the project's optional vision dependencies: python -m pip install -e '.[vision]'")
+    if Path(args.output).exists():
+        parser.error("output already exists; choose a new development report path to preserve prior evidence")
     report = evaluate(intake_zip=args.intake_zip, private_template_zip=args.private_template_zip, video_path=args.video)
     Path(args.output).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"query_count": report["query_count"], "summary": report["summary"], "geometry": report["geometry"]}))
