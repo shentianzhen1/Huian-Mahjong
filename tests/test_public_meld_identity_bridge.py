@@ -245,9 +245,9 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
         observer = self.MeldSnapshotObserver(settle_frames=3)
         sequence = [
             ("P4", "P5", "P6"),
-            ("P4", "P5", "P7"),
-            ("P4", "P5", "P7"),
-            ("P4", "P5", "P7"),
+            ("P6", "P7", "P8"),
+            ("P6", "P7", "P8"),
+            ("P6", "P7", "P8"),
         ]
         outputs = []
         for frame, tiles in enumerate(sequence, start=1):
@@ -267,6 +267,53 @@ class PublicMeldIdentityBridgeTests(unittest.TestCase):
         self.assertTrue(outputs[3].stable)
         self.assertTrue(outputs[3].trusted)
         self.assertIn("meld_baseline_established", outputs[3].issues)
+
+    def test_three_confident_invalid_faces_do_not_become_trusted_meld(self):
+        for tiles in (("P4", "P5", "P7"), ("P4", "M5", "S6"),
+                      ("E", "SOUTH", "W"), ("P4", "P4", "P5"),
+                      ("UNKNOWN", "UNKNOWN", "UNKNOWN")):
+            with self.subTest(tiles=tiles):
+                result = self._classified(tiles)
+                self.assertEqual(result.tile_ids, tiles)
+                self.assertFalse(result.trusted_for_read_only_runtime)
+                self.assertIn("individually_trusted_faces_form_invalid_regular_meld", result.issues)
+                snapshot = self.snapshot_from_bridges(
+                    ((self._group(), result),), actor="player",
+                    timestamp_seconds=1.0, frame=10, source_session="query",
+                )
+                self.assertFalse(snapshot.trusted)
+                self.assertEqual(snapshot.groups[0].tiles, (None, None, None))
+
+    def test_reversed_sequence_and_honor_triplet_remain_valid_without_action_claim(self):
+        for tiles in (("P6", "P5", "P4"), ("B", "B", "B")):
+            with self.subTest(tiles=tiles):
+                result = self._classified(tiles)
+                self.assertTrue(result.trusted_for_read_only_runtime)
+                self.assertEqual(result.to_dict()["action_kind"], "UNKNOWN")
+                self.assertFalse(result.to_dict()["safe_for_executor"])
+
+    def test_repeated_invalid_group_cannot_establish_stable_identity_baseline(self):
+        observer = self.MeldSnapshotObserver(settle_frames=3)
+        for frame in range(1, 5):
+            result = self._classified(("P4", "P5", "P7"))
+            snapshot = self.snapshot_from_bridges(
+                ((self._group(), result),), actor="opponent",
+                timestamp_seconds=frame * .1, frame=frame, source_session="query",
+            )
+            observed = observer.observe(snapshot)
+            self.assertFalse(observed.trusted)
+            self.assertIsNone(observed.observation)
+
+    def test_snapshot_rechecks_inconsistent_precomputed_bridge_result(self):
+        from dataclasses import replace
+        complete = self._classified(("P4", "P5", "P6"))
+        stale = replace(complete, tile_ids=("P4", "P5", "P7"))
+        snapshot = self.snapshot_from_bridges(
+            ((self._group(), stale),), actor="player",
+            timestamp_seconds=1., frame=10, source_session="query",
+        )
+        self.assertFalse(snapshot.trusted)
+        self.assertEqual(snapshot.groups[0].tiles, (None, None, None))
 
     def test_stacked_group_does_not_fabricate_three_face_identity(self):
         with patch(

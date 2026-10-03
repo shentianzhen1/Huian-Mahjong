@@ -21,8 +21,19 @@ from workspace.vision.public_meld_face_segmentation import (
     PreparedPublicMeldFaces,
     prepare_public_meld_faces,
 )
+from workspace.vision.public_meld_group_identity_decoder import (
+    rank_regular_public_meld_identity,
+)
 from workspace.vision.public_tile_detector import PublicGeometryCandidate
 from workspace.vision.public_observers import MeldGroup, MeldSnapshot
+
+
+def _regular_identity_is_valid(tile_ids: Sequence[str | None]) -> bool:
+    if len(tile_ids) != 3 or any(tile is None for tile in tile_ids):
+        return False
+    return rank_regular_public_meld_identity(
+        tuple({tile: 1.0} for tile in tile_ids)
+    ).top_tiles is not None
 
 
 @dataclass(frozen=True)
@@ -137,6 +148,11 @@ def classify_public_meld_group(
     issues: list[str] = []
     if not all_trusted:
         issues.append("one_or_more_meld_faces_untrusted")
+    elif not _regular_identity_is_valid(tile_ids):
+        # Validate only the already accepted identities. Do not search weaker
+        # class scores to manufacture a legal replacement or infer an action.
+        all_trusted = False
+        issues.append("individually_trusted_faces_form_invalid_regular_meld")
 
     return PublicMeldIdentityBridgeResult(
         prepared=prepared,
@@ -175,8 +191,7 @@ def meld_snapshot_from_identity_bridges(
     for group, result in entries:
         if (
             result.trusted_for_read_only_runtime
-            and len(result.tile_ids) == 3
-            and all(tile is not None for tile in result.tile_ids)
+            and _regular_identity_is_valid(result.tile_ids)
         ):
             tiles = tuple(result.tile_ids)
         elif result.prepared.geometry.stack_state == "STACKED":
