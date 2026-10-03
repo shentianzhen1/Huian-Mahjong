@@ -138,3 +138,58 @@ Executor remains off.
 Next use a separately supported, abstaining family observation and obtain
 public-meld M8 references from another original match. Preserve these inspected
 failures as regression controls; future blind promotion evidence must be new.
+
+## Lower-feature consensus: abstention gain and reverse failure
+
+This second candidate freezes a lower-half 72x96 feature before evaluation.
+The lower-feature bank pools templates into WAN/NON_WAN and counts original
+matches across tile classes. Both binary alternatives must be eligible; ties,
+missing winners, and disagreement with whole-face ranking produce UNKNOWN.
+No learned score/margin threshold or fraction search is used. The two feature
+views share pixels and are not independent corroborating evidence.
+
+At one-other-original-match support:
+
+| Query packet | Correct binary family hypotheses | UNKNOWN | Wrong hypotheses |
+| --- | --- | --- | --- |
+| Old manual crops, 75 faces | 63 | 12 | 0 |
+| Public controls, 21 faces | 21 | 0 | 0 |
+| Recovered private controls, 15 faces | 15 | 0 | 0 |
+| All frozen new native faces, reverse direction, 15 faces | 9 | 6 | 0 |
+| M8 draw-domain stress only, 1 face | 1 | 0 | 0 |
+
+The old N/S1 false routes now abstain; ten other old non-Wan crops also abstain.
+All 15 old M9 queries still enter the diagnostic digit head and rank as M9.
+Reverse queries exclude every template from the new recording's original
+match, including references from its other segments. This is previously
+inspected development data, not blind evidence.
+
+Reverse M9 family recall is only **1/3**: two native faces abstain; one enters
+the diagnostic digit head and ranks as unsupported M7, since new-match M9
+references are excluded. Visual review of all three raw/normalized/lower crops
+shows that the fixed lower half mainly contains the gray side wall and almost
+none of the red Wan glyph. It is a body-fraction feature, not glyph localization.
+Do not tune the fraction on these exposed failures.
+
+The two-other-match mode remains rejected: it has eight incorrect NON_WAN
+hypotheses in private controls, three in public controls, and one false WAN
+hypothesis among new reverse queries. Zero old-packet false WAN routes alone
+would conceal these failures. The ledger reports wrong hypotheses separately
+from abstentions and missing true-class support.
+
+M8 still enters the digit head and ranks as unsupported M9. Every query has
+zero other-original-match M8 support. The evaluator records per-class source
+support for the entire M1–M9 alphabet, and leaves `qualified_identity=null`
+for every row. Hypothesis agreement does not bypass incomplete classes or
+uncalibrated scores. No Runtime caller or threshold change is introduced.
+
+32 focused tests pass, including five consensus/source-support tests covering
+disagreement, missing competition, ties/missing observations, family-only
+output, and same-original/exact-SHA exclusion with duplicate-match counting.
+
+- [127-face consensus ledger](../references/vision/2026-10-04/new_match_lower_family_consensus_v0_1.json)
+- [Evaluator with optional `--lower-family-consensus`](../workspace/vision/evaluate_new_match_family_route_probe.py)
+
+Next validate automatic front-face-plane localization before extracting a Wan
+glyph feature. Retain the fixed-fraction failure as a regression, and keep M8
+public-meld source coverage and future blind qualification as separate gaps.
