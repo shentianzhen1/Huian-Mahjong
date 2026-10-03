@@ -228,6 +228,30 @@ def _reverse_descriptor_reference_support(
     }
 
 
+def reference_completeness_score(forward_score, audit):
+    """Reweight one development score by whole-reference geometric support.
+
+    This is an offline candidate only. It adds no acceptance threshold and
+    fails closed when the bidirectional reference-support audit is unavailable.
+    """
+    if forward_score is None:
+        return None
+    if isinstance(forward_score, bool) or not isinstance(forward_score, (int, float)):
+        raise ValueError('forward_score must be numeric or None')
+    if forward_score <= 0:
+        return 0.0
+    support = audit.get('reference_keypoints_supported_by_query_fraction')
+    if support is None:
+        return 0.0
+    if (
+        isinstance(support, bool)
+        or not isinstance(support, (int, float))
+        or not 0.0 <= float(support) <= 1.0
+    ):
+        raise ValueError('reference support must be within [0, 1]')
+    return float(forward_score) * float(support)
+
+
 class PositionedSift:
     """Retain positions while preserving the frozen descriptor extraction."""
     def __init__(self, *, local_window=False):
