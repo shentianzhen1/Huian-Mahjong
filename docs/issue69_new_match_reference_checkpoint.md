@@ -94,6 +94,47 @@ Runtime confidence and do not open advisory capabilities.
 - [Native pixel reference pin](../references/vision/2026-10-04/new_match_native_reference_candidate_pin_v0_1.json)
 - [Resolution and within-Wan diagnostic](../references/vision/2026-10-04/new_match_north_wan_resolution_feature_diagnostic_v0_1.json)
 
-Next validate a real, abstaining suit-family observation before applying a
-Wan-only digit head; use broader source-disjoint Wan controls and include M8.
-Keep the inspected diagnostic separate from future blind promotion evidence.
+## Automatic family-route falsification
+
+The next offline evaluator removes the reviewed family from routing. It uses
+the unchanged whole-face source-disjoint SIFT winner to propose M/P/S/HONOR;
+only an M winner enters the fixed upper-half 72x96 Wan digit head. An absent
+winner abstains. No confidence or margin threshold was fitted.
+
+At one-other-original-match support, family ranking is correct on 73/75 old
+manual crops, 21/21 public controls, and 15/15 recovered private controls. The
+two old-crop errors are N at frame 3606 face 0 and S1 at frame 3606 face 1;
+both enter the Wan head and rank as M5. All 15 old M9 crops still rank as M9
+after routing, but that success does not cure false routes from other families.
+
+Broader private Wan queries have four eligible true-class identities, all
+four correct. Five other Wan queries lack a true-class reference from another
+original match (M1/M2/M3/M7); their forced winners are not counted as supported
+identity errors. The report records this separately for every query and both
+support modes. The two-other-match setting does not supply a reliable family
+gate: 20/60 old non-Wan crops route to Wan while classes lose source support.
+
+An existing approved M8 **draw-region** crop is a stress query only. It is
+excluded from templates and is not public-meld evidence. Whole-face ranking
+proposes Wan (M4); the digit head ranks M9 while M8 is unsupported. This catches
+a missing-class failure, not a measured M8 public-meld error rate. Its original
+match lineage is unresolved; no independent-source qualification is claimed.
+
+**Reject winner-family routing as an automatic identity gate.** Frozen SIFT
+returns a winner even for unsupported classes and supplies no calibrated
+abstention. Keep the Wan digit result diagnostic-only and preserve Runtime's
+missing-class fail-closed behavior. Do not select a new margin threshold on
+these inspected failures.
+
+The evaluation verifies native reference pin equality, query/crop hashes,
+public/private source registries, and original-match alias exclusion. It
+inherits the earlier video-hash audit rather than rehashing videos. All 27
+existing SIFT/private-loader/Runtime-reader tests pass. Runtime remains at 0.82;
+Executor remains off.
+
+- [Family-route ledger](../references/vision/2026-10-04/new_match_family_route_falsification_v0_1.json)
+- [Offline evaluator](../workspace/vision/evaluate_new_match_family_route_probe.py)
+
+Next use a separately supported, abstaining family observation and obtain
+public-meld M8 references from another original match. Preserve these inspected
+failures as regression controls; future blind promotion evidence must be new.
