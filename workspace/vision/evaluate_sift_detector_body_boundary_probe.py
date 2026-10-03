@@ -55,7 +55,7 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, oute
         'geometry': a.to_dict(), 'outer_body_probe': outer_audit}
 
 
-def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False):
+def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False, opponent_s123_reference=False):
     import cv2
     import numpy as np
     from PIL import Image
@@ -88,7 +88,18 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
     if identity._sift_descriptors is not _sift_descriptors or loader._sift_descriptors is not original_loader_extractor:
         raise RuntimeError('reference extractor was not restored')
     aliases = set(spec['excluded_same_match_aliases'])
-    templates = [t for t in bank.templates if t.match_group not in aliases and t.source_sha256 != digest]
+    from workspace.vision.public_meld_opponent_reference_probe import source_disjoint_templates
+    templates = source_disjoint_templates(bank.templates, aliases, digest)
+    reference_supplement = None
+    if opponent_s123_reference:
+        if not reference_geometry:
+            raise ValueError('opponent reference requires symmetric reference geometry')
+        from workspace.vision.public_meld_opponent_reference_probe import load_s123_reference_templates
+        supplement, reference_supplement = load_s123_reference_templates()
+        admitted = source_disjoint_templates(supplement, aliases, digest)
+        templates.extend(admitted)
+        reference_supplement['admitted_tile_ids_after_source_exclusion'] = [t.tile_id for t in admitted]
+        reference_supplement['admitted_original_match_count'] = len({t.match_group for t in admitted})
     modes = {'detector_seam2': (False,2,False,False), 'body_context_no_seam': (True,0,False,False), 'body_context_seam2': (True,2,False,False), 'outer_body_seam2': (False,2,True,False), 'face_plane_seam_boxes': (False,2,False,True), 'face_plane_seam_rectified': (False,2,False,True)}
     cap = cv2.VideoCapture(str(video_path)); rows=[]
     try:
@@ -138,9 +149,10 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'scorable_faces':sum(r['scorable_faces'] for r in rows if r['mode']==mode),
         'scorable_groups':sum(r['group_scorable'] for r in rows if r['mode']==mode),
         'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':len(group['frame_indices'])} for mode in modes}
-    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_3','source_sha256':digest,
+    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_4','source_sha256':digest,
         'summary':summary,'rows':rows,'private_template_load':loaded,
         'reference_geometry_normalized': reference_geometry,
+        'opponent_reference_supplement': reference_supplement,
         'query_geometry_normalized': True, 'scorer_changed': False,
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
         'input_sha256':{str(spec_path):hashlib.sha256(spec_path.read_bytes()).hexdigest(),
@@ -154,5 +166,11 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--video',required=True);p.add_argument('--private-template-zip',required=True);p.add_argument('--output',required=True);p.add_argument('--reference-geometry',action='store_true')
-    args=p.parse_args();result=evaluate(args.video,args.private_template_zip,reference_geometry=args.reference_geometry)
+    p.add_argument('--spec-file', default='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json')
+    p.add_argument('--source-index', type=int, default=0)
+    p.add_argument('--group-index', type=int, default=0)
+    p.add_argument('--opponent-s123-reference', action='store_true')
+    args=p.parse_args();result=evaluate(args.video,args.private_template_zip,reference_geometry=args.reference_geometry,
+        spec_file=args.spec_file, source_index=args.source_index, group_index=args.group_index,
+        opponent_s123_reference=args.opponent_s123_reference)
     Path(args.output).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result['summary']))
