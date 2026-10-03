@@ -231,3 +231,55 @@ Next apply the frozen band transform symmetrically to reference and query
 features, explicitly retaining band failures as abstentions rather than old
 feature fallback. Then repeat family/identity controls and reverse-source M9
 checks. No identity improvement is claimed by this geometry-only checkpoint.
+
+## Symmetric front-band feature comparison: reject global replacement
+
+The optional evaluator path applies the frozen band transformation to BOTH
+references and queries before all three features. Band failures return no
+descriptors and no raw-feature fallback. The strict private loader first verifies
+the unchanged original ZIP/manifests/crops; alternate private features are then
+computed from the verified bytes with explicit abstention records. Its existing
+verification contract is not relaxed to hide geometry failures.
+
+All 127 queries remain paired with the prior consensus ledger. At one-other
+original-match support, the old packet's correct binary hypotheses drop from
+63/75 to 51/75. Ten S1 crops newly route to Wan. Its entire 15-face S1 identity
+support and five S9 queries lose eligible true-class support, since shadowed
+native S1/S9 references cannot supply front-band features. Public controls drop
+from 21/21 to 18/21 correct binary hypotheses; private controls from 15/15 to
+12/15. Public and private M6 digit controls each lose a previously correct
+result. Coverage loss and abstention stay in every denominator.
+
+The unaugmented reverse packet now routes all three native M9 faces to Wan,
+but true M9 identity is still unscorable once their own new match is excluded.
+A separate paired reverse experiment adds the SAME three previously frozen old
+M9 faces from frame 4794 to both configurations. With those fixed references:
+
+| Native reverse M9, one other original match | Prior body features | Symmetric front-band features |
+| --- | --- | --- |
+| Family route and supported M9 digit winner | 1/3 | 3/3 |
+| Other faces | 2 UNKNOWN family hypotheses | 0 |
+
+Old 15-face M9 queries remain 15/15 in both configurations because their own
+old-match additions are excluded. All new-match templates are likewise excluded
+for native reverse queries. Three correlated faces do not constitute three
+independent sources. Two-other-match M9 qualification is still absent.
+
+**Reject global front-band feature replacement.** Retain only the geometry and
+limited M9 numeral diagnostic; the local reverse gain does not outweigh false
+family routes, coverage losses, or control regressions. M8's new UNKNOWN is a
+band failure, not successful M8 recognition. All qualified identities remain
+null, Runtime stays at 0.82, and Executor remains off.
+
+53 focused tests pass, including strict role-symmetric feature preparation,
+no raw fallback, and paired-ledger tests preventing source/crop mismatches or
+dropped queries from hiding abstention/coverage regressions.
+
+- [Symmetric front-band ledger](../references/vision/2026-10-04/new_match_symmetric_front_band_v0_1.json)
+- [Paired comparisons, fixed reverse pins and per-query outcomes](../references/vision/2026-10-04/new_match_front_band_identity_paired_comparison_v0_1.json)
+- [Paired report evaluator](../workspace/vision/compare_front_band_identity_reports.py)
+
+Next recover front-band coverage on the shadowed S1/S9 references and preserve
+explicit missing-class abstention. Keep the previous whole/lower feature bank
+as the development baseline until family-route regressions are resolved; do not
+adopt the new transform globally or fit a threshold on these revealed failures.

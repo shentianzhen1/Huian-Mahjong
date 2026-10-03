@@ -7,6 +7,18 @@ wall, but is not a semantic glyph detector or a calibrated Runtime observer.
 from __future__ import annotations
 
 
+def prepare_front_band(image):
+    """Same strict feature preparation for references/queries, no raw fallback."""
+    from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
+    normalized, normalization = normalize_single_face(image)
+    if normalized is None:
+        return None, dict(failed=True, reason="normalization_abstained", normalization=normalization)
+    box, audit = front_band_bbox(normalized)
+    if box is None:
+        return None, dict(failed=True, reason="front_band_abstained", normalization=normalization, band=audit)
+    return normalized.crop(box), dict(failed=False, normalization=normalization, band=audit)
+
+
 def front_band_bbox(image):
     import cv2
     import numpy as np

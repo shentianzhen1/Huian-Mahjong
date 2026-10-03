@@ -1,6 +1,6 @@
 import unittest
 import importlib.util
-from workspace.vision.public_meld_front_band_probe import front_band_bbox
+from workspace.vision.public_meld_front_band_probe import front_band_bbox, prepare_front_band
 
 VISION = all(importlib.util.find_spec(name) is not None for name in ("PIL", "cv2", "numpy"))
 if VISION:
@@ -46,6 +46,18 @@ class FrontBandProbeTests(unittest.TestCase):
         box, audit = front_band_bbox(image)
         self.assertIsNone(box)
         self.assertEqual(audit["reason"], "ambiguous_or_absent_front_component")
+
+    def test_role_symmetric_preparation_has_no_raw_fallback(self):
+        image = Image.new("RGB", (60, 90), (180, 180, 180))
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((0, 0, 59, 54), fill=(245, 245, 245))
+        draw.rectangle((17, 6, 38, 15), fill=(10, 10, 10))
+        first, audit = prepare_front_band(image)
+        second, repeated = prepare_front_band(image.copy())
+        self.assertIsNotNone(first)
+        self.assertEqual(first.tobytes(), second.tobytes())
+        self.assertEqual(audit, repeated)
+        self.assertIsNone(prepare_front_band(Image.new("RGB", (60, 90), "white"))[0])
 
 
 if __name__ == "__main__":

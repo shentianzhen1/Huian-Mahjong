@@ -48,7 +48,8 @@ def wan_other_original_support(bank, session: str, source_sha256: str) -> dict[s
 
 
 def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
-             query_zips: list[Path], lower_consensus: bool = False) -> dict:
+             query_zips: list[Path], lower_consensus: bool = False,
+             front_band: bool = False, reverse_old_m9: bool = False) -> dict:
     from PIL import Image
     from workspace.vision import public_meld_identity_sift as sift
     from workspace.vision import public_meld_private_sift_loader as private
@@ -56,20 +57,27 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
     from workspace.vision.public_identity_shadow_v0_2 import SourceGroup
     from workspace.vision.public_meld_private_recovery_result import load_private_recovery_results, RecoveredPrivateTemplate
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
+    from workspace.vision.public_meld_front_band_probe import prepare_front_band
 
     root = root.resolve()
+    if front_band and not lower_consensus:
+        raise ValueError("front-band comparison requires lower-family consensus")
+    if reverse_old_m9 and not lower_consensus:
+        raise ValueError("reverse-reference comparison requires lower-family consensus")
     original = sift._sift_descriptors
+    def prepare(image):
+        return prepare_front_band(image) if front_band else normalize_single_face(image)
     def whole(image):
-        normalized, _ = normalize_single_face(image)
+        normalized, _ = prepare(image)
         return None if normalized is None else original(normalized)
     def digit(image):
-        normalized, _ = normalize_single_face(image)
+        normalized, _ = prepare(image)
         if normalized is None:
             return None
         upper = normalized.crop((0, 0, normalized.width, max(1, normalized.height // 2)))
         return original(upper.resize((72, 96), Image.Resampling.LANCZOS))
     def lower(image):
-        normalized, _ = normalize_single_face(image)
+        normalized, _ = prepare(image)
         if normalized is None:
             return None
         body = normalized.crop((0, normalized.height // 2, normalized.width, normalized.height))
@@ -86,14 +94,47 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
     recovery = root / "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json"
     registry = root / "references/vision/2026-09-24/public_identity_source_groups.development.json"
     banks = {}
+    native_reference_abstentions = []
+    private_feature_abstentions = []
+    raw_private_templates = []
+    verified_private_bank = None
+    if front_band:
+        # Preserve the strict loader's original verification contract. A new
+        # geometry abstention is an experiment outcome, never a weaker ZIP pin.
+        verified_private_bank = sift.build_public_meld_sift_bank(manifest, root, registry)
+        verified_private_bank, _ = private.augment_public_meld_sift_bank_from_private_zip(
+            verified_private_bank, private_zip_path=private_zip,
+            recovery_result_path=recovery, repository_root=root)
+        recovered_for_features = [r for r in load_private_recovery_results(recovery).values() if isinstance(r, RecoveredPrivateTemplate)]
+        with ZipFile(private_zip) as archive:
+            groups = tuple(json.loads(archive.read(recovered_for_features[0].private_label_manifest_name))["groups"])
+            for record in recovered_for_features:
+                group = private._matching_private_group(groups, record)
+                for index, face in enumerate(group["faces"]):
+                    raw_private_templates.append((record, index,
+                        read_face(archive, "approved_faces/"+face["crop_file"], record.crop_sha256[index])))
     transforms = [("whole", whole), ("digit", digit)]
     if lower_consensus:
         transforms.append(("lower", lower))
     for name, transform in transforms:
         with patch.object(sift, "_sift_descriptors", transform), patch.object(private, "_sift_descriptors", transform):
             bank = sift.build_public_meld_sift_bank(manifest, root, registry)
-            bank, _ = private.augment_public_meld_sift_bank_from_private_zip(
-                bank, private_zip_path=private_zip, recovery_result_path=recovery, repository_root=root)
+            if not front_band:
+                bank, _ = private.augment_public_meld_sift_bank_from_private_zip(
+                    bank, private_zip_path=private_zip, recovery_result_path=recovery, repository_root=root)
+        if front_band:
+            transformed_private = []
+            for record, index, image in raw_private_templates:
+                tile = record.tile_ids[index]
+                if name == "digit" and not tile.startswith("M"):
+                    continue
+                descriptors = transform(image)
+                if descriptors is None:
+                    private_feature_abstentions.append(dict(feature=name, recovery_id=record.recovery_id, face_index=index, expected=tile))
+                    continue
+                transformed_private.append(sift.PublicMeldSiftTemplate(tile, "private_recovered_"+record.recovery_id,
+                    record.source_sha256, record.match_group, descriptors))
+            bank = sift.PublicMeldSiftBank(verified_private_bank.sources, bank.templates+tuple(transformed_private))
         sources = {key: replace(value, match_group=canonical if value.match_group in alias else value.match_group)
                    for key, value in bank.sources.items()}
         templates = [replace(t, match_group=canonical if t.match_group in alias else t.match_group)
@@ -112,6 +153,9 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                     continue
                 descriptors = transform(image)
                 if descriptors is None:
+                    if front_band:
+                        native_reference_abstentions.append(dict(feature=name, crop_file=face["crop_file"], expected=tile))
+                        continue
                     raise ValueError("reference lacks descriptors")
                 templates.append(sift.PublicMeldSiftTemplate(tile, session, digest, group, descriptors))
         banks[name] = sift.PublicMeldSiftBank(sources, tuple(templates))
@@ -166,6 +210,27 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                          crop_sha256=face["crop_png_sha256"]),
                     read_face(archive, face["crop_file"], face["crop_png_sha256"]))
 
+    reverse_reference_rows = []
+    if reverse_old_m9:
+        # All three faces of already frozen frame 4794; no score-driven choice.
+        selected = [(meta, image) for meta, image in queries
+                    if meta["query_id"].startswith("hand8_wan9_4794_")]
+        if len(selected) != 3 or any(meta["expected"] != "M9" for meta, _ in selected):
+            raise ValueError("frozen old M9 reference group missing")
+        for name, transform in transforms:
+            bank = banks[name]
+            additions = []
+            for meta, image in selected:
+                descriptors = transform(image)
+                eligible = descriptors is not None
+                reverse_reference_rows.append(dict(feature=name, query_id=meta["query_id"],
+                    crop_sha256=meta["crop_sha256"], feature_available=eligible))
+                if eligible:
+                    source = bank.sources[meta["session"]]
+                    additions.append(sift.PublicMeldSiftTemplate("WAN" if name == "lower" else "M9",
+                        meta["session"], meta["sha256"], source.match_group, descriptors))
+            banks[name] = sift.PublicMeldSiftBank(bank.sources, bank.templates+tuple(additions))
+
     # A draw-domain M8 is only a stress query. It is never a public-meld template.
     label = next(json.loads(line) for line in (root / "dataset/tiles_runtime_v0_2/labels.jsonl").read_text().splitlines()
                  if json.loads(line).get("id") == "tile_aaa921b08dbfec79")
@@ -217,7 +282,8 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                 modes[str(minimum)]["wan_alphabet_support_complete"] = all(n >= minimum for n in support.values())
                 modes[str(minimum)]["qualified_identity"] = None
                 modes[str(minimum)]["identity_abstention_reason"] = "unqualified_development_scores" if all(n >= minimum for n in support.values()) else "incomplete_source_disjoint_Wan_alphabet"
-        rows.append(dict(**meta, modes=modes))
+        preparation = prepare(image)[1] if front_band else None
+        rows.append(dict(**meta, modes=modes, feature_preparation=preparation))
     summary = {}
     for minimum in ("1", "2"):
         summary[minimum] = {}
@@ -235,22 +301,30 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                 expected_identity_unscorable=sum(not r["modes"][minimum]["expected_identity_scorable"] for r in selected),
                 routed_expected_identity_unscorable=sum(r["modes"][minimum]["routed_expected_identity_scorable"] is False for r in selected),
                 routed_correct_identities=sum(r["modes"][minimum]["routed_identity_correct"] is True for r in selected))
-    return dict(schema_version="new_match_lower_family_consensus_dev_v0_1" if lower_consensus else "new_match_family_route_falsification_dev_v0_1", summary=summary, rows=rows,
+    return dict(schema_version="new_match_symmetric_front_band_dev_v0_1" if front_band else ("new_match_lower_family_consensus_dev_v0_1" if lower_consensus else "new_match_family_route_falsification_dev_v0_1"), summary=summary, rows=rows,
         whole_bank_classes=sorted({t.tile_id for t in banks["whole"].templates}),
         routing_rule="whole-face source-disjoint SIFT winner's family; no label-selected family; absent winner abstains",
         lower_family_consensus_enabled=lower_consensus,
         lower_family_rule="lower half 72x96 binary WAN/NON_WAN bank; family support pools originals across tile classes; require both families eligible, positive ranking margins and whole/lower agreement; otherwise UNKNOWN" if lower_consensus else None,
         feature_views_are_independent_evidence=False,
+        symmetric_front_band_enabled=front_band,
+        front_band_failure_fallback=False,
+        native_reference_feature_abstentions=native_reference_abstentions,
+        private_template_feature_abstentions=private_feature_abstentions,
+        private_loader_verification_contract_changed=False,
+        reverse_old_m9_references_enabled=reverse_old_m9,
+        reverse_reference_selection="all three previously frozen old frame 4794 faces" if reverse_old_m9 else None,
+        reverse_reference_feature_rows=reverse_reference_rows,
         lower_feature_is_glyph_localized=False,
-        known_feature_geometry_limit="review of three native reverse M9 faces shows the fixed lower half mostly covers gray side wall; raw face body is not the front glyph plane",
+        known_feature_geometry_limit="vertical band preserves glyphs but can remove reference support and change class separation; not full plane rectification" if front_band else "review of three native reverse M9 faces shows the fixed lower half mostly covers gray side wall; raw face body is not the front glyph plane",
         score_is_calibrated_confidence=False, confidence_threshold_selected=False,
         crop_ratio_search_performed=False, upper_crop_fraction=0.5, upper_feature_size=[72,96],
         same_original_match_aliases_collapsed=sorted(alias), crop_hashes_and_source_registries_verified=True,
         native_video_hash_audit="inherited frozen reference intake; this evaluator verifies crop bytes and pin equality",
         reference_selection="previous frozen native 15-face pin; no new samples chosen by score",
         M8_reference_added=False, M8_draw_domain_is_public_meld_evidence=False,
-        decision="offline consensus hypothesis only; identity always UNKNOWN pending complete Wan support and confidence qualification" if lower_consensus else "reject winner-family routing as an automatic identity gate",
-        rejection_reasons=["no calibrated confidence", "incomplete source-disjoint Wan alphabet"] if lower_consensus else ["non-Wan crops enter the Wan head", "unsupported M8 stress query ranks as M9", "SIFT winners provide no calibrated abstention"],
+        decision="reject global front-band feature replacement; retain geometry/numeral diagnostics only" if front_band else ("offline consensus hypothesis only; identity always UNKNOWN pending complete Wan support and confidence qualification" if lower_consensus else "reject winner-family routing as an automatic identity gate"),
+        rejection_reasons=["non-Wan routing regressions", "reference coverage losses", "no calibrated confidence", "incomplete source-disjoint Wan alphabet"] if front_band else (["no calibrated confidence", "incomplete source-disjoint Wan alphabet"] if lower_consensus else ["non-Wan crops enter the Wan head", "unsupported M8 stress query ranks as M9", "SIFT winners provide no calibrated abstention"]),
         oracle_family_used_for_routing=False, previously_inspected=True, blind_holdout=False,
         default_bank_modified=False, runtime_identity_threshold=0.82, runtime_integration=False,
         formal_promotion_evidence=False, safe_for_runtime=False, safe_for_hint=False, safe_for_executor=False)
@@ -264,10 +338,13 @@ def main():
     parser.add_argument("--query-zip", type=Path, action="append", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--lower-family-consensus", action="store_true")
+    parser.add_argument("--front-band", action="store_true")
+    parser.add_argument("--reverse-old-m9-references", action="store_true")
     args = parser.parse_args()
     report = evaluate(root=args.repository_root, native_zip=args.native_reference_zip,
                       private_zip=args.private_template_zip, query_zips=args.query_zip,
-                      lower_consensus=args.lower_family_consensus)
+                      lower_consensus=args.lower_family_consensus, front_band=args.front_band,
+                      reverse_old_m9=args.reverse_old_m9_references)
     args.output.write_text(json.dumps(report, separators=(",", ":"))+"\n")
     print(json.dumps(report["summary"]))
 
