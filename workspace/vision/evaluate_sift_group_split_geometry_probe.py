@@ -106,8 +106,16 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             for i, (row, group_descriptors) in enumerate(zip(rows_for_frame, ids)):
                 with ZipFile(intake_zip) as archive:
                     with Image.open(io.BytesIO(archive.read(row["crop_file"]))) as direct:
-                        direct, _ = normalize_single_face(direct.convert("RGB"))
-                        direct_descriptors = _sift_descriptors(direct)
+                        direct_face, _ = normalize_single_face(direct.convert("RGB"))
+                        direct_descriptors = _sift_descriptors(direct_face)
+                group_face, _ = normalize_single_face(faces[i])
+                import numpy as np
+                common_width = max(direct_face.width, group_face.width)
+                direct_pixels = np.asarray(direct_face.resize((common_width, 96), Image.Resampling.LANCZOS), dtype=np.float32)
+                group_pixels = np.asarray(group_face.resize((common_width, 96), Image.Resampling.LANCZOS), dtype=np.float32)
+                direct_gray = cv2.cvtColor(direct_pixels.astype("uint8"), cv2.COLOR_RGB2GRAY).astype(np.float32)
+                group_gray = cv2.cvtColor(group_pixels.astype("uint8"), cv2.COLOR_RGB2GRAY).astype(np.float32)
+                correlation = float(np.corrcoef(direct_gray.ravel(), group_gray.ravel())[0, 1])
                 expected = row["reviewed_candidate_tile"]
                 row_scores = {}
                 for mode, query in (("direct_face_symmetric_geometry", direct_descriptors),
@@ -126,11 +134,21 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                         for tile, scores in by_class_group.items() if scores)
                     best.sort(key=lambda item: (-item[1], item[0]))
                     row_scores[mode] = {"top1": best[0][0] if best else None,
+                        "top1_score": round(float(best[0][1]), 8) if best else None,
+                        "runner_up_tile": best[1][0] if len(best) > 1 else None,
+                        "runner_up_score": round(float(best[1][1]), 8) if len(best) > 1 else None,
                         "scorable": expected in by_class_group,
+                        "query_descriptor_count": len(query) if query is not None else 0,
                         "expected_class_score": sorted(by_class_group[expected].values(), reverse=True)[0]
                             if expected in by_class_group else None,
                         "top1_correct": bool(best and best[0][0] == expected) if expected in by_class_group else None}
                 rows.append({"frame": frame, "face_index": i, "expected": expected, "modes": row_scores})
+                rows[-1]["processed_face_comparison"] = {
+                    "manual_face_normalized_size": list(direct_face.size),
+                    "group_split_face_normalized_size": list(group_face.size),
+                    "common_comparison_size": [common_width, 96],
+                    "mae_rgb_0_255": round(float(np.mean(np.abs(direct_pixels-group_pixels))), 5),
+                    "grayscale_pixel_correlation_after_width_alignment": round(correlation, 6)}
     finally:
         cap.release()
     summaries = {}
@@ -143,6 +161,16 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             "legal_groups_correct": sum({r["modes"][mode]["top1"] for r in rows if r["frame"] == frame} == {"S7", "S8", "S9"} for frame in sorted({r["frame"] for r in rows}))}
     group_mode = summaries["group_normalize_split_then_face_geometry"]
     direct_mode = summaries["direct_face_symmetric_geometry"]
+    for tile in ("S7", "S8", "S9"):
+        selected = [r for r in rows if r["expected"] == tile]
+        summaries.setdefault("processed_pixel_difference_by_tile", {})[tile] = {
+            "face_rows": len(selected),
+            "mean_rgb_mae_0_255_after_width_alignment": round(float(np.mean([
+                r["processed_face_comparison"]["mae_rgb_0_255"] for r in selected])), 5),
+            "mean_grayscale_correlation_after_width_alignment": round(float(np.mean([
+                r["processed_face_comparison"]["grayscale_pixel_correlation_after_width_alignment"] for r in selected])), 6),
+            "direct_correct": sum(r["modes"]["direct_face_symmetric_geometry"]["top1_correct"] is True for r in selected),
+            "group_split_correct": sum(r["modes"]["group_normalize_split_then_face_geometry"]["top1_correct"] is True for r in selected)}
     decision = ("reject_group_pipeline_candidate_on_fixed_hand8_queries"
         if group_mode["legal_groups_correct"] < direct_mode["legal_groups_correct"]
         or group_mode["correct_when_scorable"] < direct_mode["correct_when_scorable"]

@@ -288,8 +288,17 @@ development diagnosis, not accuracy evidence. The face-boundary splitter was
 not independently visually qualified, and `UNKNOWN` remains appropriate for
 Runtime.
 
+A contact-sheet visual check shows all principal glyphs remain visible in the
+automatic thirds; it does not certify precise tile-edge polygons. After width
+alignment, mean direct-vs-group processed-pixel grayscale correlation is 0.749
+for S7, 0.921 for S8 and 0.614 for S9 (S9 RGB MAE 20.75/255). Across all five
+frames S9 is consistently ranked S7 after the group path, while direct crops
+remain S9. These measurements localize a substantial S9 input-image change;
+they do not prove whether the cause is crop boundary, resizing/interpolation,
+or their interaction. No scorer or threshold changed.
+
 Decision: reject this group-crop/split candidate for these fixed Hand 8 queries.
 This does not invalidate the separate symmetric single-face A/B, nor prove the
 group normalizer generally wrong. Next isolate the loss by reviewing actual
-split boundaries against the locked faces and locating which crop pixels change
-the nine-dot face rankings; do not search new bboxes or tune scorer thresholds.
+processed S9 pixels against the locked faces, then assess the fixed crop/rescale
+stages one at a time; do not search new bboxes or tune scorer thresholds.

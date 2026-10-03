@@ -23,3 +23,11 @@ class GroupSplitGeometryEvidenceTests(unittest.TestCase):
         self.assertTrue(all(row["stack_state"] == "FLAT" for row in report["geometry"]))
         self.assertTrue(all(row["input_faces_were_manual_rois_not_verified_splitter_outputs"] for row in report["geometry"]))
         self.assertFalse(report["manual_face_boundary_review"])
+
+    def test_nine_dot_pixel_domain_change_tracks_fixed_ranking_failure(self):
+        report = json.loads(REPORT.read_text())
+        pixels = report["summary"]["processed_pixel_difference_by_tile"]
+        self.assertEqual(pixels["S9"]["group_split_correct"], 0)
+        self.assertEqual(pixels["S9"]["direct_correct"], 5)
+        self.assertLess(pixels["S9"]["mean_grayscale_correlation_after_width_alignment"],
+                        pixels["S8"]["mean_grayscale_correlation_after_width_alignment"])
