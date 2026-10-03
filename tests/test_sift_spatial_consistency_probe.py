@@ -125,5 +125,38 @@ class PositionedSiftTests(unittest.TestCase):
         )
 
 
+    def test_reference_completeness_score_multiplies_without_threshold(self):
+        from workspace.vision.sift_spatial_consistency_probe import (
+            reference_completeness_score,
+        )
+        self.assertAlmostEqual(
+            reference_completeness_score(
+                0.25,
+                {'reference_keypoints_supported_by_query_fraction': 0.8},
+            ),
+            0.2,
+        )
+
+    def test_reference_completeness_score_fails_closed_when_audit_missing(self):
+        from workspace.vision.sift_spatial_consistency_probe import (
+            reference_completeness_score,
+        )
+        self.assertEqual(reference_completeness_score(0.25, {}), 0.0)
+        self.assertEqual(reference_completeness_score(0.0, {}), 0.0)
+        self.assertIsNone(reference_completeness_score(None, {}))
+
+    def test_reference_completeness_score_rejects_invalid_support(self):
+        from workspace.vision.sift_spatial_consistency_probe import (
+            reference_completeness_score,
+        )
+        for value in (-0.1, 1.1, True, '0.8'):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    reference_completeness_score(
+                        0.25,
+                        {'reference_keypoints_supported_by_query_fraction': value},
+                    )
+
+
 if __name__ == "__main__":
     unittest.main()
