@@ -40,6 +40,11 @@ not the separately supplemented private SIFT bank; do not mix their coverage or
 failure counts. Reviewed expected labels are used only for evaluation/support
 diagnostics and never supplied to the classifier.
 
+Attribution correction: even the six low-score/ambiguity observations have
+unsupported expected classes in this Shadow bank. Their reason codes describe
+the backend's abstention, not proof that the correct class had enough reference
+support and still failed. Do not call them six isolated classifier failures.
+
 Next measurement: separate each real face's source-disjoint class-support gap
 from low-score/ambiguity failures. Prioritize ordinary FLAT templates/crop review,
 with original-match lineage retained, rather than waiting for additional KONG
