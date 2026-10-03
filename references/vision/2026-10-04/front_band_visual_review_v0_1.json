@@ -1,0 +1,34 @@
+{
+  "schema_version": "front_band_visual_review_dev_v0_1",
+  "geometry_report": "references/vision/2026-10-04/front_band_geometry_probe_v0_1.json",
+  "geometry_report_sha256": "cf077738a2e35088c026521753e4a68a55fbad7020c7389b26c6fe54d4db729f",
+  "review_authority": "assistant_visual_review_not_owner_adjudication",
+  "review_method": "all 90 normalized input/output pairs viewed in six packet contact sheets; separate six-face old/new M9 band review",
+  "reviewed_input_faces": 90,
+  "candidate_faces": 82,
+  "candidate_faces_without_obvious_added_glyph_clipping_relative_to_normalized_input": 82,
+  "abstained_faces": 8,
+  "native_M9_candidates": 3,
+  "native_M9_candidates_retaining_visible_nine_and_wan_glyphs": 3,
+  "old_M9_candidates": 15,
+  "old_M9_candidates_retaining_visible_nine_and_wan_glyphs": 15,
+  "abstention_query_ids": [
+    "native_S1_1", "native_S1_2", "native_S8_2",
+    "hand8_s789_4794_2", "hand8_s789_4797_2", "hand8_s789_4800_2",
+    "hand8_s789_4803_2", "hand8_s789_4806_2"
+  ],
+  "limits": [
+    "no pixel-exact glyph or plane polygons; visual absence of obvious clipping is not segmentation accuracy",
+    "X and the top boundary are inherited, not newly localized; only lower vertical side-wall trimming is tested",
+    "two original matches; correlated frames and faces do not add independent matches",
+    "old 75 inputs remain reviewed manual face crops, not automatic group-splitter outputs",
+    "eight abstentions are retained without fixed-ratio fallback",
+    "private/public all-class controls outside these 90 faces are not evaluated here",
+    "no identity scoring, confidence fitting, Runtime integration, or blind validation"
+  ],
+  "full_face_plane_rectification": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

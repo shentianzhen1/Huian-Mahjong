@@ -193,3 +193,41 @@ output, and same-original/exact-SHA exclusion with duplicate-match counting.
 Next validate automatic front-face-plane localization before extracting a Wan
 glyph feature. Retain the fixed-fraction failure as a regression, and keep M8
 public-meld source coverage and future blind qualification as separate gaps.
+
+## Vertical front-band geometry checkpoint
+
+`public_meld_front_band_probe.py` is a narrower first step, not complete plane
+rectification. Existing single-face normalization precedes it. The frozen
+low-saturation light-body mask supplies brightness samples; Otsu separates two
+brightness populations. A minimum 20-level median contrast, one wide bright
+component, and a darker lower band are required. It preserves X and the entire
+upper crop, trimming only the lower side wall with the existing two-pixel
+context. Missing/ambiguous evidence abstains; no fixed-ratio fallback exists.
+
+On the same 15 frozen native faces it produces 12 candidates and 3 abstentions;
+on the old 75 manual crops it produces 70 candidates and 5 abstentions. These
+are **candidate counts, not accuracy**. All 90 before/after pairs were visually
+reviewed: no obvious added glyph clipping was seen in the 82 candidates.
+The three native M9 and fifteen old M9 crops retain both visible glyphs after
+most of the lower gray side wall is removed. This is assistant review without
+pixel-exact ground truth, not owner adjudication or blind validation.
+
+The eight abstentions are native S2/S1/S9 and the five old S9 frames. Their bright
+front component is absent/ambiguous under the frozen criteria; keep UNKNOWN.
+This experiment does not certify their full upstream crop boundaries or solve
+slanted plane edges, shadowed faces, arbitrary orientations, or STACKED crops.
+Two original matches remain two matches, despite ninety face rows.
+
+42 focused tests pass, including six new cases: dark side-wall trimming with
+glyph retention, uniform/weak-contrast faces, reversed brightness layout,
+tiny/empty crops, and ambiguous multiple bright components. Runtime/consensus
+and existing geometry/symmetric-normalization checks remain passing.
+
+- [Geometry ledger](../references/vision/2026-10-04/front_band_geometry_probe_v0_1.json)
+- [Visual review bound to the ledger hash](../references/vision/2026-10-04/front_band_visual_review_v0_1.json)
+- [Offline geometry evaluator](../workspace/vision/evaluate_front_band_geometry_probe.py)
+
+Next apply the frozen band transform symmetrically to reference and query
+features, explicitly retaining band failures as abstentions rather than old
+feature fallback. Then repeat family/identity controls and reverse-source M9
+checks. No identity improvement is claimed by this geometry-only checkpoint.
