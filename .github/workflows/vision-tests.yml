@@ -162,6 +162,15 @@ jobs:
           }
           print("PUBLIC_MELD_FEATURE_EXPERIMENT=" + json.dumps(compact, sort_keys=True))
           PY
+      - name: Export derived public meld spatial reference bank
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_spatial_reference_export \
+            --output-npz /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank_v0_1.npz \
+            --output-metadata /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank.log
+          cat /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank.log
       - name: Evaluate synthetic hand-to-meld transfer
         if: needs.scope.outputs.run_vision == 'true'
         run: |
