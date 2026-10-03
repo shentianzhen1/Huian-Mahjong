@@ -318,6 +318,17 @@ filename such as `sift_group_split_geometry_probe_v0_2.json`; the CLI refuses
 to overwrite the existing v0.1 evidence. This mode is a manual-boundary
 counterfactual, not an automatic splitter or a Runtime identity result.
 
+An additional source-pixel audit in
+`references/vision/2026-10-03/hand8_boundary_band_pixels_v0_1.json`
+maps the equal-third boundaries back to the pinned raw crops. For each of the
+five S9 frames, the reviewed rectangle adds raw x=336–337 beyond the equal
+thirds. The omitted two-column band has 0 chromatic body pixels under the
+declared RGB-channel-span >45 diagnostic (the first/last raster rows are
+excluded as decorative edges). This narrows the likelihood that equal thirds
+visibly truncate the colored S9 glyph, but does not prove that the border
+pixels are irrelevant to SIFT or that scaling is the cause. The OpenCV
+counterfactual and original-match holdout are still required.
+
 As an independent source-integrity check, FFmpeg decoded the locked original
 video and all 15 SHA-pinned face rectangles compared pixel-for-pixel equal to
 the private intake crops. See
