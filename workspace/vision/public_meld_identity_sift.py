@@ -165,6 +165,7 @@ def rank_public_meld_sift(
     source_session: str,
     source_sha256: str,
     minimum_other_match_groups: int = SIFT_MINIMUM_OTHER_MATCH_GROUPS,
+    include_class_scores: bool = False,
 ) -> dict[str, Any]:
     """Rank source-disjoint classes using independent original-match support."""
     if (
@@ -197,6 +198,8 @@ def rank_public_meld_sift(
         "safe_for_executor": False,
         "reason": "insufficient_cross_match_class_support",
     }
+    if include_class_scores:
+        result["class_scores"] = {}
     if query is None:
         result["reason"] = "insufficient_sift_keypoints"
         return result
@@ -227,6 +230,10 @@ def rank_public_meld_sift(
         eligible.append((tile_id, conservative_score, len(group_scores)))
 
     eligible.sort(key=lambda row: (-row[1], row[0]))
+    if include_class_scores:
+        result["class_scores"] = {
+            tile: float(score) for tile, score, _support in eligible
+        }
     result["eligible_class_count"] = len(eligible)
     if not eligible:
         return result

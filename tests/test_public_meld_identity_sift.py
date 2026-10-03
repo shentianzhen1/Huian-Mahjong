@@ -12,6 +12,25 @@ VISION = all(
 
 @unittest.skipUnless(VISION, "OpenCV/numpy/Pillow are optional in core-only installs")
 class PublicMeldIdentitySiftTests(unittest.TestCase):
+    def test_class_score_export_does_not_change_frozen_ranking(self):
+        from pathlib import Path
+        from PIL import Image
+        from workspace.vision.public_identity_labels import load_public_identity_manifest
+        from workspace.vision.public_meld_identity_sift import build_public_meld_sift_bank, rank_public_meld_sift
+
+        bank = build_public_meld_sift_bank(
+            load_public_identity_manifest("references/vision/2026-09-22/public_identity_labels_v0_1.json"),
+            ".", "references/vision/2026-09-24/public_identity_source_groups.development.json",
+        )
+        packet = json.loads(Path("references/vision/2026-10-01/hand1_p6_kong_public_query_v0_1.json").read_text())
+        with Image.open(packet["queries"][0]["image_path"]) as image:
+            kwargs = dict(source_session=packet["source_session"], source_sha256=packet["source_sha256"])
+            original = rank_public_meld_sift(bank, image, **kwargs)
+            exported = rank_public_meld_sift(bank, image, **kwargs, include_class_scores=True)
+        scores = exported.pop("class_scores")
+        self.assertEqual(original, exported)
+        self.assertAlmostEqual(scores[original["top1_tile"]], original["top1_score"], places=8)
+
     def test_locked_queries_are_development_only_and_source_disjoint(self):
         from workspace.vision.evaluate_public_meld_sift_queries import (
             evaluate_public_meld_sift_queries,
