@@ -108,6 +108,126 @@ def _bidirectional_affine_support(query_positions, reference_positions, matrix, 
     }
 
 
+def _reverse_descriptor_reference_support(
+    query_descriptors,
+    reference_descriptors,
+    query_positions,
+    reference_positions,
+    matrix,
+    *,
+    radius=.2,
+    ratio=.8,
+):
+    """Audit reference content explained by query after accepted affine.
+
+    The forward affine is inverted to predict where each reference keypoint
+    should appear in the query. Nearby query descriptors must then pass the
+    same ratio-test idea in the reverse direction.
+
+    This is audit-only: it never alters the forward score, ranking, Runtime
+    confidence, Hint, or Executor behavior.
+    """
+    import cv2
+    import numpy as np
+
+    inverse = cv2.invertAffineTransform(
+        np.asarray(matrix, dtype=np.float32)
+    )
+    predicted_query_positions = _affine_points(
+        reference_positions, inverse
+    )
+    proposed = []
+    for reference_index, descriptor in enumerate(reference_descriptors):
+        neighbors = np.flatnonzero(
+            np.linalg.norm(
+                query_positions - predicted_query_positions[reference_index],
+                axis=1,
+            )
+            <= radius
+        )
+        if len(neighbors) < 2:
+            continue
+        distances = np.linalg.norm(
+            query_descriptors[neighbors] - descriptor,
+            axis=1,
+        )
+        order = np.argsort(distances, kind='stable')
+        if distances[order[0]] < ratio * distances[order[1]]:
+            proposed.append(
+                (
+                    float(distances[order[0]]),
+                    reference_index,
+                    int(neighbors[order[0]]),
+                )
+            )
+
+    proposed.sort()
+    matched = []
+    used_reference = set()
+    used_query = set()
+    for distance, reference_index, query_index in proposed:
+        reference_position = tuple(
+            np.round(reference_positions[reference_index], 2)
+        )
+        query_position = tuple(np.round(query_positions[query_index], 2))
+        if (
+            reference_position in used_reference
+            or query_position in used_query
+        ):
+            continue
+        used_reference.add(reference_position)
+        used_query.add(query_position)
+        matched.append((distance, reference_index, query_index))
+
+    matched_reference = np.asarray(
+        [reference_positions[index] for _, index, _ in matched],
+        dtype=np.float32,
+    )
+    matched_query = np.asarray(
+        [query_positions[index] for _, _, index in matched],
+        dtype=np.float32,
+    )
+    reference_full_hull = _hull_area(reference_positions)
+    query_full_hull = _hull_area(query_positions)
+    reference_matched_hull = _hull_area(matched_reference)
+    query_matched_hull = _hull_area(matched_query)
+    reference_full_cells = _grid_cells(reference_positions)
+    reference_matched_cells = _grid_cells(matched_reference)
+
+    return {
+        'reverse_descriptor_support_checked': True,
+        'reverse_descriptor_position_window': radius,
+        'reverse_descriptor_ratio_test': ratio,
+        'reverse_descriptor_ratio_matches': len(proposed),
+        'reverse_descriptor_unique_position_pairs': len(matched),
+        'reverse_descriptor_reference_keypoint_fraction': (
+            len(matched_reference) / len(reference_positions)
+            if len(reference_positions) else 0.0
+        ),
+        'reverse_descriptor_query_keypoint_fraction': (
+            len(matched_query) / len(query_positions)
+            if len(query_positions) else 0.0
+        ),
+        'reverse_descriptor_reference_hull_fraction': (
+            reference_matched_hull / reference_full_hull
+            if reference_full_hull > 0 else 0.0
+        ),
+        'reverse_descriptor_query_hull_fraction': (
+            query_matched_hull / query_full_hull
+            if query_full_hull > 0 else 0.0
+        ),
+        'reverse_descriptor_reference_unexplained_grid_cells': [
+            list(cell)
+            for cell in reference_full_cells
+            if cell not in set(reference_matched_cells)
+        ],
+        'reverse_descriptor_mean_distance': (
+            float(np.mean([distance for distance, _, _ in matched]))
+            if matched else None
+        ),
+    }
+
+
 class PositionedSift:
     """Retain positions while preserving the frozen descriptor extraction."""
     def __init__(self, *, local_window=False):
@@ -187,9 +307,20 @@ class PositionedSift:
         q_area, r_area = _hull_area(q_inliers), _hull_area(r_inliers)
         coverage = _coverage_audit(q, r, q_inliers, r_inliers)
         bidirectional = _bidirectional_affine_support(q, r, matrix)
+        reverse_descriptor = {'reverse_descriptor_support_checked': False}
+        if self.local_window:
+            reverse_descriptor = _reverse_descriptor_reference_support(
+                query,
+                reference,
+                q,
+                r,
+                matrix,
+                radius=.2,
+                ratio=SIFT_RATIO_TEST,
+            )
         if count < 4 or min(q_area, r_area) < .01:
             self.last_audit = {
-                **audit, **coverage, **bidirectional, 'pattern_coverage_checked':True,
+                **audit, **coverage, **bidirectional, **reverse_descriptor, 'pattern_coverage_checked':True,
                 'reason':'localized_or_sparse_inliers','inliers':count,
                 'query_hull_area':q_area,'reference_hull_area':r_area,
             }
@@ -197,7 +328,7 @@ class PositionedSift:
         distance = float(np.mean([m.distance for m, keep in zip(matches, selected) if keep]))
         score = count/(len(query)*len(reference))**.5 * (q_area*r_area)**.5 / (1+distance/512)
         self.last_audit = {
-            **audit, **coverage, **bidirectional, 'pattern_coverage_checked':True,
+            **audit, **coverage, **bidirectional, **reverse_descriptor, 'pattern_coverage_checked':True,
             'reason':None,'inliers':count,'query_hull_area':q_area,
             'reference_hull_area':r_area,'mean_descriptor_distance':distance,
             'affine':matrix.tolist(),'score':float(score),
