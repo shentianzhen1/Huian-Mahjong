@@ -198,3 +198,38 @@ three private input ZIPs and `--output`. Result:
 scoring modes, rather than incorrectly treating the grid variant's internal
 before/after reference test as proof of no regressions. All patched descriptor
 and scorer callbacks are restored; Runtime identities remain UNKNOWN.
+
+## Boundary and correspondence audit without another score change
+
+The fixed S9 and reciprocal P6 query/reference pairs were inspected against
+their exact source/crop hashes. No apparent wrong-tile ROI was found and their
+glyphs are readable, but precise face polygons, perspective corners and glyph
+clipping have not been verified. The reused bright low-saturation mask is only
+a description of neutral tile material; a mask touching an ROI edge does not
+prove a clipped glyph or identify the actual face plane.
+
+The audit reproduces the frozen descriptors exactly and separately exports
+their normalized keypoint positions. Of 22/29 distinct reference matches in the
+two P6 directions, only 5/7 occupy the same 3x3 cells. For S9 frame4800/4806,
+the correct S9 reference has 7/5 distinct matches with 2/2 in the same cells;
+the competing S7 has 9/9 with 3/3 in the same cells. These are local descriptor
+matches, not verified correspondences between equivalent glyph parts. Repeated
+circle/bamboo features can jump between different symbols even for a same-class
+pair. This makes a rigid ROI grid an inadequate geometric verification method.
+No global geometric model was fitted, so do not declare crop offset or perspective
+the sole cause of the regressions.
+
+Code-path inspection also separates two input policies: the SIFT bank cuts
+public templates directly from manifest rectangles; the ordinary FLAT evaluator
+normalizes a group and then splits its query faces. Their equivalence has not
+been validated. The recent Hand 8 and public-control probes both use direct
+rectangles, so that broader pipeline difference does not explain all errors in
+these probes.
+
+Next perform one fixed preprocessing comparison on both query and reference
+inputs, with the S9/P6 controls preserved; require readable face boundaries
+before trying perspective changes. Do not reuse a high group ranking, the bright
+mask or a descriptor count as proof of correct segmentation. This audit changes
+neither crop pixels nor scores. Result: `meld_crop_layout_pair_audit_v0_1.json`;
+reproduce with `workspace.vision.audit_meld_crop_layout_pairs --hand8-intake-zip
+/path/to/hand8.zip --output /tmp/layout_audit.json`. Raw private pixels stay private.
