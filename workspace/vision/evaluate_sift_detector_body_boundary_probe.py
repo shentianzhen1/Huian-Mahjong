@@ -57,7 +57,7 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, oute
         'geometry': a.to_dict(), 'outer_body_probe': outer_audit}
 
 
-def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False, opponent_s123_reference=False, bottom_reference_video=None, bottom_reference_rectified=False):
+def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False, opponent_s123_reference=False, bottom_reference_video=None, bottom_reference_rectified=False, score_policy='frozen'):
     import cv2
     import numpy as np
     from PIL import Image
@@ -68,6 +68,16 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
     from workspace.vision.public_meld_private_sift_loader import augment_public_meld_sift_bank_from_private_zip
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
     from workspace.vision.evaluate_sift_group_split_geometry_probe import frozen_score
+    if score_policy not in ('frozen', 'spatial_affine', 'spatial_window_affine'):
+        raise ValueError('unknown score policy')
+    spatial = None
+    extract_descriptors = _sift_descriptors
+    if score_policy != 'frozen':
+        if not reference_geometry:
+            raise ValueError('spatial comparison requires symmetric reference geometry')
+        from workspace.vision.sift_spatial_consistency_probe import PositionedSift
+        spatial = PositionedSift(local_window=score_policy=='spatial_window_affine')
+        extract_descriptors = spatial.extract
     from workspace.vision.public_tile_detector import detect_public_tile_geometry, target_coverage
     spec_path = Path(spec_file)
     spec = json.loads(spec_path.read_text()); source = spec['sources'][source_index]; group = source['groups'][group_index]
@@ -81,7 +91,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
     original_loader_extractor = loader._sift_descriptors
     def reference_descriptors(image):
         normalized, _ = normalize_single_face(image)
-        return _sift_descriptors(normalized) if normalized is not None else None
+        return extract_descriptors(normalized) if normalized is not None else None
     with ExitStack() as stack:
         if reference_geometry:
             stack.enter_context(patch.object(identity, '_sift_descriptors', reference_descriptors))
@@ -99,7 +109,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         if not reference_geometry:
             raise ValueError('opponent reference requires symmetric reference geometry')
         from workspace.vision.public_meld_opponent_reference_probe import load_s123_reference_templates
-        supplement, reference_supplement = load_s123_reference_templates()
+        supplement, reference_supplement = load_s123_reference_templates(descriptor_extractor=extract_descriptors)
         admitted = source_disjoint_templates(supplement, aliases, digest)
         templates.extend(admitted)
         reference_supplement['admitted_tile_ids_after_source_exclusion'] = [t.tile_id for t in admitted]
@@ -109,7 +119,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         if not reference_geometry:
             raise ValueError('bottom reference requires symmetric reference geometry')
         from workspace.vision.public_meld_bottom_reference_probe import load_bottom_s234_templates
-        supplement, bottom_supplement = load_bottom_s234_templates(bottom_reference_video, rectified=bottom_reference_rectified)
+        supplement, bottom_supplement = load_bottom_s234_templates(bottom_reference_video, rectified=bottom_reference_rectified, descriptor_extractor=extract_descriptors)
         admitted = source_disjoint_templates(supplement, aliases, digest)
         templates.extend(admitted)
         bottom_supplement['admitted_tile_ids_after_source_exclusion'] = [t.tile_id for t in admitted]
@@ -139,22 +149,26 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
                         crop = rectify_face_quad(image, audit['face_quads'][index])
                     else:
                         crop = image.crop(box)
-                    face,_=normalize_single_face(crop); query=_sift_descriptors(face) if face is not None else None
+                    face,_=normalize_single_face(crop); query=extract_descriptors(face) if face is not None else None
                     scores={}
                     best_references={}
+                    spatial_audits={}
                     for t in templates:
-                        score=frozen_score(query,t.descriptors)
+                        score=spatial.score(query,t.descriptors) if spatial else frozen_score(query,t.descriptors)
                         if score is not None:
                             if score > scores.get(t.tile_id,float('-inf')):
                                 scores[t.tile_id]=score
                                 best_references[t.tile_id]=t
+                                if spatial:
+                                    spatial_audits[t.tile_id]=dict(spatial.last_audit)
                     ranking=sorted(scores.items(),key=lambda p:(-p[1],p[0]))
                     expected_tile=(group.get('reviewed_candidate_tiles') or [group['reviewed_candidate_tile']]*3)[index]
                     from workspace.vision.sift_match_multiplicity_probe import match_multiplicity
                     diagnostic_tiles={expected_tile}
                     if ranking:
                         diagnostic_tiles.add(ranking[0][0])
-                    ranked.append({'top1':ranking[0][0] if ranking else None,'scores':ranking,
+                    ranked.append({'top1':ranking[0][0] if ranking and (not spatial or ranking[0][1]>0) else None,'scores':ranking,
+                        'spatial_diagnostics': {tile:spatial_audits[tile] for tile in sorted(diagnostic_tiles) if tile in spatial_audits},
                         'match_diagnostics': {tile:{**match_multiplicity(query,best_references[tile].descriptors),
                             'reference_match_group':best_references[tile].match_group,
                             'reference_source_sha256':best_references[tile].source_sha256} for tile in sorted(diagnostic_tiles) if tile in best_references}})
@@ -170,16 +184,20 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
     finally:
         cap.release()
     summary={mode:{'correct_faces':sum(r['correct_faces'] for r in rows if r['mode']==mode),
+        'geometry_abstained_faces':sum(3-len(r['rankings']) for r in rows if r['mode']==mode),
+        'abstained_faces':sum(v['top1'] is None for r in rows if r['mode']==mode for v in r['rankings']),
+        'wrong_ranked_faces':sum(v['top1'] is not None and v['top1']!=expected
+            for r in rows if r['mode']==mode for v,expected in zip(r['rankings'], group.get('reviewed_candidate_tiles') or [group['reviewed_candidate_tile']]*3)),
         'faces':3*len(group['frame_indices']),
         'scorable_faces':sum(r['scorable_faces'] for r in rows if r['mode']==mode),
         'scorable_groups':sum(r['group_scorable'] for r in rows if r['mode']==mode),
         'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':len(group['frame_indices'])} for mode in modes}
-    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_5','source_sha256':digest,
+    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_6','source_sha256':digest,
         'summary':summary,'rows':rows,'private_template_load':loaded,
         'reference_geometry_normalized': reference_geometry,
         'opponent_reference_supplement': reference_supplement,
         'bottom_reference_supplement': bottom_supplement,
-        'query_geometry_normalized': True, 'scorer_changed': False,
+        'query_geometry_normalized': True, 'scorer_changed': score_policy != 'frozen', 'score_policy':score_policy,
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
         'input_sha256':{str(spec_path):hashlib.sha256(spec_path.read_bytes()).hexdigest(),
             'private_template_zip':hashlib.sha256(Path(private_template_zip).read_bytes()).hexdigest()},
@@ -198,8 +216,9 @@ if __name__=='__main__':
     p.add_argument('--opponent-s123-reference', action='store_true')
     p.add_argument('--bottom-reference-video')
     p.add_argument('--bottom-reference-rectified', action='store_true')
+    p.add_argument('--score-policy', choices=('frozen','spatial_affine','spatial_window_affine'), default='frozen')
     args=p.parse_args();result=evaluate(args.video,args.private_template_zip,reference_geometry=args.reference_geometry,
         spec_file=args.spec_file, source_index=args.source_index, group_index=args.group_index,
         opponent_s123_reference=args.opponent_s123_reference, bottom_reference_video=args.bottom_reference_video,
-        bottom_reference_rectified=args.bottom_reference_rectified)
+        bottom_reference_rectified=args.bottom_reference_rectified, score_policy=args.score_policy)
     Path(args.output).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result['summary']))

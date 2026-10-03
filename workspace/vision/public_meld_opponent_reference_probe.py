@@ -12,7 +12,7 @@ def source_disjoint_templates(templates, excluded_match_groups, query_source_sha
             and t.source_sha256 != query_source_sha]
 
 
-def load_s123_reference_templates():
+def load_s123_reference_templates(*, descriptor_extractor=None):
     from PIL import Image
     from workspace.vision.evaluate_sift_detector_body_boundary_probe import raw_face_boxes
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
@@ -46,7 +46,7 @@ def load_s123_reference_templates():
     templates = []
     for tile, box in zip(item['expected_tiles'], boxes):
         face, _ = normalize_single_face(group.crop(box))
-        descriptors = _sift_descriptors(face) if face is not None else None
+        descriptors = (descriptor_extractor or _sift_descriptors)(face) if face is not None else None
         if descriptors is None:
             raise ValueError('reviewed opponent reference has no descriptors')
         templates.append(PublicMeldSiftTemplate(tile, 'reviewed_opponent_s123_strip', source_sha, match_group, descriptors))

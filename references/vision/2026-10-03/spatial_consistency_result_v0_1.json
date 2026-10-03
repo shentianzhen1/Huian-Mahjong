@@ -1,0 +1,4304 @@
+{
+  "schema_version": "spatial_consistency_probe_development_v0_1",
+  "query_source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+  "reference_source": {
+    "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+    "source_frame_index": 1920,
+    "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "pin_sha256": "3108365b515606d1760aa0f864dac57e93e7dd065baaf7aa344b90e92d8d7331",
+    "raw_source_and_crop_hashes_verified": true,
+    "label_authority": "assistant_visual_review_not_user_confirmation",
+    "reference_faces": [
+      {
+        "tile_id": "S2",
+        "crop_xyxy": [
+          397,
+          441,
+          443,
+          502
+        ],
+        "crop_png_sha256": "599931da7581d7bd3794e0d797f391a3a8fdf0ecb6a4b8c80cc81e8a7f1baea7"
+      },
+      {
+        "tile_id": "S3",
+        "crop_xyxy": [
+          439,
+          441,
+          486,
+          502
+        ],
+        "crop_png_sha256": "c06412ccc7ff57f65639d452d527f1c1b686fb1f0636baf6c724920356b73c86"
+      },
+      {
+        "tile_id": "S4",
+        "crop_xyxy": [
+          482,
+          441,
+          528,
+          502
+        ],
+        "crop_png_sha256": "027492b8dac72938e637c44893fe12f597ab590f429af76eea11c7ec38cb93de"
+      }
+    ],
+    "split_audit": {
+      "detector_bbox": [
+        395,
+        429,
+        133,
+        78
+      ],
+      "tight_bbox_in_group": [
+        2,
+        13,
+        131,
+        59
+      ],
+      "vertical_context": 1,
+      "raw_group_xyxy": [
+        397,
+        441,
+        528,
+        502
+      ],
+      "face_xyxy": [
+        [
+          397,
+          441,
+          443,
+          502
+        ],
+        [
+          439,
+          441,
+          486,
+          502
+        ],
+        [
+          482,
+          441,
+          528,
+          502
+        ]
+      ],
+      "geometry": {
+        "schema_version": "public_meld_geometry_normalization_v0_1",
+        "rotation_degrees": 0.0,
+        "stack_state": "FLAT",
+        "height_score": 1.351145,
+        "top_to_mid_span_ratio": 0.979989,
+        "normalized_size": [
+          213,
+          96
+        ],
+        "tight_bbox_in_group": [
+          2,
+          13,
+          131,
+          59
+        ],
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "safe_for_hint": false,
+        "safe_for_executor": false
+      },
+      "outer_body_probe": null
+    },
+    "full_quad_rectified": true,
+    "rectified_audit": {
+      "boundary_seed": "detector_light_face_body",
+      "face_seed_xyxy": [
+        397,
+        442,
+        528,
+        501
+      ],
+      "face_plane_rows": [
+        442,
+        501
+      ],
+      "blank_band_rows": [
+        443,
+        490
+      ],
+      "measured_seams_in_outer_body": [
+        [
+          44,
+          86
+        ],
+        [
+          43,
+          85
+        ]
+      ],
+      "face_quads": [
+        [
+          [
+            400.1914893617021,
+            440
+          ],
+          [
+            443.06382978723406,
+            440
+          ],
+          [
+            441.74468085106383,
+            502
+          ],
+          [
+            396.2340425531915,
+            502
+          ]
+        ],
+        [
+          [
+            439.06382978723406,
+            440
+          ],
+          [
+            485.06382978723406,
+            440
+          ],
+          [
+            483.74468085106383,
+            502
+          ],
+          [
+            437.74468085106383,
+            502
+          ]
+        ],
+        [
+          [
+            481.06382978723406,
+            440
+          ],
+          [
+            523.936170212766,
+            440
+          ],
+          [
+            525.2553191489362,
+            502
+          ],
+          [
+            479.74468085106383,
+            502
+          ]
+        ]
+      ],
+      "fit_outer_edges": true,
+      "measured_outer_edges_in_body": [
+        [
+          3.0,
+          127.0
+        ],
+        [
+          0.0,
+          128.0
+        ]
+      ],
+      "light_body_only": true,
+      "vertical_context": 2,
+      "seam_context": 2,
+      "face_xyxy": [
+        [
+          396,
+          440,
+          445,
+          503
+        ],
+        [
+          437,
+          440,
+          487,
+          503
+        ],
+        [
+          479,
+          440,
+          527,
+          503
+        ]
+      ]
+    },
+    "descriptor_counts": {
+      "S2": 51,
+      "S3": 79,
+      "S4": 86
+    },
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false,
+    "admitted_tile_ids_after_source_exclusion": [
+      "S2",
+      "S3",
+      "S4"
+    ],
+    "admitted_original_match_count": 1
+  },
+  "summaries": {
+    "frozen": {
+      "detector_seam2": {
+        "correct_faces": 3,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "body_context_no_seam": {
+        "correct_faces": 3,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "body_context_seam2": {
+        "correct_faces": 3,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "outer_body_seam2": {
+        "correct_faces": 3,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "face_plane_seam_boxes": {
+        "correct_faces": 3,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "face_plane_seam_rectified": {
+        "correct_faces": 2,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 7,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "face_plane_full_rectified": {
+        "correct_faces": 3,
+        "geometry_abstained_faces": 0,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      }
+    },
+    "affine": {
+      "detector_seam2": {
+        "correct_faces": 3,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 4,
+        "abstained_faces": 2
+      },
+      "body_context_no_seam": {
+        "correct_faces": 3,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 3,
+        "abstained_faces": 3
+      },
+      "body_context_seam2": {
+        "correct_faces": 4,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 4,
+        "abstained_faces": 1
+      },
+      "outer_body_seam2": {
+        "correct_faces": 3,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 3,
+        "abstained_faces": 3
+      },
+      "face_plane_seam_boxes": {
+        "correct_faces": 4,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 4,
+        "abstained_faces": 1
+      },
+      "face_plane_seam_rectified": {
+        "correct_faces": 3,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 2,
+        "abstained_faces": 4
+      },
+      "face_plane_full_rectified": {
+        "correct_faces": 4,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3,
+        "wrong_ranked_faces": 1,
+        "abstained_faces": 4
+      }
+    },
+    "window_affine": {
+      "detector_seam2": {
+        "correct_faces": 5,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 4,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 1,
+        "groups": 3
+      },
+      "body_context_no_seam": {
+        "correct_faces": 3,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "body_context_seam2": {
+        "correct_faces": 6,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 3,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 1,
+        "groups": 3
+      },
+      "outer_body_seam2": {
+        "correct_faces": 4,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 5,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "face_plane_seam_boxes": {
+        "correct_faces": 3,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 6,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 0,
+        "groups": 3
+      },
+      "face_plane_seam_rectified": {
+        "correct_faces": 7,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 2,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 1,
+        "groups": 3
+      },
+      "face_plane_full_rectified": {
+        "correct_faces": 7,
+        "abstained_faces": 0,
+        "wrong_ranked_faces": 2,
+        "faces": 9,
+        "scorable_faces": 9,
+        "scorable_groups": 3,
+        "exact_groups_correct": 1,
+        "groups": 3
+      }
+    }
+  },
+  "window_repeat_exact_report_equal": true,
+  "frozen_control_rankings_and_scores_unchanged": true,
+  "s789_window_control": {
+    "detector_seam2": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_full_rectified": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "s8_window_same_original_match_control": {
+    "detector_seam2": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_full_rectified": {
+      "correct_faces": 15,
+      "geometry_abstained_faces": 0,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "s789_affine_without_window_control": {
+    "detector_seam2": {
+      "correct_faces": 10,
+      "abstained_faces": 5,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 10,
+      "abstained_faces": 5,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 10,
+      "abstained_faces": 5,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 10,
+      "abstained_faces": 5,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 10,
+      "abstained_faces": 4,
+      "wrong_ranked_faces": 1,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 10,
+      "abstained_faces": 5,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "face_plane_full_rectified": {
+      "correct_faces": 15,
+      "abstained_faces": 0,
+      "wrong_ranked_faces": 0,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "window_full_quad_rows": [
+    {
+      "frame": 2549,
+      "group_id": "special14_player_chi_s234_088s",
+      "mode": "face_plane_full_rectified",
+      "audit": {
+        "boundary_seed": "detector_light_face_body",
+        "face_seed_xyxy": [
+          99,
+          415,
+          225,
+          470
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          415,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            47,
+            87
+          ],
+          [
+            39,
+            80
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              108.4,
+              413
+            ],
+            [
+              148.35555555555555,
+              413
+            ],
+            [
+              138.04444444444445,
+              471
+            ],
+            [
+              96.8,
+              471
+            ]
+          ],
+          [
+            [
+              144.35555555555555,
+              413
+            ],
+            [
+              188.31111111111113,
+              413
+            ],
+            [
+              179.2888888888889,
+              471
+            ],
+            [
+              134.04444444444445,
+              471
+            ]
+          ],
+          [
+            [
+              184.31111111111113,
+              413
+            ],
+            [
+              224.22222222222223,
+              413
+            ],
+            [
+              217.77777777777777,
+              471
+            ],
+            [
+              175.2888888888889,
+              471
+            ]
+          ]
+        ],
+        "fit_outer_edges": true,
+        "measured_outer_edges_in_body": [
+          [
+            9.0,
+            125.0
+          ],
+          [
+            0.0,
+            120.0
+          ]
+        ],
+        "light_body_only": true,
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            96,
+            413,
+            150,
+            472
+          ],
+          [
+            134,
+            413,
+            190,
+            472
+          ],
+          [
+            175,
+            413,
+            226,
+            472
+          ]
+        ]
+      },
+      "rankings": [
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.022859677189162063
+            ],
+            [
+              "S2",
+              0.012840220221521944
+            ],
+            [
+              "S6",
+              0.003881907271465197
+            ],
+            [
+              "S3",
+              0.00297704251950922
+            ],
+            [
+              "S5",
+              0.0013045339706494268
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S2": {
+              "ratio_matches": 13,
+              "unique_position_pairs": 10,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 10,
+              "query_hull_area": 0.10577961263389524,
+              "reference_hull_area": 0.09212895052686454,
+              "mean_descriptor_distance": 238.0920608520508,
+              "affine": [
+                [
+                  0.9935525578988043,
+                  0.02501215478597449,
+                  0.012578871016183902
+                ],
+                [
+                  -0.04216391061309376,
+                  0.8776396784746909,
+                  0.052559628008648086
+                ]
+              ],
+              "score": 0.012840220221521944
+            },
+            "S4": {
+              "ratio_matches": 15,
+              "unique_position_pairs": 13,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 10,
+              "query_hull_area": 0.2440535158487015,
+              "reference_hull_area": 0.2057138381938972,
+              "mean_descriptor_distance": 224.4241973876953,
+              "affine": [
+                [
+                  0.9284983395888851,
+                  -0.017992526693132876,
+                  -0.06971923544070616
+                ],
+                [
+                  0.19896459247226175,
+                  0.9066861484432082,
+                  -0.07962025418319876
+                ]
+              ],
+              "score": 0.022859677189162063
+            }
+          },
+          "match_diagnostics": {
+            "S2": {
+              "scorable": true,
+              "query_descriptors": 54,
+              "reference_descriptors": 51,
+              "ratio_accepted_matches": 4,
+              "raw_fallback_used": false,
+              "scoring_matches": 4,
+              "unique_reference_descriptor_indices": 4,
+              "many_to_one_reuse_count": 0,
+              "mean_scoring_distance": 269.9369201660156,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            },
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 54,
+              "reference_descriptors": 86,
+              "ratio_accepted_matches": 11,
+              "raw_fallback_used": false,
+              "scoring_matches": 11,
+              "unique_reference_descriptor_indices": 7,
+              "many_to_one_reuse_count": 4,
+              "mean_scoring_distance": 211.16874972256747,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S3",
+          "scores": [
+            [
+              "S3",
+              0.03301290696238788
+            ],
+            [
+              "S4",
+              0.032542427097636044
+            ],
+            [
+              "S8",
+              0.009383984261830642
+            ],
+            [
+              "P4",
+              0.006756828707213879
+            ],
+            [
+              "S2",
+              0.004057747381274131
+            ],
+            [
+              "M5",
+              0.003599649502816024
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S3": {
+              "ratio_matches": 23,
+              "unique_position_pairs": 18,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 17,
+              "query_hull_area": 0.22843447551014898,
+              "reference_hull_area": 0.23667059927430395,
+              "mean_descriptor_distance": 215.03160992790671,
+              "affine": [
+                [
+                  1.031569097299746,
+                  0.036332495649600276,
+                  -0.014026028317128349
+                ],
+                [
+                  -0.004171087274684996,
+                  1.0031108674894964,
+                  -0.0002183681378353053
+                ]
+              ],
+              "score": 0.03301290696238788
+            }
+          },
+          "match_diagnostics": {
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 90,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 12,
+              "raw_fallback_used": false,
+              "scoring_matches": 12,
+              "unique_reference_descriptor_indices": 11,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 212.3180720011393,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.13254222520452616
+            ],
+            [
+              "S5",
+              0.048082335482801226
+            ],
+            [
+              "S2",
+              0.02145880845077251
+            ],
+            [
+              "S8",
+              0.019870023173172064
+            ],
+            [
+              "M3",
+              0.0051098488024769835
+            ],
+            [
+              "P3",
+              0.0040489955267150905
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S4": {
+              "ratio_matches": 49,
+              "unique_position_pairs": 39,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 34,
+              "query_hull_area": 0.5176656099730029,
+              "reference_hull_area": 0.5303263235136223,
+              "mean_descriptor_distance": 172.74707076128792,
+              "affine": [
+                [
+                  1.0351830005236948,
+                  -0.19482558737298888,
+                  0.13820148773906354
+                ],
+                [
+                  -0.00011611351190859535,
+                  0.9985303368401562,
+                  -0.010677953558980999
+                ]
+              ],
+              "score": 0.13254222520452616
+            }
+          },
+          "match_diagnostics": {
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 101,
+              "reference_descriptors": 100,
+              "ratio_accepted_matches": 29,
+              "raw_fallback_used": false,
+              "scoring_matches": 29,
+              "unique_reference_descriptor_indices": 25,
+              "many_to_one_reuse_count": 4,
+              "mean_scoring_distance": 173.29129186169854,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_19_eight_hand",
+              "reference_source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e"
+            }
+          }
+        }
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "scorable_faces": 3,
+      "group_scorable": true,
+      "correct_faces": 2,
+      "exact_group_correct": false,
+      "scored_faces": 3
+    },
+    {
+      "frame": 2552,
+      "group_id": "special14_player_chi_s234_088s",
+      "mode": "face_plane_full_rectified",
+      "audit": {
+        "boundary_seed": "detector_light_face_body",
+        "face_seed_xyxy": [
+          99,
+          415,
+          227,
+          470
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            46,
+            86
+          ],
+          [
+            39,
+            80
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              107.54545454545455,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              97.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              225.4090909090909,
+              413
+            ],
+            [
+              217.5,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "fit_outer_edges": true,
+        "measured_outer_edges_in_body": [
+          [
+            8.0,
+            126.0
+          ],
+          [
+            0.0,
+            120.0
+          ]
+        ],
+        "light_body_only": true,
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            97,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            227,
+            472
+          ]
+        ]
+      },
+      "rankings": [
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.017004245113764756
+            ],
+            [
+              "S2",
+              0.01649198116367208
+            ],
+            [
+              "S6",
+              0.005026977141332667
+            ],
+            [
+              "S5",
+              0.0016674654491198584
+            ],
+            [
+              "S9",
+              0.001027143118033735
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S2": {
+              "ratio_matches": 14,
+              "unique_position_pairs": 11,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 11,
+              "query_hull_area": 0.11541640709027412,
+              "reference_hull_area": 0.10140471378898086,
+              "mean_descriptor_distance": 205.4074845747514,
+              "affine": [
+                [
+                  0.9786366931303402,
+                  0.0434923564122995,
+                  0.0020529833108754373
+                ],
+                [
+                  0.05574411573773172,
+                  0.8981401153099299,
+                  0.0008239090472090497
+                ]
+              ],
+              "score": 0.01649198116367208
+            },
+            "S4": {
+              "ratio_matches": 17,
+              "unique_position_pairs": 13,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 8,
+              "query_hull_area": 0.20520212024118,
+              "reference_hull_area": 0.1877684481835682,
+              "mean_descriptor_distance": 195.05618286132812,
+              "affine": [
+                [
+                  1.0350398495656676,
+                  -0.0008829362768321464,
+                  -0.1350978135746438
+                ],
+                [
+                  -0.1602859478074967,
+                  0.8686226172460771,
+                  0.10624504954642273
+                ]
+              ],
+              "score": 0.017004245113764756
+            }
+          },
+          "match_diagnostics": {
+            "S2": {
+              "scorable": true,
+              "query_descriptors": 52,
+              "reference_descriptors": 51,
+              "ratio_accepted_matches": 8,
+              "raw_fallback_used": false,
+              "scoring_matches": 8,
+              "unique_reference_descriptor_indices": 6,
+              "many_to_one_reuse_count": 2,
+              "mean_scoring_distance": 229.62050437927246,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            },
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 52,
+              "reference_descriptors": 86,
+              "ratio_accepted_matches": 9,
+              "raw_fallback_used": false,
+              "scoring_matches": 9,
+              "unique_reference_descriptor_indices": 7,
+              "many_to_one_reuse_count": 2,
+              "mean_scoring_distance": 177.0327936808268,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S3",
+          "scores": [
+            [
+              "S3",
+              0.034924785144896706
+            ],
+            [
+              "S4",
+              0.024979828644238693
+            ],
+            [
+              "S2",
+              0.014659414938894876
+            ],
+            [
+              "S6",
+              0.010449359692109915
+            ],
+            [
+              "M6",
+              0.002191639670684032
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S3": {
+              "ratio_matches": 23,
+              "unique_position_pairs": 19,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 15,
+              "query_hull_area": 0.2448559531021277,
+              "reference_hull_area": 0.25697333346174234,
+              "mean_descriptor_distance": 204.6096669514974,
+              "affine": [
+                [
+                  1.0486507291399352,
+                  0.06875713203592472,
+                  -0.0459516836585709
+                ],
+                [
+                  -0.002646297038877585,
+                  0.9957272806438007,
+                  0.00015950135744721835
+                ]
+              ],
+              "score": 0.034924785144896706
+            }
+          },
+          "match_diagnostics": {
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 75,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 15,
+              "raw_fallback_used": false,
+              "scoring_matches": 15,
+              "unique_reference_descriptor_indices": 14,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 225.7492421468099,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.10996049993465114
+            ],
+            [
+              "S5",
+              0.05353969372012294
+            ],
+            [
+              "S8",
+              0.022524201375646848
+            ],
+            [
+              "S2",
+              0.01083486008198199
+            ],
+            [
+              "M4",
+              0.008750762128633802
+            ],
+            [
+              "M6",
+              0.003990846774685952
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S4": {
+              "ratio_matches": 46,
+              "unique_position_pairs": 30,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 28,
+              "query_hull_area": 0.45907492017254176,
+              "reference_hull_area": 0.47353801229563536,
+              "mean_descriptor_distance": 140.22971534729004,
+              "affine": [
+                [
+                  1.01321527964832,
+                  0.033572823076571945,
+                  0.003415127255552558
+                ],
+                [
+                  -0.002258954487320204,
+                  1.0022520139528317,
+                  0.021949467704400646
+                ]
+              ],
+              "score": 0.10996049993465114
+            }
+          },
+          "match_diagnostics": {
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 101,
+              "reference_descriptors": 86,
+              "ratio_accepted_matches": 23,
+              "raw_fallback_used": false,
+              "scoring_matches": 23,
+              "unique_reference_descriptor_indices": 16,
+              "many_to_one_reuse_count": 7,
+              "mean_scoring_distance": 154.8749711409859,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        }
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "scorable_faces": 3,
+      "group_scorable": true,
+      "correct_faces": 2,
+      "exact_group_correct": false,
+      "scored_faces": 3
+    },
+    {
+      "frame": 2555,
+      "group_id": "special14_player_chi_s234_088s",
+      "mode": "face_plane_full_rectified",
+      "audit": {
+        "boundary_seed": "detector_light_face_body",
+        "face_seed_xyxy": [
+          99,
+          415,
+          227,
+          470
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            46,
+            86
+          ],
+          [
+            39,
+            80
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              107.54545454545455,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              97.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              225.4090909090909,
+              413
+            ],
+            [
+              217.5,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "fit_outer_edges": true,
+        "measured_outer_edges_in_body": [
+          [
+            8.0,
+            126.0
+          ],
+          [
+            0.0,
+            120.0
+          ]
+        ],
+        "light_body_only": true,
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            97,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            227,
+            472
+          ]
+        ]
+      },
+      "rankings": [
+        {
+          "top1": "S2",
+          "scores": [
+            [
+              "S2",
+              0.016356251182289467
+            ],
+            [
+              "S4",
+              0.01354045812986356
+            ],
+            [
+              "S6",
+              0.003648106562875546
+            ],
+            [
+              "S5",
+              0.0016566375687894523
+            ],
+            [
+              "S9",
+              0.0010192136828711103
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S2": {
+              "ratio_matches": 14,
+              "unique_position_pairs": 11,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 11,
+              "query_hull_area": 0.11564451766350525,
+              "reference_hull_area": 0.10140471378898086,
+              "mean_descriptor_distance": 205.21183638139203,
+              "affine": [
+                [
+                  0.976589104108764,
+                  0.043765658334474135,
+                  0.002906275986586107
+                ],
+                [
+                  0.05366505356654962,
+                  0.8984699829123853,
+                  0.0014959581493973716
+                ]
+              ],
+              "score": 0.016356251182289467
+            }
+          },
+          "match_diagnostics": {
+            "S2": {
+              "scorable": true,
+              "query_descriptors": 53,
+              "reference_descriptors": 51,
+              "ratio_accepted_matches": 9,
+              "raw_fallback_used": false,
+              "scoring_matches": 9,
+              "unique_reference_descriptor_indices": 8,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 196.95562574598523,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S3",
+          "scores": [
+            [
+              "S3",
+              0.022316620262704062
+            ],
+            [
+              "S6",
+              0.021600323084665817
+            ],
+            [
+              "S2",
+              0.008792420980926915
+            ],
+            [
+              "M2",
+              0.0046770902057029365
+            ],
+            [
+              "S9",
+              0.003864299636995302
+            ],
+            [
+              "M3",
+              0.0026216537117988727
+            ],
+            [
+              "M6",
+              0.002047415442604911
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S3": {
+              "ratio_matches": 20,
+              "unique_position_pairs": 17,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 13,
+              "query_hull_area": 0.19305631907887744,
+              "reference_hull_area": 0.19559851505206471,
+              "mean_descriptor_distance": 191.14825908954327,
+              "affine": [
+                [
+                  1.0419788837292363,
+                  0.06712000286193204,
+                  -0.042877409049043705
+                ],
+                [
+                  0.007350618754664529,
+                  0.9817440882265831,
+                  -1.3366507364599756e-05
+                ]
+              ],
+              "score": 0.022316620262704062
+            }
+          },
+          "match_diagnostics": {
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 86,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 12,
+              "raw_fallback_used": false,
+              "scoring_matches": 12,
+              "unique_reference_descriptor_indices": 11,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 232.20869064331055,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.12203665557175863
+            ],
+            [
+              "S5",
+              0.05045229726546779
+            ],
+            [
+              "S8",
+              0.02252630481872469
+            ],
+            [
+              "S2",
+              0.013087001669494343
+            ],
+            [
+              "M6",
+              0.003992452266969503
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S4": {
+              "ratio_matches": 47,
+              "unique_position_pairs": 30,
+              "local_position_window": 0.2,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 29,
+              "query_hull_area": 0.5021620434653322,
+              "reference_hull_area": 0.504536449360317,
+              "mean_descriptor_distance": 145.1068036309604,
+              "affine": [
+                [
+                  1.0009935150971312,
+                  0.026437684506542474,
+                  0.011296810645018194
+                ],
+                [
+                  -0.0010072826537204968,
+                  0.9987719149965197,
+                  0.022221163913768344
+                ]
+              ],
+              "score": 0.12203665557175863
+            }
+          },
+          "match_diagnostics": {
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 101,
+              "reference_descriptors": 86,
+              "ratio_accepted_matches": 24,
+              "raw_fallback_used": false,
+              "scoring_matches": 24,
+              "unique_reference_descriptor_indices": 17,
+              "many_to_one_reuse_count": 7,
+              "mean_scoring_distance": 160.78738975524902,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        }
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "scorable_faces": 3,
+      "group_scorable": true,
+      "correct_faces": 3,
+      "exact_group_correct": true,
+      "scored_faces": 3
+    }
+  ],
+  "affine_full_quad_rows": [
+    {
+      "frame": 2549,
+      "group_id": "special14_player_chi_s234_088s",
+      "mode": "face_plane_full_rectified",
+      "audit": {
+        "boundary_seed": "detector_light_face_body",
+        "face_seed_xyxy": [
+          99,
+          415,
+          225,
+          470
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          415,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            47,
+            87
+          ],
+          [
+            39,
+            80
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              108.4,
+              413
+            ],
+            [
+              148.35555555555555,
+              413
+            ],
+            [
+              138.04444444444445,
+              471
+            ],
+            [
+              96.8,
+              471
+            ]
+          ],
+          [
+            [
+              144.35555555555555,
+              413
+            ],
+            [
+              188.31111111111113,
+              413
+            ],
+            [
+              179.2888888888889,
+              471
+            ],
+            [
+              134.04444444444445,
+              471
+            ]
+          ],
+          [
+            [
+              184.31111111111113,
+              413
+            ],
+            [
+              224.22222222222223,
+              413
+            ],
+            [
+              217.77777777777777,
+              471
+            ],
+            [
+              175.2888888888889,
+              471
+            ]
+          ]
+        ],
+        "fit_outer_edges": true,
+        "measured_outer_edges_in_body": [
+          [
+            9.0,
+            125.0
+          ],
+          [
+            0.0,
+            120.0
+          ]
+        ],
+        "light_body_only": true,
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            96,
+            413,
+            150,
+            472
+          ],
+          [
+            134,
+            413,
+            190,
+            472
+          ],
+          [
+            175,
+            413,
+            226,
+            472
+          ]
+        ]
+      },
+      "rankings": [
+        {
+          "top1": null,
+          "scores": [
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "M1": {
+              "ratio_matches": 4,
+              "unique_position_pairs": 3,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "insufficient_unique_pairs",
+              "inliers": 0
+            },
+            "S2": {
+              "ratio_matches": 4,
+              "unique_position_pairs": 4,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 3,
+              "affine": [
+                [
+                  2.8642528485600165,
+                  0.7123680808106929,
+                  -1.1866854253353778
+                ],
+                [
+                  12.029456608332861,
+                  1.3469877057897655,
+                  -6.148213875891142
+                ]
+              ]
+            }
+          },
+          "match_diagnostics": {
+            "M1": {
+              "scorable": true,
+              "query_descriptors": 54,
+              "reference_descriptors": 64,
+              "ratio_accepted_matches": 4,
+              "raw_fallback_used": false,
+              "scoring_matches": 4,
+              "unique_reference_descriptor_indices": 3,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 288.4061965942383,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_19_eight_hand",
+              "reference_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22"
+            },
+            "S2": {
+              "scorable": true,
+              "query_descriptors": 54,
+              "reference_descriptors": 51,
+              "ratio_accepted_matches": 4,
+              "raw_fallback_used": false,
+              "scoring_matches": 4,
+              "unique_reference_descriptor_indices": 4,
+              "many_to_one_reuse_count": 0,
+              "mean_scoring_distance": 269.9369201660156,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": null,
+          "scores": [
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "M1": {
+              "ratio_matches": 11,
+              "unique_position_pairs": 7,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 4,
+              "affine": [
+                [
+                  0.9156354505975504,
+                  0.996003467209233,
+                  -0.5512077949650936
+                ],
+                [
+                  -0.40061307813437824,
+                  -0.6205558568286954,
+                  0.9966700981163871
+                ]
+              ]
+            },
+            "S3": {
+              "ratio_matches": 12,
+              "unique_position_pairs": 9,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 4,
+              "affine": [
+                [
+                  1.1708609995050707,
+                  -0.8988124397932474,
+                  0.24953115292889447
+                ],
+                [
+                  0.8415735939241754,
+                  -2.1187928802191607,
+                  0.696182694731038
+                ]
+              ]
+            }
+          },
+          "match_diagnostics": {
+            "M1": {
+              "scorable": true,
+              "query_descriptors": 90,
+              "reference_descriptors": 64,
+              "ratio_accepted_matches": 11,
+              "raw_fallback_used": false,
+              "scoring_matches": 11,
+              "unique_reference_descriptor_indices": 8,
+              "many_to_one_reuse_count": 3,
+              "mean_scoring_distance": 294.7443195689808,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_19_eight_hand",
+              "reference_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22"
+            },
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 90,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 12,
+              "raw_fallback_used": false,
+              "scoring_matches": 12,
+              "unique_reference_descriptor_indices": 11,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 212.3180720011393,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.05130625787928157
+            ],
+            [
+              "S5",
+              0.005197471657566107
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S4": {
+              "ratio_matches": 29,
+              "unique_position_pairs": 24,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 14,
+              "query_hull_area": 0.48500864071517835,
+              "reference_hull_area": 0.5030100403350671,
+              "mean_descriptor_distance": 174.64147894723075,
+              "affine": [
+                [
+                  1.035136769781129,
+                  -0.20813407890821745,
+                  0.14416775968456416
+                ],
+                [
+                  0.006620066432832552,
+                  1.0097174833525637,
+                  -0.01752032488947725
+                ]
+              ],
+              "score": 0.05130625787928157
+            }
+          },
+          "match_diagnostics": {
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 101,
+              "reference_descriptors": 100,
+              "ratio_accepted_matches": 29,
+              "raw_fallback_used": false,
+              "scoring_matches": 29,
+              "unique_reference_descriptor_indices": 25,
+              "many_to_one_reuse_count": 4,
+              "mean_scoring_distance": 173.29129186169854,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_19_eight_hand",
+              "reference_source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e"
+            }
+          }
+        }
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "scorable_faces": 3,
+      "group_scorable": true,
+      "correct_faces": 1,
+      "exact_group_correct": false,
+      "scored_faces": 3
+    },
+    {
+      "frame": 2552,
+      "group_id": "special14_player_chi_s234_088s",
+      "mode": "face_plane_full_rectified",
+      "audit": {
+        "boundary_seed": "detector_light_face_body",
+        "face_seed_xyxy": [
+          99,
+          415,
+          227,
+          470
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            46,
+            86
+          ],
+          [
+            39,
+            80
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              107.54545454545455,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              97.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              225.4090909090909,
+              413
+            ],
+            [
+              217.5,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "fit_outer_edges": true,
+        "measured_outer_edges_in_body": [
+          [
+            8.0,
+            126.0
+          ],
+          [
+            0.0,
+            120.0
+          ]
+        ],
+        "light_body_only": true,
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            97,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            227,
+            472
+          ]
+        ]
+      },
+      "rankings": [
+        {
+          "top1": "S3",
+          "scores": [
+            [
+              "S3",
+              0.009152323434642964
+            ],
+            [
+              "S2",
+              0.0024358162265345207
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S2": {
+              "ratio_matches": 8,
+              "unique_position_pairs": 5,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 4,
+              "query_hull_area": 0.04495181311919838,
+              "reference_hull_area": 0.04093530079128005,
+              "mean_descriptor_distance": 188.35990142822266,
+              "affine": [
+                [
+                  1.0072031256750147,
+                  0.050687979735395204,
+                  -0.016367666739227498
+                ],
+                [
+                  0.11206714694545067,
+                  0.9039566626970857,
+                  -0.028299501462095786
+                ]
+              ],
+              "score": 0.0024358162265345207
+            },
+            "S3": {
+              "ratio_matches": 10,
+              "unique_position_pairs": 8,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 6,
+              "query_hull_area": 0.13965671097326837,
+              "reference_hull_area": 0.12902494912542506,
+              "mean_descriptor_distance": 190.97905858357748,
+              "affine": [
+                [
+                  0.9630313366511931,
+                  -0.4075057228302052,
+                  0.053720909477716544
+                ],
+                [
+                  0.00016417562729470996,
+                  0.9115437226313541,
+                  -0.0016039791001809269
+                ]
+              ],
+              "score": 0.009152323434642964
+            }
+          },
+          "match_diagnostics": {
+            "S2": {
+              "scorable": true,
+              "query_descriptors": 52,
+              "reference_descriptors": 51,
+              "ratio_accepted_matches": 8,
+              "raw_fallback_used": false,
+              "scoring_matches": 8,
+              "unique_reference_descriptor_indices": 6,
+              "many_to_one_reuse_count": 2,
+              "mean_scoring_distance": 229.62050437927246,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            },
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 52,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 10,
+              "raw_fallback_used": false,
+              "scoring_matches": 10,
+              "unique_reference_descriptor_indices": 8,
+              "many_to_one_reuse_count": 2,
+              "mean_scoring_distance": 188.91482849121093,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": null,
+          "scores": [
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "M1": {
+              "ratio_matches": 9,
+              "unique_position_pairs": 6,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 4,
+              "affine": [
+                [
+                  0.5843791007166579,
+                  -0.31486348834012123,
+                  0.4735447901250806
+                ],
+                [
+                  -0.3789959415702985,
+                  0.06828188859576056,
+                  0.5186169051239784
+                ]
+              ]
+            },
+            "S3": {
+              "ratio_matches": 15,
+              "unique_position_pairs": 12,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 4,
+              "affine": [
+                [
+                  0.9881594723259542,
+                  0.07305703255348656,
+                  -0.01190748640115025
+                ],
+                [
+                  0.7180774619766486,
+                  1.5131693930811927,
+                  -0.6614724274798199
+                ]
+              ]
+            }
+          },
+          "match_diagnostics": {
+            "M1": {
+              "scorable": true,
+              "query_descriptors": 75,
+              "reference_descriptors": 64,
+              "ratio_accepted_matches": 9,
+              "raw_fallback_used": false,
+              "scoring_matches": 9,
+              "unique_reference_descriptor_indices": 7,
+              "many_to_one_reuse_count": 2,
+              "mean_scoring_distance": 287.74192979600696,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_19_eight_hand",
+              "reference_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22"
+            },
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 75,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 15,
+              "raw_fallback_used": false,
+              "scoring_matches": 15,
+              "unique_reference_descriptor_indices": 14,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 225.7492421468099,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.028423514394925273
+            ],
+            [
+              "S8",
+              0.008666153913851178
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S4": {
+              "ratio_matches": 23,
+              "unique_position_pairs": 14,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 11,
+              "query_hull_area": 0.3104223776898509,
+              "reference_hull_area": 0.2979800812460436,
+              "mean_descriptor_distance": 134.61397483132103,
+              "affine": [
+                [
+                  0.971585087497636,
+                  0.013182987673258912,
+                  0.03624923887004549
+                ],
+                [
+                  -0.007479687593918584,
+                  0.9946046309319542,
+                  0.02953859868529966
+                ]
+              ],
+              "score": 0.028423514394925273
+            }
+          },
+          "match_diagnostics": {
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 101,
+              "reference_descriptors": 86,
+              "ratio_accepted_matches": 23,
+              "raw_fallback_used": false,
+              "scoring_matches": 23,
+              "unique_reference_descriptor_indices": 16,
+              "many_to_one_reuse_count": 7,
+              "mean_scoring_distance": 154.8749711409859,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        }
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "scorable_faces": 3,
+      "group_scorable": true,
+      "correct_faces": 1,
+      "exact_group_correct": false,
+      "scored_faces": 3
+    },
+    {
+      "frame": 2555,
+      "group_id": "special14_player_chi_s234_088s",
+      "mode": "face_plane_full_rectified",
+      "audit": {
+        "boundary_seed": "detector_light_face_body",
+        "face_seed_xyxy": [
+          99,
+          415,
+          227,
+          470
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            46,
+            86
+          ],
+          [
+            39,
+            80
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              107.54545454545455,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              97.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              225.4090909090909,
+              413
+            ],
+            [
+              217.5,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "fit_outer_edges": true,
+        "measured_outer_edges_in_body": [
+          [
+            8.0,
+            126.0
+          ],
+          [
+            0.0,
+            120.0
+          ]
+        ],
+        "light_body_only": true,
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            97,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            227,
+            472
+          ]
+        ]
+      },
+      "rankings": [
+        {
+          "top1": "S2",
+          "scores": [
+            [
+              "S2",
+              0.0024198052855032882
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S2": {
+              "ratio_matches": 9,
+              "unique_position_pairs": 7,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 4,
+              "query_hull_area": 0.04490223559233808,
+              "reference_hull_area": 0.04093530079128005,
+              "mean_descriptor_distance": 185.9261703491211,
+              "affine": [
+                [
+                  1.0082449771861013,
+                  0.05057076608194559,
+                  -0.01670812596583534
+                ],
+                [
+                  0.11282273209503954,
+                  0.9038854318439868,
+                  -0.028610331354694665
+                ]
+              ],
+              "score": 0.0024198052855032882
+            }
+          },
+          "match_diagnostics": {
+            "S2": {
+              "scorable": true,
+              "query_descriptors": 53,
+              "reference_descriptors": 51,
+              "ratio_accepted_matches": 9,
+              "raw_fallback_used": false,
+              "scoring_matches": 9,
+              "unique_reference_descriptor_indices": 8,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 196.95562574598523,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": null,
+          "scores": [
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S8",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "M1": {
+              "ratio_matches": 10,
+              "unique_position_pairs": 6,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 4,
+              "affine": [
+                [
+                  0.5852516852658526,
+                  -0.3152736850250223,
+                  0.47337985736626903
+                ],
+                [
+                  -0.37931439147331447,
+                  0.06845282399104087,
+                  0.518669357544087
+                ]
+              ]
+            },
+            "S3": {
+              "ratio_matches": 12,
+              "unique_position_pairs": 9,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": "implausible_normalized_affine",
+              "inliers": 4,
+              "affine": [
+                [
+                  -0.07239673443044942,
+                  0.040276781205569684,
+                  0.6859387034112838
+                ],
+                [
+                  -1.236854449642065,
+                  -0.7242817035602055,
+                  1.4908310333399808
+                ]
+              ]
+            }
+          },
+          "match_diagnostics": {
+            "M1": {
+              "scorable": true,
+              "query_descriptors": 86,
+              "reference_descriptors": 64,
+              "ratio_accepted_matches": 10,
+              "raw_fallback_used": false,
+              "scoring_matches": 10,
+              "unique_reference_descriptor_indices": 7,
+              "many_to_one_reuse_count": 3,
+              "mean_scoring_distance": 290.3156936645508,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_19_eight_hand",
+              "reference_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22"
+            },
+            "S3": {
+              "scorable": true,
+              "query_descriptors": 86,
+              "reference_descriptors": 79,
+              "ratio_accepted_matches": 12,
+              "raw_fallback_used": false,
+              "scoring_matches": 12,
+              "unique_reference_descriptor_indices": 11,
+              "many_to_one_reuse_count": 1,
+              "mean_scoring_distance": 232.20869064331055,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.035491691415990734
+            ],
+            [
+              "S8",
+              0.008661462803742014
+            ],
+            [
+              "M1",
+              0.0
+            ],
+            [
+              "M2",
+              0.0
+            ],
+            [
+              "M3",
+              0.0
+            ],
+            [
+              "M4",
+              0.0
+            ],
+            [
+              "M5",
+              0.0
+            ],
+            [
+              "M6",
+              0.0
+            ],
+            [
+              "M7",
+              0.0
+            ],
+            [
+              "P1",
+              0.0
+            ],
+            [
+              "P3",
+              0.0
+            ],
+            [
+              "P4",
+              0.0
+            ],
+            [
+              "P5",
+              0.0
+            ],
+            [
+              "P6",
+              0.0
+            ],
+            [
+              "P7",
+              0.0
+            ],
+            [
+              "P8",
+              0.0
+            ],
+            [
+              "P9",
+              0.0
+            ],
+            [
+              "S2",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "S7",
+              0.0
+            ],
+            [
+              "S9",
+              0.0
+            ]
+          ],
+          "spatial_diagnostics": {
+            "S4": {
+              "ratio_matches": 24,
+              "unique_position_pairs": 15,
+              "raw_match_fallback": false,
+              "spatial_consistency_checked": true,
+              "reason": null,
+              "inliers": 12,
+              "query_hull_area": 0.35825712331462567,
+              "reference_hull_area": 0.3427296222632732,
+              "mean_descriptor_distance": 138.86038080851236,
+              "affine": [
+                [
+                  0.9680927650769321,
+                  0.016025881317432534,
+                  0.037424407160368066
+                ],
+                [
+                  -0.001369576165960435,
+                  0.991079909010377,
+                  0.02698227249715026
+                ]
+              ],
+              "score": 0.035491691415990734
+            }
+          },
+          "match_diagnostics": {
+            "S4": {
+              "scorable": true,
+              "query_descriptors": 101,
+              "reference_descriptors": 86,
+              "ratio_accepted_matches": 24,
+              "raw_fallback_used": false,
+              "scoring_matches": 24,
+              "unique_reference_descriptor_indices": 17,
+              "many_to_one_reuse_count": 7,
+              "mean_scoring_distance": 160.78738975524902,
+              "spatial_consistency_checked": false,
+              "score_changed": false,
+              "reference_match_group": "reviewed_match_2026_09_26_eight_hand",
+              "reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4"
+            }
+          }
+        }
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "scorable_faces": 3,
+      "group_scorable": true,
+      "correct_faces": 2,
+      "exact_group_correct": false,
+      "scored_faces": 3
+    }
+  ],
+  "parameters": {
+    "ratio_test": "unchanged frozen constant",
+    "local_position_window_radius": 0.2,
+    "position_dedup_round_decimals": 2,
+    "minimum_unique_pairs": 4,
+    "ransac_threshold": 0.04,
+    "rng_seed": 69,
+    "affine_singular_value_range": [
+      0.65,
+      1.5
+    ],
+    "max_abs_translation": 0.2,
+    "minimum_inliers": 4,
+    "minimum_convex_hull_area": 0.01,
+    "raw_match_fallback": false,
+    "score": "inliers / sqrt(query_count*reference_count) * sqrt(query_hull_area*reference_hull_area) / (1+mean_descriptor_distance/512)"
+  },
+  "all_competing_supported_classes_ranked": true,
+  "descriptor_extraction_unchanged_and_tested": true,
+  "candidate_scorer_changed": true,
+  "runtime_thresholds_changed": false,
+  "query_crop_methods_unchanged_between_scorers": true,
+  "parameter_and_policy_selection_after_development_inspection": true,
+  "independent_reference_original_matches_for_S2_S3": 1,
+  "formal_holdout": false,
+  "formal_promotion_evidence": false,
+  "development_only": true,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "dependency_versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3"
+  },
+  "input_sha256": {
+    "references/vision/2026-10-03/independent14_s234_detector_spec_v0_1.json": "7a83d79f5aeda9ed97f41f350ca423cfb86ade3983ec3de5bcea181805dd0148",
+    "private_template_zip": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c"
+  },
+  "decision": "retain_window_spatial_candidate_for_development; two_S2_to_S4_errors_still_block_adoption"
+}

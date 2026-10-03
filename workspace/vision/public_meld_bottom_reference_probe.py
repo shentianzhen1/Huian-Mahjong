@@ -9,7 +9,7 @@ from pathlib import Path
 PIN = Path('references/vision/2026-10-03/bottom_s234_reference_pin_v0_1.json')
 
 
-def load_bottom_s234_templates(video_path, *, rectified=False):
+def load_bottom_s234_templates(video_path, *, rectified=False, descriptor_extractor=None):
     import cv2
     from PIL import Image
     from workspace.vision.evaluate_sift_detector_body_boundary_probe import raw_face_boxes
@@ -59,7 +59,7 @@ def load_bottom_s234_templates(video_path, *, rectified=False):
             raise ValueError('bottom reference crop SHA mismatch')
         descriptor_crop = rectify_face_quad(image, rectified_audit['face_quads'][index]) if rectified else crop
         face, _ = normalize_single_face(descriptor_crop)
-        descriptors = _sift_descriptors(face) if face is not None else None
+        descriptors = (descriptor_extractor or _sift_descriptors)(face) if face is not None else None
         if descriptors is None:
             raise ValueError('bottom reference descriptors absent')
         templates.append(PublicMeldSiftTemplate(face_pin['tile_id'], 'chunk3_bottom_s234', source_sha,
