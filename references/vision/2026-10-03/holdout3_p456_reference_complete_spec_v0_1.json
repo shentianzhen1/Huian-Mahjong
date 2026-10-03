@@ -14,7 +14,17 @@
     "bottom_reference_rectified": true,
     "opencv_cv2": "5.0.0",
     "numpy": "2.5.3",
-    "parameter_retuning_after_holdout": false
+    "parameter_retuning_after_holdout": false,
+    "crop_mode_policy": "report_all_existing_detector_body_boundary_modes_no_posthoc_selection",
+    "required_modes": [
+      "detector_seam2",
+      "body_context_no_seam",
+      "body_context_seam2",
+      "outer_body_seam2",
+      "face_plane_seam_boxes",
+      "face_plane_seam_rectified",
+      "face_plane_full_rectified"
+    ]
   },
   "sources": [
     {
