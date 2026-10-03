@@ -271,3 +271,25 @@ All query clips remain one original match and have previously been inspected.
 Next: compare this fixed adapter against the actual group-normalization and
 face-split chain with source-locked boundary review, before any integration.
 Runtime gate 0.82, Hint read-only and Executor OFF remain unchanged.
+
+## Fixed Hand 8 actual group-normalize/split probe
+
+`references/vision/2026-10-03/sift_group_split_geometry_probe_v0_1.json` now
+runs the repository's real `normalize_public_meld_crop` → FLAT-only
+`split_flat_meld_faces` chain on original source frames 4794, 4797, 4800,
+4803 and 4806. The group ROI is fixed as the bounding union of the three
+source/hash-pinned manual face ROIs; no per-frame crop search is performed.
+All five groups return FLAT and three 72×96 faces. The subsequent per-face
+identity geometry and unchanged frozen SIFT ranking produce 10/15 correct
+faces and 0/5 exact S789 groups, versus 15/15 and 5/5 when the same faces are
+individually cropped first and then normalized. Expected tile positions inherit
+the previously inspected manual review, not user-confirmed truth; this is
+development diagnosis, not accuracy evidence. The face-boundary splitter was
+not independently visually qualified, and `UNKNOWN` remains appropriate for
+Runtime.
+
+Decision: reject this group-crop/split candidate for these fixed Hand 8 queries.
+This does not invalidate the separate symmetric single-face A/B, nor prove the
+group normalizer generally wrong. Next isolate the loss by reviewing actual
+split boundaries against the locked faces and locating which crop pixels change
+the nine-dot face rankings; do not search new bboxes or tune scorer thresholds.
