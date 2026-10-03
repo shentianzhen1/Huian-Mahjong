@@ -110,6 +110,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             faces = split_flat_meld_faces(normalized) if normalized.analysis.stack_state == FLAT else ()
             if len(faces) != 3:
                 raise ValueError(f"frame {frame}: actual group pipeline abstained: {normalized.analysis.stack_state}")
+            split_raw_descriptors = [_sift_descriptors(face) for face in faces]
             ids = [_sift_descriptors(normalize_single_face(face)[0]) for face in faces]
             if any(desc is None for desc in ids):
                 raise ValueError(f"frame {frame}: split face has insufficient descriptors")
@@ -120,6 +121,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             if tight_box is None or normalized.image is None:
                 raise ValueError("fixed ROI projection requires a normalized image and tight bbox")
             review_faces = []
+            review_raw_descriptors = []
             mapped_boxes = []
             if abs(normalized.analysis.rotation_degrees) > 0.01:
                 raise ValueError("fixed ROI coordinate projection only supports the pinned zero-rotation case")
@@ -132,7 +134,9 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 )
                 x1, y1 = x0 + w, y0 + h
                 mapped_boxes.append([x0, y0, w, h])
-                face, _ = normalize_single_face(normalized.image.crop((x0, y0, x1, y1)))
+                raw_face = normalized.image.crop((x0, y0, x1, y1))
+                review_raw_descriptors.append(_sift_descriptors(raw_face))
+                face, _ = normalize_single_face(raw_face)
                 review_faces.append(_sift_descriptors(face))
             if any(desc is None for desc in review_faces):
                 raise ValueError(f"frame {frame}: reviewed-boundary split lacks descriptors")
@@ -161,7 +165,9 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 expected = row["reviewed_candidate_tile"]
                 row_scores = {}
                 for mode, query in (("direct_face_symmetric_geometry", direct_descriptors),
+                                    ("group_normalize_equal_thirds_no_second_normalization", split_raw_descriptors[i]),
                                     ("group_normalize_split_then_face_geometry", group_descriptors),
+                                    ("group_normalize_manual_roi_no_second_normalization", review_raw_descriptors[i]),
                                     ("group_normalize_manual_roi_boundary_counterfactual", reviewed_descriptors)):
                     by_class_group = defaultdict(dict)
                     if query is not None:
@@ -195,7 +201,10 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
     finally:
         cap.release()
     summaries = {}
-    for mode in ("direct_face_symmetric_geometry", "group_normalize_split_then_face_geometry",
+    for mode in ("direct_face_symmetric_geometry",
+                 "group_normalize_equal_thirds_no_second_normalization",
+                 "group_normalize_split_then_face_geometry",
+                 "group_normalize_manual_roi_no_second_normalization",
                  "group_normalize_manual_roi_boundary_counterfactual"):
         selected = [r for r in rows if r["modes"][mode]["scorable"]]
         summaries[mode] = {"faces": len(rows), "scorable_faces": len(selected),
@@ -219,7 +228,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
         if group_mode["legal_groups_correct"] < direct_mode["legal_groups_correct"]
         or group_mode["correct_when_scorable"] < direct_mode["correct_when_scorable"]
         else "development_only_no_promotion")
-    return {"schema_version": "sift_group_split_geometry_probe_dev_v0_1",
+    return {"schema_version": "sift_group_split_geometry_probe_dev_v0_2",
         "geometry": geometry, "query_count": len(rows),
         "rows": rows, "summary": summaries,
         "source_sha256": video_sha, "private_template_load": loaded,
@@ -229,6 +238,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             "workspace/vision/public_meld_identity_sift.py": hashlib.sha256(Path("workspace/vision/public_meld_identity_sift.py").read_bytes()).hexdigest()},
         "group_crop_policy": "bounding union of three SHA-pinned face ROIs",
         "boundary_counterfactual": "same normalized group image cropped using fixed ledger ROI edges mapped into normalized coordinates",
+        "stage_factorial": "equal thirds versus pinned manual ROI boundaries, each with or without second face normalization; frozen SIFT scorer and templates unchanged",
         "boundary_counterfactual_is_automatic_splitter": False,
         "boundary_counterfactual_is_new_training_data": False,
         "identity_scoring_completed": True, "candidate_decision": decision,

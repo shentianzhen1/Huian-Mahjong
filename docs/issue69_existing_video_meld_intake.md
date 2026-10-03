@@ -317,6 +317,12 @@ where `python -m pip install -e ".[vision]"` succeeds. Choose a fresh output
 filename such as `sift_group_split_geometry_probe_v0_2.json`; the CLI refuses
 to overwrite the existing v0.1 evidence. This mode is a manual-boundary
 counterfactual, not an automatic splitter or a Runtime identity result.
+The pending v0.2 run records a 2×2 development comparison within that same
+normalized group image: equal thirds versus fixed reviewed rectangles, each
+scored directly and after a second per-face normalization. The four modes use
+the same SIFT templates, source exclusion and frozen scorer; an unscorable
+mode remains an abstention. No v0.2 identity result exists until this script
+runs with OpenCV and writes a new report.
 
 An additional source-pixel audit in
 `references/vision/2026-10-03/hand8_boundary_band_pixels_v0_1.json`
