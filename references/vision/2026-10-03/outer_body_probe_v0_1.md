@@ -1,5 +1,12 @@
 # Detector-to-outer-body development probe
 
+Interpretation update: the identity comparisons below used normalized queries
+against a raw-extraction reference bank. The subsequent
+`face_plane_reference_symmetry_v0_1.md` ablation removes that asymmetry and
+restores all six crop modes to 15/15 faces, 5/5 groups on S789. Preserve the
+historical measurements, but do not attribute their failures solely to geometry
+or treat direct outer-envelope cropping as intrinsically rejected.
+
 This is an inspected development experiment for Issue #69 / Draft PR #117.
 It rejects direct equal-third identity cropping from the new outer envelope.
 No runtime observer or classifier threshold is changed.

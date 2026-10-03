@@ -39,3 +39,76 @@ def outer_body_box(image, detector_bbox):
         return None, {**audit, 'reason': 'body_touches_search_boundary'}
     box = (left+cx, top+cy, left+cx+cw, top+cy+ch)
     return box, {**audit, 'outer_body_xyxy': list(box)}
+
+
+def face_plane_quads(image, detector_bbox, *, seam_context=2):
+    """Inspect blank face bands for sloping seams; abstain if unsupported.
+
+    Equal thirds only constrain the seam search, never define accepted cuts.
+    This deliberately narrow experiment supports flat, three-face rows only.
+    """
+    import cv2
+    import numpy as np
+    box, audit = outer_body_box(image, detector_bbox)
+    if box is None:
+        return (), audit
+    x, y, right, bottom = box
+    rgb = np.asarray(image.crop(box))
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    light = (hsv[:, :, 1] < 110) & (hsv[:, :, 2] > 110)
+    occupied = np.flatnonzero(light.mean(axis=1) > .45)
+    if len(occupied) < 10:
+        return (), {**audit, 'reason': 'face_plane_absent'}
+    first, last = int(occupied[0]), int(occupied[-1])
+    height, width = last-first+1, right-x
+    bands = []
+    for lo, hi in ((first, first+max(1, round(height*.2))),
+                   (first+round(height*.55), first+round(height*.85))):
+        occupancy = light[lo:hi].mean(axis=1)
+        row = lo+int(np.argmax(occupancy))
+        if float(occupancy.max()) < .8:
+            return (), {**audit, 'reason': 'blank_face_band_absent'}
+        bands.append(row)
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(float)
+    seams = []
+    for row in bands:
+        cuts = []
+        for index in (1, 2):
+            center, radius = round(width*index/3), max(2, round(width/12))
+            lo, hi = center-radius, center+radius+1
+            profile = gray[row, lo:hi]
+            cut = lo+int(np.argmin(profile))
+            contrast = float(np.percentile(profile, 80)-profile.min())
+            if cut in (lo, hi-1) or contrast < 20:
+                return (), {**audit, 'reason': 'seam_absent_or_search_edge'}
+            cuts.append(cut)
+        seams.append(cuts)
+    top, end = max(0, y+first-2), min(image.height, y+last+3)
+    def cuts_at(global_y):
+        ratio = (global_y-y-bands[0])/(bands[1]-bands[0])
+        return [0.0]+[seams[0][i]+ratio*(seams[1][i]-seams[0][i]) for i in (0, 1)]+[float(width)]
+    upper, lower = cuts_at(top), cuts_at(end-1)
+    quads = []
+    for index in range(3):
+        offset_left = seam_context if index else 0
+        offset_right = seam_context if index < 2 else 0
+        quads.append(((x+upper[index]-offset_left, top),
+                      (x+upper[index+1]+offset_right, top),
+                      (x+lower[index+1]+offset_right, end-1),
+                      (x+lower[index]-offset_left, end-1)))
+    return tuple(quads), {**audit, 'face_plane_rows': [y+first, y+last+1],
+        'blank_band_rows': [y+row for row in bands],
+        'measured_seams_in_outer_body': seams, 'face_quads': quads,
+        'vertical_context': 2, 'seam_context': seam_context}
+
+
+def rectify_face_quad(image, quad):
+    import cv2
+    import numpy as np
+    from PIL import Image
+    points = np.array(quad, dtype=np.float32)
+    width = max(2, round(max(np.linalg.norm(points[1]-points[0]), np.linalg.norm(points[2]-points[3]))))
+    height = max(2, round(max(np.linalg.norm(points[3]-points[0]), np.linalg.norm(points[2]-points[1]))))
+    target = np.array(((0, 0), (width-1, 0), (width-1, height-1), (0, height-1)), dtype=np.float32)
+    transform = cv2.getPerspectiveTransform(points, target)
+    return Image.fromarray(cv2.warpPerspective(np.asarray(image), transform, (width, height)))

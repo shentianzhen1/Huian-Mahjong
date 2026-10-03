@@ -72,15 +72,16 @@ def audit(video_path: str | Path) -> dict:
                 raise ValueError("reviewed group has no unique detector candidate")
             candidate = candidates[0]
             modes = {}
-            for name, body_context, seam_context, outer in (
-                ("detector_raw", False, 0, False),
-                ("detector_seam2", False, 2, False),
-                ("body_context_no_seam", True, 0, False),
-                ("body_context_seam2", True, 2, False),
-                ("outer_body_seam2", False, 2, True),
+            for name, body_context, seam_context, outer, plane in (
+                ("detector_raw", False, 0, False, False),
+                ("detector_seam2", False, 2, False, False),
+                ("body_context_no_seam", True, 0, False, False),
+                ("body_context_seam2", True, 2, False, False),
+                ("outer_body_seam2", False, 2, True, False),
+                ("face_plane_seam_boxes", False, 2, False, True),
             ):
                 boxes, geometry = raw_face_boxes(image, candidate,
-                    body_context=body_context, seam_context=seam_context, outer_body=outer)
+                    body_context=body_context, seam_context=seam_context, outer_body=outer, face_plane=plane)
                 if len(boxes) != 3:
                     modes[name] = {"abstained": True, "reason": geometry.get("reason")}
                     continue
@@ -88,7 +89,8 @@ def audit(video_path: str | Path) -> dict:
                     "face_rect_coverage": [round(rectangle_coverage(box, target), 6)
                                            for box, target in zip(boxes, targets)],
                     "face_boxes": [list(box) for box in boxes],
-                    "raw_group_xyxy": geometry["raw_group_xyxy"]}
+                    "raw_group_xyxy": geometry.get("raw_group_xyxy"),
+                    "face_plane_geometry": geometry if plane else None}
             rows.append({"frame": frame, "template_match_score": round(match_score, 6),
                 "reviewed_crop_xyxy": [tx, ty, tx + width, ty + height],
                 "detector_bbox": list(candidate.pixel_bbox), "modes": modes})

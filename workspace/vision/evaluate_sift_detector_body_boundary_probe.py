@@ -10,18 +10,25 @@ import json
 from pathlib import Path
 
 
-def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, outer_body=False):
+def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, outer_body=False, face_plane=False):
     """Geometry-only experimental adapter. Abstain on stacked/rotated rows."""
     from workspace.vision.public_meld_geometry_normalization import normalize_public_meld_crop, FLAT
     if seam_context < 0:
         raise ValueError("negative seam context")
-    if body_context and outer_body:
+    if sum((body_context, outer_body, face_plane)) > 1:
         raise ValueError("choose one body boundary mode")
     normalized = normalize_public_meld_crop(image, candidate)
     a = normalized.analysis
     if a.stack_state != FLAT or abs(a.rotation_degrees) > .01 or a.tight_bbox_in_group is None:
         return (), {'reason': 'requires_unrotated_flat_body'}
     x, y, w, h = candidate.pixel_bbox
+    if face_plane:
+        import math
+        from workspace.vision.public_meld_outer_body_probe import face_plane_quads
+        quads, audit = face_plane_quads(image, candidate.pixel_bbox, seam_context=seam_context)
+        boxes = tuple((math.floor(min(p[0] for p in q)), math.floor(min(p[1] for p in q)),
+                       math.ceil(max(p[0] for p in q))+1, math.ceil(max(p[1] for p in q))+1) for q in quads)
+        return boxes, {**audit, 'face_xyxy': boxes}
     outer_audit = None
     if outer_body:
         from workspace.vision.public_meld_outer_body_probe import outer_body_box
@@ -48,7 +55,7 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, oute
         'geometry': a.to_dict(), 'outer_body_probe': outer_audit}
 
 
-def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0):
+def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False):
     import cv2
     import numpy as np
     from PIL import Image
@@ -64,12 +71,25 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
     if digest != source['source_sha256']:
         raise ValueError('source SHA mismatch')
     manifest = load_public_identity_manifest('references/vision/2026-09-22/public_identity_labels_v0_1.json')
-    bank = build_public_meld_sift_bank(manifest, Path('.'), Path('references/vision/2026-09-24/public_identity_source_groups.development.json'))
-    bank, loaded = augment_public_meld_sift_bank_from_private_zip(bank, private_zip_path=private_template_zip,
-        recovery_result_path='references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json', repository_root=Path('.'))
+    from contextlib import ExitStack
+    from unittest.mock import patch
+    from workspace.vision import public_meld_identity_sift as identity, public_meld_private_sift_loader as loader
+    original_loader_extractor = loader._sift_descriptors
+    def reference_descriptors(image):
+        normalized, _ = normalize_single_face(image)
+        return _sift_descriptors(normalized) if normalized is not None else None
+    with ExitStack() as stack:
+        if reference_geometry:
+            stack.enter_context(patch.object(identity, '_sift_descriptors', reference_descriptors))
+            stack.enter_context(patch.object(loader, '_sift_descriptors', reference_descriptors))
+        bank = build_public_meld_sift_bank(manifest, Path('.'), Path('references/vision/2026-09-24/public_identity_source_groups.development.json'))
+        bank, loaded = augment_public_meld_sift_bank_from_private_zip(bank, private_zip_path=private_template_zip,
+            recovery_result_path='references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json', repository_root=Path('.'))
+    if identity._sift_descriptors is not _sift_descriptors or loader._sift_descriptors is not original_loader_extractor:
+        raise RuntimeError('reference extractor was not restored')
     aliases = set(spec['excluded_same_match_aliases'])
     templates = [t for t in bank.templates if t.match_group not in aliases and t.source_sha256 != digest]
-    modes = {'detector_seam2': (False,2,False), 'body_context_no_seam': (True,0,False), 'body_context_seam2': (True,2,False), 'outer_body_seam2': (False,2,True)}
+    modes = {'detector_seam2': (False,2,False,False), 'body_context_no_seam': (True,0,False,False), 'body_context_seam2': (True,2,False,False), 'outer_body_seam2': (False,2,True,False), 'face_plane_seam_boxes': (False,2,False,True), 'face_plane_seam_rectified': (False,2,False,True)}
     cap = cv2.VideoCapture(str(video_path)); rows=[]
     try:
         for frame in group['frame_indices']:
@@ -85,11 +105,16 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
                 if g.geometry_kind=='bottom_group' and target_coverage(g.normalized_bbox,target)>.5]
             if len(candidates)!=1:
                 raise ValueError('audit candidate association absent or ambiguous')
-            for mode,(body,seam,outer) in modes.items():
-                crops,audit=raw_face_boxes(image,candidates[0],body_context=body,seam_context=seam,outer_body=outer)
+            for mode,(body,seam,outer,plane) in modes.items():
+                crops,audit=raw_face_boxes(image,candidates[0],body_context=body,seam_context=seam,outer_body=outer,face_plane=plane)
                 ranked=[]
-                for box in crops:
-                    face,_=normalize_single_face(image.crop(box)); query=_sift_descriptors(face) if face is not None else None
+                for index,box in enumerate(crops):
+                    if mode == 'face_plane_seam_rectified':
+                        from workspace.vision.public_meld_outer_body_probe import rectify_face_quad
+                        crop = rectify_face_quad(image, audit['face_quads'][index])
+                    else:
+                        crop = image.crop(box)
+                    face,_=normalize_single_face(crop); query=_sift_descriptors(face) if face is not None else None
                     scores={}
                     for t in templates:
                         score=frozen_score(query,t.descriptors)
@@ -113,8 +138,10 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'scorable_faces':sum(r['scorable_faces'] for r in rows if r['mode']==mode),
         'scorable_groups':sum(r['group_scorable'] for r in rows if r['mode']==mode),
         'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':len(group['frame_indices'])} for mode in modes}
-    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_2','source_sha256':digest,
+    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_3','source_sha256':digest,
         'summary':summary,'rows':rows,'private_template_load':loaded,
+        'reference_geometry_normalized': reference_geometry,
+        'query_geometry_normalized': True, 'scorer_changed': False,
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
         'input_sha256':{str(spec_path):hashlib.sha256(spec_path.read_bytes()).hexdigest(),
             'private_template_zip':hashlib.sha256(Path(private_template_zip).read_bytes()).hexdigest()},
@@ -122,10 +149,10 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'parameter_selected_after_viewing_development_batch':True,'independent_match_groups':1,
         'development_only':True,'formal_promotion_evidence':False,'runtime_integration':False,
         'safe_for_runtime':False,'safe_for_hint':False,'safe_for_executor':False,
-        'decision':'development_comparison_only; outer_body_is_not_promoted_to_identity_crop'}
+        'decision':'development_comparison_only; assess_reference_transform_symmetry_before_attributing_identity_failure_to_crop'}
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--video',required=True);p.add_argument('--private-template-zip',required=True);p.add_argument('--output',required=True)
-    args=p.parse_args();result=evaluate(args.video,args.private_template_zip)
+    p=argparse.ArgumentParser();p.add_argument('--video',required=True);p.add_argument('--private-template-zip',required=True);p.add_argument('--output',required=True);p.add_argument('--reference-geometry',action='store_true')
+    args=p.parse_args();result=evaluate(args.video,args.private_template_zip,reference_geometry=args.reference_geometry)
     Path(args.output).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result['summary']))
