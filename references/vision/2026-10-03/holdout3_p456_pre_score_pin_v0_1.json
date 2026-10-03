@@ -3,7 +3,7 @@
   "date": "2026-10-03",
   "issue": 69,
   "development_only": true,
-  "purpose": "Freeze a new source-disjoint real exposed-meld query before running the reference-completeness-weighted scorer.",
+  "purpose": "Freeze an unseen query window before scoring; later lineage audit shows this source belongs to an original match already represented in candidate controls/templates, so it is not an independent-match holdout.",
   "source": {
     "private_filename": "3.mp4",
     "sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
@@ -27,7 +27,8 @@
     ],
     "selected_before_identity_scoring": true,
     "reason": "3.mp4 is the first candidate in the predeclared order and contains a stable reviewable FLAT exposed meld.",
-    "no_score_based_video_selection": true
+    "no_score_based_video_selection": true,
+    "lineage_correction": "3.mp4 is G01 of drive_full_eight_one_original_match; clips 3/4/5/9/10/11/12/13 share that original match."
   },
   "query": {
     "actor": "PLAYER",
@@ -72,11 +73,13 @@
   },
   "evidence_boundary": {
     "user_confirmed_labels": false,
-    "source_disjoint_from_formula_selection_packet": true,
+    "source_disjoint_from_formula_selection_packet": false,
     "formal_promotion_evidence": false,
     "runtime_integration": false,
     "safe_for_runtime": false,
     "safe_for_hint": false,
-    "safe_for_executor": false
+    "safe_for_executor": false,
+    "same_original_match_as_existing_controls": true,
+    "corrected_after_lineage_audit": true
   }
 }
