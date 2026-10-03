@@ -159,3 +159,42 @@ Reproduce with `workspace.vision.evaluate_sift_reference_dedup_probe`, supplying
 `--hand8-intake-zip`, `--original-intake-zip`, `--private-template-zip`, and
 `--output`. The pinned result is
 `sift_reference_descriptor_dedup_probe_v0_1.json`. Keep this variant offline.
+
+## Fixed 3x3 position mask: rejected as a general scorer
+
+The two remaining S9-to-S7 errors at frames 4800/4806 have inconsistent match
+positions. A single fixed spatial diagnostic attached normalized 3x3 cell IDs
+to the unchanged SIFT descriptors, allowed matches only within the same cell,
+and retained the reference-index deduplication. Both ratio matching and raw
+fallback obey the mask. No grid-size, threshold, crop or bank search occurred.
+This is coarse position masking, not a verified perspective transform or
+geometric model fit.
+
+| Inspected metric | Frozen | Reference dedup | Fixed 3x3 + dedup |
+|---|---:|---:|---:|
+| Hand 8 S7 faces | 5/5 | 5/5 | 5/5 |
+| Hand 8 S8 faces | 5/5 | 5/5 | 5/5 |
+| Hand 8 S9 faces | 0/5 | 3/5 | 5/5 |
+| Hand 8 legal group ranking | 4/5 | 5/5 | 5/5 |
+| Baseline-scorable public controls | 9/9 | 9/9 | 7/9 |
+
+Both new control errors are P6 queries with independent true-class support:
+`public_meld_p6` ranks P7 and `eight_hand_h7_p456_p6_2` ranks P8. Both remain
+scorable; these are actual ranking regressions, not missing-class abstentions.
+The controls come from different original recordings. Hand 7 S8 remains 15/15
+and reverse S8 remains correct, but those successes do not cancel the P6 errors.
+
+Decision: do not adopt the grid candidate. The frozen scorer and the separate
+reference-dedup development variant remain unchanged; no bamboo-only Runtime
+route is introduced without a validated suit decision. A target group's 5/5
+does not establish generalization. All three modes use previously inspected
+material and the one-other-match diagnostic. Next inspect crop alignment and
+geometric correspondence on the fixed S9 and regressed P6 pairs before designing
+another score change; do not keep searching grid parameters on these samples.
+
+Reproduce with `workspace.vision.evaluate_sift_spatial_grid_probe` using the same
+three private input ZIPs and `--output`. Result:
+`sift_fixed_spatial_grid_probe_v0_1.json`. The report compares controls across
+scoring modes, rather than incorrectly treating the grid variant's internal
+before/after reference test as proof of no regressions. All patched descriptor
+and scorer callbacks are restored; Runtime identities remain UNKNOWN.
