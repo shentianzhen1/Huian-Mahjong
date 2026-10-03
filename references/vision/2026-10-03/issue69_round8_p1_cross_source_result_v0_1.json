@@ -38,13 +38,10 @@
     "reason": "P1 lacks two other independent original-match reference groups"
   },
   "historical_context": {
-    "older_stable_top1": [
-      "P7",
-      "P6",
-      "P8"
-    ],
-    "older_output_is_not_truth": true,
-    "note": "P1 was absent from the old eligible class set; temporal stability does not repair missing class coverage"
+    "older_round8_rankings_exist": true,
+    "exact_group_association_to_this_rightmost_P1_group": "UNVERIFIED",
+    "old_predictions_used_for_this_result": false,
+    "note": "Do not attribute older P7/P6/P8 output to this rightmost P1 group without a pinned historical group bbox."
   },
   "candidate": {
     "name": "spatial_window_affine_reference_complete",
