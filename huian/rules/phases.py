@@ -192,7 +192,7 @@ def report(adapter, state):
     if state.phase == "OPENING_QIANGJIN_CHECK":
         return ActionReport((), ("qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"))
     if state.phase == "ROB_KONG_HU_DECLARED":
-        return ActionReport((), ("ROB_KONG_SCORING_UNKNOWN",))
+        return ActionReport((), ("win_declaration_and_settlement",))
     if state.phase == "QIANGJIN_DECLARED":
         return ActionReport((), ("qiangjin_settlement",))
     if state.phase == "SANJINDAO_DECLARED":
