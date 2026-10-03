@@ -52,8 +52,27 @@ python -m workspace.vision.evaluate_existing_meld_intake \
   --output /tmp/intake_rankings.json
 ```
 
-Next inspect the fixed bamboo-8 query/reference pairs and preserve this baseline
-before comparing any feature change. North/bamboo-1/Wan-9 are useful candidate
+### Correction: the bamboo-8 reference was mislabeled by location
+
+The source-pixel review found that the old S7/S8/S9 template ROIs and their
+parent calibration bbox pointed at the first P1 meld. The actual S789 is the
+second exposed group. The v0.1 0/15 result above is preserved as a dated result
+from a contaminated reference bank; its earlier interpretation as a supported
+bamboo-class ranking failure is invalid. It does not justify changing features.
+
+After correcting the three face ROIs and parent group bbox, the unchanged query
+crops and scorer rank all 15 bamboo-8 faces as S8 in one-other-match mode.
+Two-other-match coverage remains zero. This is one reviewed development group,
+not 15 independent events or a generalization accuracy. The new report pins the
+label/source/recovery file hashes so annotation changes are visible.
+
+See `existing_meld_intake_corrected_s789_probe_v0_2.json` and
+`s789_template_location_correction_v0_1.json` in the October 3 references.
+All 21 public-meld template crops were visually rechecked after the fix; no
+additional identity/location mismatch was apparent in that limited inventory.
+This does not audit concealed, river, action or private-template inventories.
+
+North/bamboo-1/Wan-9 are useful candidate
 material for other-match experiments, pending the same lineage and crop review
 required of existing templates. Do not search thresholds on these viewed crops.
 Runtime identities remain UNKNOWN, Hint read-only, Executor off.

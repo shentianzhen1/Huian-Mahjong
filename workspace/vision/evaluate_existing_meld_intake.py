@@ -55,6 +55,10 @@ def evaluate(intake_zip, private_template_zip, repository_root="."):
             "matching_candidate_faces": sum(r["modes"][minimum]["matches_reviewed_candidate_when_scorable"] is True for r in selected)}
             for tile in sorted({r["reviewed_candidate_tile"] for r in rows})}
     return {"schema_version": "existing_meld_intake_frozen_sift_probe_dev_v0_1", "summary": summary, "faces": rows,
+        "input_sha256": {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in (
+            "references/vision/2026-09-22/public_identity_labels_v0_1.json",
+            "references/vision/2026-09-24/public_identity_source_groups.development.json",
+            "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json")},
         "private_template_load": loaded, "query_crops_added_to_bank": False, "same_match_aliases_excluded": sorted(aliases),
         "manual_crops": True, "assistant_review_not_user_truth": True, "original_query_match_count": 1,
         "parameters_changed": False, "blind_validation": False, "formal_promotion_evidence": False,

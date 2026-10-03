@@ -77,6 +77,11 @@ def evaluate_low_data_flat(
         summary[mode] = {"fully_scorable_reviewed_groups": len(eligible),
                          "correct_ranked_groups_among_scorable": sum(row["ranked_group_matches_reviewed_truth"] for row in eligible)}
     return {"schema_version": "flat_meld_sift_low_data_diagnostic_dev_v0_1", "group_count": len(rows),
+            "input_sha256": {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in (
+                "references/vision/2026-09-22/public_identity_labels_v0_1.json",
+                "references/vision/2026-09-22/public_detector_calibration_v0_1.json",
+                "references/vision/2026-09-24/public_identity_source_groups.development.json",
+                "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json")},
             "private_template_load": loaded, "summary": summary, "rows": rows,
             "one_match_mode_is_frozen_candidate": False, "query_original_match_excluded": True,
             "query_exact_sha_excluded": True, "query_image_sha_verified": True,

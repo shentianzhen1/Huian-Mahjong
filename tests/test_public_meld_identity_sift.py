@@ -12,6 +12,35 @@ VISION = all(
 
 @unittest.skipUnless(VISION, "OpenCV/numpy/Pillow are optional in core-only installs")
 class PublicMeldIdentitySiftTests(unittest.TestCase):
+    def test_reviewed_s789_crops_pin_second_meld_pixels(self):
+        """Prevent the old P1 group from silently becoming S7/S8/S9 again."""
+        import hashlib
+        from pathlib import Path
+        from PIL import Image
+        from workspace.vision.public_identity_labels import load_public_identity_manifest, approved_labels, pixel_bbox
+
+        manifest = load_public_identity_manifest("references/vision/2026-09-22/public_identity_labels_v0_1.json")
+        expected = {
+            "public_meld_s7": "698a228498932ea06ec169d2c2533559bb4af67d29f6d76b7c57bb68453ab491",
+            "public_meld_s8": "32a336d859815f637c2d2843322b892f7a6077657b85a80f8db88d4802dc9623",
+            "public_meld_s9": "39e1216ae9d8aa9934bdb0d9314b9fdc0a0f8e556c45d2dad5e6ca29ac3e14c0",
+        }
+        selected = [label for label in approved_labels(manifest) if label.label_id in expected]
+        self.assertEqual(len(selected), 3)
+        calibration = json.loads(Path("references/vision/2026-09-22/public_detector_calibration_v0_1.json").read_text())
+        group = next(row for row in calibration["samples"] if row["sample_id"] == "66fe_player_chi_s789_082s")
+        for label in selected:
+            with Image.open(label.image_path) as source:
+                image = source.convert("RGB")
+            x, y, width, height = pixel_bbox(label, image.size)
+            crop = image.crop((x, y, x + width, y + height))
+            self.assertEqual(hashlib.sha256(crop.tobytes()).hexdigest(), expected[label.label_id])
+            gx, gy, gw, gh = (round(v * dimension) for v, dimension in zip(group["bbox"], image.size * 2))
+            self.assertGreaterEqual(x, gx)
+            self.assertGreaterEqual(y, gy)
+            self.assertLessEqual(x + width, gx + gw)
+            self.assertLessEqual(y + height, gy + gh)
+
     def test_class_score_export_does_not_change_frozen_ranking(self):
         from pathlib import Path
         from PIL import Image

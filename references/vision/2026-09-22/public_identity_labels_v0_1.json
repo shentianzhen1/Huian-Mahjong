@@ -207,16 +207,17 @@
       "region": "public_meld",
       "tile_id": "S7",
       "bbox": [
-        0.094646,
+        0.225621,
         0.852083,
-        0.042065,
+        0.041109,
         0.135417
       ],
       "status": "approved",
       "annotator": "pixel_review_2026_09_22",
       "notes": [
         "development-only public-region identity label",
-        "individual visible meld face reviewed inside locked exposed-group bbox"
+        "individual visible meld face reviewed inside locked exposed-group bbox",
+        "2026-10-03 visual correction: old ROI covered the first P1 meld; S789 is the second exposed group. Source image/SHA unchanged; no scorer tuning."
       ]
     },
     {
@@ -231,16 +232,17 @@
       "region": "public_meld",
       "tile_id": "S8",
       "bbox": [
-        0.136711,
+        0.26673,
         0.852083,
-        0.042065,
+        0.041109,
         0.135417
       ],
       "status": "approved",
       "annotator": "pixel_review_2026_09_22",
       "notes": [
         "development-only public-region identity label",
-        "individual visible meld face reviewed inside locked exposed-group bbox"
+        "individual visible meld face reviewed inside locked exposed-group bbox",
+        "2026-10-03 visual correction: old ROI covered the first P1 meld; S789 is the second exposed group. Source image/SHA unchanged; no scorer tuning."
       ]
     },
     {
@@ -255,16 +257,17 @@
       "region": "public_meld",
       "tile_id": "S9",
       "bbox": [
-        0.178776,
+        0.307839,
         0.852083,
-        0.042065,
+        0.041109,
         0.135417
       ],
       "status": "approved",
       "annotator": "pixel_review_2026_09_22",
       "notes": [
         "development-only public-region identity label",
-        "individual visible meld face reviewed inside locked exposed-group bbox"
+        "individual visible meld face reviewed inside locked exposed-group bbox",
+        "2026-10-03 visual correction: old ROI covered the first P1 meld; S789 is the second exposed group. Source image/SHA unchanged; no scorer tuning."
       ]
     },
     {
