@@ -1,0 +1,59 @@
+{
+  "schema_version": "issue69_unseen_holdout3_p456_spec_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "selection_policy": {
+    "candidate_order_frozen_before_identity_review": [
+      "3.mp4", "4.mp4", "5.mp4", "9.mp4", "10.mp4", "11.mp4", "12.mp4", "13.mp4"
+    ],
+    "selected_source": "3.mp4",
+    "reason": "first source in the predeclared order containing a stable readable FLAT three-face exposed meld",
+    "replacement_after_machine_scoring_allowed": false
+  },
+  "source": {
+    "private_filename": "3.mp4",
+    "sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+    "width": 1046,
+    "height": 480,
+    "fps": 29.000226928868667,
+    "frame_count": 1809,
+    "duration_seconds": 62.37882222222222,
+    "private_pixels_committed": false
+  },
+  "frozen_window": {
+    "frames": [1477, 1478, 1479, 1480, 1481],
+    "timestamps_seconds": [50.930636, 50.965118, 50.999601, 51.034083, 51.068566],
+    "actor": "player",
+    "structure": "FLAT_THREE_FACE_MELD",
+    "visual_region_approximate_only": [98, 414, 133, 62],
+    "region_is_detector_truth": false
+  },
+  "reviewed_identity_truth": {
+    "tile_ids_left_to_right": ["P4", "P5", "P6"],
+    "label_authority": "assistant_visual_review_not_user_confirmation",
+    "review_completed_before_frozen_candidate_scoring": true,
+    "machine_prediction_seen_before_label_freeze": false
+  },
+  "candidate_under_test": {
+    "name": "spatial_window_affine_reference_complete",
+    "formula": "existing_spatial_window_affine_score * reference_keypoints_supported_by_query_fraction",
+    "reference_support_radius_normalized": 0.08,
+    "frozen_from_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+    "parameter_changes_after_holdout_selection_allowed": false,
+    "class_restriction_allowed": false,
+    "first_machine_result_must_be_retained": true
+  },
+  "evidence_boundary": {
+    "source_not_used_in_reference_completeness_weighted_v0_1": true,
+    "new_original_source_for_weighted_candidate": true,
+    "formal_holdout_eligibility_not_yet_claimed": true,
+    "reason": "labels are assistant-reviewed and reference-bank class support requirements still apply"
+  },
+  "runtime_identity_threshold": 0.82,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
