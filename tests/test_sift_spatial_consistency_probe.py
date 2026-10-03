@@ -33,6 +33,11 @@ class PositionedSiftTests(unittest.TestCase):
         probe,q,r=self.pair(lambda points: points*.98+.01)
         self.assertGreater(probe.score(q,r), 0)
         self.assertEqual(probe.last_audit['inliers'], 8)
+        self.assertTrue(probe.last_audit['pattern_coverage_checked'])
+        self.assertAlmostEqual(probe.last_audit['query_inlier_hull_fraction'], 1.0)
+        self.assertAlmostEqual(probe.last_audit['reference_inlier_hull_fraction'], 1.0)
+        self.assertEqual(probe.last_audit['query_unmatched_grid_cells'], [])
+        self.assertEqual(probe.last_audit['reference_unmatched_grid_cells'], [])
 
     def test_reflected_layout_cannot_match_upright_pose(self):
         def reflected(points):
@@ -58,3 +63,31 @@ class PositionedSiftTests(unittest.TestCase):
         probe.local_window=True
         self.assertGreater(probe.score(q,reference), 0)
         self.assertEqual(probe.last_audit['inliers'], 8)
+
+    def test_coverage_audit_exposes_unmatched_reference_regions(self):
+        import numpy as np
+        from workspace.vision.sift_spatial_consistency_probe import _coverage_audit
+        query = np.array([
+            [.1,.1],[.5,.1],[.9,.1],
+            [.1,.5],[.5,.5],[.9,.5],
+            [.1,.9],[.5,.9],[.9,.9],
+        ], dtype='float32')
+        reference = query.copy()
+        query_inliers = query[:6]
+        reference_inliers = reference[:6]
+        audit = _coverage_audit(
+            query, reference, query_inliers, reference_inliers
+        )
+        self.assertLess(audit['reference_inlier_hull_fraction'], 1.0)
+        self.assertEqual(
+            audit['reference_unmatched_grid_cells'],
+            [[0, 2], [1, 2], [2, 2]],
+        )
+        self.assertEqual(
+            audit['query_unmatched_grid_cells'],
+            [[0, 2], [1, 2], [2, 2]],
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
