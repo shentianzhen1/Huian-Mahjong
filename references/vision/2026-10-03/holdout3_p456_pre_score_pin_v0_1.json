@@ -1,0 +1,82 @@
+{
+  "schema_version": "holdout3_p456_pre_score_pin_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "development_only": true,
+  "purpose": "Freeze a new source-disjoint real exposed-meld query before running the reference-completeness-weighted scorer.",
+  "source": {
+    "private_filename": "3.mp4",
+    "sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+    "width": 1046,
+    "height": 480,
+    "fps": 29,
+    "frames": 1809,
+    "duration_seconds": 62.378822,
+    "pixels_committed": false
+  },
+  "selection_policy": {
+    "candidate_order": [
+      "3.mp4",
+      "4.mp4",
+      "5.mp4",
+      "9.mp4",
+      "10.mp4",
+      "11.mp4",
+      "12.mp4",
+      "13.mp4"
+    ],
+    "selected_before_identity_scoring": true,
+    "reason": "3.mp4 is the first candidate in the predeclared order and contains a stable reviewable FLAT exposed meld.",
+    "no_score_based_video_selection": true
+  },
+  "query": {
+    "actor": "PLAYER",
+    "structure": "FLAT_THREE_FACE_MELD",
+    "stable_frames": [
+      1392,
+      1393,
+      1394,
+      1395,
+      1396
+    ],
+    "approximate_seconds": [
+      48,
+      48.034,
+      48.069,
+      48.103,
+      48.138
+    ],
+    "review_roi_xywh": [
+      80,
+      400,
+      170,
+      80
+    ],
+    "reviewed_left_to_right_tile_ids": [
+      "P4",
+      "P5",
+      "P6"
+    ],
+    "label_source": "assistant visual review before scorer execution",
+    "end_screen_corroboration": true,
+    "end_screen_note": "The final settlement display independently shows the same left-to-right P4/P5/P6 exposed group."
+  },
+  "scorer_freeze": {
+    "candidate_name": "spatial_window_affine_reference_complete",
+    "formula": "existing_spatial_window_affine_score * reference_keypoints_supported_by_query_fraction",
+    "reference_support_radius_normalized": 0.08,
+    "frozen_from_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+    "class_restriction": false,
+    "all_admitted_competing_classes_ranked": true,
+    "parameter_retuning_after_holdout": false
+  },
+  "evidence_boundary": {
+    "user_confirmed_labels": false,
+    "source_disjoint_from_formula_selection_packet": true,
+    "formal_promotion_evidence": false,
+    "runtime_integration": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}
