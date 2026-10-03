@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from workspace.vision.public_identity_labels import PUBLIC_STANDARD_CLASSES
+
 from workspace.vision.public_meld_identity_sift import (
     PublicMeldSiftBank,
     rank_public_meld_sift,
@@ -57,6 +59,10 @@ There is no production confidence threshold or physical-identity acceptance.
         source_frame_verified=not issues,
         visible_faces_reviewed=not issues,
     )
+    common_classes = (
+        set.intersection(*(set(row["class_scores"]) for row in rankings.values()))
+        if len(rankings) == 3 else set()
+    )
     return {
         "schema_version": "public_meld_stacked_reviewed_sift_pipeline_dev_v0_1",
         "source_session": source_session,
@@ -66,6 +72,10 @@ There is no production confidence threshold or physical-identity acceptance.
         "minimum_other_match_groups": 2,
         "face_rankings": rankings,
         "decoder": decoded,
+        "group_identity_status": "UNKNOWN",
+        "common_eligible_classes": sorted(common_classes),
+        "unscored_standard_classes": sorted(PUBLIC_STANDARD_CLASSES - common_classes),
+        "standard_class_coverage_complete": common_classes == PUBLIC_STANDARD_CLASSES,
         "issues": issues,
         "automatic_splitter": False,
         "development_only": True,

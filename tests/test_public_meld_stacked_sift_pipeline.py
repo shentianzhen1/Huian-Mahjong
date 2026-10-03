@@ -33,6 +33,9 @@ class StackedSiftPipelineTests(unittest.TestCase):
         self.assertTrue(result["decoder"]["visible_top1_agreement"])
         self.assertEqual(result["decoder"]["physical_tile_ids"], ["UNKNOWN"] * 4)
         self.assertFalse(result["safe_for_runtime"])
+        self.assertEqual(result["group_identity_status"], "UNKNOWN")
+        self.assertFalse(result["standard_class_coverage_complete"])
+        self.assertIn("B", result["unscored_standard_classes"])
 
     def test_tile_back_packet_never_enters_standard_tile_classifier(self):
         with patch("workspace.vision.public_meld_stacked_sift_pipeline.rank_public_meld_sift") as scorer:

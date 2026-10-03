@@ -62,3 +62,28 @@ Next: recover/version the original splitter and its crop qualification records,
 and obtain reviewed B public-meld references from other original matches before
 using Hand 6 to measure classifier correctness. Do not tune the scorer against
 this event or turn a missing expected class into an accepted wrong identity.
+
+## Expanded-bank and rectification checkpoint, 2026-10-03
+
+The original pinned private supplement was restored through the existing
+source/frame/crop-integrity loader: 15 templates, five recovered groups. Under
+the same query-original-match exclusion and >=2-other-match rule, the eligible
+bank is M4/M5/M6/P6/P7/P8/S4. B remains unsupported.
+
+With the previous manual crops held fixed, Hand 1 is **6/9** face Top1 correct,
+not the narrow two-class bank's 9/9; only frame 258 has three unanimous P6
+winners. This is not a reproduction of the old 7/9 experiment. Expanded
+competitors reveal P6/P7 confusion and qualify the earlier optimistic result.
+
+One new geometry-only reviewed-quadrilateral rectification was tested without
+score-driven parameter search. Hand 1 declined to **3/9**, with no unanimous
+frames. The transform is **not adopted** by the scorer/pipeline; its helper
+remains an isolated offline experiment. The new manual corners are not automatic
+splitter validation, and top-face boundary/neighbor intrusion remains a review
+limitation. Do not treat this experiment as evidence that automatic perspective
+normalization in general is ineffective.
+
+The pipeline now explicitly reports unscored standard classes alongside its
+candidate rankings and retains group identity UNKNOWN even for unanimous
+winners. Missing B support cannot be repaired by choosing the highest-scoring
+available class. See the expanded-bank probe under `references/vision/2026-10-03`.
