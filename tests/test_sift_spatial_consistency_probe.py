@@ -38,6 +38,15 @@ class PositionedSiftTests(unittest.TestCase):
         self.assertAlmostEqual(probe.last_audit['reference_inlier_hull_fraction'], 1.0)
         self.assertEqual(probe.last_audit['query_unmatched_grid_cells'], [])
         self.assertEqual(probe.last_audit['reference_unmatched_grid_cells'], [])
+        self.assertTrue(probe.last_audit['bidirectional_support_checked'])
+        self.assertEqual(
+            probe.last_audit['query_keypoints_supported_by_reference_fraction'],
+            1.0,
+        )
+        self.assertEqual(
+            probe.last_audit['reference_keypoints_supported_by_query_fraction'],
+            1.0,
+        )
 
     def test_reflected_layout_cannot_match_upright_pose(self):
         def reflected(points):
@@ -86,6 +95,33 @@ class PositionedSiftTests(unittest.TestCase):
         self.assertEqual(
             audit['query_unmatched_grid_cells'],
             [[0, 2], [1, 2], [2, 2]],
+        )
+
+
+    def test_bidirectional_support_exposes_unexplained_dense_reference(self):
+        import numpy as np
+        from workspace.vision.sift_spatial_consistency_probe import (
+            _bidirectional_affine_support,
+        )
+        query = np.array([
+            [.2,.2],[.5,.2],[.8,.2],
+            [.2,.5],[.5,.5],[.8,.5],
+        ], dtype='float32')
+        reference = np.concatenate((
+            query,
+            np.array([[.2,.85],[.5,.85],[.8,.85]], dtype='float32'),
+        ))
+        identity = np.array([[1.,0.,0.],[0.,1.,0.]], dtype='float32')
+        audit = _bidirectional_affine_support(
+            query, reference, identity, radius=.05
+        )
+        self.assertEqual(
+            audit['query_keypoints_supported_by_reference_fraction'],
+            1.0,
+        )
+        self.assertLess(
+            audit['reference_keypoints_supported_by_query_fraction'],
+            1.0,
         )
 
 
