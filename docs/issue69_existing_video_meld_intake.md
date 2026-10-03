@@ -333,6 +333,27 @@ five frames are one original match and do not qualify as generalization or
 Runtime promotion evidence. The CLI preserves the v0.1 report and refuses
 to overwrite an existing output file.
 
+## Inspected two-pixel seam-context candidate
+
+The v0.3 follow-up in
+`references/vision/2026-10-03/sift_group_split_geometry_probe_v0_3.json`
+keeps raw-frame equal thirds but includes two raw pixels on both sides of each
+internal seam before normalizing each face. The two-pixel choice comes from the
+already inspected Hand 8 boundary discrepancy; it is **not** a blind or fitted
+production setting. On the same five Hand 8 frames, this restores S789 from
+10/15 faces and 0/5 groups to 15/15 faces and 5/5 groups. The frozen scorer,
+templates and original-match exclusion remain unchanged.
+
+`references/vision/2026-10-03/existing_group_seam_context_v0_1.json` tests
+four other inspected groups in the same original match, using the locked
+source videos and exact source-to-intake pixel checks. Hand 7 S8 is the only
+group with an eligible reference class: direct, equal thirds and two-pixel
+context are all 15/15 faces and 5/5 groups. N, S1 and M9 have zero eligible
+reference faces, so they provide no identity success or failure measurement.
+The five frames within a group are correlated, and these groups do not provide
+an independent original-match holdout. Keep the overlap candidate offline;
+do not alter Runtime 0.82, UNKNOWN behavior, Hint or Executor.
+
 An additional source-pixel audit in
 `references/vision/2026-10-03/hand8_boundary_band_pixels_v0_1.json`
 maps the equal-third boundaries back to the pinned raw crops. For each of the

@@ -117,6 +117,14 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 left + raw_boundaries[index + 1], bottom)) for index in range(3)]
             raw_equal_descriptors = [_sift_descriptors(normalize_single_face(face)[0])
                 for face in raw_equal_faces]
+            # Development-only fixed seam context from the already inspected
+            # 2-pixel raw boundary discrepancy; this is not a fitted Runtime
+            # parameter or evidence of source-disjoint generalization.
+            raw_seam_context_boxes = [(left + max(0, raw_boundaries[index] - (2 if index else 0)), top,
+                left + min(right-left, raw_boundaries[index + 1] + (2 if index < 2 else 0)), bottom)
+                for index in range(3)]
+            raw_seam_context_descriptors = [_sift_descriptors(normalize_single_face(image.crop(box))[0])
+                for box in raw_seam_context_boxes]
             split_raw_descriptors = [_sift_descriptors(face) for face in faces]
             ids = [_sift_descriptors(normalize_single_face(face)[0]) for face in faces]
             if any(desc is None for desc in ids):
@@ -151,6 +159,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 "stack_state": normalized.analysis.stack_state,
                 "normalized_group_size": list(normalized.image.size),
                 "split_face_sizes": [list(f.size) for f in faces],
+                "raw_equal_thirds_with_two_pixel_seam_context_boxes": [list(box) for box in raw_seam_context_boxes],
                 "manual_roi_mapped_split_boxes": mapped_boxes,
                 "rotation_degrees": normalized.analysis.rotation_degrees,
                 "tight_bbox_in_group": normalized.analysis.tight_bbox_in_group,
@@ -172,6 +181,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 row_scores = {}
                 for mode, query in (("direct_face_symmetric_geometry", direct_descriptors),
                                     ("raw_group_equal_thirds_then_face_geometry", raw_equal_descriptors[i]),
+                                    ("raw_equal_thirds_two_pixel_seam_context_then_face_geometry", raw_seam_context_descriptors[i]),
                                     ("group_normalize_equal_thirds_no_second_normalization", split_raw_descriptors[i]),
                                     ("group_normalize_split_then_face_geometry", group_descriptors),
                                     ("group_normalize_manual_roi_no_second_normalization", review_raw_descriptors[i]),
@@ -210,6 +220,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
     summaries = {}
     for mode in ("direct_face_symmetric_geometry",
                  "raw_group_equal_thirds_then_face_geometry",
+                 "raw_equal_thirds_two_pixel_seam_context_then_face_geometry",
                  "group_normalize_equal_thirds_no_second_normalization",
                  "group_normalize_split_then_face_geometry",
                  "group_normalize_manual_roi_no_second_normalization",
@@ -236,7 +247,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
         if group_mode["legal_groups_correct"] < direct_mode["legal_groups_correct"]
         or group_mode["correct_when_scorable"] < direct_mode["correct_when_scorable"]
         else "development_only_no_promotion")
-    return {"schema_version": "sift_group_split_geometry_probe_dev_v0_2",
+    return {"schema_version": "sift_group_split_geometry_probe_dev_v0_3",
         "geometry": geometry, "query_count": len(rows),
         "rows": rows, "summary": summaries,
         "source_sha256": video_sha, "private_template_load": loaded,
@@ -248,6 +259,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
         "boundary_counterfactual": "same normalized group image cropped using fixed ledger ROI edges mapped into normalized coordinates",
         "stage_factorial": "equal thirds versus pinned manual ROI boundaries, each with or without second face normalization; frozen SIFT scorer and templates unchanged",
         "raw_group_equal_thirds_counterfactual": "equal third boundaries in raw union crop before any group normalization, then same single-face normalization as direct baseline",
+        "seam_context_candidate": "fixed two raw pixels at each interior equal-third seam; chosen after inspected Hand 8 boundary discrepancy, development-only and not a promotion parameter",
         "dependency_versions": {"opencv": cv2.__version__, "numpy": np.__version__, "pillow": PIL.__version__},
         "boundary_counterfactual_is_automatic_splitter": False,
         "boundary_counterfactual_is_new_training_data": False,
