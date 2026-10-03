@@ -304,25 +304,34 @@ maps the already pinned manual ROIs into the recorded normalized group: x ranges
 144–216. Thus equal thirds omit 3, 2 and 3 normalized pixels from those
 rectangles in every fixed frame. The manual rectangles overlap and are not
 certified tile polygons; this establishes a reproducible geometric discrepancy,
-not a corrected boundary or causal explanation. The recorded local diagnostic
-environment lacked OpenCV, so the fixed manual-boundary identity counterfactual
-has not been reranked; do not infer whether that boundary change improves identity.
+not a corrected boundary or causal explanation. The v0.2 SIFT rerun below
+evaluates these fixed boundaries without promoting them to an automatic splitter.
 
-The development probe now has a pending third mode that projects those same
-SHA-pinned rectangular boundaries into the actual normalized group image. Its
-projection has a dependency-free regression check, while the SIFT ranking still
-requires OpenCV and has **not** been executed for this third mode. Run it only
-with the private video, intake ZIP, and template ZIP in a Python environment
-where `python -m pip install -e ".[vision]"` succeeds. Choose a fresh output
-filename such as `sift_group_split_geometry_probe_v0_2.json`; the CLI refuses
-to overwrite the existing v0.1 evidence. This mode is a manual-boundary
-counterfactual, not an automatic splitter or a Runtime identity result.
-The pending v0.2 run records a 2×2 development comparison within that same
-normalized group image: equal thirds versus fixed reviewed rectangles, each
-scored directly and after a second per-face normalization. The four modes use
-the same SIFT templates, source exclusion and frozen scorer; an unscorable
-mode remains an abstention. No v0.2 identity result exists until this script
-runs with OpenCV and writes a new report.
+The v0.2 development rerun in
+`references/vision/2026-10-03/sift_group_split_geometry_probe_v0_2.json`
+uses OpenCV 5.0.0, NumPy 2.3.5 and Pillow 12.3.0. It compares the original
+direct-face baseline against five controlled modes, all with the same frozen
+SIFT scorer, template bank and original-match exclusion:
+
+| Query preparation | Correct faces | Correct S789 groups | S9 top-1 in five frames |
+| --- | ---: | ---: | --- |
+| Pinned manual face ROI → single-face normalize | 15/15 | 5/5 | S9 ×5 |
+| Raw group equal thirds → single-face normalize | 10/15 | 0/5 | S2 ×3, S7 ×2 |
+| Normalize group → equal thirds → direct SIFT | 10/15 | 0/5 | S2 ×5 |
+| Normalize group → equal thirds → single-face normalize | 10/15 | 0/5 | S7 ×5 |
+| Normalize group → pinned manual rectangle → direct SIFT | 10/15 | 0/5 | S2 ×5 |
+| Normalize group → pinned manual rectangle → single-face normalize | 10/15 | 0/5 | S7 ×5 |
+
+The raw equal-thirds control shows that changing crop context/boundaries can
+lose S9 ranking even before group normalization. Restoring the pinned manual
+boundaries after group normalization does not recover S9. Skipping the second
+normalization changes the wrong top-1 class, but does not recover S9 either.
+Thus neither a boundary-only replacement nor skipping the second resize is a
+passing fix on these fixed queries. The manual rectangles are previously
+inspected development labels, not independently verified tile polygons; these
+five frames are one original match and do not qualify as generalization or
+Runtime promotion evidence. The CLI preserves the v0.1 report and refuses
+to overwrite an existing output file.
 
 An additional source-pixel audit in
 `references/vision/2026-10-03/hand8_boundary_band_pixels_v0_1.json`
@@ -330,10 +339,9 @@ maps the equal-third boundaries back to the pinned raw crops. For each of the
 five S9 frames, the reviewed rectangle adds raw x=336–337 beyond the equal
 thirds. The omitted two-column band has 0 chromatic body pixels under the
 declared RGB-channel-span >45 diagnostic (the first/last raster rows are
-excluded as decorative edges). This narrows the likelihood that equal thirds
-visibly truncate the colored S9 glyph, but does not prove that the border
-pixels are irrelevant to SIFT or that scaling is the cause. The OpenCV
-counterfactual and original-match holdout are still required.
+excluded as decorative edges). This does not show colored S9 glyph truncation,
+but the OpenCV raw equal-thirds counterfactual above shows SIFT sensitivity to
+this crop context. An independent original-match holdout remains required.
 
 As an independent source-integrity check, FFmpeg decoded the locked original
 video and all 15 SHA-pinned face rectangles compared pixel-for-pixel equal to
@@ -344,6 +352,6 @@ intake ZIP/source-frame mismatch for these queries; it does not resolve identity
 
 Decision: reject this group-crop/split candidate for these fixed Hand 8 queries.
 This does not invalidate the separate symmetric single-face A/B, nor prove the
-group normalizer generally wrong. Next isolate the loss by reviewing actual
-processed S9 pixels against the locked faces, then assess the fixed crop/rescale
-stages one at a time; do not search new bboxes or tune scorer thresholds.
+group normalizer generally wrong. Next assess a geometry-aware face extraction
+or identity representation on independent original matches without tuning the
+frozen scorer to these five inspected frames.

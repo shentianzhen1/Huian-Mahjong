@@ -30,6 +30,8 @@ def project_pinned_face_box(*, face_box, group_box, tight_box, normalized_size):
 def evaluate(*, intake_zip, private_template_zip, video_path):
     from collections import defaultdict
     import cv2
+    import numpy as np
+    import PIL
     from PIL import Image
     from workspace.vision.public_meld_identity_sift import (
         PublicMeldSiftBank, PublicMeldSiftTemplate, _sift_descriptors,
@@ -110,6 +112,11 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             faces = split_flat_meld_faces(normalized) if normalized.analysis.stack_state == FLAT else ()
             if len(faces) != 3:
                 raise ValueError(f"frame {frame}: actual group pipeline abstained: {normalized.analysis.stack_state}")
+            raw_boundaries = [round((right - left) * index / 3) for index in range(4)]
+            raw_equal_faces = [image.crop((left + raw_boundaries[index], top,
+                left + raw_boundaries[index + 1], bottom)) for index in range(3)]
+            raw_equal_descriptors = [_sift_descriptors(normalize_single_face(face)[0])
+                for face in raw_equal_faces]
             split_raw_descriptors = [_sift_descriptors(face) for face in faces]
             ids = [_sift_descriptors(normalize_single_face(face)[0]) for face in faces]
             if any(desc is None for desc in ids):
@@ -155,7 +162,6 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                         direct_face, _ = normalize_single_face(direct.convert("RGB"))
                         direct_descriptors = _sift_descriptors(direct_face)
                 group_face, _ = normalize_single_face(faces[i])
-                import numpy as np
                 common_width = max(direct_face.width, group_face.width)
                 direct_pixels = np.asarray(direct_face.resize((common_width, 96), Image.Resampling.LANCZOS), dtype=np.float32)
                 group_pixels = np.asarray(group_face.resize((common_width, 96), Image.Resampling.LANCZOS), dtype=np.float32)
@@ -165,6 +171,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 expected = row["reviewed_candidate_tile"]
                 row_scores = {}
                 for mode, query in (("direct_face_symmetric_geometry", direct_descriptors),
+                                    ("raw_group_equal_thirds_then_face_geometry", raw_equal_descriptors[i]),
                                     ("group_normalize_equal_thirds_no_second_normalization", split_raw_descriptors[i]),
                                     ("group_normalize_split_then_face_geometry", group_descriptors),
                                     ("group_normalize_manual_roi_no_second_normalization", review_raw_descriptors[i]),
@@ -202,6 +209,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
         cap.release()
     summaries = {}
     for mode in ("direct_face_symmetric_geometry",
+                 "raw_group_equal_thirds_then_face_geometry",
                  "group_normalize_equal_thirds_no_second_normalization",
                  "group_normalize_split_then_face_geometry",
                  "group_normalize_manual_roi_no_second_normalization",
@@ -239,6 +247,8 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
         "group_crop_policy": "bounding union of three SHA-pinned face ROIs",
         "boundary_counterfactual": "same normalized group image cropped using fixed ledger ROI edges mapped into normalized coordinates",
         "stage_factorial": "equal thirds versus pinned manual ROI boundaries, each with or without second face normalization; frozen SIFT scorer and templates unchanged",
+        "raw_group_equal_thirds_counterfactual": "equal third boundaries in raw union crop before any group normalization, then same single-face normalization as direct baseline",
+        "dependency_versions": {"opencv": cv2.__version__, "numpy": np.__version__, "pillow": PIL.__version__},
         "boundary_counterfactual_is_automatic_splitter": False,
         "boundary_counterfactual_is_new_training_data": False,
         "identity_scoring_completed": True, "candidate_decision": decision,
