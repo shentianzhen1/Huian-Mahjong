@@ -149,7 +149,6 @@ class HuianEnvironment:
         candidate.phase, candidate.terminal = "TERMINAL", True
         candidate.terminal_reason = "SIMULATION_" + ("PINGHU" if multiplier == 1 else "ZIMO")
         candidate.pending_discard = candidate.pending_hu = None
-        candidate.pending_kong = None
         self.rules.validate_state(candidate)
         self._state = candidate
         self._events.append({"seq": len(self._events), "action": {"player": winner,
