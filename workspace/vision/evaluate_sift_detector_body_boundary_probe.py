@@ -10,17 +10,27 @@ import json
 from pathlib import Path
 
 
-def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2):
+def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, outer_body=False):
     """Geometry-only experimental adapter. Abstain on stacked/rotated rows."""
     from workspace.vision.public_meld_geometry_normalization import normalize_public_meld_crop, FLAT
     if seam_context < 0:
         raise ValueError("negative seam context")
+    if body_context and outer_body:
+        raise ValueError("choose one body boundary mode")
     normalized = normalize_public_meld_crop(image, candidate)
     a = normalized.analysis
     if a.stack_state != FLAT or abs(a.rotation_degrees) > .01 or a.tight_bbox_in_group is None:
         return (), {'reason': 'requires_unrotated_flat_body'}
     x, y, w, h = candidate.pixel_bbox
-    if body_context:
+    outer_audit = None
+    if outer_body:
+        from workspace.vision.public_meld_outer_body_probe import outer_body_box
+        box, outer_audit = outer_body_box(image, candidate.pixel_bbox)
+        if box is None:
+            return (), outer_audit
+        x, top, right, bottom = box
+        w, pad = right-x, 0
+    elif body_context:
         tx, ty, w, h = a.tight_bbox_in_group
         x, y = x+tx, y+ty
         pad = max(1, round(h*.025))
@@ -35,7 +45,7 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2):
     return boxes, {'detector_bbox': list(candidate.pixel_bbox),
         'tight_bbox_in_group': list(a.tight_bbox_in_group), 'vertical_context': pad,
         'raw_group_xyxy': [x, top, x+w, bottom], 'face_xyxy': boxes,
-        'geometry': a.to_dict()}
+        'geometry': a.to_dict(), 'outer_body_probe': outer_audit}
 
 
 def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0):
@@ -59,7 +69,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         recovery_result_path='references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json', repository_root=Path('.'))
     aliases = set(spec['excluded_same_match_aliases'])
     templates = [t for t in bank.templates if t.match_group not in aliases and t.source_sha256 != digest]
-    modes = {'detector_seam2': (False,2), 'body_context_no_seam': (True,0), 'body_context_seam2': (True,2)}
+    modes = {'detector_seam2': (False,2,False), 'body_context_no_seam': (True,0,False), 'body_context_seam2': (True,2,False), 'outer_body_seam2': (False,2,True)}
     cap = cv2.VideoCapture(str(video_path)); rows=[]
     try:
         for frame in group['frame_indices']:
@@ -75,8 +85,8 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
                 if g.geometry_kind=='bottom_group' and target_coverage(g.normalized_bbox,target)>.5]
             if len(candidates)!=1:
                 raise ValueError('audit candidate association absent or ambiguous')
-            for mode,(body,seam) in modes.items():
-                crops,audit=raw_face_boxes(image,candidates[0],body_context=body,seam_context=seam)
+            for mode,(body,seam,outer) in modes.items():
+                crops,audit=raw_face_boxes(image,candidates[0],body_context=body,seam_context=seam,outer_body=outer)
                 ranked=[]
                 for box in crops:
                     face,_=normalize_single_face(image.crop(box)); query=_sift_descriptors(face) if face is not None else None
@@ -103,7 +113,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'scorable_faces':sum(r['scorable_faces'] for r in rows if r['mode']==mode),
         'scorable_groups':sum(r['group_scorable'] for r in rows if r['mode']==mode),
         'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':len(group['frame_indices'])} for mode in modes}
-    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_1','source_sha256':digest,
+    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_2','source_sha256':digest,
         'summary':summary,'rows':rows,'private_template_load':loaded,
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
         'input_sha256':{str(spec_path):hashlib.sha256(spec_path.read_bytes()).hexdigest(),
@@ -112,7 +122,7 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'parameter_selected_after_viewing_development_batch':True,'independent_match_groups':1,
         'development_only':True,'formal_promotion_evidence':False,'runtime_integration':False,
         'safe_for_runtime':False,'safe_for_hint':False,'safe_for_executor':False,
-        'decision':'retain_candidate_for_cross_group_development_regression_only'}
+        'decision':'development_comparison_only; outer_body_is_not_promoted_to_identity_crop'}
 
 
 if __name__=='__main__':

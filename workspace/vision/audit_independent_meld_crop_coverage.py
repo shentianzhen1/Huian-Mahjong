@@ -72,14 +72,15 @@ def audit(video_path: str | Path) -> dict:
                 raise ValueError("reviewed group has no unique detector candidate")
             candidate = candidates[0]
             modes = {}
-            for name, body_context, seam_context in (
-                ("detector_raw", False, 0),
-                ("detector_seam2", False, 2),
-                ("body_context_no_seam", True, 0),
-                ("body_context_seam2", True, 2),
+            for name, body_context, seam_context, outer in (
+                ("detector_raw", False, 0, False),
+                ("detector_seam2", False, 2, False),
+                ("body_context_no_seam", True, 0, False),
+                ("body_context_seam2", True, 2, False),
+                ("outer_body_seam2", False, 2, True),
             ):
                 boxes, geometry = raw_face_boxes(image, candidate,
-                    body_context=body_context, seam_context=seam_context)
+                    body_context=body_context, seam_context=seam_context, outer_body=outer)
                 if len(boxes) != 3:
                     modes[name] = {"abstained": True, "reason": geometry.get("reason")}
                     continue
