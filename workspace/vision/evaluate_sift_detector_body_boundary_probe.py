@@ -38,7 +38,7 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2):
         'geometry': a.to_dict()}
 
 
-def evaluate(video_path, private_template_zip):
+def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0):
     import cv2
     import numpy as np
     from PIL import Image
@@ -48,8 +48,8 @@ def evaluate(video_path, private_template_zip):
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
     from workspace.vision.evaluate_sift_group_split_geometry_probe import frozen_score
     from workspace.vision.public_tile_detector import detect_public_tile_geometry, target_coverage
-    spec_path = Path('references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json')
-    spec = json.loads(spec_path.read_text()); source = spec['sources'][0]; group = source['groups'][0]
+    spec_path = Path(spec_file)
+    spec = json.loads(spec_path.read_text()); source = spec['sources'][source_index]; group = source['groups'][group_index]
     digest = hashlib.sha256(Path(video_path).read_bytes()).hexdigest()
     if digest != source['source_sha256']:
         raise ValueError('source SHA mismatch')
@@ -87,14 +87,22 @@ def evaluate(video_path, private_template_zip):
                             scores[t.tile_id]=max(scores.get(t.tile_id,float('-inf')),score)
                     ranking=sorted(scores.items(),key=lambda p:(-p[1],p[0]))
                     ranked.append({'top1':ranking[0][0] if ranking else None,'scores':ranking})
-                winners=[r['top1'] for r in ranked]; expected=group['reviewed_candidate_tiles']
-                rows.append({'frame':frame,'mode':mode,'audit':audit,'rankings':ranked,
+                winners=[r['top1'] for r in ranked]
+                expected=group.get('reviewed_candidate_tiles') or [group['reviewed_candidate_tile']]*3
+                supported = [tile in dict(r['scores']) for tile,r in zip(expected,ranked)]
+                rows.append({'frame':frame,'group_id':group['group_id'],'mode':mode,'audit':audit,'rankings':ranked,
+                    'expected_classes_supported': supported,
+                    'scorable_faces':sum(supported),
+                    'group_scorable':len(supported)==3 and all(supported),
                     'correct_faces':sum(a==b for a,b in zip(winners,expected)),
                     'exact_group_correct':winners==expected,'scored_faces':len(ranked)})
     finally:
         cap.release()
     summary={mode:{'correct_faces':sum(r['correct_faces'] for r in rows if r['mode']==mode),
-        'faces':15,'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':5} for mode in modes}
+        'faces':3*len(group['frame_indices']),
+        'scorable_faces':sum(r['scorable_faces'] for r in rows if r['mode']==mode),
+        'scorable_groups':sum(r['group_scorable'] for r in rows if r['mode']==mode),
+        'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':len(group['frame_indices'])} for mode in modes}
     return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_1','source_sha256':digest,
         'summary':summary,'rows':rows,'private_template_load':loaded,
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
