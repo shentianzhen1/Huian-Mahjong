@@ -63,6 +63,51 @@ def _coverage_audit(query_positions, reference_positions, query_inliers, referen
     }
 
 
+def _affine_points(points, matrix):
+    import numpy as np
+    values = np.asarray(points, dtype=np.float32)
+    if not len(values):
+        return values
+    return values @ matrix[:, :2].T + matrix[:, 2]
+
+
+def _nearest_support_fraction(source_points, target_points, *, radius=.08):
+    """Fraction of source keypoints supported by a nearby target keypoint."""
+    import numpy as np
+    if not len(source_points) or not len(target_points):
+        return 0.0
+    distances = np.linalg.norm(
+        np.asarray(source_points)[:, None, :] - np.asarray(target_points)[None, :, :],
+        axis=2,
+    )
+    return float((distances.min(axis=1) <= radius).mean())
+
+
+def _bidirectional_affine_support(query_positions, reference_positions, matrix, *, radius=.08):
+    """Measure whole-pattern support after the accepted affine alignment.
+
+    Diagnostic only: this does not alter the SIFT score or acceptance result.
+    The two directions stay separate because sparse and dense tile artwork have
+    different natural keypoint coverage.
+    """
+    import cv2
+    import numpy as np
+    matrix = np.asarray(matrix, dtype=np.float32)
+    inverse = cv2.invertAffineTransform(matrix)
+    query_in_reference = _affine_points(query_positions, matrix)
+    reference_in_query = _affine_points(reference_positions, inverse)
+    return {
+        'bidirectional_support_checked': True,
+        'support_radius_normalized': radius,
+        'query_keypoints_supported_by_reference_fraction': _nearest_support_fraction(
+            query_in_reference, reference_positions, radius=radius
+        ),
+        'reference_keypoints_supported_by_query_fraction': _nearest_support_fraction(
+            reference_in_query, query_positions, radius=radius
+        ),
+    }
+
+
 class PositionedSift:
     """Retain positions while preserving the frozen descriptor extraction."""
     def __init__(self, *, local_window=False):
@@ -141,9 +186,10 @@ class PositionedSift:
         q_inliers, r_inliers = src[selected], dst[selected]
         q_area, r_area = _hull_area(q_inliers), _hull_area(r_inliers)
         coverage = _coverage_audit(q, r, q_inliers, r_inliers)
+        bidirectional = _bidirectional_affine_support(q, r, matrix)
         if count < 4 or min(q_area, r_area) < .01:
             self.last_audit = {
-                **audit, **coverage, 'pattern_coverage_checked':True,
+                **audit, **coverage, **bidirectional, 'pattern_coverage_checked':True,
                 'reason':'localized_or_sparse_inliers','inliers':count,
                 'query_hull_area':q_area,'reference_hull_area':r_area,
             }
@@ -151,7 +197,7 @@ class PositionedSift:
         distance = float(np.mean([m.distance for m, keep in zip(matches, selected) if keep]))
         score = count/(len(query)*len(reference))**.5 * (q_area*r_area)**.5 / (1+distance/512)
         self.last_audit = {
-            **audit, **coverage, 'pattern_coverage_checked':True,
+            **audit, **coverage, **bidirectional, 'pattern_coverage_checked':True,
             'reason':None,'inliers':count,'query_hull_area':q_area,
             'reference_hull_area':r_area,'mean_descriptor_distance':distance,
             'affine':matrix.tolist(),'score':float(score),
