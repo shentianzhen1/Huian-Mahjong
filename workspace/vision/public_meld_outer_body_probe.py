@@ -41,7 +41,7 @@ def outer_body_box(image, detector_bbox):
     return box, {**audit, 'outer_body_xyxy': list(box)}
 
 
-def face_plane_quads(image, detector_bbox, *, seam_context=2):
+def face_plane_quads(image, detector_bbox, *, seam_context=2, fit_outer_edges=False, light_body_only=False):
     """Inspect blank face bands for sloping seams; abstain if unsupported.
 
     Equal thirds only constrain the seam search, never define accepted cuts.
@@ -49,7 +49,18 @@ def face_plane_quads(image, detector_bbox, *, seam_context=2):
     """
     import cv2
     import numpy as np
-    box, audit = outer_body_box(image, detector_bbox)
+    if light_body_only:
+        from workspace.vision.public_meld_geometry_normalization import normalize_public_meld_crop, FLAT
+        from workspace.vision.public_tile_detector import PublicGeometryCandidate
+        candidate = PublicGeometryCandidate(detector_bbox, (0., 0., 1., 1.), 'bottom_group', 0., 0., None, None)
+        analysis = normalize_public_meld_crop(image, candidate).analysis
+        if analysis.stack_state != FLAT or abs(analysis.rotation_degrees) > .01 or analysis.tight_bbox_in_group is None:
+            return (), {'reason': 'light_body_requires_unrotated_flat_row'}
+        dx, dy, w, h = analysis.tight_bbox_in_group
+        x, y = detector_bbox[0]+dx, detector_bbox[1]+dy
+        box, audit = (x, y, x+w, y+h), {'boundary_seed': 'detector_light_face_body', 'face_seed_xyxy': [x, y, x+w, y+h]}
+    else:
+        box, audit = outer_body_box(image, detector_bbox)
     if box is None:
         return (), audit
     x, y, right, bottom = box
@@ -71,7 +82,10 @@ def face_plane_quads(image, detector_bbox, *, seam_context=2):
         bands.append(row)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(float)
     seams = []
+    outer_edges = []
     for row in bands:
+        occupied_x = np.flatnonzero(light[row])
+        outer_edges.append([float(occupied_x[0]), float(occupied_x[-1])])
         cuts = []
         for index in (1, 2):
             center, radius = round(width*index/3), max(2, round(width/12))
@@ -86,7 +100,9 @@ def face_plane_quads(image, detector_bbox, *, seam_context=2):
     top, end = max(0, y+first-2), min(image.height, y+last+3)
     def cuts_at(global_y):
         ratio = (global_y-y-bands[0])/(bands[1]-bands[0])
-        return [0.0]+[seams[0][i]+ratio*(seams[1][i]-seams[0][i]) for i in (0, 1)]+[float(width)]
+        left_edge = outer_edges[0][0]+ratio*(outer_edges[1][0]-outer_edges[0][0]) if fit_outer_edges else 0.0
+        right_edge = outer_edges[0][1]+ratio*(outer_edges[1][1]-outer_edges[0][1]) if fit_outer_edges else float(width)
+        return [left_edge]+[seams[0][i]+ratio*(seams[1][i]-seams[0][i]) for i in (0, 1)]+[right_edge]
     upper, lower = cuts_at(top), cuts_at(end-1)
     quads = []
     for index in range(3):
@@ -99,6 +115,8 @@ def face_plane_quads(image, detector_bbox, *, seam_context=2):
     return tuple(quads), {**audit, 'face_plane_rows': [y+first, y+last+1],
         'blank_band_rows': [y+row for row in bands],
         'measured_seams_in_outer_body': seams, 'face_quads': quads,
+        'fit_outer_edges': fit_outer_edges, 'measured_outer_edges_in_body': outer_edges,
+        'light_body_only': light_body_only,
         'vertical_context': 2, 'seam_context': seam_context}
 
 

@@ -10,13 +10,15 @@ import json
 from pathlib import Path
 
 
-def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, outer_body=False, face_plane=False):
+def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, outer_body=False, face_plane=False, face_plane_outer_edges=False):
     """Geometry-only experimental adapter. Abstain on stacked/rotated rows."""
     from workspace.vision.public_meld_geometry_normalization import normalize_public_meld_crop, FLAT
     if seam_context < 0:
         raise ValueError("negative seam context")
     if sum((body_context, outer_body, face_plane)) > 1:
         raise ValueError("choose one body boundary mode")
+    if face_plane_outer_edges and not face_plane:
+        raise ValueError('outer face edges require face-plane mode')
     normalized = normalize_public_meld_crop(image, candidate)
     a = normalized.analysis
     if a.stack_state != FLAT or abs(a.rotation_degrees) > .01 or a.tight_bbox_in_group is None:
@@ -25,7 +27,7 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, oute
     if face_plane:
         import math
         from workspace.vision.public_meld_outer_body_probe import face_plane_quads
-        quads, audit = face_plane_quads(image, candidate.pixel_bbox, seam_context=seam_context)
+        quads, audit = face_plane_quads(image, candidate.pixel_bbox, seam_context=seam_context, fit_outer_edges=face_plane_outer_edges, light_body_only=face_plane_outer_edges)
         boxes = tuple((math.floor(min(p[0] for p in q)), math.floor(min(p[1] for p in q)),
                        math.ceil(max(p[0] for p in q))+1, math.ceil(max(p[1] for p in q))+1) for q in quads)
         return boxes, {**audit, 'face_xyxy': boxes}
@@ -55,10 +57,12 @@ def raw_face_boxes(image, candidate, *, body_context=False, seam_context=2, oute
         'geometry': a.to_dict(), 'outer_body_probe': outer_audit}
 
 
-def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False, opponent_s123_reference=False):
+def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json', source_index=0, group_index=0, reference_geometry=False, opponent_s123_reference=False, bottom_reference_video=None, bottom_reference_rectified=False):
     import cv2
     import numpy as np
     from PIL import Image
+    if bottom_reference_rectified and bottom_reference_video is None:
+        raise ValueError('rectified bottom reference requires source video')
     from workspace.vision.public_identity_labels import load_public_identity_manifest
     from workspace.vision.public_meld_identity_sift import build_public_meld_sift_bank, _sift_descriptors
     from workspace.vision.public_meld_private_sift_loader import augment_public_meld_sift_bank_from_private_zip
@@ -100,7 +104,17 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         templates.extend(admitted)
         reference_supplement['admitted_tile_ids_after_source_exclusion'] = [t.tile_id for t in admitted]
         reference_supplement['admitted_original_match_count'] = len({t.match_group for t in admitted})
-    modes = {'detector_seam2': (False,2,False,False), 'body_context_no_seam': (True,0,False,False), 'body_context_seam2': (True,2,False,False), 'outer_body_seam2': (False,2,True,False), 'face_plane_seam_boxes': (False,2,False,True), 'face_plane_seam_rectified': (False,2,False,True)}
+    bottom_supplement = None
+    if bottom_reference_video is not None:
+        if not reference_geometry:
+            raise ValueError('bottom reference requires symmetric reference geometry')
+        from workspace.vision.public_meld_bottom_reference_probe import load_bottom_s234_templates
+        supplement, bottom_supplement = load_bottom_s234_templates(bottom_reference_video, rectified=bottom_reference_rectified)
+        admitted = source_disjoint_templates(supplement, aliases, digest)
+        templates.extend(admitted)
+        bottom_supplement['admitted_tile_ids_after_source_exclusion'] = [t.tile_id for t in admitted]
+        bottom_supplement['admitted_original_match_count'] = len({t.match_group for t in admitted})
+    modes = {'detector_seam2': (False,2,False,False), 'body_context_no_seam': (True,0,False,False), 'body_context_seam2': (True,2,False,False), 'outer_body_seam2': (False,2,True,False), 'face_plane_seam_boxes': (False,2,False,True), 'face_plane_seam_rectified': (False,2,False,True), 'face_plane_full_rectified': (False,2,False,True)}
     cap = cv2.VideoCapture(str(video_path)); rows=[]
     try:
         for frame in group['frame_indices']:
@@ -117,22 +131,33 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
             if len(candidates)!=1:
                 raise ValueError('audit candidate association absent or ambiguous')
             for mode,(body,seam,outer,plane) in modes.items():
-                crops,audit=raw_face_boxes(image,candidates[0],body_context=body,seam_context=seam,outer_body=outer,face_plane=plane)
+                crops,audit=raw_face_boxes(image,candidates[0],body_context=body,seam_context=seam,outer_body=outer,face_plane=plane,face_plane_outer_edges=mode=='face_plane_full_rectified')
                 ranked=[]
                 for index,box in enumerate(crops):
-                    if mode == 'face_plane_seam_rectified':
+                    if mode in ('face_plane_seam_rectified', 'face_plane_full_rectified'):
                         from workspace.vision.public_meld_outer_body_probe import rectify_face_quad
                         crop = rectify_face_quad(image, audit['face_quads'][index])
                     else:
                         crop = image.crop(box)
                     face,_=normalize_single_face(crop); query=_sift_descriptors(face) if face is not None else None
                     scores={}
+                    best_references={}
                     for t in templates:
                         score=frozen_score(query,t.descriptors)
                         if score is not None:
-                            scores[t.tile_id]=max(scores.get(t.tile_id,float('-inf')),score)
+                            if score > scores.get(t.tile_id,float('-inf')):
+                                scores[t.tile_id]=score
+                                best_references[t.tile_id]=t
                     ranking=sorted(scores.items(),key=lambda p:(-p[1],p[0]))
-                    ranked.append({'top1':ranking[0][0] if ranking else None,'scores':ranking})
+                    expected_tile=(group.get('reviewed_candidate_tiles') or [group['reviewed_candidate_tile']]*3)[index]
+                    from workspace.vision.sift_match_multiplicity_probe import match_multiplicity
+                    diagnostic_tiles={expected_tile}
+                    if ranking:
+                        diagnostic_tiles.add(ranking[0][0])
+                    ranked.append({'top1':ranking[0][0] if ranking else None,'scores':ranking,
+                        'match_diagnostics': {tile:{**match_multiplicity(query,best_references[tile].descriptors),
+                            'reference_match_group':best_references[tile].match_group,
+                            'reference_source_sha256':best_references[tile].source_sha256} for tile in sorted(diagnostic_tiles) if tile in best_references}})
                 winners=[r['top1'] for r in ranked]
                 expected=group.get('reviewed_candidate_tiles') or [group['reviewed_candidate_tile']]*3
                 supported = [tile in dict(r['scores']) for tile,r in zip(expected,ranked)]
@@ -149,10 +174,11 @@ def evaluate(video_path, private_template_zip, *, spec_file='references/vision/2
         'scorable_faces':sum(r['scorable_faces'] for r in rows if r['mode']==mode),
         'scorable_groups':sum(r['group_scorable'] for r in rows if r['mode']==mode),
         'exact_groups_correct':sum(r['exact_group_correct'] for r in rows if r['mode']==mode),'groups':len(group['frame_indices'])} for mode in modes}
-    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_4','source_sha256':digest,
+    return {'schema_version':'sift_detector_body_boundary_probe_dev_v0_5','source_sha256':digest,
         'summary':summary,'rows':rows,'private_template_load':loaded,
         'reference_geometry_normalized': reference_geometry,
         'opponent_reference_supplement': reference_supplement,
+        'bottom_reference_supplement': bottom_supplement,
         'query_geometry_normalized': True, 'scorer_changed': False,
         'dependency_versions':{'opencv':cv2.__version__,'numpy':np.__version__},
         'input_sha256':{str(spec_path):hashlib.sha256(spec_path.read_bytes()).hexdigest(),
@@ -170,7 +196,10 @@ if __name__=='__main__':
     p.add_argument('--source-index', type=int, default=0)
     p.add_argument('--group-index', type=int, default=0)
     p.add_argument('--opponent-s123-reference', action='store_true')
+    p.add_argument('--bottom-reference-video')
+    p.add_argument('--bottom-reference-rectified', action='store_true')
     args=p.parse_args();result=evaluate(args.video,args.private_template_zip,reference_geometry=args.reference_geometry,
         spec_file=args.spec_file, source_index=args.source_index, group_index=args.group_index,
-        opponent_s123_reference=args.opponent_s123_reference)
+        opponent_s123_reference=args.opponent_s123_reference, bottom_reference_video=args.bottom_reference_video,
+        bottom_reference_rectified=args.bottom_reference_rectified)
     Path(args.output).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result['summary']))

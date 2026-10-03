@@ -39,3 +39,17 @@ class FacePlaneTests(unittest.TestCase):
         image = self.image()
         quads, _ = face_plane_quads(image, (40, 45, 140, 80))
         self.assertTrue(all(rectify_face_quad(image, q).width > 30 for q in quads))
+
+    def test_full_quad_measures_both_sloping_outer_edges(self):
+        from PIL import Image, ImageDraw
+        from workspace.vision.public_meld_outer_body_probe import face_plane_quads
+        image = Image.new('RGB', (250, 180), (3, 65, 76))
+        draw = ImageDraw.Draw(image)
+        draw.polygon(((45,55),(180,55),(170,110),(35,110)), fill=(225,230,220))
+        for x in (90, 132):
+            draw.line((x,55,x-10,110), fill=(50,50,50), width=2)
+        quads, audit = face_plane_quads(image, (30,45,155,80), fit_outer_edges=True, light_body_only=True)
+        self.assertEqual(len(quads), 3)
+        self.assertGreater(quads[0][0][0], quads[0][3][0])
+        self.assertGreater(quads[2][1][0], quads[2][2][0])
+        self.assertEqual(audit['boundary_seed'], 'detector_light_face_body')
