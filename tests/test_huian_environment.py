@@ -203,6 +203,35 @@ class EnvironmentTests(unittest.TestCase):
         ))
 
 
+    def test_observed_rob_kong_outcome_uses_zimo_and_cancels_pending_kong(self):
+        instance = game(rob_kong_scenario())
+        add_kong = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.ADD_KONG and action.tile == "M3"
+        )
+        instance.step(add_kong)
+        rob = next(
+            action for action in instance.action_report().known_actions
+            if action.type == env.ActionType.ROB_KONG_HU
+        )
+        instance.step(rob)
+
+        terminal, event = instance.finalize_observed_outcome(
+            winner=1,
+            current_dealer_base=10,
+            winner_fan=2,
+            win_type="ZIMO",
+        )
+        metadata = event["action"]["metadata"]
+        self.assertEqual(terminal.terminal_reason, "OBSERVED_ZIMO")
+        self.assertEqual(terminal.rewards, [-24, 24])
+        self.assertEqual(metadata["multiplier"], 2)
+        self.assertEqual(metadata["hu_declaration"]["source"], "rob_kong")
+        self.assertEqual(terminal.melds[0][0].kind, "PENG")
+        self.assertEqual(terminal.hands[0].count("M3"), 1)
+        self.assertIsNone(terminal.pending_kong)
+
+
     def test_single_youjin_offer_coexists_with_same_ordinary_discard(self):
         instance = game(youjin_offer_scenario())
         actions = instance.legal_actions()
