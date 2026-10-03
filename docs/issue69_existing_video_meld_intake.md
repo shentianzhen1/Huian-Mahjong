@@ -308,6 +308,13 @@ not a corrected boundary or causal explanation. The recorded local diagnostic
 environment lacked OpenCV, so the fixed manual-boundary identity counterfactual
 has not been reranked; do not infer whether that boundary change improves identity.
 
+As an independent source-integrity check, FFmpeg decoded the locked original
+video and all 15 SHA-pinned face rectangles compared pixel-for-pixel equal to
+the private intake crops. See
+`references/vision/2026-10-03/hand8_crop_source_pixel_verification_v0_1.json`
+and `workspace/vision/verify_hand8_crop_source_pixels.py`. This rules out an
+intake ZIP/source-frame mismatch for these queries; it does not resolve identity.
+
 Decision: reject this group-crop/split candidate for these fixed Hand 8 queries.
 This does not invalidate the separate symmetric single-face A/B, nor prove the
 group normalizer generally wrong. Next isolate the loss by reviewing actual
