@@ -233,3 +233,41 @@ mask or a descriptor count as proof of correct segmentation. This audit changes
 neither crop pixels nor scores. Result: `meld_crop_layout_pair_audit_v0_1.json`;
 reproduce with `workspace.vision.audit_meld_crop_layout_pairs --hand8-intake-zip
 /path/to/hand8.zip --output /tmp/layout_audit.json`. Raw private pixels stay private.
+# Symmetric single-face geometry A/B (development only)
+
+The fixed report `references/vision/2026-10-03/sift_symmetric_geometry_probe_v0_1.json`
+compares direct rectangular faces with the existing bright-mask tight crop,
+deskew and aspect-preserving height-96 normalization applied identically to
+all query and public/private/experimental reference faces. It does not use the
+query-only 12% identity inset, descriptor deduplication or spatial grid mask.
+The SIFT extractor parameters, ratio threshold and scoring callback are unchanged.
+The adapter uses geometry pixels only: the three-face group's stack classifier
+is not applicable to these single faces and its output is never used.
+Normalization failure returns no descriptors, never a raw-image fallback.
+
+| Fixed development endpoint | Direct rectangle | Symmetric geometry |
+| --- | --- | --- |
+| Hand 8 S7 faces | 5/5 | 5/5 |
+| Hand 8 S8 faces | 5/5 | 5/5 |
+| Hand 8 S9 faces | 0/5 | 5/5 |
+| Hand 8 legal S789 groups | 4/5 | 5/5 |
+| Baseline-supported public controls (including both P6 faces) | 9/9 | 9/9 |
+| Existing Hand 7 S8 forward queries | 15/15 | 15/15 |
+| Fixed S8 experimental-reference reverse query | 1/1 | 1/1 |
+
+All 303 transformation calls succeeded (calls include repeated queries and
+bank builds, not 303 distinct faces). Controls retain their baseline denominator;
+lost coverage would count as regression rather than disappearing from the report.
+The two-other-original-match condition still supports zero Hand 8 faces. M9,
+North and S1 from the existing intake remain unsupported; they are not counted
+as either successful identities or retrieval errors.
+
+Decision: retain this as a reproducible development candidate, not Runtime or
+promotion evidence. This supports testing input-domain alignment without
+changing the scorer, but does not isolate which component of the combined
+transform caused improvement, prove a true face-plane boundary, or certify
+that single-face normalization equals group-normalize-then-split processing.
+All query clips remain one original match and have previously been inspected.
+Next: compare this fixed adapter against the actual group-normalization and
+face-split chain with source-locked boundary review, before any integration.
+Runtime gate 0.82, Hint read-only and Executor OFF remain unchanged.
