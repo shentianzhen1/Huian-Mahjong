@@ -438,18 +438,32 @@ class AddedKongTests(unittest.TestCase):
         self.assertEqual(result.phase, "AFTER_DRAW")
         self.assertIsNone(result.terminal_reason)
 
-    def test_rob_kong_cannot_be_finalized_as_observed_ordinary_win(self):
+    def test_rob_kong_observed_outcome_rejects_pinghu_and_accepts_zimo(self):
         instance = environment(added_kong_state(rob=True))
         self.declare(instance)
         instance.step(action_of(instance, env.ActionType.ROB_KONG_HU))
+
         before, events = instance.state.state_hash(), instance.events
-        with self.assertRaises(UnknownRuleError) as caught:
+        with self.assertRaisesRegex(
+                ValueError, "Observed win type disagrees with the Hu declaration source"):
             instance.finalize_observed_outcome(
                 winner=1, current_dealer_base=10, winner_fan=1,
                 win_type="PINGHU")
-        self.assertEqual(caught.exception.rule_ids, ("ROB_KONG_SCORING_UNKNOWN",))
         self.assertEqual(instance.state.state_hash(), before)
         self.assertEqual(instance.events, events)
+
+        state, event = instance.finalize_observed_outcome(
+            winner=1, current_dealer_base=10, winner_fan=1,
+            win_type="ZIMO")
+        metadata = event["action"]["metadata"]
+        self.assertTrue(state.terminal)
+        self.assertEqual(state.terminal_reason, "OBSERVED_ZIMO")
+        self.assertEqual(state.rewards, [-22, 22])
+        self.assertEqual(metadata["multiplier"], 2)
+        self.assertEqual(metadata["hu_declaration"]["source"], "rob_kong")
+        self.assertEqual(state.melds[0][0].kind, "PENG")
+        self.assertEqual(state.hands[0].count(KONG_TILE), 1)
+        self.assertIsNone(state.pending_kong)
 
     def test_added_kong_tail_hu_uses_normal_zimo_and_additive_kong_fan(self):
         instance = environment(added_kong_state(kong_hu=True, tail=("E",)))
