@@ -1,10 +1,11 @@
 {
   "schema_version": "reference_complete_holdout_spec_dev_v0_1",
-  "conservative_original_match_group": "reviewed_recording_3",
+  "conservative_original_match_group": "drive_full_eight_one_original_match",
   "excluded_same_match_aliases": [
-    "reviewed_recording_3"
+    "drive_full_eight_one_original_match",
+    "reviewed_match_2026_09_19_eight_hand"
   ],
-  "review_exposure": "frozen_before_identity_scoring",
+  "review_exposure": "frozen_before_scoring_but_same_original_match_as_existing_controls",
   "label_authority": "assistant_visual_review_not_user_confirmation",
   "scorer_contract": {
     "candidate_name": "spatial_window_affine_reference_complete",
@@ -32,7 +33,7 @@
       "filename": "3.mp4",
       "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
       "source_session": "holdout3_original",
-      "grouping_basis": "first candidate in predeclared unseen-video order; source-disjoint from weighted-formula selection packet",
+      "grouping_basis": "G01 of the existing private reviewed eight-hand packet; unseen query window but NOT an independent original match",
       "groups": [
         {
           "group_id": "holdout3_player_p456",
@@ -79,5 +80,18 @@
   "runtime_integration": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "holdout_eligibility": {
+    "independent_original_match": false,
+    "same_original_match_as_existing_candidate_controls": true,
+    "minimum_other_original_match_groups_required_per_class": 2,
+    "reviewed_truth_classes": [
+      "P4",
+      "P5",
+      "P6"
+    ],
+    "eligible_truth_classes_after_conservative_same_match_exclusion": [],
+    "disposition": "ABSTAIN_ALL_15_FACES_AS_UNKNOWN_FOR_FORMAL_HOLDOUT",
+    "reason": "After excluding the entire original match, P4/P5/P6 do not each have two independent other-match reference groups. Scoring with same-match references would leak source information."
+  }
 }
