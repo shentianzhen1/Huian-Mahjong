@@ -1,0 +1,73 @@
+{
+  "schema_version": "issue69_0926_flat_cross_source_regression_packet_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "candidate_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+  "candidate": "spatial_window_affine_reference_complete",
+  "source_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "same_match_references_excluded": true,
+  "development_only": true,
+  "formal_holdout": false,
+  "selection_policy": "all currently reviewed five-frame FLAT groups in existing_video_meld_face_harvest_spec_v0_1; no score-based group selection",
+  "groups": [
+    {
+      "group_id": "hand3_north",
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "frames": [3594,3597,3600,3603,3606],
+      "truth_per_face": ["N","N","N"],
+      "visible_face_samples": 15,
+      "label_authority": "assistant_visual_review_not_user_confirmation"
+    },
+    {
+      "group_id": "hand3_bamboo1",
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "frames": [3594,3597,3600,3603,3606],
+      "truth_per_face": ["S1","S1","S1"],
+      "visible_face_samples": 15,
+      "label_authority": "assistant_visual_review_not_user_confirmation"
+    },
+    {
+      "group_id": "hand7_bamboo8",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frames": [1794,1797,1800,1803,1806],
+      "truth_per_face": ["S8","S8","S8"],
+      "visible_face_samples": 15,
+      "label_authority": "assistant_visual_review_not_user_confirmation"
+    },
+    {
+      "group_id": "hand8_wan9",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frames": [4794,4797,4800,4803,4806],
+      "truth_per_face": ["M9","M9","M9"],
+      "visible_face_samples": 15,
+      "label_authority": "assistant_visual_review_not_user_confirmation"
+    }
+  ],
+  "total_groups": 4,
+  "total_visible_face_samples": 60,
+  "minimum_other_original_match_groups_required_per_class": 2,
+  "eligibility_at_freeze": {
+    "N": 0,
+    "S1": 0,
+    "S8": 1,
+    "M9": 0
+  },
+  "eligible_truth_classes_at_freeze": [],
+  "current_disposition": "ELIGIBILITY_ABSTENTION_BEFORE_WEIGHTED_IDENTITY_SCORING",
+  "current_result": {
+    "correct": 0,
+    "wrong": 0,
+    "unknown_due_to_reference_coverage": 60,
+    "exact_groups_measured": 0,
+    "accuracy_measured": false
+  },
+  "replay_gate": "When each truth class reaches at least two other independent original-match reference groups, rerun this exact frozen packet before any Runtime identity promotion. Do not replace groups based on score.",
+  "bottleneck": "reference_class_coverage_not_temporal_stability_or_geometry",
+  "runtime_threshold": 0.82,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
