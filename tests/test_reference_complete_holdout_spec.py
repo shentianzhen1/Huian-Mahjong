@@ -67,6 +67,29 @@ class ReferenceCompleteHoldoutSpecTests(unittest.TestCase):
             "report_all_existing_detector_body_boundary_modes_no_posthoc_selection",
         )
 
+    def test_same_original_match_is_not_misreported_as_independent_holdout(self):
+        eligibility = self.spec["holdout_eligibility"]
+        self.assertEqual(
+            self.spec["conservative_original_match_group"],
+            "drive_full_eight_one_original_match",
+        )
+        self.assertIn(
+            "reviewed_match_2026_09_19_eight_hand",
+            self.spec["excluded_same_match_aliases"],
+        )
+        self.assertFalse(eligibility["independent_original_match"])
+        self.assertTrue(
+            eligibility["same_original_match_as_existing_candidate_controls"]
+        )
+        self.assertEqual(
+            eligibility["eligible_truth_classes_after_conservative_same_match_exclusion"],
+            [],
+        )
+        self.assertEqual(
+            eligibility["disposition"],
+            "ABSTAIN_ALL_15_FACES_AS_UNKNOWN_FOR_FORMAL_HOLDOUT",
+        )
+
     def test_holdout_remains_fail_closed(self):
         self.assertFalse(self.spec["formal_promotion_evidence"])
         self.assertFalse(self.spec["runtime_integration"])
