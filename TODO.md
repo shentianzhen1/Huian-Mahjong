@@ -8,22 +8,21 @@
 
 - **#1 抢金** — 精确资格 + 真实终局结算。
 - **#2 三金倒** — 点击【三金倒】后的真实分数、番叠加、付款、庄位与特殊窗口优先级。
-- **#3 游金计分回归 / #4 交界** — 主状态机已实现；只维护计分回归及与杠胡/抢杠胡的边界，不重新考古已关闭状态语义。
-- **#4 抢杠胡 / 杠胡** — 真实付款、倍率、番叠加、庄位；这是 KONG EV 与部分游金路径的共同阻塞点。
+- **#3 游金计分回归** — 主状态机已实现；维护计分回归与其他特殊窗口的未确认边界，不重新考古已关闭的 #4 状态/结算语义。
 - **#5 八花游** — 真实终局证据与特殊窗口优先级；当前 WORKING 规则不得进入官方 EV。
 
 ## P1 — AI / Vision
 
-- **#6 AI EV / 8局上下文** — `CurrentAgent = MeldAwareShantenAgent V0.10` 固定为当前前沿；#4 闭环前不并行开新 Agent 版本。
+- **#6 AI EV / 8局上下文** — `CurrentAgent = MeldAwareShantenAgent V0.10` 固定为当前前沿；本轮不并行开新 Agent 版本，特殊规则 UNKNOWN 不作为正式 EV 真值。
 - **#7 Vision 独立验证** — 旧8局已完成64时点同批状态栏审计并保留 false-valid 错误；新批次先用 `independent_batch_lock.py` 锁 SHA/session/帧位，再人工 truth，最后只跑已冻结 `promotion_gate.py`。
-- **#69 Public Match Reconstruction V0.1** — 只读整局公开动作流水；当前集成工作在 Draft PR #117。Hand 2 的 0–2399 帧正式河牌回放产生 7 个 `UNKNOWN` 动作，密集河牌诊断单独输出候选，不回填 `DISCARD`。按 Issue 验收路线做第一局代表性闭环、第 2–8 局场景覆盖和八局机器回放；补独立牌面/回合证据与新来源盲测，不要求人工逐张抄录八局，也不把同源候选当准确率。
+- **#69 Public Match Reconstruction V0.1** — 当前集成工作在 Draft PR #117。优先完成只读 Alpha 的当前状态、恢复与 Windows 实机验收；公开动作回放继续作证据与回归。Hand 2 正式河牌回放的 7 个 `UNKNOWN` 动作不由密集诊断候选回填。不要求人工逐张抄录八局，也不把同源候选当准确率。
 
 ## Product
 
-- **#45 Hint Alpha V0.1** — 只读提示与证据审计。Vision 未通过独立晋级门前，不包装成正式助手；Executor 保持关闭。
+- **#45 Hint Alpha V0.1** — 只读提示与证据审计；人工录牌可以独立于 Vision 提供结构向听，人工录分仅保存观察，不结算未知规则。Vision 未通过独立晋级门前不包装成正式助手；Executor 保持关闭。
 
 ## P2 — 低频 / 证据工具
 
 - **#9 低频终局规则** — 天胡 / 天听 / 8局平分。
 
-已关闭 Issue（例如 #8）不会继续出现在本文件。需要历史请看 GitHub Closed Issues 或 `CHANGELOG.md`。
+已关闭 Issue（例如 #4、#8）不会继续出现在本文件。需要历史请看 GitHub Closed Issues 或 `CHANGELOG.md`。

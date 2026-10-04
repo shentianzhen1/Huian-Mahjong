@@ -101,3 +101,29 @@ class LiveLifecycleTests(unittest.TestCase):
         HintAlphaApp.stop(shell)
         self.assertIs(shell.evidence, evidence)
         self.assertIn('证据关闭失败', shell.evidence_status.set.call_args.args[0])
+
+    def test_manual_session_stops_capture_and_does_not_claim_vision(self):
+        shell = SimpleNamespace(manual_active=False, evidence=None,
+                                stop=Mock(), _start_evidence=Mock(),
+                                capture_status=Mock(), runtime_status=Mock(),
+                                vision_status=Mock(), demo=True,
+                                source={'old_capture': True})
+        self.assertTrue(HintAlphaApp._start_manual_session(shell))
+        shell.stop.assert_called_once()
+        shell._start_evidence.assert_called_once()
+        self.assertFalse(shell.demo)
+        self.assertEqual(shell.backend_name, 'MANUAL')
+        self.assertEqual(shell.source, {})
+        self.assertEqual(shell.manual_revision, 0)
+        self.assertTrue(shell.manual_active)
+        self.assertIn('无画面采集', shell.capture_status.set.call_args.args[0])
+
+    def test_manual_session_refuses_after_failed_evidence_close(self):
+        shell = SimpleNamespace(manual_active=False, evidence=None, stop=Mock(),
+                                _start_evidence=Mock())
+        def fail_close():
+            shell.evidence = object()
+        shell.stop.side_effect = fail_close
+        with unittest.mock.patch('workspace.hint_alpha.app.messagebox.showerror'):
+            self.assertFalse(HintAlphaApp._start_manual_session(shell))
+        shell._start_evidence.assert_not_called()

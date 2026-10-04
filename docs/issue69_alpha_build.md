@@ -6,6 +6,15 @@ Shared replay boundary `bb80861593a85d2c0cad5773123b72d405fd3e9d` passed
 Tests, Vision Regression, Evidence Contracts and CodeQL.
 Issue #69 is execution truth; PR #117 remains Draft, unmerged.
 
+Manual Alpha input is a separate provenance path: the user can point-select
+hand, Gold and own meld count, producing a zero-frame snapshot through the
+same structural gate. Unknown or impossible tile counts block; public
+remaining-copy/danger never unlocks from manual input. For unconfirmed
+settlement rules, users may transcribe before/after scores as zero-sum
+`OBSERVED_ONLY` events. These events do not invoke rule settlement or become
+official AI reward, Vision accuracy, or rule-confirmation evidence. Windows
+interaction still requires an actual Windows smoke test.
+
 ## Existing runnable chain
 
 `START_HINT_ALPHA.bat --experimental` -> Windows capture -> three-frame Runtime

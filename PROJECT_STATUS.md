@@ -23,6 +23,10 @@
 
 Windows capture -> stable Runtime frames -> CurrentTableSnapshot -> independent
 capability gates -> structural shanten / basic discard suggestions -> read-only UI.
+Separate user-entered hand/Gold/own-meld-count input reuses the structural
+capability gate without pretending to be Vision frames. Manual score before/
+after entries for unresolved settlement rules are observed-only, zero-sum and
+never invoke Environment settlement or official reward.
 Use `START_HINT_ALPHA.bat --experimental` for explicit unpromoted internal advice.
 Default mode retains the formal Vision promotion gate. Identity threshold 0.82;
 Executor OFF. Capture/error/black-screen/epoch/freshness failures invalidate advice.
@@ -30,6 +34,8 @@ Executor OFF. Capture/error/black-screen/epoch/freshness failures invalidate adv
 Own meld identity UNKNOWN may still permit structural shanten when hand, Gold
 and own meld count are trusted. Missing public river/meld identities block live
 remaining-copy and danger features. Dark-face fallback remains development-only.
+Manual entries are unverified human assertions and cannot count as Vision
+promotion or source-disjoint evidence.
 
 Native private first-hand 173–176s replay now observes 8 structural advice
 windows, 5 blocked windows and 1 recovery across 13 overlapping bursts. This

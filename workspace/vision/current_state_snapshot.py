@@ -55,6 +55,7 @@ class CurrentTableSnapshot:
     river_trusted: tuple[bool, bool]
     meld_trusted: tuple[bool, bool]
     adapter_issues: tuple[str, ...] = ()
+    input_source: str = "runtime_vision"
 
     def __post_init__(self):
         if isinstance(self.timestamp_seconds, bool) or not isinstance(
@@ -75,6 +76,8 @@ class CurrentTableSnapshot:
             raise ValueError("rivers and melds must contain exactly two seats")
         if len(self.river_trusted) != 2 or len(self.meld_trusted) != 2:
             raise ValueError("trust tuples must contain exactly two seats")
+        if self.input_source not in {"runtime_vision", "user_entered"}:
+            raise ValueError("input_source must identify runtime_vision or user_entered")
         object.__setattr__(
             self,
             "adapter_issues",
@@ -140,7 +143,15 @@ def assess_current_snapshot(
         global_issues.append("source_session_missing")
     if snapshot.stream_epoch < 0:
         global_issues.append("stream_epoch_invalid")
-    if snapshot.stable_frames < minimum_stable_frames:
+    if snapshot.input_source == "user_entered":
+        # A human assertion is not a multi-frame Vision observation. The
+        # explicit manual source replaces that particular stability test only.
+        if not snapshot.source_session or not snapshot.source_session.startswith("manual:"):
+            global_issues.append("manual_source_session_missing")
+        if snapshot.stable_frames != 0:
+            global_issues.append("manual_snapshot_claims_visual_frames")
+        public_issues.append("manual_public_identity_unavailable")
+    elif snapshot.stable_frames < minimum_stable_frames:
         global_issues.append("snapshot_not_stable")
 
     if not snapshot.hand_trusted:

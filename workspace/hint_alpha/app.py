@@ -17,6 +17,7 @@ from tkinter import messagebox, ttk
 
 from PIL import Image, ImageTk
 
+from huian._legacy import env
 from huian.rules import DEFAULT_RULE_SNAPSHOT
 from huian.version import PROJECT_VERSION
 from workspace.ai import CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION
@@ -36,6 +37,7 @@ from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 from .runtime_pipeline import evaluate_runtime_report
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
+from .manual_input import evaluate_manual_input, observed_score_entry
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -82,6 +84,9 @@ class HintAlphaApp(tk.Tk):
         self.runtime_result_queue = queue.Queue(maxsize=1)
         self.last_runtime_started = 0.0
         self.last_runtime_event_key = None
+        self.manual_active = False
+        self.manual_tiles = []
+        self.manual_revision = 0
 
         self.backend = tk.StringVar(value="WGC")
         self.auto_record = tk.BooleanVar(value=True)
@@ -127,6 +132,9 @@ class HintAlphaApp(tk.Tk):
         ).grid(row=0, column=4, padx=6)
         ttk.Button(top, text="开始内测", command=self.start).grid(row=0, column=5, padx=4)
         ttk.Button(top, text="停止", command=self.stop).grid(row=0, column=6)
+        ttk.Button(top, text="人工录牌", command=self.open_manual_hand).grid(
+            row=0, column=7, padx=4
+        )
 
         body = ttk.Panedwindow(self, orient="horizontal")
         body.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -155,6 +163,8 @@ class HintAlphaApp(tk.Tk):
             )
 
         ttk.Separator(sidebar).pack(fill="x", pady=10)
+        ttk.Button(sidebar, text="人工录分（未知规则，仅记录）",
+                   command=self.open_manual_score).pack(fill="x", pady=3)
         ttk.Label(sidebar, text="一键证据打点", font=("", 11, "bold")).pack(anchor="w")
         for text, category in (
             ("识别错了", "RECOGNITION_ERROR"),
@@ -171,8 +181,8 @@ class HintAlphaApp(tk.Tk):
         ttk.Label(
             sidebar,
             text=(
-                "Alpha原则：识别不稳/规则UNKNOWN时不提供策略；"
-                "Executor始终关闭。每次打点自动保存当前帧和RuleSnapshot。"
+                "Alpha原则：不稳的视觉状态不出提示；人工输入仅供结构向听。"
+                "未知规则只录观察分数，不自动结算；Executor始终关闭。"
             ),
             wraplength=310,
         ).pack(anchor="w", pady=(12, 4))
@@ -208,7 +218,10 @@ class HintAlphaApp(tk.Tk):
             },
         )
         self.evidence_status.set(f"证据会话：{self.evidence.path}")
-        self.evidence.mark("CAPTURE_STARTED", {"backend": self.backend_name})
+        self.evidence.mark(
+            "MANUAL_ENTRY_STARTED" if self.backend_name == "MANUAL" else "CAPTURE_STARTED",
+            {"backend": self.backend_name},
+        )
 
     def start(self):
         self.stop()
@@ -249,6 +262,169 @@ class HintAlphaApp(tk.Tk):
         except Exception as exc:
             self.stop()
             messagebox.showerror("内测未开始", str(exc))
+
+    @staticmethod
+    def _tile_label(tile):
+        return env.CN[tile]
+
+    def _start_manual_session(self):
+        if self.manual_active and self.evidence is not None:
+            return True
+        self.stop()
+        if self.evidence is not None:
+            messagebox.showerror("人工模式未开始", "证据会话关闭失败，请先处理保存错误。")
+            return False
+        try:
+            self.demo = False
+            self.backend_name = "MANUAL"
+            self.target = None
+            self.source = {}
+            self.manual_tiles = []
+            self.manual_revision = 0
+            self._start_evidence()
+            self.manual_active = True
+            self.capture_status.set("人工模式：无画面采集、无自动识别；Executor OFF")
+            self.runtime_status.set("Runtime Vision：人工输入未经过视觉识别")
+            self.vision_status.set("PublicState：未提供完整公开牌")
+            return True
+        except Exception as exc:
+            messagebox.showerror("人工模式未开始", str(exc))
+            return False
+
+    def open_manual_hand(self):
+        if not self._start_manual_session():
+            return
+        dialog = tk.Toplevel(self)
+        dialog.title("人工点选手牌 · 仅内部只读")
+        dialog.geometry("680x540")
+        dialog.transient(self)
+        dialog.grab_set()
+        ttk.Label(dialog, text="逐张点选自己的暗手牌（含本次摸牌）；\n"
+                  "金牌和自家副露组数需单独选择。未知牌不要猜，先不要提交。"
+                  ).pack(anchor="w", padx=12, pady=8)
+        controls = ttk.Frame(dialog)
+        controls.pack(fill="x", padx=12)
+        gold = tk.StringVar(value="")
+        melds = tk.StringVar(value="0")
+        ttk.Label(controls, text="开出的金牌").grid(row=0, column=0)
+        ttk.Combobox(controls, state="readonly", textvariable=gold,
+                     values=env.BASE_TILES, width=8).grid(row=0, column=1, padx=8)
+        ttk.Label(controls, text="自家副露组数").grid(row=0, column=2)
+        ttk.Spinbox(controls, from_=0, to=5, textvariable=melds,
+                    width=5).grid(row=0, column=3, padx=8)
+
+        hand_view = tk.Listbox(dialog, height=4, exportselection=False)
+        hand_view.pack(fill="x", padx=12, pady=6)
+
+        def refresh():
+            hand_view.delete(0, tk.END)
+            for tile in self.manual_tiles:
+                hand_view.insert(tk.END, f"{tile} · {self._tile_label(tile)}")
+            self.hint_status.set("向听提示：BLOCKED（人工录牌已改动，请重新提交）")
+
+        gold.trace_add("write", lambda *_: refresh())
+        melds.trace_add("write", lambda *_: refresh())
+
+        def add(tile):
+            self.manual_tiles.append(tile)
+            refresh()
+
+        tile_grid = ttk.Frame(dialog)
+        tile_grid.pack(fill="both", expand=True, padx=12)
+        for index, tile in enumerate(env.BASE_TILES):
+            ttk.Button(tile_grid, text=f"{tile} {self._tile_label(tile)}",
+                       command=lambda value=tile: add(value), width=9).grid(
+                           row=index // 8, column=index % 8, padx=2, pady=3
+                       )
+
+        def remove_selected():
+            selected = hand_view.curselection()
+            if selected:
+                self.manual_tiles.pop(selected[0])
+                refresh()
+
+        def submit():
+            try:
+                snapshot, hint = evaluate_manual_input(
+                    session_id=self.evidence.session_id,
+                    revision=self.manual_revision + 1,
+                    captured=time.monotonic(),
+                    hand=tuple(self.manual_tiles), gold_tile=gold.get() or None,
+                    own_meld_count=int(melds.get()),
+                )
+                self.evidence.mark("MANUAL_TABLE_SNAPSHOT", {
+                    "input_source": "USER_ENTERED_UNVERIFIED",
+                    "snapshot": asdict(snapshot), "hint": asdict(hint),
+                    "official_ai_reward_eligible": False,
+                    "safe_for_executor": False,
+                }, source={"manual_revision": snapshot.stream_epoch})
+            except (ValueError, RuntimeError, OSError) as exc:
+                messagebox.showerror("人工录牌未提交", str(exc))
+                return
+            self.manual_revision = snapshot.stream_epoch
+            self.runtime_status.set(
+                f"人工输入：{len(snapshot.own_hand)}张，金={snapshot.gold_tile or '?'}，"
+                f"自家副露{len(snapshot.melds[0])}组；{hint.status}；非视觉识别"
+            )
+            self.hint_status.set("人工未核验 · " + self._format_shanten_hint(hint))
+            dialog.destroy()
+
+        buttons = ttk.Frame(dialog)
+        buttons.pack(fill="x", padx=12, pady=8)
+        ttk.Button(buttons, text="移除选中牌（弃牌后更新）",
+                   command=remove_selected).pack(side="left", padx=4)
+        ttk.Button(buttons, text="提交当前快照", command=submit).pack(side="right")
+        refresh()
+
+    def open_manual_score(self):
+        if self.evidence is None:
+            messagebox.showinfo("尚无证据会话", "请先开始内测或点击人工录牌。")
+            return
+        dialog = tk.Toplevel(self)
+        dialog.title("人工录分 · 规则仍为 UNKNOWN")
+        dialog.transient(self)
+        dialog.grab_set()
+        ttk.Label(dialog, text="仅录入画面上的前后分数；不按未确认规则自动结算。"
+                  ).grid(row=0, column=0, columnspan=2, padx=12, pady=8)
+        fields = {}
+        for index, (key, label) in enumerate((
+            ("before_self", "之前我方"), ("before_opponent", "之前对方"),
+            ("after_self", "之后我方"), ("after_opponent", "之后对方"),
+        ), start=1):
+            ttk.Label(dialog, text=label).grid(row=index, column=0, padx=8, pady=4)
+            entry = ttk.Entry(dialog, width=18)
+            entry.grid(row=index, column=1, padx=8, pady=4)
+            fields[key] = entry
+        rule = tk.StringVar(value="")
+        ttk.Label(dialog, text="未确认规则 ID").grid(row=5, column=0, padx=8)
+        ttk.Combobox(dialog, textvariable=rule, width=32, values=(
+            "settlement.qiangjin_full", "settlement.sanjindao_full",
+            "settlement.eight_flower_real",
+        )).grid(row=5, column=1, padx=8, pady=4)
+
+        def submit():
+            try:
+                row = observed_score_entry(
+                    scores_before=(int(fields["before_self"].get()),
+                                   int(fields["before_opponent"].get())),
+                    scores_after=(int(fields["after_self"].get()),
+                                  int(fields["after_opponent"].get())),
+                    unresolved_rule_id=rule.get(),
+                )
+                self.evidence.mark("MANUAL_SCORE_OBSERVATION", row,
+                                   source={"input_origin": "user_entered",
+                                           **self.source})
+            except (ValueError, RuntimeError, OSError) as exc:
+                messagebox.showerror("人工分数未保存", str(exc))
+                return
+            self.evidence_status.set(
+                f"人工录分已保存：我方{row['score_delta'][0]:+d}；"
+                "仅观察，不作规则结算"
+            )
+            dialog.destroy()
+
+        ttk.Button(dialog, text="保存观察分数（不落规则账）",
+                   command=submit).grid(row=6, column=0, columnspan=2, pady=12)
 
     def _ensure_auto_recorder(self):
         if (
@@ -300,6 +476,7 @@ class HintAlphaApp(tk.Tk):
 
     def stop(self):
         self._invalidate_advice("采集已停止")
+        self.manual_active = False
         errors = []
         if self.auto_recorder:
             automatic, self.auto_recorder = self.auto_recorder, None

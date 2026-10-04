@@ -1,5 +1,11 @@
 # 重要变更记录
 
+## 2026-10-04 — Manual-input Alpha fallback (Draft)
+
+- Add manual hand/Gold/own-meld-count input to the read-only Windows shell. Each submission uses the existing physical-copy and structural shanten gates; manual snapshots claim zero visual frames and cannot enable public remaining-copy/danger.
+- Add zero-sum before/after score transcription for unresolved settlement rules as `OBSERVED_ONLY` evidence. It neither calls automatic settlement nor promotes rule evidence or official AI reward.
+- Keep CurrentAgent V0.10, Vision threshold 0.82, Executor OFF and PR #117 Draft. Windows live interaction and untouched-source Vision blind test remain pending.
+
 ## 2026-10-04 — Real structural discard checkpoint (Draft)
 
 - Source/session/frame/pixel-locked first-hand 160–164s replay recorded 2 real post-draw structural discard windows, 4 blocked windows and 6 other accepted structural windows. Same-original-match development evidence only.
