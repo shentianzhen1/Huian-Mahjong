@@ -103,7 +103,7 @@ class EvidenceSession:
         image.save(path, format="PNG")
         self.mark(
             "FRAME_SAVED",
-            {"label": str(label), "path": str(path.relative_to(self.path)), **dict(payload or {})},
+            {"label": str(label), "path": path.relative_to(self.path).as_posix(), **dict(payload or {})},
             source=source,
         )
         return path

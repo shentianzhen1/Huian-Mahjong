@@ -5,6 +5,7 @@ record evidence, and audit settlement, but it never clicks the game UI.
 """
 
 from .advisor import HintAdvisor, HintDecision
+from .current_snapshot_advisor import analyze_snapshot_shanten
 from .evidence import EvidenceSession
 from .safety import AdvisoryGate, AdvisoryGateResult, AdvisoryState
 from .settlement_audit import (
@@ -27,4 +28,5 @@ __all__ = [
     "SettlementAuditResult",
     "SettlementPrediction",
     "audit_settlement",
+    "analyze_snapshot_shanten",
 ]
