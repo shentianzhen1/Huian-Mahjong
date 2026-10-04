@@ -45,7 +45,7 @@ class DarkFaceFrontBandProbeTests(unittest.TestCase):
             image, {"reason": "ambiguous_or_absent_front_component"})
         self.assertIsNone(box)
         self.assertIn(audit["reason"], {
-            "no_two_brightness_populations", "weak_brightness_separation",
+            "insufficient_body", "no_two_brightness_populations", "weak_brightness_separation",
             "ambiguous_or_absent_front_component", "no_lower_side_band",
             "lower_band_not_darker",
         })
