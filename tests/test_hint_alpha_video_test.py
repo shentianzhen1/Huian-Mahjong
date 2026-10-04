@@ -13,16 +13,16 @@ from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
 
 
 class AutomaticVideoParameterTests(unittest.TestCase):
-    def test_short_match_uses_point_two_seconds(self):
+    def test_short_match_uses_point_three_seconds(self):
         meta = {"fps": 60.0, "duration_seconds": 600.0}
-        self.assertAlmostEqual(automatic_sample_interval(meta), 0.2, places=6)
+        self.assertAlmostEqual(automatic_sample_interval(meta), 0.3, places=6)
 
     def test_longer_match_stays_inside_temporal_window(self):
         medium = {"fps": 30.0, "duration_seconds": 1200.0}
         long = {"fps": 60.0, "duration_seconds": 2400.0}
         self.assertLessEqual(automatic_sample_interval(medium) * 2, 0.8)
         self.assertLessEqual(automatic_sample_interval(long) * 2, 0.8)
-        self.assertAlmostEqual(automatic_sample_interval(medium), 0.2666666667, places=6)
+        self.assertAlmostEqual(automatic_sample_interval(medium), 0.3, places=6)
         self.assertAlmostEqual(automatic_sample_interval(long), 0.3, places=6)
 
 class VideoTestSummaryTests(unittest.TestCase):
