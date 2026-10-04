@@ -180,7 +180,7 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(top, text="人工录牌", command=self.open_manual_hand).grid(
             row=0, column=7, padx=4
         )
-        ttk.Button(top, text="录像测试", command=self.open_video_test).grid(
+        ttk.Button(top, text="录像复盘", command=self.open_video_test).grid(
             row=0, column=8, padx=4
         )
 
@@ -198,7 +198,7 @@ class HintAlphaApp(tk.Tk):
         self.notebook.add(realtime, text="实时流水")
         self.notebook.add(advice, text="AI 提示")
         self.notebook.add(diagnostic, text="识别诊断")
-        self.notebook.add(video_test, text="录像测试")
+        self.notebook.add(video_test, text="录像复盘")
 
         # --- 实时流水：打牌时默认看的页面 ---
         header = ttk.Frame(realtime)
@@ -372,7 +372,7 @@ class HintAlphaApp(tk.Tk):
             key=("boot",),
         )
 
-        # --- 录像测试：直接解码原文件，不经过播放器/WGC ---
+        # --- 录像复盘：直接解码原文件，不经过播放器/WGC ---
         video_controls = ttk.Frame(video_test)
         video_controls.pack(fill="x")
         ttk.Label(video_controls, text="真实对局录像").grid(row=0, column=0, sticky="w")
@@ -395,10 +395,10 @@ class HintAlphaApp(tk.Tk):
 
         action_row = ttk.Frame(video_test)
         action_row.pack(fill="x", pady=10)
-        ttk.Button(action_row, text="开始录像测试", command=self.start_video_test).pack(
+        ttk.Button(action_row, text="开始自动复盘", command=self.start_video_test).pack(
             side="left"
         )
-        ttk.Button(action_row, text="停止测试", command=self.stop_video_test).pack(
+        ttk.Button(action_row, text="停止复盘", command=self.stop_video_test).pack(
             side="left", padx=6
         )
         ttk.Label(
@@ -424,7 +424,7 @@ class HintAlphaApp(tk.Tk):
         self.video_test_canvas.pack(fill="both", expand=True)
 
         ttk.Label(
-            video_result_frame, text="录像测试结果", font=("", 12, "bold")
+            video_result_frame, text="录像复盘结果", font=("", 12, "bold")
         ).pack(anchor="w", pady=(0, 8))
         for variable in (
             self.video_test_source_status,
@@ -442,13 +442,44 @@ class HintAlphaApp(tk.Tk):
         ttk.Separator(video_result_frame).pack(fill="x", pady=10)
         ttk.Label(
             video_result_frame,
-            text=(
-                "用途：判断“原始录像直接识别”和“播放器/WGC识别”的差异。"
-                "报告仍是开发诊断，不属于 Vision 正式 promotion 证据。"
-            ),
-            wraplength=390,
-            justify="left",
-        ).pack(anchor="w", fill="x")
+            text="自动流水草稿",
+            font=("", 11, "bold"),
+        ).pack(anchor="w", pady=(0, 5))
+        timeline_wrap = ttk.Frame(video_result_frame)
+        timeline_wrap.pack(fill="both", expand=True)
+        self.video_timeline_text = tk.Text(
+            timeline_wrap,
+            height=16,
+            wrap="word",
+            state="disabled",
+            borderwidth=0,
+            padx=8,
+            pady=6,
+            background="#0f172a",
+            foreground="#e5e7eb",
+            font=("", 10),
+        )
+        video_timeline_scroll = ttk.Scrollbar(
+            timeline_wrap, orient="vertical", command=self.video_timeline_text.yview
+        )
+        self.video_timeline_text.configure(yscrollcommand=video_timeline_scroll.set)
+        self.video_timeline_text.pack(side="left", fill="both", expand=True)
+        video_timeline_scroll.pack(side="right", fill="y")
+        self._set_video_timeline_lines([
+            "选择录像后自动整段复盘。",
+            "当前流水先记录换局、开金、比分变化和可信手牌快照；",
+            "弃牌/吃/碰/杠需要 #69 公共区域证据，缺失时保持 UNKNOWN/PARTIAL。",
+        ])
+
+    def _set_video_timeline_lines(self, lines):
+        if not hasattr(self, "video_timeline_text"):
+            return
+        self.video_timeline_text.configure(state="normal")
+        self.video_timeline_text.delete("1.0", "end")
+        for line in lines:
+            self.video_timeline_text.insert("end", str(line) + "\n")
+        self.video_timeline_text.configure(state="disabled")
+        self.video_timeline_text.see("end")
 
     @staticmethod
     def _display_tile(tile):
@@ -710,7 +741,8 @@ class HintAlphaApp(tk.Tk):
         self.video_test_progress.set(0)
         self.video_test_runtime_status.set("Runtime Vision：正在读取原始录像……")
         self.video_test_public_status.set("PublicState OCR：正在读取原始录像……")
-        self.video_test_report_status.set("报告：测试进行中")
+        self.video_test_report_status.set("报告：自动复盘进行中")
+        self._set_video_timeline_lines(["正在生成流水草稿……"])
         self.notebook.select(self.video_test_tab)
 
         worker = threading.Thread(
@@ -858,15 +890,22 @@ class HintAlphaApp(tk.Tk):
                     f"局号票数={public['hand_number_votes'] or 'none'} | "
                     f"OCR错误窗={public['error_windows']}"
                 )
+                from .video_test import render_video_timeline
+
+                timeline = result.get("timeline") or {}
+                self._set_video_timeline_lines(render_video_timeline(timeline))
                 suffix = "（已提前停止）" if result.get("stopped_early") else ""
                 self.video_test_report_status.set(
-                    f"报告：{result.get('report_path', '未写入')} {suffix}"
+                    "报告："
+                    f"{result.get('report_path', '未写入')} | "
+                    f"流水={result.get('timeline_text_path', '未写入')} {suffix}"
                 )
             elif kind == "error":
                 self.video_test_running = False
-                self.video_test_runtime_status.set("Runtime Vision：测试失败")
-                self.video_test_public_status.set("PublicState OCR：测试失败")
+                self.video_test_runtime_status.set("Runtime Vision：复盘失败")
+                self.video_test_public_status.set("PublicState OCR：复盘失败")
                 self.video_test_report_status.set(f"报告：{item[1]}")
+                self._set_video_timeline_lines([f"复盘失败：{item[1]}"])
 
     def refresh(self):
         try:
