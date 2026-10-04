@@ -130,7 +130,8 @@ def evaluate(root, native_zip, private_zip, query_zips, pin_path, body_path, bra
         identity = evaluate_identity(root=root, native_zip=Path(native_zip), private_zip=Path(private_zip),
             query_zips=[Path(p) for p in query_zips], lower_consensus=True, front_band=True,
             merge_front_overlaps=True, bracketed_peer_band=True,
-            reviewed_public_plane=reviewed_public_plane)
+            reviewed_public_plane=reviewed_public_plane,
+            reviewed_public_plane_as_query=True)
     identity.update(manually_reviewed_edge_plane_enabled=True,
         manual_edge_plane_query_ids=list(entries), manual_plane_pin_sha256=geometry["reviewed_plane_pin_sha256"],
         automatic_edge_repair=False, exact_face_plane_ground_truth=False, user_confirmed=False,
@@ -145,8 +146,13 @@ def evaluate(root, native_zip, private_zip, query_zips, pin_path, body_path, bra
             (("bracketed", bracket_path), ("body", body_path), ("reviewed", identity_output), ("manual_pin", pin_path))},
         against_bracketed=compare_whole_classes(before, identity), against_body=compare_whole_classes(body, identity),
         targeted_edge_ranks=[dict(query_id=r["query_id"], source_sha256=r["sha256"], crop_sha256=r["crop_sha256"],
-            expected=r["expected"], feature_preparation=r["feature_preparation"], modes=r["modes"])
+            expected=r["expected"], feature_preparation=r["feature_preparation"], modes=r["modes"],
+            development_only=True, accuracy_evidence=False, formal_promotion_evidence=False)
             for r in identity["rows"] if r["query_id"] in entries],
+        reviewed_public_s9_reverse_query_included=any(
+            r["query_id"] == "public_meld_s9" for r in identity["rows"]),
+        source_disjoint_ranking_required=True,
+        targeted_ranks_are_accuracy_evidence=False,
         all_queries_kept_in_denominators=True, class_winners_are_qualified_identity=False,
         automatic_edge_repair=False, previously_inspected=True, blind_holdout=False,
         whole_lower_views_independent_evidence=False, formal_promotion_evidence=False,
