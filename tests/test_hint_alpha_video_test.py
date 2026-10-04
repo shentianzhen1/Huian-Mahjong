@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from workspace.hint_alpha.video_test import (automatic_sample_interval, build_video_timeline, render_video_timeline, run_video_test, summarize_video_test)
+from workspace.hint_alpha.video_test import (REPLAY_OCR_INTERVAL_SECONDS, VideoTimelineAccumulator, automatic_sample_interval, build_video_timeline, render_video_timeline, render_video_timeline_event, run_video_test, summarize_video_test)
 from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
 
 
@@ -141,6 +141,111 @@ class VideoTimelineDraftTests(unittest.TestCase):
         self.assertIn("开金：六筒", text)
         self.assertIn("结算方式 UNKNOWN", text)
         self.assertIn("流水状态：PARTIAL", text)
+
+
+class IncrementalTimelineTests(unittest.TestCase):
+    def test_observe_returns_only_new_lines_for_live_ui(self):
+        source = {"sha256": "a" * 64, "session": "video-a"}
+        acc = VideoTimelineAccumulator(source)
+        runtime = {
+            "source_seconds": [0.0, 0.2, 0.4],
+            "snapshot": {
+                "hand_trusted": True,
+                "own_hand": ["M1", "M2", "M3"],
+                "gold_trusted": True,
+                "gold_tile": "P6",
+            },
+            "hint": {"phase": "PRE_DRAW"},
+        }
+        public = {
+            "observation": {
+                "hand_number": 1,
+                "score_pair": [1000, 1000],
+                "issues": [],
+            }
+        }
+        created = acc.observe(runtime, public)
+        self.assertEqual(
+            [event["kind"] for event in created],
+            ["HAND_START", "SCORE_BASELINE", "OPEN_GOLD", "PLAYER_HAND_SNAPSHOT"],
+        )
+        self.assertIn("第1/8局开始", render_video_timeline_event(created[0]))
+        self.assertEqual(acc.observe(runtime, public), ())
+
+
+class ReplayOcrCadenceTests(unittest.TestCase):
+    def test_reuses_public_state_between_sparse_ocr_samples(self):
+        samples = [
+            (index, index * 0.2, object())
+            for index in range(1, 9)
+        ]
+
+        def runtime_row(samples, **_):
+            return {
+                "display_allowed": False,
+                "frames": [item[0] for item in samples],
+                "source_seconds": [item[1] for item in samples],
+                "snapshot": {
+                    "hand_trusted": False,
+                    "own_hand": [],
+                    "gold_trusted": False,
+                    "gold_tile": None,
+                },
+                "hint": {"phase": None, "best_discards": [], "issues": ["blocked"]},
+            }
+
+        observation = PublicStateObservation(
+            top_right_score=1000,
+            bottom_left_score=1000,
+            hand_number=1,
+            remaining_tiles=80,
+            score_votes=2,
+            hand_votes=2,
+            remaining_votes=2,
+            issues=(),
+        )
+        public_reader = SimpleNamespace()
+        public_reader.read_window = unittest.mock.Mock(
+            return_value=SimpleNamespace(observation=observation)
+        )
+        meta = {
+            "path": "match.mp4",
+            "width": 960,
+            "height": 448,
+            "fps": 30.0,
+            "frame_count": 300,
+            "duration_seconds": 10.0,
+            "aspect_ratio": 960 / 448,
+            "reference_frame_size": [2796, 1290],
+            "reference_aspect_ratio": 2796 / 1290,
+            "aspect_ratio_delta_percent": 1.0,
+        }
+
+        with TemporaryDirectory() as tmp:
+            video = Path(tmp) / "match.mp4"
+            video.write_bytes(b"fixture")
+            with (
+                patch("workspace.hint_alpha.video_test.probe_video", return_value=meta),
+                patch("workspace.hint_alpha.video_test.sha256", return_value="b" * 64),
+                patch(
+                    "workspace.hint_alpha.video_test.iter_video_samples",
+                    return_value=iter(samples),
+                ),
+                patch(
+                    "workspace.hint_alpha.video_test.evaluate_burst",
+                    side_effect=runtime_row,
+                ),
+            ):
+                result = run_video_test(
+                    video,
+                    dataset_root="unused",
+                    public_reader=public_reader,
+                )
+
+        self.assertEqual(REPLAY_OCR_INTERVAL_SECONDS, 2.0)
+        self.assertEqual(public_reader.read_window.call_count, 1)
+        self.assertEqual(result["public_state"]["sampled_windows"], 1)
+        self.assertGreater(result["public_state"]["reused_windows"], 0)
 
 
 class DirectVideoRunnerTests(unittest.TestCase):
