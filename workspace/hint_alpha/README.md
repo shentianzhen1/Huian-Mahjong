@@ -27,6 +27,23 @@ Hint Alpha 主窗口现在按使用场景拆成三个 Tab：
 - **识别诊断**：保留原始实时预览、PublicState OCR、Runtime Vision、证据目录、版本信息和一键证据打点。
 
 实时流水只记录已有链路明确接受的事实，例如局号变化、比分变化、可信金牌和人工录牌更新。当前实时壳尚未接入双方河牌和对手副露的低层牌面识别，因此不会伪造“对方出牌 / 吃 / 碰 / 杠”等事件；缺失动作保持 `UNKNOWN`，页面继续运行而不是中断。
+## 直接录像测试
+
+主窗口新增 **录像测试** Tab，用于把本地真实对局录像直接送入与 GitHub 回放相同的识别边界，不经过播放器、窗口缩放或 WGC：
+
+`本地 MP4/MOV/AVI/MKV -> 原始像素解码 -> 3 帧 Runtime Vision -> CurrentTableSnapshot / structural hint`
+
+同一组原始帧还会独立送入 PublicState OCR，用于查看第几局、剩余牌数和双方比分。OCR 缺失或失败只记录为 PublicState 错误，不会中止 Runtime Vision 测试。
+
+使用步骤：
+
+1. 打开 Hint Alpha，进入“录像测试”或点击顶部“录像测试”。
+2. 选择本地真实对局视频；程序只读取本机文件，不上传原视频。
+3. 默认从 0 秒开始测试 30 秒；测试时长填 `0` 可跑到视频结尾；默认采样间隔 `0.20s`。
+4. 点击“开始录像测试”。左侧显示直接解码的原始帧，右侧显示原始分辨率/比例、Runtime 接受/阻塞窗口、可信手牌/金牌窗口、PublicState 局号票数和 OCR 错误数。
+5. JSON 报告保存在 `data/hint_alpha/video_tests/`，其中保留 source SHA、原始分辨率、比例差、逐窗口 Runtime/PublicState 结果。
+
+界面会把当前录像比例和开发对照原始录像 `2796x1290` 做只读差异提示；该差异**不是识别 gate**，不会为了匹配比例而偷偷缩放画面。录像测试报告固定标记 `development_only=true`、`formal_promotion_evidence=false`、`safe_for_executor=false`。
 ## 仍未接入本壳
 
 - 双方弃牌河 / 对手副露的原始截图低层识别，因此实时危险牌提示仍保持关闭
