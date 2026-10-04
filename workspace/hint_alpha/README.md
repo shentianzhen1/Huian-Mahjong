@@ -27,23 +27,32 @@ Hint Alpha 主窗口现在按使用场景拆成三个 Tab：
 - **识别诊断**：保留原始实时预览、PublicState OCR、Runtime Vision、证据目录、版本信息和一键证据打点。
 
 实时流水只记录已有链路明确接受的事实，例如局号变化、比分变化、可信金牌和人工录牌更新。当前实时壳尚未接入双方河牌和对手副露的低层牌面识别，因此不会伪造“对方出牌 / 吃 / 碰 / 杠”等事件；缺失动作保持 `UNKNOWN`，页面继续运行而不是中断。
-## 直接录像测试
+## 自动录像复盘
 
-主窗口新增 **录像测试** Tab，用于把本地真实对局录像直接送入与 GitHub 回放相同的识别边界，不经过播放器、窗口缩放或 WGC：
+主窗口新增 **录像复盘** Tab。用户只需要选择本地真实对局视频；程序自动识别容器可解码性、原始分辨率、FPS、总时长和宽高比，并自动从 `0s` 跑到视频结尾，不再要求填写开始时间、测试时长或采样间隔。
 
-`本地 MP4/MOV/AVI/MKV -> 原始像素解码 -> 3 帧 Runtime Vision -> CurrentTableSnapshot / structural hint`
+自动采样间隔会按录像 FPS / 总时长选择，并保持三帧稳定窗口在现有 `<=0.8s` 时序约束内。原视频只在本机读取，不上传 GitHub，也不经过播放器或 WGC 缩放。
 
-同一组原始帧还会独立送入 PublicState OCR，用于查看第几局、剩余牌数和双方比分。OCR 缺失或失败只记录为 PublicState 错误，不会中止 Runtime Vision 测试。
+复盘链路：
 
-使用步骤：
+`本地 MP4/MOV/AVI/MKV/M4V -> 原始像素解码 -> Runtime Vision + PublicState OCR -> 自动流水草稿`
 
-1. 打开 Hint Alpha，进入“录像测试”或点击顶部“录像测试”。
-2. 选择本地真实对局视频；程序只读取本机文件，不上传原视频。
-3. 默认从 0 秒开始测试 30 秒；测试时长填 `0` 可跑到视频结尾；默认采样间隔 `0.20s`。
-4. 点击“开始录像测试”。左侧显示直接解码的原始帧，右侧显示原始分辨率/比例、Runtime 接受/阻塞窗口、可信手牌/金牌窗口、PublicState 局号票数和 OCR 错误数。
-5. JSON 报告保存在 `data/hint_alpha/video_tests/`，其中保留 source SHA、原始分辨率、比例差、逐窗口 Runtime/PublicState 结果。
+当前自动流水草稿会记录已有链路能够直接观察到的事实：
 
-界面会把当前录像比例和开发对照原始录像 `2796x1290` 做只读差异提示；该差异**不是识别 gate**，不会为了匹配比例而偷偷缩放画面。录像测试报告固定标记 `development_only=true`、`formal_promotion_evidence=false`、`safe_for_executor=false`。
+- OCR 稳定识别到的换局；
+- Runtime Vision 可信的开金；
+- OCR 稳定识别到的比分基线 / 比分变化（结算方式仍为 `UNKNOWN`）；
+- 可信的我方手牌快照变化。
+
+弃牌、吃、碰、杠、对手副露等公共动作继续复用 Issue #69 的公共区域证据 / Temporal Action Assembler。新录像在公共区域尚未通过来源绑定/自动校准前，不会偷用旧录像的 ROI，也不会根据麻将合法性反推动作；流水明确标记 `PARTIAL / UNKNOWN`。
+
+复盘完成后生成：
+
+- `data/hint_alpha/video_tests/<name>.json`：完整诊断报告；
+- `data/hint_alpha/video_tests/<name>.timeline.json`：机器可读流水草稿；
+- `data/hint_alpha/video_tests/<name>.timeline.txt`：直接查看的中文流水。
+
+界面同时显示当前录像和开发对照原始录像 `2796x1290` 的比例差；该差异只用于诊断，不会为了匹配比例而偷偷缩放画面。所有录像复盘产物固定为 development-only，不能作为 Vision 正式 promotion 证据，Executor 始终关闭。
 ## 仍未接入本壳
 
 - 双方弃牌河 / 对手副露的原始截图低层识别，因此实时危险牌提示仍保持关闭
