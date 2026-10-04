@@ -36,6 +36,7 @@ from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 
 from .current_snapshot_advisor import analyze_snapshot_shanten
 from .evidence import EvidenceSession
+from .live_guard import LiveAdviceGuard
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -76,6 +77,7 @@ class HintAlphaApp(tk.Tk):
         self.public_result_queue = queue.Queue(maxsize=1)
         self.last_public_started = 0.0
 
+        self.live_guard = LiveAdviceGuard()
         self.runtime_frames = deque(maxlen=3)
         self.runtime_busy = False
         self.runtime_result_queue = queue.Queue(maxsize=1)
@@ -276,84 +278,17 @@ class HintAlphaApp(tk.Tk):
             "hint_alpha": True,
             "project_version": PROJECT_VERSION,
             "executor_enabled": False,
-            "session_id": self.evidence.session_id if self.evidence else None,
-            "backend": self.backend_name,
-            "target": self.target,
-            "rule_snapshot_id": DEFAULT_RULE_SNAPSHOT.fingerprint,
-            "agent_version": CURRENT_AGENT_VERSION,
-        }
-
-    def stop(self):
-        if self.auto_recorder:
-            automatic, self.auto_recorder = self.auto_recorder, None
-            try:
-                path = automatic.close("Hint Alpha停止")
-                if path and self.evidence:
-                    self.evidence.mark("AUTO_RECORDING_CLOSED", {"path": str(path)})
-            except Exception:
-                pass
-        if self.session:
-            self.session.close()
-            self.session = None
-        if self.evidence:
-            evidence, self.evidence = self.evidence, None
-            evidence.close("capture_stopped")
-        self.frame = None
-        self.canvas.delete("all")
-        self.capture_status.set("已停止")
-
-    def _public_worker(self, images, previous):
-        try:
-            result = self.public_reader.read_window(
-                images, previous=previous, minimum_votes=2
-            )
-            payload = ("ok", result)
-        except Exception as exc:
-            payload = ("error", f"{type(exc).__name__}: {exc}")
-        try:
-            self.public_result_queue.put_nowait(payload)
-        except queue.Full:
-            pass
-
-    def _schedule_public_read(self, now):
-        if (
-            self.public_disabled
-            or self.public_busy
-            or len(self.public_frames) < 3
-            or now - self.last_public_started < 1.5
-        ):
-            return
-        self.public_busy = True
-        self.last_public_started = now
-        images = tuple(image.copy() for image in self.public_frames)
-        threading.Thread(
-            target=self._public_worker,
-            args=(images, self.public_previous),
-            daemon=True,
-        ).start()
-
-    def _runtime_worker(self, samples, session_id):
-        try:
-            # Lazy import keeps non-Vision Hint Alpha utilities importable
-            # without forcing OpenCV into every core-only process.
-            from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
-                read_stable_frames,
-            )
-
-            frame_ids = tuple(sequence for sequence, _ in samples)
-            images = tuple(image for _, image in samples)
-            report = read_stable_frames(
-                images,
-                PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
+            "session_…808 tokens truncated…T_ROOT / "dataset" / "tiles_runtime_v0_2",
                 frame_ids=frame_ids,
                 session=session_id,
                 confidence_threshold=0.82,
             )
-            payload = ("ok", session_id, report)
+            report["stream_epoch"] = generation
+            payload = ("ok", session_id, generation, captured, report)
         except Exception as exc:
-            payload = ("error", session_id, f"{type(exc).__name__}: {exc}")
+            payload = ("error", session_id, generation, captured, f"{type(exc).__name__}: {exc}")
         try:
-            self.runtime_result_queue.put_nowait(payload)
+            output_queue.put_nowait(payload)
         except queue.Full:
             pass
 
@@ -374,7 +309,8 @@ class HintAlphaApp(tk.Tk):
         )
         threading.Thread(
             target=self._runtime_worker,
-            args=(samples, self.evidence.session_id),
+            args=(samples, self.evidence.session_id, self.live_guard.generation,
+                  self.live_guard.last_frame, self.runtime_result_queue),
             daemon=True,
         ).start()
 
@@ -423,13 +359,16 @@ class HintAlphaApp(tk.Tk):
 
     def _consume_runtime_result(self):
         try:
-            kind, source_session, value = self.runtime_result_queue.get_nowait()
+            kind, source_session, generation, captured, value = self.runtime_result_queue.get_nowait()
         except queue.Empty:
             return
         self.runtime_busy = False
         current_session = self.evidence.session_id if self.evidence else None
-        if source_session != current_session:
+        if source_session != current_session or not self.live_guard.accepts(
+            generation, captured, time.monotonic()
+        ):
             return
+        self.live_guard.last_result = captured
         if kind == "error":
             self.runtime_status.set(f"Runtime Vision暂不可用：{value}")
             self.hint_status.set("向听提示：BLOCKED（Runtime Vision错误）")
@@ -442,7 +381,7 @@ class HintAlphaApp(tk.Tk):
         report = value
         snapshot = current_snapshot_from_runtime(
             report,
-            timestamp_seconds=time.monotonic(),
+            timestamp_seconds=captured,
         )
         result = analyze_snapshot_shanten(snapshot)
         issues = ",".join(result.issues[:4]) or "none"
@@ -557,10 +496,20 @@ class HintAlphaApp(tk.Tk):
         health = self.health.inspect(self.frame, captured)
         self.black = health["black"]
         if self.black:
+            self._invalidate_advice("黑屏")
             self.capture_status.set("疑似黑屏：停止给提示并保留证据")
             if self.evidence:
                 self.evidence.mark("BLACK_FRAME", source=self.source)
             return
+        if self.last_rect is not None and rect != self.last_rect:
+            self._invalidate_advice("窗口几何变化，等待稳定帧")
+        generation = self.live_guard.generation
+        if not self.live_guard.observe(sequence, captured):
+            self._invalidate_advice("无效采集时间")
+            return
+        if generation != self.live_guard.generation:
+            self._invalidate_advice("采集序列重置")
+            self.live_guard.observe(sequence, captured)
         self.public_frames.append(self.frame.copy())
         self.runtime_frames.append((sequence, self.frame.copy()))
         self._ensure_auto_recorder()
@@ -635,6 +584,8 @@ class HintAlphaApp(tk.Tk):
 
     def tick(self):
         try:
+            if self.live_guard.stale(time.monotonic()):
+                self._invalidate_advice("画面或识别结果已过期")
             self._consume_public_result()
             self._consume_runtime_result()
             if self.demo:
@@ -678,6 +629,7 @@ class HintAlphaApp(tk.Tk):
                 self.evidence.mark(
                     "CAPTURE_ERROR", {"error": f"{type(exc).__name__}: {exc}"}
                 )
+            self._invalidate_advice("采集错误")
             self.capture_status.set(f"采集错误：{exc}")
         finally:
             self.after(100, self.tick)
