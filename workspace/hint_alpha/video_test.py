@@ -449,7 +449,7 @@ def run_video_test(
         read_stable_frames,
     )
 
-    runtime_resources = prepare_runtime_resources(dataset_root, session)
+    runtime_resources = None
     geometry_cache = {}
 
     def replay_runtime_reader(
@@ -460,6 +460,9 @@ def run_video_test(
         session=None,
         confidence_threshold=0.82,
     ):
+        nonlocal runtime_resources
+        if runtime_resources is None:
+            runtime_resources = prepare_runtime_resources(dataset_root, session)
         return read_stable_frames(
             images,
             root,
