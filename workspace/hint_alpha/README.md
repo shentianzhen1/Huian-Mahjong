@@ -7,6 +7,8 @@
 - Windows 窗口采集（复用 Recorder V0.2 的 WGC / PrintWindow / 屏幕区域）
 - 默认自动按局录制
 - PublicState 后台诊断（比分 / 局号 / 剩余牌；需要本机 Tesseract）
+- Runtime Vision V0.2 稳定 3 帧诊断（手牌 / Gold / 覆盖缺口 / fail-closed 状态）
+- `CurrentTableSnapshot -> 普通结构向听` 的只读内测桥；默认不绕过 Vision promotion gate
 - Project release + RuleSnapshot + CurrentAgent 版本写入每次证据会话
 - 一键保存“识别错误 / AI建议错误 / 新规则证据 / 结算页”
 - UNKNOWN / 非 CONFIRMED / 低置信识别的 fail-closed 提示门
@@ -16,7 +18,8 @@
 
 ## 仍未接入本壳
 
-- 实时 hand / draw / gold -> GameState 桥接
+- 双方弃牌河 / 对手副露的原始截图低层识别，因此实时危险牌提示仍保持关闭
+- 实时 hand / draw / gold -> GameState 桥接（当前向听路径不需要 GameState）
 - V0.10 实时合法动作提示
 - 结算页番数与倍率自动读取
 - 独立 Windows EXE 安装器
@@ -54,6 +57,29 @@ Tesseract 缺失只会让 PublicState OCR 不可用，不会阻止窗口采集�
 python -m workspace.hint_alpha.app --demo
 python -m workspace.hint_alpha.app
 ```
+
+### 未 promotion Runtime 的内部向听验证
+
+默认启动严格尊重 Runtime Vision 报告中的 `safe_for_hint=false`，因此即使
+CurrentTableSnapshot 已经能计算向听，也不会把它显示成正式提示。
+
+仅在内部研发核对时可显式开启：
+
+```bat
+START_HINT_ALPHA.bat --experimental
+```
+
+等价于：
+
+```bash
+python -m workspace.hint_alpha.app --experimental-runtime-advisory
+```
+
+窗口标题会显示 `UNPROMOTED Runtime`。该模式只允许把通过
+CurrentTableSnapshot fail-closed gate 的状态送入普通结构向听分析；它不会
+调用 CurrentAgent，不会构造自动点击，也不会改变 `Executor OFF`。当前
+Runtime 数据仍处于开发/原型证据状态，实验结果不能当成正式 Vision
+generalization 结论。
 
 `--demo` 不连接游戏，用于检查 UI、证据目录和自动录像壳。
 

@@ -1,0 +1,75 @@
+{
+  "schema_version": "opponent_public_meld_mobilenet_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_0926_hand1_s456",
+  "query_match_group": "reviewed_match_2026_09_26_first_hand",
+  "expected_tiles": ["S4", "S5", "S6"],
+  "query": {
+    "stable_frame_count": 5,
+    "source_frame_estimates": [4904, 4908, 4913, 4918, 4923],
+    "public_strip_path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s456_5frame_strip.webp",
+    "public_strip_sha256": "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+    "frame_size_px": [71, 33],
+    "prepared_face_observation_count": 15,
+    "human_truth_scope": "group_identity_only_no_left_to_right_truth_assumed"
+  },
+  "frame_metrics": {
+    "frame_count": 5,
+    "raw_unordered_top1_exact_count": 0,
+    "unordered_top3_expected_coverage_count": 0,
+    "legal_group_top1_correct_count": 0
+  },
+  "multi_frame_mean_scores": {
+    "face_top1": [
+      {"tile": "S4", "score": 0.83152429},
+      {"tile": "S7", "score": 0.78700691},
+      {"tile": "S4", "score": 0.83327127}
+    ],
+    "face_top3": [
+      [{"tile":"S4","score":0.83152429},{"tile":"S5","score":0.78469907},{"tile":"S8","score":0.77263862}],
+      [{"tile":"S7","score":0.78700691},{"tile":"M1","score":0.77941706},{"tile":"S8","score":0.77589064}],
+      [{"tile":"S4","score":0.83327127},{"tile":"S2","score":0.78919482},{"tile":"S8","score":0.78085082}]
+    ],
+    "raw_unordered_top1_exact": false,
+    "unordered_top3_expected_coverage": false,
+    "legal_group": {
+      "schema_version": "public_meld_group_identity_ranking_v0_1",
+      "top_tiles": ["S4", "S4", "S4"],
+      "top_score": 0.81129756,
+      "runner_up_tiles": ["S6", "S5", "S4"],
+      "runner_up_score": 0.78595841,
+      "margin": 0.02533916,
+      "canonical_candidate_count": 37,
+      "development_proposal_tiles": null,
+      "action_kind": "UNKNOWN",
+      "development_only": true,
+      "changes_runtime_behavior": false,
+      "formal_promotion_evidence": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false,
+      "issues": ["mahjong_valid_group_identity_ranked","development_margin_gate_not_configured"]
+    },
+    "legal_group_correct": false
+  },
+  "model": {
+    "name": "mobilenet_v3_small_imagenet1k_v1",
+    "weights": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+    "fine_tuned": false,
+    "torch_version": "2.14.1+cu130",
+    "torchvision_version": "0.29.1+cu130",
+    "prototype_class_count": 25
+  },
+  "evidence_role": "development_measurement_only",
+  "blind_validation": false,
+  "independent_opponent_match_group_count": 1,
+  "mobilenet_acceptance_threshold": null,
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

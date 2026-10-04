@@ -1,0 +1,89 @@
+{
+  "schema_version": "round8_river_identity_candidate_intake_v0_1",
+  "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+  "source_session": "reviewed_match_2026_09_26_eight_hand",
+  "event_count": 5,
+  "rows": [
+    {
+      "event_frame": 3032,
+      "timestamp_seconds": 101.06666666666668,
+      "actor": "player",
+      "candidate_count": 1,
+      "river_region_candidates": [
+        {
+          "bbox": [
+            340,
+            274,
+            33,
+            42
+          ],
+          "native_size": [
+            33,
+            42
+          ],
+          "geometry_kind": "single_face",
+          "pixel_sha256": "84137b51236ee584405003633c17c689dc8ab1829aa3894e79a622fe6267e40a",
+          "laplacian_variance": 6318.337,
+          "tile_identity": "UNKNOWN",
+          "is_new_discard_identity_confirmed": false
+        }
+      ]
+    },
+    {
+      "event_frame": 3137,
+      "timestamp_seconds": 104.56666666666668,
+      "actor": "player",
+      "candidate_count": 1,
+      "river_region_candidates": [
+        {
+          "bbox": [
+            340,
+            274,
+            68,
+            42
+          ],
+          "native_size": [
+            68,
+            42
+          ],
+          "geometry_kind": "single_face",
+          "pixel_sha256": "950453e62b28a48346c3a4e15be9dae3683f7e4c01d3847b072f0b38d11a7fc0",
+          "laplacian_variance": 12373.158,
+          "tile_identity": "UNKNOWN",
+          "is_new_discard_identity_confirmed": false
+        }
+      ]
+    },
+    {
+      "event_frame": 3239,
+      "timestamp_seconds": 107.96666666666667,
+      "actor": "player",
+      "candidate_count": 0,
+      "river_region_candidates": []
+    },
+    {
+      "event_frame": 3347,
+      "timestamp_seconds": 111.56666666666668,
+      "actor": "player",
+      "candidate_count": 0,
+      "river_region_candidates": []
+    },
+    {
+      "event_frame": 3639,
+      "timestamp_seconds": 121.30000000000001,
+      "actor": "player",
+      "candidate_count": 0,
+      "river_region_candidates": []
+    }
+  ],
+  "scope": "all detector candidates in reviewed player river ROI at five existing growth-event frames; not yet linked to changed slots",
+  "private_pixels_committed": false,
+  "crop_pixels_are_native_resolution": true,
+  "classification_run": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

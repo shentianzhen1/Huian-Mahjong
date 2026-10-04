@@ -36,20 +36,74 @@ def _canonical_region(region: str) -> str:
     return "draw_visual" if region == "draw_region" else region
 
 
-def _coverage(labels: list[dict]) -> tuple[set[str], dict[str, set[str]]]:
+CONCEALED_IDENTITY_GATE_REGION = "concealed_identity"
+CONCEALED_IDENTITY_SOURCE_REGIONS = frozenset({"hand_region", "draw_visual"})
+GOLD_IDENTITY_GATE_REGION = "gold_identity"
+GOLD_IDENTITY_SOURCE_REGIONS = frozenset({"hand_region", "draw_visual", "gold_region"})
+
+
+def _gold_skin_covered_classes(labels: list[dict]) -> set[str]:
+    """Return classes with at least one reviewed real yellow Gold-skin crop."""
+    return {
+        row["tile_id"]
+        for row in labels
+        if row.get("approved") and row.get("gold_skin_only")
+    }
+
+
+def _coverage(
+    labels: list[dict],
+) -> tuple[set[str], dict[str, set[str]], dict[str, set[str]]]:
+    """Return global reporting coverage plus classifier-domain safety coverage."""
     covered = {row["tile_id"] for row in labels if row.get("approved")}
+    covered_by_region: dict[str, set[str]] = defaultdict(set)
     sessions: dict[str, dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
+    concealed_identity_sessions: dict[str, set[str]] = defaultdict(set)
+    concealed_identity_covered: set[str] = set()
+    gold_identity_sessions: dict[str, set[str]] = defaultdict(set)
+    gold_identity_covered: set[str] = set()
     for row in labels:
         if not row.get("approved"):
             continue
-        sessions[_canonical_region(row["region"])][row["tile_id"]].add(
-            row.get("source_session") or row.get("source_id") or "unknown"
-        )
+        region = _canonical_region(row["region"])
+        tile_id = row["tile_id"]
+        source_session = row.get("source_session") or row.get("source_id") or "unknown"
+        gold_skin_only = bool(row.get("gold_skin_only"))
+        if not gold_skin_only:
+            covered_by_region[region].add(tile_id)
+            sessions[region][tile_id].add(source_session)
+            if region in CONCEALED_IDENTITY_SOURCE_REGIONS:
+                concealed_identity_covered.add(tile_id)
+                concealed_identity_sessions[tile_id].add(source_session)
+        if region in GOLD_IDENTITY_SOURCE_REGIONS or gold_skin_only:
+            gold_identity_covered.add(tile_id)
+            gold_identity_sessions[tile_id].add(source_session)
     cross_session = {
         region: {tile_id for tile_id, values in classes.items() if len(values) >= 2}
         for region, classes in sessions.items()
     }
-    return covered, cross_session
+    # Hand and draw_visual use the same tile-face normalization and are two
+    # geometric positions of the same concealed visual domain. Pool them for
+    # identity while keeping their geometry/event semantics separate.
+    covered_by_region[CONCEALED_IDENTITY_GATE_REGION] = concealed_identity_covered
+    cross_session[CONCEALED_IDENTITY_GATE_REGION] = {
+        tile_id
+        for tile_id, values in concealed_identity_sessions.items()
+        if len(values) >= 2
+    }
+
+    # Gold-skin classification removes the yellow UI skin and ranks the
+    # underlying face against the complete reviewed template bank. Its own
+    # domain therefore aggregates only the regions actually used by that bank.
+    # A future public-river/meld M2 must not silently make concealed-hand Wan
+    # classification look complete.
+    covered_by_region[GOLD_IDENTITY_GATE_REGION] = gold_identity_covered
+    cross_session[GOLD_IDENTITY_GATE_REGION] = {
+        tile_id
+        for tile_id, values in gold_identity_sessions.items()
+        if len(values) >= 2
+    }
+    return covered, dict(covered_by_region), cross_session
 
 
 def _training_labels(labels: list[dict], session: str | None) -> list[dict]:
@@ -102,7 +156,13 @@ def read_stable_frames(
     root = Path(dataset_root)
     labels = approved_labels(root)
     training_labels = _training_labels(labels, session)
-    covered, cross_session = _coverage(training_labels)
+    covered, covered_by_region, cross_session = _coverage(training_labels)
+    # Gold-skin review is an appearance qualification, not an identity
+    # template. Keep the current runtime session excluded from classifier
+    # training and cross-session identity support, but allow any approved
+    # reviewed Gold-skin crop to prove that this class has been observed under
+    # the target yellow UI skin. This cannot make a class pass identity_gate().
+    gold_skin_covered = _gold_skin_covered_classes(labels)
     classifier = TemplateTileClassifier.from_labels(root, training_labels)
     geometry_frames = [
         detect_dynamic_geometry(image, frame=frame_id, session=session)
@@ -120,6 +180,19 @@ def read_stable_frames(
             "covered": len(covered & STANDARD_CLASSES),
             "total": len(STANDARD_CLASSES),
             "missing": missing,
+        },
+        "classification_domain_coverage": {
+            region: {
+                "covered": len(classes & STANDARD_CLASSES),
+                "total": len(STANDARD_CLASSES),
+                "missing": sorted(STANDARD_CLASSES - classes),
+            }
+            for region, classes in sorted(covered_by_region.items())
+        },
+        "real_gold_skin_evidence": {
+            "covered": len(gold_skin_covered & STANDARD_CLASSES),
+            "total": len(STANDARD_CLASSES),
+            "classes": sorted(gold_skin_covered & STANDARD_CLASSES),
         },
         "geometry_untrusted": fused.geometry_untrusted,
         "geometry_issues": list(fused.issues),
@@ -150,7 +223,11 @@ def read_stable_frames(
             "tile_confidence": 0.0,
             "identity_reason": "region_not_classified",
         })
-        classifier_region = CLASSIFIER_REGIONS.get(component.region_candidate)
+        classifier_region = (
+            "gold_region"
+            if component.gold_skin
+            else CLASSIFIER_REGIONS.get(component.region_candidate)
+        )
         if classifier_region is not None:
             crop_bbox = classification_crop_bbox(
                 component.pixel_bbox,
@@ -160,18 +237,45 @@ def read_stable_frames(
             x, y, width, height = crop_bbox
             crop = image.crop((x, y, x + width, y + height))
             try:
-                prediction = classifier.classify(crop, region=classifier_region)
+                if component.gold_skin:
+                    prediction = classifier.classify_gold_skin(crop)
+                elif component.region_candidate in {"hand", "draw_visual"}:
+                    prediction = classifier.classify(
+                        crop,
+                        region=CONCEALED_IDENTITY_GATE_REGION,
+                    )
+                else:
+                    prediction = classifier.classify(
+                        crop,
+                        region=classifier_region,
+                    )
             except ValueError:
                 item["identity_reason"] = "no_templates_for_region"
             else:
+                gate_region = (
+                    GOLD_IDENTITY_GATE_REGION
+                    if component.gold_skin
+                    else (
+                        CONCEALED_IDENTITY_GATE_REGION
+                        if component.region_candidate in {"hand", "draw_visual"}
+                        else classifier_region
+                    )
+                )
                 tile_id, reason = identity_gate(
                     prediction.tile_id,
                     prediction.confidence,
-                    region=classifier_region,
-                    covered_classes=covered,
+                    region=gate_region,
+                    covered_classes=covered_by_region.get(gate_region, set()),
                     cross_session_classes=cross_session,
                     confidence_threshold=confidence_threshold,
                 )
+                if (
+                    component.gold_skin
+                    and tile_id != "UNKNOWN"
+                    and prediction.tile_id not in gold_skin_covered
+                ):
+                    tile_id = "UNKNOWN"
+                    reason = "class_missing_real_gold_skin_example"
                 item.update({
                     "classification_crop_bbox": list(crop_bbox),
                     "candidate_tile_id": prediction.tile_id,

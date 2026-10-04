@@ -1,0 +1,191 @@
+{
+  "schema_version": "reviewed_edge_visible_plane_pin_dev_v0_1",
+  "annotation_author": "assistant_visible_pixel_review",
+  "user_confirmed": false,
+  "exact_face_plane_ground_truth": false,
+  "complete_face_outline_claimed": false,
+  "output_size": [
+    72,
+    96
+  ],
+  "selection": "all six previously frozen S9 edge crops; five adjacent old frames count as one event",
+  "corners_frozen_before_identity_scores": true,
+  "crop_ratio_search_performed": false,
+  "previously_inspected": true,
+  "blind_holdout": false,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "entries": [
+    {
+      "query_id": "native_reverse_S8_2",
+      "source_sha256": "3aeb25b0cccddbc2c8e5b25d2b640986f7d3690df33f15d34706355b2b9122cb",
+      "source_frame_pin": "d1273c1b5b536d96a618a37ef2802efa35d87697e57547a25e30ab7e742c8dbb",
+      "crop_sha256": "f11e2e70359c4583445b70f6cf2c20553adb0b7ceb83e9f33b7ea57cfc861966",
+      "source_crop_size": [
+        119,
+        157
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          14,
+          5
+        ],
+        [
+          118,
+          5
+        ],
+        [
+          101,
+          128
+        ],
+        [
+          0,
+          126
+        ]
+      ]
+    },
+    {
+      "query_id": "hand8_s789_4794_2",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "source_frame_pin": 4794,
+      "crop_sha256": "59a9f4200e5bac6ea5be0ff0b4351e4ac0fae330f61093b3dd242dd5c9fc8099",
+      "source_crop_size": [
+        47,
+        62
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          5,
+          2
+        ],
+        [
+          45,
+          2
+        ],
+        [
+          42,
+          50
+        ],
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "query_id": "hand8_s789_4797_2",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "source_frame_pin": 4797,
+      "crop_sha256": "9529d37188fd9dd74f0a29a4afedec96daa318222d545bf8d73bda33671eaaeb",
+      "source_crop_size": [
+        47,
+        62
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          5,
+          2
+        ],
+        [
+          45,
+          2
+        ],
+        [
+          42,
+          50
+        ],
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "query_id": "hand8_s789_4800_2",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "source_frame_pin": 4800,
+      "crop_sha256": "a4631b4f285e42e5165f114278b15c10baa2f1f4d0fe6833dccfab0c1e8d430e",
+      "source_crop_size": [
+        47,
+        62
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          5,
+          2
+        ],
+        [
+          45,
+          2
+        ],
+        [
+          42,
+          50
+        ],
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "query_id": "hand8_s789_4803_2",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "source_frame_pin": 4803,
+      "crop_sha256": "9e6caaa646965f6af678427c15785c1b7f8fbe075c471fb4005e81d87a79c067",
+      "source_crop_size": [
+        47,
+        62
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          5,
+          2
+        ],
+        [
+          45,
+          2
+        ],
+        [
+          42,
+          50
+        ],
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "query_id": "hand8_s789_4806_2",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "source_frame_pin": 4806,
+      "crop_sha256": "73a84f058dd9331828ca1deba253fa5592298fb06cc7020e8b26c4d98cd0a606",
+      "source_crop_size": [
+        47,
+        62
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          5,
+          2
+        ],
+        [
+          45,
+          2
+        ],
+        [
+          42,
+          50
+        ],
+        [
+          1,
+          50
+        ]
+      ]
+    }
+  ]
+}

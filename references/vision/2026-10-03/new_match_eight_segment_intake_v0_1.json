@@ -1,0 +1,650 @@
+{
+  "schema_version": "issue69_new_match_intake_development_v0_1",
+  "audited_code_sha": "a3b553c92ccbd2edd4a1a4e0e3137c04b69d284b",
+  "original_match_group": "new_match_20261003_owner_uploaded",
+  "original_match_group_status": "one match: common room, score continuity and overlapping opening; different chunks are not independent matches",
+  "independent_original_match_count": 1,
+  "purpose": "development/reference harvesting candidate; inspected data is not a frozen blind holdout",
+  "media_location": "private owner Drive; raw footage and crops excluded from GitHub",
+  "segments": [
+    {
+      "segment_alias": "segment01",
+      "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "size_bytes": 51996977,
+      "duration_seconds": 47.401667,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        7
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment02",
+      "sha256": "087e6059d1967e4f798926e274f14cad1d03d619c8d6677d3d29a4ddc92e9a31",
+      "size_bytes": 89699580,
+      "duration_seconds": 81.538333,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        6
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment03",
+      "sha256": "9a03e9078293ffedb25e3f0910f0d27db9e2df31f309546bad40cf285ad77822",
+      "size_bytes": 94409693,
+      "duration_seconds": 85.605011,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        8
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment04",
+      "sha256": "3aeb25b0cccddbc2c8e5b25d2b640986f7d3690df33f15d34706355b2b9122cb",
+      "size_bytes": 105497852,
+      "duration_seconds": 96.395,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        4
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment05",
+      "sha256": "10d63197d2d6c91f9a03d8617d1523d5b0498fd577f9790acefa492864e108be",
+      "size_bytes": 118269847,
+      "duration_seconds": 108.668345,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        5
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment06",
+      "sha256": "00583f60552163e5432a566aa388f7bd209bb9d6cd4556e08a1549e9fd2ed98d",
+      "size_bytes": 159175234,
+      "duration_seconds": 152.816667,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        3
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment07",
+      "sha256": "5b135387cc1b67d9e3932c2b33112e9591383e44e56865836e12997168f6abde",
+      "size_bytes": 176728322,
+      "duration_seconds": 179.175012,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        1
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    },
+    {
+      "segment_alias": "segment08",
+      "sha256": "a8abdb0660d921ed1cb3c3e0cf0628a6802b76a92e7beecc09f3ed87c952c6ed",
+      "size_bytes": 256412544,
+      "duration_seconds": 250.806667,
+      "encoded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "codec": "hevc",
+      "observed_hands": [
+        1,
+        2
+      ],
+      "hand_label_evidence": "assistant visual review of start/middle/end decoded samples",
+      "full_hand_completeness": "UNVERIFIED"
+    }
+  ],
+  "observed_hand_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "upload_order_is_hand_order": false,
+  "canonical_hand_mapping": {
+    "1": "segment08 first-hand portion; segment07 is overlapping alternate",
+    "2": "segment08 second-hand portion",
+    "3": "segment06",
+    "4": "segment04",
+    "5": "segment05",
+    "6": "segment02",
+    "7": "segment01",
+    "8": "segment03"
+  },
+  "overlap": {
+    "segments": [
+      "segment07",
+      "segment08"
+    ],
+    "observed_shared_hand": 1,
+    "opening_zero_images_equal": true,
+    "policy": "never concatenate or count overlapping first-hand footage twice",
+    "segment08_transition_samples": {
+      "175s": "hand1 visible",
+      "180s": "between hands, table clear",
+      "185s": "hand2 opening Gold animation",
+      "190s": "hand2 visible"
+    },
+    "exact_cut_pts": "UNKNOWN; sampled transition is not exact onset evidence"
+  },
+  "candidate_probe": {
+    "hand": 7,
+    "segment": "segment01",
+    "requested_ffmpeg_seek_seconds": 23,
+    "frame_count": 3,
+    "frame_sampling": "three consecutive output images; correlated, not independent samples or matched exact-frame ground truth",
+    "preprocessing": "FFmpeg auto-rotation then resize to 1046x480",
+    "provisional_visual_label": [
+      "P1",
+      "P1",
+      "P1"
+    ],
+    "label_reviewer": "assistant visual review; not owner adjudication",
+    "runtime_tile_identity": "UNKNOWN",
+    "runtime_action_kind": "UNKNOWN",
+    "automatic_crop_construction": true,
+    "manual_target_bbox_used_to_construct_crop": false,
+    "detector_and_geometry_rows": [
+      {
+        "frame_offset": 0,
+        "candidate_rows": [
+          {
+            "detector": {
+              "pixel_bbox": [
+                94,
+                402,
+                131,
+                74
+              ],
+              "normalized_bbox": [
+                0.089866,
+                0.8375,
+                0.125239,
+                0.154167
+              ],
+              "geometry_kind": "bottom_group",
+              "confidence": 0.818898,
+              "fill_ratio": 0.663606,
+              "frame": 1,
+              "session": "new_match_20261003_round7",
+              "tile_id": "UNKNOWN"
+            },
+            "prepared": {
+              "schema_version": "prepared_public_meld_faces_v0_1",
+              "geometry": {
+                "schema_version": "public_meld_geometry_normalization_v0_1",
+                "rotation_degrees": 0.0,
+                "stack_state": "FLAT",
+                "height_score": 1.302326,
+                "top_to_mid_span_ratio": 0.98353,
+                "normalized_size": [
+                  221,
+                  96
+                ],
+                "tight_bbox_in_group": [
+                  2,
+                  12,
+                  129,
+                  56
+                ],
+                "issues": [
+                  "geometry_normalized",
+                  "flat_three_face_geometry"
+                ],
+                "geometry_only": true,
+                "tile_identity": "UNKNOWN",
+                "action_kind": "UNKNOWN",
+                "safe_for_hint": false,
+                "safe_for_executor": false
+              },
+              "normalized_face_count": 3,
+              "classifier_ready": true,
+              "stacked_structure_detected": false,
+              "tile_identity": "UNKNOWN",
+              "action_kind": "UNKNOWN",
+              "safe_for_runtime_identity": false,
+              "safe_for_hint": false,
+              "safe_for_executor": false
+            },
+            "body_context_seam2": {
+              "detector_bbox": [
+                94,
+                402,
+                131,
+                74
+              ],
+              "tight_bbox_in_group": [
+                2,
+                12,
+                129,
+                56
+              ],
+              "vertical_context": 1,
+              "raw_group_xyxy": [
+                96,
+                413,
+                225,
+                471
+              ],
+              "face_xyxy": [
+                [
+                  96,
+                  413,
+                  141,
+                  471
+                ],
+                [
+                  137,
+                  413,
+                  184,
+                  471
+                ],
+                [
+                  180,
+                  413,
+                  225,
+                  471
+                ]
+              ],
+              "geometry": {
+                "schema_version": "public_meld_geometry_normalization_v0_1",
+                "rotation_degrees": 0.0,
+                "stack_state": "FLAT",
+                "height_score": 1.302326,
+                "top_to_mid_span_ratio": 0.98353,
+                "normalized_size": [
+                  221,
+                  96
+                ],
+                "tight_bbox_in_group": [
+                  2,
+                  12,
+                  129,
+                  56
+                ],
+                "issues": [
+                  "geometry_normalized",
+                  "flat_three_face_geometry"
+                ],
+                "geometry_only": true,
+                "tile_identity": "UNKNOWN",
+                "action_kind": "UNKNOWN",
+                "safe_for_hint": false,
+                "safe_for_executor": false
+              },
+              "outer_body_probe": null
+            }
+          }
+        ],
+        "issues": [
+          "candidate_intake_only",
+          "oversized_components=2"
+        ]
+      },
+      {
+        "frame_offset": 1,
+        "candidate_rows": [
+          {
+            "detector": {
+              "pixel_bbox": [
+                94,
+                402,
+                131,
+                74
+              ],
+              "normalized_bbox": [
+                0.089866,
+                0.8375,
+                0.125239,
+                0.154167
+              ],
+              "geometry_kind": "bottom_group",
+              "confidence": 0.818898,
+              "fill_ratio": 0.663606,
+              "frame": 2,
+              "session": "new_match_20261003_round7",
+              "tile_id": "UNKNOWN"
+            },
+            "prepared": {
+              "schema_version": "prepared_public_meld_faces_v0_1",
+              "geometry": {
+                "schema_version": "public_meld_geometry_normalization_v0_1",
+                "rotation_degrees": 0.0,
+                "stack_state": "FLAT",
+                "height_score": 1.302326,
+                "top_to_mid_span_ratio": 0.98353,
+                "normalized_size": [
+                  221,
+                  96
+                ],
+                "tight_bbox_in_group": [
+                  2,
+                  12,
+                  129,
+                  56
+                ],
+                "issues": [
+                  "geometry_normalized",
+                  "flat_three_face_geometry"
+                ],
+                "geometry_only": true,
+                "tile_identity": "UNKNOWN",
+                "action_kind": "UNKNOWN",
+                "safe_for_hint": false,
+                "safe_for_executor": false
+              },
+              "normalized_face_count": 3,
+              "classifier_ready": true,
+              "stacked_structure_detected": false,
+              "tile_identity": "UNKNOWN",
+              "action_kind": "UNKNOWN",
+              "safe_for_runtime_identity": false,
+              "safe_for_hint": false,
+              "safe_for_executor": false
+            },
+            "body_context_seam2": {
+              "detector_bbox": [
+                94,
+                402,
+                131,
+                74
+              ],
+              "tight_bbox_in_group": [
+                2,
+                12,
+                129,
+                56
+              ],
+              "vertical_context": 1,
+              "raw_group_xyxy": [
+                96,
+                413,
+                225,
+                471
+              ],
+              "face_xyxy": [
+                [
+                  96,
+                  413,
+                  141,
+                  471
+                ],
+                [
+                  137,
+                  413,
+                  184,
+                  471
+                ],
+                [
+                  180,
+                  413,
+                  225,
+                  471
+                ]
+              ],
+              "geometry": {
+                "schema_version": "public_meld_geometry_normalization_v0_1",
+                "rotation_degrees": 0.0,
+                "stack_state": "FLAT",
+                "height_score": 1.302326,
+                "top_to_mid_span_ratio": 0.98353,
+                "normalized_size": [
+                  221,
+                  96
+                ],
+                "tight_bbox_in_group": [
+                  2,
+                  12,
+                  129,
+                  56
+                ],
+                "issues": [
+                  "geometry_normalized",
+                  "flat_three_face_geometry"
+                ],
+                "geometry_only": true,
+                "tile_identity": "UNKNOWN",
+                "action_kind": "UNKNOWN",
+                "safe_for_hint": false,
+                "safe_for_executor": false
+              },
+              "outer_body_probe": null
+            }
+          }
+        ],
+        "issues": [
+          "candidate_intake_only",
+          "oversized_components=2"
+        ]
+      },
+      {
+        "frame_offset": 2,
+        "candidate_rows": [
+          {
+            "detector": {
+              "pixel_bbox": [
+                94,
+                402,
+                131,
+                74
+              ],
+              "normalized_bbox": [
+                0.089866,
+                0.8375,
+                0.125239,
+                0.154167
+              ],
+              "geometry_kind": "bottom_group",
+              "confidence": 0.818861,
+              "fill_ratio": 0.663503,
+              "frame": 3,
+              "session": "new_match_20261003_round7",
+              "tile_id": "UNKNOWN"
+            },
+            "prepared": {
+              "schema_version": "prepared_public_meld_faces_v0_1",
+              "geometry": {
+                "schema_version": "public_meld_geometry_normalization_v0_1",
+                "rotation_degrees": 0.0,
+                "stack_state": "FLAT",
+                "height_score": 1.302326,
+                "top_to_mid_span_ratio": 0.98353,
+                "normalized_size": [
+                  221,
+                  96
+                ],
+                "tight_bbox_in_group": [
+                  2,
+                  12,
+                  129,
+                  56
+                ],
+                "issues": [
+                  "geometry_normalized",
+                  "flat_three_face_geometry"
+                ],
+                "geometry_only": true,
+                "tile_identity": "UNKNOWN",
+                "action_kind": "UNKNOWN",
+                "safe_for_hint": false,
+                "safe_for_executor": false
+              },
+              "normalized_face_count": 3,
+              "classifier_ready": true,
+              "stacked_structure_detected": false,
+              "tile_identity": "UNKNOWN",
+              "action_kind": "UNKNOWN",
+              "safe_for_runtime_identity": false,
+              "safe_for_hint": false,
+              "safe_for_executor": false
+            },
+            "body_context_seam2": {
+              "detector_bbox": [
+                94,
+                402,
+                131,
+                74
+              ],
+              "tight_bbox_in_group": [
+                2,
+                12,
+                129,
+                56
+              ],
+              "vertical_context": 1,
+              "raw_group_xyxy": [
+                96,
+                413,
+                225,
+                471
+              ],
+              "face_xyxy": [
+                [
+                  96,
+                  413,
+                  141,
+                  471
+                ],
+                [
+                  137,
+                  413,
+                  184,
+                  471
+                ],
+                [
+                  180,
+                  413,
+                  225,
+                  471
+                ]
+              ],
+              "geometry": {
+                "schema_version": "public_meld_geometry_normalization_v0_1",
+                "rotation_degrees": 0.0,
+                "stack_state": "FLAT",
+                "height_score": 1.302326,
+                "top_to_mid_span_ratio": 0.98353,
+                "normalized_size": [
+                  221,
+                  96
+                ],
+                "tight_bbox_in_group": [
+                  2,
+                  12,
+                  129,
+                  56
+                ],
+                "issues": [
+                  "geometry_normalized",
+                  "flat_three_face_geometry"
+                ],
+                "geometry_only": true,
+                "tile_identity": "UNKNOWN",
+                "action_kind": "UNKNOWN",
+                "safe_for_hint": false,
+                "safe_for_executor": false
+              },
+              "outer_body_probe": null
+            }
+          }
+        ],
+        "issues": [
+          "candidate_intake_only",
+          "oversized_components=2"
+        ]
+      }
+    ],
+    "claim": "3 frames yield one bottom FLAT group and 3 normalized faces; body-context crops visually show P1 glyphs. No identity score, source-disjoint bank admission, pixel-exact polygons or action reconstruction is claimed"
+  },
+  "remaining": [
+    "pin exact hand2 transition presentation timestamps",
+    "verify opening and settlement completeness for each hand",
+    "review reference candidates for N/S1/S8/M9 in both meld zones",
+    "freeze original-match exclusions before any reference-bank evaluation",
+    "score identity and abstention independently from geometry"
+  ],
+  "runtime_identity_threshold": 0.82,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "executor": "OFF",
+  "promotion": "none"
+}

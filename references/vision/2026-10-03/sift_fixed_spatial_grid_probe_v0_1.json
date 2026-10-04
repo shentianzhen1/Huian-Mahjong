@@ -1,0 +1,1062 @@
+{
+  "schema_version": "sift_fixed_spatial_grid_probe_dev_v0_1",
+  "modes": {
+    "frozen_baseline": {
+      "hand8_face_summary": {
+        "1": {
+          "S7": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          },
+          "S8": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          },
+          "S9": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 0
+          }
+        },
+        "2": {
+          "S7": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S9": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          }
+        }
+      },
+      "hand8_group_summary": {
+        "1": {
+          "group_frame_rows": 5,
+          "scorable_group_frames": 5,
+          "matching_group_frames": 4
+        },
+        "2": {
+          "group_frame_rows": 5,
+          "scorable_group_frames": 0,
+          "matching_group_frames": 0
+        }
+      },
+      "hand8_face_rows": [
+        {
+          "frame": 4794,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4794,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4794,
+          "expected": "S9",
+          "top1": "S2"
+        },
+        {
+          "frame": 4797,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4797,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4797,
+          "expected": "S9",
+          "top1": "S2"
+        },
+        {
+          "frame": 4800,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4800,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4800,
+          "expected": "S9",
+          "top1": "S2"
+        },
+        {
+          "frame": 4803,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4803,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4803,
+          "expected": "S9",
+          "top1": "S2"
+        },
+        {
+          "frame": 4806,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4806,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4806,
+          "expected": "S9",
+          "top1": "S2"
+        }
+      ],
+      "hand7_face_summary": {
+        "1": {
+          "M9": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "N": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S1": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 15,
+            "scorable_faces": 15,
+            "matching_candidate_faces": 15
+          }
+        },
+        "2": {
+          "M9": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "N": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S1": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          }
+        }
+      },
+      "reverse_summary": {
+        "public_face_rows": 21,
+        "paired_scorable_faces": 9,
+        "baseline_correct_on_paired": 9,
+        "augmented_correct_on_paired": 9,
+        "newly_supported_faces": 1,
+        "newly_supported_correct": 1,
+        "regressed_label_ids": []
+      },
+      "public_control_rows": [
+        {
+          "label_id": "public_meld_p1_a",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_p1_b",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_p1_c",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s7",
+          "expected": "S7",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s8",
+          "expected": "S8",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s9",
+          "expected": "S9",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_m4",
+          "expected": "M4",
+          "scorable": true,
+          "top1": "M4",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_m5",
+          "expected": "M5",
+          "scorable": true,
+          "top1": "M5",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_m6",
+          "expected": "M6",
+          "scorable": true,
+          "top1": "M6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p6",
+          "expected": "P6",
+          "scorable": true,
+          "top1": "P6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p7",
+          "expected": "P7",
+          "scorable": true,
+          "top1": "P7",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p8",
+          "expected": "P8",
+          "scorable": true,
+          "top1": "P8",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p4_0",
+          "expected": "P4",
+          "scorable": false,
+          "top1": "P7",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p5_1",
+          "expected": "P5",
+          "scorable": false,
+          "top1": "P7",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p6_2",
+          "expected": "P6",
+          "scorable": true,
+          "top1": "P6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s4_0",
+          "expected": "S4",
+          "scorable": true,
+          "top1": "S4",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s5_1",
+          "expected": "S5",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s6_2",
+          "expected": "S6",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s2_0",
+          "expected": "S2",
+          "scorable": false,
+          "top1": "S5",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s3_1",
+          "expected": "S3",
+          "scorable": false,
+          "top1": "S5",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s4_2",
+          "expected": "S4",
+          "scorable": true,
+          "top1": "S4",
+          "correct_when_scorable": true
+        }
+      ],
+      "input_sha256": {
+        "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+        "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json": "c076878ea205ed4cc33f8934a8ad7b1ca4ac054b12085b75402911fbcfc42018",
+        "references/vision/2026-10-03/existing_video_meld_face_intake_v0_1.json": "2e4c95918ead1527372e71fe4066a3a0bc3ead1513026eb779831d7175f2ee78",
+        "references/vision/2026-09-24/public_identity_source_groups.development.json": "5eaa25861b77925739dec39c18da0dfef9450cf9729e9a2a8d4f5ddde9924248",
+        "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json": "6cf0d63b66215f0833f822170e066123ff8c5286834030c74eab1d912295a744"
+      }
+    },
+    "reference_dedup": {
+      "hand8_face_summary": {
+        "1": {
+          "S7": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          },
+          "S8": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          },
+          "S9": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 3
+          }
+        },
+        "2": {
+          "S7": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S9": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          }
+        }
+      },
+      "hand8_group_summary": {
+        "1": {
+          "group_frame_rows": 5,
+          "scorable_group_frames": 5,
+          "matching_group_frames": 5
+        },
+        "2": {
+          "group_frame_rows": 5,
+          "scorable_group_frames": 0,
+          "matching_group_frames": 0
+        }
+      },
+      "hand8_face_rows": [
+        {
+          "frame": 4794,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4794,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4794,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4797,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4797,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4797,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4800,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4800,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4800,
+          "expected": "S9",
+          "top1": "S7"
+        },
+        {
+          "frame": 4803,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4803,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4803,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4806,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4806,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4806,
+          "expected": "S9",
+          "top1": "S7"
+        }
+      ],
+      "hand7_face_summary": {
+        "1": {
+          "M9": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "N": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S1": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 15,
+            "scorable_faces": 15,
+            "matching_candidate_faces": 15
+          }
+        },
+        "2": {
+          "M9": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "N": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S1": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          }
+        }
+      },
+      "reverse_summary": {
+        "public_face_rows": 21,
+        "paired_scorable_faces": 9,
+        "baseline_correct_on_paired": 9,
+        "augmented_correct_on_paired": 9,
+        "newly_supported_faces": 1,
+        "newly_supported_correct": 1,
+        "regressed_label_ids": []
+      },
+      "public_control_rows": [
+        {
+          "label_id": "public_meld_p1_a",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_p1_b",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_p1_c",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "P4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s7",
+          "expected": "S7",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s8",
+          "expected": "S8",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s9",
+          "expected": "S9",
+          "scorable": false,
+          "top1": "S2",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_m4",
+          "expected": "M4",
+          "scorable": true,
+          "top1": "M4",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_m5",
+          "expected": "M5",
+          "scorable": true,
+          "top1": "M5",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_m6",
+          "expected": "M6",
+          "scorable": true,
+          "top1": "M6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p6",
+          "expected": "P6",
+          "scorable": true,
+          "top1": "P6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p7",
+          "expected": "P7",
+          "scorable": true,
+          "top1": "P7",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p8",
+          "expected": "P8",
+          "scorable": true,
+          "top1": "P8",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p4_0",
+          "expected": "P4",
+          "scorable": false,
+          "top1": "P7",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p5_1",
+          "expected": "P5",
+          "scorable": false,
+          "top1": "P7",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p6_2",
+          "expected": "P6",
+          "scorable": true,
+          "top1": "P6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s4_0",
+          "expected": "S4",
+          "scorable": true,
+          "top1": "S4",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s5_1",
+          "expected": "S5",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s6_2",
+          "expected": "S6",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s2_0",
+          "expected": "S2",
+          "scorable": false,
+          "top1": "S5",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s3_1",
+          "expected": "S3",
+          "scorable": false,
+          "top1": "S6",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s4_2",
+          "expected": "S4",
+          "scorable": true,
+          "top1": "S4",
+          "correct_when_scorable": true
+        }
+      ],
+      "input_sha256": {
+        "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+        "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json": "c076878ea205ed4cc33f8934a8ad7b1ca4ac054b12085b75402911fbcfc42018",
+        "references/vision/2026-10-03/existing_video_meld_face_intake_v0_1.json": "2e4c95918ead1527372e71fe4066a3a0bc3ead1513026eb779831d7175f2ee78",
+        "references/vision/2026-09-24/public_identity_source_groups.development.json": "5eaa25861b77925739dec39c18da0dfef9450cf9729e9a2a8d4f5ddde9924248",
+        "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json": "6cf0d63b66215f0833f822170e066123ff8c5286834030c74eab1d912295a744"
+      }
+    },
+    "fixed_3x3_grid_reference_dedup": {
+      "hand8_face_summary": {
+        "1": {
+          "S7": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          },
+          "S8": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          },
+          "S9": {
+            "face_count": 5,
+            "scorable_faces": 5,
+            "matching_candidate_faces": 5
+          }
+        },
+        "2": {
+          "S7": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S9": {
+            "face_count": 5,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          }
+        }
+      },
+      "hand8_group_summary": {
+        "1": {
+          "group_frame_rows": 5,
+          "scorable_group_frames": 5,
+          "matching_group_frames": 5
+        },
+        "2": {
+          "group_frame_rows": 5,
+          "scorable_group_frames": 0,
+          "matching_group_frames": 0
+        }
+      },
+      "hand8_face_rows": [
+        {
+          "frame": 4794,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4794,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4794,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4797,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4797,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4797,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4800,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4800,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4800,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4803,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4803,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4803,
+          "expected": "S9",
+          "top1": "S9"
+        },
+        {
+          "frame": 4806,
+          "expected": "S7",
+          "top1": "S7"
+        },
+        {
+          "frame": 4806,
+          "expected": "S8",
+          "top1": "S8"
+        },
+        {
+          "frame": 4806,
+          "expected": "S9",
+          "top1": "S9"
+        }
+      ],
+      "hand7_face_summary": {
+        "1": {
+          "M9": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "N": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S1": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 15,
+            "scorable_faces": 15,
+            "matching_candidate_faces": 15
+          }
+        },
+        "2": {
+          "M9": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "N": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S1": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          },
+          "S8": {
+            "face_count": 15,
+            "scorable_faces": 0,
+            "matching_candidate_faces": 0
+          }
+        }
+      },
+      "reverse_summary": {
+        "public_face_rows": 21,
+        "paired_scorable_faces": 9,
+        "baseline_correct_on_paired": 7,
+        "augmented_correct_on_paired": 7,
+        "newly_supported_faces": 1,
+        "newly_supported_correct": 1,
+        "regressed_label_ids": []
+      },
+      "public_control_rows": [
+        {
+          "label_id": "public_meld_p1_a",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "M6",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_p1_b",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_p1_c",
+          "expected": "P1",
+          "scorable": false,
+          "top1": "P5",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s7",
+          "expected": "S7",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s8",
+          "expected": "S8",
+          "scorable": false,
+          "top1": "S3",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_s9",
+          "expected": "S9",
+          "scorable": false,
+          "top1": "S6",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "public_meld_m4",
+          "expected": "M4",
+          "scorable": true,
+          "top1": "M4",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_m5",
+          "expected": "M5",
+          "scorable": true,
+          "top1": "M5",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_m6",
+          "expected": "M6",
+          "scorable": true,
+          "top1": "M6",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p6",
+          "expected": "P6",
+          "scorable": true,
+          "top1": "P7",
+          "correct_when_scorable": false
+        },
+        {
+          "label_id": "public_meld_p7",
+          "expected": "P7",
+          "scorable": true,
+          "top1": "P7",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "public_meld_p8",
+          "expected": "P8",
+          "scorable": true,
+          "top1": "P8",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p4_0",
+          "expected": "P4",
+          "scorable": false,
+          "top1": "P6",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p5_1",
+          "expected": "P5",
+          "scorable": false,
+          "top1": "P7",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h7_p456_p6_2",
+          "expected": "P6",
+          "scorable": true,
+          "top1": "P8",
+          "correct_when_scorable": false
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s4_0",
+          "expected": "S4",
+          "scorable": true,
+          "top1": "S4",
+          "correct_when_scorable": true
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s5_1",
+          "expected": "S5",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "eight_hand_h4_s456_s6_2",
+          "expected": "S6",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s2_0",
+          "expected": "S2",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s3_1",
+          "expected": "S3",
+          "scorable": false,
+          "top1": "S4",
+          "correct_when_scorable": null
+        },
+        {
+          "label_id": "special14_s234_s4_2",
+          "expected": "S4",
+          "scorable": true,
+          "top1": "S4",
+          "correct_when_scorable": true
+        }
+      ],
+      "input_sha256": {
+        "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+        "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json": "c076878ea205ed4cc33f8934a8ad7b1ca4ac054b12085b75402911fbcfc42018",
+        "references/vision/2026-10-03/existing_video_meld_face_intake_v0_1.json": "2e4c95918ead1527372e71fe4066a3a0bc3ead1513026eb779831d7175f2ee78",
+        "references/vision/2026-09-24/public_identity_source_groups.development.json": "5eaa25861b77925739dec39c18da0dfef9450cf9729e9a2a8d4f5ddde9924248",
+        "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json": "6cf0d63b66215f0833f822170e066123ff8c5286834030c74eab1d912295a744"
+      }
+    }
+  },
+  "cross_mode_public_controls": {
+    "frozen_baseline": {
+      "baseline_scorable_control_faces": 9,
+      "still_scorable": 9,
+      "correct_on_baseline_controls": 9,
+      "coverage_lost_ids": [],
+      "regressed_ids": []
+    },
+    "reference_dedup": {
+      "baseline_scorable_control_faces": 9,
+      "still_scorable": 9,
+      "correct_on_baseline_controls": 9,
+      "coverage_lost_ids": [],
+      "regressed_ids": []
+    },
+    "fixed_3x3_grid_reference_dedup": {
+      "baseline_scorable_control_faces": 9,
+      "still_scorable": 9,
+      "correct_on_baseline_controls": 7,
+      "coverage_lost_ids": [],
+      "regressed_ids": [
+        "public_meld_p6",
+        "eight_hand_h7_p456_p6_2"
+      ]
+    }
+  },
+  "query_ledger_sha256": "78fe4422206c12e0239dfe73453ad2dca976a59ef2dfdb5c73dca420f5a3270b",
+  "opencv_version": "5.0.0",
+  "fixed_grid_rows": 3,
+  "fixed_grid_columns": 3,
+  "grid_search_performed": false,
+  "mask_applied_to_ratio_and_fallback": true,
+  "query_crops_changed": false,
+  "thresholds_changed": false,
+  "frozen_callbacks_restored": true,
+  "candidate_decision": "do_not_adopt_grid_candidate_due_to_public_control_regressions",
+  "previously_inspected": true,
+  "blind_validation": false,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

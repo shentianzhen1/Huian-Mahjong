@@ -1,0 +1,221 @@
+{
+  "schema_version": "opponent_public_meld_review_queue_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "purpose": "first reviewed opponent top_group identity batch",
+  "privacy": "raw video/full frames remain private; one privacy-bounded five-frame strip contains only the opponent exposed meld tiles for reproducible development evaluation",
+  "items": [
+    {
+      "review_id": "opp_meld_14_m123",
+      "source_role": "private_development_video",
+      "source_name_public_alias": "14.mp4",
+      "match_group": "reviewed_recording_14",
+      "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "event": "CHI",
+      "actor": "opponent",
+      "expected_tiles": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "incoming_tile": "M3",
+      "candidate_window_seconds": [
+        58,
+        60
+      ],
+      "candidate_window_frames": [
+        1682,
+        1740
+      ],
+      "strongest_transition_frames": [
+        1700,
+        1706,
+        1707,
+        1723,
+        1711
+      ],
+      "evidence_status": "USER_REVIEWED_EVENT_AND_EXISTING_PRIVATE_CONTACT_SHEET",
+      "crop_status": "CLASSIFIER_READY",
+      "independent_match_group": true,
+      "source_verification": "SHA256_EXACT_VERIFIED_FROM_CONNECTED_DRIVE_RAW_BYTES_2026_10_01",
+      "source_size_bytes": 10709355,
+      "measured_source_face_size_px": [
+        22,
+        29
+      ],
+      "stable_measurement_crop_count": 5,
+      "measurement_report": "references/vision/2026-10-01/opponent_meld_14_m123_geometry_result_v0_1.json",
+      "identity_runtime_status": "UNKNOWN",
+      "measurement_crop_storage": "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA",
+      "public_evaluation_asset": {
+        "path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.webp",
+        "sha256": "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9",
+        "layout": "vertical_strip_5x_71x33",
+        "frame_count": 5,
+        "frame_size_px": [
+          71,
+          33
+        ],
+        "content_scope": "opponent_exposed_meld_tiles_only",
+        "player_or_room_metadata": false,
+        "encoding": "webp_lossless",
+        "decoded_rgb_sha256": "ddcfa7a367f3a379e16b7324b745759a29625fd9e223c45de84cc28d5d416ec3",
+        "decoded_rgb_matches_original_png": true,
+        "file_size_bytes": 9720
+      },
+      "latest_identity_evaluation": {
+        "path": "references/vision/2026-10-01/opponent_public_meld_mobilenet_lineage_qualified_result_v0_1.json",
+        "status": "DEVELOPMENT_TRANSFER_FAILED_CURRENT_BATCH",
+        "frame_legal_group_top1_correct": "0/5",
+        "frame_unordered_top3_expected_coverage": "0/5",
+        "multi_frame_legal_group_top_tiles": [
+          "M6",
+          "M6",
+          "M6"
+        ],
+        "identity_runtime_status": "UNKNOWN"
+      },
+      "real_public_probe": {
+        "eligible": false,
+        "status": "BLOCKED_MISSING_CROSS_MATCH_REAL_PUBLIC_REFERENCE",
+        "eligibility_query": "m123",
+        "note": "After excluding reviewed_recording_14, M1/M2/M3 each have zero reviewed real public-meld faces."
+      }
+    },
+    {
+      "review_id": "opp_meld_0926_hand1_s456",
+      "source_role": "private_first_hand_video",
+      "source_name_public_alias": "2026-09-26 first-hand recording",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "event": "CHI",
+      "actor": "opponent",
+      "expected_tiles": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "incoming_tile": "S5",
+      "candidate_window_seconds": [
+        82,
+        83.5
+      ],
+      "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
+      "crop_status": "CLASSIFIER_READY",
+      "independent_match_group": true,
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "source_verification": "SHA256_EXACT_VERIFIED_FROM_CONNECTED_DRIVE_RAW_BYTES_2026_10_01",
+      "measured_source_face_size_px": [
+        23,
+        26
+      ],
+      "stable_measurement_crop_count": 5,
+      "measurement_report": "references/vision/2026-10-01/opponent_meld_0926_hand1_s456_geometry_result_v0_1.json",
+      "identity_runtime_status": "UNKNOWN",
+      "measurement_crop_storage": "PUBLIC_TILE_ONLY_5FRAME_STRIP_NO_PLAYER_OR_ROOM_METADATA",
+      "public_evaluation_asset": {
+        "path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s456_5frame_strip.webp",
+        "sha256": "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+        "layout": "vertical_strip_5x_71x33",
+        "frame_count": 5,
+        "frame_size_px": [
+          71,
+          33
+        ],
+        "content_scope": "opponent_exposed_meld_tiles_only",
+        "player_or_room_metadata": false,
+        "encoding": "webp_lossless",
+        "file_size_bytes": 9214
+      },
+      "latest_identity_evaluation": {
+        "path": "references/vision/2026-10-01/opponent_public_meld_mobilenet_s456_result_v0_1.json",
+        "status": "DEVELOPMENT_TRANSFER_FAILED_CURRENT_BATCH",
+        "frame_legal_group_top1_correct": "0/5",
+        "frame_unordered_top3_expected_coverage": "0/5",
+        "multi_frame_legal_group_top_tiles": [
+          "S4",
+          "S4",
+          "S4"
+        ],
+        "multi_frame_runner_up_tiles": [
+          "S6",
+          "S5",
+          "S4"
+        ],
+        "multi_frame_margin": 0.02533916,
+        "identity_runtime_status": "UNKNOWN"
+      },
+      "real_public_probe": {
+        "eligible": true,
+        "status": "ELIGIBLE_DEVELOPMENT_ONLY",
+        "eligibility_query": "s456",
+        "latest_result": "references/vision/2026-10-01/opponent_meld_s456_real_public_probe_v0_1.json",
+        "legal_group_top1_correct": "5/5",
+        "identity_runtime_status": "UNKNOWN"
+      }
+    },
+    {
+      "review_id": "opp_meld_0926_hand1_s123",
+      "source_role": "private_first_hand_video",
+      "source_name_public_alias": "2026-09-26 first-hand recording",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "event": "CHI",
+      "actor": "opponent",
+      "expected_tiles": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "incoming_tile": "S2",
+      "candidate_window_seconds": [
+        125,
+        126.5
+      ],
+      "evidence_status": "USER_AND_VIDEO_REVIEW_CONFIRMED",
+      "crop_status": "CLASSIFIER_READY",
+      "independent_match_group": false,
+      "note": "same original match as opp_meld_0926_hand1_s456; counts as additional coverage, not independent validation",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "source_verification": "LOCKED_EXISTING_FIRST_HAND_LINEAGE_PENDING_REFETCH_IF_CROPPED",
+      "real_public_probe": {
+        "eligible": false,
+        "status": "BLOCKED_MISSING_CROSS_MATCH_REAL_PUBLIC_REFERENCE",
+        "eligibility_query": "s123",
+        "missing_tiles": [
+          "S1"
+        ],
+        "available_cross_match_real_public_tiles": [
+          "S2",
+          "S3"
+        ],
+        "identity_runtime_status": "UNKNOWN"
+      },
+      "public_strip_path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s123_5frame_strip.webp",
+      "public_strip_sha256": "4a3c2b5f125b668ec5ff7ecc1fddf0d41cff241e7968482e11fe34c9e75bc5de",
+      "geometry_evaluation": {
+        "path": "references/vision/2026-10-01/opponent_meld_0926_hand1_s123_geometry_result_v0_1.json",
+        "flat_frames": "5/5",
+        "classifier_ready_frames": "5/5",
+        "classifier_ready_faces": 15
+      }
+    }
+  ],
+  "qualification_rules": [
+    "exact source SHA must be verified before frame extraction",
+    "top_group must be visibly settled rather than in CHI animation",
+    "single-tile segmentation must return exactly three classifier-ready faces",
+    "tile identities remain human-confirmed truth; detector predictions may not rewrite labels",
+    "same original match contributes one match_group for validation",
+    "raw private video/full frames remain private; only privacy-bounded tile-only crops may be committed for reproducible development evaluation"
+  ],
+  "current_counts": {
+    "queued_groups": 3,
+    "independent_original_match_groups": 2,
+    "classifier_ready_groups": 3,
+    "source_verified_groups": 2
+  },
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

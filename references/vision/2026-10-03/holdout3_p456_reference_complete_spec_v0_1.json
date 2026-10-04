@@ -1,0 +1,97 @@
+{
+  "schema_version": "reference_complete_holdout_spec_dev_v0_1",
+  "conservative_original_match_group": "drive_full_eight_one_original_match",
+  "excluded_same_match_aliases": [
+    "drive_full_eight_one_original_match",
+    "reviewed_match_2026_09_19_eight_hand"
+  ],
+  "review_exposure": "frozen_before_scoring_but_same_original_match_as_existing_controls",
+  "label_authority": "assistant_visual_review_not_user_confirmation",
+  "scorer_contract": {
+    "candidate_name": "spatial_window_affine_reference_complete",
+    "frozen_formula_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+    "score_policy": "spatial_window_affine_reference_complete",
+    "reference_geometry": true,
+    "bottom_reference_rectified": true,
+    "opencv_cv2": "5.0.0",
+    "numpy": "2.5.3",
+    "parameter_retuning_after_holdout": false,
+    "crop_mode_policy": "report_all_existing_detector_body_boundary_modes_no_posthoc_selection",
+    "required_modes": [
+      "detector_seam2",
+      "body_context_no_seam",
+      "body_context_seam2",
+      "outer_body_seam2",
+      "face_plane_seam_boxes",
+      "face_plane_seam_rectified",
+      "face_plane_full_rectified"
+    ],
+    "reference_support_radius_normalized": 0.08
+  },
+  "sources": [
+    {
+      "filename": "3.mp4",
+      "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "source_session": "holdout3_original",
+      "grouping_basis": "G01 of the existing private reviewed eight-hand packet; unseen query window but NOT an independent original match",
+      "groups": [
+        {
+          "group_id": "holdout3_player_p456",
+          "reviewed_candidate_tiles": [
+            "P4",
+            "P5",
+            "P6"
+          ],
+          "frame_indices": [
+            1392,
+            1393,
+            1394,
+            1395,
+            1396
+          ],
+          "face_bboxes": [
+            [
+              113,
+              413,
+              46,
+              62
+            ],
+            [
+              160,
+              412,
+              46,
+              64
+            ],
+            [
+              207,
+              413,
+              46,
+              62
+            ]
+          ],
+          "structure": "FLAT_THREE_FACE_MELD",
+          "end_screen_corroboration": true
+        }
+      ]
+    }
+  ],
+  "private_pixels_committed": false,
+  "formal_promotion_evidence": false,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "holdout_eligibility": {
+    "independent_original_match": false,
+    "same_original_match_as_existing_candidate_controls": true,
+    "minimum_other_original_match_groups_required_per_class": 2,
+    "reviewed_truth_classes": [
+      "P4",
+      "P5",
+      "P6"
+    ],
+    "eligible_truth_classes_after_conservative_same_match_exclusion": [],
+    "disposition": "ABSTAIN_ALL_15_FACES_AS_UNKNOWN_FOR_FORMAL_HOLDOUT",
+    "reason": "After excluding the entire original match, P4/P5/P6 do not each have two independent other-match reference groups. Scoring with same-match references would leak source information."
+  }
+}

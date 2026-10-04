@@ -1,0 +1,41 @@
+{
+  "schema_version": "issue69_round8_user_confirmed_meld_identity_v0_1",
+  "reviewed_at_local": "2026-10-02T18:55:17+08:00",
+  "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+  "match_group": "reviewed_match_2026_09_26_eight_hand",
+  "reviewed_image_sha256": "2e6eb31e0abc30a3fb88c72cb02b9023ef4ee31c4f6a668001a4f0866905c161",
+  "reviewed_image_pixel_match_to_frame_3534": false,
+  "confirmed_left_to_right_tiles": [
+    "P9",
+    "P8",
+    "P7"
+  ],
+  "confirmation": "user explicitly confirmed displayed crop left-to-right P9 P8 P7",
+  "action_kind": "UNKNOWN",
+  "reviewed_scope": "Displayed crop exactly matches normalized source frames 3566, 3568, 3569, 3570; confirmation is limited to those pixel-matched crops.",
+  "development_only": true,
+  "previously_inspected": true,
+  "query_only": true,
+  "template_eligible": false,
+  "holdout_eligible": false,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "coverage_limitations": {
+    "P9_other_match_groups": 1,
+    "P9_eligible": false,
+    "P7_eligible": true,
+    "P8_eligible": true
+  },
+  "interpretation": "P9 is excluded by current independent-template coverage; correct ordered identity is now user-reviewed. Per-frame accuracy evaluation must bind the displayed crop to exact source frame pixels before applying this truth.",
+  "exact_matching_source_frames": [
+    3566,
+    3568,
+    3569,
+    3570
+  ],
+  "frame_index": 3566,
+  "timestamp_seconds": 118.86666666666666
+}

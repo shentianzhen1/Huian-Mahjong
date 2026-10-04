@@ -1,0 +1,39 @@
+{
+  "schema_version": "issue69_round8_replay_consistency_review_v0_2",
+  "source_session": "reviewed_match_2026_09_26_eight_hand",
+  "hand": 8,
+  "checker": "issue69_replay_consistency_v0_1",
+  "status": "PASS_FOR_REVIEWED_ACTION_SKELETON",
+  "resolved_gaps": [
+    {
+      "window_seconds": [115.9, 116.8],
+      "event": {"actor": "SELF", "action": "DISCARD", "tile_id": "P7"},
+      "evidence": "human-verified correction: post-PENG discard is P7; prior visual P8 reading is rejected and must not be used as ground truth"
+    },
+    {
+      "window_seconds": [132.5, 132.75],
+      "event": {"actor": "SELF", "action": "DISCARD", "tile_id": "M7"},
+      "evidence": "post-CHI concealed-hand reduction and newly visible M7 in self river before next draw cycle"
+    }
+  ],
+  "reviewed_chain": [
+    {"actor":"OPPONENT","action":"DISCARD","tile_id":"M9"},
+    {"actor":"SELF","action":"PENG","tile_id":"M9"},
+    {"actor":"SELF","action":"DISCARD","tile_id":"P7"},
+    {"actor":"OPPONENT","action":"CHI","tile_id":"P7"},
+    {"actor":"OPPONENT","action":"DISCARD","tile_id":"UNKNOWN"},
+    {"actor":"SELF","action":"CHI","tile_id":"UNKNOWN"},
+    {"actor":"SELF","action":"DISCARD","tile_id":"M7"},
+    {"actor":"SELF","action":"DISCARD","tile_id":"P4"},
+    {"actor":"OPPONENT","action":"HU","tile_id":"P4","hu_source":"DISCARD"}
+  ],
+  "notes": [
+    "Intermediate normal draw/discard rotations remain intentionally compressed in this reviewed skeleton.",
+    "UNKNOWN identity is allowed and is not guessed to satisfy consistency.",
+    "Terminal SELF DISCARD P4 -> OPPONENT HU P4 remains human-verified and settlement-consistent."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

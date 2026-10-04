@@ -1,0 +1,45 @@
+{
+  "schema_version": "issue69_hand1_p6_public_meld_sift_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "session": "session_c4d1b879367aeca8",
+    "sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+    "match_group": "reviewed_match_2026_09_26_first_hand",
+    "independent_match_group_credit": false
+  },
+  "query": {
+    "query_id": "hand1_p6_kong_frame360_public_meld_face",
+    "image_path": "references/vision/2026-10-01/public_meld_crops/hand1_p6_kong_public_face_frame360.pgm",
+    "image_sha256": "63ccd947fc38d97564f6393e650e1696ba9529ac5255b76fa3dcbbb336da99c8",
+    "image_size": [
+      60,
+      72
+    ],
+    "region": "public_meld"
+  },
+  "ranking": {
+    "backend": "public_meld_sift_rank_v0_1",
+    "source_disjoint_ranking": true,
+    "minimum_other_match_groups": 2,
+    "eligible_class_count": 2,
+    "top1_tile": "P6",
+    "top1_score": 0.12673655,
+    "runner_up_tile": "S4",
+    "runner_up_score": 0.00354157,
+    "margin": 0.12319498,
+    "winner_other_match_groups": 2,
+    "reason": "development_source_disjoint_ranking"
+  },
+  "evidence_boundary": {
+    "candidate_selection_match_previously_inspected": true,
+    "blind_validation": false,
+    "formal_promotion_evidence": false,
+    "production_acceptance_threshold": null,
+    "changes_runtime_behavior": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}

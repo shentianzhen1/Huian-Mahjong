@@ -1,0 +1,29 @@
+{
+  "schema_version": "public_meld_concealed_transfer_result_v0_1",
+  "date": "2026-09-30",
+  "issue": 69,
+  "status": "development_diagnostic_rejected",
+  "method": "normalize_group_then_split_then_concealed_identity_templates",
+  "confidence_threshold": 0.82,
+  "target_group_count": 7,
+  "prepared_group_count": 7,
+  "target_face_count": 21,
+  "scored_face_count": 21,
+  "raw_exact_correct": 6,
+  "raw_exact_accuracy": 0.285714,
+  "runtime_gate_accepted_count": 0,
+  "runtime_gate_accepted_accuracy": null,
+  "exact_session_exclusion_effective": false,
+  "decision": "reject_concealed_identity_reuse_for_public_meld",
+  "rationale": [
+    "All seven reviewed regular exposed-meld groups reached the normalized three-face classifier input, so geometry preparation was not the blocker.",
+    "Only 6 of 21 normalized public-meld faces matched the correct concealed-template class.",
+    "No face passed the unchanged Runtime V0.2 confidence/evidence gate at 0.82.",
+    "Exact public-vs-runtime session naming still does not provide formal source-disjoint exclusion, so this diagnostic cannot justify promotion even if accuracy were higher."
+  ],
+  "runtime_policy": "Keep public meld identity on the separate provenance-gated public_meld path. Do not lower the 0.82 concealed Runtime threshold and do not import these diagnostics as training truth.",
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

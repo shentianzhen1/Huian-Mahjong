@@ -1,0 +1,93 @@
+{
+  "schema_version": "issue69_hand1_p6_ming_gang_mobile_windows_v0_1",
+  "date": "2026-10-01",
+  "development_only": true,
+  "clip_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+  "clip_fps": 30,
+  "clip_resolution": [
+    1108,
+    512
+  ],
+  "original_match_group": "reviewed_match_2026_09_26_first_hand",
+  "windows": [
+    {
+      "name": "pre_claim_stable",
+      "seconds": [
+        0,
+        1
+      ],
+      "frames": [
+        0,
+        30
+      ],
+      "purpose": "claim context only; response UI/dimming prevents a complete identity-qualified before-hand snapshot from this derived clip",
+      "identity_qualified": false,
+      "status": "NOT_IDENTITY_QUALIFIED_FROM_THIS_CLIP"
+    },
+    {
+      "name": "response_ui",
+      "seconds": [
+        1,
+        5.9
+      ],
+      "frames": [
+        30,
+        177
+      ],
+      "purpose": "chi/peng/gang/pass overlay; exclude from stable hand identity delta"
+    },
+    {
+      "name": "meld_transition",
+      "seconds": [
+        5.9,
+        6.5
+      ],
+      "frames": [
+        177,
+        195
+      ],
+      "purpose": "P6 exposed kong becomes visible; geometry/meld observer"
+    },
+    {
+      "name": "replacement_draw_m3",
+      "seconds": [
+        6.5,
+        7.4
+      ],
+      "frames": [
+        195,
+        222
+      ],
+      "purpose": "independent M3 replacement-draw identity in draw region"
+    },
+    {
+      "name": "post_replacement_stable",
+      "seconds": [
+        7,
+        8
+      ],
+      "frames": [
+        210,
+        240
+      ],
+      "purpose": "after hand snapshot with replacement M3 explicitly accounted"
+    }
+  ],
+  "conservation_target": "before + independently_observed(M3) - after = P6,P6,P6",
+  "warnings": [
+    "The derived clip does not contain a clean complete pre-claim hand identity burst; obtain the before snapshot from the exact full source recording.",
+    "Do not use response_ui frames as stable concealed-hand snapshots.",
+    "Do not count this derived clip as a new independent match group.",
+    "Do not infer M3 from kong rules; require draw-region identity observation."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "clip_capability": {
+    "supports_meld_transition_review": true,
+    "supports_replacement_draw_identity_review": true,
+    "supports_complete_before_hand_identity": false,
+    "supports_standalone_ming_gang_machine_closure": false
+  }
+}
