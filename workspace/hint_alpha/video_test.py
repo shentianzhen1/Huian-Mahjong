@@ -19,6 +19,7 @@ from .replay_smoke import evaluate_burst, sha256, summarize_windows
 
 REFERENCE_FRAME_SIZE = (2796, 1290)
 DEFAULT_SAMPLE_INTERVAL_SECONDS = 0.20
+REPLAY_OCR_INTERVAL_SECONDS = 2.0
 
 
 def automatic_sample_interval(metadata):
@@ -126,10 +127,13 @@ def iter_video_samples(
         while index < end_frame:
             if stop_event is not None and stop_event.is_set():
                 return
-            ok, frame = cap.read()
+            ok = cap.grab()
             if not ok:
                 break
             if (index - start_frame) % stride == 0:
+                ok, frame = cap.retrieve()
+                if not ok:
+                    break
                 pts = float(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000.0
                 yield (
                     index,
@@ -141,22 +145,18 @@ def iter_video_samples(
         cap.release()
 
 
-def build_video_timeline(runtime_rows, public_rows, source):
-    """Build a fail-closed replay timeline from already accepted video facts.
+class VideoTimelineAccumulator:
+    """Incrementally build the same fail-closed timeline shown in the UI."""
 
-    This first automatic draft intentionally contains only facts already exposed
-    by Runtime Vision/PublicState.  River/meld actions are not invented from
-    Mahjong legality or from source-specific ROIs belonging to another video.
-    """
-    runtime_rows = list(runtime_rows)
-    public_rows = list(public_rows)
-    events = []
-    current_hand = None
-    current_gold = None
-    current_scores = None
-    current_hand_tiles = None
+    def __init__(self, source):
+        self.source = dict(source)
+        self.events = []
+        self.current_hand = None
+        self.current_gold = None
+        self.current_scores = None
+        self.current_hand_tiles = None
 
-    def emit(timestamp, kind, *, actor="system", hand_number=None, **details):
+    def _emit(self, timestamp, kind, *, actor="system", hand_number=None, **details):
         event = {
             "timestamp_seconds": round(float(timestamp), 6),
             "actor": actor,
@@ -165,140 +165,157 @@ def build_video_timeline(runtime_rows, public_rows, source):
             "evidence_grade": "UNKNOWN",
             "details": details,
         }
-        events.append(event)
+        self.events.append(event)
+        return event
 
-    for index, runtime in enumerate(runtime_rows):
+    def observe(self, runtime, public):
         times = runtime.get("source_seconds") or ()
         if not times:
-            continue
+            return ()
         timestamp = times[-1]
-        public = public_rows[index] if index < len(public_rows) else {}
+        created = []
         observation = public.get("observation") if isinstance(public, dict) else None
 
         if observation:
             hand_number = observation.get("hand_number")
-            previous_hand = current_hand
-            hand_changed = hand_number is not None and hand_number != current_hand
+            previous_hand = self.current_hand
+            hand_changed = hand_number is not None and hand_number != self.current_hand
             if hand_changed:
-                current_hand = hand_number
-                current_gold = None
-                current_hand_tiles = None
-                emit(
+                self.current_hand = hand_number
+                self.current_gold = None
+                self.current_hand_tiles = None
+                created.append(self._emit(
                     timestamp,
                     "HAND_START",
                     hand_number=hand_number,
                     total_hands=8,
                     source="public_state_ocr",
-                )
+                ))
 
             score_pair = observation.get("score_pair")
             if score_pair is not None:
                 score_pair = tuple(score_pair)
-                if score_pair != current_scores:
-                    if current_scores is None:
-                        emit(
+                if score_pair != self.current_scores:
+                    if self.current_scores is None:
+                        created.append(self._emit(
                             timestamp,
                             "SCORE_BASELINE",
-                            hand_number=current_hand,
+                            hand_number=self.current_hand,
                             top_right=score_pair[0],
                             bottom_left=score_pair[1],
                             source="public_state_ocr",
-                        )
+                        ))
                     else:
-                        emit(
+                        created.append(self._emit(
                             timestamp,
                             "SETTLEMENT_SCORE_CHANGE",
-                            hand_number=(previous_hand if hand_changed else current_hand),
-                            top_right_before=current_scores[0],
-                            bottom_left_before=current_scores[1],
+                            hand_number=(
+                                previous_hand if hand_changed else self.current_hand
+                            ),
+                            top_right_before=self.current_scores[0],
+                            bottom_left_before=self.current_scores[1],
                             top_right_after=score_pair[0],
                             bottom_left_after=score_pair[1],
                             settlement_kind="UNKNOWN",
                             source="public_state_ocr",
-                        )
-                    current_scores = score_pair
+                        ))
+                    self.current_scores = score_pair
 
         snapshot = runtime.get("snapshot") or {}
         if snapshot.get("gold_trusted") and snapshot.get("gold_tile"):
             gold = snapshot["gold_tile"]
-            if gold != current_gold:
-                current_gold = gold
-                emit(
+            if gold != self.current_gold:
+                self.current_gold = gold
+                created.append(self._emit(
                     timestamp,
                     "OPEN_GOLD",
-                    hand_number=current_hand,
+                    hand_number=self.current_hand,
                     tile=gold,
                     source="runtime_vision",
-                )
+                ))
 
         if snapshot.get("hand_trusted") and snapshot.get("own_hand"):
             tiles = tuple(sorted(snapshot["own_hand"]))
-            if tiles != current_hand_tiles:
-                current_hand_tiles = tiles
-                emit(
+            if tiles != self.current_hand_tiles:
+                self.current_hand_tiles = tiles
+                created.append(self._emit(
                     timestamp,
                     "PLAYER_HAND_SNAPSHOT",
                     actor="player",
-                    hand_number=current_hand,
+                    hand_number=self.current_hand,
                     tile_count=len(tiles),
                     tiles=list(tiles),
                     phase=(runtime.get("hint") or {}).get("phase"),
                     source="runtime_vision",
-                )
+                ))
+        return tuple(created)
 
-    return {
-        "schema_version": "hint_alpha_video_timeline_draft_v0_1",
-        "source_sha256": source.get("sha256"),
-        "source_session": source.get("session"),
-        "status": "PARTIAL",
-        "public_actions_complete": False,
-        "missing_channels": [
-            "river_action_identity",
-            "meld_action_identity",
-            "opponent_concealed_hand",
-            "hu_subtype_and_settlement_semantics",
-        ],
-        "formal_promotion_evidence": False,
-        "safe_for_runtime": False,
-        "safe_for_hint": False,
-        "safe_for_executor": False,
-        "events": events,
-    }
+    def to_dict(self):
+        return {
+            "schema_version": "hint_alpha_video_timeline_draft_v0_1",
+            "source_sha256": self.source.get("sha256"),
+            "source_session": self.source.get("session"),
+            "status": "PARTIAL",
+            "public_actions_complete": False,
+            "missing_channels": [
+                "river_action_identity",
+                "meld_action_identity",
+                "opponent_concealed_hand",
+                "hu_subtype_and_settlement_semantics",
+            ],
+            "formal_promotion_evidence": False,
+            "safe_for_runtime": False,
+            "safe_for_hint": False,
+            "safe_for_executor": False,
+            "events": list(self.events),
+        }
+
+
+def build_video_timeline(runtime_rows, public_rows, source):
+    accumulator = VideoTimelineAccumulator(source)
+    for index, runtime in enumerate(runtime_rows):
+        public = public_rows[index] if index < len(public_rows) else {}
+        accumulator.observe(runtime, public)
+    return accumulator.to_dict()
+
+
+def render_video_timeline_event(event):
+    from workspace.vision.issue69_text_timeline import tile_text
+
+    timestamp = event["timestamp_seconds"]
+    kind = event["kind"]
+    details = event.get("details") or {}
+    hand_number = event.get("hand_number")
+    prefix = f"{timestamp:.2f}s "
+    if kind == "HAND_START":
+        text = f"第{hand_number}/8局开始"
+    elif kind == "OPEN_GOLD":
+        text = f"开金：{tile_text(details.get('tile'))}"
+    elif kind == "SCORE_BASELINE":
+        text = (
+            f"比分：我方 {details.get('bottom_left')} / "
+            f"对方 {details.get('top_right')}"
+        )
+    elif kind == "SETTLEMENT_SCORE_CHANGE":
+        text = (
+            "比分变化："
+            f"我方 {details.get('bottom_left_before')}→{details.get('bottom_left_after')}，"
+            f"对方 {details.get('top_right_before')}→{details.get('top_right_after')} "
+            "（结算方式 UNKNOWN）"
+        )
+    elif kind == "PLAYER_HAND_SNAPSHOT":
+        tiles = " ".join(tile_text(tile) for tile in details.get("tiles", ()))
+        text = f"我方手牌快照（{details.get('tile_count')}张）：{tiles}"
+    else:
+        text = f"{kind}（UNKNOWN）"
+    return prefix + text
 
 
 def render_video_timeline(timeline):
-    """Render the automatic replay draft for the local UI/review file."""
-    from workspace.vision.issue69_text_timeline import tile_text
-
-    lines = []
-    for event in timeline.get("events", ()):
-        timestamp = event["timestamp_seconds"]
-        kind = event["kind"]
-        details = event.get("details") or {}
-        hand_number = event.get("hand_number")
-        prefix = f"{timestamp:.2f}s "
-        if kind == "HAND_START":
-            text = f"第{hand_number}/8局开始"
-        elif kind == "OPEN_GOLD":
-            text = f"开金：{tile_text(details.get('tile'))}"
-        elif kind == "SCORE_BASELINE":
-            text = (
-                f"比分：我方 {details.get('bottom_left')} / "
-                f"对方 {details.get('top_right')}"
-            )
-        elif kind == "SETTLEMENT_SCORE_CHANGE":
-            text = (
-                "比分变化："
-                f"我方 {details.get('bottom_left_before')}→{details.get('bottom_left_after')}，"
-                f"对方 {details.get('top_right_before')}→{details.get('top_right_after')} "
-                "（结算方式 UNKNOWN）"
-            )
-        elif kind == "PLAYER_HAND_SNAPSHOT":
-            tiles = " ".join(tile_text(tile) for tile in details.get("tiles", ()))
-            text = f"我方手牌快照（{details.get('tile_count')}张）：{tiles}"
-        else:
-            text = f"{kind}（UNKNOWN）"
-        lines.append(prefix + text)
+    lines = [
+        render_video_timeline_event(event)
+        for event in timeline.get("events", ())
+    ]
     if not lines:
         lines.append("未形成可信流水事件；保持 UNKNOWN。")
     lines.append(
@@ -335,12 +352,18 @@ def summarize_video_test(runtime_rows, public_rows, source):
     score_counts = Counter()
     valid_public = 0
     public_errors = 0
+    sampled_public = 0
+    reused_public = 0
     for row in public_rows:
+        if row.get("sampled"):
+            sampled_public += 1
+        if row.get("reused"):
+            reused_public += 1
         if row.get("error"):
             public_errors += 1
             continue
         observation = row.get("observation") or {}
-        if not observation.get("issues"):
+        if observation and not observation.get("issues"):
             valid_public += 1
         hand = observation.get("hand_number")
         if hand is not None:
@@ -370,6 +393,8 @@ def summarize_video_test(runtime_rows, public_rows, source):
         },
         "public_state": {
             "windows": len(public_rows),
+            "sampled_windows": sampled_public,
+            "reused_windows": reused_public,
             "valid_windows": valid_public,
             "error_windows": public_errors,
             "hand_number_votes": dict(hand_counts.most_common()),
@@ -410,6 +435,7 @@ def run_video_test(
             "start_seconds": float(start_seconds),
             "requested_duration_seconds": float(duration_seconds),
             "sample_interval_seconds": float(sample_interval_seconds),
+            "ocr_interval_seconds": REPLAY_OCR_INTERVAL_SECONDS,
         }
     )
 
@@ -418,10 +444,39 @@ def run_video_test(
 
         public_reader = PublicStateReader()
 
+    from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
+        prepare_runtime_resources,
+        read_stable_frames,
+    )
+
+    runtime_resources = prepare_runtime_resources(dataset_root, session)
+    geometry_cache = {}
+
+    def replay_runtime_reader(
+        images,
+        root,
+        *,
+        frame_ids=None,
+        session=None,
+        confidence_threshold=0.82,
+    ):
+        return read_stable_frames(
+            images,
+            root,
+            frame_ids=frame_ids,
+            session=session,
+            confidence_threshold=confidence_threshold,
+            resources=runtime_resources,
+            geometry_cache=geometry_cache,
+        )
+
     window = deque(maxlen=3)
     runtime_rows = []
     public_rows = []
     previous_public = None
+    last_public_row = None
+    last_ocr_seconds = float("-inf")
+    timeline_accumulator = VideoTimelineAccumulator(source)
 
     for sample in iter_video_samples(
         path,
@@ -438,35 +493,67 @@ def run_video_test(
             burst,
             session=session,
             dataset_root=dataset_root,
+            reader=replay_runtime_reader,
         )
         runtime_rows.append(runtime)
 
-        try:
-            public = public_reader.read_window(
-                tuple(item[2] for item in burst),
-                previous=previous_public,
-                minimum_votes=2,
-            )
-            previous_public = public.observation
+        current_seconds = burst[-1][1]
+        ocr_due = (
+            last_public_row is None
+            or current_seconds - last_ocr_seconds >= REPLAY_OCR_INTERVAL_SECONDS
+        )
+        if ocr_due:
+            try:
+                # Two fresh nearby frames retain the 2-vote PublicState gate
+                # while avoiding OCR of the same overlapping frame three times.
+                public = public_reader.read_window(
+                    tuple(item[2] for item in burst[-2:]),
+                    previous=previous_public,
+                    minimum_votes=2,
+                )
+                previous_public = public.observation
+                public_row = {
+                    "frames": [item[0] for item in burst[-2:]],
+                    "source_seconds": [item[1] for item in burst[-2:]],
+                    "sampled": True,
+                    "reused": False,
+                    "observation": {
+                        **asdict(public.observation),
+                        "score_pair": (
+                            list(public.observation.score_pair)
+                            if public.observation.score_pair is not None
+                            else None
+                        ),
+                    },
+                }
+                last_public_row = public_row
+            except Exception as exc:
+                public_row = {
+                    "frames": [item[0] for item in burst[-2:]],
+                    "source_seconds": [item[1] for item in burst[-2:]],
+                    "sampled": True,
+                    "reused": False,
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            last_ocr_seconds = current_seconds
+        elif last_public_row is not None:
             public_row = {
                 "frames": [item[0] for item in burst],
                 "source_seconds": [item[1] for item in burst],
-                "observation": {
-                    **asdict(public.observation),
-                    "score_pair": (
-                        list(public.observation.score_pair)
-                        if public.observation.score_pair is not None
-                        else None
-                    ),
-                },
+                "sampled": False,
+                "reused": True,
+                "observation": dict(last_public_row.get("observation") or {}),
             }
-        except Exception as exc:
+        else:
             public_row = {
                 "frames": [item[0] for item in burst],
                 "source_seconds": [item[1] for item in burst],
-                "error": f"{type(exc).__name__}: {exc}",
+                "sampled": False,
+                "reused": False,
+                "skipped": True,
             }
         public_rows.append(public_row)
+        new_timeline_events = timeline_accumulator.observe(runtime, public_row)
 
         if on_window is not None:
             on_window(
@@ -476,6 +563,11 @@ def run_video_test(
                     "source_seconds": burst[-1][1],
                     "runtime": runtime,
                     "public_state": public_row,
+                    "timeline_events": list(new_timeline_events),
+                    "timeline_lines": [
+                        render_video_timeline_event(event)
+                        for event in new_timeline_events
+                    ],
                     "preview": burst[-1][2],
                 }
             )
@@ -487,7 +579,7 @@ def run_video_test(
         raise ValueError("Selected range contains fewer than three sampled frames")
 
     result = summarize_video_test(runtime_rows, public_rows, source)
-    timeline = build_video_timeline(runtime_rows, public_rows, source)
+    timeline = timeline_accumulator.to_dict()
     result["timeline"] = timeline
     result["stopped_early"] = bool(stop_event is not None and stop_event.is_set())
     result["generated_unix_time"] = time.time()
