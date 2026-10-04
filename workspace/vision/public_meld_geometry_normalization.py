@@ -312,6 +312,76 @@ def normalize_public_meld_crop(
     )
 
 
+
+def find_flat_meld_seams(
+    normalized: NormalizedPublicMeld,
+) -> tuple[int, int] | None:
+    """Find two geometry-only separators for a normalized FLAT three-face row.
+
+    Search is deliberately local around the expected thirds.  A separator is
+    accepted only when the bright-face column occupancy has a clear local
+    valley relative to both neighboring shoulders.  Identity labels and SIFT
+    scores never participate.  Ambiguous geometry returns None so callers can
+    fail closed or retain the frozen equal-third diagnostic path.
+    """
+    if normalized.image is None or normalized.analysis.stack_state != FLAT:
+        return None
+
+    import cv2
+    import numpy as np
+
+    rgb = np.asarray(normalized.image.convert("RGB"))
+    height, width = rgb.shape[:2]
+    if width < 60 or height < 32:
+        return None
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    mask = ((hsv[:, :, 1] < 110) & (hsv[:, :, 2] > 110)).astype(np.float32)
+    occupancy = mask.mean(axis=0)
+    # Smooth only enough to suppress glyph-scale single-column noise.
+    occupancy = np.convolve(occupancy, np.ones(5, dtype=np.float32) / 5.0, mode="same")
+
+    seams = []
+    radius = max(3, int(round(width * 0.07)))
+    shoulder = max(3, int(round(width * 0.05)))
+    for fraction in (1.0 / 3.0, 2.0 / 3.0):
+        center = int(round(width * fraction))
+        lo = max(shoulder, center - radius)
+        hi = min(width - shoulder - 1, center + radius)
+        if hi <= lo:
+            return None
+        local = occupancy[lo : hi + 1]
+        seam = lo + int(np.argmin(local))
+        left_level = float(occupancy[max(0, seam - shoulder) : seam].mean())
+        right_level = float(occupancy[seam + 1 : min(width, seam + 1 + shoulder)].mean())
+        valley = float(occupancy[seam])
+        # Require a visible valley on both sides; this is intentionally strict.
+        if min(left_level, right_level) - valley < 0.10:
+            return None
+        seams.append(seam)
+
+    first, second = seams
+    widths = (first, second - first, width - second)
+    expected = width / 3.0
+    if any(part < expected * 0.72 or part > expected * 1.28 for part in widths):
+        return None
+    return first, second
+
+
+def split_flat_meld_faces_by_seams(
+    normalized: NormalizedPublicMeld,
+) -> tuple[Any, ...]:
+    """Conservatively split a FLAT row only when two automatic seams exist."""
+    seams = find_flat_meld_seams(normalized)
+    if seams is None or normalized.image is None:
+        return ()
+    first, second = seams
+    width, height = normalized.image.size
+    boundaries = (0, first, second, width)
+    return tuple(
+        normalized.image.crop((boundaries[i], 0, boundaries[i + 1], height))
+        for i in range(3)
+    )
+
 def split_flat_meld_faces(
     normalized: NormalizedPublicMeld,
 ) -> tuple[Any, ...]:
