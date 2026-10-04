@@ -33,9 +33,14 @@ remaining-copy and danger features. Dark-face fallback remains development-only.
 
 Native private first-hand 173–176s replay now observes 8 structural advice
 windows, 5 blocked windows and 1 recovery across 13 overlapping bursts. This
-same-source smoke does not validate tile accuracy, real discard suggestions or
+same-source smoke does not validate tile accuracy, strategic discard quality or
 full-match recovery. Windows live capture/freshness/recovery acceptance remains
 pending. Linux CI does not prove Windows usability. See docs/issue69_alpha_build.md.
+
+An earlier same-original 160–164s source-locked replay adds two consecutive
+automatic post-draw structural discard windows (M3/P5/P7/P9 tied at minimal
+shanten). It proves the advisory pipeline can emit candidates, not that the
+recognized identities or strategic ranking are human-confirmed.
 
 ## Remaining priorities
 

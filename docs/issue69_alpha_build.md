@@ -100,3 +100,22 @@ human tile-accuracy measurement or full-match state-recovery claim.
 
 Windows WGC/PrintWindow live capture, freshness, latency and disconnect/restart
 acceptance remain pending. No private raw media should be committed.
+
+## Real structural discard checkpoint (2026-10-04)
+
+The **same original first-hand recording** (not another match) at native
+2796x1290, 160–164 seconds, stride 18, yielded 12 overlapping windows:
+8 displayed structural advice, 4 blocked, including **2 post-draw discard
+windows** at source frames 9608/9626 (162.44/162.75s). Both read the same
+11-tile own hand, Gold M6 and two own melds, with four tied minimum-shanten
+choices M3/P5/P7/P9. No remaining-copy, danger or special-Hu advice opened.
+The UI now displays the actual UNKNOWN reason when inputs fail; the formal
+promotion gate is unchanged in default mode.
+
+`--require-discard` accepts only a displayed `POST_DRAW` window with nonempty
+structural choices. It correctly rejects the real 173–176s window even though
+that sequence has accepted shanten/complete-structure output. Metadata is frozen
+at `references/vision/2026-10-04/alpha_real_discard_160_164_v0_1.json`; CI
+recomputes the saved snapshots without private media. This is a same-source
+automatic-chain smoke, **not** tile identity accuracy, human-confirmed optimal
+discards, V0.10 strategy evaluation or live Windows acceptance.

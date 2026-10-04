@@ -139,6 +139,8 @@ def main():
                         help='Fail acceptance if no trusted structural advice window exists')
     parser.add_argument('--require-recovery', action='store_true',
                         help='Require accepted -> blocked -> accepted advice in this replay')
+    parser.add_argument('--require-discard', action='store_true',
+                        help='Require an accepted post-draw structural discard candidate')
     args = parser.parse_args()
     if args.source_session and not args.video:
         parser.error('--source-session is only valid with --video')
@@ -176,6 +178,10 @@ def main():
         'windows_capture_validated': False,
         'accepted_windows': sum(row['display_allowed'] for row in rows),
         'blocked_windows': sum(not row['display_allowed'] for row in rows),
+        'discard_windows': sum(
+            row['display_allowed'] and row['hint']['phase'] == 'POST_DRAW'
+            and bool(row['hint']['best_discards']) for row in rows
+        ),
         **summarize_windows(rows),
         'rows': rows,
     }
@@ -186,6 +192,8 @@ def main():
         raise SystemExit('Acceptance incomplete: zero trusted advice windows; report retained')
     if args.require_recovery and not result['recovered_advice_runs']:
         raise SystemExit('Acceptance incomplete: no observed advice recovery; report retained')
+    if args.require_discard and not result['discard_windows']:
+        raise SystemExit('Acceptance incomplete: no trusted discard candidates; report retained')
 
 
 if __name__ == '__main__':

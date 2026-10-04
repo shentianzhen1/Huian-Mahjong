@@ -452,6 +452,20 @@ class HintAlphaApp(tk.Tk):
 
         return "向听提示：状态暂不可解释；不输出建议"
 
+    @staticmethod
+    def _format_runtime_advice(advisory, *, experimental, promoted):
+        # Missing trusted inputs are an actual Vision abstention, even when
+        # Runtime has not passed its formal promotion gate. Surface the cause.
+        if not advisory.hint.allowed:
+            return HintAlphaApp._format_shanten_hint(advisory.hint)
+        if not advisory.display_allowed:
+            return (
+                "向听提示：BLOCKED（Runtime Vision尚未正式promotion；"
+                "仅可用开发开关做内部验证）"
+            )
+        prefix = "实验 " if experimental and not promoted else ""
+        return prefix + HintAlphaApp._format_shanten_hint(advisory.hint)
+
     def _consume_runtime_result(self):
         try:
             kind, source_session, generation, captured, value = self.runtime_result_queue.get_nowait()
@@ -495,19 +509,10 @@ class HintAlphaApp(tk.Tk):
         )
         runtime_promoted_for_hint = report.get("safe_for_hint") is True
         display_allowed = advisory.display_allowed
-        if display_allowed:
-            prefix = (
-                "实验 "
-                if self.experimental_runtime_advisory
-                and not runtime_promoted_for_hint
-                else ""
-            )
-            self.hint_status.set(prefix + self._format_shanten_hint(result))
-        else:
-            self.hint_status.set(
-                "向听提示：BLOCKED（Runtime Vision尚未正式promotion；"
-                "仅可用开发开关做内部验证）"
-            )
+        self.hint_status.set(self._format_runtime_advice(
+            advisory, experimental=self.experimental_runtime_advisory,
+            promoted=runtime_promoted_for_hint,
+        ))
 
         event_key = (
             result.status,

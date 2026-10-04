@@ -42,6 +42,37 @@ class ReplayPipelineTests(unittest.TestCase):
         self.assertEqual(summary['advice_runs'], evidence['advice_runs'])
         self.assertEqual(summary['recovered_advice_runs'], 1)
 
+    def test_frozen_real_discard_windows_remain_structural_and_read_only(self):
+        from workspace.vision.current_state_snapshot import CurrentTableSnapshot
+        from workspace.hint_alpha.current_snapshot_advisor import analyze_snapshot_shanten
+        from workspace.hint_alpha.replay_smoke import summarize_windows
+        root = Path(__file__).resolve().parents[1]
+        evidence = json.loads((root / 'references/vision/2026-10-04/'
+                               'alpha_real_discard_160_164_v0_1.json').read_text())
+        self.assertTrue(evidence['development_only'])
+        self.assertFalse(evidence['formal_promotion_evidence'])
+        self.assertFalse(evidence['discard_strategy_quality_measured'])
+        self.assertEqual(evidence['session_binding'], 'explicit_original_session')
+        self.assertEqual(evidence['identity_threshold'], .82)
+        self.assertEqual(evidence['original_match_count'], 1)
+        self.assertEqual((evidence['accepted_windows'], evidence['blocked_windows'],
+                          evidence['discard_windows']), (8, 4, 2))
+        candidates = []
+        for row in evidence['rows']:
+            hint = analyze_snapshot_shanten(CurrentTableSnapshot(**row['snapshot']))
+            self.assertEqual(json.loads(json.dumps(asdict(hint))), row['hint'])
+            self.assertEqual(hint.allowed, row['display_allowed'])
+            self.assertFalse(hint.visible_remainders_used)
+            self.assertFalse(hint.safe_for_executor)
+            if hint.phase == 'POST_DRAW' and row['display_allowed']:
+                candidates.append((row['frames'][-1],
+                                   [item.discard for item in hint.best_discards]))
+        self.assertEqual(candidates, [(9608, ['M3', 'P5', 'P7', 'P9']),
+                                      (9626, ['M3', 'P5', 'P7', 'P9'])])
+        self.assertEqual(summarize_windows(evidence['rows'])['advice_runs'],
+                         evidence['advice_runs'])
+
+
     def test_replay_summary_distinguishes_first_acquisition_and_recovery(self):
         from workspace.hint_alpha.replay_smoke import summarize_windows
         rows = [dict(display_allowed=allowed, frames=[n, n + 1, n + 2],
@@ -65,6 +96,17 @@ class ReplayPipelineTests(unittest.TestCase):
         self.assertTrue(experimental.display_allowed)
         self.assertFalse(experimental.hint.visible_remainders_used)
         self.assertFalse(experimental.safe_for_executor)
+
+    def test_discard_windows_require_actual_post_draw_choices(self):
+        report = trusted_report()
+        report['components'].insert(-1, dict(region_candidate='draw_visual',
+                                             tile_id='P4', confidence=.95,
+                                             identity_reason='accepted'))
+        report['concealed_tile_count'] = 17
+        advisory = evaluate_runtime_report(report, captured=1, experimental=True)
+        self.assertEqual(advisory.hint.phase, 'POST_DRAW')
+        self.assertTrue(advisory.hint.best_discards)
+        self.assertTrue(advisory.display_allowed)
 
     def test_unknown_then_recovered_current_snapshot_has_no_sticky_pollution(self):
         report = trusted_report()

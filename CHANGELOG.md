@@ -1,5 +1,12 @@
 # 重要变更记录
 
+## 2026-10-04 — Real structural discard checkpoint (Draft)
+
+- Source/session/frame/pixel-locked first-hand 160–164s replay recorded 2 real post-draw structural discard windows, 4 blocked windows and 6 other accepted structural windows. Same-original-match development evidence only.
+- Add `--require-discard` acceptance that rejects shanten-only/complete-hand replays; retain 0.82 identity gate and Executor OFF.
+- Surface actual UNKNOWN causes in internal UI; keep default formal-promotion block and read-only experimental label.
+- Snapshot contracts are recomputed in CI; no private video, human tile-accuracy, strategy-quality or Windows live acceptance claim.
+
 ## 2026-10-04 — Continuous real Alpha recovery smoke (Draft)
 
 - Add consecutive advice/rejection runs, rejection-reason counts and explicit recovery acceptance to private replay; preserve original Runtime session binding.

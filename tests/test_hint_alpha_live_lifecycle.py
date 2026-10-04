@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import Mock
 
 from workspace.hint_alpha.live_guard import LiveAdviceGuard
+from workspace.hint_alpha.runtime_pipeline import evaluate_runtime_report
 
 try:
     from workspace.hint_alpha.app import HintAlphaApp
@@ -15,6 +16,32 @@ except ImportError:
 
 @unittest.skipIf(HintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
 class LiveLifecycleTests(unittest.TestCase):
+    def test_unknown_reason_is_visible_but_promoted_gate_stays_closed(self):
+        hand = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9',
+                'P1', 'P2', 'P3', 'S1', 'S2', 'S3', 'E']
+        report = dict(session='synthetic-ui', stream_epoch=0, frames=[1, 2, 3],
+                      geometry_untrusted=False, concealed_tile_count=16,
+                      all_concealed_tile_ids_trusted=True, safe_for_hint=False,
+                      components=[dict(region_candidate='hand', tile_id=tile,
+                                       identity_reason='accepted') for tile in hand]
+                      + [dict(region_candidate='gold', tile_id='B',
+                              identity_reason='accepted')])
+        trusted_report = dict(report, components=[dict(item) for item in report['components']])
+        report['components'][0]['tile_id'] = 'UNKNOWN'
+        report['all_concealed_tile_ids_trusted'] = False
+        blocked = evaluate_runtime_report(report, captured=1, experimental=True)
+        text = HintAlphaApp._format_runtime_advice(
+            blocked, experimental=True, promoted=False)
+        self.assertIn('hand_untrusted', text)
+        self.assertNotIn('promotion', text)
+        trusted = evaluate_runtime_report(trusted_report, captured=2)
+        self.assertIn('promotion', HintAlphaApp._format_runtime_advice(
+            trusted, experimental=False, promoted=False))
+        experimental = evaluate_runtime_report(trusted_report, captured=2,
+                                               experimental=True)
+        self.assertTrue(HintAlphaApp._format_runtime_advice(
+            experimental, experimental=True, promoted=False).startswith('实验 '))
+
     def shell(self):
         return SimpleNamespace(
             live_guard=LiveAdviceGuard(), runtime_frames=deque([1, 2, 3]),
