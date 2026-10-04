@@ -116,6 +116,16 @@ def _training_labels(labels: list[dict], session: str | None) -> list[dict]:
     ]
 
 
+def _component_gold_skin(component) -> bool:
+    """Read optional Gold-skin metadata without crashing on stale local code.
+
+    Hint Alpha uses an editable local install, so a partially-updated working
+    tree can temporarily load a legacy GeometryComponent without this field.
+    Missing metadata degrades to the ordinary region path instead of aborting
+    an entire video replay.
+    """
+    return bool(getattr(component, "gold_skin", False))
+
 def identity_gate(
     candidate_tile_id: str,
     confidence: float,
@@ -223,9 +233,10 @@ def read_stable_frames(
             "tile_confidence": 0.0,
             "identity_reason": "region_not_classified",
         })
+        gold_skin = _component_gold_skin(component)
         classifier_region = (
             "gold_region"
-            if component.gold_skin
+            if gold_skin
             else CLASSIFIER_REGIONS.get(component.region_candidate)
         )
         if classifier_region is not None:
@@ -237,7 +248,7 @@ def read_stable_frames(
             x, y, width, height = crop_bbox
             crop = image.crop((x, y, x + width, y + height))
             try:
-                if component.gold_skin:
+                if gold_skin:
                     prediction = classifier.classify_gold_skin(crop)
                 elif component.region_candidate in {"hand", "draw_visual"}:
                     prediction = classifier.classify(
@@ -254,7 +265,7 @@ def read_stable_frames(
             else:
                 gate_region = (
                     GOLD_IDENTITY_GATE_REGION
-                    if component.gold_skin
+                    if gold_skin
                     else (
                         CONCEALED_IDENTITY_GATE_REGION
                         if component.region_candidate in {"hand", "draw_visual"}
@@ -270,7 +281,7 @@ def read_stable_frames(
                     confidence_threshold=confidence_threshold,
                 )
                 if (
-                    component.gold_skin
+                    gold_skin
                     and tile_id != "UNKNOWN"
                     and prediction.tile_id not in gold_skin_covered
                 ):
