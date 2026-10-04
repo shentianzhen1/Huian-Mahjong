@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
 
 from .runtime_reader import (
+    _component_gold_skin,
     _coverage,
     _gold_skin_covered_classes,
     _training_labels,
@@ -36,6 +37,17 @@ class RuntimeReaderGateTests(unittest.TestCase):
             confidence_threshold=0.82,
         )
 
+    def test_legacy_geometry_component_without_gold_skin_fails_closed(self) -> None:
+        class LegacyComponent:
+            pass
+
+        self.assertFalse(_component_gold_skin(LegacyComponent()))
+
+    def test_current_geometry_component_gold_skin_is_read(self) -> None:
+        class CurrentComponent:
+            gold_skin = True
+
+        self.assertTrue(_component_gold_skin(CurrentComponent()))
     def test_known_runtime_session_is_excluded_from_templates(self) -> None:
         labels = [
             {"tile_id": "P9", "approved": True, "source_session": "session_a"},
