@@ -283,3 +283,57 @@ Next recover front-band coverage on the shadowed S1/S9 references and preserve
 explicit missing-class abstention. Keep the previous whole/lower feature bank
 as the development baseline until family-route regressions are resolved; do not
 adopt the new transform globally or fit a threshold on these revealed failures.
+
+## Overlapping bright fragments: partial S1 coverage recovery
+
+The native S1 bird glyph separates its bright face into two connected components
+whose original bounding boxes overlap. An explicit offline
+`--front-band --merge-front-overlaps` option joins only groups connected by
+strictly overlapping ORIGINAL component envelopes. Touching edges, gaps and
+new overlaps introduced only by a union envelope do not join. The default
+strict transform and brightness/contrast requirements are unchanged. Queries
+and references use the same preparation; failed bands still have no fallback.
+Visual review of the recovered S1 band retains the bird glyph and removes the
+lower side wall. This is a revealed development repair, not blind evidence.
+
+All 127 source/crop-pinned query rows remain paired. The restored strict run
+reproduces every previously published query mode exactly. At one-other-original
+support:
+
+| Packet / measure | Strict front band | Overlap option |
+| --- | --- | --- |
+| Old 75-face packet: correct binary hypotheses | 51/75 | 61/75 |
+| Old packet: false Wan routes, all S1 | 10 | 0 |
+| Old packet: unscorable true-class identities | 20 | 5 |
+| Old M9: supported digit winners | 15/15 | 15/15 |
+| Public controls: correct binary hypotheses | 18/21 | 18/21 |
+| Private controls: correct binary hypotheses | 12/15 | 12/15 |
+
+There are no additional paired family/digit regressions or support losses in
+this option, at either one- or two-other-match support. Two-other-match outcomes
+are unchanged: recovering a face from the same new match adds no second source.
+Native S2 (`S1_1.png`) and S9 (`S8_2.png`) still abstain on whole/lower features;
+the old packet's five S9 queries still lack true-class support. Native reverse
+M9 identity remains unscorable without the separate frozen old-M9 additions.
+All qualified identities remain null.
+
+This only recovers the missing S1 reference. Correct binary hypotheses still
+fall short of the prior body-feature baseline (63/75, 21/21 and 15/15), and M6
+control coverage/digit losses remain. Reject global front-band replacement.
+Runtime remains 0.82; Hint/Executor integration remains disabled for this probe.
+55 focused tests pass, including the empty-corner case preventing union-created
+bridges. The core-only run passes three comparison tests and skips nine optional
+Vision tests.
+
+- [Overlap-option ledger](../references/vision/2026-10-04/new_match_front_overlap_merge_v0_1.json)
+- [All-query paired comparison](../references/vision/2026-10-04/new_match_front_overlap_paired_comparison_v0_1.json)
+
+Reproduce the paired comparison with
+`python -m workspace.vision.compare_front_band_identity_reports --overlap-only`
+and `--baseline`, `--front`, `--output` pointing to the strict ledger, overlap
+ledger and comparison respectively. Reproduce the overlap ledger with the same
+verified ZIP inputs as the strict evaluator plus `--merge-front-overlaps`.
+
+Next inspect the unresolved dark S2/S9 face-plane evidence and M6 control
+failures separately. Do not lower brightness thresholds or infer identities
+from a missing class; retain the prior body-feature bank as the baseline.

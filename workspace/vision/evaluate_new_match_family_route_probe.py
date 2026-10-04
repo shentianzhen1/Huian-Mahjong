@@ -49,7 +49,8 @@ def wan_other_original_support(bank, session: str, source_sha256: str) -> dict[s
 
 def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
              query_zips: list[Path], lower_consensus: bool = False,
-             front_band: bool = False, reverse_old_m9: bool = False) -> dict:
+             front_band: bool = False, reverse_old_m9: bool = False,
+             merge_front_overlaps: bool = False) -> dict:
     from PIL import Image
     from workspace.vision import public_meld_identity_sift as sift
     from workspace.vision import public_meld_private_sift_loader as private
@@ -64,9 +65,11 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         raise ValueError("front-band comparison requires lower-family consensus")
     if reverse_old_m9 and not lower_consensus:
         raise ValueError("reverse-reference comparison requires lower-family consensus")
+    if merge_front_overlaps and not front_band:
+        raise ValueError("component merging requires front-band mode")
     original = sift._sift_descriptors
     def prepare(image):
-        return prepare_front_band(image) if front_band else normalize_single_face(image)
+        return prepare_front_band(image, merge_overlaps=merge_front_overlaps) if front_band else normalize_single_face(image)
     def whole(image):
         normalized, _ = prepare(image)
         return None if normalized is None else original(normalized)
@@ -308,6 +311,7 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         lower_family_rule="lower half 72x96 binary WAN/NON_WAN bank; family support pools originals across tile classes; require both families eligible, positive ranking margins and whole/lower agreement; otherwise UNKNOWN" if lower_consensus else None,
         feature_views_are_independent_evidence=False,
         symmetric_front_band_enabled=front_band,
+        merge_front_overlaps_enabled=merge_front_overlaps,
         front_band_failure_fallback=False,
         native_reference_feature_abstentions=native_reference_abstentions,
         private_template_feature_abstentions=private_feature_abstentions,
@@ -340,11 +344,13 @@ def main():
     parser.add_argument("--lower-family-consensus", action="store_true")
     parser.add_argument("--front-band", action="store_true")
     parser.add_argument("--reverse-old-m9-references", action="store_true")
+    parser.add_argument("--merge-front-overlaps", action="store_true")
     args = parser.parse_args()
     report = evaluate(root=args.repository_root, native_zip=args.native_reference_zip,
                       private_zip=args.private_template_zip, query_zips=args.query_zip,
                       lower_consensus=args.lower_family_consensus, front_band=args.front_band,
-                      reverse_old_m9=args.reverse_old_m9_references)
+                      reverse_old_m9=args.reverse_old_m9_references,
+                      merge_front_overlaps=args.merge_front_overlaps)
     args.output.write_text(json.dumps(report, separators=(",", ":"))+"\n")
     print(json.dumps(report["summary"]))
 

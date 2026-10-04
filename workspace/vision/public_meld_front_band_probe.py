@@ -7,19 +7,45 @@ wall, but is not a semantic glyph detector or a calibrated Runtime observer.
 from __future__ import annotations
 
 
-def prepare_front_band(image):
+def prepare_front_band(image, *, merge_overlaps=False):
     """Same strict feature preparation for references/queries, no raw fallback."""
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
     normalized, normalization = normalize_single_face(image)
     if normalized is None:
         return None, dict(failed=True, reason="normalization_abstained", normalization=normalization)
-    box, audit = front_band_bbox(normalized)
+    box, audit = front_band_bbox(normalized, merge_overlaps=merge_overlaps)
     if box is None:
         return None, dict(failed=True, reason="front_band_abstained", normalization=normalization, band=audit)
     return normalized.crop(box), dict(failed=False, normalization=normalization, band=audit)
 
 
-def front_band_bbox(image):
+def merge_overlapping_boxes(boxes):
+    """Union strictly overlapping component envelopes; never bridge a gap."""
+    remaining = [tuple(box) for box in boxes]
+    result = []
+    while remaining:
+        group = [remaining.pop(0)]
+        cursor = 0
+        while cursor < len(group):
+            a = group[cursor]
+            connected = []
+            for b in remaining:
+                if (max(a[0], b[0]) < min(a[0]+a[2], b[0]+b[2])
+                        and max(a[1], b[1]) < min(a[1]+a[3], b[1]+b[3])):
+                    connected.append(b)
+            for b in connected:
+                remaining.remove(b)
+                group.append(b)
+            cursor += 1
+        left = min(b[0] for b in group)
+        top = min(b[1] for b in group)
+        right = max(b[0]+b[2] for b in group)
+        bottom = max(b[1]+b[3] for b in group)
+        result.append((left, top, right-left, bottom-top, sum(b[4] for b in group)))
+    return result
+
+
+def front_band_bbox(image, *, merge_overlaps=False):
     import cv2
     import numpy as np
 
@@ -29,6 +55,7 @@ def front_band_bbox(image):
                  body_mask_saturation_max=105, body_mask_value_min=115,
                  minimum_cluster_median_contrast=20, closing_kernel=[3, 3],
                  minimum_component_body_width_fraction=0.7, vertical_context=2)
+    audit["merge_overlapping_component_envelopes"] = merge_overlaps
     def abstain(reason):
         return None, dict(audit, reason=reason)
     if min(image.size) < 8:
@@ -58,6 +85,9 @@ def front_band_bbox(image):
     for x, y, width, height, area in stats[1:]:
         if width >= 0.7 * body_width and height >= 0.2 * image.height:
             candidates.append((int(x), int(y), int(width), int(height), int(area)))
+    audit["eligible_bright_components_before_merge"] = len(candidates)
+    if merge_overlaps:
+        candidates = merge_overlapping_boxes(candidates)
     audit["eligible_bright_components"] = len(candidates)
     if len(candidates) != 1:
         return abstain("ambiguous_or_absent_front_component")

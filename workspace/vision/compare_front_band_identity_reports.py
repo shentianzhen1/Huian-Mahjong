@@ -52,9 +52,33 @@ def compare(before: dict, after: dict) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ("baseline", "front", "reverse-baseline", "reverse-front", "output"):
+    for name in ("baseline", "front", "output"):
         parser.add_argument("--"+name, type=Path, required=True)
+    for name in ("reverse-baseline", "reverse-front"):
+        parser.add_argument("--"+name, type=Path)
+    parser.add_argument("--overlap-only", action="store_true")
     args = parser.parse_args()
+    if args.overlap_only:
+        before = json.loads(args.baseline.read_text())
+        after = json.loads(args.front.read_text())
+        if (not before["symmetric_front_band_enabled"] or not after["symmetric_front_band_enabled"]
+                or before.get("merge_front_overlaps_enabled", False)
+                or not after.get("merge_front_overlaps_enabled", False)
+                or before["reverse_old_m9_references_enabled"] or after["reverse_old_m9_references_enabled"]):
+            raise ValueError("overlap comparison requires strict versus overlap mode without reverse additions")
+        report = dict(schema_version="front_band_overlap_paired_comparison_dev_v0_1",
+            input_sha256={name: hashlib.sha256(path.read_bytes()).hexdigest()
+                          for name, path in (("strict", args.baseline), ("overlap", args.front))},
+            paired=compare(before, after), all_queries_kept_in_denominators=True,
+            whole_lower_views_independent_evidence=False,
+            decision="retain optional overlapping-component diagnostic; reject global front-band replacement",
+            runtime_identity_threshold=0.82, runtime_integration=False, formal_promotion_evidence=False,
+            safe_for_runtime=False, safe_for_hint=False, safe_for_executor=False)
+        args.output.write_text(json.dumps(report, separators=(",", ":"))+"\n")
+        print(json.dumps(report["paired"]["summary"]))
+        return
+    if args.reverse_baseline is None or args.reverse_front is None:
+        parser.error("reverse-baseline and reverse-front are required unless overlap-only is selected")
     paths = dict(baseline=args.baseline, front=args.front, reverse_baseline=args.reverse_baseline, reverse_front=args.reverse_front)
     payloads = {name: json.loads(path.read_text()) for name, path in paths.items()}
     reverse_baseline, reverse_front = payloads["reverse_baseline"], payloads["reverse_front"]

@@ -1,6 +1,6 @@
 import unittest
 import importlib.util
-from workspace.vision.public_meld_front_band_probe import front_band_bbox, prepare_front_band
+from workspace.vision.public_meld_front_band_probe import front_band_bbox, prepare_front_band, merge_overlapping_boxes
 
 VISION = all(importlib.util.find_spec(name) is not None for name in ("PIL", "cv2", "numpy"))
 if VISION:
@@ -8,6 +8,19 @@ if VISION:
 
 @unittest.skipUnless(VISION, "optional Vision dependencies")
 class FrontBandProbeTests(unittest.TestCase):
+    def test_overlapping_fragments_union_but_a_gap_or_touch_does_not(self):
+        a = (3, 0, 81, 33, 100)
+        b = (7, 31, 83, 40, 200)
+        self.assertEqual(merge_overlapping_boxes([a, b]), [(3, 0, 87, 71, 300)])
+        for y in (33, 40):
+            self.assertEqual(len(merge_overlapping_boxes([a, (7, y, 83, 40, 200)])), 2)
+
+    def test_union_envelope_does_not_create_a_new_overlap(self):
+        # A third box lies in the union's empty corner, outside both originals.
+        boxes = [(0, 0, 10, 3, 30), (8, 1, 3, 10, 30), (0, 8, 3, 3, 9)]
+        self.assertEqual(merge_overlapping_boxes(boxes),
+                         [(0, 0, 11, 11, 60), (0, 8, 3, 3, 9)])
+
     def test_darker_lower_side_is_removed_without_cutting_upper_glyph(self):
         image = Image.new("RGB", (60, 90), (180, 180, 180))
         draw = ImageDraw.Draw(image)
