@@ -1,5 +1,14 @@
 # 重要变更记录
 
+## 2026-10-04 — Draft 0.2.1: settlement consistency and audit hardening
+
+- Synchronize already-confirmed Issue #4 / PR #125 Rob-Kong settlement with registry revision 2, special-outcome readiness, phase diagnostics and simulator terminal handling; no new rule inferred.
+- Retire obsolete Gang-Hu/Rob-Kong scoring stops; retain ordinary x2, original PENG, zero failed-kong fan/fee and physical accounting.
+- Make shutdown errors visible and logged; failed evidence completion writes remain retryable.
+- Exclude package-local test modules from wheels; installed smoke checks prohibit them. Add fatal-error lint and Python CodeQL workflow.
+- Refresh integrated status, security/material-rights documentation and separate capture requirements Dependabot job. License choice and history rewriting remain unresolved.
+- PR #117 remains Draft/unmerged; V0.10 unchanged, identity threshold 0.82, Executor OFF.
+
 ## 2026-09-22 — Runtime Vision 独立批次锁定器
 
 - 新增 `independent_batch_lock.py`：在任何检测/分类评估前，对全新录像做 SHA256、source-disjoint 排除、匿名 session 与 20/50/80% 帧位冻结。

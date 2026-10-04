@@ -202,8 +202,6 @@ def report(adapter, state):
     if state.phase == "NEED_FLOWER_REPLACE":
         return ActionReport((), ("deal_replacement_order",))
     if state.phase == "HU_DECLARED":
-        if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
-            return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
         return ActionReport((), ("win_declaration_and_settlement",))
     if state.phase == "YOUJIN_RESPONSE_DRAW":
         p = state.current_player

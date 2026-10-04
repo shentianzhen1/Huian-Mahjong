@@ -155,13 +155,12 @@ _SPECIAL_OUTCOMES = {
         declaration_phase="ROB_KONG_HU_DECLARED",
         multiplier=_rule_value("settlement.rob_kong_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
-        settlement_rule_id="ROB_KONG_SCORING_UNKNOWN",
-        settlement_ready=False,
+        settlement_rule_id=None,
+        settlement_ready=True,
         note=(
-            "Player confirmation: rob-kong uses the same Hu multiplier as self-draw, x2. "
-            "The in-game Huian rules page independently lists rob-kong x2. Exact target-room "
-            "payment/dealer continuation and remaining settlement flow are still incomplete, "
-            "so confirmed multiplier evidence does not yet enable automatic settlement."
+            "Issue #4 / PR #125: robbed ADD_KONG does not complete; original PENG "
+            "remains and failed kong adds no fan/fee. Ordinary Zimo x2 settlement "
+            "and ordinary dealer continuation apply."
         ),
     ),
     "GANG_HU": SpecialOutcomeProfile(

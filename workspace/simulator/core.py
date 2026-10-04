@@ -277,9 +277,6 @@ class Simulator:
                 if game.is_terminal():
                     return finish("COMPLETED")
                 state = game.state
-                if state.phase == "ROB_KONG_HU_DECLARED":
-                    return finish("STOPPED_UNKNOWN", ("ROB_KONG_SCORING_UNKNOWN",),
-                                  "unresolved_rule")
                 if (profile.enable_youjin
                         and state.phase == "YOUJIN_SETTLEMENT_READY"):
                     game.finalize_youjin_outcome(
@@ -289,7 +286,7 @@ class Simulator:
                     state, enable_youjin=profile.enable_youjin)
                 if unknown:
                     return finish("STOPPED_UNKNOWN", unknown, "special_rule_encountered")
-                if state.phase == "HU_DECLARED":
+                if state.phase in ("HU_DECLARED", "ROB_KONG_HU_DECLARED"):
                     # Settlement is part of the declaring action, even on last step.
                     if profile.enable_real_scoring:
                         game.finalize_ordinary_outcome(

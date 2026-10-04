@@ -527,7 +527,7 @@ class EnvironmentTests(unittest.TestCase):
         declared, _ = ordinary.step(hu)
         self.assertEqual(declared.phase, "HU_DECLARED")
         self.assertEqual(declared.pending_hu["source"], "kong_tail_draw")
-        self.assertIn("GANG_HU_SCORING_UNKNOWN",
+        self.assertNotIn("GANG_HU_SCORING_UNKNOWN",
                       ordinary.action_report().unresolved)
 
         settled, _ = instance.step(special)

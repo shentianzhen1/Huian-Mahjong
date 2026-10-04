@@ -213,6 +213,9 @@ class HintAlphaApp(tk.Tk):
 
     def start(self):
         self.stop()
+        if self.evidence is not None:
+            messagebox.showerror("内测未开始", "上次证据会话关闭失败，请先处理保存错误再重试。")
+            return
         try:
             if self.demo:
                 self.backend_name = "SYNTHETIC"
@@ -298,23 +301,36 @@ class HintAlphaApp(tk.Tk):
 
     def stop(self):
         self._invalidate_advice("采集已停止")
+        errors = []
         if self.auto_recorder:
             automatic, self.auto_recorder = self.auto_recorder, None
             try:
                 path = automatic.close("Hint Alpha停止")
                 if path and self.evidence:
                     self.evidence.mark("AUTO_RECORDING_CLOSED", {"path": str(path)})
-            except Exception:
-                pass
+            except Exception as exc:
+                errors.append(f"录像关闭失败：{type(exc).__name__}: {exc}")
         if self.session:
-            self.session.close()
-            self.session = None
+            session, self.session = self.session, None
+            try:
+                session.close()
+            except Exception as exc:
+                errors.append(f"采集关闭失败：{type(exc).__name__}: {exc}")
         if self.evidence:
-            evidence, self.evidence = self.evidence, None
-            evidence.close("capture_stopped")
+            evidence = self.evidence
+            try:
+                if errors:
+                    evidence.mark("SHUTDOWN_FAILED", {"errors": list(errors)})
+                evidence.close("capture_stopped_with_errors" if errors else "capture_stopped")
+            except Exception as exc:
+                errors.append(f"证据关闭失败：{type(exc).__name__}: {exc}")
+            else:
+                self.evidence = None
         self.frame = None
         self.canvas.delete("all")
-        self.capture_status.set("已停止")
+        self.capture_status.set("已停止；保存失败" if errors else "已停止")
+        if errors:
+            self.evidence_status.set("；".join(errors))
 
     def _public_worker(self, images, previous, output_queue):
         try:

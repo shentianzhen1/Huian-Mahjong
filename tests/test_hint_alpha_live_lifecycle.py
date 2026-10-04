@@ -44,3 +44,33 @@ class LiveLifecycleTests(unittest.TestCase):
         shell.runtime_result_queue.put(('ok', 'same-session', 0, 10, {}))
         HintAlphaApp._consume_runtime_result(shell)
         shell.hint_status.set.assert_not_called()
+
+    def test_stop_records_recorder_failure_and_closes_other_resources(self):
+        shell = self.shell()
+        shell._invalidate_advice = Mock()
+        shell.auto_recorder = Mock()
+        shell.auto_recorder.close.side_effect = OSError('disk full')
+        capture = shell.session = Mock()
+        evidence = shell.evidence = Mock()
+        shell.canvas = Mock()
+        shell.capture_status = Mock()
+        shell.evidence_status = Mock()
+        HintAlphaApp.stop(shell)
+        capture.close.assert_called_once()
+        evidence.mark.assert_called_once()
+        self.assertEqual(evidence.mark.call_args.args[0], 'SHUTDOWN_FAILED')
+        evidence.close.assert_called_once_with('capture_stopped_with_errors')
+        self.assertIn('保存失败', shell.capture_status.set.call_args.args[0])
+
+    def test_stop_preserves_evidence_handle_after_close_failure(self):
+        shell = self.shell()
+        shell._invalidate_advice = Mock()
+        shell.auto_recorder = shell.session = None
+        evidence = shell.evidence = Mock()
+        evidence.close.side_effect = OSError('completion write failed')
+        shell.canvas = Mock()
+        shell.capture_status = Mock()
+        shell.evidence_status = Mock()
+        HintAlphaApp.stop(shell)
+        self.assertIs(shell.evidence, evidence)
+        self.assertIn('证据关闭失败', shell.evidence_status.set.call_args.args[0])

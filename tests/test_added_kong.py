@@ -386,7 +386,7 @@ class AddedKongTests(unittest.TestCase):
         self.assertEqual(replay.state.hands, original.hands)
         self.assert_conserved(replay.state)
 
-    def test_rob_kong_scoring_unknown_keeps_declaration_audit(self):
+    def test_rob_kong_simulation_completes_without_materializing_failed_kong(self):
         instances = []
 
         def factory(**options):
@@ -400,16 +400,13 @@ class AddedKongTests(unittest.TestCase):
             agent=AddedKongFixtureAgent(True),
             max_steps=2,
         )
-        self.assertEqual(result.status, "STOPPED_UNKNOWN")
-        self.assertEqual(result.unresolved, ("ROB_KONG_SCORING_UNKNOWN",))
-        self.assertEqual(result.stop_reason, "unresolved_rule")
-        self.assertEqual(result.phase, "ROB_KONG_HU_DECLARED")
-        self.assertEqual(result.winner, 1)
+        self.assertEqual(result.status, "COMPLETED")
+        self.assertEqual(result.unresolved, ())
         self.assertEqual(result.win_source, "rob_kong")
         self.assertEqual(result.steps, 2)
-        self.assertEqual(result.rewards, (0, 0))
-        self.assertFalse(instances[0].state.terminal)
-        self.assertNotIn("END_HAND", [e["action"]["type"] for e in result.events])
+        self.assertTrue(instances[0].state.terminal)
+        self.assertEqual(instances[0].state.melds[0][0].kind, "PENG")
+        self.assertIsNone(instances[0].state.pending_kong)
         self.assert_conserved(instances[0].state)
 
     def test_gang_hu_simulation_uses_ordinary_zimo_multiplier(self):

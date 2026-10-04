@@ -125,9 +125,11 @@ class RuleRegistryTests(unittest.TestCase):
             ).value,
         )
 
-    def test_unknown_dependencies_are_explicit(self):
+    def test_confirmed_rob_kong_contract_matches_terminal_path(self):
         robbed = DEFAULT_RULE_SNAPSHOT.get("settlement.rob_kong_full")
-        self.assertEqual(robbed.status, EvidenceStatus.UNKNOWN)
+        self.assertEqual(robbed.status, EvidenceStatus.CONFIRMED)
+        self.assertEqual(robbed.revision, 2)
+        self.assertEqual(robbed.value["failed_added_kong_fan"], 0)
         self.assertEqual(
             robbed.depends_on,
             ("legality.rob_kong_scope", "settlement.rob_kong_multiplier"),
