@@ -34,7 +34,11 @@ def automatic_sample_interval(metadata):
     duration = float(metadata["duration_seconds"])
     if fps <= 0 or duration <= 0:
         raise ValueError("Video metadata is invalid")
-    target = 0.20 if duration <= 10 * 60 else 0.25 if duration <= 30 * 60 else 0.30
+    # Offline replay values throughput over live-display latency.  A 0.30s
+    # cadence still keeps a 3-sample burst within the existing <=0.8s temporal
+    # gate (first-to-last ~=0.6s) while cutting short-video Runtime work by
+    # roughly one third versus the earlier 0.20s cadence.
+    target = 0.30
     stride = max(1, int(round(target * fps)))
     return stride / fps
 
@@ -571,6 +575,7 @@ def run_video_test(
                         render_video_timeline_event(event)
                         for event in new_timeline_events
                     ],
+                    "timeline_event_count": len(timeline_accumulator.events),
                     "preview": burst[-1][2],
                 }
             )
