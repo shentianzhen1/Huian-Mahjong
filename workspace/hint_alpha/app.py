@@ -143,6 +143,8 @@ class HintAlphaApp(tk.Tk):
         self.video_test_report_status = tk.StringVar(value="报告：尚未生成")
         self.video_test_progress = tk.DoubleVar(value=0.0)
         self.video_test_queue = queue.Queue(maxsize=3)
+        self.video_timeline_queue = queue.Queue()
+        self.video_timeline_live_started = False
         self.video_test_stop = threading.Event()
         self.video_test_thread = None
         self.video_test_running = False
@@ -481,6 +483,18 @@ class HintAlphaApp(tk.Tk):
         self.video_timeline_text.configure(state="disabled")
         self.video_timeline_text.see("end")
 
+    def _append_video_timeline_lines(self, lines):
+        if not hasattr(self, "video_timeline_text"):
+            return
+        lines = list(lines)
+        if not lines:
+            return
+        self.video_timeline_text.configure(state="normal")
+        for line in lines:
+            self.video_timeline_text.insert("end", str(line) + "\n")
+        self.video_timeline_text.configure(state="disabled")
+        self.video_timeline_text.see("end")
+
     @staticmethod
     def _display_tile(tile):
         if not tile or tile == "UNKNOWN":
@@ -677,7 +691,11 @@ class HintAlphaApp(tk.Tk):
             return
         self.video_test_path.set(path)
         try:
-            from .video_test import automatic_sample_interval, probe_video
+            from .video_test import (
+                REPLAY_OCR_INTERVAL_SECONDS,
+                automatic_sample_interval,
+                probe_video,
+            )
 
             meta = probe_video(path)
             interval = automatic_sample_interval(meta)
@@ -686,7 +704,8 @@ class HintAlphaApp(tk.Tk):
             self.video_test_interval.set(f"{interval:.3f}")
             self.video_test_auto_status.set(
                 f"自动参数：0–{meta['duration_seconds']:.1f}s（完整录像） · "
-                f"采样约 {interval:.3f}s · 无需手工填写"
+                f"Vision采样约 {interval:.3f}s · OCR约每 {REPLAY_OCR_INTERVAL_SECONDS:.1f}s · "
+                "无需手工填写"
             )
         except Exception as exc:
             self.video_test_source_status.set(f"录像无法读取：{exc}")
@@ -737,6 +756,8 @@ class HintAlphaApp(tk.Tk):
 
         self.video_test_stop = threading.Event()
         self.video_test_queue = queue.Queue(maxsize=3)
+        self.video_timeline_queue = queue.Queue()
+        self.video_timeline_live_started = False
         self.video_test_running = True
         self.video_test_progress.set(0)
         self.video_test_runtime_status.set("Runtime Vision：正在读取原始录像……")
@@ -747,7 +768,15 @@ class HintAlphaApp(tk.Tk):
 
         worker = threading.Thread(
             target=self._video_test_worker,
-            args=(path, start, duration, interval, self.video_test_stop, self.video_test_queue),
+            args=(
+                path,
+                start,
+                duration,
+                interval,
+                self.video_test_stop,
+                self.video_test_queue,
+                self.video_timeline_queue,
+            ),
             daemon=True,
         )
         self.video_test_thread = worker
@@ -758,7 +787,16 @@ class HintAlphaApp(tk.Tk):
             self.video_test_stop.set()
             self.video_test_report_status.set("报告：正在停止，已完成窗口仍会保留")
 
-    def _video_test_worker(self, path, start, duration, interval, stop_event, output_queue):
+    def _video_test_worker(
+        self,
+        path,
+        start,
+        duration,
+        interval,
+        stop_event,
+        output_queue,
+        timeline_queue,
+    ):
         try:
             from .video_test import probe_video, run_video_test
 
@@ -787,6 +825,8 @@ class HintAlphaApp(tk.Tk):
                     100.0,
                     max(0.0, (payload["source_seconds"] - start) / selected_span * 100.0),
                 )
+                for line in payload.get("timeline_lines") or ():
+                    timeline_queue.put_nowait(line)
                 emit(("progress", progress, payload))
 
             stamp = time.strftime("%Y%m%d_%H%M%S")
@@ -834,6 +874,18 @@ class HintAlphaApp(tk.Tk):
         )
 
     def _consume_video_test_events(self):
+        live_lines = []
+        for _ in range(50):
+            try:
+                live_lines.append(self.video_timeline_queue.get_nowait())
+            except queue.Empty:
+                break
+        if live_lines:
+            if not self.video_timeline_live_started:
+                self._set_video_timeline_lines([])
+                self.video_timeline_live_started = True
+            self._append_video_timeline_lines(live_lines)
+
         for _ in range(3):
             try:
                 item = self.video_test_queue.get_nowait()
@@ -852,6 +904,7 @@ class HintAlphaApp(tk.Tk):
                 allowed = "ACCEPT" if runtime.get("display_allowed") else "BLOCK"
                 self.video_test_runtime_status.set(
                     f"Runtime Vision：窗口{payload['window_index']} | "
+                    f"源视频={payload['source_seconds']:.1f}s | "
                     f"{allowed} | 手牌={hand} | 金={gold}"
                 )
                 if public.get("error"):
@@ -860,8 +913,9 @@ class HintAlphaApp(tk.Tk):
                     )
                 else:
                     obs = public.get("observation") or {}
+                    mode = "复用" if public.get("reused") else "新采样"
                     self.video_test_public_status.set(
-                        "PublicState OCR："
+                        f"PublicState OCR（{mode}）："
                         f"第{obs.get('hand_number') or '?'}局 | "
                         f"余牌={obs.get('remaining_tiles')} | "
                         f"比分={obs.get('score_pair')} | "
