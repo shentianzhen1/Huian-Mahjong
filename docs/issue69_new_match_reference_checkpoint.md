@@ -430,3 +430,83 @@ plus `--bracketed-peer --body-baseline` (prior body ledger), `--baseline`
 Next address edge-face S9 geometry using visible source-plane evidence; do not
 extend this bracket helper by guessing beyond its neighbors. Keep remaining
 P3/P5/S5/S2 control failures and two-source family availability visible.
+
+## Edge S9: reject row-ridge repair, retain a pinned manual-plane diagnostic
+
+Visible source crops show a bright lower bevel above a dark wall on the shaded
+edge face. The automatic own-pixel probe requires one broad ridge across at
+least 70% of body width, a rise of at least 20 above the broad-row median, and
+an adjacent terminal gray wall at least 20 darker than both ridge and face.
+Multiple/narrow ridges, an equal lower face, a dark glyph stripe followed by
+face pixels, weak contrast or an unsupported coordinate mapping abstain.
+It neither extrapolates a neighbor boundary nor changes the existing front-band
+or Runtime thresholds.
+
+All 105 hash-locked crops remain in the geometry ledger. The row-ridge probe
+finds 11 candidates already covered by existing geometry, but adds **0/7** of
+the bracketed packet's uncovered faces. Native S9 has a maximum broad-row
+median of 162 against a face baseline of 140, but insufficient broad bright
+pixel coverage. The old S9 five-frame packet peaks at 158 against 139: a rise
+of 19 fails the unchanged 20 check. The tilted bevel is poorly represented by
+one bright horizontal row. Reject this automatic repair; do not lower the gate
+to make the inspected cases pass. All six edge S9 automatic outputs stay UNKNOWN.
+
+A separate manual diagnostic pins visible TL/TR/BR/BL coordinates on ALL six
+previously frozen edge S9 crops before inspecting identity scores, at a fixed
+72x96 output size. These are assistant-reviewed visible-surface approximations,
+not user-confirmed or pixel-exact complete-face ground truth. The source/frame/
+crop hashes and dimensions are verified against the existing intake. No corner
+or crop-ratio search uses the identity results. Private pixels remain private.
+
+The six pinned inputs use the same reviewed-plane transform wherever they
+appear as reference or query; other inputs retain bracketed preparation.
+This is partial manual-plane coverage: the existing public S9 reference keeps
+its prior bracketed features. It is not a full symmetric face-plane model for
+all S9 sources, and it is not an automatic detector/splitter path.
+
+| Reviewed-plane development result | Before: bracketed packet | Manual diagnostic |
+| --- | --- | --- |
+| Old S9: whole-class winners, one-other-match support | 0/5 (geometry abstained) | 5/5 S9 |
+| Old S9: whole-class winners, two-other-match support | 0/5 (geometry abstained) | 5/5 S9 |
+| Native reverse S9, one-other-match support | Geometry abstained | S7 winner, S9 runner-up |
+| Native reverse S9, two-other-match support | Geometry abstained | S9 class unsupported |
+| Old 75 faces: correct binary hypotheses, one-source | 61/75 | 66/75 |
+| Native reverse 15: correct binary hypotheses, one-source | 11/15 | 12/15 |
+
+The old queries' S9 winners each have two eligible other-original-match groups,
+including the reviewed new native reference and the existing public S9 source.
+The five adjacent old frames are one correlated event, not five independent
+matches. No old S9 query is added as a template. Native reverse excludes the
+entire new match and still fails to identify S9; new geometry alone has not
+closed the source/feature generalization gap.
+
+No additional whole-class, binary-family or Wan-digit regressions appear
+against the bracketed packet at either support level. Against the prior body
+baseline, however, public/private binary availability still declines 21/21 to
+18/21 and 15/15 to 14/15, and individual old N/S1 queries regress despite the
+old packet's net gain from 63/75 to 66/75. Two-source native reverse hypotheses
+remain below body baseline (6/15 versus 7/15). Every loss/abstention is retained
+in the paired report. M9 digit winners remain unchanged; all qualified
+identities remain null. No Runtime/Hint/Executor promotion is implied.
+
+76 focused tests pass, including fixed manual-pin provenance and safety
+contracts, changed frames/crops/dimensions, duplicate queries, misleading
+highlights/glyph stripes, weak/narrow/multiple ridges and reviewed quad bounds.
+Core-only validation runs seven tests and skips 26 optional Vision tests.
+
+- [Automatic row-ridge probe](../workspace/vision/public_meld_edge_ridge_probe.py)
+- [Manual visible-plane pin](../references/vision/2026-10-04/new_match_reviewed_edge_plane_pin_v0_1.json)
+- [105-face automatic geometry falsification](../references/vision/2026-10-04/new_match_edge_ridge_geometry_v0_1.json)
+- [127-query manual-plane identity ledger](../references/vision/2026-10-04/new_match_reviewed_edge_plane_identity_v0_1.json)
+- [Paired binary/whole-class results and six target ranks](../references/vision/2026-10-04/new_match_reviewed_edge_plane_comparison_v0_1.json)
+
+Reproduce with `python -m workspace.vision.evaluate_reviewed_edge_plane_probe`
+and the same four verified ZIP inputs, the manual `--plane-pin`, the prior
+`--body-baseline` and `--bracketed-baseline`, and the three report output paths.
+The scorer override is scoped to this offline evaluator; the default bank and
+existing preparation are unchanged. Runtime stays 0.82 and Executor stays off.
+
+Next make reviewed visible-plane coverage consistent for the remaining public
+S9 reference, then repeat reverse-source class rankings before pursuing an
+automatic boundary model. Do not present the manual 5/5 as an automatic repair,
+fit a threshold on this revealed packet or force native S9 out of UNKNOWN.
