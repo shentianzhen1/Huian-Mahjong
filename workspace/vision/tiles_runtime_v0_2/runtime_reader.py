@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from functools import lru_cache
 import json
 from pathlib import Path
 from typing import Iterable
@@ -147,6 +148,29 @@ def identity_gate(
     return candidate_tile_id, "accepted"
 
 
+@lru_cache(maxsize=16)
+def _cached_runtime_resources(root_text: str, session: str | None):
+    root = Path(root_text)
+    labels = approved_labels(root)
+    training_labels = _training_labels(labels, session)
+    covered, covered_by_region, cross_session = _coverage(training_labels)
+    return {
+        "root": root,
+        "labels": labels,
+        "training_labels": training_labels,
+        "covered": covered,
+        "covered_by_region": covered_by_region,
+        "cross_session": cross_session,
+        "gold_skin_covered": _gold_skin_covered_classes(labels),
+        "classifier": TemplateTileClassifier.from_labels(root, training_labels),
+    }
+
+
+def prepare_runtime_resources(dataset_root, session=None):
+    """Build immutable Runtime Vision template resources once per replay session."""
+    root = Path(dataset_root).resolve()
+    return _cached_runtime_resources(str(root), session)
+
 def read_stable_frames(
     images: Iterable[Image.Image],
     dataset_root: str | Path = "dataset/tiles_runtime_v0_2",
@@ -154,6 +178,8 @@ def read_stable_frames(
     frame_ids: Iterable[str | int] | None = None,
     session: str | None = None,
     confidence_threshold: float = 0.82,
+    resources=None,
+    geometry_cache=None,
 ) -> dict:
     """Read one 3--5 frame burst and return conservative tile observations."""
     images = [image.convert("RGB") for image in images]
@@ -163,21 +189,31 @@ def read_stable_frames(
     if len(frame_ids) != len(images):
         raise ValueError("frame_ids must match images")
 
-    root = Path(dataset_root)
-    labels = approved_labels(root)
-    training_labels = _training_labels(labels, session)
-    covered, covered_by_region, cross_session = _coverage(training_labels)
+    resources = resources or prepare_runtime_resources(dataset_root, session)
+    root = resources["root"]
+    labels = resources["labels"]
+    training_labels = resources["training_labels"]
+    covered = resources["covered"]
+    covered_by_region = resources["covered_by_region"]
+    cross_session = resources["cross_session"]
     # Gold-skin review is an appearance qualification, not an identity
     # template. Keep the current runtime session excluded from classifier
     # training and cross-session identity support, but allow any approved
     # reviewed Gold-skin crop to prove that this class has been observed under
     # the target yellow UI skin. This cannot make a class pass identity_gate().
-    gold_skin_covered = _gold_skin_covered_classes(labels)
-    classifier = TemplateTileClassifier.from_labels(root, training_labels)
-    geometry_frames = [
-        detect_dynamic_geometry(image, frame=frame_id, session=session)
-        for image, frame_id in zip(images, frame_ids)
-    ]
+    gold_skin_covered = resources["gold_skin_covered"]
+    classifier = resources["classifier"]
+    geometry_frames = []
+    for image, frame_id in zip(images, frame_ids):
+        cache_key = (session, frame_id)
+        geometry = geometry_cache.get(cache_key) if geometry_cache is not None else None
+        if geometry is None:
+            geometry = detect_dynamic_geometry(image, frame=frame_id, session=session)
+            if geometry_cache is not None:
+                geometry_cache[cache_key] = geometry
+                while len(geometry_cache) > 12:
+                    geometry_cache.pop(next(iter(geometry_cache)))
+        geometry_frames.append(geometry)
     fused = fuse_dynamic_geometry(geometry_frames, minimum_frames=3)
     missing = sorted(STANDARD_CLASSES - covered)
     base = {
