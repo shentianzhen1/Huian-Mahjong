@@ -278,7 +278,87 @@ class HintAlphaApp(tk.Tk):
             "hint_alpha": True,
             "project_version": PROJECT_VERSION,
             "executor_enabled": False,
-            "session_…808 tokens truncated…T_ROOT / "dataset" / "tiles_runtime_v0_2",
+            "session_id": self.evidence.session_id if self.evidence else None,
+            "backend": self.backend_name,
+            "target": self.target,
+            "rule_snapshot_id": DEFAULT_RULE_SNAPSHOT.fingerprint,
+            "agent_version": CURRENT_AGENT_VERSION,
+        }
+
+    def _invalidate_advice(self, reason):
+        self.live_guard.invalidate()
+        self.runtime_frames.clear()
+        self.public_frames.clear()
+        self.runtime_busy = False
+        self.runtime_result_queue = queue.Queue(maxsize=1)
+        self.public_busy = False
+        self.public_result_queue = queue.Queue(maxsize=1)
+        self.public_previous = None
+        self.hint_status.set(f"向听提示：BLOCKED（{reason}）；Executor OFF")
+
+    def stop(self):
+        self._invalidate_advice("采集已停止")
+        if self.auto_recorder:
+            automatic, self.auto_recorder = self.auto_recorder, None
+            try:
+                path = automatic.close("Hint Alpha停止")
+                if path and self.evidence:
+                    self.evidence.mark("AUTO_RECORDING_CLOSED", {"path": str(path)})
+            except Exception:
+                pass
+        if self.session:
+            self.session.close()
+            self.session = None
+        if self.evidence:
+            evidence, self.evidence = self.evidence, None
+            evidence.close("capture_stopped")
+        self.frame = None
+        self.canvas.delete("all")
+        self.capture_status.set("已停止")
+
+    def _public_worker(self, images, previous, output_queue):
+        try:
+            result = self.public_reader.read_window(
+                images, previous=previous, minimum_votes=2
+            )
+            payload = ("ok", result)
+        except Exception as exc:
+            payload = ("error", f"{type(exc).__name__}: {exc}")
+        try:
+            output_queue.put_nowait(payload)
+        except queue.Full:
+            pass
+
+    def _schedule_public_read(self, now):
+        if (
+            self.public_disabled
+            or self.public_busy
+            or len(self.public_frames) < 3
+            or now - self.last_public_started < 1.5
+        ):
+            return
+        self.public_busy = True
+        self.last_public_started = now
+        images = tuple(image.copy() for image in self.public_frames)
+        threading.Thread(
+            target=self._public_worker,
+            args=(images, self.public_previous, self.public_result_queue),
+            daemon=True,
+        ).start()
+
+    def _runtime_worker(self, samples, session_id, generation, captured, output_queue):
+        try:
+            # Lazy import keeps non-Vision Hint Alpha utilities importable
+            # without forcing OpenCV into every core-only process.
+            from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
+                read_stable_frames,
+            )
+
+            frame_ids = tuple(sequence for sequence, _ in samples)
+            images = tuple(image for _, image in samples)
+            report = read_stable_frames(
+                images,
+                PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
                 frame_ids=frame_ids,
                 session=session_id,
                 confidence_threshold=0.82,
