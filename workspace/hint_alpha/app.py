@@ -135,8 +135,8 @@ class HintAlphaApp(tk.Tk):
 
         self.video_test_path = tk.StringVar(value="")
         self.video_test_start = tk.StringVar(value="0")
-        self.video_test_duration = tk.StringVar(value="30")
-        self.video_test_interval = tk.StringVar(value="0.20")
+        self.video_test_duration = tk.StringVar(value="0")
+        self.video_test_interval = tk.StringVar(value="AUTO")
         self.video_test_source_status = tk.StringVar(value="尚未选择录像")
         self.video_test_runtime_status = tk.StringVar(value="Runtime Vision：等待测试")
         self.video_test_public_status = tk.StringVar(value="PublicState OCR：等待测试")
@@ -384,19 +384,13 @@ class HintAlphaApp(tk.Tk):
             video_controls, text="选择录像", command=self.choose_video_test_file
         ).grid(row=0, column=6, padx=4)
 
-        ttk.Label(video_controls, text="开始秒").grid(row=1, column=0, sticky="w", pady=(8, 0))
-        ttk.Entry(video_controls, textvariable=self.video_test_start, width=9).grid(
-            row=1, column=1, sticky="w", pady=(8, 0)
+        self.video_test_auto_status = tk.StringVar(
+            value="自动参数：从 0 秒开始 · 跑完整段录像 · 采样间隔自动"
         )
-        ttk.Label(video_controls, text="测试时长").grid(row=1, column=2, sticky="e", pady=(8, 0))
-        ttk.Entry(video_controls, textvariable=self.video_test_duration, width=9).grid(
-            row=1, column=3, sticky="w", padx=(4, 0), pady=(8, 0)
-        )
-        ttk.Label(video_controls, text="秒（0=整段）").grid(row=1, column=4, sticky="w", pady=(8, 0))
-        ttk.Label(video_controls, text="采样间隔").grid(row=1, column=5, sticky="e", pady=(8, 0))
-        ttk.Entry(video_controls, textvariable=self.video_test_interval, width=7).grid(
-            row=1, column=6, sticky="w", padx=(4, 0), pady=(8, 0)
-        )
+        ttk.Label(
+            video_controls,
+            textvariable=self.video_test_auto_status,
+        ).grid(row=1, column=0, columnspan=7, sticky="w", pady=(8, 0))
         video_controls.columnconfigure(1, weight=1)
 
         action_row = ttk.Frame(video_test)
@@ -652,9 +646,17 @@ class HintAlphaApp(tk.Tk):
             return
         self.video_test_path.set(path)
         try:
-            from .video_test import probe_video
+            from .video_test import automatic_sample_interval, probe_video
 
             meta = probe_video(path)
+            interval = automatic_sample_interval(meta)
+            self.video_test_start.set("0")
+            self.video_test_duration.set("0")
+            self.video_test_interval.set(f"{interval:.3f}")
+            self.video_test_auto_status.set(
+                f"自动参数：0–{meta['duration_seconds']:.1f}s（完整录像） · "
+                f"采样约 {interval:.3f}s · 无需手工填写"
+            )
         except Exception as exc:
             self.video_test_source_status.set(f"录像无法读取：{exc}")
             return
@@ -680,12 +682,20 @@ class HintAlphaApp(tk.Tk):
         if not path:
             return
         try:
-            start = float(self.video_test_start.get())
-            duration = float(self.video_test_duration.get())
-            interval = float(self.video_test_interval.get())
-            if start < 0 or duration < 0 or interval <= 0:
-                raise ValueError("开始秒/时长不能为负，采样间隔必须大于0")
-        except ValueError as exc:
+            from .video_test import automatic_sample_interval, probe_video
+
+            meta = probe_video(path)
+            start = 0.0
+            duration = 0.0
+            interval = automatic_sample_interval(meta)
+            self.video_test_start.set("0")
+            self.video_test_duration.set("0")
+            self.video_test_interval.set(f"{interval:.3f}")
+            self.video_test_auto_status.set(
+                f"自动参数：0–{meta['duration_seconds']:.1f}s（完整录像） · "
+                f"采样约 {interval:.3f}s · 无需手工填写"
+            )
+        except Exception as exc:
             messagebox.showerror("录像测试未开始", str(exc))
             return
 
