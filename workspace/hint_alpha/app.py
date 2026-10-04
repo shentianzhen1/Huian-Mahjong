@@ -444,6 +444,12 @@ class HintAlphaApp(tk.Tk):
         if observation.hand_number is not None and observation.hand_number != self.timeline_hand:
             self.timeline_hand = observation.hand_number
             self.timeline_gold = None
+            self.ui_gold_tile = None
+            self.ui_gold_ok = False
+            self.ui_hand_ok = False
+            self.table_hand_status.set("我的手牌：UNKNOWN")
+            self.table_meld_status.set("我的副露：UNKNOWN")
+            self.turn_status.set("当前状态：新一局，等待可信牌面")
             self._append_timeline(
                 "system",
                 f"第 {observation.hand_number} / 8 局",
@@ -810,7 +816,11 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
+        self.ui_hand_ok = False
+        self.ui_gold_ok = False
+        self.turn_status.set(f"当前状态：UNKNOWN（{reason}）")
         self.hint_status.set(f"向听提示：BLOCKED（{reason}）；Executor OFF")
+        self._refresh_health()
 
     def stop(self):
         self._invalidate_advice("采集已停止")
@@ -996,6 +1006,10 @@ class HintAlphaApp(tk.Tk):
         self.live_guard.last_result = captured
         if kind == "error":
             self.runtime_status.set(f"Runtime Vision暂不可用：{value}")
+            self.ui_hand_ok = False
+            self.ui_gold_ok = False
+            self.turn_status.set("当前状态：UNKNOWN（Runtime Vision错误）")
+            self._refresh_health()
             self.hint_status.set("向听提示：BLOCKED（Runtime Vision错误）")
             event_key = ("error", value)
             if self.evidence and event_key != self.last_runtime_event_key:
@@ -1076,6 +1090,8 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         if kind == "error":
             self.vision_status.set(f"PublicState暂不可用：{value}")
+            self.ui_hand_number_ok = False
+            self._refresh_health()
             if "OCRUnavailable" in value or "not installed" in value:
                 self.public_disabled = True
             if self.evidence:
