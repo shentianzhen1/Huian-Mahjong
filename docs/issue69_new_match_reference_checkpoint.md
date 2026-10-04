@@ -337,3 +337,96 @@ verified ZIP inputs as the strict evaluator plus `--merge-front-overlaps`.
 Next inspect the unresolved dark S2/S9 face-plane evidence and M6 control
 failures separately. Do not lower brightness thresholds or infer identities
 from a missing class; retain the prior body-feature bank as the baseline.
+
+## Same-frame bracketed geometry: recover shaded middle faces, retain regressions
+
+The remaining M6 control loss has two linked causes. The private M6 query
+fails the brightness-band transform, and removing that same private reference
+leaves the public M6 query without an eligible other-match M6 reference.
+Its whole-face winner becomes M3 and its digit winner M5. This is missing
+true-class coverage, not evidence that the visible tile changed identity.
+The private normalized M6 already ends near the front/side boundary: adding
+another arbitrary lower crop would risk removing the artwork.
+
+A separate optional probe uses two independently successful SAME-FRAME
+neighbor band boundaries in source coordinates. It permits only a target
+bracketed on both sides by adjacent peers of the same level row and source
+crop height, with an exact zero-rotation coordinate mapping. A steep boundary
+slope, missing/ambiguous peer, different row, edge extrapolation, invalid pixel
+bounds or conflicting source/frame/match provenance abstains. Brightness gates
+and direct candidates are unchanged. If normalization has already removed the
+side wall, the whole normalized body can be retained only when the peer plane
+bound supports it; failed geometry never falls back to raw features.
+
+The source-pinned geometry packet keeps all 105 manually split crops:
+
+| Packet | Direct overlap-band candidates | Bracketed candidates |
+| --- | --- | --- |
+| Native 15 faces | 13/15 | 14/15 |
+| Recovered private 15 controls | 12/15 | 14/15 |
+| Old 75-face packet | 70/75 | 70/75 |
+
+The three new candidates are native S2, private P8 and private M6. Visual
+review of source/prepared pairs retains their full glyphs without obvious new
+clipping. These counts are geometry availability, not accuracy. Native S9 and
+the five old S9 faces are at row edges and remain UNKNOWN; private P3 also lacks
+a valid two-sided bracket. Automatic detector/splitter success is not claimed.
+
+The opt-in `--bracketed-peer-band` identity experiment applies the same
+preparation to references and queries. An in-memory query ID plus exact source
+SHA binds the crop to its verified source-frame row. Pixel equality alone
+cannot borrow another recording's peers. Missing/ambiguous context keeps the
+direct transform, including its failure; it supplies no raw-feature fallback.
+Public controls have no added neighbor context. Their source-disjoint ranks
+can change only through the verified reference availability changes.
+
+Both comparisons retain all 127 query IDs, source/crop pins and abstentions:
+
+| One-other-match development measure | Overlap only | Bracketed |
+| --- | --- | --- |
+| Native reverse: correct binary hypotheses | 10/15 | 11/15 |
+| Private controls: correct binary hypotheses | 12/15 | 14/15 |
+| Public controls: correct binary hypotheses | 18/21 | 18/21 |
+| Old packet: correct binary hypotheses | 61/75 | 61/75 |
+| Public/private M6 supported digit winners | 0/2 | 2/2 |
+| Old M9 supported digit winners | 15/15 | 15/15 |
+
+There are no new one-other-match family or digit regressions against overlap
+only. At TWO-other-match support, however, native reverse correct binary
+hypotheses fall from 7/15 to 5/15. `native_reverse_P1_0` and `_1` change from
+NON_WAN to UNKNOWN: restored M6 references make M6 the whole-face winner,
+while the lower feature still chooses NON_WAN. They are correlated faces from
+one match, not two independent failures. Consensus correctly abstains rather
+than issuing a false Wan route. Private two-source hypotheses improve 4/15 to
+5/15; other packets are unchanged. This loss remains in the published paired
+ledger rather than being hidden by the single-source gains.
+
+**Keep this as a geometry/identity diagnostic, reject global replacement.**
+Against the prior body-feature baseline, one-source old/private/public correct
+binary hypotheses still fall from 63/75, 15/15, 21/21 to 61/75, 14/15, 18/21.
+No supported digit winner regresses against that baseline, but public-state
+coverage is still incomplete. Native reverse M9 identity is still unscorable
+without the separate old-M9 additions. All qualified identities remain null;
+Runtime stays 0.82; Executor remains off. This revealed experiment is not a
+blind promotion batch.
+
+64 focused tests pass, including source/frame/match separation, equal pixels
+with a different source/row, ambiguous contexts, missing and distant neighbors,
+sloping boundaries and glyph retention. Core-only tests pass three comparison
+tests and skip 18 optional Vision tests.
+
+- [Bracketed geometry probe](../workspace/vision/public_meld_bracketed_front_band_probe.py)
+- [105-face geometry ledger](../references/vision/2026-10-04/new_match_bracketed_front_geometry_v0_1.json)
+- [127-query identity ledger](../references/vision/2026-10-04/new_match_bracketed_front_identity_v0_1.json)
+- [Paired comparison against overlap and body baselines](../references/vision/2026-10-04/new_match_bracketed_front_paired_comparison_v0_1.json)
+
+Reproduce geometry with `python -m workspace.vision.evaluate_bracketed_front_band_probe`
+and the same four verified ZIPs. Reproduce identity with the frozen family
+probe plus `--lower-family-consensus --front-band --merge-front-overlaps --bracketed-peer-band`.
+Reproduce comparisons with `python -m workspace.vision.compare_front_band_identity_reports`
+plus `--bracketed-peer --body-baseline` (prior body ledger), `--baseline`
+(overlap ledger), `--front` (bracketed ledger) and `--output`.
+
+Next address edge-face S9 geometry using visible source-plane evidence; do not
+extend this bracket helper by guessing beyond its neighbors. Keep remaining
+P3/P5/S5/S2 control failures and two-source family availability visible.

@@ -50,7 +50,7 @@ def wan_other_original_support(bank, session: str, source_sha256: str) -> dict[s
 def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
              query_zips: list[Path], lower_consensus: bool = False,
              front_band: bool = False, reverse_old_m9: bool = False,
-             merge_front_overlaps: bool = False) -> dict:
+             merge_front_overlaps: bool = False, bracketed_peer_band: bool = False) -> dict:
     from PIL import Image
     from workspace.vision import public_meld_identity_sift as sift
     from workspace.vision import public_meld_private_sift_loader as private
@@ -67,8 +67,23 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         raise ValueError("reverse-reference comparison requires lower-family consensus")
     if merge_front_overlaps and not front_band:
         raise ValueError("component merging requires front-band mode")
+    peer_contexts = None
+    if bracketed_peer_band:
+        if not front_band or not merge_front_overlaps:
+            raise ValueError("bracketed geometry requires front-band and overlap modes")
+        from workspace.vision.evaluate_bracketed_front_band_probe import load_frozen_groups
+        from workspace.vision.public_meld_bracketed_front_band_probe import build_peer_contexts, prepare_from_peer_context
+        groups, _ = load_frozen_groups(root, native_zip, private_zip, query_zips)
+        peer_contexts = build_peer_contexts(groups)
     original = sift._sift_descriptors
     def prepare(image):
+        if peer_contexts is not None:
+            # Callback receives only an image; an explicit in-memory source
+            # tag binds its verified row. Pixel equality cannot borrow a row
+            # from a different recording or frame. Untagged public controls
+            # retain the direct transform.
+            query_id, source_sha = image.info.get("verified_peer_query", (None, None))
+            return prepare_from_peer_context(image, peer_contexts, query_id=query_id, source_sha256=source_sha)
         return prepare_front_band(image, merge_overlaps=merge_front_overlaps) if front_band else normalize_single_face(image)
     def whole(image):
         normalized, _ = prepare(image)
@@ -114,8 +129,9 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
             for record in recovered_for_features:
                 group = private._matching_private_group(groups, record)
                 for index, face in enumerate(group["faces"]):
-                    raw_private_templates.append((record, index,
-                        read_face(archive, "approved_faces/"+face["crop_file"], record.crop_sha256[index])))
+                    image = read_face(archive, "approved_faces/"+face["crop_file"], record.crop_sha256[index])
+                    image.info["verified_peer_query"] = (f"{record.recovery_id}_{index}", record.source_sha256)
+                    raw_private_templates.append((record, index, image))
     transforms = [("whole", whole), ("digit", digit)]
     if lower_consensus:
         transforms.append(("lower", lower))
@@ -149,6 +165,7 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                 raise ValueError("native reference manifest mismatch")
             for face in pin["reference_faces"]:
                 image = read_face(archive, face["crop_file"], face["crop_png_sha256"])
+                image.info["verified_peer_query"] = (f'native_reverse_{face["reference_group"]}_{face["face_index"]}', face["source_sha256"])
                 session, digest, group = face["source_session"], face["source_sha256"], face["original_match_group"]
                 sources[session] = SourceGroup(session, digest, group)
                 tile = face["provisional_visual_tile"]
@@ -168,6 +185,7 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
 
     queries = []
     def add(meta, image):
+        image.info["verified_peer_query"] = (meta["query_id"], meta["sha256"])
         queries.append((meta, image))
     for label in approved_labels(manifest):
         if label.region != "public_meld":
@@ -312,6 +330,7 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         feature_views_are_independent_evidence=False,
         symmetric_front_band_enabled=front_band,
         merge_front_overlaps_enabled=merge_front_overlaps,
+        bracketed_peer_band_enabled=bracketed_peer_band,
         front_band_failure_fallback=False,
         native_reference_feature_abstentions=native_reference_abstentions,
         private_template_feature_abstentions=private_feature_abstentions,
@@ -345,12 +364,14 @@ def main():
     parser.add_argument("--front-band", action="store_true")
     parser.add_argument("--reverse-old-m9-references", action="store_true")
     parser.add_argument("--merge-front-overlaps", action="store_true")
+    parser.add_argument("--bracketed-peer-band", action="store_true")
     args = parser.parse_args()
     report = evaluate(root=args.repository_root, native_zip=args.native_reference_zip,
                       private_zip=args.private_template_zip, query_zips=args.query_zip,
                       lower_consensus=args.lower_family_consensus, front_band=args.front_band,
                       reverse_old_m9=args.reverse_old_m9_references,
-                      merge_front_overlaps=args.merge_front_overlaps)
+                      merge_front_overlaps=args.merge_front_overlaps,
+                      bracketed_peer_band=args.bracketed_peer_band)
     args.output.write_text(json.dumps(report, separators=(",", ":"))+"\n")
     print(json.dumps(report["summary"]))
 

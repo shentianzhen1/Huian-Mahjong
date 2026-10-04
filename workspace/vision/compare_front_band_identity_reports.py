@@ -57,7 +57,35 @@ def main():
     for name in ("reverse-baseline", "reverse-front"):
         parser.add_argument("--"+name, type=Path)
     parser.add_argument("--overlap-only", action="store_true")
+    parser.add_argument("--bracketed-peer", action="store_true")
+    parser.add_argument("--body-baseline", type=Path)
     args = parser.parse_args()
+    if args.bracketed_peer:
+        if args.overlap_only or args.body_baseline is None:
+            parser.error("bracketed-peer requires body-baseline and cannot combine with overlap-only")
+        before = json.loads(args.baseline.read_text())
+        after = json.loads(args.front.read_text())
+        body = json.loads(args.body_baseline.read_text())
+        if (before.get("bracketed_peer_band_enabled", False)
+                or not after.get("bracketed_peer_band_enabled", False)
+                or not before["merge_front_overlaps_enabled"]
+                or not after["merge_front_overlaps_enabled"]
+                or not before["symmetric_front_band_enabled"]
+                or not after["symmetric_front_band_enabled"]
+                or body.get("symmetric_front_band_enabled", False)
+                or any(p.get("reverse_old_m9_references_enabled", False) for p in (before, after, body))):
+            raise ValueError("expected body/overlap/bracketed modes without reverse additions")
+        report = dict(schema_version="bracketed_front_identity_paired_comparison_dev_v0_1",
+            input_sha256={name: hashlib.sha256(path.read_bytes()).hexdigest()
+                for name, path in (("body", args.body_baseline), ("overlap", args.baseline), ("bracketed", args.front))},
+            against_overlap=compare(before, after), against_body_baseline=compare(body, after),
+            all_queries_kept_in_denominators=True, whole_lower_views_independent_evidence=False,
+            decision="retain bracketed geometry diagnostic; reject global feature replacement due to remaining coverage/control losses and two-source reverse family abstentions",
+            runtime_identity_threshold=0.82, runtime_integration=False, formal_promotion_evidence=False,
+            safe_for_runtime=False, safe_for_hint=False, safe_for_executor=False)
+        args.output.write_text(json.dumps(report, separators=(",", ":"))+"\n")
+        print(json.dumps(report["against_overlap"]["summary"]))
+        return
     if args.overlap_only:
         before = json.loads(args.baseline.read_text())
         after = json.loads(args.front.read_text())
