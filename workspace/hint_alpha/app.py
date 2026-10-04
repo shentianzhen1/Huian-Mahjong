@@ -13,7 +13,7 @@ import queue
 import threading
 import time
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import filedialog, messagebox, ttk
 
 from PIL import Image, ImageTk
 
@@ -132,6 +132,21 @@ class HintAlphaApp(tk.Tk):
                 f"{DEFAULT_RULE_SNAPSHOT.fingerprint[:12]}"
             )
         )
+
+        self.video_test_path = tk.StringVar(value="")
+        self.video_test_start = tk.StringVar(value="0")
+        self.video_test_duration = tk.StringVar(value="30")
+        self.video_test_interval = tk.StringVar(value="0.20")
+        self.video_test_source_status = tk.StringVar(value="尚未选择录像")
+        self.video_test_runtime_status = tk.StringVar(value="Runtime Vision：等待测试")
+        self.video_test_public_status = tk.StringVar(value="PublicState OCR：等待测试")
+        self.video_test_report_status = tk.StringVar(value="报告：尚未生成")
+        self.video_test_progress = tk.DoubleVar(value=0.0)
+        self.video_test_queue = queue.Queue(maxsize=3)
+        self.video_test_stop = threading.Event()
+        self.video_test_thread = None
+        self.video_test_running = False
+        self.video_test_photo = None
         self._build()
         if demo:
             self.backend_name = "SYNTHETIC"
@@ -165,6 +180,9 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(top, text="人工录牌", command=self.open_manual_hand).grid(
             row=0, column=7, padx=4
         )
+        ttk.Button(top, text="录像测试", command=self.open_video_test).grid(
+            row=0, column=8, padx=4
+        )
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -172,9 +190,15 @@ class HintAlphaApp(tk.Tk):
         realtime = ttk.Frame(self.notebook, padding=10)
         advice = ttk.Frame(self.notebook, padding=10)
         diagnostic = ttk.Frame(self.notebook, padding=8)
+        video_test = ttk.Frame(self.notebook, padding=10)
+        self.realtime_tab = realtime
+        self.advice_tab = advice
+        self.diagnostic_tab = diagnostic
+        self.video_test_tab = video_test
         self.notebook.add(realtime, text="实时流水")
         self.notebook.add(advice, text="AI 提示")
         self.notebook.add(diagnostic, text="识别诊断")
+        self.notebook.add(video_test, text="录像测试")
 
         # --- 实时流水：打牌时默认看的页面 ---
         header = ttk.Frame(realtime)
@@ -347,6 +371,90 @@ class HintAlphaApp(tk.Tk):
             "等待实时采集；未确认的局号、金牌或动作都会保持 UNKNOWN。",
             key=("boot",),
         )
+
+        # --- 录像测试：直接解码原文件，不经过播放器/WGC ---
+        video_controls = ttk.Frame(video_test)
+        video_controls.pack(fill="x")
+        ttk.Label(video_controls, text="真实对局录像").grid(row=0, column=0, sticky="w")
+        video_entry = ttk.Entry(
+            video_controls, textvariable=self.video_test_path, state="readonly", width=72
+        )
+        video_entry.grid(row=0, column=1, columnspan=5, sticky="ew", padx=6)
+        ttk.Button(
+            video_controls, text="选择录像", command=self.choose_video_test_file
+        ).grid(row=0, column=6, padx=4)
+
+        ttk.Label(video_controls, text="开始秒").grid(row=1, column=0, sticky="w", pady=(8, 0))
+        ttk.Entry(video_controls, textvariable=self.video_test_start, width=9).grid(
+            row=1, column=1, sticky="w", pady=(8, 0)
+        )
+        ttk.Label(video_controls, text="测试时长").grid(row=1, column=2, sticky="e", pady=(8, 0))
+        ttk.Entry(video_controls, textvariable=self.video_test_duration, width=9).grid(
+            row=1, column=3, sticky="w", padx=(4, 0), pady=(8, 0)
+        )
+        ttk.Label(video_controls, text="秒（0=整段）").grid(row=1, column=4, sticky="w", pady=(8, 0))
+        ttk.Label(video_controls, text="采样间隔").grid(row=1, column=5, sticky="e", pady=(8, 0))
+        ttk.Entry(video_controls, textvariable=self.video_test_interval, width=7).grid(
+            row=1, column=6, sticky="w", padx=(4, 0), pady=(8, 0)
+        )
+        video_controls.columnconfigure(1, weight=1)
+
+        action_row = ttk.Frame(video_test)
+        action_row.pack(fill="x", pady=10)
+        ttk.Button(action_row, text="开始录像测试", command=self.start_video_test).pack(
+            side="left"
+        )
+        ttk.Button(action_row, text="停止测试", command=self.stop_video_test).pack(
+            side="left", padx=6
+        )
+        ttk.Label(
+            action_row,
+            text="直接读取原始视频像素；不会上传视频，不经过播放器缩放。",
+        ).pack(side="left", padx=10)
+
+        self.video_test_bar = ttk.Progressbar(
+            video_test, variable=self.video_test_progress, maximum=100
+        )
+        self.video_test_bar.pack(fill="x", pady=(0, 10))
+
+        video_body = ttk.Panedwindow(video_test, orient="horizontal")
+        video_body.pack(fill="both", expand=True)
+        video_preview_frame = ttk.Frame(video_body)
+        video_result_frame = ttk.Frame(video_body, width=410)
+        video_body.add(video_preview_frame, weight=3)
+        video_body.add(video_result_frame, weight=2)
+
+        self.video_test_canvas = tk.Canvas(
+            video_preview_frame, background="#111827", highlightthickness=0
+        )
+        self.video_test_canvas.pack(fill="both", expand=True)
+
+        ttk.Label(
+            video_result_frame, text="录像测试结果", font=("", 12, "bold")
+        ).pack(anchor="w", pady=(0, 8))
+        for variable in (
+            self.video_test_source_status,
+            self.video_test_runtime_status,
+            self.video_test_public_status,
+            self.video_test_report_status,
+        ):
+            ttk.Label(
+                video_result_frame,
+                textvariable=variable,
+                wraplength=390,
+                justify="left",
+            ).pack(anchor="w", fill="x", pady=7)
+
+        ttk.Separator(video_result_frame).pack(fill="x", pady=10)
+        ttk.Label(
+            video_result_frame,
+            text=(
+                "用途：判断“原始录像直接识别”和“播放器/WGC识别”的差异。"
+                "报告仍是开发诊断，不属于 Vision 正式 promotion 证据。"
+            ),
+            wraplength=390,
+            justify="left",
+        ).pack(anchor="w", fill="x")
 
     @staticmethod
     def _display_tile(tile):
@@ -527,6 +635,229 @@ class HintAlphaApp(tk.Tk):
         self._refresh_header()
         self._refresh_health()
 
+    def open_video_test(self):
+        self.notebook.select(self.video_test_tab)
+        if not self.video_test_path.get():
+            self.choose_video_test_file()
+
+    def choose_video_test_file(self):
+        path = filedialog.askopenfilename(
+            title="选择真实对局录像",
+            filetypes=(
+                ("视频文件", "*.mp4 *.mov *.avi *.mkv *.m4v"),
+                ("所有文件", "*.*"),
+            ),
+        )
+        if not path:
+            return
+        self.video_test_path.set(path)
+        try:
+            from .video_test import probe_video
+
+            meta = probe_video(path)
+        except Exception as exc:
+            self.video_test_source_status.set(f"录像无法读取：{exc}")
+            return
+        self._set_video_source_status(meta)
+
+    def _set_video_source_status(self, source):
+        delta = float(source.get("aspect_ratio_delta_percent", 0.0))
+        reference = source.get("reference_frame_size") or (2796, 1290)
+        self.video_test_source_status.set(
+            "原始录像："
+            f"{source['width']}×{source['height']} | "
+            f"{source['fps']:.2f} FPS | "
+            f"{source['duration_seconds']:.1f}s | "
+            f"比例={source['aspect_ratio']:.4f} | "
+            f"相对对照 {reference[0]}×{reference[1]} 差 {delta:.2f}%"
+        )
+
+    def start_video_test(self):
+        path = self.video_test_path.get().strip()
+        if not path:
+            self.choose_video_test_file()
+            path = self.video_test_path.get().strip()
+        if not path:
+            return
+        try:
+            start = float(self.video_test_start.get())
+            duration = float(self.video_test_duration.get())
+            interval = float(self.video_test_interval.get())
+            if start < 0 or duration < 0 or interval <= 0:
+                raise ValueError("开始秒/时长不能为负，采样间隔必须大于0")
+        except ValueError as exc:
+            messagebox.showerror("录像测试未开始", str(exc))
+            return
+
+        self.stop()
+        if self.evidence is not None:
+            messagebox.showerror("录像测试未开始", "上次证据会话关闭失败，请先处理保存错误。")
+            return
+
+        self.video_test_stop = threading.Event()
+        self.video_test_queue = queue.Queue(maxsize=3)
+        self.video_test_running = True
+        self.video_test_progress.set(0)
+        self.video_test_runtime_status.set("Runtime Vision：正在读取原始录像……")
+        self.video_test_public_status.set("PublicState OCR：正在读取原始录像……")
+        self.video_test_report_status.set("报告：测试进行中")
+        self.notebook.select(self.video_test_tab)
+
+        worker = threading.Thread(
+            target=self._video_test_worker,
+            args=(path, start, duration, interval, self.video_test_stop, self.video_test_queue),
+            daemon=True,
+        )
+        self.video_test_thread = worker
+        worker.start()
+
+    def stop_video_test(self):
+        if self.video_test_running:
+            self.video_test_stop.set()
+            self.video_test_report_status.set("报告：正在停止，已完成窗口仍会保留")
+
+    def _video_test_worker(self, path, start, duration, interval, stop_event, output_queue):
+        try:
+            from .video_test import probe_video, run_video_test
+
+            meta = probe_video(path)
+            if duration == 0:
+                selected_end = meta["duration_seconds"]
+            else:
+                selected_end = min(meta["duration_seconds"], start + duration)
+            selected_span = max(0.001, selected_end - start)
+
+            def emit(message):
+                try:
+                    output_queue.put_nowait(message)
+                except queue.Full:
+                    try:
+                        output_queue.get_nowait()
+                    except queue.Empty:
+                        pass
+                    try:
+                        output_queue.put_nowait(message)
+                    except queue.Full:
+                        pass
+
+            def on_window(payload):
+                progress = min(
+                    100.0,
+                    max(0.0, (payload["source_seconds"] - start) / selected_span * 100.0),
+                )
+                emit(("progress", progress, payload))
+
+            stamp = time.strftime("%Y%m%d_%H%M%S")
+            safe_stem = "".join(
+                char if char.isalnum() or char in "-_" else "_"
+                for char in Path(path).stem
+            )[:60]
+            report_path = (
+                OUTPUT / "video_tests" / f"{stamp}_{safe_stem or 'video'}.json"
+            )
+            result = run_video_test(
+                path,
+                dataset_root=PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
+                start_seconds=start,
+                duration_seconds=duration,
+                sample_interval_seconds=interval,
+                output_path=report_path,
+                stop_event=stop_event,
+                on_window=on_window,
+            )
+            emit(("done", result))
+        except Exception as exc:
+            try:
+                output_queue.put_nowait(("error", f"{type(exc).__name__}: {exc}"))
+            except queue.Full:
+                pass
+
+    def _render_video_test_frame(self, image):
+        if image is None:
+            return
+        preview = image.copy()
+        preview.thumbnail(
+            (
+                max(1, self.video_test_canvas.winfo_width()),
+                max(1, self.video_test_canvas.winfo_height()),
+            )
+        )
+        self.video_test_photo = ImageTk.PhotoImage(preview)
+        self.video_test_canvas.delete("all")
+        self.video_test_canvas.create_image(
+            self.video_test_canvas.winfo_width() / 2,
+            self.video_test_canvas.winfo_height() / 2,
+            image=self.video_test_photo,
+            anchor="center",
+        )
+
+    def _consume_video_test_events(self):
+        for _ in range(3):
+            try:
+                item = self.video_test_queue.get_nowait()
+            except queue.Empty:
+                return
+            kind = item[0]
+            if kind == "progress":
+                _, progress, payload = item
+                self.video_test_progress.set(progress)
+                self._render_video_test_frame(payload.get("preview"))
+                runtime = payload["runtime"]
+                snapshot = runtime.get("snapshot") or {}
+                public = payload["public_state"]
+                hand = len(snapshot.get("own_hand") or ())
+                gold = self._display_tile(snapshot.get("gold_tile"))
+                allowed = "ACCEPT" if runtime.get("display_allowed") else "BLOCK"
+                self.video_test_runtime_status.set(
+                    f"Runtime Vision：窗口{payload['window_index']} | "
+                    f"{allowed} | 手牌={hand} | 金={gold}"
+                )
+                if public.get("error"):
+                    self.video_test_public_status.set(
+                        "PublicState OCR：" + public["error"]
+                    )
+                else:
+                    obs = public.get("observation") or {}
+                    self.video_test_public_status.set(
+                        "PublicState OCR："
+                        f"第{obs.get('hand_number') or '?'}局 | "
+                        f"余牌={obs.get('remaining_tiles')} | "
+                        f"比分={obs.get('score_pair')} | "
+                        f"issues={','.join(obs.get('issues') or ()) or 'none'}"
+                    )
+            elif kind == "done":
+                result = item[1]
+                self.video_test_running = False
+                self.video_test_progress.set(100)
+                source = result["source"]
+                self._set_video_source_status(source)
+                runtime = result["runtime"]
+                gold_votes = runtime.get("gold_tile_votes") or {}
+                self.video_test_runtime_status.set(
+                    "Runtime Vision："
+                    f"{runtime['accepted_windows']}接受 / "
+                    f"{runtime['blocked_windows']}阻塞 | "
+                    f"手牌可信{runtime['trusted_hand_windows']}窗 | "
+                    f"金牌可信{runtime['trusted_gold_windows']}窗 | "
+                    f"金牌票数={gold_votes or 'none'}"
+                )
+                public = result["public_state"]
+                self.video_test_public_status.set(
+                    "PublicState OCR："
+                    f"有效{public['valid_windows']}/{public['windows']}窗 | "
+                    f"局号票数={public['hand_number_votes'] or 'none'} | "
+                    f"OCR错误窗={public['error_windows']}"
+                )
+                suffix = "（已提前停止）" if result.get("stopped_early") else ""
+                self.video_test_report_status.set(
+                    f"报告：{result.get('report_path', '未写入')} {suffix}"
+                )
+            elif kind == "error":
+                self.video_test_running = False
+                self.video_test_runtime_status.set("Runtime Vision：测试失败")
+                self.video_test_public_status.set("PublicState OCR：测试失败")
+                self.video_test_report_status.set(f"报告：{item[1]}")
+
     def refresh(self):
         try:
             self.entries = windows()
@@ -624,7 +955,9 @@ class HintAlphaApp(tk.Tk):
             self.manual_tiles = []
             self.manual_revision = 0
             self._start_evidence()
-            self._begin_live_view("人工录牌会话开始 · 非视觉识别")
+            begin_live_view = getattr(self, "_begin_live_view", None)
+            if callable(begin_live_view):
+                begin_live_view("人工录牌会话开始 · 非视觉识别")
             self.manual_active = True
             self.capture_status.set("人工模式：无画面采集、无自动识别；Executor OFF")
             self.runtime_status.set("Runtime Vision：人工输入未经过视觉识别")
@@ -818,11 +1151,16 @@ class HintAlphaApp(tk.Tk):
         self.public_previous = None
         self.ui_hand_ok = False
         self.ui_gold_ok = False
-        self.turn_status.set(f"当前状态：UNKNOWN（{reason}）")
+        if hasattr(self, "turn_status"):
+            self.turn_status.set(f"当前状态：UNKNOWN（{reason}）")
         self.hint_status.set(f"向听提示：BLOCKED（{reason}）；Executor OFF")
-        self._refresh_health()
+        refresh_health = getattr(self, "_refresh_health", None)
+        if callable(refresh_health):
+            refresh_health()
 
     def stop(self):
+        if getattr(self, "video_test_running", False):
+            self.video_test_stop.set()
         self._invalidate_advice("采集已停止")
         self.manual_active = False
         errors = []
@@ -853,7 +1191,9 @@ class HintAlphaApp(tk.Tk):
         self.frame = None
         self.canvas.delete("all")
         self.capture_status.set("已停止；保存失败" if errors else "已停止")
-        self._refresh_health()
+        refresh_health = getattr(self, "_refresh_health", None)
+        if callable(refresh_health):
+            refresh_health()
         if errors:
             self.evidence_status.set("；".join(errors))
 
@@ -1221,6 +1561,7 @@ class HintAlphaApp(tk.Tk):
                 self._invalidate_advice("画面或识别结果已过期")
             self._consume_public_result()
             self._consume_runtime_result()
+            self._consume_video_test_events()
             if self.demo:
                 from PIL import ImageDraw
 
@@ -1269,6 +1610,7 @@ class HintAlphaApp(tk.Tk):
 
     def close(self):
         self.demo = False
+        self.stop_video_test()
         self.stop()
         self.destroy()
 
