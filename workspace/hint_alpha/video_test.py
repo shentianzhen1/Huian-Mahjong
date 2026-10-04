@@ -21,6 +21,23 @@ REFERENCE_FRAME_SIZE = (2796, 1290)
 DEFAULT_SAMPLE_INTERVAL_SECONDS = 0.20
 
 
+def automatic_sample_interval(metadata):
+    """Choose a conservative no-input replay cadence from decoded metadata.
+
+    Three sampled frames must stay within the existing <=0.8s temporal window,
+    so the automatic cadence never exceeds 0.30s.  Longer recordings use a
+    slightly wider interval to keep whole-match replay practical without
+    changing any Vision confidence threshold.
+    """
+    fps = float(metadata["fps"])
+    duration = float(metadata["duration_seconds"])
+    if fps <= 0 or duration <= 0:
+        raise ValueError("Video metadata is invalid")
+    target = 0.20 if duration <= 10 * 60 else 0.25 if duration <= 30 * 60 else 0.30
+    stride = max(1, int(round(target * fps)))
+    return stride / fps
+
+
 def probe_video(path):
     """Return decode metadata without resizing or otherwise changing pixels."""
     import cv2
@@ -60,8 +77,8 @@ def iter_video_samples(
     path,
     *,
     start_seconds=0.0,
-    duration_seconds=30.0,
-    sample_interval_seconds=DEFAULT_SAMPLE_INTERVAL_SECONDS,
+    duration_seconds=0.0,
+    sample_interval_seconds=None,
     stop_event=None,
 ):
     """Yield source-frame samples from the original video without resizing."""
@@ -71,7 +88,11 @@ def iter_video_samples(
     meta = probe_video(path)
     start_seconds = float(start_seconds)
     duration_seconds = float(duration_seconds)
-    sample_interval_seconds = float(sample_interval_seconds)
+    sample_interval_seconds = (
+        automatic_sample_interval(meta)
+        if sample_interval_seconds is None
+        else float(sample_interval_seconds)
+    )
     if (
         not math.isfinite(start_seconds)
         or start_seconds < 0
@@ -196,8 +217,8 @@ def run_video_test(
     *,
     dataset_root,
     start_seconds=0.0,
-    duration_seconds=30.0,
-    sample_interval_seconds=DEFAULT_SAMPLE_INTERVAL_SECONDS,
+    duration_seconds=0.0,
+    sample_interval_seconds=None,
     output_path=None,
     source_session=None,
     public_reader=None,
@@ -207,6 +228,8 @@ def run_video_test(
     """Run original video pixels through Runtime Vision and PublicState OCR."""
     path = Path(path)
     source = probe_video(path)
+    if sample_interval_seconds is None:
+        sample_interval_seconds = automatic_sample_interval(source)
     digest = sha256(path)
     session = source_session or "local-video-" + digest[:16]
     source.update(
