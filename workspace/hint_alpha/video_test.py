@@ -141,6 +141,170 @@ def iter_video_samples(
         cap.release()
 
 
+def build_video_timeline(runtime_rows, public_rows, source):
+    """Build a fail-closed replay timeline from already accepted video facts.
+
+    This first automatic draft intentionally contains only facts already exposed
+    by Runtime Vision/PublicState.  River/meld actions are not invented from
+    Mahjong legality or from source-specific ROIs belonging to another video.
+    """
+    runtime_rows = list(runtime_rows)
+    public_rows = list(public_rows)
+    events = []
+    current_hand = None
+    current_gold = None
+    current_scores = None
+    current_hand_tiles = None
+
+    def emit(timestamp, kind, *, actor="system", hand_number=None, **details):
+        event = {
+            "timestamp_seconds": round(float(timestamp), 6),
+            "actor": actor,
+            "kind": kind,
+            "hand_number": hand_number,
+            "evidence_grade": "UNKNOWN",
+            "details": details,
+        }
+        events.append(event)
+
+    for index, runtime in enumerate(runtime_rows):
+        times = runtime.get("source_seconds") or ()
+        if not times:
+            continue
+        timestamp = times[-1]
+        public = public_rows[index] if index < len(public_rows) else {}
+        observation = public.get("observation") if isinstance(public, dict) else None
+
+        if observation:
+            hand_number = observation.get("hand_number")
+            if hand_number is not None and hand_number != current_hand:
+                current_hand = hand_number
+                current_gold = None
+                current_hand_tiles = None
+                emit(
+                    timestamp,
+                    "HAND_START",
+                    hand_number=hand_number,
+                    total_hands=8,
+                    source="public_state_ocr",
+                )
+
+            score_pair = observation.get("score_pair")
+            if score_pair is not None:
+                score_pair = tuple(score_pair)
+                if score_pair != current_scores:
+                    if current_scores is None:
+                        emit(
+                            timestamp,
+                            "SCORE_BASELINE",
+                            hand_number=current_hand,
+                            top_right=score_pair[0],
+                            bottom_left=score_pair[1],
+                            source="public_state_ocr",
+                        )
+                    else:
+                        emit(
+                            timestamp,
+                            "SETTLEMENT_SCORE_CHANGE",
+                            hand_number=current_hand,
+                            top_right_before=current_scores[0],
+                            bottom_left_before=current_scores[1],
+                            top_right_after=score_pair[0],
+                            bottom_left_after=score_pair[1],
+                            settlement_kind="UNKNOWN",
+                            source="public_state_ocr",
+                        )
+                    current_scores = score_pair
+
+        snapshot = runtime.get("snapshot") or {}
+        if snapshot.get("gold_trusted") and snapshot.get("gold_tile"):
+            gold = snapshot["gold_tile"]
+            if gold != current_gold:
+                current_gold = gold
+                emit(
+                    timestamp,
+                    "OPEN_GOLD",
+                    hand_number=current_hand,
+                    tile=gold,
+                    source="runtime_vision",
+                )
+
+        if snapshot.get("hand_trusted") and snapshot.get("own_hand"):
+            tiles = tuple(sorted(snapshot["own_hand"]))
+            if tiles != current_hand_tiles:
+                current_hand_tiles = tiles
+                emit(
+                    timestamp,
+                    "PLAYER_HAND_SNAPSHOT",
+                    actor="player",
+                    hand_number=current_hand,
+                    tile_count=len(tiles),
+                    tiles=list(tiles),
+                    phase=(runtime.get("hint") or {}).get("phase"),
+                    source="runtime_vision",
+                )
+
+    return {
+        "schema_version": "hint_alpha_video_timeline_draft_v0_1",
+        "source_sha256": source.get("sha256"),
+        "source_session": source.get("session"),
+        "status": "PARTIAL",
+        "public_actions_complete": False,
+        "missing_channels": [
+            "river_action_identity",
+            "meld_action_identity",
+            "opponent_concealed_hand",
+            "hu_subtype_and_settlement_semantics",
+        ],
+        "formal_promotion_evidence": False,
+        "safe_for_runtime": False,
+        "safe_for_hint": False,
+        "safe_for_executor": False,
+        "events": events,
+    }
+
+
+def render_video_timeline(timeline):
+    """Render the automatic replay draft for the local UI/review file."""
+    from workspace.vision.issue69_text_timeline import tile_text
+
+    lines = []
+    for event in timeline.get("events", ()):
+        timestamp = event["timestamp_seconds"]
+        kind = event["kind"]
+        details = event.get("details") or {}
+        hand_number = event.get("hand_number")
+        prefix = f"{timestamp:.2f}s "
+        if kind == "HAND_START":
+            text = f"第{hand_number}/8局开始"
+        elif kind == "OPEN_GOLD":
+            text = f"开金：{tile_text(details.get('tile'))}"
+        elif kind == "SCORE_BASELINE":
+            text = (
+                f"比分：我方 {details.get('bottom_left')} / "
+                f"对方 {details.get('top_right')}"
+            )
+        elif kind == "SETTLEMENT_SCORE_CHANGE":
+            text = (
+                "比分变化："
+                f"我方 {details.get('bottom_left_before')}→{details.get('bottom_left_after')}，"
+                f"对方 {details.get('top_right_before')}→{details.get('top_right_after')} "
+                "（结算方式 UNKNOWN）"
+            )
+        elif kind == "PLAYER_HAND_SNAPSHOT":
+            tiles = " ".join(tile_text(tile) for tile in details.get("tiles", ()))
+            text = f"我方手牌快照（{details.get('tile_count')}张）：{tiles}"
+        else:
+            text = f"{kind}（UNKNOWN）"
+        lines.append(prefix + text)
+    if not lines:
+        lines.append("未形成可信流水事件；保持 UNKNOWN。")
+    lines.append(
+        "流水状态：PARTIAL；弃牌/吃/碰/杠等公共动作需通过 #69 公共区域证据后再升级。"
+    )
+    return lines
+
+
 def summarize_video_test(runtime_rows, public_rows, source):
     runtime_rows = list(runtime_rows)
     public_rows = list(public_rows)
@@ -321,6 +485,8 @@ def run_video_test(
         raise ValueError("Selected range contains fewer than three sampled frames")
 
     result = summarize_video_test(runtime_rows, public_rows, source)
+    timeline = build_video_timeline(runtime_rows, public_rows, source)
+    result["timeline"] = timeline
     result["stopped_early"] = bool(stop_event is not None and stop_event.is_set())
     result["generated_unix_time"] = time.time()
     result["rows"] = runtime_rows
@@ -333,6 +499,18 @@ def run_video_test(
             json.dumps(result, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
+        timeline_json = output_path.with_suffix(".timeline.json")
+        timeline_text = output_path.with_suffix(".timeline.txt")
+        timeline_json.write_text(
+            json.dumps(timeline, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        timeline_text.write_text(
+            "\n".join(render_video_timeline(timeline)) + "\n",
+            encoding="utf-8",
+        )
         result["report_path"] = str(output_path)
+        result["timeline_json_path"] = str(timeline_json)
+        result["timeline_text_path"] = str(timeline_text)
 
     return result
