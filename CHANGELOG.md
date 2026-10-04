@@ -1,5 +1,12 @@
 # 重要变更记录
 
+## 2026-10-04 — Continuous real Alpha recovery smoke (Draft)
+
+- Add consecutive advice/rejection runs, rejection-reason counts and explicit recovery acceptance to private replay; preserve original Runtime session binding.
+- Native first-hand 173–176s replay: 8 structural advice windows / 5 blocked / 1 recovery across 13 overlapping bursts. Freeze metadata only; private pixels remain outside GitHub.
+- Recompute frozen snapshot semantics in CI. Same-source development smoke does not establish identity accuracy, discard recommendations, Windows acceptance or formal Vision promotion.
+- Threshold 0.82, read-only Hint, V0.10 and Executor OFF remain unchanged.
+
 ## 2026-10-04 — Draft 0.2.1: settlement consistency and audit hardening
 
 - Synchronize already-confirmed Issue #4 / PR #125 Rob-Kong settlement with registry revision 2, special-outcome readiness, phase diagnostics and simulator terminal handling; no new rule inferred.

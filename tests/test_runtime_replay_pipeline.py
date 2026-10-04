@@ -1,4 +1,7 @@
 import unittest
+from dataclasses import asdict
+import json
+from pathlib import Path
 from workspace.hint_alpha.runtime_pipeline import evaluate_runtime_report
 from workspace.hint_alpha.live_guard import LiveAdviceGuard
 
@@ -18,6 +21,41 @@ def trusted_report():
 
 
 class ReplayPipelineTests(unittest.TestCase):
+    def test_frozen_real_snapshot_decisions_recompute_without_private_pixels(self):
+        from workspace.vision.current_state_snapshot import CurrentTableSnapshot
+        from workspace.hint_alpha.current_snapshot_advisor import analyze_snapshot_shanten
+        from workspace.hint_alpha.replay_smoke import summarize_windows
+        root = Path(__file__).resolve().parents[1]
+        evidence = json.loads((root / 'references/vision/2026-10-04/'
+                               'alpha_continuous_real_recovery_v0_1.json').read_text())
+        # This checks saved snapshot semantics; CI does not have private pixels.
+        self.assertFalse(evidence['formal_promotion_evidence'])
+        self.assertFalse(evidence['windows_capture_validated'])
+        self.assertEqual(evidence['session_binding'], 'explicit_original_session')
+        for row in evidence['rows']:
+            hint = analyze_snapshot_shanten(CurrentTableSnapshot(**row['snapshot']))
+            self.assertEqual(json.loads(json.dumps(asdict(hint))), row['hint'])
+            self.assertEqual(hint.allowed, row['display_allowed'])
+            self.assertFalse(hint.visible_remainders_used)
+            self.assertFalse(hint.safe_for_executor)
+        summary = summarize_windows(evidence['rows'])
+        self.assertEqual(summary['advice_runs'], evidence['advice_runs'])
+        self.assertEqual(summary['recovered_advice_runs'], 1)
+
+    def test_replay_summary_distinguishes_first_acquisition_and_recovery(self):
+        from workspace.hint_alpha.replay_smoke import summarize_windows
+        rows = [dict(display_allowed=allowed, frames=[n, n + 1, n + 2],
+                     source_seconds=[n / 10, (n + 1) / 10, (n + 2) / 10],
+                     hint={'issues': [] if allowed else ['gold_untrusted']})
+                for n, allowed in enumerate([False, True, True, False, True])]
+        result = summarize_windows(rows)
+        self.assertEqual(result['recovered_advice_runs'], 1)
+        self.assertEqual([r['windows'] for r in result['advice_runs']], [1, 2, 1, 1])
+        self.assertEqual(result['rejection_issue_windows'], {'gold_untrusted': 2})
+        self.assertEqual(summarize_windows(rows[:3])['recovered_advice_runs'], 0)
+        self.assertEqual(summarize_windows(rows[:1])['recovered_advice_runs'], 0)
+        self.assertEqual(summarize_windows([])['advice_runs'], [])
+
     def test_default_gate_and_experimental_structural_advice(self):
         report = trusted_report()
         default = evaluate_runtime_report(report, captured=1)

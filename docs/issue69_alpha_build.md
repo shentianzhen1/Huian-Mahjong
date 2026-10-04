@@ -1,7 +1,9 @@
 # Issue #69 internal Alpha build audit (2026-10-04)
 
 Audited main: `96ee733c8daa13bf5166719c1a3f398f680828c1`.
-Audited integration head: `815e506b39aa0dabdeabeadc2c5dde1d0b21fcea`.
+Initial integration audit: `815e506b39aa0dabdeabeadc2c5dde1d0b21fcea`.
+Shared replay boundary `bb80861593a85d2c0cad5773123b72d405fd3e9d` passed
+Tests, Vision Regression, Evidence Contracts and CodeQL.
 Issue #69 is execution truth; PR #117 remains Draft, unmerged.
 
 ## Existing runnable chain
@@ -52,13 +54,18 @@ experimental structural advice and never enables Executor.
 Run a **private local original video** (replace SHA with its frozen SHA256):
 
 ```powershell
-python -m workspace.hint_alpha.replay_smoke --video data/issue69_private/source.mp4 --source-sha256 SHA256 --start 173 --duration 3 --stride 3 --output data/issue69_private/alpha_replay.json --require-accepted
+python -m workspace.hint_alpha.replay_smoke --video data/issue69_private/source.mp4 --source-sha256 SHA256 --source-session ORIGINAL_SESSION --start 173 --duration 3 --stride 12 --output data/issue69_private/alpha_replay.json --require-accepted --require-recovery
 ```
 
 A source mismatch, repeated source frame index or non-monotonic timestamps
 fails. Bursts spanning more than 0.8 seconds cannot establish live stability.
 `--require-accepted` exits unsuccessfully if all windows abstain; it retains the
 report rather than relabeling zero accepted windows as successful acceptance.
+`--require-recovery` also requires accepted -> blocked -> accepted in this
+sequence. Initial blocked -> accepted is acquisition, not recovery. Reports
+include consecutive advice runs and rejection-issue window counts. Use the
+registered original Runtime session with `--source-session` when known; a
+SHA-derived session alone makes no original-match template-exclusion claim.
 The replay clock uses source PTS, not inference wall time; this is offline
 regression and does not validate live freshness/performance or Windows capture.
 
@@ -70,6 +77,26 @@ See the frozen metadata report in references/vision/2026-10-04.
 
 Synthetic contract regressions separately cover accepted structural advice,
 UNKNOWN-to-trusted recovery, default promotion blocking and old-epoch rejection.
-They do not substitute for real-video accepted/recovery evidence. Still pending:
-continuous source-locked real accepted/abstained/recovered sequences and Windows
-WGC/PrintWindow acceptance. No private raw media should be committed.
+They do not substitute for real-video accepted/recovery evidence.
+
+## Continuous real recovery checkpoint (2026-10-04)
+
+The private exact first-hand source (`fba5f67d...`, registered session
+`session_fba5f67d244fb5bd`) was decoded at native 2796x1290, without resizing,
+for 173–176 seconds at stride 12. Thirteen overlapping three-frame windows
+produced **8 structural advice windows / 5 blocked windows / 1 recovery**.
+The first two accepted windows report ordinary shanten 0; after two blocked
+windows, six accepted windows report ordinary shanten -1; terminal/transition
+frames block again. Unknown public identities keep remaining-copy/danger OFF.
+No discard choice was emitted in this checkpoint, so this does not validate
+real-video discard suggestions or special Hu eligibility.
+
+See `references/vision/2026-10-04/alpha_continuous_real_recovery_v0_1.json` for
+source/session/frame/pixel pins and complete snapshot decisions. A second local
+decode reproduced all decisions and pixel hashes (timing excluded). CI
+recomputes the saved snapshot decisions; private raw pixels remain local and
+are not redecoded by CI. This is same-source development smoke, without a
+human tile-accuracy measurement or full-match state-recovery claim.
+
+Windows WGC/PrintWindow live capture, freshness, latency and disconnect/restart
+acceptance remain pending. No private raw media should be committed.

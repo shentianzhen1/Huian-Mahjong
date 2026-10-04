@@ -5,7 +5,7 @@ Outputs are development diagnostics, never formal promotion evidence.
 from __future__ import annotations
 
 import argparse
-from collections import deque
+from collections import Counter, deque
 from dataclasses import asdict
 import hashlib
 import json
@@ -22,6 +22,33 @@ def sha256(path):
         for chunk in iter(lambda: stream.read(1024 * 1024), b''):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def summarize_windows(rows):
+    """Describe observed advice transitions without claiming unseen recovery."""
+    runs = []
+    rejection_issues = Counter()
+    for row in rows:
+        allowed = row['display_allowed'] is True
+        if not allowed:
+            rejection_issues.update(set(row['hint']['issues']))
+        if not runs or runs[-1]['display_allowed'] != allowed:
+            runs.append({'display_allowed': allowed, 'windows': 0,
+                         'first_frame': row['frames'][-1],
+                         'start_seconds': row['source_seconds'][-1]})
+        runs[-1].update(last_frame=row['frames'][-1],
+                        end_seconds=row['source_seconds'][-1])
+        runs[-1]['windows'] += 1
+    # Initial abstention followed by first acceptance is acquisition, not
+    # recovery of previously displayed advice.
+    recoveries = sum(
+        not runs[index - 1]['display_allowed']
+        and runs[index]['display_allowed']
+        and any(run['display_allowed'] for run in runs[:index - 1])
+        for index in range(1, len(runs))
+    )
+    return {'advice_runs': runs, 'recovered_advice_runs': recoveries,
+            'rejection_issue_windows': dict(sorted(rejection_issues.items()))}
 
 
 def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None):
@@ -101,6 +128,8 @@ def main():
     group.add_argument('--video', type=Path)
     group.add_argument('--frame-manifest', type=Path)
     parser.add_argument('--source-sha256')
+    parser.add_argument('--source-session',
+                        help='Known original Runtime session for template-session exclusion')
     parser.add_argument('--start', type=float, default=0)
     parser.add_argument('--duration', type=float, default=3)
     parser.add_argument('--stride', type=int, default=3)
@@ -108,14 +137,19 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--require-accepted', action='store_true',
                         help='Fail acceptance if no trusted structural advice window exists')
+    parser.add_argument('--require-recovery', action='store_true',
+                        help='Require accepted -> blocked -> accepted advice in this replay')
     args = parser.parse_args()
-    if args.stride < 1 or args.start < 0 or args.duration <= 0:
+    if args.source_session and not args.video:
+        parser.error('--source-session is only valid with --video')
+    if (args.stride < 1 or not math.isfinite(args.start)
+            or not math.isfinite(args.duration) or args.start < 0 or args.duration <= 0):
         parser.error('Require positive duration/stride and nonnegative start')
     if args.video:
         if not args.source_sha256:
             parser.error('--video requires --source-sha256')
         digest = args.source_sha256
-        session = 'private-replay-' + digest[:16]
+        session = args.source_session or 'private-replay-' + digest[:16]
         samples = video_samples(args.video, expected_sha=digest, start=args.start,
                                 duration=args.duration, stride=args.stride)
     else:
@@ -133,12 +167,16 @@ def main():
     result = {
         'schema_version': 'hint_alpha_replay_smoke_v0_1',
         'source_sha256': digest, 'session': session,
+        'session_binding': ('explicit_original_session' if args.source_session else
+                            'sha_derived_no_match_exclusion_claim' if args.video else
+                            'frame_manifest_evidence_id'),
         'original_match_count': 1, 'formal_promotion_evidence': False,
         'safe_for_executor': False, 'identity_threshold': 0.82,
         'clock': 'offline_source_time_not_live_latency_gate',
         'windows_capture_validated': False,
         'accepted_windows': sum(row['display_allowed'] for row in rows),
         'blocked_windows': sum(not row['display_allowed'] for row in rows),
+        **summarize_windows(rows),
         'rows': rows,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -146,6 +184,8 @@ def main():
     print(json.dumps({k: v for k, v in result.items() if k != 'rows'}))
     if args.require_accepted and not result['accepted_windows']:
         raise SystemExit('Acceptance incomplete: zero trusted advice windows; report retained')
+    if args.require_recovery and not result['recovered_advice_runs']:
+        raise SystemExit('Acceptance incomplete: no observed advice recovery; report retained')
 
 
 if __name__ == '__main__':

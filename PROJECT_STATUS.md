@@ -31,9 +31,11 @@ Own meld identity UNKNOWN may still permit structural shanten when hand, Gold
 and own meld count are trusted. Missing public river/meld identities block live
 remaining-copy and danger features. Dark-face fallback remains development-only.
 
-Minimum Alpha acceptance still requires real-frame end-to-end accepted/abstained
-regression and Windows live capture/recovery validation. Linux CI does not prove
-Windows usability. See docs/issue69_alpha_build.md.
+Native private first-hand 173–176s replay now observes 8 structural advice
+windows, 5 blocked windows and 1 recovery across 13 overlapping bursts. This
+same-source smoke does not validate tile accuracy, real discard suggestions or
+full-match recovery. Windows live capture/freshness/recovery acceptance remains
+pending. Linux CI does not prove Windows usability. See docs/issue69_alpha_build.md.
 
 ## Remaining priorities
 
@@ -49,8 +51,9 @@ Windows usability. See docs/issue69_alpha_build.md.
 
 Core regression, Rules/Environment coverage floor 85%, Vision Regression,
 Evidence Contracts, fatal-error lint and installed wheel boundary checks.
-CodeQL workflow is added; first-run results and GitHub security settings require
-verification. Stop/recording failures are visible and completion-write failures
+CodeQL analysis succeeded at the shared replay boundary head; GitHub secret
+scanning/push-protection settings still require verification. Stop/recording
+failures are visible and completion-write failures
 remain retryable. Package-local test modules are excluded from runtime wheels.
 
 Preserve 144 tiles, no fifth copies, at most three playable Gold copies,
