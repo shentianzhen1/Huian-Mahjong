@@ -23,8 +23,10 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
             FLAT,
             STACKED,
             UNKNOWN,
+            find_flat_meld_seams,
             normalize_public_meld_crop,
             split_flat_meld_faces,
+            split_flat_meld_faces_by_seams,
         )
         from workspace.vision.public_tile_detector import PublicGeometryCandidate
 
@@ -33,8 +35,10 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         cls.FLAT = FLAT
         cls.STACKED = STACKED
         cls.UNKNOWN = UNKNOWN
+        cls.find_seams = staticmethod(find_flat_meld_seams)
         cls.normalize = staticmethod(normalize_public_meld_crop)
         cls.split = staticmethod(split_flat_meld_faces)
+        cls.split_by_seams = staticmethod(split_flat_meld_faces_by_seams)
         cls.PublicGeometryCandidate = PublicGeometryCandidate
         cls.calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))
 
@@ -76,6 +80,33 @@ class PublicMeldGeometryNormalizationTests(unittest.TestCase):
         self.assertEqual(len(faces), 3)
         self.assertTrue(all(face.size[1] == 96 for face in faces))
         self.assertTrue(all(face.size[0] > 0 for face in faces))
+
+
+    def test_geometry_seam_splitter_finds_clear_three_face_gaps(self):
+        image = self._flat_image()
+        normalized = self.normalize(
+            image,
+            self._candidate((20, 30, 185, 105)),
+        )
+        seams = self.find_seams(normalized)
+        self.assertIsNotNone(seams)
+        assert seams is not None
+        self.assertLess(seams[0], seams[1])
+        faces = self.split_by_seams(normalized)
+        self.assertEqual(len(faces), 3)
+        self.assertTrue(all(face.size[0] > 0 for face in faces))
+
+    def test_geometry_seam_splitter_abstains_without_visible_separators(self):
+        image = self.Image.new("RGB", (240, 150), (0, 75, 78))
+        draw = self.ImageDraw.Draw(image)
+        draw.rectangle((25, 40, 199, 125), fill=(235, 235, 225))
+        normalized = self.normalize(
+            image,
+            self._candidate((20, 30, 185, 105)),
+        )
+        self.assertEqual(normalized.analysis.stack_state, self.FLAT)
+        self.assertIsNone(self.find_seams(normalized))
+        self.assertEqual(self.split_by_seams(normalized), ())
 
     def test_stacked_3_plus_1_is_detected_and_not_equal_thirds_split(self):
         image = self._stacked_image()
