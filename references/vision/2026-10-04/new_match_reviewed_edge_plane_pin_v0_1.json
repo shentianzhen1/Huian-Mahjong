@@ -186,6 +186,34 @@
           50
         ]
       ]
+    },
+    {
+      "query_id": "public_meld_s9",
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "source_frame_pin": 2378,
+      "crop_sha256": "39e1216ae9d8aa9934bdb0d9314b9fdc0a0f8e556c45d2dad5e6ca29ac3e14c0",
+      "source_crop_size": [
+        43,
+        65
+      ],
+      "corners_tl_tr_br_bl": [
+        [
+          3,
+          6
+        ],
+        [
+          39,
+          6
+        ],
+        [
+          39,
+          51
+        ],
+        [
+          2,
+          51
+        ]
+      ]
     }
   ]
 }

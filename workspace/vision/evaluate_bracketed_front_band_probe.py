@@ -9,7 +9,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 
-def load_frozen_groups(root, native_zip, private_zip, query_zips):
+def load_frozen_groups(root, native_zip, private_zip, query_zips, *, include_public_s789=False):
     from PIL import Image
     from workspace.vision import public_meld_identity_sift as sift
     from workspace.vision import public_meld_private_sift_loader as private
@@ -27,6 +27,46 @@ def load_frozen_groups(root, native_zip, private_zip, query_zips):
         if hashlib.sha256(raw).hexdigest() != digest:
             raise ValueError("crop hash changed: " + name)
         return Image.open(io.BytesIO(raw)).convert("RGB")
+    if include_public_s789:
+        from workspace.vision.public_identity_labels import (
+            approved_labels, load_public_identity_manifest, pixel_bbox,
+            verify_repository_files,
+        )
+        from workspace.vision.public_identity_shadow_v0_2 import load_development_sources
+        manifest_path = root / "references/vision/2026-09-22/public_identity_labels_v0_1.json"
+        manifest = load_public_identity_manifest(manifest_path)
+        issues = verify_repository_files(manifest, root)
+        if issues:
+            raise ValueError("public S789 source image verification failed: " + ",".join(issues))
+        registry_path = root / "references/vision/2026-09-24/public_identity_source_groups.development.json"
+        sources = load_development_sources(registry_path)
+        labels = {label.label_id: label for label in approved_labels(manifest)
+                  if label.label_id in {"public_meld_s7", "public_meld_s8", "public_meld_s9"}}
+        if set(labels) != {"public_meld_s7", "public_meld_s8", "public_meld_s9"}:
+            raise ValueError("frozen public S789 control group is incomplete")
+        if len({(label.source_sha256, label.frame_index, label.image_path)
+                for label in labels.values()}) != 1:
+            raise ValueError("public S789 labels are not from the same source frame")
+        inputs["references/vision/2026-09-22/public_identity_labels_v0_1.json"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+        inputs["references/vision/2026-09-24/public_identity_source_groups.development.json"] = hashlib.sha256(registry_path.read_bytes()).hexdigest()
+        label = labels["public_meld_s7"]
+        source = sources.get(label.source_session)
+        if source is None or source.source_sha256 != label.source_sha256:
+            raise ValueError("public S789 source lineage is not registered")
+        with Image.open(root / label.image_path) as frame:
+            frame = frame.convert("RGB")
+            row = []
+            for tile in ("S7", "S8", "S9"):
+                label = labels[f"public_meld_{tile.lower()}"]
+                x, y, w, h = pixel_bbox(label, frame.size)
+                crop = frame.crop((x, y, x+w, y+h))
+                row.append((dict(query_id=label.label_id, packet="public_reference_controls",
+                    expected_visual_tile=tile, source_sha256=label.source_sha256,
+                    source_frame_pin=label.frame_index, source_session=label.source_session,
+                    original_match_group=source.match_group,
+                    crop_sha256=hashlib.sha256(crop.tobytes()).hexdigest(), bounds=[x,y,x+w,y+h],
+                    image_sha256=label.image_sha256, label_id=label.label_id), crop))
+            groups.append(row)
     native_path = "references/vision/2026-10-04/new_match_native_reference_candidate_pin_v0_1.json"
     with ZipFile(native_zip) as archive:
         pin = load_pin(native_path)

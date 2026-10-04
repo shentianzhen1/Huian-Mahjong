@@ -50,7 +50,8 @@ def wan_other_original_support(bank, session: str, source_sha256: str) -> dict[s
 def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
              query_zips: list[Path], lower_consensus: bool = False,
              front_band: bool = False, reverse_old_m9: bool = False,
-             merge_front_overlaps: bool = False, bracketed_peer_band: bool = False) -> dict:
+             merge_front_overlaps: bool = False, bracketed_peer_band: bool = False,
+             reviewed_public_plane: dict | None = None) -> dict:
     from PIL import Image
     from workspace.vision import public_meld_identity_sift as sift
     from workspace.vision import public_meld_private_sift_loader as private
@@ -73,7 +74,8 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
             raise ValueError("bracketed geometry requires front-band and overlap modes")
         from workspace.vision.evaluate_bracketed_front_band_probe import load_frozen_groups
         from workspace.vision.public_meld_bracketed_front_band_probe import build_peer_contexts, prepare_from_peer_context
-        groups, _ = load_frozen_groups(root, native_zip, private_zip, query_zips)
+        groups, _ = load_frozen_groups(root, native_zip, private_zip, query_zips,
+                                       include_public_s789=reviewed_public_plane is not None)
         peer_contexts = build_peer_contexts(groups)
     original = sift._sift_descriptors
     def prepare(image):
@@ -114,6 +116,7 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
     banks = {}
     native_reference_abstentions = []
     private_feature_abstentions = []
+    reviewed_plane_reference_rows = []
     raw_private_templates = []
     verified_private_bank = None
     if front_band:
@@ -178,6 +181,39 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                         continue
                     raise ValueError("reference lacks descriptors")
                 templates.append(sift.PublicMeldSiftTemplate(tile, session, digest, group, descriptors))
+        if reviewed_public_plane is not None and name != "digit":
+            from workspace.vision.public_meld_visible_face_rectification import rectify_reviewed_visible_face
+            plane_meta = reviewed_public_plane["meta"]
+            plane_image = reviewed_public_plane["image"]
+            source = sources.get(plane_meta["session"])
+            if (plane_meta["expected_visual_tile"] != "S9" or source is None
+                    or source.source_sha256 != plane_meta["sha256"]
+                    or hashlib.sha256(plane_image.tobytes()).hexdigest() != plane_meta["crop_pixel_sha256"]):
+                raise ValueError("reviewed public plane is not the pinned S9 source")
+            plane = rectify_reviewed_visible_face(
+                plane_image, reviewed_public_plane["corners"],
+                output_size=tuple(reviewed_public_plane["output_size"]))
+            if name == "whole":
+                descriptors = original(plane)
+                tile_id = "S9"
+            else:
+                lower_face = plane.crop((0, plane.height//2, plane.width, plane.height))
+                descriptors = original(lower_face.resize((72, 96), Image.Resampling.LANCZOS))
+                tile_id = "WAN"
+            if descriptors is None:
+                raise ValueError("reviewed public S9 reference lacks descriptors")
+            matches = [t for t in templates if t.tile_id == tile_id
+                       and t.source_sha256 == plane_meta["source_sha256"]]
+            if len(matches) != 1:
+                raise ValueError("expected exactly one frozen public S9 template to replace")
+            prior = matches[0]
+            templates.remove(prior)
+            templates.append(sift.PublicMeldSiftTemplate(tile_id, prior.source_session,
+                prior.source_sha256, prior.match_group, descriptors))
+            reviewed_plane_reference_rows.append(dict(feature=name, label_id=plane_meta["label_id"],
+                source_sha256=plane_meta["sha256"], crop_pixel_sha256=plane_meta["crop_pixel_sha256"],
+                replaced_template_count=1, corners=reviewed_public_plane["corners"],
+                output_size=reviewed_public_plane["output_size"]))
         banks[name] = sift.PublicMeldSiftBank(sources, tuple(templates))
         if name == "lower":
             banks[name] = sift.PublicMeldSiftBank(sources, tuple(
@@ -331,6 +367,8 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         symmetric_front_band_enabled=front_band,
         merge_front_overlaps_enabled=merge_front_overlaps,
         bracketed_peer_band_enabled=bracketed_peer_band,
+        reviewed_public_plane_reference_enabled=reviewed_public_plane is not None,
+        reviewed_public_plane_reference_features=reviewed_plane_reference_rows,
         front_band_failure_fallback=False,
         native_reference_feature_abstentions=native_reference_abstentions,
         private_template_feature_abstentions=private_feature_abstentions,

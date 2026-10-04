@@ -64,11 +64,22 @@ def evaluate(root, native_zip, private_zip, query_zips, pin_path, body_path, bra
     from workspace.vision.public_meld_visible_face_rectification import rectify_reviewed_visible_face
     from workspace.vision.evaluate_new_match_family_route_probe import evaluate as evaluate_identity
     root = Path(root).resolve()
-    groups, inputs = load_frozen_groups(root, native_zip, private_zip, query_zips)
+    groups, inputs = load_frozen_groups(root, native_zip, private_zip, query_zips,
+                                        include_public_s789=True)
     pin = json.loads(Path(pin_path).read_text())
     entries = verify_plane_entries(groups, pin)
     if review_directory:
         review_directory = Path(review_directory); review_directory.mkdir(parents=True, exist_ok=True)
+    public_group = next(group for group in groups
+                        if group and group[0][0].get("packet") == "public_reference_controls")
+    public_s9_meta, public_s9_image = next((meta, image) for meta, image in public_group
+        if meta["query_id"] == "public_meld_s9")
+    public_plane_pin = next(entry for entry in pin["entries"]
+                            if entry["query_id"] == "public_meld_s9")
+    reviewed_public_plane = dict(meta=dict(expected_visual_tile="S9", session=public_s9_meta["source_session"],
+        sha256=public_s9_meta["source_sha256"], crop_pixel_sha256=public_s9_meta["crop_sha256"],
+        label_id=public_s9_meta["label_id"]), image=public_s9_image,
+        corners=public_plane_pin["corners_tl_tr_br_bl"], output_size=pin["output_size"])
     geometry_rows = []
     for group in groups:
         for index, (meta, image) in enumerate(group):
@@ -95,6 +106,8 @@ def evaluate(root, native_zip, private_zip, query_zips, pin_path, body_path, bra
         uncovered_query_count=sum(r["bracketed_status"]=="UNKNOWN" for r in geometry_rows),
         uncovered_ridge_reasons=dict(Counter(r["own_ridge_audit"]["reason"] for r in geometry_rows if r["bracketed_status"]=="UNKNOWN")),
         own_ridge_decision="reject as repair when it supplies no uncovered face candidates",
+        original_frozen_query_count=sum(r["packet"] != "public_reference_controls" for r in geometry_rows),
+        public_s789_control_count=sum(r["packet"] == "public_reference_controls" for r in geometry_rows),
         geometry_only=True, exact_face_plane_ground_truth=False, user_confirmed=False,
         manually_reviewed_candidates_not_automatic_success=True, crop_hashes_and_manifests_verified=True,
         previously_inspected=True, blind_holdout=False, formal_promotion_evidence=False,
@@ -116,11 +129,14 @@ def evaluate(root, native_zip, private_zip, query_zips, pin_path, body_path, bra
     with patch.object(bracket, "prepare_from_peer_context", manual_prepare):
         identity = evaluate_identity(root=root, native_zip=Path(native_zip), private_zip=Path(private_zip),
             query_zips=[Path(p) for p in query_zips], lower_consensus=True, front_band=True,
-            merge_front_overlaps=True, bracketed_peer_band=True)
+            merge_front_overlaps=True, bracketed_peer_band=True,
+            reviewed_public_plane=reviewed_public_plane)
     identity.update(manually_reviewed_edge_plane_enabled=True,
         manual_edge_plane_query_ids=list(entries), manual_plane_pin_sha256=geometry["reviewed_plane_pin_sha256"],
         automatic_edge_repair=False, exact_face_plane_ground_truth=False, user_confirmed=False,
         manual_plane_coverage_is_partial=True, other_S9_references_keep_bracketed_features=True,
+        public_S9_reference_uses_same_reviewed_plane=True,
+        same_plane_transform_applied_to_reviewed_references_and_queries=True,
         decision="reviewed-plane ranking diagnostic only; reject automatic or global replacement")
     Path(identity_output).write_text(json.dumps(identity, separators=(",", ":"))+"\n")
     before = json.loads(Path(bracket_path).read_text()); body = json.loads(Path(body_path).read_text())
