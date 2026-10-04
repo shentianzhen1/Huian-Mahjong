@@ -149,6 +149,7 @@ class HintAlphaApp(tk.Tk):
         self.video_test_thread = None
         self.video_test_running = False
         self.video_test_photo = None
+        self.video_timeline_heartbeat = tk.StringVar(value="录像复盘：等待开始")
         self._build()
         if demo:
             self.backend_name = "SYNTHETIC"
@@ -447,6 +448,12 @@ class HintAlphaApp(tk.Tk):
             text="自动流水草稿",
             font=("", 11, "bold"),
         ).pack(anchor="w", pady=(0, 5))
+        ttk.Label(
+            video_result_frame,
+            textvariable=self.video_timeline_heartbeat,
+            wraplength=390,
+            justify="left",
+        ).pack(anchor="w", fill="x", pady=(0, 5))
         timeline_wrap = ttk.Frame(video_result_frame)
         timeline_wrap.pack(fill="both", expand=True)
         self.video_timeline_text = tk.Text(
@@ -763,7 +770,10 @@ class HintAlphaApp(tk.Tk):
         self.video_test_runtime_status.set("Runtime Vision：正在读取原始录像……")
         self.video_test_public_status.set("PublicState OCR：正在读取原始录像……")
         self.video_test_report_status.set("报告：自动复盘进行中")
-        self._set_video_timeline_lines(["正在生成流水草稿……"])
+        self.video_timeline_heartbeat.set("录像复盘：0.0s / 正在初始化")
+        self._set_video_timeline_lines([
+            "流水会边处理边更新；没有可信事件时保持 UNKNOWN，不会伪造动作。"
+        ])
         self.notebook.select(self.video_test_tab)
 
         worker = threading.Thread(
@@ -896,6 +906,14 @@ class HintAlphaApp(tk.Tk):
                 _, progress, payload = item
                 self.video_test_progress.set(progress)
                 self._render_video_test_frame(payload.get("preview"))
+                processed = float(payload.get("source_seconds") or 0.0)
+                event_count = int(payload.get("timeline_event_count") or 0)
+                self.video_timeline_heartbeat.set(
+                    f"录像复盘：已处理 {processed:.1f}s | "
+                    f"进度 {progress:.1f}% | "
+                    f"可信流水事件 {event_count} 条"
+                    + (" | 当前无新增可信事件" if not payload.get("timeline_lines") else "")
+                )
                 runtime = payload["runtime"]
                 snapshot = runtime.get("snapshot") or {}
                 public = payload["public_state"]
@@ -925,6 +943,10 @@ class HintAlphaApp(tk.Tk):
                 result = item[1]
                 self.video_test_running = False
                 self.video_test_progress.set(100)
+                self.video_timeline_heartbeat.set(
+                    f"录像复盘：完成 | 流水事件 "
+                    f"{len((result.get('timeline') or {}).get('events') or ())} 条"
+                )
                 source = result["source"]
                 self._set_video_source_status(source)
                 runtime = result["runtime"]
@@ -959,6 +981,7 @@ class HintAlphaApp(tk.Tk):
                 self.video_test_runtime_status.set("Runtime Vision：复盘失败")
                 self.video_test_public_status.set("PublicState OCR：复盘失败")
                 self.video_test_report_status.set(f"报告：{item[1]}")
+                self.video_timeline_heartbeat.set("录像复盘：失败")
                 self._set_video_timeline_lines([f"复盘失败：{item[1]}"])
 
     def refresh(self):
