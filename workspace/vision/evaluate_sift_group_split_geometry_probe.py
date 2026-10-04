@@ -42,6 +42,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
     from workspace.vision.public_identity_shadow_v0_2 import SourceGroup
     from workspace.vision.public_meld_geometry_normalization import (
         FLAT, normalize_public_meld_crop, split_flat_meld_faces,
+        split_flat_meld_faces_by_seams,
     )
     from workspace.vision.public_tile_detector import PublicGeometryCandidate
     from workspace.vision.evaluate_sift_symmetric_geometry_probe import normalize_single_face
@@ -110,6 +111,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                 (0., 0., 1., 1.), "bottom_group", 1., 1., frame, "hand8_s789")
             normalized = normalize_public_meld_crop(image, candidate)
             faces = split_flat_meld_faces(normalized) if normalized.analysis.stack_state == FLAT else ()
+            seam_faces = split_flat_meld_faces_by_seams(normalized) if normalized.analysis.stack_state == FLAT else ()
             if len(faces) != 3:
                 raise ValueError(f"frame {frame}: actual group pipeline abstained: {normalized.analysis.stack_state}")
             raw_boundaries = [round((right - left) * index / 3) for index in range(4)]
@@ -126,6 +128,8 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
             raw_seam_context_descriptors = [_sift_descriptors(normalize_single_face(image.crop(box))[0])
                 for box in raw_seam_context_boxes]
             split_raw_descriptors = [_sift_descriptors(face) for face in faces]
+            seam_ids = ([_sift_descriptors(normalize_single_face(face)[0]) for face in seam_faces]
+                if len(seam_faces) == 3 else [None, None, None])
             ids = [_sift_descriptors(normalize_single_face(face)[0]) for face in faces]
             if any(desc is None for desc in ids):
                 raise ValueError(f"frame {frame}: split face has insufficient descriptors")
@@ -184,6 +188,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                                     ("raw_equal_thirds_two_pixel_seam_context_then_face_geometry", raw_seam_context_descriptors[i]),
                                     ("group_normalize_equal_thirds_no_second_normalization", split_raw_descriptors[i]),
                                     ("group_normalize_split_then_face_geometry", group_descriptors),
+                                    ("group_normalize_automatic_seam_then_face_geometry", seam_ids[i]),
                                     ("group_normalize_manual_roi_no_second_normalization", review_raw_descriptors[i]),
                                     ("group_normalize_manual_roi_boundary_counterfactual", reviewed_descriptors)):
                     by_class_group = defaultdict(dict)
@@ -223,6 +228,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
                  "raw_equal_thirds_two_pixel_seam_context_then_face_geometry",
                  "group_normalize_equal_thirds_no_second_normalization",
                  "group_normalize_split_then_face_geometry",
+                 "group_normalize_automatic_seam_then_face_geometry",
                  "group_normalize_manual_roi_no_second_normalization",
                  "group_normalize_manual_roi_boundary_counterfactual"):
         selected = [r for r in rows if r["modes"][mode]["scorable"]]
@@ -260,6 +266,7 @@ def evaluate(*, intake_zip, private_template_zip, video_path):
         "stage_factorial": "equal thirds versus pinned manual ROI boundaries, each with or without second face normalization; frozen SIFT scorer and templates unchanged",
         "raw_group_equal_thirds_counterfactual": "equal third boundaries in raw union crop before any group normalization, then same single-face normalization as direct baseline",
         "seam_context_candidate": "fixed two raw pixels at each interior equal-third seam; chosen after inspected Hand 8 boundary discrepancy, development-only and not a promotion parameter",
+        "automatic_seam_candidate": "geometry-only local occupancy valleys near expected thirds; identity labels and SIFT scores do not fit the boundaries",
         "dependency_versions": {"opencv": cv2.__version__, "numpy": np.__version__, "pillow": PIL.__version__},
         "boundary_counterfactual_is_automatic_splitter": False,
         "boundary_counterfactual_is_new_training_data": False,
