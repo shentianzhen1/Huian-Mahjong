@@ -177,7 +177,9 @@ def build_video_timeline(runtime_rows, public_rows, source):
 
         if observation:
             hand_number = observation.get("hand_number")
-            if hand_number is not None and hand_number != current_hand:
+            previous_hand = current_hand
+            hand_changed = hand_number is not None and hand_number != current_hand
+            if hand_changed:
                 current_hand = hand_number
                 current_gold = None
                 current_hand_tiles = None
@@ -206,7 +208,7 @@ def build_video_timeline(runtime_rows, public_rows, source):
                         emit(
                             timestamp,
                             "SETTLEMENT_SCORE_CHANGE",
-                            hand_number=current_hand,
+                            hand_number=(previous_hand if hand_changed else current_hand),
                             top_right_before=current_scores[0],
                             bottom_left_before=current_scores[1],
                             top_right_after=score_pair[0],
