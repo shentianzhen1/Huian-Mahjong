@@ -88,6 +88,33 @@ class HintAlphaApp(tk.Tk):
         self.manual_tiles = []
         self.manual_revision = 0
 
+        # Presentation-only live view state.  These fields summarize facts that
+        # existing PublicState / Runtime Vision have already accepted; they do
+        # not infer new game actions or weaken any UNKNOWN gate.
+        self.timeline_events = []
+        self.timeline_seen = set()
+        self.timeline_hand = None
+        self.timeline_gold = None
+        self.timeline_scores = None
+        self.ui_hand_number = None
+        self.ui_remaining_tiles = None
+        self.ui_score_pair = None
+        self.ui_gold_tile = None
+        self.ui_hand_ok = False
+        self.ui_gold_ok = False
+        self.ui_hand_number_ok = False
+        self.match_header_status = tk.StringVar(
+            value="第 ? / 8 局  ｜  我方：UNKNOWN  ｜  金：UNKNOWN  ｜  剩余 ? 张"
+        )
+        self.score_header_status = tk.StringVar(value="我方 ?  ｜  对方 ?")
+        self.table_hand_status = tk.StringVar(value="我的手牌：UNKNOWN")
+        self.table_meld_status = tk.StringVar(value="我的副露：UNKNOWN")
+        self.opponent_meld_status = tk.StringVar(value="对方副露：实时牌面尚未接入")
+        self.turn_status = tk.StringVar(value="当前状态：等待可信状态")
+        self.health_status = tk.StringVar(
+            value="采集 —  ｜  手牌 —  ｜  金牌 —  ｜  局号 —  ｜  流水 PARTIAL"
+        )
+
         self.backend = tk.StringVar(value="WGC")
         self.auto_record = tk.BooleanVar(value=True)
         self.capture_status = tk.StringVar(value="等待选择开心麻将窗口")
@@ -114,10 +141,13 @@ class HintAlphaApp(tk.Tk):
         self.after(100, self.tick)
 
     def _build(self):
-        top = ttk.Frame(self, padding=10)
+        self.geometry("1320x820")
+        self.minsize(1080, 680)
+
+        top = ttk.Frame(self, padding=(10, 8))
         top.pack(fill="x")
         ttk.Label(top, text="目标窗口").grid(row=0, column=0)
-        self.selector = ttk.Combobox(top, state="readonly", width=54)
+        self.selector = ttk.Combobox(top, state="readonly", width=48)
         self.selector.grid(row=0, column=1, padx=6)
         ttk.Button(top, text="刷新", command=self.refresh).grid(row=0, column=2)
         ttk.Combobox(
@@ -125,21 +155,142 @@ class HintAlphaApp(tk.Tk):
             state="readonly",
             textvariable=self.backend,
             values=["WGC", "PrintWindow", "屏幕区域"],
-            width=12,
+            width=11,
         ).grid(row=0, column=3, padx=6)
         ttk.Checkbutton(
             top, text="自动按局录制", variable=self.auto_record
         ).grid(row=0, column=4, padx=6)
         ttk.Button(top, text="开始内测", command=self.start).grid(row=0, column=5, padx=4)
-        ttk.Button(top, text="停止", command=self.stop).grid(row=0, column=6)
+        ttk.Button(top, text="停止", command=self.stop).grid(row=0, column=6, padx=2)
         ttk.Button(top, text="人工录牌", command=self.open_manual_hand).grid(
             row=0, column=7, padx=4
         )
 
-        body = ttk.Panedwindow(self, orient="horizontal")
-        body.pack(fill="both", expand=True, padx=10, pady=(0, 8))
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
+
+        realtime = ttk.Frame(self.notebook, padding=10)
+        advice = ttk.Frame(self.notebook, padding=10)
+        diagnostic = ttk.Frame(self.notebook, padding=8)
+        self.notebook.add(realtime, text="实时流水")
+        self.notebook.add(advice, text="AI 提示")
+        self.notebook.add(diagnostic, text="识别诊断")
+
+        # --- 实时流水：打牌时默认看的页面 ---
+        header = ttk.Frame(realtime)
+        header.pack(fill="x", pady=(0, 8))
+        ttk.Label(
+            header, textvariable=self.match_header_status, font=("", 16, "bold")
+        ).pack(side="left", anchor="w")
+        ttk.Label(
+            header, textvariable=self.score_header_status, font=("", 14, "bold")
+        ).pack(side="right", anchor="e")
+
+        live_body = ttk.Panedwindow(realtime, orient="horizontal")
+        live_body.pack(fill="both", expand=True)
+
+        timeline_panel = ttk.Frame(live_body, padding=(0, 0, 8, 0))
+        snapshot_panel = ttk.Frame(live_body, width=360)
+        live_body.add(timeline_panel, weight=3)
+        live_body.add(snapshot_panel, weight=2)
+
+        ttk.Label(
+            timeline_panel, text="牌局流水", font=("", 12, "bold")
+        ).pack(anchor="w", pady=(0, 6))
+        timeline_wrap = ttk.Frame(timeline_panel)
+        timeline_wrap.pack(fill="both", expand=True)
+        self.timeline_text = tk.Text(
+            timeline_wrap,
+            wrap="word",
+            state="disabled",
+            borderwidth=0,
+            padx=10,
+            pady=8,
+            background="#0f172a",
+            foreground="#e5e7eb",
+            insertbackground="#e5e7eb",
+            font=("", 11),
+        )
+        timeline_scroll = ttk.Scrollbar(
+            timeline_wrap, orient="vertical", command=self.timeline_text.yview
+        )
+        self.timeline_text.configure(yscrollcommand=timeline_scroll.set)
+        self.timeline_text.pack(side="left", fill="both", expand=True)
+        timeline_scroll.pack(side="right", fill="y")
+        self.timeline_text.tag_configure("system", foreground="#facc15")
+        self.timeline_text.tag_configure("self", foreground="#60a5fa")
+        self.timeline_text.tag_configure("opponent", foreground="#f87171")
+        self.timeline_text.tag_configure("unknown", foreground="#9ca3af")
+
+        ttk.Label(
+            snapshot_panel, text="当前桌面摘要", font=("", 12, "bold")
+        ).pack(anchor="w", pady=(0, 8))
+        for variable in (
+            self.table_hand_status,
+            self.table_meld_status,
+            self.opponent_meld_status,
+            self.turn_status,
+        ):
+            ttk.Label(
+                snapshot_panel, textvariable=variable, wraplength=340, justify="left"
+            ).pack(anchor="w", fill="x", pady=7)
+        ttk.Separator(snapshot_panel).pack(fill="x", pady=10)
+        ttk.Label(
+            snapshot_panel,
+            text=(
+                "实时壳尚未接入双方河牌和对手副露的低层牌面识别。"
+                "缺失动作保持 UNKNOWN，流水不会因单项识别失败而中断。"
+            ),
+            wraplength=340,
+            justify="left",
+        ).pack(anchor="w", fill="x")
+
+        health = ttk.Frame(realtime)
+        health.pack(fill="x", pady=(8, 0))
+        ttk.Separator(health).pack(fill="x", pady=(0, 6))
+        ttk.Label(
+            health, textvariable=self.health_status, font=("", 10, "bold")
+        ).pack(anchor="w")
+
+        # --- AI 提示：只放牌效/建议，不混工程日志 ---
+        ttk.Label(advice, text="AI 提示", font=("", 16, "bold")).pack(
+            anchor="w", pady=(2, 12)
+        )
+        ttk.Label(
+            advice,
+            textvariable=self.hint_status,
+            wraplength=1180,
+            justify="left",
+            font=("", 13),
+        ).pack(anchor="w", fill="x", pady=6)
+        ttk.Separator(advice).pack(fill="x", pady=10)
+        ttk.Label(
+            advice,
+            textvariable=self.table_hand_status,
+            wraplength=1180,
+            justify="left",
+        ).pack(anchor="w", fill="x", pady=5)
+        ttk.Label(
+            advice,
+            textvariable=self.runtime_status,
+            wraplength=1180,
+            justify="left",
+        ).pack(anchor="w", fill="x", pady=5)
+        ttk.Label(
+            advice,
+            text=(
+                "这里只展示通过现有 fail-closed gate 的只读结果。"
+                "CurrentAgent V0.10 未因本次页面调整而升级，Executor 始终关闭。"
+            ),
+            wraplength=1180,
+            justify="left",
+        ).pack(anchor="w", fill="x", pady=(14, 0))
+
+        # --- 识别诊断：原来的预览和研发状态全部收进这里 ---
+        body = ttk.Panedwindow(diagnostic, orient="horizontal")
+        body.pack(fill="both", expand=True)
         preview = ttk.Frame(body)
-        sidebar = ttk.Frame(body, width=330)
+        sidebar = ttk.Frame(body, width=350)
         body.add(preview, weight=3)
         body.add(sidebar, weight=1)
 
@@ -147,7 +298,7 @@ class HintAlphaApp(tk.Tk):
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", lambda _: self.render())
 
-        ttk.Label(sidebar, text="内测状态", font=("", 12, "bold")).pack(
+        ttk.Label(sidebar, text="识别诊断", font=("", 12, "bold")).pack(
             anchor="w", pady=(4, 8)
         )
         for variable in (
@@ -158,13 +309,16 @@ class HintAlphaApp(tk.Tk):
             self.evidence_status,
             self.version_status,
         ):
-            ttk.Label(sidebar, textvariable=variable, wraplength=310).pack(
+            ttk.Label(sidebar, textvariable=variable, wraplength=330).pack(
                 anchor="w", fill="x", pady=4
             )
 
         ttk.Separator(sidebar).pack(fill="x", pady=10)
-        ttk.Button(sidebar, text="人工录分（未知规则，仅记录）",
-                   command=self.open_manual_score).pack(fill="x", pady=3)
+        ttk.Button(
+            sidebar,
+            text="人工录分（未知规则，仅记录）",
+            command=self.open_manual_score,
+        ).pack(fill="x", pady=3)
         ttk.Label(sidebar, text="一键证据打点", font=("", 11, "bold")).pack(anchor="w")
         for text, category in (
             ("识别错了", "RECOGNITION_ERROR"),
@@ -181,11 +335,191 @@ class HintAlphaApp(tk.Tk):
         ttk.Label(
             sidebar,
             text=(
-                "Alpha原则：不稳的视觉状态不出提示；人工输入仅供结构向听。"
-                "未知规则只录观察分数，不自动结算；Executor始终关闭。"
+                "诊断页保留原始采集、OCR、Runtime Vision、证据路径和版本信息。"
+                "主页面不展示置信度等工程细节。"
             ),
-            wraplength=310,
+            wraplength=330,
+            justify="left",
         ).pack(anchor="w", pady=(12, 4))
+
+        self._append_timeline(
+            "unknown",
+            "等待实时采集；未确认的局号、金牌或动作都会保持 UNKNOWN。",
+            key=("boot",),
+        )
+
+    @staticmethod
+    def _display_tile(tile):
+        if not tile or tile == "UNKNOWN":
+            return "UNKNOWN"
+        return env.CN.get(tile, tile)
+
+    @classmethod
+    def _display_tiles(cls, tiles):
+        values = [cls._display_tile(tile) for tile in tiles if tile]
+        return " ".join(values) if values else "UNKNOWN"
+
+    def _clear_timeline(self):
+        self.timeline_events = []
+        self.timeline_seen = set()
+        self.timeline_hand = None
+        self.timeline_gold = None
+        self.timeline_scores = None
+        if hasattr(self, "timeline_text"):
+            self.timeline_text.configure(state="normal")
+            self.timeline_text.delete("1.0", "end")
+            self.timeline_text.configure(state="disabled")
+
+    def _append_timeline(self, kind, text, *, key=None):
+        if key is not None and key in self.timeline_seen:
+            return
+        if key is not None:
+            self.timeline_seen.add(key)
+        stamp = time.strftime("%H:%M:%S")
+        row = (stamp, kind, text)
+        self.timeline_events.append(row)
+        if len(self.timeline_events) > 300:
+            self.timeline_events = self.timeline_events[-300:]
+        if not hasattr(self, "timeline_text"):
+            return
+        self.timeline_text.configure(state="normal")
+        self.timeline_text.insert("end", f"{stamp}  {text}\n", kind)
+        self.timeline_text.see("end")
+        self.timeline_text.configure(state="disabled")
+
+    def _refresh_header(self):
+        hand = self.ui_hand_number if self.ui_hand_number is not None else "?"
+        remaining = (
+            self.ui_remaining_tiles if self.ui_remaining_tiles is not None else "?"
+        )
+        gold = self._display_tile(self.ui_gold_tile)
+        self.match_header_status.set(
+            f"第 {hand} / 8 局  ｜  我方：UNKNOWN  ｜  金：{gold}  ｜  剩余 {remaining} 张"
+        )
+        if self.ui_score_pair is None:
+            self.score_header_status.set("我方 ?  ｜  对方 ?")
+        else:
+            top_right, bottom_left = self.ui_score_pair
+            self.score_header_status.set(
+                f"我方 {bottom_left}  ｜  对方 {top_right}"
+            )
+
+    def _refresh_health(self):
+        capture_ok = self.frame is not None and not self.black
+        self.health_status.set(
+            "采集 "
+            + ("✅" if capture_ok else "—")
+            + "  ｜  手牌 "
+            + ("✅" if self.ui_hand_ok else "❌")
+            + "  ｜  金牌 "
+            + ("✅" if self.ui_gold_ok else "❌")
+            + "  ｜  局号 "
+            + ("✅" if self.ui_hand_number_ok else "❌")
+            + "  ｜  流水 PARTIAL"
+        )
+
+    def _begin_live_view(self, label):
+        self._clear_timeline()
+        self.ui_hand_number = None
+        self.ui_remaining_tiles = None
+        self.ui_score_pair = None
+        self.ui_gold_tile = None
+        self.ui_hand_ok = False
+        self.ui_gold_ok = False
+        self.ui_hand_number_ok = False
+        self.table_hand_status.set("我的手牌：UNKNOWN")
+        self.table_meld_status.set("我的副露：UNKNOWN")
+        self.opponent_meld_status.set("对方副露：实时牌面尚未接入")
+        self.turn_status.set("当前状态：等待可信状态")
+        self._refresh_header()
+        self._refresh_health()
+        self._append_timeline("system", label, key=("session_start", label))
+
+    def _update_public_view(self, observation):
+        self.ui_hand_number = observation.hand_number
+        self.ui_remaining_tiles = observation.remaining_tiles
+        self.ui_score_pair = observation.score_pair
+        self.ui_hand_number_ok = observation.hand_number is not None
+
+        if observation.hand_number is not None and observation.hand_number != self.timeline_hand:
+            self.timeline_hand = observation.hand_number
+            self.timeline_gold = None
+            self._append_timeline(
+                "system",
+                f"第 {observation.hand_number} / 8 局",
+                key=("hand", observation.hand_number),
+            )
+
+        if observation.score_pair is not None and observation.score_pair != self.timeline_scores:
+            self.timeline_scores = observation.score_pair
+            top_right, bottom_left = observation.score_pair
+            self._append_timeline(
+                "system",
+                f"比分：我方 {bottom_left} / 对方 {top_right}",
+                key=("scores", observation.score_pair),
+            )
+
+        self._refresh_header()
+        self._refresh_health()
+
+    def _update_snapshot_view(self, snapshot, result, *, source_label):
+        own_hand = tuple(snapshot.own_hand)
+        trusted_hand = bool(snapshot.hand_trusted) and bool(own_hand)
+        self.ui_hand_ok = trusted_hand
+        self.ui_gold_ok = bool(snapshot.gold_trusted and snapshot.gold_tile)
+        if trusted_hand:
+            self.table_hand_status.set(
+                "我的手牌：" + self._display_tiles(own_hand)
+            )
+        else:
+            self.table_hand_status.set("我的手牌：UNKNOWN")
+
+        own_meld_count = len(snapshot.melds[0]) if snapshot.melds else 0
+        if snapshot.meld_trusted[0]:
+            self.table_meld_status.set(
+                f"我的副露：{own_meld_count} 组"
+                + ("（牌面可能为 UNKNOWN）" if own_meld_count else "")
+            )
+        else:
+            self.table_meld_status.set("我的副露：UNKNOWN")
+
+        if self.ui_gold_ok:
+            gold = snapshot.gold_tile
+            self.ui_gold_tile = gold
+            if gold != self.timeline_gold:
+                old = self.timeline_gold
+                self.timeline_gold = gold
+                message = (
+                    f"开金：{self._display_tile(gold)}"
+                    if old is None
+                    else f"金牌识别更新：{self._display_tile(gold)}"
+                )
+                self._append_timeline(
+                    "system",
+                    message,
+                    key=("gold", self.timeline_hand, gold),
+                )
+
+        if not result.allowed:
+            issue = ",".join(result.issues[:2]) or "snapshot_untrusted"
+            self.turn_status.set(f"当前状态：UNKNOWN（{issue}）")
+        elif result.phase == "PRE_DRAW":
+            self.turn_status.set("当前状态：等待摸牌 / 结构向听可用")
+        elif result.phase == "POST_DRAW":
+            self.turn_status.set("当前状态：已摸牌 / 等待弃牌")
+        elif result.phase == "POST_DRAW_COMPLETE":
+            self.turn_status.set("当前状态：普通结构完成 / 等待规则确认")
+        else:
+            self.turn_status.set(f"当前状态：{result.phase or result.status}")
+
+        if source_label == "manual":
+            self._append_timeline(
+                "self",
+                f"人工更新当前手牌：{len(own_hand)} 张；金={self._display_tile(snapshot.gold_tile)}",
+                key=("manual_snapshot", snapshot.stream_epoch),
+            )
+        self._refresh_header()
+        self._refresh_health()
 
     def refresh(self):
         try:
@@ -233,6 +567,7 @@ class HintAlphaApp(tk.Tk):
                 self.backend_name = "SYNTHETIC"
                 self.target = ("synthetic", 0, "synthetic")
                 self._start_evidence()
+                self._begin_live_view("合成内测开始")
                 self.capture_status.set("合成内测运行中")
                 return
 
@@ -258,6 +593,7 @@ class HintAlphaApp(tk.Tk):
             self.runtime_status.set("Runtime Vision：等待稳定3帧")
             self.hint_status.set("向听提示：等待可信手牌/金牌；Executor OFF")
             self._start_evidence()
+            self._begin_live_view(f"实时采集开始 · {self.backend_name}")
             self.capture_status.set("正在连接窗口……")
         except Exception as exc:
             self.stop()
@@ -282,6 +618,7 @@ class HintAlphaApp(tk.Tk):
             self.manual_tiles = []
             self.manual_revision = 0
             self._start_evidence()
+            self._begin_live_view("人工录牌会话开始 · 非视觉识别")
             self.manual_active = True
             self.capture_status.set("人工模式：无画面采集、无自动识别；Executor OFF")
             self.runtime_status.set("Runtime Vision：人工输入未经过视觉识别")
@@ -367,6 +704,7 @@ class HintAlphaApp(tk.Tk):
                 f"自家副露{len(snapshot.melds[0])}组；{hint.status}；非视觉识别"
             )
             self.hint_status.set("人工未核验 · " + self._format_shanten_hint(hint))
+            self._update_snapshot_view(snapshot, hint, source_label="manual")
             dialog.destroy()
 
         buttons = ttk.Frame(dialog)
@@ -505,6 +843,7 @@ class HintAlphaApp(tk.Tk):
         self.frame = None
         self.canvas.delete("all")
         self.capture_status.set("已停止；保存失败" if errors else "已停止")
+        self._refresh_health()
         if errors:
             self.evidence_status.set("；".join(errors))
 
@@ -684,6 +1023,7 @@ class HintAlphaApp(tk.Tk):
             f"concealed_missing={concealed_missing} "
             f"issues={issues}"
         )
+        self._update_snapshot_view(snapshot, result, source_label="runtime")
         runtime_promoted_for_hint = report.get("safe_for_hint") is True
         display_allowed = advisory.display_allowed
         self.hint_status.set(self._format_runtime_advice(
@@ -743,6 +1083,7 @@ class HintAlphaApp(tk.Tk):
             return
         observation = value.observation
         self.public_previous = observation
+        self._update_public_view(observation)
         self.vision_status.set(
             "PublicState："
             f"比分={observation.score_pair} "
@@ -802,6 +1143,7 @@ class HintAlphaApp(tk.Tk):
             f"{self.backend_name} | {size[0]}×{size[1]} | "
             "正在采集；Executor OFF"
         )
+        self._refresh_health()
         self.last_rect = rect
         self.render()
 
