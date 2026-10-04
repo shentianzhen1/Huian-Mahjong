@@ -51,7 +51,8 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
              query_zips: list[Path], lower_consensus: bool = False,
              front_band: bool = False, reverse_old_m9: bool = False,
              merge_front_overlaps: bool = False, bracketed_peer_band: bool = False,
-             reviewed_public_plane: dict | None = None) -> dict:
+             reviewed_public_plane: dict | None = None,
+             reviewed_public_plane_as_query: bool = False) -> dict:
     from PIL import Image
     from workspace.vision import public_meld_identity_sift as sift
     from workspace.vision import public_meld_private_sift_loader as private
@@ -66,6 +67,8 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         raise ValueError("front-band comparison requires lower-family consensus")
     if reverse_old_m9 and not lower_consensus:
         raise ValueError("reverse-reference comparison requires lower-family consensus")
+    if reviewed_public_plane_as_query and reviewed_public_plane is None:
+        raise ValueError("reviewed public plane query requires the pinned reviewed public plane")
     if merge_front_overlaps and not front_band:
         raise ValueError("component merging requires front-band mode")
     peer_contexts = None
@@ -256,6 +259,19 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
                          session=face["source_session"], sha256=face["source_sha256"], crop_sha256=face["crop_sha256"]),
                     read_face(archive, face["crop_file"], face["crop_sha256"]))
 
+    if reviewed_public_plane_as_query:
+        # Development-only reverse direction for the already pinned public S9.
+        # Ranking excludes its entire original match through the bank's existing
+        # source/match-group contract. This is a diagnostic, not accuracy or
+        # promotion evidence.
+        plane_meta = reviewed_public_plane["meta"]
+        add(dict(query_id="public_meld_s9", set="reviewed_public_plane_reverse_query_dev_only",
+                 expected=plane_meta["expected_visual_tile"], session=plane_meta["session"],
+                 sha256=plane_meta["sha256"], crop_sha256=plane_meta["crop_pixel_sha256"],
+                 development_only=True, accuracy_evidence=False,
+                 formal_promotion_evidence=False),
+            reviewed_public_plane["image"].copy())
+
     if lower_consensus:
         # Reverse direction: reuse ALL frozen faces as queries, excluding their
         # entire original match from both banks. No new reference selection.
@@ -368,6 +384,10 @@ def evaluate(*, root: Path, native_zip: Path, private_zip: Path,
         merge_front_overlaps_enabled=merge_front_overlaps,
         bracketed_peer_band_enabled=bracketed_peer_band,
         reviewed_public_plane_reference_enabled=reviewed_public_plane is not None,
+        reviewed_public_plane_reverse_query_enabled=reviewed_public_plane_as_query,
+        reviewed_public_plane_reverse_query_is_development_only=True if reviewed_public_plane_as_query else None,
+        reviewed_public_plane_reverse_query_is_accuracy_evidence=False if reviewed_public_plane_as_query else None,
+        reviewed_public_plane_reverse_query_is_formal_promotion_evidence=False if reviewed_public_plane_as_query else None,
         reviewed_public_plane_reference_features=reviewed_plane_reference_rows,
         front_band_failure_fallback=False,
         native_reference_feature_abstentions=native_reference_abstentions,
