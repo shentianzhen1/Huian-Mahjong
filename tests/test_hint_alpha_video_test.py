@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from workspace.hint_alpha.video_test import (automatic_sample_interval, run_video_test, summarize_video_test)
+from workspace.hint_alpha.video_test import (automatic_sample_interval, build_video_timeline, render_video_timeline, run_video_test, summarize_video_test)
 from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
 
 
@@ -76,6 +76,71 @@ class VideoTestSummaryTests(unittest.TestCase):
         self.assertEqual(result["runtime"]["gold_tile_votes"], {"M6": 1})
         self.assertEqual(result["public_state"]["hand_number_votes"], {"1": 1})
         self.assertEqual(result["public_state"]["error_windows"], 1)
+
+
+class VideoTimelineDraftTests(unittest.TestCase):
+    def test_builds_only_observed_high_level_events_and_stays_partial(self):
+        runtime_rows = [
+            {
+                "source_seconds": [0.0, 0.2, 0.4],
+                "snapshot": {
+                    "hand_trusted": True,
+                    "own_hand": ["M1", "M2", "M3"],
+                    "gold_trusted": True,
+                    "gold_tile": "P6",
+                },
+                "hint": {"phase": "PRE_DRAW"},
+            },
+            {
+                "source_seconds": [0.2, 0.4, 0.6],
+                "snapshot": {
+                    "hand_trusted": True,
+                    "own_hand": ["M1", "M2", "M3"],
+                    "gold_trusted": True,
+                    "gold_tile": "P6",
+                },
+                "hint": {"phase": "PRE_DRAW"},
+            },
+            {
+                "source_seconds": [10.0, 10.2, 10.4],
+                "snapshot": {
+                    "hand_trusted": True,
+                    "own_hand": ["M1", "M2", "P3"],
+                    "gold_trusted": True,
+                    "gold_tile": "S2",
+                },
+                "hint": {"phase": "POST_DRAW"},
+            },
+        ]
+        public_rows = [
+            {"observation": {"hand_number": 1, "score_pair": [1000, 1000], "issues": []}},
+            {"observation": {"hand_number": 1, "score_pair": [1000, 1000], "issues": []}},
+            {"observation": {"hand_number": 2, "score_pair": [900, 1100], "issues": []}},
+        ]
+        source = {"sha256": "a" * 64, "session": "video-a"}
+        timeline = build_video_timeline(runtime_rows, public_rows, source)
+        kinds = [event["kind"] for event in timeline["events"]]
+        self.assertEqual(
+            kinds,
+            [
+                "HAND_START",
+                "SCORE_BASELINE",
+                "OPEN_GOLD",
+                "PLAYER_HAND_SNAPSHOT",
+                "HAND_START",
+                "SETTLEMENT_SCORE_CHANGE",
+                "OPEN_GOLD",
+                "PLAYER_HAND_SNAPSHOT",
+            ],
+        )
+        self.assertEqual(timeline["status"], "PARTIAL")
+        self.assertFalse(timeline["public_actions_complete"])
+        self.assertFalse(timeline["safe_for_executor"])
+        text = "\n".join(render_video_timeline(timeline))
+        self.assertIn("第1/8局开始", text)
+        self.assertIn("开金：六筒", text)
+        self.assertIn("结算方式 UNKNOWN", text)
+        self.assertIn("流水状态：PARTIAL", text)
 
 
 class DirectVideoRunnerTests(unittest.TestCase):
@@ -163,9 +228,12 @@ class DirectVideoRunnerTests(unittest.TestCase):
             self.assertEqual(result["public_state"]["error_windows"], 1)
             self.assertEqual(result["public_state"]["hand_number_votes"], {"1": 1})
             self.assertTrue(report.exists())
+            self.assertTrue(report.with_suffix(".timeline.json").exists())
+            self.assertTrue(report.with_suffix(".timeline.txt").exists())
             saved = json.loads(report.read_text(encoding="utf-8"))
             self.assertFalse(saved["formal_promotion_evidence"])
             self.assertFalse(saved["safe_for_executor"])
+            self.assertEqual(saved["timeline"]["status"], "PARTIAL")
 
 
 if __name__ == "__main__":
