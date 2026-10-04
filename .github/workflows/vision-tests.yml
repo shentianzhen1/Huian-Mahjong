@@ -311,6 +311,9 @@ jobs:
           }
           print("S456_BOUNDARY_DIAGNOSTIC=" + json.dumps(compact, sort_keys=True))
           PY
+      - name: Replay source-checked Alpha sparse real-frame abstention
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_alpha_real_frame_smoke.py" -v
       - name: Audit S456 lineage-qualified template coverage
         if: needs.scope.outputs.run_vision == 'true'
         run: |

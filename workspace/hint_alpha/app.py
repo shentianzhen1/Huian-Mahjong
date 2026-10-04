@@ -31,10 +31,9 @@ from workspace.vision.capture_validator.backend import (
     windows,
 )
 from workspace.vision.capture_validator.media import FrameHealth
-from workspace.vision.runtime_public_adapter import current_snapshot_from_runtime
 from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 
-from .current_snapshot_advisor import analyze_snapshot_shanten
+from .runtime_pipeline import evaluate_runtime_report
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 
@@ -475,11 +474,11 @@ class HintAlphaApp(tk.Tk):
             return
 
         report = value
-        snapshot = current_snapshot_from_runtime(
-            report,
-            timestamp_seconds=captured,
+        advisory = evaluate_runtime_report(
+            report, captured=captured,
+            experimental=self.experimental_runtime_advisory,
         )
-        result = analyze_snapshot_shanten(snapshot)
+        snapshot, result = advisory.snapshot, advisory.hint
         issues = ",".join(result.issues[:4]) or "none"
         global_coverage = report.get("standard_class_coverage") or {}
         domains = report.get("classification_domain_coverage") or {}
@@ -495,9 +494,7 @@ class HintAlphaApp(tk.Tk):
             f"issues={issues}"
         )
         runtime_promoted_for_hint = report.get("safe_for_hint") is True
-        display_allowed = (
-            runtime_promoted_for_hint or self.experimental_runtime_advisory
-        )
+        display_allowed = advisory.display_allowed
         if display_allowed:
             prefix = (
                 "实验 "
