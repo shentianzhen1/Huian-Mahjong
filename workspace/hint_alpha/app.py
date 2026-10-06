@@ -13,7 +13,7 @@ import queue
 import threading
 import time
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import filedialog, messagebox, ttk
 
 from PIL import Image, ImageTk
 
@@ -138,6 +138,9 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(top, text="人工录牌", command=self.open_manual_hand).grid(
             row=0, column=7, padx=4
         )
+        ttk.Button(top, text="录像诊断（30秒）", command=self.open_video_diagnostic).grid(
+            row=1, column=1, padx=4, pady=4
+        )
 
         self.pages = ttk.Notebook(self)
         self.pages.pack(fill="both", expand=True)
@@ -182,6 +185,22 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(sidebar, text="打开独立辅助窗口", command=self.open_assistant).pack(fill="x", pady=6)
         ttk.Button(sidebar, text="查看诊断信息", command=self.open_diagnostics).pack(fill="x", pady=6)
         self._update_simple_hint()
+
+    def open_video_diagnostic(self):
+        import subprocess
+        import sys
+        from .video_cli import launch_command
+        video = filedialog.askopenfilename(parent=self, title="选择原始对局录像",
+            filetypes=[("视频", "*.mp4 *.mov *.avi *.mkv"), ("所有文件", "*")])
+        if not video:
+            return
+        command = launch_command(video, executable=sys.executable, output_root=OUTPUT,
+                                 dataset_root=PROJECT_ROOT / "dataset/tiles_runtime_v0_2")
+        try:
+            subprocess.Popen(command, cwd=PROJECT_ROOT,
+                             creationflags=getattr(subprocess, 'CREATE_NEW_CONSOLE', 0))
+        except OSError as exc:
+            messagebox.showerror("录像诊断启动失败", str(exc), parent=self)
 
     def _update_simple_hint(self, *_):
         text = self.hint_status.get()

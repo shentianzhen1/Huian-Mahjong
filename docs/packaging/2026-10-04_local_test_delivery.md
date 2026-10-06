@@ -54,3 +54,25 @@ tiles. M2 itself still has only one source and remains UNKNOWN under the
 cross-session gate. Excluding that source session removes M2 from training.
 The delivered EXE still contains 139 templates; direct-video runner synchronization
 and Windows rebuilding remain pending.
+
+## Direct-video diagnostic entrypoint (2026-10-06)
+
+The source UI now has a `录像诊断（30秒）` button. It selects MP4/MOV/AVI/MKV,
+launches a separate console process, decodes original pixels without resizing,
+and prints each processed window's source time, structural capability/UNKNOWN
+and observation count. Source SHA, sampled frame indices/pixel hashes, template
+coverage diagnostics, Runtime/advisory/hash/OCR timings and partial observation
+ledger are saved in JSON plus a timeline text file. The main capture UI remains
+independent of this diagnostic process; Ctrl+C stops the diagnostic console.
+
+CLI: `python -m workspace.hint_alpha.video_cli match.mp4 --output report.json
+--start 0 --duration 30`. For a verified known original session, supply
+`--source-session` so its templates are excluded. Without it, SHA-derived session
+binding explicitly makes no original-match exclusion claim. The report is
+development-only; high-level snapshots/score observations are not a complete
+CHI/PENG/KONG/discard action reconstruction or measured recognition accuracy.
+
+This ports #117's direct-video runner/replay diagnostics with a narrow adaptation
+to #126's session-cached Runtime reader. It does not import #117's identity-domain
+changes. Threshold 0.82 and Executor OFF are unchanged. The source changes must
+be rebuilt on Windows before the old delivered installer gains this button.
