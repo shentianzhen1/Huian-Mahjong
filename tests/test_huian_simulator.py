@@ -1,7 +1,7 @@
 import unittest
 
 from huian import HuianGameState
-from workspace.simulator import Simulator, make_wall
+from workspace.simulator import Simulator, SimulatorConfig, make_wall
 
 
 class SimulatorTests(unittest.TestCase):
@@ -11,8 +11,10 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(len(wall), 144)
         self.assertTrue(all(wall.count(tile) <= 4 for tile in set(wall)))
 
-    def test_unknown_opening_stops_explicitly(self):
-        result = Simulator().run(seed=42)
+    def test_legacy_safe_stop_profile_stops_unknown_explicitly(self):
+        result = Simulator(
+            config=SimulatorConfig(normal_hand_mode=False)
+        ).run(seed=42)
         self.assertEqual(result.status, "UNRESOLVED")
         self.assertTrue(result.unresolved)
 
