@@ -22,9 +22,16 @@ NONDEALER16 = [
     "P1", "P2", "P3", "S1", "S2", "S3",
     "W", "W", "P4", "P5",
 ]
+NONDEALER_NO_QIANGJIN16 = [
+    "M1", "M1", "M2", "M4", "M6", "M8",
+    "P1", "P3", "P5", "P7",
+    "S1", "S3", "S5", "S7",
+    "W", "W",
+]
 
 
-def first_round_game(*, dealer=0, draw_tile="W", base=10):
+def first_round_game(*, dealer=0, draw_tile="W", base=10,
+                     nondealer_hand=None):
     state = HuianGameState(
         dealer=dealer,
         current_player=dealer,
@@ -34,7 +41,9 @@ def first_round_game(*, dealer=0, draw_tile="W", base=10):
         reserved_tiles=[GOLD],
     )
     state.hands[dealer] = [*DEALER16, "N"]
-    state.hands[1 - dealer] = list(NONDEALER16)
+    state.hands[1 - dealer] = list(
+        NONDEALER16 if nondealer_hand is None else nondealer_hand
+    )
     remaining = env.full_wall()
     for tile in state.physical_tiles():
         remaining.remove(tile)
@@ -116,6 +125,25 @@ class QiangjinFirstRoundTests(unittest.TestCase):
             self.assertEqual({a.player for a in after}, {dealer})
             self.assertEqual(
                 {a.type for a in after},
+                {env.ActionType.QIANGJIN, env.ActionType.PASS_QIANGJIN},
+            )
+
+    def test_ineligible_nondealer_skips_fake_prompt_and_reaches_dealer(self):
+        for dealer in (0, 1):
+            game = first_round_game(
+                dealer=dealer,
+                nondealer_hand=NONDEALER_NO_QIANGJIN16,
+            )
+            dealer, nondealer = advance_to_first_draw(game)
+            first = game.state.first_round
+            self.assertFalse(first["qiangjin_eligible"][nondealer])
+            self.assertTrue(first["qiangjin_resolved"][nondealer])
+            self.assertTrue(first["qiangjin_eligible"][dealer])
+            self.assertFalse(working_qiangjin_eligible(game.state, nondealer))
+            actions = game.legal_actions()
+            self.assertEqual({a.player for a in actions}, {dealer})
+            self.assertEqual(
+                {a.type for a in actions},
                 {env.ActionType.QIANGJIN, env.ActionType.PASS_QIANGJIN},
             )
 
