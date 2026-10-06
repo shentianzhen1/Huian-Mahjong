@@ -24,6 +24,23 @@ from .core import Simulator, make_wall
 OPEN_GOLD_RANDOM_EVIDENCE_ID = "player_confirmed_open_gold_random_20261007_v1"
 
 
+def simulator_random_gold_candidate(wall, *, seed=None):
+    """Choose one nonflower wall entry for deterministic simulation only.
+
+    The target-room fact is only SYSTEM_RANDOM over a flower-excluded pool.
+    Uniform sampling and this local PRNG are simulator conventions; they do not
+    model, predict or claim the server's unknown distribution/RNG.
+    """
+    candidates = tuple(
+        index for index, tile in enumerate(wall)
+        if tile not in env.FLOWERS
+    )
+    if not candidates:
+        raise ValueError("No nonflower tile is available for random Gold selection")
+    wall_index = random.Random(seed).choice(candidates)
+    return wall_index, wall[wall_index], len(candidates)
+
+
 def run_staged_opening(
         *, seed=None, wall=None, dealer=0, current_dealer_base=10,
         candidate_indices=(), max_steps=100, environment_factory=HuianEnvironment):
@@ -143,16 +160,9 @@ def run_random_staged_opening(
     if probe.state.phase != "OPENING_GOLD_PENDING":
         raise ValueError("Random Gold selection requires OPENING_GOLD_PENDING")
 
-    candidates = [
-        index for index, tile in enumerate(probe.state.wall)
-        if tile not in env.FLOWERS
-    ]
-    if not candidates:
-        raise ValueError("No nonflower tile is available for random Gold selection")
-
-    rng = random.Random(selector_seed)
-    wall_index = rng.choice(candidates)
-    selected_tile = probe.state.wall[wall_index]
+    wall_index, selected_tile, candidate_pool_size = simulator_random_gold_candidate(
+        probe.state.wall, seed=selector_seed
+    )
     result = run_staged_opening(
         seed=seed,
         wall=tiles,
@@ -172,7 +182,7 @@ def run_random_staged_opening(
         "simulator_sampling": "SEEDED_UNIFORM_NONFLOWER",
         "simulator_sampling_status": "SIMULATOR_CONVENTION_ONLY",
         "random_seed": selector_seed,
-        "candidate_pool_size": len(candidates),
+        "candidate_pool_size": candidate_pool_size,
         "selected_wall_index": wall_index,
         "selected_tile": selected_tile,
     })
