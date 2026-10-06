@@ -36,6 +36,8 @@ class RuntimeResourceCacheTests(unittest.TestCase):
         self.assertEqual(yellow[0]['identity_reason'], 'gold_skin_identity_unqualified')
         self.assertFalse(result['all_concealed_tile_ids_trusted'])
         self.assertFalse(result['safe_for_executor'])
+        self.assertEqual(result['classification_domain_coverage']['gold_region']['classes'], ['N', 'S3'])
+        self.assertIn('M6', result['classification_domain_coverage']['gold_region']['missing'])
 
     def test_repeated_bursts_build_once_and_session_change_rebuilds(self):
         labels = [

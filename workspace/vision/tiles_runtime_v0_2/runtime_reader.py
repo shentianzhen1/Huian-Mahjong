@@ -92,7 +92,15 @@ def _cached_runtime_resources(root_text: str, session: str | None):
     labels = approved_labels(root)
     training_labels = _training_labels(labels, session)
     covered, cross_session = _coverage(training_labels)
-    return root, covered, cross_session, TemplateTileClassifier.from_labels(root, training_labels)
+    classifier = TemplateTileClassifier.from_labels(root, training_labels)
+    domain_coverage = {
+        region: {"covered": len(set(bank) & STANDARD_CLASSES),
+                 "total": len(STANDARD_CLASSES),
+                 "missing": sorted(STANDARD_CLASSES - set(bank)),
+                 "classes": sorted(bank)}
+        for region, bank in classifier.regional_templates.items()
+    }
+    return root, covered, cross_session, classifier, domain_coverage
 
 
 def read_stable_frames(
@@ -111,7 +119,7 @@ def read_stable_frames(
     if len(frame_ids) != len(images):
         raise ValueError("frame_ids must match images")
 
-    root, covered, cross_session, classifier = _cached_runtime_resources(
+    root, covered, cross_session, classifier, domain_coverage = _cached_runtime_resources(
         str(Path(dataset_root).resolve()), session,
     )
     geometry_frames = [
@@ -131,6 +139,7 @@ def read_stable_frames(
             "total": len(STANDARD_CLASSES),
             "missing": missing,
         },
+        "classification_domain_coverage": domain_coverage,
         "geometry_untrusted": fused.geometry_untrusted,
         "geometry_issues": list(fused.issues),
         "safe_for_hint": False,

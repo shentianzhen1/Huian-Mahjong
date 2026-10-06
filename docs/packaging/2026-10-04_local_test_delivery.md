@@ -94,3 +94,27 @@ opened indicator is [110,48,36,48]. Complete advice remains 0/8: opened-Gold
 identity and S2 confidence/domain qualification are still unresolved.
 See `2026-10-06_gold_role_fix.json`. This is same-source development evidence,
 not a blind evaluation or rebuilt Windows installer acceptance.
+
+## Identity input probe and domain diagnostics (2026-10-06)
+
+Runtime diagnostics now report the actual classifier bank's class coverage
+separately for each region. The package's gold_region bank contains only N/S3;
+its global 34/34 coverage cannot make that regional classifier output M6.
+The same-source first-window probe is reproducible via
+`python -m workspace.vision.tiles_runtime_v0_2.probe_identity_inputs VIDEO
+--output REPORT.json`; it compares current region/crop, tighter region crop,
+and a symmetric Gold-feature pooled bank for diagnostic purposes only.
+
+Frozen result: `2026-10-06_identity_input_probe.json`. Current S2 scores
+0.644122/0.724970 decrease to 0.549383/0.532955 with tighter crops. Symmetric
+pooled Gold processing ranks M9 for the indicator at 0.355132 and M3 for the
+playable yellow face at 0.479758. Neither is usable identification; no A/B
+variant is connected to Runtime acceptance. Ordinary current-path P3/P8 are
+also below threshold at 0.817065/0.759059 in this package slice.
+
+Next evidence gap: review/source-qualify opened-Gold and playable Gold-skin
+reference domains across other original matches, and audit S2 reference crop
+quality without reusing this clip as a blind holdout. Do not add the query's
+own crops and call self-matching an accuracy repair. Threshold 0.82, UNKNOWN,
+formal promotion and Executor gates remain unchanged. The delivered EXE is
+still the previous build.
