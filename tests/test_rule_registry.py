@@ -19,7 +19,7 @@ class RuleRegistryTests(unittest.TestCase):
         self.assertEqual(len(DEFAULT_RULE_SNAPSHOT.fingerprint), 64)
         self.assertEqual(
             DEFAULT_RULE_SNAPSHOT.label,
-            "huian-target-2026-10-06-first-round-r1",
+            "huian-target-2026-10-07-random-gold-r1",
         )
         json.dumps(manifest, ensure_ascii=False, sort_keys=True)
 
@@ -30,6 +30,34 @@ class RuleRegistryTests(unittest.TestCase):
         self.assertEqual(
             reversed_snapshot.fingerprint,
             DEFAULT_RULE_SNAPSHOT.fingerprint,
+        )
+
+    def test_random_gold_contract_excludes_flowers_and_keeps_rng_unknown(self):
+        rule = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+            "state_machine.open_gold_random_selection")
+        self.assertEqual(rule.value["selection"], "SYSTEM_RANDOM")
+        self.assertEqual(rule.value["candidate_pool"], "NONFLOWER_TILES_ONLY")
+        self.assertTrue(rule.value["flowers_excluded_before_selection"])
+        self.assertFalse(rule.value["dice_mapping_used"])
+        self.assertEqual(rule.value["distribution"], "UNKNOWN")
+        self.assertEqual(rule.value["rng_algorithm"], "UNKNOWN")
+        self.assertEqual(
+            rule.evidence_ids,
+            ("player_confirmed_open_gold_random_20261007_v1",),
+        )
+        legacy_flower = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+            "physical.open_gold_candidate_flower")
+        self.assertEqual(legacy_flower.revision, 2)
+        self.assertEqual(
+            legacy_flower.value,
+            "TARGET_ROOM_RANDOM_SELECTION_EXCLUDES_FLOWERS",
+        )
+        old_force = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+            "state_machine.eight_flower_open_gold_force")
+        self.assertEqual(old_force.revision, 2)
+        self.assertEqual(
+            old_force.value,
+            "UNREACHABLE_IN_TARGET_ROOM_RANDOM_OPEN_GOLD",
         )
 
     def test_research_override_is_isolated_and_changes_fingerprint(self):
