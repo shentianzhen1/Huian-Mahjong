@@ -2,6 +2,7 @@ import unittest
 
 from huian import HuianEnvironment, HuianGameState
 from huian._legacy import env
+from huian.rules.registry import DEFAULT_RULE_SNAPSHOT
 
 
 GOLD = "P9"
@@ -57,6 +58,21 @@ def eight_flower_actions(game):
 
 
 class EightFlowerRepromptTests(unittest.TestCase):
+    def test_registry_records_node_local_pass_and_later_reoffer(self):
+        rule = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+            "state_machine.eight_flower_reprompt"
+        )
+        self.assertEqual(rule.value["pass_scope"], "CURRENT_NODE_ONLY")
+        self.assertEqual(rule.value["later_own_draw"], "REOFFER_WHILE_STILL_8")
+        self.assertEqual(
+            rule.value["completed_replacement"], "REOFFER_WHILE_STILL_8"
+        )
+        self.assertFalse(rule.value["same_node_immediate_reprompt"])
+        self.assertIn(
+            "player_confirmed_special_rules_20261006_v1",
+            rule.evidence_ids,
+        )
+
     def test_later_normal_own_draw_reoffers_while_still_eight_flowers(self):
         game = game_from(eight_flower_after_draw_state())
         actions = game.legal_actions()
