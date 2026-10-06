@@ -1,13 +1,8 @@
 """Evidence-scoped registry for Huian special outcomes.
 
 This module centralizes what is actually known about each special outcome.
-It deliberately separates:
-- trigger/window evidence,
-- multiplier evidence,
-- settlement readiness.
-
-A special can therefore be legal to declare while still refusing to settle
-until the missing payment/dealer-flow rule is confirmed.
+It deliberately separates trigger/window evidence, multiplier evidence and
+settlement readiness so replay imports can remain source-scoped.
 """
 from dataclasses import dataclass
 from types import MappingProxyType
@@ -18,7 +13,6 @@ from .registry import DEFAULT_RULE_SNAPSHOT
 
 def _rule_value(rule_id):
     return DEFAULT_RULE_SNAPSHOT.get(rule_id).value
-
 
 
 @dataclass(frozen=True)
@@ -54,12 +48,21 @@ class SpecialOutcomeProfile:
 _SPECIAL_OUTCOMES = {
     "QIANGJIN": SpecialOutcomeProfile(
         key="QIANGJIN",
+        # Kept for legacy/imported declarations. The confirmed staged runtime
+        # settles atomically from first-round provenance.
         declaration_phase="QIANGJIN_DECLARED",
-        multiplier=None,
-        multiplier_status=EvidenceStatus.UNKNOWN,
-        settlement_rule_id="qiangjin_settlement",
-        settlement_ready=False,
-        note="Window ownership/PASS are confirmed; hand shape and settlement are not.",
+        multiplier=_rule_value("settlement.qiangjin_full")["multiplier"],
+        multiplier_status=EvidenceStatus.CONFIRMED,
+        settlement_rule_id="settlement.qiangjin_full",
+        settlement_ready=True,
+        note=(
+            "Player-confirmed 2026-10-06: first round only. Dealer checks after "
+            "first discard with remaining16 + reserved Gold virtually; nondealer "
+            "checks after first draw by virtually replacing exactly that drawn "
+            "tile with reserved Gold. Nondealer has priority. Ordinary fan and "
+            "ordinary self-draw x2 settlement apply; no later draw/flower/Kong "
+            "reopens Qiangjin."
+        ),
     ),
     "SANJINDAO": SpecialOutcomeProfile(
         key="SANJINDAO",
@@ -110,9 +113,9 @@ _SPECIAL_OUTCOMES = {
             "exactly one normal self-draw Hu interception opportunity; if the opponent "
             "does not Hu, they must discard one tile before progression continues. If "
             "single/double You survives that response discard, the Youjin player draws "
-            "once: a structurally freed/new gold "
-            "offers an optional next-stage upgrade, otherwise the current stage settles. "
-            "Declining an available upgrade also settles the current stage."
+            "once: a structurally freed/new gold offers an optional next-stage upgrade, "
+            "otherwise the current stage settles. Declining an available upgrade also "
+            "settles the current stage."
         ),
     ),
     "DOUBLE_YOU": SpecialOutcomeProfile(
@@ -129,9 +132,8 @@ _SPECIAL_OUTCOMES = {
             "stage must not be inferred from gold count. Sequential upgrade from "
             "single You is confirmed: after the opponent misses and completes the "
             "mandatory response discard, the Youjin player draws once; if that draw "
-            "frees/adds a discardable gold, upgrading by "
-            "discarding one gold is optional. Declining or failing to free a gold "
-            "settles Double-You at x8."
+            "frees/adds a discardable gold, upgrading by discarding one gold is "
+            "optional. Declining or failing to free a gold settles Double-You at x8."
         ),
     ),
     "TRIPLE_YOU": SpecialOutcomeProfile(
@@ -146,8 +148,7 @@ _SPECIAL_OUTCOMES = {
             "opponent response rule as Youjin/Double-You: exactly one normal "
             "self-draw Hu opportunity; if it does not self-Hu, the opponent must "
             "discard one tile and Triple-You then settles immediately at x16 with no "
-            "further upgrade draw. This supersedes the older "
-            "working note that Triple-You could only be intercepted by kong-replacement Hu."
+            "further upgrade draw."
         ),
     ),
     "ROB_KONG_HU": SpecialOutcomeProfile(

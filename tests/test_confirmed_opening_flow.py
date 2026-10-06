@@ -78,15 +78,22 @@ class ConfirmedOpeningTests(unittest.TestCase):
                 self.assertIsNone(state.gold_tile)
                 self.assertFalse(event['action']['metadata']['hand_replacement'])
                 self.assert_physical(state)
-            state, _ = game.reveal_opening_candidate(
+            state, event = game.reveal_opening_candidate(
                 wall_index=game.state.wall.index('P9'), current_dealer_base=10)
             self.assertEqual(state.phase, 'OPENING_POST_GOLD_PENDING')
             self.assertEqual(state.reserved_tiles, ['P9'])
             self.assertEqual(state.wall.count('P9') + sum(h.count('P9') for h in state.hands), 3)
             self.assertEqual(state.hands, hands)
+            self.assertIsInstance(state.first_round, dict)
+            self.assertTrue(event['action']['metadata']['first_round_initialized'])
+            self.assertIsNotNone(state.first_round['tianting'][1 - dealer])
             self.assert_physical(state)
-            with self.assertRaises(UnknownRuleError):
-                game.legal_actions()  # Future Qiangjin/Tianting cannot be guessed.
+            actions = game.legal_actions()
+            self.assertTrue(actions)
+            self.assertTrue(all(
+                a.type == env.ActionType.DISCARD and a.player == dealer
+                for a in actions
+            ))
 
     def test_new_eighth_flower_forces_terminal_with_no_gold_and_no_more_flips(self):
         for dealer in (0, 1):
@@ -162,6 +169,7 @@ class ConfirmedOpeningTests(unittest.TestCase):
             self.assertEqual(state.phase, 'OPENING_POST_GOLD_PENDING')
             self.assertEqual(len(state.flowers[owner]), 8)
             self.assertEqual(state.rewards, [0, 0])
+            self.assertIsInstance(state.first_round, dict)
             self.assert_physical(state)
 
     def test_tianhu_uses_gold_only_after_full_opening_for_dealer(self):
@@ -179,6 +187,7 @@ class ConfirmedOpeningTests(unittest.TestCase):
             self.assertEqual(state.terminal_reason, 'AUTO_TIANHU')
             self.assertEqual(state.rewards[dealer], 50)
             self.assertEqual(event['action']['metadata']['special'], 'TIANHU')
+            self.assertIsNone(state.first_round)
             self.assert_physical(state)
         three_gold = LOSE.copy()
         three_gold[:3] = ['P9'] * 3

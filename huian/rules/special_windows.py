@@ -1,15 +1,16 @@
 """Current-player special declare windows.
 
-Player spec 2026-09-18:
-- ADD_KONG = 补杠/蓄杠/加杠: an existing Peng upgraded with a self-drawn fourth tile. It is an exposed-kong subtype and is the only robbable kong.
-- MING_GANG = 大明杠: opponent discard + three matching hand tiles; not robbable.
-- AN_GANG = 暗杠: four matching concealed tiles; not robbable.
-- Qiangjin belongs only to the acting player after draw / flower / kong.
-- Opening flip does not offer opponent qiangjin. PASS does not hand off.
-- Sanjindao outranks qiangjin at an eligible current-player prompt. The opened gold indicator consumes one physical copy, so three playable golds is the maximum. Opening 3 gold and the first 2->3 gold draw are confirmed entry forms. New replay evidence shows PASS closes only the current prompt: a later own draw while still holding all 3 playable golds can offer Sanjindao again.
-Hand-shape details for qiangjin remain UNKNOWN; eligibility here is the
-working gate "gold in hand, not in Youjin" so the window ownership tests
-can run without inventing a decomposition.
+Confirmed 2026-10-06 correction:
+- Qiangjin exists only in the first round after opening replacement + Gold.
+- Dealer eligibility is frozen after the dealer's first discard (remaining 16 +
+  the single reserved opened Gold, virtually, for a 17-tile Hu analysis).
+- Nondealer eligibility is frozen after the first draw by virtually replacing
+  exactly that drawn tile with the reserved opened Gold; the hand stays 17.
+- Nondealer has priority. Dealer can act only after nondealer is ineligible or
+  explicitly passes. No later draw, flower replacement or Kong draw reopens it.
+- Qiangjin uses ordinary fan and ordinary self-draw x2 settlement.
+
+Sanjindao repeated own-draw prompts and Eight-Flower windows remain independent.
 """
 from huian._legacy import env
 from .phases import ActionReport, report as base_report, validate
@@ -27,10 +28,15 @@ def _in_youjin(state, player):
 
 
 def working_qiangjin_eligible(state, player):
-    if _in_youjin(state, player):
-        return False
-    gold = state.gold_tile
-    return gold is not None and gold in state.hands[player]
+    """Compatibility name backed by confirmed first-round provenance only."""
+    first = getattr(state, "first_round", None)
+    return bool(
+        isinstance(first, dict)
+        and first.get("active")
+        and player in (0, 1)
+        and first["qiangjin_eligible"][player]
+        and not first["qiangjin_resolved"][player]
+    )
 
 
 def _window_just_closed(state):
@@ -58,19 +64,15 @@ def _just_received_third_gold(state, player):
 def _opening_sanjindao_check(state, player):
     gold = state.gold_tile
     return (
-        state.phase == "OPENING_QIANGJIN_CHECK"
+        state.phase in ("OPENING_QIANGJIN_CHECK", "OPENING_POST_GOLD_PENDING")
+        and player == state.dealer
         and gold is not None
         and state.hands[player].count(gold) == 3
     )
 
 
 def _later_sanjindao_draw_check(state, player):
-    """Later own-draw re-check after a prior Sanjindao PASS.
-
-    match_evidence_002/player clarification shows repeated optional prompts while
-    all three playable golds remain. A fourth playable gold is physically
-    impossible because the opened indicator is the fourth copy.
-    """
+    """Later own-draw re-check after a prior Sanjindao PASS."""
     gold = state.gold_tile
     last = state.last_action
     return (
@@ -97,11 +99,23 @@ def _just_completed_eight_flowers(state, player):
 
 
 def current_player_special_actions(adapter, state):
+    """Non-Qiangjin current-seat special choices in confirmed priority order."""
     p = state.current_player
     A, T = env.Action, env.ActionType
-    actions = []
-    # Sanjindao PASS closes only the current prompt. A later own draw with
-    # exactly three golds can offer the choice again.
+    # Same-node confirmed order: Eight-Flower before Sanjindao. Qiangjin is
+    # first-round-only and is injected separately with nondealer seat priority.
+    if _just_completed_eight_flowers(state, p):
+        profile = special_outcome_profile("EIGHT_FLOWER_YOU")
+        return (
+            A(p, T.HU, metadata={
+                "win_source": "eight_flower_you",
+                **profile.action_metadata,
+            }),
+            A(p, T.PASS_QIANGJIN, metadata={
+                "window": "current_only", "declined": "EIGHT_FLOWER_YOU",
+                "continue_play": True,
+            }),
+        )
     third_gold = _just_received_third_gold(state, p)
     opening_check = _opening_sanjindao_check(state, p)
     later_draw_check = _later_sanjindao_draw_check(state, p) and not third_gold
@@ -121,30 +135,103 @@ def current_player_special_actions(adapter, state):
                 "continue_play": True,
             }),
         )
-    if working_qiangjin_eligible(state, p):
-        profile = special_outcome_profile("QIANGJIN")
-        actions.append(A(p, T.QIANGJIN, metadata={
-            "win_source": "qiangjin",
-            "self_draw": True,
-            **profile.action_metadata,
-        }))
-    if _just_completed_eight_flowers(state, p):
-        profile = special_outcome_profile("EIGHT_FLOWER_YOU")
-        actions.append(A(p, T.HU, metadata={
-            "win_source": "eight_flower_you",
-            **profile.action_metadata,
-        }))
-    actions.append(A(p, T.PASS_QIANGJIN, metadata={"window": "current_only"}))
-    return tuple(actions)
+    return ()
+
+
+def _first_round_qiangjin_actions(state, player):
+    first = state.first_round
+    role = (
+        "dealer_after_first_discard"
+        if player == state.dealer
+        else "nondealer_after_first_draw"
+    )
+    profile = special_outcome_profile("QIANGJIN")
+    metadata = {
+        "win_source": "qiangjin",
+        "window": "first_round",
+        "role": role,
+        "seat_priority": "NONDEALER_THEN_DEALER",
+        "winner_fan": first["qiangjin_fan"][player],
+        "current_dealer_base": first["current_dealer_base"],
+        "virtual_gold": True,
+        "physical_gold_moved": False,
+        **profile.action_metadata,
+    }
+    return (
+        env.Action(player, env.ActionType.QIANGJIN, metadata=metadata),
+        env.Action(player, env.ActionType.PASS_QIANGJIN, metadata={
+            "window": "first_round",
+            "role": role,
+            "declined": "QIANGJIN",
+            "seat_priority": "NONDEALER_THEN_DEALER",
+        }),
+    )
+
+
+def _first_round_report(adapter, state):
+    first = getattr(state, "first_round", None)
+    if not isinstance(first, dict) or not first.get("active"):
+        return None
+    validate(adapter, state)
+    dealer = state.dealer
+    nondealer = 1 - dealer
+
+    # After Gold/Tianhu, dealer must make the first discard. Opening Sanjindao
+    # remains higher priority if actually legal. A prior PASS at this same node
+    # is not re-offered immediately.
+    if (state.current_player == dealer
+            and not first.get("dealer_first_discard_done")
+            and state.phase in ("OPENING_POST_GOLD_PENDING", "AFTER_DRAW")):
+        last = state.last_action
+        declined_sanjindao = (
+            isinstance(last, dict)
+            and last.get("type") == env.ActionType.PASS_QIANGJIN.value
+            and (last.get("metadata") or {}).get("declined") == "SANJINDAO"
+        )
+        if not declined_sanjindao and _opening_sanjindao_check(state, dealer):
+            special = current_player_special_actions(adapter, state)
+            if special:
+                return ActionReport(special)
+        return ActionReport(tuple(
+            env.Action(dealer, env.ActionType.DISCARD, tile=tile)
+            for tile in sorted(set(state.hands[dealer]))
+        ))
+
+    # Claims on the dealer's first discard are handled by normal AFTER_DISCARD
+    # legality. PASS reaches NEED_DRAW; only the actual first DRAW opens this
+    # Qiangjin priority check.
+    if not first.get("nondealer_first_draw_done"):
+        return None
+    if state.phase != "AFTER_DRAW" or state.current_player != nondealer:
+        return None
+
+    last = state.last_action
+    fresh_draw = (
+        isinstance(last, dict)
+        and last.get("type") == env.ActionType.DRAW.value
+        and last.get("player") == nondealer
+    )
+    if fresh_draw:
+        # Same-node Eight-Flower/Sanjindao outrank Qiangjin. If passed, the next
+        # report falls through to the Qiangjin seat-priority chain below.
+        if (_just_completed_eight_flowers(state, nondealer)
+                or _just_received_third_gold(state, nondealer)
+                or _later_sanjindao_draw_check(state, nondealer)):
+            special = current_player_special_actions(adapter, state)
+            if special:
+                return ActionReport(special)
+
+    if (not first["qiangjin_resolved"][nondealer]
+            and first["qiangjin_eligible"][nondealer]):
+        return ActionReport(_first_round_qiangjin_actions(state, nondealer))
+    if (not first["qiangjin_resolved"][dealer]
+            and first["qiangjin_eligible"][dealer]):
+        return ActionReport(_first_round_qiangjin_actions(state, dealer))
+    return None
 
 
 def _single_youjin_offer_actions(adapter, state):
-    """Known optional single-Youjin declarations after the current special window.
-
-    A distinct YOUJIN action records the system's special choice. Ordinary
-    DISCARD of the same tile remains available and means the player declined
-    this offer without locking future Youjin-family progression.
-    """
+    """Known optional single-Youjin declarations after the current special window."""
     p = state.current_player
     candidates = adapter.rules.youjin_entry_discards(
         state.hands[p], state.gold_tile, len(state.melds[p])
@@ -183,23 +270,16 @@ def _strip_unrobbable_kong_unknown(adapter, state, result):
 def report_with_specials(adapter, state):
     # Simulation-only hands bypass special Huian declaration windows by
     # default. A narrow research opt-in can expose only confirmed Youjin-family
-    # actions while Qiangjin/Sanjindao/Eight-Flower stay on their PASS path.
-    # ADD_KONG (补/蓄/加杠) remains the only robbable kong branch.
+    # actions while first-round Qiangjin stays on the staged confirmed path.
     if adapter.rules.config.simulation_only_normal_hand:
         result = _strip_unrobbable_kong_unknown(
             adapter, state, base_report(adapter, state)
         )
         if not adapter.rules.config.simulation_enable_youjin:
             return result
-
-        # Established Youjin phases are already fully described by base_report.
         if (state.special_states != ["NORMAL", "NORMAL"]
                 or state.phase.startswith("YOUJIN_")):
             return result
-
-        # Single-Youjin offers are exposed only after an auditable real own draw.
-        # The synthetic opening bypass is not treated as evidence of an opening
-        # Youjin window.
         last = state.last_action
         if (state.phase == "AFTER_DRAW"
                 and isinstance(last, dict)
@@ -211,6 +291,11 @@ def report_with_specials(adapter, state):
                     youjin + result.known_actions, result.unresolved
                 )
         return result
+
+    first_round = _first_round_report(adapter, state)
+    if first_round is not None:
+        return first_round
+
     A, T = env.Action, env.ActionType
     p = state.current_player
     if _window_just_closed(state) and state.phase in ("AFTER_DRAW", "NEED_DRAW"):
@@ -224,19 +309,20 @@ def report_with_specials(adapter, state):
         return ActionReport(youjin + discards)
     if state.phase == "OPENING_QIANGJIN_CHECK":
         validate(adapter, state)
-        return ActionReport(current_player_special_actions(adapter, state))
-    # Mid-hand special windows exist only after the acting player has completed
-    # a real draw. Flower replacement and all three kong replacement draws are
-    # recorded as that same DRAW event (with effective_drawn_tile / wall_tail
-    # metadata), so they pass this gate without making NEED_DRAW, CHI, or PENG
-    # nodes spuriously eligible.
+        special = current_player_special_actions(adapter, state)
+        if special:
+            return ActionReport(special)
+        return base_report(adapter, state)
+    # Mid-hand special windows no longer include Qiangjin. Sanjindao repeated
+    # own-draw and Eight-Flower remain independently eligible after real draws.
     if state.phase == "AFTER_DRAW" and _last_effective_draw(state, p) is not None and (
             _just_received_third_gold(state, p)
             or _later_sanjindao_draw_check(state, p)
-            or _just_completed_eight_flowers(state, p)
-            or working_qiangjin_eligible(state, p)):
+            or _just_completed_eight_flowers(state, p)):
         validate(adapter, state)
-        return ActionReport(current_player_special_actions(adapter, state))
+        special = current_player_special_actions(adapter, state)
+        if special:
+            return ActionReport(special)
     result = base_report(adapter, state)
     result = _strip_unrobbable_kong_unknown(adapter, state, result)
     return result

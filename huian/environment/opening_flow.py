@@ -4,6 +4,7 @@ from dataclasses import asdict
 
 from huian._legacy import env
 from huian.rules.registry import DEFAULT_RULE_SNAPSHOT
+from huian.rules.first_round import new_first_round_state
 from .flowers import replace_flowers
 from .opening import deal_initial_hands
 
@@ -42,6 +43,7 @@ def begin_confirmed_opening(environment):
     candidate.flowers = [list(zone) for zone in replacement.flowers]
     candidate.wall = list(replacement.wall)
     candidate.special_states = ['NORMAL', 'NORMAL']
+    candidate.first_round = None
     qualifying = [p for p in (0, 1) if len(candidate.flowers[p]) == 8]
     candidate.current_player = qualifying[0] if qualifying else candidate.dealer
     candidate.phase = 'OPENING_EIGHT_FLOWER_CHOICE' if qualifying else 'OPENING_GOLD_PENDING'
@@ -118,6 +120,21 @@ def reveal_opening_candidate(environment, *, wall_index, current_dealer_base):
                             current_dealer_base=current_dealer_base, winner_fan=fixed_fan,
                             multiplier=multiplier, fan_policy='NO_ADDITIVE_FAN',
                             evidence_status='CONFIRMED', rewards=list(candidate.rewards))
+        else:
+            candidate.first_round = new_first_round_state(
+                candidate,
+                current_dealer_base=current_dealer_base,
+                rules=environment.rules.rules,
+            )
+            nondealer = 1 - candidate.dealer
+            metadata.update(
+                first_round_initialized=True,
+                qiangjin_window='FIRST_ROUND_ONLY',
+                nondealer_tianting=candidate.first_round['tianting'][nondealer],
+                nondealer_tianting_waits=list(
+                    candidate.first_round['tianting_waits'][nondealer]
+                ),
+            )
     action = {'player': candidate.dealer, 'type': action_type,
               'tile': tile, 'tiles': [], 'metadata': metadata}
     return _commit(environment, candidate, action)

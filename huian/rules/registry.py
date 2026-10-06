@@ -1,13 +1,7 @@
 """Versioned rule registry and immutable rule snapshots.
 
-This module is intentionally metadata-first. It does not reimplement Mahjong
-logic. Its job is to give every high-impact rule a stable ID, evidence status,
-revision, value, blast radius and implementation boundary so simulations and AI
-results can be tied to the exact rule set that produced them.
-
-Runtime rule behavior should migrate to these IDs incrementally. Until a module
-is migrated, registry tests act as a consistency alarm rather than a second
-source of gameplay logic.
+The registry is metadata-first: every high-impact rule keeps a stable ID,
+evidence status, revision, value, blast radius and implementation boundary.
 """
 from dataclasses import dataclass, replace
 from enum import Enum
@@ -136,7 +130,6 @@ class RuleSnapshot:
         return record
 
     def with_overrides(self, *, label, overrides):
-        """Create a separate research snapshot; never mutate the default snapshot."""
         records = dict(self.records)
         for rule_id, changes in overrides.items():
             current = self.get(rule_id)
@@ -145,31 +138,22 @@ class RuleSnapshot:
             if "rule_id" in changes and changes["rule_id"] != rule_id:
                 raise ValueError("override cannot rename a rule ID")
             records[rule_id] = replace(current, **changes)
-        return RuleSnapshot(
-            label=label,
-            records=records,
-            schema_version=self.schema_version,
-        )
+        return RuleSnapshot(label=label, records=records,
+                            schema_version=self.schema_version)
 
     def to_manifest(self):
         return {
             "schema_version": self.schema_version,
             "label": self.label,
             "fingerprint": self.fingerprint,
-            "rules": [
-                record.to_dict()
-                for record in self.records.values()
-            ],
+            "rules": [record.to_dict() for record in self.records.values()],
         }
 
     @property
     def fingerprint(self):
         payload = {
             "schema_version": self.schema_version,
-            "rules": [
-                record.to_dict()
-                for record in self.records.values()
-            ],
+            "rules": [record.to_dict() for record in self.records.values()],
         }
         canonical = json.dumps(
             payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
@@ -193,6 +177,8 @@ def _record(rule_id, domain, status, revision, value, impact, evidence_ids,
     )
 
 
+P20261006 = ("player_confirmed_special_rules_20261006_v1",)
+
 RULE_REGISTRY = MappingProxyType({
     "physical.open_gold_reserved_copy": _record(
         "physical.open_gold_reserved_copy", RuleDomain.PHYSICAL,
@@ -208,37 +194,80 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "physical.open_gold_candidate_flower": _record(
         "physical.open_gold_candidate_flower", RuleDomain.PHYSICAL,
-        EvidenceStatus.CONFIRMED, 1, "DEALER_FLOWER_ZONE_NO_HAND_REPLACEMENT", ImpactLevel.CRITICAL,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
+        EvidenceStatus.CONFIRMED, 1,
+        "DEALER_FLOWER_ZONE_NO_HAND_REPLACEMENT", ImpactLevel.CRITICAL,
+        P20261006, "huian.environment.opening_flow",
     ),
     "state_machine.eight_flower_open_gold_force": _record(
         "state_machine.eight_flower_open_gold_force", RuleDomain.STATE_MACHINE,
-        EvidenceStatus.CONFIRMED, 1, "NEW_EIGHTH_FLOWER_AUTO_END_BEFORE_GOLD", ImpactLevel.CRITICAL,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
-        depends_on=("physical.open_gold_candidate_flower", "settlement.eight_flower_real"),
+        EvidenceStatus.CONFIRMED, 1, "NEW_EIGHTH_FLOWER_AUTO_END_BEFORE_GOLD",
+        ImpactLevel.CRITICAL, P20261006, "huian.environment.opening_flow",
+        depends_on=("physical.open_gold_candidate_flower",
+                    "settlement.eight_flower_real"),
     ),
     "state_machine.eight_flower_pre_gold_choice": _record(
         "state_machine.eight_flower_pre_gold_choice", RuleDomain.STATE_MACHINE,
-        EvidenceStatus.CONFIRMED, 1, "DECLARE_OR_PASS_AFTER_COMPLETED_REPLACEMENT", ImpactLevel.HIGH,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.opening_phases",
+        EvidenceStatus.CONFIRMED, 1,
+        "DECLARE_OR_PASS_AFTER_COMPLETED_REPLACEMENT", ImpactLevel.HIGH,
+        P20261006, "huian.rules.opening_phases",
     ),
     "legality.tianhu_opening": _record(
         "legality.tianhu_opening", RuleDomain.LEGALITY,
-        EvidenceStatus.CONFIRMED, 1, "DEALER_17_FIVE_MELDS_PAIR_AFTER_REPLACEMENT_AND_GOLD", ImpactLevel.CRITICAL,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.engine",
+        EvidenceStatus.CONFIRMED, 1,
+        "DEALER_17_FIVE_MELDS_PAIR_AFTER_REPLACEMENT_AND_GOLD",
+        ImpactLevel.CRITICAL, P20261006, "huian.rules.engine",
     ),
     "settlement.tianhu_fixed_fan": _record(
         "settlement.tianhu_fixed_fan", RuleDomain.SETTLEMENT,
         EvidenceStatus.CONFIRMED, 1, 0, ImpactLevel.HIGH,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
+        P20261006, "huian.environment.opening_flow",
         note="No ordinary Gold/flower/triplet/Kong fan stacks onto Tianhu.",
     ),
     "settlement.tianhu_multiplier": _record(
         "settlement.tianhu_multiplier", RuleDomain.SETTLEMENT,
         EvidenceStatus.CONFIRMED, 1, 2, ImpactLevel.HIGH,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
-        note="Automatic dealer opening Hu; no additive fan.",
+        P20261006, "huian.environment.opening_flow",
         depends_on=("legality.tianhu_opening",),
+        note="Automatic dealer opening Hu; no additive fan.",
+    ),
+    "legality.qiangjin_virtual_gold_shape": _record(
+        "legality.qiangjin_virtual_gold_shape", RuleDomain.LEGALITY,
+        EvidenceStatus.CONFIRMED, 1,
+        {
+            "dealer": "REMAINING_16_PLUS_RESERVED_GOLD_VIRTUAL_17",
+            "nondealer": "FIRST_DRAW_17_REPLACE_DRAWN_TILE_WITH_RESERVED_GOLD",
+            "physical_gold_moved": False,
+        },
+        ImpactLevel.CRITICAL, P20261006, "huian.rules.first_round",
+        depends_on=("physical.open_gold_reserved_copy",),
+        note="Virtual Gold is the one reserved opened copy; never duplicate an entity tile.",
+    ),
+    "state_machine.qiangjin_first_round_timing": _record(
+        "state_machine.qiangjin_first_round_timing", RuleDomain.STATE_MACHINE,
+        EvidenceStatus.CONFIRMED, 1,
+        "OPENING_COMPLETE_THEN_DEALER_FIRST_DISCARD_THEN_NONDEALER_FIRST_DRAW_ONLY",
+        ImpactLevel.CRITICAL, P20261006, "huian.rules.first_round",
+        depends_on=("legality.qiangjin_virtual_gold_shape",),
+        note="Later normal draws, flower replacement and Kong-tail draws do not reopen Qiangjin.",
+    ),
+    "state_machine.qiangjin_seat_priority": _record(
+        "state_machine.qiangjin_seat_priority", RuleDomain.STATE_MACHINE,
+        EvidenceStatus.CONFIRMED, 1, "NONDEALER_THEN_DEALER",
+        ImpactLevel.CRITICAL, P20261006, "huian.rules.special_windows",
+        depends_on=("state_machine.qiangjin_first_round_timing",),
+        note="Dealer opportunity waits until nondealer is ineligible or explicitly passes.",
+    ),
+    "state_machine.tianting_status": _record(
+        "state_machine.tianting_status", RuleDomain.STATE_MACHINE,
+        EvidenceStatus.CONFIRMED, 1,
+        {
+            "dealer": "AFTER_FIRST_DISCARD_REMAINING_16_TING",
+            "nondealer": "INITIAL_16_BEFORE_FIRST_DRAW_TING",
+            "bonus_fan": 0,
+            "bonus_multiplier": 1,
+        },
+        ImpactLevel.HIGH, P20261006, "huian.rules.first_round",
+        note="Tianting is a status marker only; it does not change settlement.",
     ),
     "legality.single_gold_discard_pinghu": _record(
         "legality.single_gold_discard_pinghu", RuleDomain.LEGALITY,
@@ -298,30 +327,24 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "settlement.rob_kong_full": _record(
         "settlement.rob_kong_full", RuleDomain.SETTLEMENT,
-        EvidenceStatus.CONFIRMED, 2, {
-            "uses_ordinary_zimo_formula": True,
-            "failed_added_kong_fan": 0,
-            "kong_fee": 0,
-            "dealer_flow": "ordinary_hu",
-        }, ImpactLevel.CRITICAL,
-        ("github_issue_4_confirmed_2026-10-03",), "huian.environment",
+        EvidenceStatus.CONFIRMED, 2,
+        {"uses_ordinary_zimo_formula": True,
+         "failed_added_kong_fan": 0,
+         "kong_fee": 0,
+         "dealer_flow": "ordinary_hu"},
+        ImpactLevel.CRITICAL, ("github_issue_4_confirmed_2026-10-03",),
+        "huian.environment",
         depends_on=("legality.rob_kong_scope", "settlement.rob_kong_multiplier"),
-        note="Issue #4 / PR #125: original PENG remains; robbed tile is virtual for winner analysis; ordinary Zimo x2 and dealer flow.",
+        note="Issue #4 / PR #125: original PENG remains; ordinary Zimo x2 and ordinary dealer flow.",
     ),
     "settlement.gang_hu": _record(
         "settlement.gang_hu", RuleDomain.SETTLEMENT,
-        EvidenceStatus.CONFIRMED, 2, {
-            "uses_ordinary_zimo_multiplier": True,
-            "extra_multiplier": 1,
-            "kong_fan_additive": True,
-        }, ImpactLevel.CRITICAL,
-        ("player_2026-09-30",), "huian.environment",
+        EvidenceStatus.CONFIRMED, 2,
+        {"uses_ordinary_zimo_multiplier": True,
+         "extra_multiplier": 1,
+         "kong_fan_additive": True},
+        ImpactLevel.CRITICAL, ("player_2026-09-30",), "huian.environment",
         depends_on=("settlement.ordinary_zimo_multiplier",),
-        note=(
-            "Gang-Hu after Ming/Added Kong and An-Gang-Hu have no special extra "
-            "multiplier. The kong contributes only its normal kong fan, and the "
-            "tail-draw Hu settles through the ordinary self-draw x2 formula."
-        ),
     ),
     "settlement.sanjindao_multiplier": _record(
         "settlement.sanjindao_multiplier", RuleDomain.SETTLEMENT,
@@ -331,32 +354,45 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "settlement.sanjindao_full": _record(
         "settlement.sanjindao_full", RuleDomain.SETTLEMENT,
-        EvidenceStatus.CONFIRMED, 2, "DEALER_BASE_PLUS_COMPLETED_KONG_FAN_X3", ImpactLevel.CRITICAL,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
+        EvidenceStatus.CONFIRMED, 2,
+        "DEALER_BASE_PLUS_COMPLETED_KONG_FAN_X3", ImpactLevel.CRITICAL,
+        P20261006, "huian.rules.special_outcomes",
         depends_on=("settlement.sanjindao_multiplier",),
     ),
     "settlement.qiangjin_full": _record(
         "settlement.qiangjin_full", RuleDomain.SETTLEMENT,
-        EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.CRITICAL,
-        (), "huian.rules.special_outcomes",
+        EvidenceStatus.CONFIRMED, 2,
+        {
+            "uses_ordinary_fan": True,
+            "multiplier": 2,
+            "formula": "(current_dealer_base + ordinary_fan) * 2",
+            "dealer_flow": "ordinary_hu",
+            "virtual_gold_physical_move": False,
+        },
+        ImpactLevel.CRITICAL, P20261006, "huian.environment.special_apply",
+        depends_on=("settlement.ordinary_zimo_multiplier",
+                    "legality.qiangjin_virtual_gold_shape",
+                    "state_machine.qiangjin_seat_priority"),
     ),
     "settlement.eight_flower_working_multiplier": _record(
         "settlement.eight_flower_working_multiplier", RuleDomain.SETTLEMENT,
         EvidenceStatus.CONFIRMED, 2, 1, ImpactLevel.HIGH,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
-        note="Player-confirmed settlement; stable historical rule ID retained. Direct terminal video remains absent.",
+        P20261006, "huian.rules.special_outcomes",
+        note="Player-confirmed settlement; stable historical rule ID retained.",
     ),
     "settlement.eight_flower_working_fixed_fan": _record(
         "settlement.eight_flower_working_fixed_fan", RuleDomain.SETTLEMENT,
         EvidenceStatus.CONFIRMED, 2, 16, ImpactLevel.HIGH,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
-        note="Player-confirmed settlement; stable historical rule ID retained. Direct terminal video remains absent.",
+        P20261006, "huian.rules.special_outcomes",
+        note="Player-confirmed settlement; stable historical rule ID retained.",
     ),
     "settlement.eight_flower_real": _record(
         "settlement.eight_flower_real", RuleDomain.SETTLEMENT,
-        EvidenceStatus.CONFIRMED, 2, "DEALER_BASE_PLUS_FIXED_16_NO_STACKING", ImpactLevel.HIGH,
-        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
-        depends_on=("settlement.eight_flower_working_multiplier", "settlement.eight_flower_working_fixed_fan"),
+        EvidenceStatus.CONFIRMED, 2,
+        "DEALER_BASE_PLUS_FIXED_16_NO_STACKING", ImpactLevel.HIGH,
+        P20261006, "huian.rules.special_outcomes",
+        depends_on=("settlement.eight_flower_working_multiplier",
+                    "settlement.eight_flower_working_fixed_fan"),
     ),
     "settlement.kong_fee": _record(
         "settlement.kong_fee", RuleDomain.SETTLEMENT,
@@ -367,6 +403,6 @@ RULE_REGISTRY = MappingProxyType({
 
 
 DEFAULT_RULE_SNAPSHOT = RuleSnapshot(
-    label="huian-target-2026-10-06-opening-r1",
+    label="huian-target-2026-10-06-first-round-r1",
     records=RULE_REGISTRY,
 )

@@ -1,253 +1,185 @@
-"""Current-player qiangjin window; opponent never inherits a declined window."""
+"""Player-confirmed first-round Qiangjin/Tianting sequence."""
 from collections import Counter
 import unittest
 
-from huian import HuianEnvironment, HuianGameState, HuianRules, HuianRulesAdapter, RulesConfig
+from huian import HuianEnvironment, HuianGameState
 from huian._legacy import env
+from huian.rules.first_round import new_first_round_state
 from huian.rules.special_windows import working_qiangjin_eligible
 
-
 GOLD = "P9"
+DEALER16 = [
+    "M1", "M2", "M3", "M4", "M5", "M6",
+    "P1", "P2", "P3", "S1", "S2", "S3",
+    "E", "E", "E", GOLD,
+]
+NONDEALER16 = [
+    "M7", "M8", "M9", "P4", "P5", "P6",
+    "P7", "P8", GOLD, "S4", "S5", "S6",
+    "R", "R", "R", GOLD,
+]
 
 
-def _fill(state):
-    remaining = env.full_wall()
-    for tile in list(state.physical_tiles()):
-        remaining.remove(tile)
-    state.reserved_tiles = remaining[:-20]
-    state.wall = remaining[-20:]
-    assert Counter(state.physical_tiles()) == Counter(env.full_wall())
-    return state
-
-
-def two_seat_gold_state(*, current=0, current_gold=1, opponent_gold=1,
-                        current_tiles=17, phase="OPENING_QIANGJIN_CHECK"):
+def first_round_game(*, dealer=0, draw_tile="W", base=10):
     state = HuianGameState(
-        phase=phase, gold_tile=GOLD, dealer=0,
-        current_player=current, special_states=["NORMAL", "NORMAL"])
-    # At a normal NEED_DRAW node both players may be on 16 concealed tiles;
-    # only the opening dealer starts with 17.
-    other_tiles = 16
-    if current == 0:
-        n0, n1 = current_tiles, other_tiles
-    else:
-        n0, n1 = other_tiles, current_tiles
-    base0 = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8",
-             "P1", "P2", "P3", "S1", "S2", "S3", "E", "W"]
-    base1 = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8",
-             "P1", "P2", "P3", "S1", "S2", "S4", "SOUTH", "N"]
-    extra0 = ["P4"] if n0 == 17 else []
-    extra1 = ["P5"] if n1 == 17 else []
-    state.hands[0] = (base0 + extra0)[:n0]
-    state.hands[1] = (base1 + extra1)[:n1]
-    for index in range(current_gold):
-        state.hands[current][index] = GOLD
-    opp = 1 - current
-    for index in range(opponent_gold):
-        state.hands[opp][index + 4] = GOLD
-    return _fill(state)
-
-
-def mark_gold_draw(state):
-    state.phase = "AFTER_DRAW"
-    state.last_action = env.Action(
-        state.current_player, env.ActionType.DRAW,
-        metadata={"source": "wall_head", "drawn_tile": GOLD},
-    ).to_dict()
-    return state
-
-
-def env_of(state):
-    rules = HuianRulesAdapter(HuianRules(RulesConfig()))
-    game = HuianEnvironment(rules=rules)
+        dealer=dealer,
+        current_player=dealer,
+        phase="OPENING_POST_GOLD_PENDING",
+        gold_tile=GOLD,
+        special_states=["NORMAL", "NORMAL"],
+        reserved_tiles=[GOLD],
+    )
+    state.hands[dealer] = [*DEALER16, "N"]
+    state.hands[1 - dealer] = list(NONDEALER16)
+    remaining = env.full_wall()
+    for tile in state.physical_tiles():
+        remaining.remove(tile)
+    remaining.remove(draw_tile)
+    state.wall = [draw_tile, *remaining]
+    state.first_round = new_first_round_state(
+        state, current_dealer_base=base
+    )
+    game = HuianEnvironment()
     game.set_state(state)
     return game
 
 
-class QiangjinWindowTests(unittest.TestCase):
-    def test_a_current_pass_does_not_hand_off_to_eligible_opponent(self):
-        state = two_seat_gold_state(current_gold=1, opponent_gold=1)
-        self.assertTrue(working_qiangjin_eligible(state, 0))
-        self.assertTrue(working_qiangjin_eligible(state, 1))
-        game = env_of(state)
-        actions = game.legal_actions()
-        self.assertTrue(any(a.type == env.ActionType.QIANGJIN and a.player == 0
-                            for a in actions))
-        self.assertFalse(any(a.player == 1 for a in actions))
-        pass_act = next(a for a in actions if a.type == env.ActionType.PASS_QIANGJIN)
-        game.step(pass_act)
-        after = game.legal_actions()
-        self.assertFalse(any(a.type == env.ActionType.QIANGJIN and a.player == 1
-                             for a in after))
-        self.assertTrue(all(a.player == 0 for a in after))
+def advance_to_first_draw(game):
+    dealer = game.state.dealer
+    discard = next(
+        action for action in game.legal_actions()
+        if action.type == env.ActionType.DISCARD and action.tile == "N"
+    )
+    game.step(discard)
+    self_pass = next(
+        action for action in game.legal_actions()
+        if action.type == env.ActionType.PASS
+    )
+    game.step(self_pass)
+    draw = next(
+        action for action in game.legal_actions()
+        if action.type == env.ActionType.DRAW
+    )
+    game.step(draw)
+    return dealer, 1 - dealer
 
-    def test_b_opponent_only_eligible_does_not_open_window(self):
-        state = two_seat_gold_state(current_gold=0, opponent_gold=1)
-        self.assertFalse(working_qiangjin_eligible(state, 0))
-        self.assertTrue(working_qiangjin_eligible(state, 1))
-        actions = env_of(state).legal_actions()
-        self.assertFalse(any(a.type == env.ActionType.QIANGJIN for a in actions))
-        self.assertTrue(any(a.type == env.ActionType.PASS_QIANGJIN and a.player == 0
-                            for a in actions))
 
-    def test_qiangjin_declaration_is_isolated_from_ordinary_hu(self):
-        state = two_seat_gold_state(current_gold=1, opponent_gold=0)
-        game = env_of(state)
-        action = next(
-            a for a in game.legal_actions()
-            if a.type == env.ActionType.QIANGJIN
+class QiangjinFirstRoundTests(unittest.TestCase):
+    def test_nondealer_tianting_is_marked_before_first_draw(self):
+        for dealer in (0, 1):
+            game = first_round_game(dealer=dealer)
+            first = game.state.first_round
+            nondealer = 1 - dealer
+            self.assertTrue(first["tianting"][nondealer])
+            self.assertIsNone(first["tianting"][dealer])
+            self.assertTrue(first["tianting_waits"][nondealer])
+            self.assertEqual(game.state.rewards, [0, 0])
+
+    def test_dealer_first_discard_records_tianting_and_frozen_qiangjin(self):
+        game = first_round_game()
+        before = Counter(game.state.physical_tiles())
+        discard = next(
+            action for action in game.legal_actions()
+            if action.type == env.ActionType.DISCARD and action.tile == "N"
         )
-        self.assertEqual(action.metadata.get("special"), "QIANGJIN")
-        self.assertNotIn("multiplier", action.metadata)
-        self.assertEqual(
-            action.metadata.get("multiplier_evidence"), "UNKNOWN")
-        self.assertEqual(
-            action.metadata.get("settlement_rule_id"), "qiangjin_settlement")
-        declared, _ = game.step(action)
-        self.assertEqual(declared.phase, "QIANGJIN_DECLARED")
-        self.assertEqual(declared.pending_hu, {
-            "winner": 0,
-            "source": "qiangjin",
-        })
-        report = game.action_report()
-        self.assertEqual(report.known_actions, ())
-        self.assertEqual(report.unresolved, ("qiangjin_settlement",))
-        with self.assertRaisesRegex(RuntimeError, "qiangjin_settlement"):
-            game.legal_actions()
+        state, event = game.step(discard)
+        first = state.first_round
+        self.assertTrue(first["dealer_first_discard_done"])
+        self.assertEqual(first["dealer_first_discard_tile"], "N")
+        self.assertTrue(first["tianting"][state.dealer])
+        self.assertTrue(first["qiangjin_eligible"][state.dealer])
+        self.assertTrue(event["action"]["metadata"]["first_round_dealer_discard"])
+        self.assertEqual(before, Counter(state.physical_tiles()))
 
-    def test_observed_qiangjin_can_be_recorded_without_formula_inference(self):
-        state = two_seat_gold_state(current_gold=1, opponent_gold=0)
-        game = env_of(state)
-        action = next(
-            a for a in game.legal_actions()
-            if a.type == env.ActionType.QIANGJIN
-        )
-        game.step(action)
+    def test_nondealer_priority_then_dealer_after_pass(self):
+        for dealer in (0, 1):
+            game = first_round_game(dealer=dealer)
+            dealer, nondealer = advance_to_first_draw(game)
+            first = game.state.first_round
+            self.assertTrue(first["nondealer_first_draw_done"])
+            self.assertTrue(working_qiangjin_eligible(game.state, nondealer))
+            self.assertTrue(working_qiangjin_eligible(game.state, dealer))
 
-        with self.assertRaisesRegex(RuntimeError, "qiangjin_settlement"):
-            game.finalize_observed_outcome(
-                winner=0, current_dealer_base=5, winner_fan=1,
-                win_type="ZIMO",
+            actions = game.legal_actions()
+            self.assertTrue(actions)
+            self.assertEqual({a.player for a in actions}, {nondealer})
+            self.assertEqual(
+                {a.type for a in actions},
+                {env.ActionType.QIANGJIN, env.ActionType.PASS_QIANGJIN},
+            )
+            game.step(next(a for a in actions if a.type == env.ActionType.PASS_QIANGJIN))
+            after = game.legal_actions()
+            self.assertEqual({a.player for a in after}, {dealer})
+            self.assertEqual(
+                {a.type for a in after},
+                {env.ActionType.QIANGJIN, env.ActionType.PASS_QIANGJIN},
             )
 
-        terminal, event = game.finalize_observed_special_outcome(
-            winner=0,
-            rewards=(37, -37),
-            evidence_id="fixture:qiangjin-observed",
-            observed_fields={
-                "shown_net": 37,
-                "shown_base": 5,
-                "shown_multiplier": None,
-            },
-        )
-        self.assertTrue(terminal.terminal)
-        self.assertEqual(terminal.terminal_reason, "OBSERVED_SPECIAL")
-        self.assertEqual(terminal.rewards, [37, -37])
-        metadata = event["action"]["metadata"]
-        self.assertEqual(metadata["special"], "QIANGJIN")
-        self.assertIsNone(metadata["registered_multiplier"])
-        self.assertEqual(
-            metadata["registered_multiplier_evidence"], "UNKNOWN")
-        self.assertEqual(
-            metadata["registered_settlement_rule_id"],
-            "qiangjin_settlement")
-        self.assertEqual(
-            metadata["evidence_id"], "fixture:qiangjin-observed")
+    def test_qiangjin_settles_normal_fan_x2_without_moving_virtual_gold(self):
+        for winner_role in ("nondealer", "dealer"):
+            game = first_round_game(base=15)
+            dealer, nondealer = advance_to_first_draw(game)
+            before = Counter(game.state.physical_tiles())
+            if winner_role == "dealer":
+                actions = game.legal_actions()
+                game.step(next(
+                    a for a in actions if a.type == env.ActionType.PASS_QIANGJIN
+                ))
+                actions = game.legal_actions()
+                winner = dealer
+            else:
+                actions = game.legal_actions()
+                winner = nondealer
+            qj = next(a for a in actions if a.type == env.ActionType.QIANGJIN)
+            terminal, event = game.step(qj)
+            fan = event["action"]["metadata"]["winner_fan"]
+            expected = (15 + fan) * 2
+            self.assertTrue(terminal.terminal)
+            self.assertEqual(terminal.rewards[winner], expected)
+            self.assertEqual(terminal.rewards[1 - winner], -expected)
+            self.assertEqual(sum(terminal.rewards), 0)
+            self.assertEqual(before, Counter(terminal.physical_tiles()))
+            self.assertEqual(terminal.reserved_tiles.count(GOLD), 1)
+            metadata = event["action"]["metadata"]
+            self.assertEqual(metadata["settlement_rule_id"], "settlement.qiangjin_full")
+            self.assertTrue(metadata["virtual_gold"])
+            self.assertFalse(metadata["physical_gold_moved"])
+            self.assertEqual(metadata["multiplier"], 2)
 
-    def test_c_pass_qiangjin_requires_discard(self):
-        state = two_seat_gold_state(current_gold=1, opponent_gold=0)
-        game = env_of(state)
-        pass_act = next(a for a in game.legal_actions()
-                        if a.type == env.ActionType.PASS_QIANGJIN)
-        game.step(pass_act)
-        actions = game.legal_actions()
-        self.assertTrue(actions)
-        self.assertTrue(all(a.type == env.ActionType.DISCARD and a.player == 0
-                            for a in actions))
+    def test_both_pass_then_normal_play_and_no_later_qiangjin(self):
+        game = first_round_game()
+        dealer, nondealer = advance_to_first_draw(game)
+        game.step(next(
+            a for a in game.legal_actions()
+            if a.type == env.ActionType.PASS_QIANGJIN
+        ))
+        game.step(next(
+            a for a in game.legal_actions()
+            if a.type == env.ActionType.PASS_QIANGJIN
+        ))
+        ordinary = game.legal_actions()
+        self.assertTrue(ordinary)
+        self.assertFalse(any(a.type == env.ActionType.QIANGJIN for a in ordinary))
+        discard = next(a for a in ordinary if a.type == env.ActionType.DISCARD)
+        game.step(discard)
+        self.assertFalse(game.state.first_round["active"])
+        # The old mid-hand gate was "Gold in hand after any draw". It must stay
+        # closed even though both seats still physically hold Gold.
+        self.assertFalse(working_qiangjin_eligible(game.state, dealer))
+        self.assertFalse(working_qiangjin_eligible(game.state, nondealer))
 
-    def test_d_sanjindao_is_optional_on_third_gold_draw(self):
-        state = mark_gold_draw(two_seat_gold_state(
-            current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
-        self.assertTrue(HuianRules().can_sanjindao(
-            state.hands[0], GOLD, third_gold_just_received=True))
-        game = env_of(state)
-        actions = game.legal_actions()
-        self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
+    def test_imported_midhand_draw_with_gold_does_not_open_qiangjin(self):
+        game = first_round_game()
+        _, nondealer = advance_to_first_draw(game)
+        game.state.first_round  # returned state is a copy; mutate through set_state below
+        state = game.state
+        state.first_round["active"] = False
+        state.phase = "AFTER_DRAW"
+        state.current_player = nondealer
+        game.set_state(state)
+        actions = game.action_report().known_actions
         self.assertFalse(any(a.type == env.ActionType.QIANGJIN for a in actions))
-        pass_act = next(a for a in actions if a.type == env.ActionType.PASS_QIANGJIN)
-        self.assertTrue(pass_act.metadata.get("continue_play"))
-        game.step(pass_act)
-        after = game.legal_actions()
-        self.assertTrue(after)
-        self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
-    def test_opening_three_gold_offers_sanjindao_before_qiangjin(self):
-        state = two_seat_gold_state(
-            current=0, current_gold=3, opponent_gold=0,
-            current_tiles=17, phase="OPENING_QIANGJIN_CHECK")
-        game = env_of(state)
-        actions = game.legal_actions()
-        self.assertEqual(actions[0].metadata.get("special"), "SANJINDAO")
-        self.assertFalse(any(
-            a.type == env.ActionType.QIANGJIN for a in actions
-        ))
-        pass_act = next(
-            a for a in actions if a.type == env.ActionType.PASS_QIANGJIN
-        )
-        game.step(pass_act)
-        after = game.legal_actions()
-        self.assertTrue(after)
-        self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
-    def test_sanjindao_declaration_waits_for_explicit_settlement(self):
-        state = mark_gold_draw(two_seat_gold_state(
-            current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
-        game = env_of(state)
-        declare = next(a for a in game.legal_actions()
-                       if a.metadata.get("special") == "SANJINDAO")
-        game.step(declare)
-        self.assertEqual(game.state.phase, "SANJINDAO_DECLARED")
-        with self.assertRaisesRegex(RuntimeError, "sanjindao_settlement_pending"):
-            game.legal_actions()
-
-    def test_existing_three_gold_without_new_own_draw_does_not_reopen(self):
-        state = two_seat_gold_state(
-            current=1, current_gold=3, opponent_gold=0, current_tiles=16,
-            phase="NEED_DRAW")
-        game = env_of(state)
-        actions = game.legal_actions()
-        self.assertFalse(any(
-            a.metadata.get("special") == "SANJINDAO" for a in actions
-        ))
-        self.assertEqual([a.type for a in actions], [env.ActionType.DRAW])
-
-    def test_four_playable_gold_copies_are_physically_invalid(self):
-        state = two_seat_gold_state(
-            current=0, current_gold=4, opponent_gold=0,
-            current_tiles=17, phase="AFTER_DRAW")
-        with self.assertRaisesRegex(
-            ValueError, "at most three playable gold copies"
-        ):
-            env_of(state)
-
-    def test_idle_16_tiles_draw_before_any_qiangjin_check(self):
-        state = two_seat_gold_state(
-            current=1, current_gold=1, opponent_gold=1, current_tiles=16,
-            phase="NEED_DRAW")
-        self.assertEqual(len(state.hands[1]), 16)
-        self.assertTrue(working_qiangjin_eligible(state, 1))
-        actions = env_of(state).legal_actions()
-        self.assertEqual(len(actions), 1)
-        self.assertEqual(actions[0].type, env.ActionType.DRAW)
-        self.assertEqual(actions[0].player, 1)
-
-    def test_completed_own_draw_can_open_qiangjin_window(self):
-        state = mark_gold_draw(two_seat_gold_state(
-            current=0, current_gold=1, opponent_gold=1, current_tiles=17,
-            phase="AFTER_DRAW"))
-        actions = env_of(state).legal_actions()
-        self.assertTrue(any(
-            a.type == env.ActionType.QIANGJIN and a.player == 0
-            for a in actions
-        ))
-        self.assertFalse(any(a.player == 1 for a in actions))
+if __name__ == "__main__":
+    unittest.main()
