@@ -1,7 +1,11 @@
 import unittest
 
 from huian._legacy import env
-from workspace.simulator import run_target_hand
+from workspace.simulator import (
+    Simulator,
+    SimulatorConfig,
+    run_target_hand,
+)
 
 
 class ConservativeAgent:
@@ -77,6 +81,33 @@ class TargetHandSimulatorTests(unittest.TestCase):
         self.assertEqual(first.events, second.events)
         self.assertEqual(first.state_hash, second.state_hash)
         self.assertEqual(first.rewards, second.rewards)
+
+    def test_default_simulator_dispatches_to_target_room_staged_runner(self):
+        result = Simulator().run(
+            seed=7,
+            agent=ConservativeAgent(),
+            max_steps=1,
+        )
+
+        self.assertEqual(result.config["mode"], "TARGET_ROOM_STAGED")
+        self.assertEqual(
+            result.config["opening_mode"],
+            "STAGED_SYSTEM_RANDOM_NONFLOWER",
+        )
+        self.assertIsNone(result.dice_total)
+        self.assertNotIn(result.config["selected_tile"], env.FLOWERS)
+
+    def test_explicit_normal_hand_config_keeps_legacy_benchmark_path(self):
+        simulator = Simulator(SimulatorConfig(normal_hand_mode=True))
+        result = simulator.run(
+            seed=7,
+            agent=ConservativeAgent(),
+            max_steps=1,
+        )
+
+        self.assertIsNotNone(result.dice_total)
+        self.assertNotEqual((result.config or {}).get("mode"), "TARGET_ROOM_STAGED")
+        self.assertEqual(result.config["normal_hand_mode"], True)
 
 
 if __name__ == "__main__":
