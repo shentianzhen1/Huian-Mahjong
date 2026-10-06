@@ -1,0 +1,1060 @@
+{
+  "schema_version": "round8_confirmed_meld_boundary_sensitivity_v0_1",
+  "truth_evidence_path": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+  "frame_index": 3566,
+  "query_source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+  "review_crop_exact_pixel_match": true,
+  "expected_tiles": [
+    "P9",
+    "P8",
+    "P7"
+  ],
+  "native_group_size": [
+    71,
+    27
+  ],
+  "baseline_boundaries": [
+    0,
+    24,
+    47,
+    71
+  ],
+  "offset_radius_native_pixels": 3,
+  "candidate_count": 49,
+  "baseline": {
+    "offsets_native_pixels": [
+      0,
+      0
+    ],
+    "boundaries": [
+      0,
+      24,
+      47,
+      71
+    ],
+    "predicted_tiles": [
+      "M6",
+      "P8",
+      "S4"
+    ],
+    "exact_face_matches": 1,
+    "eligible_truth_face_matches": 1,
+    "rankings": [
+      {
+        "schema_version": "public_meld_sift_rank_v0_1",
+        "top1_tile": "M6",
+        "top1_score": 0.00631904,
+        "runner_up_tile": "S4",
+        "runner_up_score": 0.00604029,
+        "margin": 0.00027875,
+        "eligible_class_count": 7,
+        "minimum_other_match_groups": 2,
+        "development_only": true,
+        "source_disjoint_ranking": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "reason": "development_source_disjoint_ranking",
+        "winner_other_match_groups": 2
+      },
+      {
+        "schema_version": "public_meld_sift_rank_v0_1",
+        "top1_tile": "P8",
+        "top1_score": 0.01599654,
+        "runner_up_tile": "M4",
+        "runner_up_score": 0.00659459,
+        "margin": 0.00940195,
+        "eligible_class_count": 7,
+        "minimum_other_match_groups": 2,
+        "development_only": true,
+        "source_disjoint_ranking": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "reason": "development_source_disjoint_ranking",
+        "winner_other_match_groups": 2
+      },
+      {
+        "schema_version": "public_meld_sift_rank_v0_1",
+        "top1_tile": "S4",
+        "top1_score": 0.01698262,
+        "runner_up_tile": "P6",
+        "runner_up_score": 0.01593299,
+        "margin": 0.00104963,
+        "eligible_class_count": 7,
+        "minimum_other_match_groups": 2,
+        "development_only": true,
+        "source_disjoint_ranking": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "reason": "development_source_disjoint_ranking",
+        "winner_other_match_groups": 2
+      }
+    ]
+  },
+  "maximum_eligible_truth_face_matches": 1,
+  "both_P8_P7_correct_candidate_count": 0,
+  "per_position_correct_candidate_counts": [
+    0,
+    8,
+    0
+  ],
+  "rows": [
+    {
+      "offsets_native_pixels": [
+        -3,
+        -3
+      ],
+      "boundaries": [
+        0,
+        21,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -3,
+        -2
+      ],
+      "boundaries": [
+        0,
+        21,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -3,
+        -1
+      ],
+      "boundaries": [
+        0,
+        21,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -3,
+        0
+      ],
+      "boundaries": [
+        0,
+        21,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P6",
+        "S4"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -3,
+        1
+      ],
+      "boundaries": [
+        0,
+        21,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P8",
+        "P6"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        -3,
+        2
+      ],
+      "boundaries": [
+        0,
+        21,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P8",
+        "P6"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        -3,
+        3
+      ],
+      "boundaries": [
+        0,
+        21,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "M4",
+        "P8",
+        "P8"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        -3
+      ],
+      "boundaries": [
+        0,
+        22,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        -2
+      ],
+      "boundaries": [
+        0,
+        22,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        -1
+      ],
+      "boundaries": [
+        0,
+        22,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "M5",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        0
+      ],
+      "boundaries": [
+        0,
+        22,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P7",
+        "S4"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        1
+      ],
+      "boundaries": [
+        0,
+        22,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P7",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        2
+      ],
+      "boundaries": [
+        0,
+        22,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -2,
+        3
+      ],
+      "boundaries": [
+        0,
+        22,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P8"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        -3
+      ],
+      "boundaries": [
+        0,
+        23,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        -2
+      ],
+      "boundaries": [
+        0,
+        23,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        -1
+      ],
+      "boundaries": [
+        0,
+        23,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        0
+      ],
+      "boundaries": [
+        0,
+        23,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "S4"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        1
+      ],
+      "boundaries": [
+        0,
+        23,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        2
+      ],
+      "boundaries": [
+        0,
+        23,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        -1,
+        3
+      ],
+      "boundaries": [
+        0,
+        23,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P6",
+        "P8"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        -3
+      ],
+      "boundaries": [
+        0,
+        24,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P8",
+        "P6"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        -2
+      ],
+      "boundaries": [
+        0,
+        24,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P8",
+        "P6"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        -1
+      ],
+      "boundaries": [
+        0,
+        24,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P8",
+        "P6"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        0
+      ],
+      "boundaries": [
+        0,
+        24,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P8",
+        "S4"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        1
+      ],
+      "boundaries": [
+        0,
+        24,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        2
+      ],
+      "boundaries": [
+        0,
+        24,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        0,
+        3
+      ],
+      "boundaries": [
+        0,
+        24,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P8"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        -3
+      ],
+      "boundaries": [
+        0,
+        25,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        -2
+      ],
+      "boundaries": [
+        0,
+        25,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        -1
+      ],
+      "boundaries": [
+        0,
+        25,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        0
+      ],
+      "boundaries": [
+        0,
+        25,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "S4"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        1
+      ],
+      "boundaries": [
+        0,
+        25,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        2
+      ],
+      "boundaries": [
+        0,
+        25,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        1,
+        3
+      ],
+      "boundaries": [
+        0,
+        25,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "M6",
+        "S4",
+        "P8"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        -3
+      ],
+      "boundaries": [
+        0,
+        26,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "P8",
+        "P6"
+      ],
+      "exact_face_matches": 1,
+      "eligible_truth_face_matches": 1
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        -2
+      ],
+      "boundaries": [
+        0,
+        26,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        -1
+      ],
+      "boundaries": [
+        0,
+        26,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        0
+      ],
+      "boundaries": [
+        0,
+        26,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "S4"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        1
+      ],
+      "boundaries": [
+        0,
+        26,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        2
+      ],
+      "boundaries": [
+        0,
+        26,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        2,
+        3
+      ],
+      "boundaries": [
+        0,
+        26,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "P7",
+        "S4",
+        "P8"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        -3
+      ],
+      "boundaries": [
+        0,
+        27,
+        44,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        -2
+      ],
+      "boundaries": [
+        0,
+        27,
+        45,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "P6",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        -1
+      ],
+      "boundaries": [
+        0,
+        27,
+        46,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "P7",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        0
+      ],
+      "boundaries": [
+        0,
+        27,
+        47,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "P7",
+        "S4"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        1
+      ],
+      "boundaries": [
+        0,
+        27,
+        48,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "P7",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        2
+      ],
+      "boundaries": [
+        0,
+        27,
+        49,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "M4",
+        "P6"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    },
+    {
+      "offsets_native_pixels": [
+        3,
+        3
+      ],
+      "boundaries": [
+        0,
+        27,
+        50,
+        71
+      ],
+      "predicted_tiles": [
+        "M5",
+        "M4",
+        "P8"
+      ],
+      "exact_face_matches": 0,
+      "eligible_truth_face_matches": 0
+    }
+  ],
+  "candidate_parameters_changed": false,
+  "template_bank_unchanged": true,
+  "query_match_excluded": true,
+  "selected_using_known_truth": true,
+  "boundary_change_promoted": false,
+  "P9_still_ineligible": true,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "interpretation": {
+    "small_boundary_shifts_did_not_recover_P7": true,
+    "split_boundary_as_sole_failure_explanation_supported": false,
+    "limit": "one reviewed group, native equal-thirds boundaries within +/-3 pixels only; does not rule out broader ROI or perspective errors",
+    "next_step": "Compare frozen SIFT scores and per-match template disagreement on the verified P7 face; evaluate a separate classifier candidate only on a fixed reviewed development packet."
+  }
+}

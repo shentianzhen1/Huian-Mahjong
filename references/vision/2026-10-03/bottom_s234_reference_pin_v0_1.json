@@ -1,0 +1,132 @@
+{
+  "schema_version": "bottom_s234_private_reference_pin_dev_v0_1",
+  "source_filename": "ScreenRecording_09-26-2026 22-30-33_1.mp4",
+  "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+  "source_frame_index": 1920,
+  "source_fps": 30.0,
+  "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "same_match_aliases": [
+    "reviewed_match_2026_09_26_first_hand",
+    "reviewed_match_2026_09_26_eight_hand",
+    "reviewed_match_2026_09_26_hands_2_to_4"
+  ],
+  "detector_bbox": [
+    395,
+    429,
+    133,
+    78
+  ],
+  "reference_crop_method": "body_context_seam2",
+  "reviewed_candidate_tiles": [
+    "S2",
+    "S3",
+    "S4"
+  ],
+  "label_authority": "assistant_visual_review_not_user_confirmation",
+  "faces": [
+    {
+      "tile_id": "S2",
+      "crop_xyxy": [
+        397,
+        441,
+        443,
+        502
+      ],
+      "crop_png_sha256": "599931da7581d7bd3794e0d797f391a3a8fdf0ecb6a4b8c80cc81e8a7f1baea7"
+    },
+    {
+      "tile_id": "S3",
+      "crop_xyxy": [
+        439,
+        441,
+        486,
+        502
+      ],
+      "crop_png_sha256": "c06412ccc7ff57f65639d452d527f1c1b686fb1f0636baf6c724920356b73c86"
+    },
+    {
+      "tile_id": "S4",
+      "crop_xyxy": [
+        482,
+        441,
+        528,
+        502
+      ],
+      "crop_png_sha256": "027492b8dac72938e637c44893fe12f597ab590f429af76eea11c7ec38cb93de"
+    }
+  ],
+  "split_audit": {
+    "detector_bbox": [
+      395,
+      429,
+      133,
+      78
+    ],
+    "tight_bbox_in_group": [
+      2,
+      13,
+      131,
+      59
+    ],
+    "vertical_context": 1,
+    "raw_group_xyxy": [
+      397,
+      441,
+      528,
+      502
+    ],
+    "face_xyxy": [
+      [
+        397,
+        441,
+        443,
+        502
+      ],
+      [
+        439,
+        441,
+        486,
+        502
+      ],
+      [
+        482,
+        441,
+        528,
+        502
+      ]
+    ],
+    "geometry": {
+      "schema_version": "public_meld_geometry_normalization_v0_1",
+      "rotation_degrees": 0.0,
+      "stack_state": "FLAT",
+      "height_score": 1.351145,
+      "top_to_mid_span_ratio": 0.979989,
+      "normalized_size": [
+        213,
+        96
+      ],
+      "tight_bbox_in_group": [
+        2,
+        13,
+        131,
+        59
+      ],
+      "issues": [
+        "geometry_normalized",
+        "flat_three_face_geometry"
+      ],
+      "geometry_only": true,
+      "tile_identity": "UNKNOWN",
+      "action_kind": "UNKNOWN",
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    },
+    "outer_body_probe": null
+  },
+  "private_pixels_committed": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

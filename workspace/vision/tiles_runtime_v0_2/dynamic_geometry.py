@@ -24,6 +24,7 @@ class GeometryComponent:
     confidence: float
     frame: str | int | None
     session: str | None
+    gold_skin: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -33,6 +34,7 @@ class GeometryComponent:
             "confidence": self.confidence,
             "frame": self.frame,
             "session": self.session,
+            "gold_skin": self.gold_skin,
         }
 
 
@@ -282,7 +284,7 @@ def _recover_gap_meld_faces(
     return recovered
 
 
-def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
+def _gold_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
     height, width = frame.shape[:2]
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     yellow = cv2.inRange(hsv, (15, 70, 100), (45, 255, 255))
@@ -296,7 +298,12 @@ def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
         if not height * 0.08 <= box_height <= height * 0.18:
             continue
         candidates.append((int(x), int(y), int(box_width), int(box_height)))
-    return max(candidates, key=lambda box: box[2] * box[3], default=None)
+    return sorted(candidates)
+
+
+def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
+    """Compatibility helper returning the largest yellow tile candidate."""
+    return max(_gold_boxes(frame), key=lambda box: box[2] * box[3], default=None)
 
 
 def _gold_is_draw_visual(
@@ -339,10 +346,31 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
     height, width = array.shape[:2]
     value = cv2.cvtColor(array, cv2.COLOR_BGR2HSV)[:, :, 2]
     bright_mask = (value > 150).astype(np.uint8) * 255
-    gold = _gold_box(array)
     all_boxes = _bright_boxes(array)
-    if _gold_is_draw_visual(gold, all_boxes):
-        gold = None
+    yellow_boxes = _gold_boxes(array)
+    preliminary_widths = [box[2] for box in all_boxes]
+    preliminary_width = median(preliminary_widths) if preliminary_widths else 0.0
+    preliminary_clusters = (
+        _clusters(all_boxes, preliminary_width, gap_limit=0.32)
+        if preliminary_width else []
+    )
+    preliminary_hand = max(preliminary_clusters, key=len, default=[])
+    # One yellow tile can be the separate opened-Gold display and geometry
+    # alone cannot safely reclassify it as concealed.  Multiple yellow tile
+    # faces provide the independent layout evidence needed to retain those
+    # overlapping the hand/draw geometry as gold-skinned playable copies.
+    concealed_gold = (
+        [
+            yellow
+            for yellow in yellow_boxes
+            if any(_overlaps(box, yellow) for box in preliminary_hand)
+            or _gold_is_draw_visual(yellow, all_boxes)
+        ]
+        if len(yellow_boxes) >= 2
+        else []
+    )
+    public_gold = [yellow for yellow in yellow_boxes if yellow not in concealed_gold]
+    gold = max(public_gold, key=lambda box: box[2] * box[3], default=None)
     boxes = [box for box in all_boxes if gold is None or not _overlaps(box, gold)]
     widths = [box[2] for box in boxes]
     typical_width = median(widths) if widths else 0.0
@@ -423,9 +451,28 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
             region, confidence = "meld", 0.76 if not untrusted else 0.55
         else:
             region, confidence = "unknown", 0.45
-        components.append(GeometryComponent(box, _normalized(box, width, height), region, confidence, frame, session))
+        components.append(
+            GeometryComponent(
+                box,
+                _normalized(box, width, height),
+                region,
+                confidence,
+                frame,
+                session,
+                gold_skin=any(_overlaps(box, yellow) for yellow in concealed_gold),
+            )
+        )
     if gold is not None:
-        components.append(GeometryComponent(gold, _normalized(gold, width, height), "gold", 0.90, frame, session))
+        components.append(
+            GeometryComponent(
+                gold,
+                _normalized(gold, width, height),
+                "gold",
+                0.90,
+                frame,
+                session,
+            )
+        )
     components.sort(key=lambda item: item.pixel_bbox[0])
     return GeometryFrame(tuple(components), untrusted, tuple(issues), frame, session)
 

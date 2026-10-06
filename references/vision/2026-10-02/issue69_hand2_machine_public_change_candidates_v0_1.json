@@ -1,0 +1,98 @@
+{
+  "schema_version": "issue69_hand2_machine_public_change_candidates_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4",
+    "fps": 29.997696737044144
+  },
+  "method": {
+    "name": "quarter_second_public_region_frame_difference",
+    "sampling_seconds": 0.25,
+    "scope_seconds": [
+      0,
+      20
+    ],
+    "classifier": false
+  },
+  "candidates": [
+    {
+      "id": "h2_mc01",
+      "timestamp_seconds": 2.25,
+      "signal_rank": "STRONG",
+      "ledger_kind": "UNKNOWN",
+      "actor": "UNKNOWN",
+      "tile": "UNKNOWN",
+      "requires_stable_river_growth": true
+    },
+    {
+      "id": "h2_mc02",
+      "timestamp_seconds": 3.5,
+      "signal_rank": "STRONG",
+      "ledger_kind": "UNKNOWN",
+      "actor": "UNKNOWN",
+      "tile": "UNKNOWN",
+      "requires_stable_river_growth": true
+    },
+    {
+      "id": "h2_mc03",
+      "timestamp_seconds": 9.25,
+      "signal_rank": "STRONG_REPEAT_HIT",
+      "ledger_kind": "UNKNOWN",
+      "actor": "UNKNOWN",
+      "tile": "UNKNOWN",
+      "requires_stable_river_growth": true
+    },
+    {
+      "id": "h2_mc04",
+      "timestamp_seconds": 17,
+      "signal_rank": "STRONG_REPEAT_HIT",
+      "ledger_kind": "UNKNOWN",
+      "actor": "UNKNOWN",
+      "tile": "UNKNOWN",
+      "requires_stable_river_growth": true
+    }
+  ],
+  "policy": {
+    "frame_difference_never_confirms_discard": true,
+    "actor_requires_river_assignment": true,
+    "tile_requires_identity_gate": true,
+    "human_ground_truth_not_used_as_machine_input": true,
+    "persistence_is_not_actor_or_discard_proof": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "persistence_diagnostic": {
+    "method": "pre/post public-region MAD with post-state persistence",
+    "roi_role": "broad diagnostic only; not tile identity",
+    "results": [
+      {
+        "timestamp_seconds": 2.25,
+        "upper_public_persistence_ratio": 0.148,
+        "interpretation": "PERSISTENT_UPPER_PUBLIC_CHANGE",
+        "discard_confirmed": false
+      },
+      {
+        "timestamp_seconds": 3.5,
+        "upper_public_persistence_ratio": 0.204,
+        "interpretation": "PERSISTENT_UPPER_PUBLIC_CHANGE",
+        "discard_confirmed": false
+      },
+      {
+        "timestamp_seconds": 9.25,
+        "upper_public_persistence_ratio": 0.14,
+        "interpretation": "PERSISTENT_UPPER_PUBLIC_CHANGE",
+        "discard_confirmed": false
+      },
+      {
+        "timestamp_seconds": 17,
+        "interpretation": "REQUIRES_TIGHT_ROI_REVIEW_NEAR_PRE_PENG_INTERACTION",
+        "discard_confirmed": false
+      }
+    ]
+  }
+}

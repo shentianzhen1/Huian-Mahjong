@@ -1,0 +1,56 @@
+{
+  "schema_version": "source_river_geometry_v0_1",
+  "source_session": "session_55328a7bce827116",
+  "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+  "frame_size": [
+    1108,
+    512
+  ],
+  "reviewed_frame_span": [
+    0,
+    2399
+  ],
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "zones": [
+    {
+      "actor": "opponent",
+      "bbox": [
+        0.455,
+        0.215,
+        0.205,
+        0.1
+      ],
+      "single_width": [
+        0.023,
+        0.031
+      ],
+      "single_height": [
+        0.06,
+        0.082
+      ]
+    },
+    {
+      "actor": "player",
+      "bbox": [
+        0.3,
+        0.525,
+        0.26,
+        0.105
+      ],
+      "single_width": [
+        0.027,
+        0.037
+      ],
+      "single_height": [
+        0.065,
+        0.09
+      ]
+    }
+  ],
+  "calibration_scope": "Hand 2 actual-play source, 0-80s. Zones reviewed from stable early/mid/late public-river states; same-source development calibration only, not a source-disjoint holdout.",
+  "evidence_refs": [
+    "Hand 2 local decoded stable states near 10s, 20s, 40s, 60s and 75s; source SHA verified before review."
+  ],
+  "safety": "No tile identity, turn, selected action, screenshot, private path, or human truth encoded. River geometry only; UNKNOWN/fail-closed downstream policy remains required."
+}

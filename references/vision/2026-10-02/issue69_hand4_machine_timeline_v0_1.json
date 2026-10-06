@@ -1,0 +1,47 @@
+{
+  "schema_version": "issue69_hand4_machine_timeline_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 4,
+  "total_hands": 8,
+  "source_policy": "exact_source_scoped_fail_closed",
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4",
+    "segment_start_seconds": 135,
+    "boundary_status": "HAND_START_VISIBLE"
+  },
+  "events": [
+    {
+      "order": 1,
+      "kind": "SOURCE_SEGMENT_ANCHOR",
+      "actor": "system",
+      "evidence_level": "source_locked_temporal_boundary",
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json"
+      ]
+    },
+    {
+      "order": 2,
+      "kind": "SELF_DRAW_TERMINAL",
+      "actor": "player",
+      "evidence_level": "source_locked_visual_terminal_anchor",
+      "window_seconds": [
+        214,
+        216
+      ],
+      "machine_tile_identity_complete": false,
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json"
+      ]
+    }
+  ],
+  "machine_closed_event_count": 0,
+  "development_candidate_event_count": 2,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

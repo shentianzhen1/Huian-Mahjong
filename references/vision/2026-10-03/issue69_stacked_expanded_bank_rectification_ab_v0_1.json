@@ -1,0 +1,249 @@
+{
+  "schema_version": "issue69_stacked_expanded_bank_rectification_ab_dev_v0_1",
+  "date": "2026-10-03",
+  "eligible_classes": [
+    "M4",
+    "M5",
+    "M6",
+    "P6",
+    "P7",
+    "P8",
+    "S4"
+  ],
+  "private_template_count": 15,
+  "private_recovered_group_count": 5,
+  "private_loader_source_frame_crop_integrity_passed": true,
+  "minimum_other_original_match_groups": 2,
+  "query_original_match_excluded": true,
+  "B_eligible": false,
+  "hand1_baseline_face_top1_correct": 6,
+  "hand1_rectified_face_top1_correct": 3,
+  "hand1_face_observations": 9,
+  "hand1_baseline_unanimous_frames": 1,
+  "hand1_rectified_unanimous_frames": 0,
+  "rectification_adopted": false,
+  "rectification_geometry": {
+    "quads": {
+      "top": [
+        [
+          149,
+          430
+        ],
+        [
+          191,
+          430
+        ],
+        [
+          179,
+          478
+        ],
+        [
+          137,
+          478
+        ]
+      ],
+      "lower_left": [
+        [
+          112,
+          443
+        ],
+        [
+          142,
+          443
+        ],
+        [
+          139,
+          491
+        ],
+        [
+          101,
+          491
+        ]
+      ],
+      "lower_right": [
+        [
+          198,
+          443
+        ],
+        [
+          236,
+          443
+        ],
+        [
+          225,
+          491
+        ],
+        [
+          186,
+          491
+        ]
+      ]
+    },
+    "sizes": {
+      "top": [
+        48,
+        60
+      ],
+      "lower_left": [
+        42,
+        51
+      ],
+      "lower_right": [
+        39,
+        50
+      ]
+    }
+  },
+  "crop_review_limitations": "new manual artwork quads; top lower edge close to symbol and small neighboring-face intrusion; not automatic or full-body split validation; one geometry-only choice, no score-driven search",
+  "automatic_splitter_validated": false,
+  "original_frozen_splitter_restored": false,
+  "historical_7_of_9_reproduced": false,
+  "independent_events": 2,
+  "independent_original_matches": 1,
+  "blind_validation": false,
+  "rows": [
+    {
+      "event": "hand1",
+      "frame": 222,
+      "visual_review_expected_tile": "P6",
+      "baseline_top1": {
+        "top": "P7",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "P7",
+        "lower_left": "P6",
+        "lower_right": "P7"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "hand1",
+      "frame": 240,
+      "visual_review_expected_tile": "P6",
+      "baseline_top1": {
+        "top": "P7",
+        "lower_left": "P6",
+        "lower_right": "P7"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "P7",
+        "lower_left": "P6",
+        "lower_right": "P7"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "hand1",
+      "frame": 258,
+      "visual_review_expected_tile": "P6",
+      "baseline_top1": {
+        "top": "P6",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "baseline_agreement": true,
+      "rectified_top1": {
+        "top": "P7",
+        "lower_left": "P6",
+        "lower_right": "P7"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "round6",
+      "frame": 3351,
+      "visual_review_expected_tile": "B",
+      "baseline_top1": {
+        "top": "P6",
+        "lower_left": "P8",
+        "lower_right": "S4"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "M6",
+        "lower_left": "P8",
+        "lower_right": "M6"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "round6",
+      "frame": 3354,
+      "visual_review_expected_tile": "B",
+      "baseline_top1": {
+        "top": "M6",
+        "lower_left": "M4",
+        "lower_right": "P6"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "M6",
+        "lower_left": "P8",
+        "lower_right": "M6"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "round6",
+      "frame": 3357,
+      "visual_review_expected_tile": "B",
+      "baseline_top1": {
+        "top": "M6",
+        "lower_left": "M4",
+        "lower_right": "P6"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "M6",
+        "lower_left": "P6",
+        "lower_right": "M6"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "round6",
+      "frame": 3360,
+      "visual_review_expected_tile": "B",
+      "baseline_top1": {
+        "top": "M6",
+        "lower_left": "M4",
+        "lower_right": "P6"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "M6",
+        "lower_left": "P8",
+        "lower_right": "M6"
+      },
+      "rectified_agreement": false
+    },
+    {
+      "event": "round6",
+      "frame": 3363,
+      "visual_review_expected_tile": "B",
+      "baseline_top1": {
+        "top": "M6",
+        "lower_left": "M4",
+        "lower_right": "P6"
+      },
+      "baseline_agreement": false,
+      "rectified_top1": {
+        "top": "M6",
+        "lower_left": "P6",
+        "lower_right": "M6"
+      },
+      "rectified_agreement": false
+    }
+  ],
+  "next_gap": "B needs two non-query original-match public-meld sources; concealed B is visual review only, not substituted as public template",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

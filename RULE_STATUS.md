@@ -1,5 +1,14 @@
 # Huian Two-Player Rules Status
 
+## 2026-10-04 implementation metadata synchronization
+
+Issue #4 was closed via PR #125 on 2026-10-03 under existing player-confirmed
+Rob-Kong semantics. Registry `settlement.rob_kong_full` now mirrors that evidence
+as CONFIRMED revision 2: ordinary Zimo x2, original PENG retained, failed added
+kong contributes zero fan/fee, ordinary dealer flow. Source: Issue #4 and the
+existing Rob-Kong row below; this metadata repair does not add visual evidence.
+
+
 ## 2026-09-30 Gang-Hu / An-Gang-Hu scoring confirmed
 
 Player confirmation closes the remaining ordinary Kong-tail Hu scoring gap:

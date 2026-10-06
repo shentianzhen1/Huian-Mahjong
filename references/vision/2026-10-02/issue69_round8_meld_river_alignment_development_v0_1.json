@@ -1,0 +1,97 @@
+{
+  "schema_version": "issue69_round8_meld_river_alignment_development_v0_1",
+  "tested_commit": "20e8a11e7f63d87cee49708299845b7e3eb6b14c",
+  "hand": 8,
+  "scope_frames": [
+    3420,
+    3585
+  ],
+  "source_sha_verified": true,
+  "source_resolution_verified": true,
+  "method": "Continuous source decode -> existing public_tile_detector top_group -> existing meld geometry normalization/split -> source-reviewed opponent public-meld regions -> MeldSnapshotObserver(settle_frames=3). Geometry-only static reviewed group boxes; no identity labels supplied.",
+  "stable_runs": [
+    {
+      "frames": [
+        3420,
+        3509
+      ],
+      "groups": 1,
+      "layouts": [
+        "FLAT"
+      ],
+      "split_faces": [
+        3
+      ]
+    },
+    {
+      "frames": [
+        3512,
+        3514
+      ],
+      "groups": 2,
+      "new_group_layout": "UNKNOWN",
+      "new_group_split_faces": 0
+    },
+    {
+      "frames": [
+        3515,
+        3517
+      ],
+      "groups": 2,
+      "new_group_layout": "STACKED",
+      "new_group_split_faces": 0
+    },
+    {
+      "frames": [
+        3518,
+        3531
+      ],
+      "groups": 1,
+      "new_group_missing": true
+    },
+    {
+      "frames": [
+        3532,
+        3585
+      ],
+      "groups": 2,
+      "layouts": [
+        "FLAT",
+        "FLAT"
+      ],
+      "split_faces": [
+        3,
+        3
+      ]
+    }
+  ],
+  "observer": {
+    "meld_delta_frame": 3534,
+    "confirmation_seconds": 117.8,
+    "stable_window_start_frame": 3532,
+    "stable_window_start_seconds": 117.733333,
+    "actor": "opponent",
+    "new_group_size": 3,
+    "identity_complete": false,
+    "tiles": [],
+    "untrusted_frames": 20
+  },
+  "river_context": {
+    "player_occupancy_increase_frame": 3501,
+    "player_occupancy_decrease_frame": 3521,
+    "river_decrease_seconds": 117.366667,
+    "meld_stable_start_lag_seconds": 0.366666,
+    "river_event_grade": "UNKNOWN",
+    "intervening_unknown_masks": true
+  },
+  "alignment_result": "CONTEXTUALLY_ALIGNED_UNKNOWN_CLAIM_ONLY",
+  "identity_review": "Normalized crop inspected; source resolution does not justify assigning complete automatic tile identities. User-verified P7 remains benchmark truth only.",
+  "negative_control": "Transient STACKED classification during the CHI animation cannot establish KONG. The normalization produced no flat faces there; snapshots were untrusted, and disappearance after the transient appearance was also untrusted. The existing right-side group persisted.",
+  "scope_boundary": "No action classifier output, no corroborated CHI promotion, no claimed new rule. Optical counts and meld geometry are same-source development. Reviewed river labels were not supplied to the meld detector.",
+  "private_reproducibility": "Full frames, decoded hashes, reviewed ROIs and full per-frame trace remain private. Fresh-checkout reproduction requires exact source and reviewed private regions.",
+  "next_step": "Recover source-qualified complete public-meld identity and independent hand-change evidence before promoting this temporal alignment to CHI; keep river-removal context separate from DISCARD.",
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

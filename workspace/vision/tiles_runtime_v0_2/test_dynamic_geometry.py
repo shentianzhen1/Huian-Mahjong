@@ -54,6 +54,17 @@ def joined_right_edge_frame() -> Image.Image:
     return image
 
 
+def gold_inside_hand_and_draw_frame() -> Image.Image:
+    image = Image.new("RGB", (1000, 480), (0, 55, 55))
+    draw = ImageDraw.Draw(image)
+    for index in range(16):
+        x = 100 + index * 45
+        colour = (230, 200, 50) if index == 0 else "white"
+        draw.rectangle((x, 400, x + 40, 470), fill=colour)
+    draw.rectangle((880, 400, 920, 470), fill=(230, 200, 50))
+    return image
+
+
 class DynamicGeometryTests(unittest.TestCase):
     def test_detects_dynamic_sixteen_hand_slots_and_gold(self) -> None:
         result = detect_dynamic_geometry(synthetic_frame(), frame=1, session="s")
@@ -66,6 +77,25 @@ class DynamicGeometryTests(unittest.TestCase):
         result = detect_dynamic_geometry(synthetic_frame(draw_present=True))
         self.assertEqual(sum(item.region_candidate == "hand" for item in result.components), 16)
         self.assertEqual(sum(item.region_candidate == "draw_visual" for item in result.components), 1)
+
+    def test_gold_skin_does_not_remove_concealed_or_draw_tiles(self) -> None:
+        result = detect_dynamic_geometry(gold_inside_hand_and_draw_frame())
+        self.assertFalse(result.geometry_untrusted)
+        self.assertEqual(
+            sum(item.region_candidate == "hand" for item in result.components),
+            16,
+        )
+        self.assertEqual(
+            sum(item.region_candidate == "draw_visual" for item in result.components),
+            1,
+        )
+        self.assertEqual(
+            sum(item.gold_skin for item in result.components),
+            2,
+        )
+        self.assertFalse(
+            any(item.region_candidate == "gold" for item in result.components)
+        )
 
     def test_requires_three_matching_trusted_frames(self) -> None:
         frames = [detect_dynamic_geometry(synthetic_frame(), frame=index) for index in range(3)]

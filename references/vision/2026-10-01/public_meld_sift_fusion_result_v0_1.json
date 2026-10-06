@@ -1,0 +1,114 @@
+{
+  "schema_version": "public_meld_sift_fusion_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "pr": 117,
+  "head_evaluated": "35e562cb0c4f9814d055573d286d46e052f278e3",
+  "status": "development_ab_reject_equal_late_fusion",
+  "question": "Does equal rank-percentile late fusion of real exposed-meld SIFT and synthetic hand-to-meld SIFT improve the same reviewed seven-group development batch?",
+  "dataset": {
+    "reviewed_player_meld_groups": 7,
+    "reviewed_player_meld_faces": 21,
+    "real_template_faces": 21,
+    "synthetic_hand_templates": 68,
+    "opponent_top_group_identity_ground_truth_in_batch": 0
+  },
+  "real_leave_one_group_out": {
+    "face_top1_correct": 4,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.190476,
+    "group_top1_correct": 0,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.0,
+    "boundary": "exact target group excluded, but another group from the same original match may remain; development only"
+  },
+  "synthetic": {
+    "face_top1_correct": 10,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.47619,
+    "group_top1_correct": 3,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.428571
+  },
+  "fusion": {
+    "method": "equal rank-percentile late fusion, use available branch when a class is missing, then Mahjong-valid three-face decoder",
+    "face_top1_correct": 11,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.52381,
+    "group_top1_correct": 2,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.285714
+  },
+  "delta": {
+    "fusion_face_vs_real_percentage_points": 33.3334,
+    "fusion_group_vs_real_percentage_points": 28.5714,
+    "fusion_face_vs_synthetic_percentage_points": 4.762,
+    "fusion_group_vs_synthetic_percentage_points": -14.2857
+  },
+  "group_outcomes": [
+    {
+      "expected": ["P1", "P1", "P1"],
+      "real": ["S9", "S9", "S9"],
+      "synthetic": ["P1", "P1", "P1"],
+      "fusion": ["P1", "P1", "P1"],
+      "fusion_correct": true
+    },
+    {
+      "expected": ["S7", "S8", "S9"],
+      "real": ["P1", "P1", "P1"],
+      "synthetic": ["P1", "P1", "P1"],
+      "fusion": ["P1", "P1", "P1"],
+      "fusion_correct": false
+    },
+    {
+      "expected": ["M4", "M5", "M6"],
+      "real": ["S2", "S3", "S4"],
+      "synthetic": ["M5", "M5", "M5"],
+      "fusion": ["M5", "M5", "M5"],
+      "fusion_correct": false
+    },
+    {
+      "expected": ["P6", "P7", "P8"],
+      "real": ["P6", "P6", "P6"],
+      "synthetic": ["P8", "P7", "P6"],
+      "fusion": ["P6", "P6", "P6"],
+      "fusion_correct": false,
+      "note": "Fusion regressed a synthetic-correct sequence into a wrong triplet."
+    },
+    {
+      "expected": ["P4", "P5", "P6"],
+      "real": ["P7", "P7", "P7"],
+      "synthetic": ["P4", "P5", "P6"],
+      "fusion": ["P4", "P5", "P6"],
+      "fusion_correct": true
+    },
+    {
+      "expected": ["S4", "S5", "S6"],
+      "real": ["S4", "S2", "S3"],
+      "synthetic": ["S2", "S2", "S2"],
+      "fusion": ["S4", "S2", "S3"],
+      "fusion_correct": false
+    },
+    {
+      "expected": ["S2", "S3", "S4"],
+      "real": ["S5", "S6", "S4"],
+      "synthetic": ["S2", "S2", "S2"],
+      "fusion": ["S2", "S2", "S2"],
+      "fusion_correct": false
+    }
+  ],
+  "decision": [
+    "Do not promote equal late fusion.",
+    "Do not tune fusion weights on the same seven groups; that would overfit development data.",
+    "Synthetic hand-to-meld transfer remains useful as a development branch, especially for P-suit sequences.",
+    "The next small experiment should change the identity representation rather than keep retuning SIFT fusion."
+  ],
+  "next_small_batch": "Test a lightweight learned or fixed embedding/classification representation on the same geometry-normalized single-tile inputs, keeping the seven groups as development selection only and reserving a genuinely new original match for blind validation.",
+  "evidence_role": "development_selection_only",
+  "blind_validation": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

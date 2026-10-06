@@ -1,0 +1,124 @@
+{
+  "schema_version": "issue69_round8_machine_replay_development_result_v0_1",
+  "tested_commit": "107821129bd3b8aa0544ecbc8f9f593d0e5a8459",
+  "source_manifest": "references/vision/2026-10-02/issue69_round8_river_geometry.development.json",
+  "hand": 8,
+  "source_sha_verified": true,
+  "source_resolution_verified": true,
+  "frame_range": [
+    2880,
+    5340
+  ],
+  "time_seconds": [
+    96,
+    178
+  ],
+  "frames_decoded": 2461,
+  "ci_at_tested_commit": {
+    "Evidence_Contracts": "success",
+    "Tests": "success",
+    "Vision_Regression": "success"
+  },
+  "machine_river_replay": {
+    "actions": 5,
+    "unknown_grade_actions": 5,
+    "known_tile_actions": 0,
+    "player_growth_observations": 5,
+    "opponent_growth_observations": 0,
+    "player_removal_observations": 2,
+    "player_untrusted_frames": 1316,
+    "opponent_untrusted_frames": 510,
+    "discard_candidate_seconds": [
+      101.066667,
+      104.566667,
+      107.966667,
+      111.566667,
+      121.3
+    ]
+  },
+  "geometry_checkpoint_diagnosis": [
+    {
+      "seconds": 116.8,
+      "actor": "player",
+      "issue": "oversized_river_component",
+      "reviewed_event": "DISCARD P7",
+      "machine_recovery": false
+    },
+    {
+      "seconds": 164,
+      "actor": "player",
+      "issue": "oversized_river_component",
+      "reviewed_event": "DISCARD UNKNOWN",
+      "machine_recovery": false
+    },
+    {
+      "seconds": 177.5,
+      "actor": "opponent",
+      "issue": "river_occluded_by_oversized_component",
+      "reviewed_event": "SELF DISCARD P4 -> OPPONENT HU",
+      "machine_recovery": false
+    }
+  ],
+  "dense_prefix_diagnostic": {
+    "scope": "private source-scoped first-row 12-slot profiles, reviewed from decoded source; no slot coordinates exported",
+    "player": {
+      "candidate_prefix_growth": [
+        [
+          4414,
+          8,
+          9
+        ],
+        [
+          4919,
+          11,
+          12
+        ]
+      ],
+      "ambiguous_transitions": 12,
+      "suppressed_reappearances": 13
+    },
+    "opponent": {
+      "candidate_prefix_growth": [
+        [
+          4818,
+          10,
+          11
+        ],
+        [
+          4970,
+          11,
+          12
+        ]
+      ],
+      "ambiguous_transitions": 15,
+      "suppressed_reappearances": 14
+    },
+    "checkpoint_164_seconds": {
+      "frame": 4919,
+      "seconds": 163.966667,
+      "before_prefix": 11,
+      "after_prefix": 12,
+      "interpretation": "count-growth candidate agrees with reviewed 164-second river growth; identity and action truth remain UNKNOWN"
+    },
+    "actual_actions_emitted": 0,
+    "tile_identity": "UNKNOWN",
+    "formal_accuracy_eligible": false,
+    "reproducibility": "Private slot profiles are not committed; dense counts require reviewed exact-source profiles and are not reproducible from a fresh checkout alone."
+  },
+  "evidence_boundary": {
+    "truth_loaded_before_machine_replay": false,
+    "benchmark_complete": false,
+    "precision_recall_claimed": false,
+    "same_source_development": true,
+    "source_disjoint_holdout": false
+  },
+  "next_steps": [
+    "Verify source-scoped dense geometry across claim removals and row-boundary changes; preserve abstention and reappearance suppression.",
+    "Keep the 116.8-second P7 human correction as reviewed truth only until independent machine evidence exists.",
+    "Do not promote dense prefix growth into DISCARD or recover terminal HU from river geometry alone."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
