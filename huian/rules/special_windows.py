@@ -85,17 +85,24 @@ def _later_sanjindao_draw_check(state, player):
 
 
 def _just_completed_eight_flowers(state, player):
+    """Offer Eight-Flower at each new own-draw node while the seat still has eight.
+
+    A DRAW that resolves one or more flower replacements remains the auditable
+    node for the completed replacement chain, so the same predicate covers both
+    a later ordinary own draw and a later completed replacement. After the user
+    passes, last_action becomes PASS_QIANGJIN and this returns False until a new
+    own DRAW occurs, preventing an immediate same-node re-prompt.
+    """
     if len(state.flowers[player]) != 8:
         return False
     if state.phase == "OPENING_QIANGJIN_CHECK":
         return True
     last = state.last_action
-    if (not isinstance(last, dict)
-            or last.get("type") != env.ActionType.DRAW.value
-            or last.get("player") != player):
-        return False
-    metadata = last.get("metadata") or {}
-    return metadata.get("drawn_tile") in env.FLOWERS
+    return bool(
+        isinstance(last, dict)
+        and last.get("type") == env.ActionType.DRAW.value
+        and last.get("player") == player
+    )
 
 
 def current_player_special_actions(adapter, state):
