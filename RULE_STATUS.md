@@ -20,6 +20,14 @@ These are target-room **PLAYER_CONFIRMED** facts, not newly video-verified settl
 
 The earlier x4 Tianhu/Tianting page interpretation, mid-hand Qiangjin, Sanjindao-before-Qiangjin, Eight-Flower WORKING-only status, and special dealer/tie UNKNOWN claims are superseded where they conflict. Youjin ×4/×8/×16 stays unchanged. Historical entries remain source-scoped evidence, not current execution instructions.
 
+## 2026-10-06 staged opening migration
+
+`begin_confirmed_opening()` finishes both seats' tail replacements, then pauses for pre-Gold Eight-Flower DECLARE/PASS or an explicit candidate. `reveal_opening_candidate(wall_index=..., current_dealer_base=...)` consumes only the supplied scripted-wall candidate; it never guesses the target-room dice position or direction. Candidate flowers enter dealer flowers without hand replacement. A new eighth flower automatically settles `base+16` with no Gold/indicator, before any Tianhu check. After a prior preopening Eight-Flower PASS, a nonflower candidate can still trigger dealer-only automatic Tianhu using Gold wildcard: `base×2`, no additive fan.
+
+Snapshot `huian-target-2026-10-06-opening-r1` registers these new physical/window/Tianhu rules independently; prior settlement revisions remain unchanged. Focused player-confirmed scenarios cover both dealer identities, pre-Gold choices, chain replacement, no-Gold terminal import, wildcard Tianhu, false14/three-Gold-only shapes, 144 tiles, zero-sum, rollback and atomic errors. These are synthetic rule scenarios, not direct-video truth.
+
+The default legacy `begin_opening(dice_total)` is explicitly labelled a simulator location convention; candidate-flower ownership is corrected, and eight-flower collection requires the staged API instead of silently bypassing choice/force windows. Non-Tianhu staged openings stop safely at `OPENING_POST_GOLD_PENDING` pending first-round Qiangjin/Tianting. Later in-play Eight-Flower re-prompts, full priority, simulator and live routing remain pending; no complete new-rule installer release is claimed.
+
 ## 2026-10-06 first runtime migration slice
 
 Sanjindao now has an explicit validated terminal settlement API using only completed Kong fan inside x3. Eight-Flower's existing fixed16 settlement is promoted to PLAYER_CONFIRMED, rejects legacy WORKING declarations, and emits a confirmed event. Four affected rule records advance to revision2; the unchanged Sanjindao multiplier remains revision1. Snapshot `huian-target-2026-10-06-settlement-r1` separates new results from prior EV evidence.

@@ -24,6 +24,10 @@ class OpeningTests(unittest.TestCase):
         wall = env.full_wall()
         flower_index = wall.index("F1")
         wall[0], wall[flower_index] = wall[flower_index], wall[0]
+        # Keep the replacement tail non-flower: collecting all8 now pauses for choice.
+        for offset, tile in ((-1, "S9"), (-2, "P9")):
+            normal_index = wall.index(tile)
+            wall[offset], wall[normal_index] = wall[normal_index], wall[offset]
         plan = plan_opening(wall, dealer=0, dice_total=2)
         self.assertEqual(len(plan.hands[0]), 17)
         self.assertEqual(len(plan.hands[1]), 16)

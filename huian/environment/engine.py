@@ -102,6 +102,7 @@ class HuianEnvironment:
             "action": {"player": candidate.dealer, "type": "OPEN_GOLD",
                        "tile": candidate.gold_tile, "tiles": [],
                        "metadata": {"dice_total": dice_total,
+                                    "location_evidence": "SIMULATOR_CONVENTION",
                                     "indicator_wall_index": opening.gold_indicator.wall_index,
                                     "indicator_removed_from_drawable_wall": True,
                                     "skipped_flowers": list(opening.gold_indicator.skipped_flowers)}},
@@ -114,6 +115,15 @@ class HuianEnvironment:
         self._snapshots = []
         self._seen = {self._position(candidate)}
         return self.state
+    def begin_confirmed_opening(self):
+        from .opening_flow import begin_confirmed_opening
+        return begin_confirmed_opening(self)
+
+    def reveal_opening_candidate(self, *, wall_index, current_dealer_base):
+        from .opening_flow import reveal_opening_candidate
+        return reveal_opening_candidate(
+            self, wall_index=wall_index, current_dealer_base=current_dealer_base)
+
     def begin_normal_hand(self, dice_total):
         """Simulation-only opening bypass; never resolves or enables 抢金."""
         if not self.rules.rules.config.simulation_only_normal_hand:
@@ -475,7 +485,7 @@ class HuianEnvironment:
         self._require_state()
         if self._state.terminal:
             raise ValueError("Hand is already terminal")
-        if (self._state.phase != "EIGHT_FLOWER_YOU_DECLARED"
+        if (self._state.phase not in ("EIGHT_FLOWER_YOU_DECLARED", "OPENING_EIGHT_FLOWER_DECLARED")
                 or not isinstance(self._state.pending_hu, dict)):
             raise ValueError("Eight-flower settlement requires its declaration phase")
         if type(current_dealer_base) is not int or current_dealer_base < 0:

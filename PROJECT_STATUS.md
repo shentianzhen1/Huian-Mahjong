@@ -7,7 +7,7 @@
 
 ## Branch and release scope
 
-- The [player-confirmed opening/special contract](references/rules/2026-10-06/player_confirmed_special_rules.md) is synchronized in Draft PR #126. The first runtime slice implements Sanjindao `(base + completed-Kong fan) ×3` and promotes Eight-Flower `base+16` settlement to player-confirmed. Snapshot: `huian-target-2026-10-06-settlement-r1`; both-seat zero-sum/physical/dealer-flow regressions added. Opening force/choice windows, Qiangjin, Tianhu/Tianting, priority and full simulator integration remain pending. This is not a complete rule/installer release.
+- The [player-confirmed contract](references/rules/2026-10-06/player_confirmed_special_rules.md) in Draft PR #126 now has Sanjindao/Eight-Flower settlement APIs plus staged pre-Gold Eight-Flower choice, explicit candidate-flower consumption, forced no-Gold eighth-flower terminal and automatic dealer Tianhu `base×2`. Snapshot: `huian-target-2026-10-06-opening-r1`. This is a scripted-wall API with unknown hidden location; live still reads visible Gold/flowers. Non-Tianhu staged openings stop safely pending first-round Qiangjin/Tianting. In-play re-prompts, full simulator/live routing and complete installer behavior remain pending.
 
 - Integration work lives on `integration/issue69-replay-stack-20260926` in
   Draft PR #117. It is unmerged; these draft features are not a main release.

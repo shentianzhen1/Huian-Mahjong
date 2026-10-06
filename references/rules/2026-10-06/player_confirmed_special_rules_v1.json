@@ -145,25 +145,39 @@
     "full_original_videos_replayed_this_audit": false
   },
   "runtime_migration": {
-    "snapshot_label": "huian-target-2026-10-06-settlement-r1",
+    "snapshot_label": "huian-target-2026-10-06-opening-r1",
     "implemented": [
       "sanjindao_kong_only_settlement_api",
-      "eight_flower_confirmed_fixed16_settlement_api"
+      "eight_flower_confirmed_fixed16_settlement_api",
+      "staged_pre_gold_replacement_eight_flower_declare_pass",
+      "explicit_opening_candidate_flower_consumption_no_hand_replacement",
+      "new_eighth_candidate_flower_forced_no_gold_terminal",
+      "dealer_tianhu_after_gold_automatic_base_x2"
     ],
     "regression_verified": [
       "both_seats_zero_sum_144_tiles",
-      "special_results_use_existing_dealer_flow"
+      "special_results_use_existing_dealer_flow",
+      "pre_gold_choice_and_pass_then_tianhu",
+      "both_dealer_identities_gold_wildcard_tianhu_no_additive_fan",
+      "explicit_candidates_no_hidden_location_inference",
+      "opening_rollback_and_atomic_errors"
     ],
     "pending": [
       "first_round_qiangjin",
-      "opening_gold_candidate_flow_and_forced_eight_flower",
       "eight_flower_later_draw_reprompt",
-      "tianhu",
       "tianting",
       "same_node_priority",
       "full_special_simulator_integration",
-      "all_methods_match_tie_regression"
+      "all_methods_match_tie_regression",
+      "default_opening_and_live_routing_to_staged_api"
     ],
-    "installer": "CI rebuild required; not a complete special-rule release"
+    "installer": "CI rebuild required; not a complete special-rule release",
+    "api_boundary": {
+      "entry": "HuianEnvironment.begin_confirmed_opening()",
+      "candidate": "reveal_opening_candidate(wall_index=..., current_dealer_base=...)",
+      "location": "Explicit scripted-wall candidate; no target-room dice mapping inferred",
+      "non_tianhu": "OPENING_POST_GOLD_PENDING safely blocks until Qiangjin/Tianting migration",
+      "legacy": "begin_opening(dice_total) remains a separately labelled simulator convention; refuses eight-flower windows that require staged API"
+    }
   }
 }

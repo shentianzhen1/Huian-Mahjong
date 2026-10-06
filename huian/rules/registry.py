@@ -206,6 +206,40 @@ RULE_REGISTRY = MappingProxyType({
         ("player_2026-09-20",), "huian.environment",
         depends_on=("physical.open_gold_reserved_copy",),
     ),
+    "physical.open_gold_candidate_flower": _record(
+        "physical.open_gold_candidate_flower", RuleDomain.PHYSICAL,
+        EvidenceStatus.CONFIRMED, 1, "DEALER_FLOWER_ZONE_NO_HAND_REPLACEMENT", ImpactLevel.CRITICAL,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
+    ),
+    "state_machine.eight_flower_open_gold_force": _record(
+        "state_machine.eight_flower_open_gold_force", RuleDomain.STATE_MACHINE,
+        EvidenceStatus.CONFIRMED, 1, "NEW_EIGHTH_FLOWER_AUTO_END_BEFORE_GOLD", ImpactLevel.CRITICAL,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
+        depends_on=("physical.open_gold_candidate_flower", "settlement.eight_flower_real"),
+    ),
+    "state_machine.eight_flower_pre_gold_choice": _record(
+        "state_machine.eight_flower_pre_gold_choice", RuleDomain.STATE_MACHINE,
+        EvidenceStatus.CONFIRMED, 1, "DECLARE_OR_PASS_AFTER_COMPLETED_REPLACEMENT", ImpactLevel.HIGH,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.opening_phases",
+    ),
+    "legality.tianhu_opening": _record(
+        "legality.tianhu_opening", RuleDomain.LEGALITY,
+        EvidenceStatus.CONFIRMED, 1, "DEALER_17_FIVE_MELDS_PAIR_AFTER_REPLACEMENT_AND_GOLD", ImpactLevel.CRITICAL,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.engine",
+    ),
+    "settlement.tianhu_fixed_fan": _record(
+        "settlement.tianhu_fixed_fan", RuleDomain.SETTLEMENT,
+        EvidenceStatus.CONFIRMED, 1, 0, ImpactLevel.HIGH,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
+        note="No ordinary Gold/flower/triplet/Kong fan stacks onto Tianhu.",
+    ),
+    "settlement.tianhu_multiplier": _record(
+        "settlement.tianhu_multiplier", RuleDomain.SETTLEMENT,
+        EvidenceStatus.CONFIRMED, 1, 2, ImpactLevel.HIGH,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.environment.opening_flow",
+        note="Automatic dealer opening Hu; no additive fan.",
+        depends_on=("legality.tianhu_opening",),
+    ),
     "legality.single_gold_discard_pinghu": _record(
         "legality.single_gold_discard_pinghu", RuleDomain.LEGALITY,
         EvidenceStatus.CONFIRMED, 1, False, ImpactLevel.CRITICAL,
@@ -333,6 +367,6 @@ RULE_REGISTRY = MappingProxyType({
 
 
 DEFAULT_RULE_SNAPSHOT = RuleSnapshot(
-    label="huian-target-2026-10-06-settlement-r1",
+    label="huian-target-2026-10-06-opening-r1",
     records=RULE_REGISTRY,
 )

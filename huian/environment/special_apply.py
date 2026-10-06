@@ -24,7 +24,13 @@ def apply_qiangjin_action(state, action):
             "project_rule": bool(action.metadata.get("project_rule")),
         }
         state.current_player = p
-        state.phase = "EIGHT_FLOWER_YOU_DECLARED"
+        state.phase = ("OPENING_EIGHT_FLOWER_DECLARED"
+                       if state.phase == "OPENING_EIGHT_FLOWER_CHOICE"
+                       else "EIGHT_FLOWER_YOU_DECLARED")
+        return True
+    if action.type == T.PASS_QIANGJIN and state.phase == "OPENING_EIGHT_FLOWER_CHOICE":
+        state.current_player = state.dealer
+        state.phase = "OPENING_GOLD_PENDING"
         return True
     if action.type == T.PASS_QIANGJIN:
         expected = 16 - 3 * len(state.melds[p])

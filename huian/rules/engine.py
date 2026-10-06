@@ -115,6 +115,15 @@ class HuianRules:
             hand, melds, flowers, gold_tile,
         )
 
+    def can_tianhu(self, hand, gold_tile, *, is_dealer, opening_complete):
+        """Dealer17, after all opening replacements and a determined Gold; shape only."""
+        DEFAULT_RULE_SNAPSHOT.require_confirmed("legality.tianhu_opening")
+        if type(is_dealer) is not bool or type(opening_complete) is not bool:
+            raise ValueError("Tianhu context flags must be boolean")
+        if not is_dealer or not opening_complete or gold_tile is None or len(hand) != 17:
+            return False
+        return self.analyze_hu(hand, gold_tile=gold_tile).legal
+
     def sanjindao_fan(self, melds=()):
         """Only completed kongs contribute fan to the player-confirmed x3 result."""
         DEFAULT_RULE_SNAPSHOT.require_confirmed("settlement.sanjindao_full")
