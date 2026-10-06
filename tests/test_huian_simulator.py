@@ -1,5 +1,6 @@
 import unittest
 
+from huian import HuianGameState
 from workspace.simulator import Simulator, make_wall
 
 
@@ -41,6 +42,40 @@ class SimulatorTests(unittest.TestCase):
         result = Simulator().run_opening(seed=99, dice_total=7)
         self.assertEqual(result.dice_total, 7)
         self.assertEqual(result.events[0]["action"]["metadata"]["dice_total"], 7)
+
+    def test_direct_terminal_special_preserves_winner_and_source(self):
+        state = HuianGameState(
+            phase="TERMINAL",
+            terminal=True,
+            terminal_reason="AUTO_ZIMO",
+            rewards=[-24, 24],
+        )
+
+        class DirectSpecialGame:
+            @property
+            def state(self):
+                return state
+
+            @property
+            def events(self):
+                return [{
+                    "seq": 0,
+                    "action": {
+                        "player": 1,
+                        "type": "QIANGJIN",
+                        "tile": None,
+                        "tiles": [],
+                        "metadata": {"win_source": "qiangjin"},
+                    },
+                }]
+
+        result = Simulator._result(
+            DirectSpecialGame(), seed=7, status="COMPLETED"
+        )
+        self.assertEqual(result.winner, 1)
+        self.assertEqual(result.win_source, "qiangjin")
+        self.assertEqual(result.rewards, (-24, 24))
+        self.assertEqual(result.terminal_reason, "AUTO_ZIMO")
 
     def test_normal_hand_mode_skips_qiangjin_and_is_reproducible(self):
         first = Simulator().run_normal_hand(seed=3)
