@@ -7,7 +7,7 @@
 
 ## Branch and release scope
 
-- The new [player-confirmed opening/special contract](references/rules/2026-10-06/player_confirmed_special_rules.md) is synchronized in Draft PR #126. It separates player feedback from archived video evidence. Rules/Environment, registered revisions, installer behavior and special-action regressions are **not yet migrated**; no Issue was closed on documentation alone.
+- The [player-confirmed opening/special contract](references/rules/2026-10-06/player_confirmed_special_rules.md) is synchronized in Draft PR #126. The first runtime slice implements Sanjindao `(base + completed-Kong fan) ×3` and promotes Eight-Flower `base+16` settlement to player-confirmed. Snapshot: `huian-target-2026-10-06-settlement-r1`; both-seat zero-sum/physical/dealer-flow regressions added. Opening force/choice windows, Qiangjin, Tianhu/Tianting, priority and full simulator integration remain pending. This is not a complete rule/installer release.
 
 - Integration work lives on `integration/issue69-replay-stack-20260926` in
   Draft PR #117. It is unmerged; these draft features are not a main release.

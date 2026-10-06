@@ -115,6 +115,15 @@ class HuianRules:
             hand, melds, flowers, gold_tile,
         )
 
+    def sanjindao_fan(self, melds=()):
+        """Only completed kongs contribute fan to the player-confirmed x3 result."""
+        DEFAULT_RULE_SNAPSHOT.require_confirmed("settlement.sanjindao_full")
+        from .fan import FanAggregator
+        components, unresolved = FanAggregator(self)._base_components([], melds, (), None)
+        if unresolved:
+            raise UnknownRuleError(*unresolved)
+        return sum(component.fan for component in components if component.category == "kong")
+
     def kong_fan(self, kind, tile):
         """Return the currently adopted target-room fan for a completed kong.
 

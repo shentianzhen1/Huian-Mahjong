@@ -57,7 +57,6 @@ class RuleRegistryTests(unittest.TestCase):
         self.assertEqual(confirmed.value, 4)
         for rule_id in (
             "settlement.qiangjin_full",
-            "settlement.eight_flower_working_fixed_fan",
         ):
             with self.subTest(rule_id=rule_id):
                 with self.assertRaises(RuleNotConfirmedError):

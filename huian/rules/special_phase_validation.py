@@ -199,7 +199,7 @@ def _validate_pending_hu(state):
                 or pending["flower_count"] != 8
                 or pending["fixed_fan"] != 16
                 or pending["multiplier"] != 1
-                or pending["project_rule"] is not True):
+                or pending["project_rule"] is not False):
             raise ValueError(
                 "EIGHT_FLOWER_YOU_DECLARED requires fixed 16 fan and no extra multiplier"
             )

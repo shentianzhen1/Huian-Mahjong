@@ -199,7 +199,7 @@ class QiangjinWindowTests(unittest.TestCase):
         self.assertTrue(after)
         self.assertTrue(all(a.type == env.ActionType.DISCARD for a in after))
 
-    def test_sanjindao_declaration_stops_only_at_unknown_settlement(self):
+    def test_sanjindao_declaration_waits_for_explicit_settlement(self):
         state = mark_gold_draw(two_seat_gold_state(
             current_gold=3, opponent_gold=0, phase="AFTER_DRAW"))
         game = env_of(state)
@@ -207,7 +207,7 @@ class QiangjinWindowTests(unittest.TestCase):
                        if a.metadata.get("special") == "SANJINDAO")
         game.step(declare)
         self.assertEqual(game.state.phase, "SANJINDAO_DECLARED")
-        with self.assertRaisesRegex(RuntimeError, "sanjindao_settlement"):
+        with self.assertRaisesRegex(RuntimeError, "sanjindao_settlement_pending"):
             game.legal_actions()
 
     def test_existing_three_gold_without_new_own_draw_does_not_reopen(self):

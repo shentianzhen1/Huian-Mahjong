@@ -20,6 +20,12 @@ These are target-room **PLAYER_CONFIRMED** facts, not newly video-verified settl
 
 The earlier x4 Tianhu/Tianting page interpretation, mid-hand Qiangjin, Sanjindao-before-Qiangjin, Eight-Flower WORKING-only status, and special dealer/tie UNKNOWN claims are superseded where they conflict. Youjin ×4/×8/×16 stays unchanged. Historical entries remain source-scoped evidence, not current execution instructions.
 
+## 2026-10-06 first runtime migration slice
+
+Sanjindao now has an explicit validated terminal settlement API using only completed Kong fan inside x3. Eight-Flower's existing fixed16 settlement is promoted to PLAYER_CONFIRMED, rejects legacy WORKING declarations, and emits a confirmed event. Four affected rule records advance to revision2; the unchanged Sanjindao multiplier remains revision1. Snapshot `huian-target-2026-10-06-settlement-r1` separates new results from prior EV evidence.
+
+Focused player-confirmed fixtures cover both seats, all Kong table cells, no additive stacking, 144 tiles, zero-sum rewards, duplicate terminal rejection and existing dealer flow. No direct-video fixture was created. Opening timing/forced Eight-Flower, later Eight-Flower re-prompts, Qiangjin, Tianhu/Tianting and same-node priority still require migration; settlement readiness does not imply those windows or full simulator integration are ready.
+
 ## 2026-10-04 implementation metadata synchronization
 
 Issue #4 was closed via PR #125 on 2026-10-03 under existing player-confirmed

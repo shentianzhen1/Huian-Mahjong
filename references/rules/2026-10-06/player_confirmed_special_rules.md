@@ -3,7 +3,7 @@
 证据 ID：`player_confirmed_special_rules_20261006_v1`。
 来源：项目玩家在北京时间2026-10-06本次对话中的逐项确认及最后修正。
 证据类型：目标房玩家反馈（PLAYER_CONFIRMED），**不是新录像直接核验**。
-本记录替换冲突的旧口径，但只同步规则事实；旧引擎、RuleSnapshot和安装包尚未据此迁移。
+本记录替换冲突的旧口径，规则事实与实施状态分开记录；本轮仅迁移三金倒和八花胡结算API，其他开局/窗口与安装包完整规则仍待完成。
 机器可读记录见同目录 `player_confirmed_special_rules_v1.json`。
 
 ## 1. 全部胡法统一庄位与8局平局
@@ -102,7 +102,7 @@
 
 ## 9. 同步与实现边界
 
-本提交只保存证据与更新人类规则/Issue。后续按`docs/rule_isolation.md`迁移：
+首轮实现已提供三金倒杠番专属结算、八花胡固定16番CONFIRMED结算API和双座位守恒/庄位回归。范围详见配套JSON的`runtime_migration`；全局`runtime_migrated`仍为false。后续按`docs/rule_isolation.md`迁移：
 新增/修正对应独立规则ID及revision、替换旧门槛、实现开局多节点检查和虚拟牌分析、结算/庄位、再做完整回归。
-引擎尚未迁移时不得将本文件当作自动结算已经启用；现有RuleSnapshot仍是旧执行口径。
+仅已列出的结算API采用新口径；新指纹为`huian-target-2026-10-06-settlement-r1`。不得据此宣称开局/窗口、完整模拟器或安装包全规则已完成。
 AI旧EV成绩保留原指纹，不与迁移后的新指纹混用；V0.10不自动晋级，Executor关闭。

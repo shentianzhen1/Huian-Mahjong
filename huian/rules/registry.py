@@ -297,8 +297,8 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "settlement.sanjindao_full": _record(
         "settlement.sanjindao_full", RuleDomain.SETTLEMENT,
-        EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.CRITICAL,
-        (), "huian.rules.special_outcomes",
+        EvidenceStatus.CONFIRMED, 2, "DEALER_BASE_PLUS_COMPLETED_KONG_FAN_X3", ImpactLevel.CRITICAL,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
         depends_on=("settlement.sanjindao_multiplier",),
     ),
     "settlement.qiangjin_full": _record(
@@ -308,20 +308,21 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "settlement.eight_flower_working_multiplier": _record(
         "settlement.eight_flower_working_multiplier", RuleDomain.SETTLEMENT,
-        EvidenceStatus.WORKING, 1, 1, ImpactLevel.HIGH,
-        ("rule_page_2026-09-13",), "huian.rules.special_outcomes",
-        note="Project-only fallback; no real target-room terminal multiplier evidence.",
+        EvidenceStatus.CONFIRMED, 2, 1, ImpactLevel.HIGH,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
+        note="Player-confirmed settlement; stable historical rule ID retained. Direct terminal video remains absent.",
     ),
     "settlement.eight_flower_working_fixed_fan": _record(
         "settlement.eight_flower_working_fixed_fan", RuleDomain.SETTLEMENT,
-        EvidenceStatus.WORKING, 1, 16, ImpactLevel.HIGH,
-        ("rule_page_2026-09-13",), "huian.rules.special_outcomes",
-        note="Project-only fallback; not real target-room terminal evidence.",
+        EvidenceStatus.CONFIRMED, 2, 16, ImpactLevel.HIGH,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
+        note="Player-confirmed settlement; stable historical rule ID retained. Direct terminal video remains absent.",
     ),
     "settlement.eight_flower_real": _record(
         "settlement.eight_flower_real", RuleDomain.SETTLEMENT,
-        EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.HIGH,
-        (), "huian.rules.special_outcomes",
+        EvidenceStatus.CONFIRMED, 2, "DEALER_BASE_PLUS_FIXED_16_NO_STACKING", ImpactLevel.HIGH,
+        ("player_confirmed_special_rules_20261006_v1",), "huian.rules.special_outcomes",
+        depends_on=("settlement.eight_flower_working_multiplier", "settlement.eight_flower_working_fixed_fan"),
     ),
     "settlement.kong_fee": _record(
         "settlement.kong_fee", RuleDomain.SETTLEMENT,
@@ -332,6 +333,6 @@ RULE_REGISTRY = MappingProxyType({
 
 
 DEFAULT_RULE_SNAPSHOT = RuleSnapshot(
-    label="huian-target-2026-10-04-r3",
+    label="huian-target-2026-10-06-settlement-r1",
     records=RULE_REGISTRY,
 )

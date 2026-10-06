@@ -54,6 +54,7 @@ def validate(adapter, state):
         "OBSERVED_PINGHU", "OBSERVED_ZIMO", "AUTO_PINGHU", "AUTO_ZIMO",
         "SIMULATION_PINGHU", "SIMULATION_ZIMO", "PROJECT_EIGHT_FLOWER_YOU",
         "AUTO_YOUJIN", "AUTO_DOUBLE_YOU", "AUTO_TRIPLE_YOU",
+        "AUTO_SANJINDAO", "AUTO_EIGHT_FLOWER_YOU",
         "OBSERVED_SPECIAL"
     )
     if state.terminal_reason not in (None, "WALL_16") and not scored_reason:
@@ -196,7 +197,7 @@ def report(adapter, state):
     if state.phase == "QIANGJIN_DECLARED":
         return ActionReport((), ("qiangjin_settlement",))
     if state.phase == "SANJINDAO_DECLARED":
-        return ActionReport((), ("sanjindao_settlement",))
+        return ActionReport((), ("sanjindao_settlement_pending",))
     if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
         return ActionReport((), ("eight_flower_settlement_pending",))
     if state.phase == "NEED_FLOWER_REPLACE":

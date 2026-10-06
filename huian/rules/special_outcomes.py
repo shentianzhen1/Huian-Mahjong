@@ -66,26 +66,26 @@ _SPECIAL_OUTCOMES = {
         declaration_phase="SANJINDAO_DECLARED",
         multiplier=_rule_value("settlement.sanjindao_multiplier"),
         multiplier_status=EvidenceStatus.CONFIRMED,
-        settlement_rule_id="sanjindao_settlement",
-        settlement_ready=False,
+        settlement_rule_id=None,
+        settlement_ready=True,
         note=(
             "x3 is confirmed. Opening/third-gold prompts are optional, and new "
             "target-room replay/player evidence shows PASS closes only the current "
             "prompt: a later own draw while still holding three gold can offer "
-            "Sanjindao again. Payment/dealer flow remain unknown."
+            "Sanjindao again. Player-confirmed settlement: (dealer base + completed kong fan) x3; no other fan."
         ),
     ),
     "EIGHT_FLOWER_YOU": SpecialOutcomeProfile(
         key="EIGHT_FLOWER_YOU",
         declaration_phase="EIGHT_FLOWER_YOU_DECLARED",
         multiplier=_rule_value("settlement.eight_flower_working_multiplier"),
-        multiplier_status=EvidenceStatus.WORKING,
-        settlement_rule_id="eight_flower_real_multiplier",
+        multiplier_status=EvidenceStatus.CONFIRMED,
+        settlement_rule_id=None,
         settlement_ready=True,
         fixed_fan=_rule_value("settlement.eight_flower_working_fixed_fan"),
-        project_rule=True,
+        project_rule=False,
         note=(
-            "Project working rule 2026-09-20: Eight-Flower-You is a fixed 16-fan "
+            "Player-confirmed rule 2026-10-06: Eight-Flower-You is a fixed 16-fan "
             "special result with no extra Hu multiplier and no stacking of the ordinary "
             "8 flower fan, gold fan, triplet/kong fan, or other additive fan. PASS still "
             "keeps the eight flowers as ordinary +8 fan for later non-Eight-Flower Hu. "
