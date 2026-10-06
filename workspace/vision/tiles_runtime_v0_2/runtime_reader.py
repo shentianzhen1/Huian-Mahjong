@@ -161,6 +161,12 @@ def read_stable_frames(
             "identity_reason": "region_not_classified",
         })
         classifier_region = CLASSIFIER_REGIONS.get(component.region_candidate)
+        if component.gold_skin:
+            # Correct role/count does not qualify identity in the yellow-skin
+            # domain. Preserve UNKNOWN until that domain has reviewed support.
+            item["identity_reason"] = "gold_skin_identity_unqualified"
+            observations.append(item)
+            continue
         if classifier_region is not None:
             crop_bbox = classification_crop_bbox(
                 component.pixel_bbox,

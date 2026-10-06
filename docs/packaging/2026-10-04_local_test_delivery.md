@@ -76,3 +76,21 @@ This ports #117's direct-video runner/replay diagnostics with a narrow adaptatio
 to #126's session-cached Runtime reader. It does not import #117's identity-domain
 changes. Threshold 0.82 and Executor OFF are unchanged. The source changes must
 be rebuilt on Windows before the old delivered installer gains this button.
+
+## Opened-Gold / playable-Gold role repair (2026-10-06)
+
+The target UI's upper-left indicator is detected in a normalized region with
+tile aspect/size/fill checks. Exactly one upper candidate is required; multiple
+candidates abstain. When it exists, lower yellow faces retain their concealed
+hand/draw role, tagged `gold_skin`, instead of being removed as the public
+indicator. The legacy separate lower display remains supported when no upper
+candidate exists. This UI-specific intake is not a universal Mahjong layout.
+
+Gold-skin identity remains explicitly UNKNOWN with
+`gold_skin_identity_unqualified`; geometry membership does not enable advice.
+Unchanged identity threshold: 0.82. The same private source SHA/0–3s range
+now yields 16 concealed slots in all eight windows (previously 15), and the
+opened indicator is [110,48,36,48]. Complete advice remains 0/8: opened-Gold
+identity and S2 confidence/domain qualification are still unresolved.
+See `2026-10-06_gold_role_fix.json`. This is same-source development evidence,
+not a blind evaluation or rebuilt Windows installer acceptance.

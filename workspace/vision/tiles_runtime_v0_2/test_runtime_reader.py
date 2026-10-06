@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from unittest.mock import patch
 from types import SimpleNamespace
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from .runtime_reader import _training_labels, identity_gate
 from . import runtime_reader
@@ -18,6 +18,24 @@ class RuntimeResourceCacheTests(unittest.TestCase):
 
     def tearDown(self):
         runtime_reader._cached_runtime_resources.cache_clear()
+
+    def test_gold_skin_role_does_not_bypass_identity_gate(self):
+        image = Image.new('RGB', (1000, 480), (0, 55, 55))
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((40, 50, 72, 94), fill=(230, 210, 130))
+        for index in range(16):
+            x = 180 + index * 45
+            draw.rectangle((x, 400, x + 40, 470), fill=(230, 200, 50) if index == 0 else 'white')
+        root = Path(__file__).resolve().parents[3] / 'dataset/tiles_runtime_v0_2'
+        result = runtime_reader.read_stable_frames([image] * 3, root)
+        yellow = [c for c in result['components'] if c.get('gold_skin')]
+        self.assertEqual(result['concealed_tile_count'], 16)
+        self.assertEqual(len(yellow), 1)
+        self.assertEqual(yellow[0]['region_candidate'], 'hand')
+        self.assertEqual(yellow[0]['tile_id'], 'UNKNOWN')
+        self.assertEqual(yellow[0]['identity_reason'], 'gold_skin_identity_unqualified')
+        self.assertFalse(result['all_concealed_tile_ids_trusted'])
+        self.assertFalse(result['safe_for_executor'])
 
     def test_repeated_bursts_build_once_and_session_change_rebuilds(self):
         labels = [
