@@ -1,5 +1,25 @@
 # Huian Two-Player Rules Status
 
+## 2026-10-06 current player-confirmed contract — runtime migration pending
+
+Evidence: [player-confirmed rules and prior-video audit](references/rules/2026-10-06/player_confirmed_special_rules.md), ID `player_confirmed_special_rules_20261006_v1`.
+These are target-room **PLAYER_CONFIRMED** facts, not newly video-verified settlements. This section supersedes conflicting older entries below. It does not claim that the current engine, RuleSnapshot or installer already implements them.
+
+| Rule | Current confirmed contract |
+| --- | --- |
+| Qiangjin | First round only: dealer after first discard virtually adds opened Gold to 16; non-dealer replaces first drawn tile with opened Gold in 17. Non-dealer first; dealer waits for its first-draw check/PASS. Normal fan, `(dealer base + fan) ×2`; no later draw/flower/Kong re-prompt. |
+| Sanjindao | Optional 3 playable Gold; PASS allows later own-draw rechecks. `(dealer base + completed-Kong fan) ×3`; no gold/flower/triplet/other fan stacking. |
+| Eight-Flower-You | Fixed16 fan, `dealer base+16`, no extra multiplier/additive fan. New eighth flower inside open-Gold loop forces terminal before Gold/Tianhu; other nodes provide DECLARE/PASS. After PASS, later own draw/completed replacement while still8 may prompt again, not the same node. |
+| Tianhu | Dealer only, after replacements and determined Gold, before first discard; 17 tiles = **5 melds + pair**, Gold wildcard. Automatic, no PASS; `dealer base ×2`, no additive fan. No non-dealer Dihu. |
+| Tianting | Dealer16 after first discard / non-dealer initial16 before first draw, Gold active. Status only; no extra fan/multiplier. |
+| Priority | Process-local new8-flower forced terminal is separate. Same-node Tianhu > Eight-Flower > Sanjindao > Qiangjin > Rob-Kong > ordinary Hu > Youjin-family; Qiangjin non-dealer before dealer. Compare only legal unpassed opportunities, preserve established Youjin phase rights. |
+| All-method dealer flow | Dealer win/draw continues +5; non-dealer win switches to new base10. All Hu methods use this flow. |
+| Fixed8-hand tie | Equal final scores are a draw, no extra hand or dealer tiebreak. |
+| Open-Gold flower | Wall candidate flower goes only to dealer flower zone; no hand replacement/addition; remove from wall. Final Gold reserves one physical copy, max3 playable; maintain144 tiles. |
+| Hidden location | Dice mapping/counting/direction/random distribution remains UNKNOWN. Live reads final visible Gold and both flower zones; never guesses hidden location. |
+
+The earlier x4 Tianhu/Tianting page interpretation, mid-hand Qiangjin, Sanjindao-before-Qiangjin, Eight-Flower WORKING-only status, and special dealer/tie UNKNOWN claims are superseded where they conflict. Youjin ×4/×8/×16 stays unchanged. Historical entries remain source-scoped evidence, not current execution instructions.
+
 ## 2026-10-04 implementation metadata synchronization
 
 Issue #4 was closed via PR #125 on 2026-10-03 under existing player-confirmed
@@ -383,13 +403,11 @@ The user-supplied 惠安 tab lists Youjin/Double/Triple as **4/8/16**, not 4/8/1
 The 2026-09-15 player confirmation now applies 4/8/16 to the target two-player
 room. Flower fan is included before the Hu multiplier in the +608 recording and ordinary direct recordings. Extra Youjin-chain dealer ×2 is now directly rejected for the target room: match_evidence_001 hand 5 is dealer Youjin and settles +76 as `(15+4)×4`, while the earlier dealer Triple-You settles +608 as `(35+3)×16`. The page's outer ×3 must not be applied to the verified two-player calculation.
 
-## Current unresolved rules and evidence gaps
+## Current implementation and corroboration gaps
 
-1. **Qiangjin — Issue #1:** exact winning/eligibility shape, target-room multiplier and fan stacking, payment, terminal flow and next dealer. Window ownership and PASS behavior are confirmed.
-2. **Sanjindao — Issue #2:** actual terminal formula/base/fan stacking, payment, next dealer and unresolved simultaneous-special priority. ×3 and repeatable later own-draw prompts after PASS are confirmed. Only three playable gold copies exist; four-gold rechecks are impossible, not UNKNOWN.
-3. **Eight-Flower-You — Issue #5:** real target-room settlement and simultaneous-special priority. Fixed 16 fan / ×1 / no additive stacking is WORKING project policy, not target-room confirmation.
-4. **Opening flower-as-gold candidate:** exact flower ownership, continued opening/replacement and physical wall indexing require target-room evidence. Final opened Gold reservation and the three-playable-copy limit are confirmed.
-5. **Low-frequency terminal rules — Issue #9:** target-room Tianhu/Tianting enablement, eligibility/timing/settlement and eight-hand match tie adjudication.
+1. **Issues #1/#2/#5/#9:** migrate the 2026-10-06 player-confirmed contract into rule IDs/revisions, narrow legality/phase/settlement services, and regressions. Do not confuse implementation pending with rule UNKNOWN.
+2. **Direct visual corroboration:** no archived Qiangjin/Sanjindao terminal, Eight-Flower/Tianhu/Tianting, opening-flower full-process or tied-match sample was found in the current records. Capture these opportunistically; existing normal/Youjin fixtures do not prove them.
+3. **Hidden opening position:** dice mapping, count unit, direction and distribution remain UNKNOWN. They do not block the selected live visible-result path.
 
 Ordinary fan aggregation, dealer-base progression/cap, Gang-Hu/An-Gang-Hu scoring, and Rob-Kong settlement are implemented and no longer rule blockers. The confirmed Youjin/Double/Triple core is regression maintenance under Issue #3. Rare paths beyond that contract remain evidence-gated; extra footage is not a reason to reopen confirmed rules. Historical source-review limitations below describe those sources, not a new current backlog.
 

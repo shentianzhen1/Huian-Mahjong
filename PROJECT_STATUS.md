@@ -1,11 +1,13 @@
 # PROJECT_STATUS — Current Snapshot
 
-**Snapshot date:** 2026-10-04
+**Snapshot date:** 2026-10-06
 **Execution truth:** GitHub Issues
 **Rule truth:** RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md
 **History:** CHANGELOG.md
 
 ## Branch and release scope
+
+- The new [player-confirmed opening/special contract](references/rules/2026-10-06/player_confirmed_special_rules.md) is synchronized in Draft PR #126. It separates player feedback from archived video evidence. Rules/Environment, registered revisions, installer behavior and special-action regressions are **not yet migrated**; no Issue was closed on documentation alone.
 
 - Integration work lives on `integration/issue69-replay-stack-20260926` in
   Draft PR #117. It is unmerged; these draft features are not a main release.
@@ -54,7 +56,7 @@ recognized identities or strategic ranking are human-confirmed.
   and regression support, not an exhaustive eight-hand transcription prerequisite.
 - #7: untouched source-disjoint evaluation against the frozen promotion gate;
   same-original-match clips and green CI do not establish generalization.
-- #1/#2/#5/#9: unresolved special-result/low-frequency evidence as tracked by Issues.
+- #1/#2/#5/#9: implement the new player-confirmed contract and regressions as tracked by Issues; opportunistic direct-video corroboration remains separate.
 - #6: preserve V0.10 and paired evaluation baselines; no new Agent in this work.
 - #45: internal/read-only Alpha, evidence audit and Windows acceptance.
 
