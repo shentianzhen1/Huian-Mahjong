@@ -1,17 +1,27 @@
-"""Evidence-safe simulator bridge for the confirmed staged opening API.
+"""Evidence-safe simulator bridges for the confirmed staged opening API.
 
-This module never derives a live Gold position from dice.  Callers must provide
-one or more explicit wall indices, each interpreted against the current wall at
-the moment that candidate is consumed.  A flower candidate leaves the opening
-in ``OPENING_GOLD_PENDING`` so another explicit index is required.
+The target room does not derive Gold from dice.  The current player-confirmed
+rule is that the system randomly selects Gold after excluding flower tiles.
+The real random distribution/RNG remains unknown.
+
+``run_staged_opening`` keeps the explicit-candidate compatibility path used by
+replay fixtures. ``run_random_staged_opening`` is the target-room simulator
+bridge: it chooses only from nonflower wall entries with a seeded local RNG so
+simulation is reproducible. Uniform choice is a SIMULATOR_CONVENTION, not a
+claim about the room's server-side distribution.
 """
-from dataclasses import asdict
+from dataclasses import replace
 import hashlib
 import json
+import random
 
+from huian._legacy import env
 from huian.environment import HuianEnvironment
 
 from .core import Simulator, make_wall
+
+
+OPEN_GOLD_RANDOM_EVIDENCE_ID = "player_confirmed_open_gold_random_20261007_v1"
 
 
 def run_staged_opening(
@@ -19,10 +29,10 @@ def run_staged_opening(
         candidate_indices=(), max_steps=100, environment_factory=HuianEnvironment):
     """Run only the confirmed opening through Gold or a forced terminal.
 
-    The function deliberately stops with ``NEEDS_INPUT`` when the opening needs
-    a player choice (pre-Gold eight flowers) or when no more explicit Gold
-    candidate indices are supplied.  It does not invent a dice mapping,
-    direction, stack count or random target-room distribution.
+    This explicit-candidate function is retained for replay/compatibility
+    fixtures. Callers provide wall indices interpreted against the current wall
+    at the moment each candidate is consumed. It never derives a target-room
+    Gold position from dice.
     """
     if type(dealer) is not int or dealer not in (0, 1):
         raise ValueError("dealer must be seat 0 or 1")
@@ -79,3 +89,91 @@ def run_staged_opening(
     if game.is_terminal():
         return finish("COMPLETED")
     return finish("READY")
+
+
+def run_random_staged_opening(
+        *, seed=None, random_seed=None, wall=None, dealer=0,
+        current_dealer_base=10, max_steps=100,
+        environment_factory=HuianEnvironment):
+    """Run staged opening with a seeded simulator-only random Gold choice.
+
+    Player-confirmed target-room facts:
+    - the system selects Gold randomly;
+    - flowers are excluded before selection;
+    - dice/wall-stack mapping is not the Gold-selection mechanism.
+
+    Unknown target-room facts:
+    - probability distribution/weighting;
+    - RNG implementation, seed and predictability.
+
+    For deterministic tests this helper uses a local uniform PRNG over the
+    current nonflower wall entries. That sampling policy is explicitly a
+    ``SIMULATOR_CONVENTION_ONLY`` and must not be reused to predict live Gold.
+    """
+    selector_seed = seed if random_seed is None else random_seed
+    tiles = make_wall(seed) if wall is None else list(wall)
+
+    probe = environment_factory(max_steps=max_steps)
+    probe.reset(wall=tiles, dealer=dealer)
+    probe.begin_confirmed_opening()
+
+    if probe.state.phase == "OPENING_EIGHT_FLOWER_CHOICE":
+        result = run_staged_opening(
+            seed=seed,
+            wall=tiles,
+            dealer=dealer,
+            current_dealer_base=current_dealer_base,
+            candidate_indices=(),
+            max_steps=max_steps,
+            environment_factory=environment_factory,
+        )
+        config = dict(result.config or {})
+        config.update({
+            "opening_mode": "STAGED_SYSTEM_RANDOM_NONFLOWER",
+            "selection_evidence_id": OPEN_GOLD_RANDOM_EVIDENCE_ID,
+            "target_selection": "SYSTEM_RANDOM",
+            "target_candidate_pool": "NONFLOWER_TILES_ONLY",
+            "target_distribution": "UNKNOWN",
+            "simulator_sampling": "SEEDED_UNIFORM_NONFLOWER",
+            "simulator_sampling_status": "SIMULATOR_CONVENTION_ONLY",
+            "random_seed": selector_seed,
+        })
+        return replace(result, config=config)
+
+    if probe.state.phase != "OPENING_GOLD_PENDING":
+        raise ValueError("Random Gold selection requires OPENING_GOLD_PENDING")
+
+    candidates = [
+        index for index, tile in enumerate(probe.state.wall)
+        if tile not in env.FLOWERS
+    ]
+    if not candidates:
+        raise ValueError("No nonflower tile is available for random Gold selection")
+
+    rng = random.Random(selector_seed)
+    wall_index = rng.choice(candidates)
+    selected_tile = probe.state.wall[wall_index]
+    result = run_staged_opening(
+        seed=seed,
+        wall=tiles,
+        dealer=dealer,
+        current_dealer_base=current_dealer_base,
+        candidate_indices=(wall_index,),
+        max_steps=max_steps,
+        environment_factory=environment_factory,
+    )
+    config = dict(result.config or {})
+    config.update({
+        "opening_mode": "STAGED_SYSTEM_RANDOM_NONFLOWER",
+        "selection_evidence_id": OPEN_GOLD_RANDOM_EVIDENCE_ID,
+        "target_selection": "SYSTEM_RANDOM",
+        "target_candidate_pool": "NONFLOWER_TILES_ONLY",
+        "target_distribution": "UNKNOWN",
+        "simulator_sampling": "SEEDED_UNIFORM_NONFLOWER",
+        "simulator_sampling_status": "SIMULATOR_CONVENTION_ONLY",
+        "random_seed": selector_seed,
+        "candidate_pool_size": len(candidates),
+        "selected_wall_index": wall_index,
+        "selected_tile": selected_tile,
+    })
+    return replace(result, config=config)
