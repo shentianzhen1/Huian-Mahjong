@@ -98,7 +98,7 @@ class TargetHandSimulatorTests(unittest.TestCase):
         self.assertNotIn(result.config["selected_tile"], env.FLOWERS)
 
     def test_explicit_normal_hand_config_keeps_legacy_benchmark_path(self):
-        simulator = Simulator(SimulatorConfig(normal_hand_mode=True))
+        simulator = Simulator(config=SimulatorConfig(normal_hand_mode=True))
         result = simulator.run(
             seed=7,
             agent=ConservativeAgent(),
@@ -107,7 +107,7 @@ class TargetHandSimulatorTests(unittest.TestCase):
 
         self.assertIsNotNone(result.dice_total)
         self.assertNotEqual((result.config or {}).get("mode"), "TARGET_ROOM_STAGED")
-        self.assertEqual(result.config["normal_hand_mode"], True)
+        self.assertTrue(result.config["normal_hand_mode"])
 
 
 if __name__ == "__main__":
