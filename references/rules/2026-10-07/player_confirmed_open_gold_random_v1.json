@@ -7,17 +7,21 @@
   "video_directly_verified": false,
   "open_gold": {
     "selection": "SYSTEM_RANDOM",
+    "candidate_pool": "NONFLOWER_TILES_ONLY",
+    "flowers_excluded_before_selection": true,
     "final_gold_must_be_nonflower": true,
     "dice_mapping_used": false,
-    "flower_candidate": {
-      "destination": "dealer_flower_zone",
-      "remove_from_wall": true,
-      "replace_or_add_hand_tile": false,
-      "continue_random_selection": true,
-      "new_eighth_flower": "FORCED_EIGHT_FLOWER_TERMINAL_NO_FINAL_GOLD"
-    },
+    "open_gold_flower_candidate_flow": "SUPERSEDED_FOR_TARGET_ROOM_DEFAULT",
     "final_indicator_removed_from_drawable_wall": true,
     "max_playable_gold_copies": 3
+  },
+  "supersedes": {
+    "evidence_id": "player_confirmed_special_rules_20261006_v1",
+    "fields": [
+      "open_gold_flower candidate-as-live-default",
+      "hidden_open_gold_location.dice_mapping uncertainty as mechanism"
+    ],
+    "note": "The target-room mechanism is now confirmed random over nonflower candidates; exact distribution/RNG remains unknown."
   },
   "unknown": {
     "distribution": "UNKNOWN",
@@ -28,6 +32,7 @@
   },
   "simulator_policy": {
     "seeded_pseudorandom_allowed": true,
+    "candidate_pool": "NONFLOWER_TILES_ONLY",
     "uniform_sampling_if_used": "SIMULATOR_CONVENTION_ONLY",
     "must_not_claim_target_room_uniformity": true
   },
