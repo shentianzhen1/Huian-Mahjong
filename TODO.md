@@ -1,26 +1,28 @@
 # TODO / Open Issue Index
 
-同步日期：2026-10-04。当前执行工作以 [GitHub Issues](https://github.com/shentianzhen1/Huian-Mahjong/issues) 为唯一真相源；本文件只保留本次逐项核验的开放入口，不复制执行语义。完整实时列表以 GitHub 为准。
+当前执行工作以 **GitHub Issues** 为唯一真相源。本文件只做入口索引，不复制 Issue 正文，不保留已关闭事项。
 
-规则事实见 `RULE_STATUS.md`；证据见 `RULE_EVIDENCE_MATRIX.md`；集成快照见 `PROJECT_STATUS.md`；历史见 `CHANGELOG.md`。
+规则事实只看 `RULE_STATUS.md`；规则证据只看 `RULE_EVIDENCE_MATRIX.md`；整体快照看 `PROJECT_STATUS.md`；历史变更看 `CHANGELOG.md`。
 
-## P0
+## P0 — 特殊结算证据
 
-- [#1 — 抢金资格与真实结算](https://github.com/shentianzhen1/Huian-Mahjong/issues/1)
-- [#2 — 三金倒真实终局结算](https://github.com/shentianzhen1/Huian-Mahjong/issues/2)
-- [#3 — 游金计分回归与边界验收](https://github.com/shentianzhen1/Huian-Mahjong/issues/3)
-- [#5 — 八花游真实倍率与特殊窗口优先级](https://github.com/shentianzhen1/Huian-Mahjong/issues/5)
+- **#1 抢金** — 精确资格 + 真实终局结算。
+- **#2 三金倒** — 点击【三金倒】后的真实分数、番叠加、付款、庄位与特殊窗口优先级。
+- **#3 游金计分回归** — 主状态机已实现；维护计分回归与其他特殊窗口的未确认边界，不重新考古已关闭的 #4 状态/结算语义。
+- **#5 八花游** — 真实终局证据与特殊窗口优先级；当前 WORKING 规则不得进入官方 EV。
 
-## P1
+## P1 — AI / Vision
 
-- [#6 — 基于 CurrentAgent V0.10 的 Jin / KONG / 整场 EV](https://github.com/shentianzhen1/Huian-Mahjong/issues/6)
-- [#7 — 新来源 Vision / PublicState 独立验证](https://github.com/shentianzhen1/Huian-Mahjong/issues/7)
-- [#69 — Current-State Advisory / Public Match Reconstruction V0.1](https://github.com/shentianzhen1/Huian-Mahjong/issues/69)
+- **#6 AI EV / 8局上下文** — `CurrentAgent = MeldAwareShantenAgent V0.10` 固定为当前前沿；本轮不并行开新 Agent 版本，特殊规则 UNKNOWN 不作为正式 EV 真值。
+- **#7 Vision 独立验证** — 旧8局已完成64时点同批状态栏审计并保留 false-valid 错误；新批次先用 `independent_batch_lock.py` 锁 SHA/session/帧位，再人工 truth，最后只跑已冻结 `promotion_gate.py`。
+- **#69 Public Match Reconstruction V0.1** — 当前集成工作在 Draft PR #117。优先完成只读 Alpha 的当前状态、恢复与 Windows 实机验收；公开动作回放继续作证据与回归。Hand 2 正式河牌回放的 7 个 `UNKNOWN` 动作不由密集诊断候选回填。不要求人工逐张抄录八局，也不把同源候选当准确率。
 
 ## Product
 
-- [#45 — Hint Alpha 内部只读提示与证据审计](https://github.com/shentianzhen1/Huian-Mahjong/issues/45)
+- **#45 Hint Alpha V0.1** — 只读提示与证据审计；人工录牌可以独立于 Vision 提供结构向听，人工录分仅保存观察，不结算未知规则。Vision 未通过独立晋级门前不包装成正式助手；Executor 保持关闭。
 
-## P2
+## P2 — 低频 / 证据工具
 
-- [#9 — 平分 / 天胡 / 天听低频终局规则](https://github.com/shentianzhen1/Huian-Mahjong/issues/9)
+- **#9 低频终局规则** — 天胡 / 天听 / 8局平分。
+
+已关闭 Issue（例如 #4、#8）不会继续出现在本文件。需要历史请看 GitHub Closed Issues 或 `CHANGELOG.md`。

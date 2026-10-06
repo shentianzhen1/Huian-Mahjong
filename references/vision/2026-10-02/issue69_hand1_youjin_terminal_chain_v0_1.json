@@ -1,0 +1,102 @@
+{
+  "schema_version": "issue69_hand1_youjin_terminal_chain_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "evidence_role": "reviewed_real_match_rule_anchor",
+  "source": {
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "expected_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3"
+  },
+  "pre_youjin_reviewed_sequence": [
+    {
+      "actor": "opponent",
+      "event": "DISCARD",
+      "tile": "M2"
+    },
+    {
+      "actor": "player",
+      "event": "DRAW_DISCARD",
+      "tile": "S8"
+    },
+    {
+      "actor": "opponent",
+      "event": "DISCARD",
+      "tile": "S8"
+    },
+    {
+      "actor": "player",
+      "event": "DRAW_DISCARD",
+      "tile": "M3"
+    },
+    {
+      "actor": "player",
+      "event": "DRAW_INTO_HAND",
+      "tile": "P8"
+    }
+  ],
+  "youjin_state_chain": [
+    {
+      "order": 1,
+      "actor": "player",
+      "event": "DISCARD",
+      "tile": "P5",
+      "state_after": "YOUJIN_ENTERED"
+    },
+    {
+      "order": 2,
+      "actor": "opponent",
+      "event": "YOUJIN_RESPONSE_DRAW",
+      "tile": "UNKNOWN",
+      "state_after": "YOUJIN_RESPONSE_AFTER_DRAW"
+    },
+    {
+      "order": 3,
+      "actor": "opponent",
+      "event": "MANDATORY_RESPONSE_DISCARD",
+      "tile": "M3",
+      "state_after": "YOUJIN_STAGE_SUCCESS"
+    },
+    {
+      "order": 4,
+      "actor": "player",
+      "event": "YOUJIN_CONTINUATION_DRAW",
+      "tile": "P4",
+      "state_after": "YOUJIN_DECISION"
+    },
+    {
+      "order": 5,
+      "actor": "player",
+      "event": "DECLARE_YOUJIN",
+      "tile": null,
+      "state_after": "YOUJIN_DECLARED"
+    },
+    {
+      "order": 6,
+      "actor": "system",
+      "event": "SETTLEMENT",
+      "net_score": 68,
+      "state_after": "HAND_ENDED"
+    }
+  ],
+  "settlement_cross_check": {
+    "dealer_base": 10,
+    "gold_fan": 2,
+    "flower_fan": 3,
+    "kong_fan": 2,
+    "total_before_multiplier": 17,
+    "youjin_multiplier": 4,
+    "net_score": 68,
+    "formula": "(10+2+3+2)*4=68"
+  },
+  "evidence_boundaries": {
+    "reviewed_real_match_chain": true,
+    "rules_evidence_matrix_confirmed": true,
+    "machine_frame_identity_complete": false,
+    "runtime_action_ready": false,
+    "executor_ready": false
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

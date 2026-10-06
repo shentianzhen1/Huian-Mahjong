@@ -1,0 +1,865 @@
+{
+  "schema_version": "hint_alpha_replay_smoke_v0_1",
+  "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+  "session": "66fe863f_youjin100",
+  "original_match_count": 1,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "identity_threshold": 0.82,
+  "clock": "offline_source_time_not_live_latency_gate",
+  "windows_capture_validated": false,
+  "accepted_windows": 0,
+  "blocked_windows": 10,
+  "rows": [
+    {
+      "frames": [
+        0,
+        1015,
+        1160
+      ],
+      "source_seconds": [
+        0.0,
+        35.0,
+        40.0
+      ],
+      "pixel_sha256": [
+        "3f04a7b7f2acf4759e4388cd8254b970ff311d993ffb24f3d68e602d7d4dd08a",
+        "8576c2ee36671039c561ac0a474d75c66a7f2117e4f795d7665352d39cf7d00f",
+        "b36fafb71ae9977fa9d3d616ad96c6a9d945270780d21a6302a2725a004e0060"
+      ],
+      "elapsed_ms": 203.842,
+      "snapshot": {
+        "timestamp_seconds": 40.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        1015,
+        1160,
+        2001
+      ],
+      "source_seconds": [
+        35.0,
+        40.0,
+        69.0
+      ],
+      "pixel_sha256": [
+        "8576c2ee36671039c561ac0a474d75c66a7f2117e4f795d7665352d39cf7d00f",
+        "b36fafb71ae9977fa9d3d616ad96c6a9d945270780d21a6302a2725a004e0060",
+        "903851f0ea55580b3547e8b00d5a978a3b2978eb00c3ddc69715af1c49ea2e17"
+      ],
+      "elapsed_ms": 153.128,
+      "snapshot": {
+        "timestamp_seconds": 69.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        1160,
+        2001,
+        2030
+      ],
+      "source_seconds": [
+        40.0,
+        69.0,
+        70.0
+      ],
+      "pixel_sha256": [
+        "b36fafb71ae9977fa9d3d616ad96c6a9d945270780d21a6302a2725a004e0060",
+        "903851f0ea55580b3547e8b00d5a978a3b2978eb00c3ddc69715af1c49ea2e17",
+        "cf74c5482447f85573c28f8a980ceea40513e4471433cc04ad42b1af8e29c339"
+      ],
+      "elapsed_ms": 143.954,
+      "snapshot": {
+        "timestamp_seconds": 70.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2001,
+        2030,
+        2320
+      ],
+      "source_seconds": [
+        69.0,
+        70.0,
+        80.0
+      ],
+      "pixel_sha256": [
+        "903851f0ea55580b3547e8b00d5a978a3b2978eb00c3ddc69715af1c49ea2e17",
+        "cf74c5482447f85573c28f8a980ceea40513e4471433cc04ad42b1af8e29c339",
+        "c6975615dfc91d90f117e78638045da04bf065f845b3ac60d7ea20357e7791ae"
+      ],
+      "elapsed_ms": 150.057,
+      "snapshot": {
+        "timestamp_seconds": 80.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2030,
+        2320,
+        2378
+      ],
+      "source_seconds": [
+        70.0,
+        80.0,
+        82.0
+      ],
+      "pixel_sha256": [
+        "cf74c5482447f85573c28f8a980ceea40513e4471433cc04ad42b1af8e29c339",
+        "c6975615dfc91d90f117e78638045da04bf065f845b3ac60d7ea20357e7791ae",
+        "5f020bddca2c17e89b1ac1adc70087eb1e68c2daa51a0b2c3181163a25bd7124"
+      ],
+      "elapsed_ms": 181.448,
+      "snapshot": {
+        "timestamp_seconds": 82.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2320,
+        2378,
+        2436
+      ],
+      "source_seconds": [
+        80.0,
+        82.0,
+        84.0
+      ],
+      "pixel_sha256": [
+        "c6975615dfc91d90f117e78638045da04bf065f845b3ac60d7ea20357e7791ae",
+        "5f020bddca2c17e89b1ac1adc70087eb1e68c2daa51a0b2c3181163a25bd7124",
+        "5ca68880455ed6b10196e745dfc86d9114b9ea2933744e1daf5dd1b7e5788527"
+      ],
+      "elapsed_ms": 172.238,
+      "snapshot": {
+        "timestamp_seconds": 84.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2378,
+        2436,
+        2465
+      ],
+      "source_seconds": [
+        82.0,
+        84.0,
+        85.0
+      ],
+      "pixel_sha256": [
+        "5f020bddca2c17e89b1ac1adc70087eb1e68c2daa51a0b2c3181163a25bd7124",
+        "5ca68880455ed6b10196e745dfc86d9114b9ea2933744e1daf5dd1b7e5788527",
+        "fefc941896a48d0092787e0b1125ded5a58447cce82022eabff344291d5497e3"
+      ],
+      "elapsed_ms": 175.152,
+      "snapshot": {
+        "timestamp_seconds": 85.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2436,
+        2465,
+        2552
+      ],
+      "source_seconds": [
+        84.0,
+        85.0,
+        88.0
+      ],
+      "pixel_sha256": [
+        "5ca68880455ed6b10196e745dfc86d9114b9ea2933744e1daf5dd1b7e5788527",
+        "fefc941896a48d0092787e0b1125ded5a58447cce82022eabff344291d5497e3",
+        "dd004c9e2f52c7f33a780813d321f36c2301cc52dad6302ccf810bff39417839"
+      ],
+      "elapsed_ms": 152.113,
+      "snapshot": {
+        "timestamp_seconds": 88.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2465,
+        2552,
+        2610
+      ],
+      "source_seconds": [
+        85.0,
+        88.0,
+        90.0
+      ],
+      "pixel_sha256": [
+        "fefc941896a48d0092787e0b1125ded5a58447cce82022eabff344291d5497e3",
+        "dd004c9e2f52c7f33a780813d321f36c2301cc52dad6302ccf810bff39417839",
+        "83902713a43d4cc5b9aa62953c89ecc60abe18fe091f98951d3af9f729f9bb76"
+      ],
+      "elapsed_ms": 180.978,
+      "snapshot": {
+        "timestamp_seconds": 90.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        2552,
+        2610,
+        2755
+      ],
+      "source_seconds": [
+        88.0,
+        90.0,
+        95.0
+      ],
+      "pixel_sha256": [
+        "dd004c9e2f52c7f33a780813d321f36c2301cc52dad6302ccf810bff39417839",
+        "83902713a43d4cc5b9aa62953c89ecc60abe18fe091f98951d3af9f729f9bb76",
+        "6bff6c4c4d24a83651e927d4717454afc78a6b5f1b3eeb26e032302f0ad70bf7"
+      ],
+      "elapsed_ms": 171.966,
+      "snapshot": {
+        "timestamp_seconds": 95.0,
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "66fe863f_youjin100",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": true,
+      "geometry_issues": [
+        "sparse_source_burst"
+      ],
+      "safe_for_executor": false
+    }
+  ]
+}

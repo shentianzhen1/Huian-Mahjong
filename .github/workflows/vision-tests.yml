@@ -98,6 +98,255 @@ jobs:
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v
+      - name: Regenerate Runtime V0.2 validation reports
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.tiles_v0_1.evaluate_tiles \
+            --dataset dataset/tiles_runtime_v0_2 \
+            --confidence 0.82 \
+            --template-scope same_region \
+            --output /tmp/runtime-v0-2-reports/phase6_tile_template_validation_v0_2.json \
+            >/tmp/runtime-v0-2-reports/template_eval.log
+          python -m workspace.vision.tiles_runtime_v0_2.evaluate_concealed_identity \
+            --dataset dataset/tiles_runtime_v0_2 \
+            --confidence 0.82 \
+            --output /tmp/runtime-v0-2-reports/phase6_concealed_identity_validation_v0_2.json \
+            >/tmp/runtime-v0-2-reports/concealed_eval.log
+          python -m workspace.vision.tiles_runtime_v0_2.evaluate_gold_identity \
+            --dataset dataset/tiles_runtime_v0_2 \
+            --confidence 0.82 \
+            --output /tmp/runtime-v0-2-reports/phase6_gold_identity_validation_v0_2.json \
+            >/tmp/runtime-v0-2-reports/gold_identity_eval.log
+          cp dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_template_validation_v0_2.json \
+            /tmp/runtime-v0-2-reports/tracked_phase6_tile_template_validation_before_refresh.json
+          cp /tmp/runtime-v0-2-reports/phase6_tile_template_validation_v0_2.json \
+            dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_template_validation_v0_2.json
+          python -m workspace.vision.tiles_runtime_v0_2.phase6_dataset_audit \
+            --dataset dataset/tiles_runtime_v0_2 \
+            >/tmp/runtime-v0-2-reports/audit.log
+          cp dataset/tiles_runtime_v0_2/validation/reports/phase6_tile_dataset_audit_v0_2.json \
+            /tmp/runtime-v0-2-reports/phase6_tile_dataset_audit_v0_2.json
+      - name: Evaluate public meld identity feature variants
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_feature_experiment \
+            --output /tmp/runtime-v0-2-reports/public_meld_feature_experiment_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_feature_experiment.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_feature_experiment_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              name: {
+                  "top1_accuracy": row["top1_accuracy"],
+                  "minimum_correct_margin": row["minimum_correct_margin"],
+                  "queries": [
+                      {
+                          "query_id": query["query_id"],
+                          "expected_tile": query["expected_tile"],
+                          "winner": query["winner"],
+                          "winner_score": query["winner_score"],
+                          "margin": query["margin"],
+                          "top1_correct": query["top1_correct"],
+                      }
+                      for query in row["queries"]
+                  ],
+              }
+              for name, row in report["results"].items()
+          }
+          print("PUBLIC_MELD_FEATURE_EXPERIMENT=" + json.dumps(compact, sort_keys=True))
+          PY
+      - name: Export derived public meld spatial reference bank
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_spatial_reference_export \
+            --output-npz /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank_v0_1.npz \
+            --output-metadata /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank.log
+          cat /tmp/runtime-v0-2-reports/public_meld_spatial_reference_bank.log
+      - name: Evaluate synthetic hand-to-meld transfer
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_synthetic_transfer \
+            --output /tmp/runtime-v0-2-reports/public_meld_synthetic_transfer_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_synthetic_transfer.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_synthetic_transfer_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "selected_hand_template_count": report["selected_hand_template_count"],
+              "selected_hand_class_count": report["selected_hand_class_count"],
+              "target_group_count": report["target_group_count"],
+              "scored_group_count": report["scored_group_count"],
+              "target_face_count": report["target_face_count"],
+              "scored_face_count": report["scored_face_count"],
+              "baseline": report["baseline"],
+              "synthetic": report["synthetic"],
+              "face_accuracy_delta": report["face_accuracy_delta"],
+              "group_accuracy_delta": report["group_accuracy_delta"],
+              "opponent_top_group_accuracy_measured": report[
+                  "opponent_top_group_accuracy_measured"
+              ],
+              "groups": report["groups"],
+          }
+          print(
+              "PUBLIC_MELD_SYNTHETIC_TRANSFER="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
+      - name: Evaluate real plus synthetic public meld SIFT fusion
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.public_meld_sift_fusion \
+            --output /tmp/runtime-v0-2-reports/public_meld_sift_fusion_v0_1.json \
+            >/tmp/runtime-v0-2-reports/public_meld_sift_fusion.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/public_meld_sift_fusion_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "real_template_face_count": report["real_template_face_count"],
+              "synthetic_hand_template_count": report[
+                  "synthetic_hand_template_count"
+              ],
+              "target_group_count": report["target_group_count"],
+              "scored_group_count": report["scored_group_count"],
+              "scored_face_count": report["scored_face_count"],
+              "real": report["real"],
+              "synthetic": report["synthetic"],
+              "fusion": report["fusion"],
+              "fusion_face_delta_vs_real": report[
+                  "fusion_face_delta_vs_real"
+              ],
+              "fusion_group_delta_vs_real": report[
+                  "fusion_group_delta_vs_real"
+              ],
+              "fusion_face_delta_vs_synthetic": report[
+                  "fusion_face_delta_vs_synthetic"
+              ],
+              "fusion_group_delta_vs_synthetic": report[
+                  "fusion_group_delta_vs_synthetic"
+              ],
+              "groups": report["groups"],
+          }
+          print(
+              "PUBLIC_MELD_SIFT_FUSION="
+              + json.dumps(compact, sort_keys=True)
+          )
+          PY
+      - name: Stress frozen completeness scorer on opponent S456
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.opponent_s456_reference_complete_cross_seat_probe \
+            --output /tmp/runtime-v0-2-reports/opponent_s456_reference_complete_cross_seat_probe_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_s456_reference_complete_cross_seat_probe.log
+          cat /tmp/runtime-v0-2-reports/opponent_s456_reference_complete_cross_seat_probe.log
+      - name: Install frozen MobileNet evaluation dependencies
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -m pip install "torch==2.14.1" "torchvision==0.29.1"
+      - name: Evaluate lineage-qualified S456 opponent meld MobileNet
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          mkdir -p /tmp/runtime-v0-2-reports
+          python -m workspace.vision.opponent_public_meld_mobilenet \
+            --query s456 \
+            --output /tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_s456_result_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_s456.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/opponent_public_meld_mobilenet_s456_result_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "review_id": report["review_id"],
+              "query_match_group": report["query_match_group"],
+              "frame_metrics": report["frame_metrics"],
+              "multi_frame_mean_scores": report["multi_frame_mean_scores"],
+              "identity_runtime_status": report["identity_runtime_status"],
+          }
+          print("OPPONENT_MELD_S456_MOBILENET=" + json.dumps(compact, sort_keys=True))
+          PY
+      - name: Diagnose S456 split-boundary sensitivity
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_boundary_diagnostic \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_s456_boundary_diagnostic_v0_1.json \
+            --radius 6 \
+            >/tmp/runtime-v0-2-reports/opponent_meld_s456_boundary_diagnostic.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/runtime-v0-2-reports/opponent_meld_s456_boundary_diagnostic_v0_1.json")
+              .read_text(encoding="utf-8")
+          )
+          compact = {
+              "candidate_count": report["candidate_count"],
+              "correct_candidate_count": report["correct_candidate_count"],
+              "baseline": report["baseline"],
+              "best_correct_candidates": report["best_correct_candidates"],
+          }
+          print("S456_BOUNDARY_DIAGNOSTIC=" + json.dumps(compact, sort_keys=True))
+          PY
+      - name: Replay source-checked Alpha sparse real-frame abstention
+        if: needs.scope.outputs.run_vision == 'true'
+        run: python -B -m unittest discover -s tests -p "test_alpha_real_frame_smoke.py" -v
+      - name: Audit S456 lineage-qualified template coverage
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_template_coverage \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
+          cat /tmp/runtime-v0-2-reports/opponent_meld_s456_template_coverage.log
+      - name: Audit real-public opponent meld probe eligibility
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_real_public_eligibility \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_real_public_eligibility_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_meld_real_public_eligibility.log
+          cat /tmp/runtime-v0-2-reports/opponent_meld_real_public_eligibility.log
+      - name: Probe real-public references for S456 opponent identity
+        if: needs.scope.outputs.run_vision == 'true'
+        run: |
+          python -m workspace.vision.opponent_meld_real_public_probe \
+            --output /tmp/runtime-v0-2-reports/opponent_meld_s456_real_public_probe_v0_1.json \
+            >/tmp/runtime-v0-2-reports/opponent_meld_s456_real_public_probe.log
+          cat /tmp/runtime-v0-2-reports/opponent_meld_s456_real_public_probe.log
+      - name: Upload Runtime V0.2 validation reports
+        if: needs.scope.outputs.run_vision == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-v0-2-validation-${{ github.sha }}
+          path: |
+            /tmp/runtime-v0-2-reports/
+            dataset/tiles_runtime_v0_2/labels.jsonl
+            dataset/tiles_runtime_v0_2/templates/
+            workspace/vision/
+          if-no-files-found: error
+          retention-days: 7
       - name: Import Vision outside repository root
         if: needs.scope.outputs.run_vision == 'true'
         working-directory: /tmp

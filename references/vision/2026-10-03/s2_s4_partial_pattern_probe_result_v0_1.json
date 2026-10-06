@@ -1,0 +1,151 @@
+{
+  "schema_version": "s2_s4_partial_pattern_probe_dev_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "base_head_before_diagnostic_fields": "93ef716706b9ec808b2d627b65c7ccabb4faf2ab",
+  "development_only": true,
+  "hypothesis": "S2 can be mis-ranked as S4 because the position-aware affine scorer can explain only a subset of the denser S4 artwork without requiring whole-reference pattern support.",
+  "inputs": {
+    "query_source": {
+      "role": "independent14_s234",
+      "sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "frames": [2549, 2552, 2555]
+    },
+    "bottom_s234_reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+    "private_template_zip_sha256": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c",
+    "committed_spatial_result": "references/vision/2026-10-03/spatial_consistency_result_v0_1.json",
+    "query_spec": "references/vision/2026-10-03/independent14_s234_detector_spec_v0_1.json",
+    "bottom_reference_pin": "references/vision/2026-10-03/bottom_s234_reference_pin_v0_1.json"
+  },
+  "method": {
+    "score_policy": "existing spatial_window_affine candidate",
+    "score_changed": false,
+    "descriptor_extraction_changed": false,
+    "runtime_threshold_changed": false,
+    "new_measurement": "inlier convex-hull area divided by the full normalized SIFT-keypoint hull area for the same query/reference face",
+    "full_hull_extraction": "exact source frames, same face-plane rectification, same symmetric single-face normalization, same SIFT constants",
+    "ranking_source": "committed spatial_consistency_result_v0_1",
+    "purpose": "diagnostic only; no acceptance threshold selected"
+  },
+  "s2_false_as_s4": [
+    {
+      "frame": 2549,
+      "expected": "S2",
+      "winner": "S4",
+      "winner_score": 0.022859677189162063,
+      "expected_score": 0.012840220221521944,
+      "winner_query_inlier_hull_area": 0.2440535158487015,
+      "winner_reference_inlier_hull_area": 0.2057138381938972,
+      "query_full_keypoint_hull_area": 0.7223566599310997,
+      "s4_reference_full_keypoint_hull_area": 0.6584151847410208,
+      "winner_query_hull_fraction": 0.33785736241703646,
+      "winner_reference_hull_fraction": 0.31243787045223165
+    },
+    {
+      "frame": 2552,
+      "expected": "S2",
+      "winner": "S4",
+      "winner_score": 0.017004245113764756,
+      "expected_score": 0.01649198116367208,
+      "winner_query_inlier_hull_area": 0.20520212024118,
+      "winner_reference_inlier_hull_area": 0.1877684481835682,
+      "query_full_keypoint_hull_area": 0.5998425963018856,
+      "s4_reference_full_keypoint_hull_area": 0.6584151847410208,
+      "winner_query_hull_fraction": 0.3420932783138111,
+      "winner_reference_hull_fraction": 0.28518243888531297
+    }
+  ],
+  "true_s4_controls_same_sequence": [
+    {
+      "frame": 2549,
+      "expected": "S4",
+      "winner": "S4",
+      "query_inlier_hull_area": 0.5176656099730029,
+      "query_full_keypoint_hull_area": 0.6685268211360663,
+      "query_hull_fraction": 0.774337832988217,
+      "reference_fraction_comparable_to_bottom_s234_reference": false,
+      "note": "the committed winner used another source-disjoint S4 reference in this frame"
+    },
+    {
+      "frame": 2552,
+      "expected": "S4",
+      "winner": "S4",
+      "query_inlier_hull_area": 0.45907492017254176,
+      "reference_inlier_hull_area": 0.47353801229563536,
+      "query_full_keypoint_hull_area": 0.728115058285673,
+      "s4_reference_full_keypoint_hull_area": 0.6584151847410208,
+      "query_hull_fraction": 0.6304977694781112,
+      "reference_hull_fraction": 0.7192088263910491
+    },
+    {
+      "frame": 2555,
+      "expected": "S4",
+      "winner": "S4",
+      "query_inlier_hull_area": 0.5021620434653322,
+      "reference_inlier_hull_area": 0.504536449360317,
+      "query_full_keypoint_hull_area": 0.6596045196170072,
+      "s4_reference_full_keypoint_hull_area": 0.6584151847410208,
+      "query_hull_fraction": 0.7613077662913947,
+      "reference_hull_fraction": 0.7662892063444284
+    }
+  ],
+  "true_s2_query_coverage_warning": [
+    {
+      "frame": 2549,
+      "query_hull_fraction": 0.14643682061986496
+    },
+    {
+      "frame": 2552,
+      "query_hull_fraction": 0.19241115552952154
+    },
+    {
+      "frame": 2555,
+      "query_hull_fraction": 0.18174075357066577
+    }
+  ],
+  "fair_comparison": {
+    "independent14_s234": {
+      "frozen_face_correct": 3,
+      "frozen_wrong": 6,
+      "frozen_unknown": 0,
+      "frozen_group_correct": 0,
+      "frozen_groups": 3,
+      "position_candidate_face_correct": 7,
+      "position_candidate_wrong": 2,
+      "position_candidate_unknown": 0,
+      "position_candidate_group_correct": 1,
+      "position_candidate_groups": 3
+    },
+    "s789_same_original_match_control": {
+      "face_correct": 15,
+      "wrong": 0,
+      "unknown": 0,
+      "group_correct": 5,
+      "groups": 5
+    },
+    "s8_peng_same_original_match_control": {
+      "face_correct": 15,
+      "wrong": 0,
+      "unknown": 0,
+      "group_correct": 5,
+      "groups": 5
+    }
+  },
+  "interpretation": {
+    "partial_pattern_hypothesis_supported": true,
+    "evidence": "false S4 explains about 28.5%-31.2% of the complete S4 reference keypoint hull, while true S4 on directly comparable frames explains about 71.9%-76.6%",
+    "global_absolute_coverage_gate_rejected": true,
+    "why_no_global_gate": "true S2 is intrinsically sparse and its successful query inlier hull fraction is only about 14.6%-19.2%; a class-agnostic minimum coverage would discard correct S2",
+    "next_candidate": "diagnose bidirectional/reference-completeness support after affine alignment, normalized to the candidate reference pattern, without restricting the candidate set to S2/S3/S4"
+  },
+  "label_boundary": {
+    "independent14_s234_labels": "assistant visual review, not user-confirmed",
+    "s2_and_s3_other_original_match_support": 1,
+    "formal_holdout": false,
+    "formal_promotion_evidence": false
+  },
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

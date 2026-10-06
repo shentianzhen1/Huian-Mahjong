@@ -264,10 +264,15 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "settlement.rob_kong_full": _record(
         "settlement.rob_kong_full", RuleDomain.SETTLEMENT,
-        EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.CRITICAL,
-        (), "huian.rules.special_outcomes",
+        EvidenceStatus.CONFIRMED, 2, {
+            "uses_ordinary_zimo_formula": True,
+            "failed_added_kong_fan": 0,
+            "kong_fee": 0,
+            "dealer_flow": "ordinary_hu",
+        }, ImpactLevel.CRITICAL,
+        ("github_issue_4_confirmed_2026-10-03",), "huian.environment",
         depends_on=("legality.rob_kong_scope", "settlement.rob_kong_multiplier"),
-        note="Payment, robbed-added-kong fan treatment and next-dealer flow unresolved.",
+        note="Issue #4 / PR #125: original PENG remains; robbed tile is virtual for winner analysis; ordinary Zimo x2 and dealer flow.",
     ),
     "settlement.gang_hu": _record(
         "settlement.gang_hu", RuleDomain.SETTLEMENT,
@@ -327,6 +332,6 @@ RULE_REGISTRY = MappingProxyType({
 
 
 DEFAULT_RULE_SNAPSHOT = RuleSnapshot(
-    label="huian-target-2026-09-30-r2",
+    label="huian-target-2026-10-04-r3",
     records=RULE_REGISTRY,
 )

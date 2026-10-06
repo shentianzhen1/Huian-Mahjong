@@ -1,0 +1,1833 @@
+{
+  "schema_version": "face_plane_reference_symmetry_development_v0_1",
+  "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+  "dependency_versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3"
+  },
+  "input_sha256": {
+    "references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json": "52c65b0bf15345499245d06c43ce363c94a867a43692b5f71180f2a0e6cc9af8",
+    "private_template_zip": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c"
+  },
+  "s789_asymmetric_reference_summary": {
+    "detector_seam2": {
+      "correct_faces": 10,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 10,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 14,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 4,
+      "groups": 5
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 10,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 10,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    }
+  },
+  "s789_symmetric_reference_summary": {
+    "detector_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "s789_symmetric_repeat_equal": true,
+  "s8_same_original_match_control_summary": {
+    "detector_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "s789_seam_geometry": [
+    {
+      "frame": 4794,
+      "geometry": {
+        "search_xyxy": [
+          232,
+          421,
+          397,
+          512
+        ],
+        "background_rgb": [
+          3.0,
+          65.0,
+          76.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          248,
+          442,
+          384,
+          509
+        ],
+        "face_plane_rows": [
+          442,
+          501
+        ],
+        "blank_band_rows": [
+          443,
+          490
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            49,
+            91
+          ],
+          [
+            44,
+            88
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              248.0,
+              440
+            ],
+            [
+              299.3191489361702,
+              440
+            ],
+            [
+              292.72340425531917,
+              502
+            ],
+            [
+              248.0,
+              502
+            ]
+          ],
+          [
+            [
+              295.3191489361702,
+              440
+            ],
+            [
+              341.1914893617021,
+              440
+            ],
+            [
+              337.2340425531915,
+              502
+            ],
+            [
+              288.72340425531917,
+              502
+            ]
+          ],
+          [
+            [
+              337.1914893617021,
+              440
+            ],
+            [
+              384.0,
+              440
+            ],
+            [
+              384.0,
+              502
+            ],
+            [
+              333.2340425531915,
+              502
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            248,
+            440,
+            301,
+            503
+          ],
+          [
+            288,
+            440,
+            343,
+            503
+          ],
+          [
+            333,
+            440,
+            385,
+            503
+          ]
+        ]
+      },
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4797,
+      "geometry": {
+        "search_xyxy": [
+          232,
+          421,
+          397,
+          512
+        ],
+        "background_rgb": [
+          3.0,
+          65.0,
+          76.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          248,
+          442,
+          384,
+          509
+        ],
+        "face_plane_rows": [
+          442,
+          501
+        ],
+        "blank_band_rows": [
+          443,
+          490
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            49,
+            91
+          ],
+          [
+            44,
+            88
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              248.0,
+              440
+            ],
+            [
+              299.3191489361702,
+              440
+            ],
+            [
+              292.72340425531917,
+              502
+            ],
+            [
+              248.0,
+              502
+            ]
+          ],
+          [
+            [
+              295.3191489361702,
+              440
+            ],
+            [
+              341.1914893617021,
+              440
+            ],
+            [
+              337.2340425531915,
+              502
+            ],
+            [
+              288.72340425531917,
+              502
+            ]
+          ],
+          [
+            [
+              337.1914893617021,
+              440
+            ],
+            [
+              384.0,
+              440
+            ],
+            [
+              384.0,
+              502
+            ],
+            [
+              333.2340425531915,
+              502
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            248,
+            440,
+            301,
+            503
+          ],
+          [
+            288,
+            440,
+            343,
+            503
+          ],
+          [
+            333,
+            440,
+            385,
+            503
+          ]
+        ]
+      },
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4800,
+      "geometry": {
+        "search_xyxy": [
+          232,
+          421,
+          397,
+          512
+        ],
+        "background_rgb": [
+          3.0,
+          65.0,
+          76.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          248,
+          442,
+          384,
+          509
+        ],
+        "face_plane_rows": [
+          442,
+          501
+        ],
+        "blank_band_rows": [
+          443,
+          490
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            49,
+            91
+          ],
+          [
+            44,
+            88
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              248.0,
+              440
+            ],
+            [
+              299.3191489361702,
+              440
+            ],
+            [
+              292.72340425531917,
+              502
+            ],
+            [
+              248.0,
+              502
+            ]
+          ],
+          [
+            [
+              295.3191489361702,
+              440
+            ],
+            [
+              341.1914893617021,
+              440
+            ],
+            [
+              337.2340425531915,
+              502
+            ],
+            [
+              288.72340425531917,
+              502
+            ]
+          ],
+          [
+            [
+              337.1914893617021,
+              440
+            ],
+            [
+              384.0,
+              440
+            ],
+            [
+              384.0,
+              502
+            ],
+            [
+              333.2340425531915,
+              502
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            248,
+            440,
+            301,
+            503
+          ],
+          [
+            288,
+            440,
+            343,
+            503
+          ],
+          [
+            333,
+            440,
+            385,
+            503
+          ]
+        ]
+      },
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4803,
+      "geometry": {
+        "search_xyxy": [
+          232,
+          421,
+          397,
+          512
+        ],
+        "background_rgb": [
+          3.0,
+          65.0,
+          76.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          248,
+          442,
+          384,
+          509
+        ],
+        "face_plane_rows": [
+          442,
+          501
+        ],
+        "blank_band_rows": [
+          443,
+          490
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            49,
+            91
+          ],
+          [
+            44,
+            88
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              248.0,
+              440
+            ],
+            [
+              299.3191489361702,
+              440
+            ],
+            [
+              292.72340425531917,
+              502
+            ],
+            [
+              248.0,
+              502
+            ]
+          ],
+          [
+            [
+              295.3191489361702,
+              440
+            ],
+            [
+              341.1914893617021,
+              440
+            ],
+            [
+              337.2340425531915,
+              502
+            ],
+            [
+              288.72340425531917,
+              502
+            ]
+          ],
+          [
+            [
+              337.1914893617021,
+              440
+            ],
+            [
+              384.0,
+              440
+            ],
+            [
+              384.0,
+              502
+            ],
+            [
+              333.2340425531915,
+              502
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            248,
+            440,
+            301,
+            503
+          ],
+          [
+            288,
+            440,
+            343,
+            503
+          ],
+          [
+            333,
+            440,
+            385,
+            503
+          ]
+        ]
+      },
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4806,
+      "geometry": {
+        "search_xyxy": [
+          232,
+          421,
+          397,
+          512
+        ],
+        "background_rgb": [
+          3.0,
+          65.0,
+          76.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          248,
+          442,
+          384,
+          509
+        ],
+        "face_plane_rows": [
+          442,
+          501
+        ],
+        "blank_band_rows": [
+          443,
+          490
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            49,
+            91
+          ],
+          [
+            44,
+            88
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              248.0,
+              440
+            ],
+            [
+              299.3191489361702,
+              440
+            ],
+            [
+              292.72340425531917,
+              502
+            ],
+            [
+              248.0,
+              502
+            ]
+          ],
+          [
+            [
+              295.3191489361702,
+              440
+            ],
+            [
+              341.1914893617021,
+              440
+            ],
+            [
+              337.2340425531915,
+              502
+            ],
+            [
+              288.72340425531917,
+              502
+            ]
+          ],
+          [
+            [
+              337.1914893617021,
+              440
+            ],
+            [
+              384.0,
+              440
+            ],
+            [
+              384.0,
+              502
+            ],
+            [
+              333.2340425531915,
+              502
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            248,
+            440,
+            301,
+            503
+          ],
+          [
+            288,
+            440,
+            343,
+            503
+          ],
+          [
+            333,
+            440,
+            385,
+            503
+          ]
+        ]
+      },
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    }
+  ],
+  "independent14_geometry_rows": [
+    {
+      "frame": 2549,
+      "template_match_score": 0.99555,
+      "reviewed_crop_xyxy": [
+        95,
+        410,
+        229,
+        475
+      ],
+      "detector_bbox": [
+        97,
+        403,
+        130,
+        73
+      ],
+      "modes": {
+        "detector_raw": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              140,
+              476
+            ],
+            [
+              140,
+              403,
+              184,
+              476
+            ],
+            [
+              184,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "detector_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              142,
+              476
+            ],
+            [
+              138,
+              403,
+              186,
+              476
+            ],
+            [
+              182,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "body_context_no_seam": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.837063,
+            0.798974
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              141,
+              471
+            ],
+            [
+              141,
+              414,
+              183,
+              471
+            ],
+            [
+              183,
+              414,
+              225,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            225,
+            471
+          ],
+          "face_plane_geometry": null
+        },
+        "body_context_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.876923,
+            0.798974
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              143,
+              471
+            ],
+            [
+              139,
+              414,
+              185,
+              471
+            ],
+            [
+              181,
+              414,
+              225,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            225,
+            471
+          ],
+          "face_plane_geometry": null
+        },
+        "outer_body_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.875897,
+            0.917133,
+            0.917607
+          ],
+          "face_boxes": [
+            [
+              98,
+              414,
+              145,
+              476
+            ],
+            [
+              141,
+              414,
+              189,
+              476
+            ],
+            [
+              185,
+              414,
+              232,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "face_plane_seam_boxes": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.847179,
+            0.907692,
+            0.907692
+          ],
+          "face_boxes": [
+            [
+              98,
+              413,
+              150,
+              472
+            ],
+            [
+              134,
+              413,
+              190,
+              472
+            ],
+            [
+              175,
+              413,
+              233,
+              472
+            ]
+          ],
+          "raw_group_xyxy": null,
+          "face_plane_geometry": {
+            "search_xyxy": [
+              84,
+              396,
+              240,
+              480
+            ],
+            "background_rgb": [
+              2.0,
+              52.0,
+              60.0
+            ],
+            "distance_threshold": 30,
+            "search_padding_fraction": 0.1,
+            "eligible_contours": 1,
+            "outer_body_xyxy": [
+              98,
+              414,
+              232,
+              476
+            ],
+            "face_plane_rows": [
+              415,
+              470
+            ],
+            "blank_band_rows": [
+              415,
+              460
+            ],
+            "measured_seams_in_outer_body": [
+              [
+                48,
+                88
+              ],
+              [
+                40,
+                81
+              ]
+            ],
+            "face_quads": [
+              [
+                [
+                  98.0,
+                  413
+                ],
+                [
+                  148.35555555555555,
+                  413
+                ],
+                [
+                  138.04444444444445,
+                  471
+                ],
+                [
+                  98.0,
+                  471
+                ]
+              ],
+              [
+                [
+                  144.35555555555555,
+                  413
+                ],
+                [
+                  188.31111111111113,
+                  413
+                ],
+                [
+                  179.2888888888889,
+                  471
+                ],
+                [
+                  134.04444444444445,
+                  471
+                ]
+              ],
+              [
+                [
+                  184.31111111111113,
+                  413
+                ],
+                [
+                  232.0,
+                  413
+                ],
+                [
+                  232.0,
+                  471
+                ],
+                [
+                  175.2888888888889,
+                  471
+                ]
+              ]
+            ],
+            "vertical_context": 2,
+            "seam_context": 2,
+            "face_xyxy": [
+              [
+                98,
+                413,
+                150,
+                472
+              ],
+              [
+                134,
+                413,
+                190,
+                472
+              ],
+              [
+                175,
+                413,
+                233,
+                472
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "frame": 2552,
+      "template_match_score": 0.998594,
+      "reviewed_crop_xyxy": [
+        95,
+        410,
+        229,
+        475
+      ],
+      "detector_bbox": [
+        97,
+        403,
+        130,
+        73
+      ],
+      "modes": {
+        "detector_raw": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              140,
+              476
+            ],
+            [
+              140,
+              403,
+              184,
+              476
+            ],
+            [
+              184,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "detector_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              142,
+              476
+            ],
+            [
+              138,
+              403,
+              186,
+              476
+            ],
+            [
+              182,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "body_context_no_seam": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.837063,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              142,
+              471
+            ],
+            [
+              142,
+              414,
+              184,
+              471
+            ],
+            [
+              184,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ],
+          "face_plane_geometry": null
+        },
+        "body_context_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.876923,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              144,
+              471
+            ],
+            [
+              140,
+              414,
+              186,
+              471
+            ],
+            [
+              182,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ],
+          "face_plane_geometry": null
+        },
+        "outer_body_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.875897,
+            0.917133,
+            0.917607
+          ],
+          "face_boxes": [
+            [
+              98,
+              414,
+              145,
+              476
+            ],
+            [
+              141,
+              414,
+              189,
+              476
+            ],
+            [
+              185,
+              414,
+              232,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "face_plane_seam_boxes": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.847179,
+            0.907692,
+            0.907692
+          ],
+          "face_boxes": [
+            [
+              98,
+              413,
+              149,
+              472
+            ],
+            [
+              134,
+              413,
+              189,
+              472
+            ],
+            [
+              175,
+              413,
+              233,
+              472
+            ]
+          ],
+          "raw_group_xyxy": null,
+          "face_plane_geometry": {
+            "search_xyxy": [
+              84,
+              396,
+              240,
+              480
+            ],
+            "background_rgb": [
+              2.0,
+              50.0,
+              62.0
+            ],
+            "distance_threshold": 30,
+            "search_padding_fraction": 0.1,
+            "eligible_contours": 1,
+            "outer_body_xyxy": [
+              98,
+              414,
+              232,
+              476
+            ],
+            "face_plane_rows": [
+              415,
+              470
+            ],
+            "blank_band_rows": [
+              416,
+              460
+            ],
+            "measured_seams_in_outer_body": [
+              [
+                47,
+                87
+              ],
+              [
+                40,
+                81
+              ]
+            ],
+            "face_quads": [
+              [
+                [
+                  98.0,
+                  413
+                ],
+                [
+                  147.47727272727272,
+                  413
+                ],
+                [
+                  138.25,
+                  471
+                ],
+                [
+                  98.0,
+                  471
+                ]
+              ],
+              [
+                [
+                  143.47727272727272,
+                  413
+                ],
+                [
+                  187.4090909090909,
+                  413
+                ],
+                [
+                  179.5,
+                  471
+                ],
+                [
+                  134.25,
+                  471
+                ]
+              ],
+              [
+                [
+                  183.4090909090909,
+                  413
+                ],
+                [
+                  232.0,
+                  413
+                ],
+                [
+                  232.0,
+                  471
+                ],
+                [
+                  175.5,
+                  471
+                ]
+              ]
+            ],
+            "vertical_context": 2,
+            "seam_context": 2,
+            "face_xyxy": [
+              [
+                98,
+                413,
+                149,
+                472
+              ],
+              [
+                134,
+                413,
+                189,
+                472
+              ],
+              [
+                175,
+                413,
+                233,
+                472
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "frame": 2555,
+      "template_match_score": 0.998266,
+      "reviewed_crop_xyxy": [
+        95,
+        410,
+        229,
+        475
+      ],
+      "detector_bbox": [
+        97,
+        403,
+        130,
+        73
+      ],
+      "modes": {
+        "detector_raw": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              140,
+              476
+            ],
+            [
+              140,
+              403,
+              184,
+              476
+            ],
+            [
+              184,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "detector_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              142,
+              476
+            ],
+            [
+              138,
+              403,
+              186,
+              476
+            ],
+            [
+              182,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "body_context_no_seam": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.837063,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              142,
+              471
+            ],
+            [
+              142,
+              414,
+              184,
+              471
+            ],
+            [
+              184,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ],
+          "face_plane_geometry": null
+        },
+        "body_context_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.876923,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              144,
+              471
+            ],
+            [
+              140,
+              414,
+              186,
+              471
+            ],
+            [
+              182,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ],
+          "face_plane_geometry": null
+        },
+        "outer_body_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.875897,
+            0.917133,
+            0.917607
+          ],
+          "face_boxes": [
+            [
+              98,
+              414,
+              145,
+              476
+            ],
+            [
+              141,
+              414,
+              189,
+              476
+            ],
+            [
+              185,
+              414,
+              232,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ],
+          "face_plane_geometry": null
+        },
+        "face_plane_seam_boxes": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.847179,
+            0.907692,
+            0.907692
+          ],
+          "face_boxes": [
+            [
+              98,
+              413,
+              149,
+              472
+            ],
+            [
+              134,
+              413,
+              189,
+              472
+            ],
+            [
+              175,
+              413,
+              233,
+              472
+            ]
+          ],
+          "raw_group_xyxy": null,
+          "face_plane_geometry": {
+            "search_xyxy": [
+              84,
+              396,
+              240,
+              480
+            ],
+            "background_rgb": [
+              2.0,
+              49.0,
+              61.0
+            ],
+            "distance_threshold": 30,
+            "search_padding_fraction": 0.1,
+            "eligible_contours": 1,
+            "outer_body_xyxy": [
+              98,
+              414,
+              232,
+              476
+            ],
+            "face_plane_rows": [
+              415,
+              470
+            ],
+            "blank_band_rows": [
+              416,
+              460
+            ],
+            "measured_seams_in_outer_body": [
+              [
+                47,
+                87
+              ],
+              [
+                40,
+                81
+              ]
+            ],
+            "face_quads": [
+              [
+                [
+                  98.0,
+                  413
+                ],
+                [
+                  147.47727272727272,
+                  413
+                ],
+                [
+                  138.25,
+                  471
+                ],
+                [
+                  98.0,
+                  471
+                ]
+              ],
+              [
+                [
+                  143.47727272727272,
+                  413
+                ],
+                [
+                  187.4090909090909,
+                  413
+                ],
+                [
+                  179.5,
+                  471
+                ],
+                [
+                  134.25,
+                  471
+                ]
+              ],
+              [
+                [
+                  183.4090909090909,
+                  413
+                ],
+                [
+                  232.0,
+                  413
+                ],
+                [
+                  232.0,
+                  471
+                ],
+                [
+                  175.5,
+                  471
+                ]
+              ]
+            ],
+            "vertical_context": 2,
+            "seam_context": 2,
+            "face_xyxy": [
+              [
+                98,
+                413,
+                149,
+                472
+              ],
+              [
+                134,
+                413,
+                189,
+                472
+              ],
+              [
+                175,
+                413,
+                233,
+                472
+              ]
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "query_transform": "normalize_single_face in all modes",
+  "reference_transform_ablation": "raw bank extraction versus same normalize_single_face before extraction",
+  "reference_images_and_source_exclusions_unchanged": true,
+  "scorer_changed": false,
+  "thresholds_changed": false,
+  "geometry_parameters_unchanged_between_reference_ablations": true,
+  "source_disjoint_independent14_identity_accuracy_measured": false,
+  "independent_original_matches_with_scorable_identity": 1,
+  "pixel_exact_body_truth_available": false,
+  "formal_promotion_evidence": false,
+  "development_only": true,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "decision": "retain_symmetric_preprocessing_for_development; qualify_independent_reference_support_before_promotion"
+}

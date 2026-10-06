@@ -1,0 +1,70 @@
+{
+  "schema_version": "issue69_hand2_public_change_localization_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb"
+  },
+  "candidates": [
+    {
+      "timestamp_seconds": 2.25,
+      "dominant_change_bbox_approx": [
+        517,
+        55,
+        65,
+        75
+      ],
+      "diagnosis": "DOMINANT_SHARED_UI_CHANGE",
+      "upgrade_to_discard_candidate": false,
+      "ledger_kind": "UNKNOWN"
+    },
+    {
+      "timestamp_seconds": 3.5,
+      "dominant_change_bbox_approx": [
+        517,
+        55,
+        65,
+        75
+      ],
+      "diagnosis": "DOMINANT_SHARED_UI_CHANGE",
+      "upgrade_to_discard_candidate": false,
+      "ledger_kind": "UNKNOWN"
+    },
+    {
+      "timestamp_seconds": 9.25,
+      "dominant_change_bbox_approx": [
+        517,
+        55,
+        65,
+        75
+      ],
+      "diagnosis": "DOMINANT_SHARED_UI_CHANGE",
+      "upgrade_to_discard_candidate": false,
+      "ledger_kind": "UNKNOWN"
+    },
+    {
+      "timestamp_seconds": 17,
+      "dominant_change_bbox_approx": [
+        517,
+        55,
+        65,
+        75
+      ],
+      "diagnosis": "DOMINANT_SHARED_UI_CHANGE",
+      "upgrade_to_discard_candidate": false,
+      "ledger_kind": "UNKNOWN"
+    }
+  ],
+  "conclusion": "Repeated dominant localization in the same upper-screen dynamic region is not sufficient evidence of river growth. Pixel persistence candidates remain UNKNOWN.",
+  "next_required_gate": "RIVER_GEOMETRY_COMPONENT_COUNT_AND_STABLE_PLUS_ONE",
+  "policy": {
+    "no_manual_roi_cherry_picking": true,
+    "pixel_difference_not_discard_truth": true,
+    "negative_evidence_preserved": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

@@ -1,0 +1,1829 @@
+{
+  "schema_version": "new_match_p1_identity_development_v0_1",
+  "audited_code_sha": "a3b553c92ccbd2edd4a1a4e0e3137c04b69d284b",
+  "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+  "original_match_group": "new_match_20261003_owner_uploaded",
+  "query_hand": 7,
+  "query_sampling": "FFmpeg auto-rotation then resize 1046x480; 23/24/25s requested timestamps, exact presentation frame anchors not claimed",
+  "labels": "assistant visual review, not owner adjudication",
+  "private_reference_load": {
+    "schema_version": "public_meld_private_sift_load_v0_1",
+    "private_template_count": 15,
+    "recovery_ids": [
+      "G02_hand2_m345",
+      "G03_hand2_m123",
+      "G07_hand5_p345",
+      "G08_hand5_m567",
+      "G09_hand6_p789"
+    ],
+    "tile_ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M3",
+      "M4",
+      "M5",
+      "M5",
+      "M6",
+      "M7",
+      "P3",
+      "P4",
+      "P5",
+      "P7",
+      "P8",
+      "P9"
+    ],
+    "private_pixels_committed_to_repository": false,
+    "source_disjoint_holdout": false,
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  },
+  "reference_template_count": 36,
+  "class_support": {
+    "M1": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "M2": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "M3": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "M4": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_b389"
+    ],
+    "M5": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_b389"
+    ],
+    "M6": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_b389"
+    ],
+    "M7": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "P1": [
+      "reviewed_recording_66fe"
+    ],
+    "P3": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "P4": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "P5": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "P6": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_b389"
+    ],
+    "P7": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_b389"
+    ],
+    "P8": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_b389"
+    ],
+    "P9": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "S2": [
+      "reviewed_recording_14"
+    ],
+    "S3": [
+      "reviewed_recording_14"
+    ],
+    "S4": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_14"
+    ],
+    "S5": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "S6": [
+      "reviewed_match_2026_09_19_eight_hand"
+    ],
+    "S7": [
+      "reviewed_recording_66fe"
+    ],
+    "S8": [
+      "reviewed_recording_66fe"
+    ],
+    "S9": [
+      "reviewed_recording_66fe"
+    ]
+  },
+  "rows": [
+    {
+      "requested_seek_seconds": 23,
+      "face_index": 0,
+      "mode": "canonical_group_split",
+      "crop_sha256": "ccf711303bd3e9644db764f34951dd5459ab3dcfc2373b0f6dcafe9c6c5db56e",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.3370239,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.03929149,
+          "margin": 0.29773242,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.33702390403473487,
+            "M6": 0.03929148661499063,
+            "P5": 0.03536550698257466,
+            "S2": 0.02659559668191159,
+            "P4": 0.02247778686801315,
+            "S7": 0.022381817745666815,
+            "M4": 0.021507611921134748,
+            "P7": 0.02097339082646172,
+            "S9": 0.020071586371255647,
+            "P6": 0.01920227036843559,
+            "M3": 0.01725519767543504,
+            "S6": 0.016849412795290227,
+            "P8": 0.01677860682569988,
+            "M1": 0.01674566739840041,
+            "P9": 0.01627433797743314,
+            "M5": 0.016244382295713334,
+            "S4": 0.014054380949725822,
+            "S3": 0.011844943110940689,
+            "M7": 0.007451390890863377,
+            "M2": 0.006354255565257844,
+            "P3": 0.003956045495006108,
+            "S8": 0.0033916887065709002,
+            "S5": 0.003311968803129794
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01771044,
+          "runner_up_tile": "P8",
+          "runner_up_score": 0.01673622,
+          "margin": 0.00097423,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01771044388464664,
+            "P8": 0.016736218060499915,
+            "M4": 0.01650190404163951,
+            "S4": 0.010157694459063643,
+            "M5": 0.010084533436023377,
+            "P7": 0.0039512370466094765,
+            "P6": 0.0031602579051293817
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 23,
+      "face_index": 1,
+      "mode": "canonical_group_split",
+      "crop_sha256": "9aa358d69ab45c214c9a4db7fead416c7f1d466b8f5041deea39bd7e16630668",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.34272466,
+          "runner_up_tile": "P4",
+          "runner_up_score": 0.0345637,
+          "margin": 0.30816096,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3427246629205395,
+            "P4": 0.03456370097128825,
+            "M6": 0.03187886672495734,
+            "M4": 0.03159252965685679,
+            "P5": 0.031084862289774303,
+            "S3": 0.022937553694813477,
+            "S7": 0.020115992318254543,
+            "S9": 0.018305391560135206,
+            "P3": 0.01788804273215833,
+            "P6": 0.01768449780851035,
+            "S5": 0.017610205664501506,
+            "P7": 0.01713215002710778,
+            "S6": 0.017048484812790594,
+            "P8": 0.016365198023990238,
+            "S2": 0.016298054491367404,
+            "P9": 0.016117525089489448,
+            "S4": 0.013552728325142227,
+            "M5": 0.012770080101387452,
+            "M3": 0.009923581771260013,
+            "M1": 0.009689383617643895,
+            "S8": 0.009189788712326164,
+            "M2": 0.0058542929933574645,
+            "M7": 0.002877736761207743
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.01877246,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.01704916,
+          "margin": 0.0017233,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.01877245896572555,
+            "M6": 0.017049158246719678,
+            "P6": 0.016502058365878834,
+            "P8": 0.015957185499982915,
+            "P7": 0.013457029614715628,
+            "M5": 0.008158880808114636,
+            "S4": 0.005431235238055774
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 23,
+      "face_index": 2,
+      "mode": "canonical_group_split",
+      "crop_sha256": "0767a56406878ecd6f0b4bf3897626f2a2f9e37d854c78e7ca2e7c6b40891fbe",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.37436488,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.02921214,
+          "margin": 0.34515273,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3743648773282206,
+            "P5": 0.029212143221904005,
+            "S4": 0.027416790417855594,
+            "M3": 0.021358113240649484,
+            "P4": 0.020721983116381452,
+            "M6": 0.020691698346397842,
+            "P6": 0.019294579390240183,
+            "P7": 0.01794253467410705,
+            "S9": 0.017706207121426995,
+            "P8": 0.016778136032444966,
+            "P9": 0.016337068177505118,
+            "S2": 0.016009859196493465,
+            "M4": 0.015546864275007224,
+            "M5": 0.015237189148269003,
+            "M7": 0.013770321900132545,
+            "M1": 0.012575693652449043,
+            "S5": 0.010119064877242278,
+            "S3": 0.0074109850076144205,
+            "P3": 0.006429810396825634,
+            "M2": 0.006302222919306477,
+            "S8": 0.005670408378249879,
+            "S7": 0.003596048560702634,
+            "S6": 0.002627404628892326
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P6",
+          "top1_score": 0.01698622,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.01679903,
+          "margin": 0.00018719,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P6": 0.01698622080961135,
+            "M6": 0.0167990301184955,
+            "M5": 0.009964854115775135,
+            "M4": 0.006916865291974519,
+            "S4": 0.0060947746950973545,
+            "P8": 0.0034208952936485956,
+            "P7": 0.0030242921690694508
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 23,
+      "face_index": 0,
+      "mode": "body_context_seam2",
+      "crop_sha256": "3f2e77ee8599eddfd0f9bb5fe6e36416aa5ad00972cc4c4ddc73f1ad9fadac9d",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.28256521,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.03351629,
+          "margin": 0.24904892,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.28256520959782383,
+            "M6": 0.03351629211126026,
+            "P5": 0.031533660201065815,
+            "M4": 0.0315190533521568,
+            "M1": 0.028976717416381564,
+            "S9": 0.021407808814469288,
+            "P4": 0.020656807294253524,
+            "S5": 0.019705406103114505,
+            "M5": 0.01969749824483413,
+            "P6": 0.016391909096138888,
+            "M3": 0.016169200259157225,
+            "P9": 0.015868761929538396,
+            "P8": 0.015802615456315953,
+            "S2": 0.013341793083876554,
+            "P7": 0.012362080831750586,
+            "S3": 0.011551427780045557,
+            "S4": 0.009611988703097261,
+            "M7": 0.009213241785740393,
+            "P3": 0.007090318690004767,
+            "S8": 0.006699456890723543,
+            "M2": 0.00629593477689785,
+            "S7": 0.0056434588006022525,
+            "S6": 0.002785526212661937
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.02058653,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.01254935,
+          "margin": 0.00803718,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.020586530146877554,
+            "M5": 0.012549346714120224,
+            "S4": 0.00707521682264078,
+            "P7": 0.006092285161447277,
+            "P8": 0.002975516461140398,
+            "M6": 0.0028495365068167823,
+            "P6": 0.0027938755396997965
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 23,
+      "face_index": 1,
+      "mode": "body_context_seam2",
+      "crop_sha256": "a1f6b20e7ac735d2d757ca29ee2aeff835db0f9b6a39d1499d70444db8042b49",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.30818873,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.03569803,
+          "margin": 0.27249071,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3081887344687369,
+            "P5": 0.03569802851365717,
+            "M6": 0.031135108473361033,
+            "P4": 0.026917584428306694,
+            "S2": 0.02546398001039103,
+            "M4": 0.02267817353279145,
+            "S7": 0.018382766676846154,
+            "S9": 0.017670460408677716,
+            "S5": 0.017510192173717867,
+            "P6": 0.017090296137363587,
+            "S6": 0.016999560547248892,
+            "P3": 0.0169271978412533,
+            "P9": 0.01550841886406814,
+            "P8": 0.015414531699771812,
+            "M3": 0.014626022485032324,
+            "S3": 0.012270532130603827,
+            "M1": 0.009547326232621675,
+            "M2": 0.009371403345979181,
+            "S4": 0.009359742538527388,
+            "M5": 0.009246382638144524,
+            "M7": 0.008331825476251085,
+            "P7": 0.006029401150725415,
+            "S8": 0.00316116063448183
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P6",
+          "top1_score": 0.01612166,
+          "runner_up_tile": "M4",
+          "runner_up_score": 0.01054134,
+          "margin": 0.00558032,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P6": 0.01612165647579999,
+            "M4": 0.010541337727380331,
+            "M5": 0.006380499908701877,
+            "S4": 0.005387550381890807,
+            "M6": 0.0036506356805297165,
+            "P7": 0.003141834638515951,
+            "P8": 0.0030920088725405965
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 23,
+      "face_index": 2,
+      "mode": "body_context_seam2",
+      "crop_sha256": "cce591dad1414f0838758929553ce23b4a0cc3e69d3b37e3faae59ed689d25c6",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.35382098,
+          "runner_up_tile": "S2",
+          "runner_up_score": 0.02271,
+          "margin": 0.33111098,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.35382098224651115,
+            "S2": 0.02271000133985772,
+            "M6": 0.02044544683988492,
+            "S4": 0.019219717478130005,
+            "S3": 0.018805154200772337,
+            "S9": 0.018637643966102013,
+            "P6": 0.018484641208195138,
+            "S5": 0.01830147397908851,
+            "P7": 0.01757433313268302,
+            "P8": 0.017121935382313307,
+            "M4": 0.016243315990473867,
+            "P9": 0.016169244939487213,
+            "P5": 0.016137943762826696,
+            "M5": 0.013900947950748421,
+            "P4": 0.013752637403350296,
+            "M3": 0.012667550338929964,
+            "M1": 0.009218234845810431,
+            "S7": 0.007321053399000063,
+            "M2": 0.006314040565417631,
+            "M7": 0.004457775810934148,
+            "P3": 0.002999816447998711,
+            "S8": 0.002822623506575641,
+            "S6": 0.002582993892348243
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01748079,
+          "runner_up_tile": "P8",
+          "runner_up_score": 0.01651489,
+          "margin": 0.00096589,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01748078836392347,
+            "P8": 0.01651489474365293,
+            "P7": 0.009479457527088562,
+            "M4": 0.005754254624011053,
+            "P6": 0.0032584218490867805,
+            "M5": 0.003001225384351112,
+            "S4": 0.002696488672739691
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 24,
+      "face_index": 0,
+      "mode": "canonical_group_split",
+      "crop_sha256": "ccf711303bd3e9644db764f34951dd5459ab3dcfc2373b0f6dcafe9c6c5db56e",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.3370239,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.03929149,
+          "margin": 0.29773242,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.33702390403473487,
+            "M6": 0.03929148661499063,
+            "P5": 0.03536550698257466,
+            "S2": 0.02659559668191159,
+            "P4": 0.02247778686801315,
+            "S7": 0.022381817745666815,
+            "M4": 0.021507611921134748,
+            "P7": 0.02097339082646172,
+            "S9": 0.020071586371255647,
+            "P6": 0.01920227036843559,
+            "M3": 0.01725519767543504,
+            "S6": 0.016849412795290227,
+            "P8": 0.01677860682569988,
+            "M1": 0.01674566739840041,
+            "P9": 0.01627433797743314,
+            "M5": 0.016244382295713334,
+            "S4": 0.014054380949725822,
+            "S3": 0.011844943110940689,
+            "M7": 0.007451390890863377,
+            "M2": 0.006354255565257844,
+            "P3": 0.003956045495006108,
+            "S8": 0.0033916887065709002,
+            "S5": 0.003311968803129794
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01771044,
+          "runner_up_tile": "P8",
+          "runner_up_score": 0.01673622,
+          "margin": 0.00097423,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01771044388464664,
+            "P8": 0.016736218060499915,
+            "M4": 0.01650190404163951,
+            "S4": 0.010157694459063643,
+            "M5": 0.010084533436023377,
+            "P7": 0.0039512370466094765,
+            "P6": 0.0031602579051293817
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 24,
+      "face_index": 1,
+      "mode": "canonical_group_split",
+      "crop_sha256": "7f1c494574638e7c9863652d4ad82634dc022229000cee20ac7a983045749e91",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.30577772,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.04865549,
+          "margin": 0.25712223,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3057777248142524,
+            "P5": 0.04865549023503041,
+            "M6": 0.041521861064604336,
+            "P4": 0.03810280984152508,
+            "S7": 0.020075385129673093,
+            "S2": 0.019350591633059997,
+            "S9": 0.018265677693488174,
+            "P3": 0.018189587997394306,
+            "P6": 0.01766953386057077,
+            "S5": 0.017655603910664543,
+            "S6": 0.017109509591580217,
+            "P7": 0.017076239321826493,
+            "P8": 0.01631144213816564,
+            "P9": 0.016121492131473996,
+            "M1": 0.012972680759812184,
+            "M4": 0.012678461483797261,
+            "M5": 0.01118790177619208,
+            "S3": 0.010686978419487386,
+            "S4": 0.010311489773421837,
+            "M3": 0.009987059004963661,
+            "S8": 0.00597142461566175,
+            "M2": 0.0058459039312357,
+            "M7": 0.002870344318683902
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.0173812,
+          "runner_up_tile": "P6",
+          "runner_up_score": 0.01640661,
+          "margin": 0.00097458,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01738119791037773,
+            "P6": 0.01640661422077735,
+            "P8": 0.015938229399682854,
+            "M4": 0.012626474752059778,
+            "P7": 0.012031819440459628,
+            "S4": 0.005431235238055774,
+            "M5": 0.0047261291930280076
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 24,
+      "face_index": 2,
+      "mode": "canonical_group_split",
+      "crop_sha256": "6d899662d871515192eb0faf3ca12708b51b509516aa9505fc67af7775ef2a40",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.37436488,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.02921214,
+          "margin": 0.34515273,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3743648773282206,
+            "P5": 0.029212143221904005,
+            "S4": 0.027416790417855594,
+            "M3": 0.021358113240649484,
+            "P4": 0.020721983116381452,
+            "M6": 0.020691698346397842,
+            "P6": 0.019294579390240183,
+            "P7": 0.01794253467410705,
+            "S9": 0.017706207121426995,
+            "P8": 0.016778136032444966,
+            "P9": 0.016337068177505118,
+            "S2": 0.016009859196493465,
+            "M4": 0.015546864275007224,
+            "M5": 0.015237189148269003,
+            "M7": 0.013770321900132545,
+            "M1": 0.012575693652449043,
+            "S5": 0.010119064877242278,
+            "S3": 0.0074109850076144205,
+            "P3": 0.006429810396825634,
+            "M2": 0.006302222919306477,
+            "S8": 0.005670408378249879,
+            "S7": 0.003596048560702634,
+            "S6": 0.002627404628892326
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P6",
+          "top1_score": 0.01698622,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.01679903,
+          "margin": 0.00018719,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P6": 0.01698622080961135,
+            "M6": 0.0167990301184955,
+            "M5": 0.009964854115775135,
+            "M4": 0.006916865291974519,
+            "S4": 0.0060947746950973545,
+            "P8": 0.0034208952936485956,
+            "P7": 0.0030242921690694508
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 24,
+      "face_index": 0,
+      "mode": "body_context_seam2",
+      "crop_sha256": "3f2e77ee8599eddfd0f9bb5fe6e36416aa5ad00972cc4c4ddc73f1ad9fadac9d",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.28256521,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.03351629,
+          "margin": 0.24904892,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.28256520959782383,
+            "M6": 0.03351629211126026,
+            "P5": 0.031533660201065815,
+            "M4": 0.0315190533521568,
+            "M1": 0.028976717416381564,
+            "S9": 0.021407808814469288,
+            "P4": 0.020656807294253524,
+            "S5": 0.019705406103114505,
+            "M5": 0.01969749824483413,
+            "P6": 0.016391909096138888,
+            "M3": 0.016169200259157225,
+            "P9": 0.015868761929538396,
+            "P8": 0.015802615456315953,
+            "S2": 0.013341793083876554,
+            "P7": 0.012362080831750586,
+            "S3": 0.011551427780045557,
+            "S4": 0.009611988703097261,
+            "M7": 0.009213241785740393,
+            "P3": 0.007090318690004767,
+            "S8": 0.006699456890723543,
+            "M2": 0.00629593477689785,
+            "S7": 0.0056434588006022525,
+            "S6": 0.002785526212661937
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.02058653,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.01254935,
+          "margin": 0.00803718,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.020586530146877554,
+            "M5": 0.012549346714120224,
+            "S4": 0.00707521682264078,
+            "P7": 0.006092285161447277,
+            "P8": 0.002975516461140398,
+            "M6": 0.0028495365068167823,
+            "P6": 0.0027938755396997965
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 24,
+      "face_index": 1,
+      "mode": "body_context_seam2",
+      "crop_sha256": "4c987dde14b5b43c6413e461d3a7720db44badb0208210f87dee16ff7ac09013",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.30116613,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.03565379,
+          "margin": 0.26551235,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.301166132707801,
+            "P5": 0.0356537857242683,
+            "M6": 0.03136767681382702,
+            "P4": 0.027102465719887385,
+            "M4": 0.025582379081578562,
+            "P3": 0.020670237960899868,
+            "S2": 0.0189847566139293,
+            "S7": 0.01837839554991561,
+            "S9": 0.017664830583773272,
+            "S5": 0.017504059191753914,
+            "S6": 0.017008934798432702,
+            "P6": 0.016404760224063553,
+            "P9": 0.015524426477902375,
+            "P8": 0.015461242729846982,
+            "M3": 0.01459188651388262,
+            "S3": 0.013097217300973199,
+            "M5": 0.013046481097130351,
+            "M1": 0.012796761756943097,
+            "M2": 0.009356876548509576,
+            "S4": 0.00800126387151486,
+            "M7": 0.006878293273103487,
+            "P7": 0.006010922220623757,
+            "S8": 0.003145449791256863
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.01071681,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.00667506,
+          "margin": 0.00404175,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.010716810139892017,
+            "M5": 0.006675064479568589,
+            "S4": 0.006231780272691736,
+            "P6": 0.003926117391245482,
+            "M6": 0.0036550872784825586,
+            "P7": 0.0031282500415757107,
+            "P8": 0.0030870984195390115
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 24,
+      "face_index": 2,
+      "mode": "body_context_seam2",
+      "crop_sha256": "060bc0f63e8f243335bdd5863f4163f5a96f278e265dc829a24a8982a01e5f35",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.35382098,
+          "runner_up_tile": "S2",
+          "runner_up_score": 0.02271,
+          "margin": 0.33111098,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.35382098224651115,
+            "S2": 0.02271000133985772,
+            "M6": 0.02044779153336752,
+            "S4": 0.019219717478130005,
+            "S3": 0.018805154200772337,
+            "S9": 0.018637643966102013,
+            "P6": 0.018484641208195138,
+            "S5": 0.01830147397908851,
+            "P7": 0.01757433313268302,
+            "P8": 0.017121935382313307,
+            "M4": 0.016243315990473867,
+            "P9": 0.016169244939487213,
+            "P5": 0.01614116822985796,
+            "M5": 0.013900947950748421,
+            "P4": 0.013752637403350296,
+            "M3": 0.012667550338929964,
+            "M1": 0.009217869787274662,
+            "S7": 0.007321053399000063,
+            "M2": 0.006314040565417631,
+            "M7": 0.004457775810934148,
+            "P3": 0.002999816447998711,
+            "S8": 0.002822623506575641,
+            "S6": 0.002582993892348243
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01748079,
+          "runner_up_tile": "P8",
+          "runner_up_score": 0.01651489,
+          "margin": 0.00096589,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01748078836392347,
+            "P8": 0.01651489474365293,
+            "P7": 0.009479457527088562,
+            "M4": 0.005754254624011053,
+            "P6": 0.0032584218490867805,
+            "M5": 0.003001225384351112,
+            "S4": 0.002696488672739691
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 25,
+      "face_index": 0,
+      "mode": "canonical_group_split",
+      "crop_sha256": "ccf711303bd3e9644db764f34951dd5459ab3dcfc2373b0f6dcafe9c6c5db56e",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.3370239,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.03929149,
+          "margin": 0.29773242,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.33702390403473487,
+            "M6": 0.03929148661499063,
+            "P5": 0.03536550698257466,
+            "S2": 0.02659559668191159,
+            "P4": 0.02247778686801315,
+            "S7": 0.022381817745666815,
+            "M4": 0.021507611921134748,
+            "P7": 0.02097339082646172,
+            "S9": 0.020071586371255647,
+            "P6": 0.01920227036843559,
+            "M3": 0.01725519767543504,
+            "S6": 0.016849412795290227,
+            "P8": 0.01677860682569988,
+            "M1": 0.01674566739840041,
+            "P9": 0.01627433797743314,
+            "M5": 0.016244382295713334,
+            "S4": 0.014054380949725822,
+            "S3": 0.011844943110940689,
+            "M7": 0.007451390890863377,
+            "M2": 0.006354255565257844,
+            "P3": 0.003956045495006108,
+            "S8": 0.0033916887065709002,
+            "S5": 0.003311968803129794
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01771044,
+          "runner_up_tile": "P8",
+          "runner_up_score": 0.01673622,
+          "margin": 0.00097423,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01771044388464664,
+            "P8": 0.016736218060499915,
+            "M4": 0.01650190404163951,
+            "S4": 0.010157694459063643,
+            "M5": 0.010084533436023377,
+            "P7": 0.0039512370466094765,
+            "P6": 0.0031602579051293817
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 25,
+      "face_index": 1,
+      "mode": "canonical_group_split",
+      "crop_sha256": "f6ac7fae7412c4347b1eb974a36fc8a16cff9398d7f38203688318507c9cdf0e",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.29601632,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.0486552,
+          "margin": 0.24736113,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.2960163227596248,
+            "P5": 0.048655195984897044,
+            "M6": 0.04149962955365783,
+            "P4": 0.034856174915223,
+            "S7": 0.020099352187230666,
+            "S2": 0.019378744632724237,
+            "S9": 0.01828645370336794,
+            "P3": 0.018245481776601225,
+            "P6": 0.017716764133379897,
+            "S5": 0.017703013663627656,
+            "S6": 0.0171444897919548,
+            "P7": 0.017077629437413647,
+            "P8": 0.016386284248024175,
+            "P9": 0.01612483773791517,
+            "M1": 0.012979925663405618,
+            "M4": 0.012678461483797261,
+            "M5": 0.011187023701926086,
+            "S3": 0.010686978419487386,
+            "S4": 0.010311135016773531,
+            "M3": 0.009983827466981586,
+            "S8": 0.005961185980934411,
+            "M2": 0.0058459039312357,
+            "M7": 0.002870344318683902
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01736815,
+          "runner_up_tile": "P6",
+          "runner_up_score": 0.01644534,
+          "margin": 0.00092282,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01736815320135855,
+            "P6": 0.01644533617031442,
+            "P8": 0.01600864060123076,
+            "M4": 0.012626474752059778,
+            "P7": 0.012028581187084096,
+            "S4": 0.005431235238055774,
+            "M5": 0.0047261291930280076
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 25,
+      "face_index": 2,
+      "mode": "canonical_group_split",
+      "crop_sha256": "6d899662d871515192eb0faf3ca12708b51b509516aa9505fc67af7775ef2a40",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.37436488,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.02921214,
+          "margin": 0.34515273,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3743648773282206,
+            "P5": 0.029212143221904005,
+            "S4": 0.027416790417855594,
+            "M3": 0.021358113240649484,
+            "P4": 0.020721983116381452,
+            "M6": 0.020691698346397842,
+            "P6": 0.019294579390240183,
+            "P7": 0.01794253467410705,
+            "S9": 0.017706207121426995,
+            "P8": 0.016778136032444966,
+            "P9": 0.016337068177505118,
+            "S2": 0.016009859196493465,
+            "M4": 0.015546864275007224,
+            "M5": 0.015237189148269003,
+            "M7": 0.013770321900132545,
+            "M1": 0.012575693652449043,
+            "S5": 0.010119064877242278,
+            "S3": 0.0074109850076144205,
+            "P3": 0.006429810396825634,
+            "M2": 0.006302222919306477,
+            "S8": 0.005670408378249879,
+            "S7": 0.003596048560702634,
+            "S6": 0.002627404628892326
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P6",
+          "top1_score": 0.01698622,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.01679903,
+          "margin": 0.00018719,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P6": 0.01698622080961135,
+            "M6": 0.0167990301184955,
+            "M5": 0.009964854115775135,
+            "M4": 0.006916865291974519,
+            "S4": 0.0060947746950973545,
+            "P8": 0.0034208952936485956,
+            "P7": 0.0030242921690694508
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 25,
+      "face_index": 0,
+      "mode": "body_context_seam2",
+      "crop_sha256": "3f2e77ee8599eddfd0f9bb5fe6e36416aa5ad00972cc4c4ddc73f1ad9fadac9d",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.28256521,
+          "runner_up_tile": "M6",
+          "runner_up_score": 0.03351629,
+          "margin": 0.24904892,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.28256520959782383,
+            "M6": 0.03351629211126026,
+            "P5": 0.031533660201065815,
+            "M4": 0.0315190533521568,
+            "M1": 0.028976717416381564,
+            "S9": 0.021407808814469288,
+            "P4": 0.020656807294253524,
+            "S5": 0.019705406103114505,
+            "M5": 0.01969749824483413,
+            "P6": 0.016391909096138888,
+            "M3": 0.016169200259157225,
+            "P9": 0.015868761929538396,
+            "P8": 0.015802615456315953,
+            "S2": 0.013341793083876554,
+            "P7": 0.012362080831750586,
+            "S3": 0.011551427780045557,
+            "S4": 0.009611988703097261,
+            "M7": 0.009213241785740393,
+            "P3": 0.007090318690004767,
+            "S8": 0.006699456890723543,
+            "M2": 0.00629593477689785,
+            "S7": 0.0056434588006022525,
+            "S6": 0.002785526212661937
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.02058653,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.01254935,
+          "margin": 0.00803718,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.020586530146877554,
+            "M5": 0.012549346714120224,
+            "S4": 0.00707521682264078,
+            "P7": 0.006092285161447277,
+            "P8": 0.002975516461140398,
+            "M6": 0.0028495365068167823,
+            "P6": 0.0027938755396997965
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 25,
+      "face_index": 1,
+      "mode": "body_context_seam2",
+      "crop_sha256": "0b966aec53472d2a3a96d8d80939ee152f5230f28255e35632b799d46564f504",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.3235649,
+          "runner_up_tile": "P5",
+          "runner_up_score": 0.0356594,
+          "margin": 0.2879055,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.3235648996798896,
+            "P5": 0.03565939828607814,
+            "M6": 0.03135360297137986,
+            "P4": 0.027091981603129308,
+            "M4": 0.021525701068264156,
+            "S2": 0.019068063216689198,
+            "S7": 0.018389744825903193,
+            "S9": 0.017661158937667492,
+            "S5": 0.01751319587883203,
+            "S6": 0.017008752572854124,
+            "P3": 0.016976326438178962,
+            "P6": 0.016393939973684844,
+            "P9": 0.015515398644891293,
+            "P8": 0.015471595457666487,
+            "M3": 0.014596872105198331,
+            "S3": 0.013097217300973199,
+            "M1": 0.012793048152690854,
+            "M5": 0.009618098979860124,
+            "M2": 0.009356586513478283,
+            "S4": 0.009347318728190081,
+            "M7": 0.006878293273103487,
+            "P7": 0.006003804871028266,
+            "S8": 0.0031478565554199224
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M5",
+          "top1_score": 0.00639908,
+          "runner_up_tile": "M4",
+          "runner_up_score": 0.00628443,
+          "margin": 0.00011465,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M5": 0.006399083568744769,
+            "M4": 0.0062844321164629855,
+            "S4": 0.005386214492907992,
+            "P6": 0.003923901834676776,
+            "M6": 0.0036550872784825586,
+            "P7": 0.0031272218516153845,
+            "P8": 0.0030853880773780078
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "requested_seek_seconds": 25,
+      "face_index": 2,
+      "mode": "body_context_seam2",
+      "crop_sha256": "060bc0f63e8f243335bdd5863f4163f5a96f278e265dc829a24a8982a01e5f35",
+      "detector_bbox": [
+        94,
+        402,
+        131,
+        74
+      ],
+      "visual_review_expected": "P1",
+      "ranking": {
+        "1": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "P1",
+          "top1_score": 0.35382098,
+          "runner_up_tile": "S2",
+          "runner_up_score": 0.02271,
+          "margin": 0.33111098,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "P1": 0.35382098224651115,
+            "S2": 0.02271000133985772,
+            "M6": 0.02044779153336752,
+            "S4": 0.019219717478130005,
+            "S3": 0.018805154200772337,
+            "S9": 0.018637643966102013,
+            "P6": 0.018484641208195138,
+            "S5": 0.01830147397908851,
+            "P7": 0.01757433313268302,
+            "P8": 0.017121935382313307,
+            "M4": 0.016243315990473867,
+            "P9": 0.016169244939487213,
+            "P5": 0.01614116822985796,
+            "M5": 0.013900947950748421,
+            "P4": 0.013752637403350296,
+            "M3": 0.012667550338929964,
+            "M1": 0.009217869787274662,
+            "S7": 0.007321053399000063,
+            "M2": 0.006314040565417631,
+            "M7": 0.004457775810934148,
+            "P3": 0.002999816447998711,
+            "S8": 0.002822623506575641,
+            "S6": 0.002582993892348243
+          },
+          "winner_other_match_groups": 1
+        },
+        "2": {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.01748079,
+          "runner_up_tile": "P8",
+          "runner_up_score": 0.01651489,
+          "margin": 0.00096589,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 2,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.01748078836392347,
+            "P8": 0.01651489474365293,
+            "P7": 0.009479457527088562,
+            "M4": 0.005754254624011053,
+            "P6": 0.0032584218490867805,
+            "M5": 0.003001225384351112,
+            "S4": 0.002696488672739691
+          },
+          "winner_other_match_groups": 2
+        }
+      },
+      "expected_class_support": [
+        "reviewed_recording_66fe"
+      ],
+      "runtime_identity": "UNKNOWN"
+    }
+  ],
+  "summary": {
+    "canonical_group_split": {
+      "1": {
+        "query_faces": 9,
+        "expected_class_eligible": true,
+        "top1_p1_faces": 9,
+        "correct_complete_p1_groups": 3,
+        "group_count": 3,
+        "runtime_accepted_faces": 0
+      },
+      "2": {
+        "query_faces": 9,
+        "expected_class_eligible": false,
+        "top1_p1_faces": 0,
+        "correct_complete_p1_groups": 0,
+        "group_count": 3,
+        "runtime_accepted_faces": 0
+      }
+    },
+    "body_context_seam2": {
+      "1": {
+        "query_faces": 9,
+        "expected_class_eligible": true,
+        "top1_p1_faces": 9,
+        "correct_complete_p1_groups": 3,
+        "group_count": 3,
+        "runtime_accepted_faces": 0
+      },
+      "2": {
+        "query_faces": 9,
+        "expected_class_eligible": false,
+        "top1_p1_faces": 0,
+        "correct_complete_p1_groups": 0,
+        "group_count": 3,
+        "runtime_accepted_faces": 0
+      }
+    }
+  },
+  "queries_added_to_bank": false,
+  "sift_parameters_or_runtime_threshold_changed": false,
+  "symmetric_reference_and_query_single_face_geometry": true,
+  "same_match_aliases_collapsed": [
+    "reviewed_match_2026_09_26_eight_hand",
+    "reviewed_match_2026_09_26_first_hand"
+  ],
+  "development_only": true,
+  "blind_holdout": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "runtime_identity_threshold": 0.82,
+  "dependency_versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.3.5",
+    "pillow": "12.3.0"
+  },
+  "frozen_input_sha256": {
+    "workspace/vision/public_meld_identity_sift.py": "028becdb38ebd1a8f851520361f96dc18ce58a06f57f87421f8f217a3bacc616",
+    "workspace/vision/public_meld_private_sift_loader.py": "7d04cd4b49a73033640b8fcca0596c8500a06b8013ff6b6381cc5898b0ed2cb8",
+    "workspace/vision/public_meld_geometry_normalization.py": "b31c0b2efb082051628149c1e20df92075fc6cbcb1c862cf4346e7acf42e6630",
+    "workspace/vision/public_tile_detector.py": "115fd435afbb79a767d52ae316b6dfe7fb3b29a8b726989b07f41ae72ade5acf",
+    "workspace/vision/public_meld_face_segmentation.py": "a77f8331244911e3a5d3fc047c215b990828427f838575ae8b6d961ca4294ae1",
+    "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+    "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json": "6cf0d63b66215f0833f822170e066123ff8c5286834030c74eab1d912295a744"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "public_meld_private_recovery_source_check_v0_1",
+  "checked_on": "2026-10-01",
+  "method": "connected_drive_raw_bytes_sha256",
+  "items": [
+    {
+      "recovery_id": "G04_hand3_m456",
+      "drive_visible_name": "5.mp4",
+      "observed_size_bytes": 18572048,
+      "expected_source_sha256": "bdec79b6ba7252126524046ee2c48aa086b40b4ae5224c78b902df32873def75",
+      "observed_source_sha256": "cf1451e8cc18561d8c3d0250826f79eebcf71904aaf337c74edc41ba46c0f636",
+      "status": "BLOCKED_SOURCE_SHA_MISMATCH",
+      "notes": [
+        "repository evidence names the original source as 5.mov",
+        "connected Drive currently exposes 5.mp4",
+        "Drive search did not locate an exact 5.mov title or the repository SHA",
+        "do not decode/promote this recovery item as source-qualified"
+      ]
+    },
+    {
+      "recovery_id": "G09_hand6_p789",
+      "drive_visible_name": "11.mp4",
+      "observed_size_bytes": 9343024,
+      "expected_source_sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "observed_source_sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "status": "SOURCE_SHA_VERIFIED",
+      "notes": [
+        "connected Drive raw bytes exactly match repository source evidence",
+        "pixel recovery and frame lineage are still pending",
+        "source verification alone does not make templates eligible"
+      ]
+    }
+  ],
+  "runtime_policy": {
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}

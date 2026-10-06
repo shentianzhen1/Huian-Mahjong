@@ -119,7 +119,10 @@ def evaluate_template_dataset(dataset_root, *, confidence_threshold=0.80,
         raise ValueError("confidence_threshold must be between 0 and 1")
 
     root = Path(dataset_root)
-    labels = approved_labels(root)
+    labels = [
+        row for row in approved_labels(root)
+        if not row.get("gold_skin_only")
+    ]
     if not labels:
         raise ValueError("No approved labels; accuracy cannot be measured")
 

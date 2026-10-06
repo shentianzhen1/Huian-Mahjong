@@ -1,0 +1,270 @@
+{
+  "schema_version": "public_meld_linear_head_development_v0_1",
+  "model": "mobilenet_v3_small_imagenet1k_v1",
+  "backbone_frozen": true,
+  "trained_component": "linear_head_only",
+  "seed": 69,
+  "epochs": 200,
+  "learning_rate": 0.01,
+  "weight_decay": 0.01,
+  "classes": [
+    "M4",
+    "M5",
+    "M6",
+    "P6",
+    "P7",
+    "P8",
+    "S4"
+  ],
+  "original_training_faces": 15,
+  "augmented_training_faces": 90,
+  "training_augmentation": {
+    "sizes": [
+      null,
+      [
+        24,
+        27
+      ],
+      [
+        32,
+        36
+      ]
+    ],
+    "blur_sigma": [
+      0,
+      0.5
+    ]
+  },
+  "query_original_match_excluded_from_training": true,
+  "query_group_count": 1,
+  "query_pixels_used_in_training": false,
+  "previously_inspected_development_queries": true,
+  "rows": [
+    {
+      "query_id": "hand1_P6",
+      "expected_tile": "P6",
+      "expected_class_eligible": true,
+      "top1_tile": "P7",
+      "top1_correct": false,
+      "untrained_embedding_top1": "P7",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "P7",
+          "logit": 0.412581
+        },
+        {
+          "tile_id": "P8",
+          "logit": 0.338604
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.069899
+        },
+        {
+          "tile_id": "P6",
+          "logit": 0.044348
+        },
+        {
+          "tile_id": "M5",
+          "logit": -0.112795
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.238091
+        },
+        {
+          "tile_id": "S4",
+          "logit": -0.514554
+        }
+      ]
+    },
+    {
+      "query_id": "hand1_S4",
+      "expected_tile": "S4",
+      "expected_class_eligible": true,
+      "top1_tile": "S4",
+      "top1_correct": true,
+      "untrained_embedding_top1": "S4",
+      "untrained_embedding_correct": true,
+      "ranked_logits": [
+        {
+          "tile_id": "S4",
+          "logit": 0.4247
+        },
+        {
+          "tile_id": "P8",
+          "logit": 0.125284
+        },
+        {
+          "tile_id": "P7",
+          "logit": 0.025597
+        },
+        {
+          "tile_id": "M4",
+          "logit": -0.082755
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.147524
+        },
+        {
+          "tile_id": "M5",
+          "logit": -0.168409
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.176892
+        }
+      ]
+    },
+    {
+      "query_id": "round8_P9",
+      "expected_tile": "P9",
+      "expected_class_eligible": false,
+      "top1_tile": "P7",
+      "top1_correct": false,
+      "untrained_embedding_top1": "P7",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "P7",
+          "logit": 0.272201
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.2396
+        },
+        {
+          "tile_id": "M5",
+          "logit": 0.119526
+        },
+        {
+          "tile_id": "M6",
+          "logit": 0.007168
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.063349
+        },
+        {
+          "tile_id": "P8",
+          "logit": -0.104383
+        },
+        {
+          "tile_id": "S4",
+          "logit": -0.470761
+        }
+      ]
+    },
+    {
+      "query_id": "round8_P8",
+      "expected_tile": "P8",
+      "expected_class_eligible": true,
+      "top1_tile": "P8",
+      "top1_correct": true,
+      "untrained_embedding_top1": "P7",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "P8",
+          "logit": 0.345157
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.11909
+        },
+        {
+          "tile_id": "P7",
+          "logit": 0.10419
+        },
+        {
+          "tile_id": "M5",
+          "logit": 0.004312
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.131174
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.213374
+        },
+        {
+          "tile_id": "S4",
+          "logit": -0.228207
+        }
+      ]
+    },
+    {
+      "query_id": "round8_P7",
+      "expected_tile": "P7",
+      "expected_class_eligible": true,
+      "top1_tile": "P7",
+      "top1_correct": true,
+      "untrained_embedding_top1": "P7",
+      "untrained_embedding_correct": true,
+      "ranked_logits": [
+        {
+          "tile_id": "P7",
+          "logit": 0.430293
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.307945
+        },
+        {
+          "tile_id": "M5",
+          "logit": 0.145948
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.007555
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.042755
+        },
+        {
+          "tile_id": "P8",
+          "logit": -0.322299
+        },
+        {
+          "tile_id": "S4",
+          "logit": -0.511573
+        }
+      ]
+    }
+  ],
+  "correct": 3,
+  "query_count": 5,
+  "torch_version": "2.14.1+cpu",
+  "torchvision_version": "0.29.1+cpu",
+  "scores_are_calibrated_probabilities": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "untrained_embedding_correct": 2,
+  "pretrained_weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+  "query_file_sha256": {
+    "first_hand_174s_p6.jpg": "612cce1ba08ef4678cf3df918e5fe2d041f47aa88f23165706628e3fa93171dc",
+    "first_hand_174s_s4.jpg": "300d85889e5e0c8cfe5c25c7b3b99fae342ce07771b477be8fe5f09591db855c",
+    "round8_new_meld_normalized.png": "2e6eb31e0abc30a3fb88c72cb02b9023ef4ee31c4f6a668001a4f0866905c161"
+  },
+  "truth_evidence_path": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+  "private_recovery_metadata_path": "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json",
+  "interpretation": {
+    "trained_head": "3/5",
+    "untrained_embedding": "2/5",
+    "eligible_truth_count": 4,
+    "trained_head_eligible_correct": 3,
+    "P9_missing_eligible_support": true,
+    "round8_P8_P7_both_correct": true,
+    "hand1_P6_regression": true,
+    "no_runtime_promotion": true,
+    "small_development_packet_not_general_accuracy": true
+  }
+}

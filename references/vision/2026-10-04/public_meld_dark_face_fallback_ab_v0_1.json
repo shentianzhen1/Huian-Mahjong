@@ -1,0 +1,170 @@
+{
+  "schema": "public_meld_dark_face_fallback_ab_dev_v0_1",
+  "issue": 69,
+  "audited_head": "0680ee302d98bbd014a389fdf8f134e63d8ca74d",
+  "source": {
+    "original_match_group": "new_match_20261003_owner_uploaded",
+    "source_video_sha256": "3aeb25b0cccddbc2c8e5b25d2b640986f7d3690df33f15d34706355b2b9122cb",
+    "requested_seek_seconds": 73,
+    "decode_path": "ffmpeg -ss 73 -> scale=1046:480 -> PNG",
+    "scaled_frame_png_sha256": "390df07dcf6fc2d7478bfa153cc28ab8425c6198803b302dc10f04e88877b1a0",
+    "crop_path": "automatic detector -> experimental body_context_seam2"
+  },
+  "policy": {
+    "primary_path_unchanged": true,
+    "fallback_allowed_only_after_reason": "ambiguous_or_absent_front_component",
+    "relative_body_quantile": 0.2,
+    "body_floor_clamp": [
+      85,
+      115
+    ],
+    "identity_threshold_changed": false,
+    "runtime_integration": false,
+    "development_only": true,
+    "tile_identity": "UNKNOWN",
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  },
+  "faces": [
+    {
+      "id": "S7",
+      "crop_sha256": "b5ecf118dd112dca2f39edd706dad85e81e59d9798939446089f7a6c07907c52",
+      "size": [
+        44,
+        58
+      ],
+      "primary": "success",
+      "fallback_invoked": false,
+      "primary_front_band": [
+        0,
+        0,
+        73,
+        85
+      ],
+      "effective_front_band": [
+        0,
+        0,
+        73,
+        85
+      ]
+    },
+    {
+      "id": "S8",
+      "crop_sha256": "b7d0666583aa1201bd0ac3bd27313bc6cfada68b0d317247c4bb72768b8f8287",
+      "size": [
+        47,
+        58
+      ],
+      "primary": "success",
+      "fallback_invoked": false,
+      "primary_front_band": [
+        0,
+        0,
+        78,
+        85
+      ],
+      "effective_front_band": [
+        0,
+        0,
+        78,
+        85
+      ]
+    },
+    {
+      "id": "S9",
+      "crop_sha256": "52fb988d5b0147c68cd48867568101f535c3b2bf850c1b2de699d18868696e81",
+      "size": [
+        44,
+        58
+      ],
+      "primary": "ambiguous_or_absent_front_component",
+      "fallback_invoked": true,
+      "fallback": "development_dark_face_front_band_candidate",
+      "relative_body_value_floor": 94,
+      "adaptive_value_cutoff": 128,
+      "cluster_median_contrast": 31,
+      "effective_front_band": [
+        0,
+        0,
+        78,
+        91
+      ]
+    },
+    {
+      "id": "M9_0",
+      "crop_sha256": "60cc149a54f5e553683bcb514ad9e3832741821db866643983f95ae15c2b998c",
+      "size": [
+        24,
+        30
+      ],
+      "primary": "success",
+      "fallback_invoked": false,
+      "primary_front_band": [
+        0,
+        0,
+        77,
+        64
+      ],
+      "effective_front_band": [
+        0,
+        0,
+        77,
+        64
+      ]
+    },
+    {
+      "id": "M9_1",
+      "crop_sha256": "4cd156a30f4d7a870ac5a4e6eff957471eeddb51d6d4cbf3259a400f25dd8574",
+      "size": [
+        26,
+        30
+      ],
+      "primary": "success",
+      "fallback_invoked": false,
+      "primary_front_band": [
+        0,
+        0,
+        83,
+        64
+      ],
+      "effective_front_band": [
+        0,
+        0,
+        83,
+        64
+      ]
+    },
+    {
+      "id": "M9_2",
+      "crop_sha256": "94d8007d3a99a239b683f8f8532b33d1849aae2315141e37ef578ad1a4f27833",
+      "size": [
+        24,
+        30
+      ],
+      "primary": "success",
+      "fallback_invoked": false,
+      "primary_front_band": [
+        0,
+        0,
+        77,
+        64
+      ],
+      "effective_front_band": [
+        0,
+        0,
+        77,
+        64
+      ]
+    }
+  ],
+  "summary": {
+    "exact_frozen_crops": 6,
+    "primary_successes": 5,
+    "primary_abstentions": 1,
+    "fallback_attempts": 1,
+    "fallback_candidates": 1,
+    "baseline_successes_changed_by_fallback": 0,
+    "claim": "Development-only geometry recovery on one primary-abstaining dark face; not identity accuracy, not source-disjoint evidence, and not Runtime promotion."
+  }
+}

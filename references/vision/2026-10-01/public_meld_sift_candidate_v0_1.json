@@ -1,0 +1,65 @@
+{
+  "schema_version": "public_meld_sift_candidate_v0_1",
+  "candidate_id": "public_meld_sift_local_keypoints_v0_1",
+  "status": "frozen_development_candidate",
+  "frozen_on": "2026-10-01",
+  "preprocessing": {
+    "color_space": "grayscale",
+    "scale_factor": 3.0,
+    "resize_interpolation": "bicubic",
+    "clahe_clip_limit": 2.0,
+    "clahe_tile_grid": [8, 8]
+  },
+  "detector": {
+    "name": "SIFT",
+    "nfeatures": 100
+  },
+  "matcher": {
+    "name": "BFMatcher",
+    "norm": "L2",
+    "knn_k": 2,
+    "ratio_test": 0.8,
+    "fallback_best_raw_matches": 5,
+    "similarity": "match_count_div_1_plus_mean_distance"
+  },
+  "class_aggregation": {
+    "region": "public_meld",
+    "minimum_other_match_groups": 2,
+    "best_template_per_match_group": true,
+    "conservative_group_score_index": 2
+  },
+  "selection_evidence": {
+    "known_public_queries": [
+      "first_hand_174s_p6",
+      "first_hand_174s_s4"
+    ],
+    "known_public_query_top1_correct": 2,
+    "known_public_query_count": 2,
+    "private_retrospective_face_count": 36,
+    "private_retrospective_same_match_cross_clip_top1": "13/17",
+    "private_retrospective_cross_match_s4_ranks": [
+      "4/33",
+      "1/3"
+    ],
+    "selection_match_groups": [
+      "reviewed_recording_66fe",
+      "reviewed_recording_b389",
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_recording_14",
+      "reviewed_match_2026_09_26_first_hand"
+    ],
+    "selected_after_reviewing_these_results": true
+  },
+  "validation_policy": {
+    "future_holdout_must_be_new_independent_match_group": true,
+    "future_holdout_must_not_change_candidate": true,
+    "future_holdout_query_pixels_template_eligible": false,
+    "minimum_future_holdout_match_groups": 1
+  },
+  "runtime_policy": {
+    "wire_into_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false,
+    "formal_promotion_evidence": false
+  }
+}

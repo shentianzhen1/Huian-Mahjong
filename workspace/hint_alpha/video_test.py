@@ -449,6 +449,8 @@ def run_video_test(
 
         public_reader = PublicStateReader()
 
+    runtime_resources = None
+    geometry_cache = {}
 
     def replay_runtime_reader(
         images,
@@ -461,15 +463,21 @@ def run_video_test(
         # Load optional Vision dependencies only when the reader is invoked.
         # Mocked replay orchestration must remain usable in core-only installs.
         from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
+            prepare_runtime_resources,
             read_stable_frames,
         )
 
+        nonlocal runtime_resources
+        if runtime_resources is None:
+            runtime_resources = prepare_runtime_resources(dataset_root, session)
         return read_stable_frames(
             images,
             root,
             frame_ids=frame_ids,
             session=session,
             confidence_threshold=confidence_threshold,
+            resources=runtime_resources,
+            geometry_cache=geometry_cache,
         )
 
     window = deque(maxlen=3)

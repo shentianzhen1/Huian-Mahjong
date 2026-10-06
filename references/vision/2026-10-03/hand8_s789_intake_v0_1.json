@@ -1,0 +1,494 @@
+{
+  "schema_version": "existing_video_meld_face_intake_dev_v0_1",
+  "spec": {
+    "schema_version": "existing_video_meld_face_harvest_spec_dev_v0_1",
+    "conservative_original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "excluded_same_match_aliases": [
+      "reviewed_match_2026_09_26_first_hand",
+      "reviewed_match_2026_09_26_eight_hand"
+    ],
+    "review_exposure": "previously_inspected_development",
+    "label_authority": "assistant_visual_review_not_user_confirmation",
+    "sources": [
+      {
+        "filename": "ScreenRecording_09-26-2026 22-34-04_1(1).mp4",
+        "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "source_session": "existing_0926_chunk4",
+        "grouping_basis": "same dated user-provided eight-hand recording; visible room 505120, hand counters 3/8,7/8,8/8 and clocks 22:28,22:35,22:36; conservative same-match exclusion",
+        "groups": [
+          {
+            "group_id": "hand8_s789",
+            "hand_index": 8,
+            "reviewed_candidate_tiles": [
+              "S7",
+              "S8",
+              "S9"
+            ],
+            "frame_indices": [
+              4794,
+              4797,
+              4800,
+              4803,
+              4806
+            ],
+            "face_bboxes": [
+              [
+                248,
+                441,
+                47,
+                62
+              ],
+              [
+                293,
+                441,
+                46,
+                62
+              ],
+              [
+                336,
+                441,
+                47,
+                62
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "faces": [
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4794,
+      "decoded_time_seconds": 159.8,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 0,
+      "bbox": [
+        248,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S7",
+      "crop_file": "faces/hand8_s789_4794_0.png",
+      "crop_sha256": "e455f0ba3c258c9dac94fc26eed0e8f950b6f31a709c79c282de77746cd44fe3",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4794,
+      "decoded_time_seconds": 159.8,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 1,
+      "bbox": [
+        293,
+        441,
+        46,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S8",
+      "crop_file": "faces/hand8_s789_4794_1.png",
+      "crop_sha256": "940b44bcfa4edc87660db2d536c79cf72d21c74033b630d289133ecb8e74432a",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4794,
+      "decoded_time_seconds": 159.8,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 2,
+      "bbox": [
+        336,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S9",
+      "crop_file": "faces/hand8_s789_4794_2.png",
+      "crop_sha256": "59a9f4200e5bac6ea5be0ff0b4351e4ac0fae330f61093b3dd242dd5c9fc8099",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4797,
+      "decoded_time_seconds": 159.9,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 0,
+      "bbox": [
+        248,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S7",
+      "crop_file": "faces/hand8_s789_4797_0.png",
+      "crop_sha256": "e455f0ba3c258c9dac94fc26eed0e8f950b6f31a709c79c282de77746cd44fe3",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4797,
+      "decoded_time_seconds": 159.9,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 1,
+      "bbox": [
+        293,
+        441,
+        46,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S8",
+      "crop_file": "faces/hand8_s789_4797_1.png",
+      "crop_sha256": "4417ea22eee6183144a78a2354508602b31ad970fa9ecccfbafa0b518eaaf9ec",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4797,
+      "decoded_time_seconds": 159.9,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 2,
+      "bbox": [
+        336,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S9",
+      "crop_file": "faces/hand8_s789_4797_2.png",
+      "crop_sha256": "9529d37188fd9dd74f0a29a4afedec96daa318222d545bf8d73bda33671eaaeb",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4800,
+      "decoded_time_seconds": 160.0,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 0,
+      "bbox": [
+        248,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S7",
+      "crop_file": "faces/hand8_s789_4800_0.png",
+      "crop_sha256": "841f9b07b4fc81b60d4e79c6e24c031c805ee5aaedadb1d41ccb7aecab855020",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4800,
+      "decoded_time_seconds": 160.0,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 1,
+      "bbox": [
+        293,
+        441,
+        46,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S8",
+      "crop_file": "faces/hand8_s789_4800_1.png",
+      "crop_sha256": "77a14a066498e4b3b85f1639ff38b712b2975e040dd42bc312df592cd9137be9",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4800,
+      "decoded_time_seconds": 160.0,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 2,
+      "bbox": [
+        336,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S9",
+      "crop_file": "faces/hand8_s789_4800_2.png",
+      "crop_sha256": "a4631b4f285e42e5165f114278b15c10baa2f1f4d0fe6833dccfab0c1e8d430e",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4803,
+      "decoded_time_seconds": 160.1,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 0,
+      "bbox": [
+        248,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S7",
+      "crop_file": "faces/hand8_s789_4803_0.png",
+      "crop_sha256": "dfa4dfc8e2d9a4ea6bec0a8defc4019250d0132557c4121eb79f7e6e3b182b5f",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4803,
+      "decoded_time_seconds": 160.1,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 1,
+      "bbox": [
+        293,
+        441,
+        46,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S8",
+      "crop_file": "faces/hand8_s789_4803_1.png",
+      "crop_sha256": "8feae18b54b04b84fc0da16e06b6e26329aedb6d9ab47d75ba7315ac4f2645e3",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4803,
+      "decoded_time_seconds": 160.1,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 2,
+      "bbox": [
+        336,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S9",
+      "crop_file": "faces/hand8_s789_4803_2.png",
+      "crop_sha256": "9e6caaa646965f6af678427c15785c1b7f8fbe075c471fb4005e81d87a79c067",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4806,
+      "decoded_time_seconds": 160.2,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 0,
+      "bbox": [
+        248,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S7",
+      "crop_file": "faces/hand8_s789_4806_0.png",
+      "crop_sha256": "16a4132f57a7b9cb986ae99d46de9ad2e8e2651af8a628e912ef37d612bfd11d",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4806,
+      "decoded_time_seconds": 160.2,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 1,
+      "bbox": [
+        293,
+        441,
+        46,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S8",
+      "crop_file": "faces/hand8_s789_4806_1.png",
+      "crop_sha256": "1be075064253b3c3862beb3470aab9881eb77800542c6f0e89a637ece350e88f",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    },
+    {
+      "group_id": "hand8_s789",
+      "hand_index": 8,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "frame_index": 4806,
+      "decoded_time_seconds": 160.2,
+      "match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_session": "existing_0926_chunk4",
+      "face_index": 2,
+      "bbox": [
+        336,
+        441,
+        47,
+        62
+      ],
+      "image_size": [
+        1108,
+        512
+      ],
+      "reviewed_candidate_tile": "S9",
+      "crop_file": "faces/hand8_s789_4806_2.png",
+      "crop_sha256": "73a84f058dd9331828ca1deba253fa5592298fb06cc7020e8b26c4d98cd0a606",
+      "review": "assistant_visual_review_not_user_confirmation",
+      "manual_rectangular_roi": true,
+      "automatic_splitter_verified": false,
+      "default_template_bank_eligible": false,
+      "runtime_identity": "UNKNOWN"
+    }
+  ],
+  "face_count": 15,
+  "group_count": 1,
+  "original_match_count": 1,
+  "source_video_count": 1,
+  "manual_roi_warning": "Perspective margins include tile thickness and may include neighboring edge pixels; no automatic segmentation claim.",
+  "independence_warning": "Clips, hands and frames from this eight-hand match count once; exclude both first-hand and eight-hand aliases when used in future scoring.",
+  "source_disjoint_evaluation": false,
+  "blind_validation": false,
+  "formal_promotion_evidence": false,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

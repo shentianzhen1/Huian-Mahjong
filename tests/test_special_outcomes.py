@@ -48,7 +48,8 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
         self.assertEqual(
             rob_kong.multiplier_status, EvidenceStatus.CONFIRMED
         )
-        self.assertFalse(rob_kong.settlement_ready)
+        self.assertTrue(rob_kong.settlement_ready)
+        self.assertIsNone(rob_kong.settlement_rule_id)
 
     def test_phase_and_source_lookup_agree_for_declared_specials(self):
         self.assertEqual(

@@ -1,0 +1,57 @@
+{
+  "schema_version": "issue69_identity_holdout_availability_audit_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "candidate_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+  "candidate": "spatial_window_affine_reference_complete",
+  "purpose": "Prevent already represented recordings from being relabeled as independent identity holdouts.",
+  "source_families": [
+    {
+      "sources": ["3.mp4","4.mp4","5.mp4","9.mp4","10.mp4","11.mp4","12.mp4","13.mp4"],
+      "original_match_group": "drive_full_eight_one_original_match",
+      "status": "NOT_INDEPENDENT_HOLDOUT",
+      "reason": "same original eight-hand match; faces from this family already appear in private/public reference and control evidence"
+    },
+    {
+      "sources": ["14.mp4"],
+      "original_match_group": "drive_existing_rule_replay_another_original_match",
+      "status": "DEVELOPMENT_TARGET_NOT_HOLDOUT",
+      "reason": "S234 from this source was inspected while selecting the reference-completeness candidate"
+    },
+    {
+      "sources": [
+        "ScreenRecording_09-26-2026 22-23-34_1.mp4",
+        "ScreenRecording_09-26-2026 22-26-47_1.mp4",
+        "ScreenRecording_09-26-2026 22-30-33_1.mp4",
+        "ScreenRecording_09-26-2026 22-34-04_1.mp4"
+      ],
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "status": "CROSS_SOURCE_NONBLIND_REGRESSION_ONLY",
+      "reason": "independent original match but already heavily inspected for Issue #69 geometry, STACKED and identity development; some source aliases are already present in identity lineage"
+    }
+  ],
+  "clean_independent_blind_holdout_available_in_current_inventory": false,
+  "holdout3_disposition": {
+    "source": "3.mp4",
+    "frames": [1392,1393,1394,1395,1396],
+    "truth": ["P4","P5","P6"],
+    "formal_result": {
+      "correct": 0,
+      "wrong": 0,
+      "unknown": 15,
+      "exact_groups": 0,
+      "groups": 5,
+      "interpretation": "eligibility abstention before identity scoring; not an algorithm accuracy measurement"
+    },
+    "reason": "after conservative exclusion of the entire same original match, P4/P5/P6 lack the required two other original-match reference groups"
+  },
+  "next_nonblind_regression": "Use a predeclared stable FLAT meld from the 2026-09-26 match with the candidate frozen; exclude all 2026-09-26 references and report it explicitly as nonblind cross-source regression.",
+  "next_formal_gate": "A genuinely new original match recorded after candidate freeze, with reviewable exposed meld identities and no query pixels admitted to the reference bank before first scoring.",
+  "runtime_threshold": 0.82,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

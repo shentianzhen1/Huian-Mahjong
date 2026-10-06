@@ -9,7 +9,10 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-BUILD_ID = 'shanten-' + datetime.now().strftime('%Y%m%d-%H%M%S')
+sys.path.insert(0, str(ROOT))
+from huian.version import PROJECT_VERSION
+
+BUILD_ID = 'integrated-' + datetime.now().strftime('%Y%m%d-%H%M%S')
 BUILD = ROOT / 'build' / ('hint-installer-' + BUILD_ID)
 PAYLOAD = BUILD / 'payload'
 RUNTIME = PAYLOAD / 'runtime'
@@ -36,6 +39,8 @@ def main():
     for package in ('huian', 'mahjong_framework', 'workspace/ai',
                     'workspace/simulator', 'workspace/vision', 'workspace/hint_alpha'):
         for path in sorted((ROOT / package).rglob('*.py')):
+            if path.name.startswith('test_') or '__pycache__' in path.parts:
+                continue
             relative = path.relative_to(ROOT)
             destination = site / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -46,6 +51,7 @@ def main():
     dataset_target.mkdir(parents=True)
     labels = dataset / 'labels.jsonl'
     shutil.copy2(labels, dataset_target / 'labels.jsonl')
+    shutil.copy2(dataset / 'manifest.json', dataset_target / 'manifest.json')
     template_hashes = {}
     for row in (json.loads(line) for line in labels.read_text(encoding='utf-8').splitlines() if line):
         if not (row.get('approved') is True or row.get('status') == 'approved'):
@@ -69,32 +75,37 @@ def main():
             + '"runtime\\python.exe" -B launch.py ' + args
             + '\nif errorlevel 1 pause\n', encoding='utf-8')
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-    manifest = {'project_version': '0.2.0', 'build': BUILD_ID, 'commit': commit,
+    manifest = {'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
                 'source_sha256': source_hashes, 'template_sha256': template_hashes,
                 'shanten_advisory_connected': True, 'experimental_runtime_advisory': True,
                 'executor_enabled': False, 'live_ai_advice_connected': False,
                 'dependencies': subprocess.check_output([str(ROOT / '.build-hint/Scripts/python.exe'),
                     '-m', 'pip', 'freeze'], text=True).splitlines()}
-    (PAYLOAD / 'BUILD_INFO.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
     (PAYLOAD / '使用说明.txt').write_text(
-        '惠安麻将 Hint Alpha 0.2.0 测试版\n双击桌面快捷方式启动。无需另装 Python。\n'
+        f'惠安麻将 Hint Alpha {PROJECT_VERSION} 测试版\n双击桌面快捷方式启动。无需另装 Python。\n'
         '新增人工录牌向听与候选弃牌、实验实时识别向听。低置信/黑屏/断流/过期时停用。\n'
         '启动后可点人工录牌。实时识别未正式晋级，界面标为实验；识别不足时BLOCKED。\n'
         '完整V0.10合法动作建议尚未接入。Executor关闭。\n'
         'PublicState OCR需另有Tesseract；缺失时明确显示不可用，采集仍可运行。\n'
         '证据保存在安装目录data/hint_alpha。CHECK_HINT_ALPHA.bat可自检。\n'
         '请保留数据；卸载可删除快捷方式及对应安装目录。\n', encoding='utf-8')
+    manifest['payload_sha256'] = {
+        path.relative_to(PAYLOAD).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(PAYLOAD.rglob('*')) if path.is_file()
+    }
+    (PAYLOAD / 'BUILD_INFO.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
     archive = BUILD / 'payload.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
         for path in sorted(PAYLOAD.rglob('*')):
             if path.is_file():
                 z.write(path, path.relative_to(PAYLOAD))
-    exe = DIST / ('HuianMahjong_Test_0.2.0_' + BUILD_ID + '_Setup.exe')
+    exe = DIST / ('HuianMahjong_Test_' + PROJECT_VERSION + '_' + BUILD_ID + '_Setup.exe')
     compiler = Path('C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe')
     subprocess.run([str(compiler), '/nologo', '/target:winexe', '/platform:x64',
         '/reference:System.IO.Compression.dll', '/reference:System.IO.Compression.FileSystem.dll',
         '/reference:System.Windows.Forms.dll', '/out:' + str(exe),
         '/resource:' + str(archive) + ',payload.zip', str(ROOT / 'packaging/TestInstaller.cs')], check=True)
+    shutil.copy2(PAYLOAD / 'BUILD_INFO.json', DIST / 'BUILD_INFO.json')
     digest = hashlib.sha256(exe.read_bytes()).hexdigest()
     exe.with_suffix('.exe.sha256').write_text(digest + '  ' + exe.name + '\n', encoding='ascii')
     print(json.dumps({'installer': str(exe), 'bytes': exe.stat().st_size, 'sha256': digest}))

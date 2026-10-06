@@ -1,11 +1,33 @@
 # 重要变更记录
 
-## 2026-10-04 — Hint Alpha 本地测试安装与只读辅助
+## 2026-10-04 — Manual-input Alpha fallback (Draft)
 
-- 从 #69 开发分支 `bad588ef` 集成 current snapshot、人工录牌、结构向听和实时只读桥接；保留缺失身份、实体冲突、断流及过期结果的停用门。
-- 新增离线 Windows 测试安装器，附源码/模板哈希清单；修复 Windows spawn 重复创建界面及 Tesseract OCR 控制台反复弹窗。
-- 新增实时流水页；未知行动方和真实动作显示未知，候选弃牌不作为实际动作。新增独立中文辅助窗口，主界面移除人工录分和证据打点入口，技术信息移到诊断窗口。
-- 修复新旧证据会话的 Windows 路径格式。用户本地反馈仍几乎无法识别且反应慢；这些交付不代表 Vision 晋级或实际可用性验收。完整 V0.10 合法动作建议未接入，Executor 保持关闭。
+- Add manual hand/Gold/own-meld-count input to the read-only Windows shell. Each submission uses the existing physical-copy and structural shanten gates; manual snapshots claim zero visual frames and cannot enable public remaining-copy/danger.
+- Add zero-sum before/after score transcription for unresolved settlement rules as `OBSERVED_ONLY` evidence. It neither calls automatic settlement nor promotes rule evidence or official AI reward.
+- Keep CurrentAgent V0.10, Vision threshold 0.82, Executor OFF and PR #117 Draft. Windows live interaction and untouched-source Vision blind test remain pending.
+
+## 2026-10-04 — Real structural discard checkpoint (Draft)
+
+- Source/session/frame/pixel-locked first-hand 160–164s replay recorded 2 real post-draw structural discard windows, 4 blocked windows and 6 other accepted structural windows. Same-original-match development evidence only.
+- Add `--require-discard` acceptance that rejects shanten-only/complete-hand replays; retain 0.82 identity gate and Executor OFF.
+- Surface actual UNKNOWN causes in internal UI; keep default formal-promotion block and read-only experimental label.
+- Snapshot contracts are recomputed in CI; no private video, human tile-accuracy, strategy-quality or Windows live acceptance claim.
+
+## 2026-10-04 — Continuous real Alpha recovery smoke (Draft)
+
+- Add consecutive advice/rejection runs, rejection-reason counts and explicit recovery acceptance to private replay; preserve original Runtime session binding.
+- Native first-hand 173–176s replay: 8 structural advice windows / 5 blocked / 1 recovery across 13 overlapping bursts. Freeze metadata only; private pixels remain outside GitHub.
+- Recompute frozen snapshot semantics in CI. Same-source development smoke does not establish identity accuracy, discard recommendations, Windows acceptance or formal Vision promotion.
+- Threshold 0.82, read-only Hint, V0.10 and Executor OFF remain unchanged.
+
+## 2026-10-04 — Draft 0.2.1: settlement consistency and audit hardening
+
+- Synchronize already-confirmed Issue #4 / PR #125 Rob-Kong settlement with registry revision 2, special-outcome readiness, phase diagnostics and simulator terminal handling; no new rule inferred.
+- Retire obsolete Gang-Hu/Rob-Kong scoring stops; retain ordinary x2, original PENG, zero failed-kong fan/fee and physical accounting.
+- Make shutdown errors visible and logged; failed evidence completion writes remain retryable.
+- Exclude package-local test modules from wheels; installed smoke checks prohibit them. Add fatal-error lint and Python CodeQL workflow.
+- Refresh integrated status, security/material-rights documentation and separate capture requirements Dependabot job. License choice and history rewriting remain unresolved.
+- PR #117 remains Draft/unmerged; V0.10 unchanged, identity threshold 0.82, Executor OFF.
 
 ## 2026-09-22 — Runtime Vision 独立批次锁定器
 

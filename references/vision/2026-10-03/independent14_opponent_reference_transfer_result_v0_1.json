@@ -1,0 +1,2470 @@
+{
+  "schema_version": "independent14_reviewed_opponent_reference_transfer_v0_1",
+  "query_source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+  "query_original_match_group": "reviewed_recording_14",
+  "reference_supplement": {
+    "strip_sha256": "4a3c2b5f125b668ec5ff7ecc1fddf0d41cff241e7968482e11fe34c9e75bc5de",
+    "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "declared_original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "strip_ordinal": 3,
+    "original_source_frame_index": null,
+    "orientation_degrees": 180,
+    "tile_ids": [
+      "S1",
+      "S2",
+      "S3"
+    ],
+    "split_audit": {
+      "detector_bbox": [
+        0,
+        0,
+        71,
+        33
+      ],
+      "tight_bbox_in_group": [
+        3,
+        5,
+        66,
+        25
+      ],
+      "vertical_context": 1,
+      "raw_group_xyxy": [
+        3,
+        4,
+        69,
+        31
+      ],
+      "face_xyxy": [
+        [
+          3,
+          4,
+          27,
+          31
+        ],
+        [
+          23,
+          4,
+          49,
+          31
+        ],
+        [
+          45,
+          4,
+          69,
+          31
+        ]
+      ],
+      "geometry": {
+        "schema_version": "public_meld_geometry_normalization_v0_1",
+        "rotation_degrees": 0.0,
+        "stack_state": "FLAT",
+        "height_score": 1.136364,
+        "top_to_mid_span_ratio": 0.996593,
+        "normalized_size": [
+          253,
+          96
+        ],
+        "tight_bbox_in_group": [
+          3,
+          5,
+          66,
+          25
+        ],
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "safe_for_hint": false,
+        "safe_for_executor": false
+      },
+      "outer_body_probe": null
+    },
+    "descriptor_counts": {
+      "S1": 77,
+      "S2": 53,
+      "S3": 52
+    },
+    "reviewed_strip_exact_hash_verified": true,
+    "raw_source_bytes_reverified_in_this_probe": false,
+    "source_lineage_status": "existing_repository_declaration; raw-original-recheck-pending",
+    "declared_reference_original_matches": 1,
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false,
+    "admitted_tile_ids_after_source_exclusion": [
+      "S1",
+      "S2",
+      "S3"
+    ],
+    "admitted_original_match_count": 1
+  },
+  "reference_support_before": {
+    "detector_seam2": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 3,
+      "scorable_groups": 0,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "body_context_no_seam": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 3,
+      "scorable_groups": 0,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "body_context_seam2": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 3,
+      "scorable_groups": 0,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "outer_body_seam2": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 3,
+      "scorable_groups": 0,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 3,
+      "scorable_groups": 0,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 2,
+      "faces": 9,
+      "scorable_faces": 3,
+      "scorable_groups": 0,
+      "exact_groups_correct": 0,
+      "groups": 3
+    }
+  },
+  "reference_support_after": {
+    "detector_seam2": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 9,
+      "scorable_groups": 3,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "body_context_no_seam": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 9,
+      "scorable_groups": 3,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "body_context_seam2": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 9,
+      "scorable_groups": 3,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "outer_body_seam2": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 9,
+      "scorable_groups": 3,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "face_plane_seam_boxes": {
+      "correct_faces": 3,
+      "faces": 9,
+      "scorable_faces": 9,
+      "scorable_groups": 3,
+      "exact_groups_correct": 0,
+      "groups": 3
+    },
+    "face_plane_seam_rectified": {
+      "correct_faces": 2,
+      "faces": 9,
+      "scorable_faces": 9,
+      "scorable_groups": 3,
+      "exact_groups_correct": 0,
+      "groups": 3
+    }
+  },
+  "repeat_rows_and_summary_equal": true,
+  "same_original_match_s789_control": {
+    "summary": {
+      "detector_seam2": {
+        "correct_faces": 15,
+        "faces": 15,
+        "scorable_faces": 15,
+        "scorable_groups": 5,
+        "exact_groups_correct": 5,
+        "groups": 5
+      },
+      "body_context_no_seam": {
+        "correct_faces": 15,
+        "faces": 15,
+        "scorable_faces": 15,
+        "scorable_groups": 5,
+        "exact_groups_correct": 5,
+        "groups": 5
+      },
+      "body_context_seam2": {
+        "correct_faces": 15,
+        "faces": 15,
+        "scorable_faces": 15,
+        "scorable_groups": 5,
+        "exact_groups_correct": 5,
+        "groups": 5
+      },
+      "outer_body_seam2": {
+        "correct_faces": 15,
+        "faces": 15,
+        "scorable_faces": 15,
+        "scorable_groups": 5,
+        "exact_groups_correct": 5,
+        "groups": 5
+      },
+      "face_plane_seam_boxes": {
+        "correct_faces": 15,
+        "faces": 15,
+        "scorable_faces": 15,
+        "scorable_groups": 5,
+        "exact_groups_correct": 5,
+        "groups": 5
+      },
+      "face_plane_seam_rectified": {
+        "correct_faces": 15,
+        "faces": 15,
+        "scorable_faces": 15,
+        "scorable_groups": 5,
+        "exact_groups_correct": 5,
+        "groups": 5
+      }
+    },
+    "admitted_supplement_tiles": [],
+    "admitted_reference_original_matches": 0
+  },
+  "rows": [
+    {
+      "frame": 2549,
+      "mode": "detector_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          126,
+          55
+        ],
+        "vertical_context": 0,
+        "raw_group_xyxy": [
+          97,
+          403,
+          227,
+          476
+        ],
+        "face_xyxy": [
+          [
+            97,
+            403,
+            142,
+            476
+          ],
+          [
+            138,
+            403,
+            186,
+            476
+          ],
+          [
+            182,
+            403,
+            227,
+            476
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.309524,
+          "top_to_mid_span_ratio": 0.9843,
+          "normalized_size": [
+            220,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            126,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S4",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2549,
+      "mode": "body_context_no_seam",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          126,
+          55
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          99,
+          414,
+          225,
+          471
+        ],
+        "face_xyxy": [
+          [
+            99,
+            414,
+            141,
+            471
+          ],
+          [
+            141,
+            414,
+            183,
+            471
+          ],
+          [
+            183,
+            414,
+            225,
+            471
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.309524,
+          "top_to_mid_span_ratio": 0.9843,
+          "normalized_size": [
+            220,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            126,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2549,
+      "mode": "body_context_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          126,
+          55
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          99,
+          414,
+          225,
+          471
+        ],
+        "face_xyxy": [
+          [
+            99,
+            414,
+            143,
+            471
+          ],
+          [
+            139,
+            414,
+            185,
+            471
+          ],
+          [
+            181,
+            414,
+            225,
+            471
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.309524,
+          "top_to_mid_span_ratio": 0.9843,
+          "normalized_size": [
+            220,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            126,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2549,
+      "mode": "outer_body_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          126,
+          55
+        ],
+        "vertical_context": 0,
+        "raw_group_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_xyxy": [
+          [
+            98,
+            414,
+            145,
+            476
+          ],
+          [
+            141,
+            414,
+            189,
+            476
+          ],
+          [
+            185,
+            414,
+            232,
+            476
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.309524,
+          "top_to_mid_span_ratio": 0.9843,
+          "normalized_size": [
+            220,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            126,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": {
+          "search_xyxy": [
+            84,
+            396,
+            240,
+            480
+          ],
+          "background_rgb": [
+            2.0,
+            52.0,
+            60.0
+          ],
+          "distance_threshold": 30,
+          "search_padding_fraction": 0.1,
+          "eligible_contours": 1,
+          "outer_body_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ]
+        }
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2549,
+      "mode": "face_plane_seam_boxes",
+      "audit": {
+        "search_xyxy": [
+          84,
+          396,
+          240,
+          480
+        ],
+        "background_rgb": [
+          2.0,
+          52.0,
+          60.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          415,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            48,
+            88
+          ],
+          [
+            40,
+            81
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              98.0,
+              413
+            ],
+            [
+              148.35555555555555,
+              413
+            ],
+            [
+              138.04444444444445,
+              471
+            ],
+            [
+              98.0,
+              471
+            ]
+          ],
+          [
+            [
+              144.35555555555555,
+              413
+            ],
+            [
+              188.31111111111113,
+              413
+            ],
+            [
+              179.2888888888889,
+              471
+            ],
+            [
+              134.04444444444445,
+              471
+            ]
+          ],
+          [
+            [
+              184.31111111111113,
+              413
+            ],
+            [
+              232.0,
+              413
+            ],
+            [
+              232.0,
+              471
+            ],
+            [
+              175.2888888888889,
+              471
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            98,
+            413,
+            150,
+            472
+          ],
+          [
+            134,
+            413,
+            190,
+            472
+          ],
+          [
+            175,
+            413,
+            233,
+            472
+          ]
+        ]
+      },
+      "top1": [
+        "S5",
+        "S4",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2549,
+      "mode": "face_plane_seam_rectified",
+      "audit": {
+        "search_xyxy": [
+          84,
+          396,
+          240,
+          480
+        ],
+        "background_rgb": [
+          2.0,
+          52.0,
+          60.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          415,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            48,
+            88
+          ],
+          [
+            40,
+            81
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              98.0,
+              413
+            ],
+            [
+              148.35555555555555,
+              413
+            ],
+            [
+              138.04444444444445,
+              471
+            ],
+            [
+              98.0,
+              471
+            ]
+          ],
+          [
+            [
+              144.35555555555555,
+              413
+            ],
+            [
+              188.31111111111113,
+              413
+            ],
+            [
+              179.2888888888889,
+              471
+            ],
+            [
+              134.04444444444445,
+              471
+            ]
+          ],
+          [
+            [
+              184.31111111111113,
+              413
+            ],
+            [
+              232.0,
+              413
+            ],
+            [
+              232.0,
+              471
+            ],
+            [
+              175.2888888888889,
+              471
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            98,
+            413,
+            150,
+            472
+          ],
+          [
+            134,
+            413,
+            190,
+            472
+          ],
+          [
+            175,
+            413,
+            233,
+            472
+          ]
+        ]
+      },
+      "top1": [
+        "S5",
+        "S4",
+        "S7"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 0,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2552,
+      "mode": "detector_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 0,
+        "raw_group_xyxy": [
+          97,
+          403,
+          227,
+          476
+        ],
+        "face_xyxy": [
+          [
+            97,
+            403,
+            142,
+            476
+          ],
+          [
+            138,
+            403,
+            186,
+            476
+          ],
+          [
+            182,
+            403,
+            227,
+            476
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.991142,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S4",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2552,
+      "mode": "body_context_no_seam",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          99,
+          414,
+          227,
+          471
+        ],
+        "face_xyxy": [
+          [
+            99,
+            414,
+            142,
+            471
+          ],
+          [
+            142,
+            414,
+            184,
+            471
+          ],
+          [
+            184,
+            414,
+            227,
+            471
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.991142,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2552,
+      "mode": "body_context_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          99,
+          414,
+          227,
+          471
+        ],
+        "face_xyxy": [
+          [
+            99,
+            414,
+            144,
+            471
+          ],
+          [
+            140,
+            414,
+            186,
+            471
+          ],
+          [
+            182,
+            414,
+            227,
+            471
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.991142,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2552,
+      "mode": "outer_body_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 0,
+        "raw_group_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_xyxy": [
+          [
+            98,
+            414,
+            145,
+            476
+          ],
+          [
+            141,
+            414,
+            189,
+            476
+          ],
+          [
+            185,
+            414,
+            232,
+            476
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.991142,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": {
+          "search_xyxy": [
+            84,
+            396,
+            240,
+            480
+          ],
+          "background_rgb": [
+            2.0,
+            50.0,
+            62.0
+          ],
+          "distance_threshold": 30,
+          "search_padding_fraction": 0.1,
+          "eligible_contours": 1,
+          "outer_body_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ]
+        }
+      },
+      "top1": [
+        "S4",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2552,
+      "mode": "face_plane_seam_boxes",
+      "audit": {
+        "search_xyxy": [
+          84,
+          396,
+          240,
+          480
+        ],
+        "background_rgb": [
+          2.0,
+          50.0,
+          62.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            47,
+            87
+          ],
+          [
+            40,
+            81
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              98.0,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              98.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              232.0,
+              413
+            ],
+            [
+              232.0,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            98,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            233,
+            472
+          ]
+        ]
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2552,
+      "mode": "face_plane_seam_rectified",
+      "audit": {
+        "search_xyxy": [
+          84,
+          396,
+          240,
+          480
+        ],
+        "background_rgb": [
+          2.0,
+          50.0,
+          62.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            47,
+            87
+          ],
+          [
+            40,
+            81
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              98.0,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              98.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              232.0,
+              413
+            ],
+            [
+              232.0,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            98,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            233,
+            472
+          ]
+        ]
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2555,
+      "mode": "detector_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 0,
+        "raw_group_xyxy": [
+          97,
+          403,
+          227,
+          476
+        ],
+        "face_xyxy": [
+          [
+            97,
+            403,
+            142,
+            476
+          ],
+          [
+            138,
+            403,
+            186,
+            476
+          ],
+          [
+            182,
+            403,
+            227,
+            476
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.992785,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S4",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2555,
+      "mode": "body_context_no_seam",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          99,
+          414,
+          227,
+          471
+        ],
+        "face_xyxy": [
+          [
+            99,
+            414,
+            142,
+            471
+          ],
+          [
+            142,
+            414,
+            184,
+            471
+          ],
+          [
+            184,
+            414,
+            227,
+            471
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.992785,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2555,
+      "mode": "body_context_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          99,
+          414,
+          227,
+          471
+        ],
+        "face_xyxy": [
+          [
+            99,
+            414,
+            144,
+            471
+          ],
+          [
+            140,
+            414,
+            186,
+            471
+          ],
+          [
+            182,
+            414,
+            227,
+            471
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.992785,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2555,
+      "mode": "outer_body_seam2",
+      "audit": {
+        "detector_bbox": [
+          97,
+          403,
+          130,
+          73
+        ],
+        "tight_bbox_in_group": [
+          2,
+          12,
+          128,
+          55
+        ],
+        "vertical_context": 0,
+        "raw_group_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_xyxy": [
+          [
+            98,
+            414,
+            145,
+            476
+          ],
+          [
+            141,
+            414,
+            189,
+            476
+          ],
+          [
+            185,
+            414,
+            232,
+            476
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.289062,
+          "top_to_mid_span_ratio": 0.992785,
+          "normalized_size": [
+            223,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            12,
+            128,
+            55
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": {
+          "search_xyxy": [
+            84,
+            396,
+            240,
+            480
+          ],
+          "background_rgb": [
+            2.0,
+            49.0,
+            61.0
+          ],
+          "distance_threshold": 30,
+          "search_padding_fraction": 0.1,
+          "eligible_contours": 1,
+          "outer_body_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ]
+        }
+      },
+      "top1": [
+        "S4",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2555,
+      "mode": "face_plane_seam_boxes",
+      "audit": {
+        "search_xyxy": [
+          84,
+          396,
+          240,
+          480
+        ],
+        "background_rgb": [
+          2.0,
+          49.0,
+          61.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            47,
+            87
+          ],
+          [
+            40,
+            81
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              98.0,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              98.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              232.0,
+              413
+            ],
+            [
+              232.0,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            98,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            233,
+            472
+          ]
+        ]
+      },
+      "top1": [
+        "S5",
+        "S4",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    },
+    {
+      "frame": 2555,
+      "mode": "face_plane_seam_rectified",
+      "audit": {
+        "search_xyxy": [
+          84,
+          396,
+          240,
+          480
+        ],
+        "background_rgb": [
+          2.0,
+          49.0,
+          61.0
+        ],
+        "distance_threshold": 30,
+        "search_padding_fraction": 0.1,
+        "eligible_contours": 1,
+        "outer_body_xyxy": [
+          98,
+          414,
+          232,
+          476
+        ],
+        "face_plane_rows": [
+          415,
+          470
+        ],
+        "blank_band_rows": [
+          416,
+          460
+        ],
+        "measured_seams_in_outer_body": [
+          [
+            47,
+            87
+          ],
+          [
+            40,
+            81
+          ]
+        ],
+        "face_quads": [
+          [
+            [
+              98.0,
+              413
+            ],
+            [
+              147.47727272727272,
+              413
+            ],
+            [
+              138.25,
+              471
+            ],
+            [
+              98.0,
+              471
+            ]
+          ],
+          [
+            [
+              143.47727272727272,
+              413
+            ],
+            [
+              187.4090909090909,
+              413
+            ],
+            [
+              179.5,
+              471
+            ],
+            [
+              134.25,
+              471
+            ]
+          ],
+          [
+            [
+              183.4090909090909,
+              413
+            ],
+            [
+              232.0,
+              413
+            ],
+            [
+              232.0,
+              471
+            ],
+            [
+              175.5,
+              471
+            ]
+          ]
+        ],
+        "vertical_context": 2,
+        "seam_context": 2,
+        "face_xyxy": [
+          [
+            98,
+            413,
+            149,
+            472
+          ],
+          [
+            134,
+            413,
+            189,
+            472
+          ],
+          [
+            175,
+            413,
+            233,
+            472
+          ]
+        ]
+      },
+      "top1": [
+        "S5",
+        "S6",
+        "S4"
+      ],
+      "expected_classes_supported": [
+        true,
+        true,
+        true
+      ],
+      "correct_faces": 1,
+      "exact_group_correct": false
+    }
+  ],
+  "descriptor_diagnostic_frame2552": [
+    {
+      "mode": "detector_seam2",
+      "rankings": [
+        {
+          "top1": "S5",
+          "scores": [
+            [
+              "S5",
+              0.10884011600616544
+            ],
+            [
+              "S4",
+              0.08709244045065515
+            ],
+            [
+              "S6",
+              0.06341456733815039
+            ],
+            [
+              "S8",
+              0.04646927916424193
+            ],
+            [
+              "M4",
+              0.039827814751211735
+            ],
+            [
+              "S7",
+              0.03478892673804097
+            ],
+            [
+              "M3",
+              0.023173897758337343
+            ],
+            [
+              "M6",
+              0.021503074275853146
+            ],
+            [
+              "S1",
+              0.020784288844613755
+            ],
+            [
+              "P1",
+              0.019518724531409144
+            ],
+            [
+              "M1",
+              0.01931798275604485
+            ],
+            [
+              "M7",
+              0.01620898702853652
+            ],
+            [
+              "S3",
+              0.016061549299947218
+            ],
+            [
+              "P6",
+              0.01553451994284768
+            ],
+            [
+              "P4",
+              0.015376074980654457
+            ],
+            [
+              "P3",
+              0.014389347127369235
+            ],
+            [
+              "P8",
+              0.014351031449728338
+            ],
+            [
+              "P5",
+              0.012558757039295928
+            ],
+            [
+              "M5",
+              0.010722779560057785
+            ],
+            [
+              "S2",
+              0.010621974692779356
+            ],
+            [
+              "M2",
+              0.009237114311356829
+            ],
+            [
+              "P7",
+              0.008247440324793302
+            ],
+            [
+              "S9",
+              0.0035376492769670187
+            ],
+            [
+              "P9",
+              0.0033438061980215336
+            ]
+          ]
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.16707849216943715
+            ],
+            [
+              "S6",
+              0.1662293043737481
+            ],
+            [
+              "S5",
+              0.07919654396339716
+            ],
+            [
+              "S7",
+              0.07597731038163728
+            ],
+            [
+              "S8",
+              0.07399283930362931
+            ],
+            [
+              "S3",
+              0.05418459752900295
+            ],
+            [
+              "S9",
+              0.03399590312433326
+            ],
+            [
+              "M4",
+              0.0334865319004079
+            ],
+            [
+              "S2",
+              0.029676680995087322
+            ],
+            [
+              "M6",
+              0.027065892993577964
+            ],
+            [
+              "M7",
+              0.026302923475315806
+            ],
+            [
+              "P4",
+              0.025317022931962817
+            ],
+            [
+              "M5",
+              0.024409125209726587
+            ],
+            [
+              "M1",
+              0.019992160056862468
+            ],
+            [
+              "P3",
+              0.019050266763615594
+            ],
+            [
+              "P5",
+              0.018329975448304614
+            ],
+            [
+              "M2",
+              0.016273328671835157
+            ],
+            [
+              "P6",
+              0.01594156172194398
+            ],
+            [
+              "P9",
+              0.015732179312430022
+            ],
+            [
+              "M3",
+              0.01531236776972756
+            ],
+            [
+              "P8",
+              0.014876374909272181
+            ],
+            [
+              "S1",
+              0.014114628808264088
+            ],
+            [
+              "P7",
+              0.013280872307050258
+            ],
+            [
+              "P1",
+              0.006943091645795641
+            ]
+          ]
+        },
+        {
+          "top1": "S4",
+          "scores": [
+            [
+              "S4",
+              0.398729052907518
+            ],
+            [
+              "S5",
+              0.17241397192642727
+            ],
+            [
+              "S6",
+              0.15889213959932943
+            ],
+            [
+              "S7",
+              0.08349600710281738
+            ],
+            [
+              "S8",
+              0.079319397756086
+            ],
+            [
+              "S2",
+              0.053898948828217
+            ],
+            [
+              "S3",
+              0.053044629953558894
+            ],
+            [
+              "M1",
+              0.049437780196999376
+            ],
+            [
+              "M6",
+              0.043017957620949385
+            ],
+            [
+              "S9",
+              0.04020945325137117
+            ],
+            [
+              "M4",
+              0.036668471192048496
+            ],
+            [
+              "M2",
+              0.029892962916242445
+            ],
+            [
+              "M3",
+              0.02945858182161922
+            ],
+            [
+              "M5",
+              0.0255327855342721
+            ],
+            [
+              "P1",
+              0.02452897892855312
+            ],
+            [
+              "M7",
+              0.02049322132982357
+            ],
+            [
+              "P5",
+              0.0179323530656602
+            ],
+            [
+              "P6",
+              0.01686625723031144
+            ],
+            [
+              "P7",
+              0.015748598236341553
+            ],
+            [
+              "P9",
+              0.01555944140617692
+            ],
+            [
+              "P8",
+              0.014641240022952003
+            ],
+            [
+              "P4",
+              0.010551479491400742
+            ],
+            [
+              "S1",
+              0.006470674424841008
+            ],
+            [
+              "P3",
+              0.002894553640447995
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "dependency_versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3"
+  },
+  "input_sha256": {
+    "references/vision/2026-10-03/independent14_s234_detector_spec_v0_1.json": "7a83d79f5aeda9ed97f41f350ca423cfb86ade3983ec3de5bcea181805dd0148",
+    "private_template_zip": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c"
+  },
+  "scorer_changed": false,
+  "thresholds_changed": false,
+  "reference_and_query_geometry_normalized": true,
+  "manual_target_rectangles_used_for_crop_edges": false,
+  "declared_source_disjoint_development_comparison": true,
+  "raw_reference_original_recheck_completed": false,
+  "formal_promotion_evidence": false,
+  "previously_inspected": true,
+  "development_only": true,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "decision": "reference_support_added_but_cross_view_identity_transfer_failed; acquire_bottom-seat_source-disjoint_references"
+}

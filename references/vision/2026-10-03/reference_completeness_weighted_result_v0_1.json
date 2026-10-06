@@ -1,0 +1,153 @@
+{
+  "schema_version": "reference_completeness_weighted_development_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "development_only": true,
+  "candidate": {
+    "name": "spatial_window_affine_reference_complete",
+    "formula": "existing_spatial_window_affine_score * reference_keypoints_supported_by_query_fraction",
+    "reference_support_radius_normalized": 0.08,
+    "new_acceptance_threshold": false,
+    "class_restriction": false,
+    "all_admitted_competing_classes_ranked": true,
+    "raw_match_fallback": false,
+    "selected_after_development_inspection": true
+  },
+  "reproduction_environment": {
+    "python": "3.13.5",
+    "opencv": "5.0.0",
+    "numpy": "2.5.3",
+    "opencv_wheel_sha256": "ed709fdf9aa0bd1f2ed8549e71d19449b03a675bb581eb292285f6861953be37",
+    "numpy_wheel_sha256": "a5fa86b80fd24bcd1aff83ad23be44ea323de3f787be8f8b15d4a65621e25321",
+    "public_spatial_reference_bank_npz_sha256": "de55db970f7ebd4ca7a7bb8bcdf3f563273a4f68b6cc205b034f5fa801798ee3",
+    "note": "OpenCV 4.13.0 changed SIFT rankings and was rejected as a comparison environment; the reported results use the frozen OpenCV 5.0.0 environment."
+  },
+  "inputs": {
+    "independent14_s234_source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+    "same_match_control_source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+    "bottom_s234_reference_source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+    "private_template_zip_sha256": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c",
+    "query_spec": "references/vision/2026-10-03/independent14_s234_detector_spec_v0_1.json",
+    "s789_spec": "references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json",
+    "same_match_control_spec": "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json"
+  },
+  "environment_aligned_baseline_reproduction": {
+    "independent14_s234": {
+      "correct_faces": 7,
+      "wrong_ranked_faces": 2,
+      "unknown_faces": 0,
+      "faces": 9,
+      "exact_groups_correct": 1,
+      "groups": 3
+    },
+    "s789_same_original_match_control": {
+      "correct_faces": 15,
+      "wrong_ranked_faces": 0,
+      "unknown_faces": 0,
+      "faces": 15,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "s8_peng_same_original_match_control": {
+      "correct_faces": 15,
+      "wrong_ranked_faces": 0,
+      "unknown_faces": 0,
+      "faces": 15,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "diagnostic": {
+    "false_s2_to_s4_reference_support": [
+      {
+        "frame": 2549,
+        "expected": "S2",
+        "winner": "S4",
+        "reference_keypoints_supported_by_query_fraction": 0.442
+      },
+      {
+        "frame": 2552,
+        "expected": "S2",
+        "winner": "S4",
+        "reference_keypoints_supported_by_query_fraction": 0.488
+      }
+    ],
+    "expected_s2_reference_support_on_error_frames": [
+      {
+        "frame": 2549,
+        "reference_keypoints_supported_by_query_fraction": 0.843
+      },
+      {
+        "frame": 2552,
+        "reference_keypoints_supported_by_query_fraction": 0.863
+      }
+    ],
+    "true_s4_reference_support_same_sequence_range": [
+      0.942,
+      0.960
+    ],
+    "correct_winner_reference_support_ranges": {
+      "independent14_s234": {
+        "min": 0.863,
+        "max": 0.987,
+        "mean": 0.951
+      },
+      "s789_same_original_match_control": {
+        "min": 0.920,
+        "max": 0.990,
+        "mean": 0.973
+      },
+      "s8_peng_same_original_match_control": {
+        "min": 0.910,
+        "max": 0.990,
+        "mean": 0.959
+      }
+    }
+  },
+  "weighted_candidate_result": {
+    "independent14_s234": {
+      "correct_faces": 9,
+      "wrong_ranked_faces": 0,
+      "unknown_faces": 0,
+      "faces": 9,
+      "exact_groups_correct": 3,
+      "groups": 3
+    },
+    "s789_same_original_match_control": {
+      "correct_faces": 15,
+      "wrong_ranked_faces": 0,
+      "unknown_faces": 0,
+      "faces": 15,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "s8_peng_same_original_match_control": {
+      "correct_faces": 15,
+      "wrong_ranked_faces": 0,
+      "unknown_faces": 0,
+      "faces": 15,
+      "exact_groups_correct": 5,
+      "groups": 5
+    }
+  },
+  "interpretation": {
+    "development_error_resolved_on_inspected_packet": true,
+    "generalization_proven": false,
+    "why_not_promoted": [
+      "the formula was selected after inspecting the S2-to-S4 development errors",
+      "S2 and S3 have only one other original-match support in the current evidence inventory",
+      "the S234 labels are assistant visual review rather than user-confirmed labels",
+      "S789 and S8 controls share one original match and are not independent generalization evidence",
+      "no new source-disjoint unseen holdout has evaluated the weighted candidate"
+    ],
+    "next_gate": "evaluate the frozen formula unchanged on a new source-disjoint real exposed-meld packet before any Runtime consideration"
+  },
+  "private_pixels_committed": false,
+  "runtime_identity_threshold": 0.82,
+  "runtime_integration": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

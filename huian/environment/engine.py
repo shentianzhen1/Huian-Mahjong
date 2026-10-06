@@ -149,6 +149,8 @@ class HuianEnvironment:
         candidate.phase, candidate.terminal = "TERMINAL", True
         candidate.terminal_reason = "SIMULATION_" + ("PINGHU" if multiplier == 1 else "ZIMO")
         candidate.pending_discard = candidate.pending_hu = None
+        if pending["source"] == WinSource.ROB_KONG.value:
+            candidate.pending_kong = None
         self.rules.validate_state(candidate)
         self._state = candidate
         self._events.append({"seq": len(self._events), "action": {"player": winner,
@@ -588,8 +590,7 @@ class HuianEnvironment:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
         if self._state.pending_kong is not None:
             if declaration is None or WinSource(declaration["source"]) != WinSource.ROB_KONG:
-                from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
+                raise ValueError("Observed settlement requires completed Kong or declared Rob-Kong Hu")
         # A verified wall-tail Hu after any completed Kong uses the
         # ordinary Zimo settlement formula. The Kong itself contributes only
         # through the caller-provided/aggregated normal fan total.
