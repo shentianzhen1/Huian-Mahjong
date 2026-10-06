@@ -178,6 +178,7 @@ def _record(rule_id, domain, status, revision, value, impact, evidence_ids,
 
 
 P20261006 = ("player_confirmed_special_rules_20261006_v1",)
+P20261007_OPEN_GOLD = ("player_confirmed_open_gold_random_20261007_v1",)
 
 RULE_REGISTRY = MappingProxyType({
     "physical.open_gold_reserved_copy": _record(
@@ -194,16 +195,48 @@ RULE_REGISTRY = MappingProxyType({
     ),
     "physical.open_gold_candidate_flower": _record(
         "physical.open_gold_candidate_flower", RuleDomain.PHYSICAL,
+        EvidenceStatus.CONFIRMED, 2,
+        "TARGET_ROOM_RANDOM_SELECTION_EXCLUDES_FLOWERS",
+        ImpactLevel.CRITICAL, P20261007_OPEN_GOLD,
+        "workspace.simulator.staged_opening",
+        note=(
+            "Stable historical ID retained. The explicit flower-candidate path "
+            "is compatibility/replay-only and is not reachable in the current "
+            "target-room default because flowers are excluded before selection."
+        ),
+    ),
+    "state_machine.open_gold_random_selection": _record(
+        "state_machine.open_gold_random_selection", RuleDomain.STATE_MACHINE,
         EvidenceStatus.CONFIRMED, 1,
-        "DEALER_FLOWER_ZONE_NO_HAND_REPLACEMENT", ImpactLevel.CRITICAL,
-        P20261006, "huian.environment.opening_flow",
+        {
+            "selection": "SYSTEM_RANDOM",
+            "candidate_pool": "NONFLOWER_TILES_ONLY",
+            "flowers_excluded_before_selection": True,
+            "dice_mapping_used": False,
+            "distribution": "UNKNOWN",
+            "rng_algorithm": "UNKNOWN",
+        },
+        ImpactLevel.CRITICAL, P20261007_OPEN_GOLD,
+        "workspace.simulator.staged_opening",
+        depends_on=("physical.open_gold_reserved_copy",
+                    "physical.max_playable_gold_copies"),
+        note=(
+            "Random mechanism is confirmed; server distribution/RNG remains "
+            "UNKNOWN. Seeded uniform simulator sampling is convention only."
+        ),
     ),
     "state_machine.eight_flower_open_gold_force": _record(
         "state_machine.eight_flower_open_gold_force", RuleDomain.STATE_MACHINE,
-        EvidenceStatus.CONFIRMED, 1, "NEW_EIGHTH_FLOWER_AUTO_END_BEFORE_GOLD",
-        ImpactLevel.CRITICAL, P20261006, "huian.environment.opening_flow",
-        depends_on=("physical.open_gold_candidate_flower",
-                    "settlement.eight_flower_real"),
+        EvidenceStatus.CONFIRMED, 2,
+        "UNREACHABLE_IN_TARGET_ROOM_RANDOM_OPEN_GOLD",
+        ImpactLevel.CRITICAL, P20261007_OPEN_GOLD,
+        "huian.environment.opening_flow",
+        depends_on=("settlement.eight_flower_real",),
+        note=(
+            "Stable historical ID retained for replay compatibility. Current "
+            "target-room Gold selection excludes flowers before selection, so "
+            "an eighth flower cannot be created by the Gold-selection step."
+        ),
     ),
     "state_machine.eight_flower_pre_gold_choice": _record(
         "state_machine.eight_flower_pre_gold_choice", RuleDomain.STATE_MACHINE,
@@ -452,6 +485,6 @@ RULE_REGISTRY = MappingProxyType({
 
 
 DEFAULT_RULE_SNAPSHOT = RuleSnapshot(
-    label="huian-target-2026-10-06-first-round-r1",
+    label="huian-target-2026-10-07-random-gold-r1",
     records=RULE_REGISTRY,
 )
