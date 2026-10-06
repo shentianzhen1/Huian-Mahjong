@@ -2,7 +2,11 @@ import unittest
 
 from huian._legacy import env
 from huian.environment import HuianEnvironment
-from workspace.simulator import make_wall, run_staged_opening
+from workspace.simulator import (
+    make_wall,
+    run_random_staged_opening,
+    run_staged_opening,
+)
 
 
 def staged_case():
@@ -67,6 +71,9 @@ class StagedOpeningSimulatorTests(unittest.TestCase):
         self.assertEqual(sum(result.rewards), 0)
 
     def test_flower_candidate_consumes_only_explicit_candidate_and_requests_next(self):
+        # Historical/replay compatibility remains available. The target-room
+        # random bridge below never chooses this path because flowers are
+        # excluded before random Gold selection.
         for seed in range(32):
             wall = make_wall(seed)
             probe = HuianEnvironment()
@@ -102,6 +109,60 @@ class StagedOpeningSimulatorTests(unittest.TestCase):
             )
             return
         self.fail("No deterministic opening-flower fixture found")
+
+    def test_random_target_bridge_selects_only_nonflower_without_dice(self):
+        seed, wall, probe, _ = staged_case()
+        result = run_random_staged_opening(
+            seed=seed,
+            random_seed=20261007,
+            wall=wall,
+            dealer=0,
+            current_dealer_base=10,
+        )
+        config = result.config
+        self.assertIn(result.status, ("READY", "COMPLETED"))
+        self.assertIsNone(result.dice_total)
+        self.assertEqual(config["opening_mode"], "STAGED_SYSTEM_RANDOM_NONFLOWER")
+        self.assertEqual(config["target_selection"], "SYSTEM_RANDOM")
+        self.assertEqual(config["target_candidate_pool"], "NONFLOWER_TILES_ONLY")
+        self.assertEqual(config["target_distribution"], "UNKNOWN")
+        self.assertEqual(
+            config["simulator_sampling_status"],
+            "SIMULATOR_CONVENTION_ONLY",
+        )
+        self.assertNotIn(config["selected_tile"], env.FLOWERS)
+        self.assertEqual(
+            config["candidate_pool_size"],
+            sum(tile not in env.FLOWERS for tile in probe.state.wall),
+        )
+        self.assertFalse(any(
+            event["action"]["type"] == "OPEN_GOLD_FLOWER"
+            for event in result.events
+        ))
+
+    def test_random_target_bridge_is_reproducible_for_same_seed(self):
+        seed, wall, _, _ = staged_case()
+        first = run_random_staged_opening(
+            seed=seed,
+            random_seed=314159,
+            wall=wall,
+            dealer=0,
+            current_dealer_base=15,
+        )
+        second = run_random_staged_opening(
+            seed=seed,
+            random_seed=314159,
+            wall=wall,
+            dealer=0,
+            current_dealer_base=15,
+        )
+        self.assertEqual(
+            first.config["selected_wall_index"],
+            second.config["selected_wall_index"],
+        )
+        self.assertEqual(first.config["selected_tile"], second.config["selected_tile"])
+        self.assertEqual(first.state_hash, second.state_hash)
+        self.assertEqual(first.events, second.events)
 
 
 if __name__ == "__main__":
