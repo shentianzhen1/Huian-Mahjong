@@ -13,10 +13,14 @@ DEALER16 = [
     "P1", "P2", "P3", "S1", "S2", "S3",
     "E", "E", "E", GOLD,
 ]
+# Four complete melds + pair + P4/P5 wait. The virtual opened Gold can complete
+# the fifth meld for Qiangjin, while the default physical W first draw is not an
+# ordinary self-draw Hu. This keeps the Qiangjin-closure test independent from
+# the still-UNKNOWN ordinary self-draw decline contract.
 NONDEALER16 = [
-    "M7", "M8", "M9", "P4", "P5", "P6",
-    "P7", "P8", GOLD, "S4", "S5", "S6",
-    "R", "R", "R", GOLD,
+    "M1", "M2", "M3", "M4", "M5", "M6",
+    "P1", "P2", "P3", "S1", "S2", "S3",
+    "E", "E", "P4", "P5",
 ]
 
 
@@ -163,13 +167,15 @@ class QiangjinFirstRoundTests(unittest.TestCase):
         discard = next(a for a in ordinary if a.type == env.ActionType.DISCARD)
         game.step(discard)
         self.assertFalse(game.state.first_round["active"])
-        # The old mid-hand gate was "Gold in hand after any draw". It must stay
-        # closed even though both seats still physically hold Gold.
+        # The old mid-hand Qiangjin gate must remain closed once the provenance
+        # has ended, regardless of later physical Gold draws.
         self.assertFalse(working_qiangjin_eligible(game.state, dealer))
         self.assertFalse(working_qiangjin_eligible(game.state, nondealer))
 
     def test_imported_midhand_draw_with_gold_does_not_open_qiangjin(self):
-        game = first_round_game()
+        # Use a physical Gold first draw here so the regression is meaningful:
+        # deactivating first_round must close Qiangjin even with Gold in hand.
+        game = first_round_game(draw_tile=GOLD)
         _, nondealer = advance_to_first_draw(game)
         game.state.first_round  # returned state is a copy; mutate through set_state below
         state = game.state
