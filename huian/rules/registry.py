@@ -294,6 +294,31 @@ RULE_REGISTRY = MappingProxyType({
         EvidenceStatus.CONFIRMED, 1, 5, ImpactLevel.CRITICAL,
         ("match_evidence_001", "player_2026-09-19"), "huian.rules.dealer_base",
     ),
+    "match.normal_dealer_flow": _record(
+        "match.normal_dealer_flow", RuleDomain.MATCH,
+        EvidenceStatus.CONFIRMED, 1,
+        {
+            "scope": "ALL_HU_METHODS",
+            "dealer_win": "STAY_AND_ADD_5",
+            "draw": "STAY_AND_ADD_5",
+            "nondealer_win": "SWITCH_AND_RESET_10",
+        },
+        ImpactLevel.CRITICAL, P20261006, "workspace.simulator.match",
+        depends_on=("match.new_dealer_base", "match.repeat_dealer_increment"),
+        note="Special win labels never override the winner-based dealer transition.",
+    ),
+    "match.fixed_eight_hand_tie": _record(
+        "match.fixed_eight_hand_tie", RuleDomain.MATCH,
+        EvidenceStatus.CONFIRMED, 1,
+        {
+            "hand_count": 8,
+            "equal_final_scores": "TIE",
+            "extra_hand": False,
+            "dealer_tiebreak": False,
+        },
+        ImpactLevel.HIGH, P20261006, "workspace.simulator.match",
+        note="Equal scores after hand 8 are final; no extra hand or dealer tiebreak.",
+    ),
     "settlement.youjin_multiplier": _record(
         "settlement.youjin_multiplier", RuleDomain.SETTLEMENT,
         EvidenceStatus.CONFIRMED, 1, 4, ImpactLevel.CRITICAL,
