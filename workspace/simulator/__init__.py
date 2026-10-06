@@ -27,7 +27,7 @@ __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "m
            "run_ordinary_deal_in_calibration",
            "summarize_deal_in_calibration",
            "CalibratingTenpaiRiskShantenAgent", "TenpaiRiskBin",
-           "DealInCalibrationRecorder", "TenpaiRiskCalibrationReport",
+           "TenpaiRiskCalibrationRecorder", "TenpaiRiskCalibrationReport",
            "TenpaiRiskCalibrationSample", "run_tenpai_risk_calibration",
            "summarize_tenpai_risk_calibration", "TenpaiStateCalibrationSample",
            "TenpaiStateRecorder", "PublicTenpaiProbabilityModel",
