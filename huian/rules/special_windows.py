@@ -168,6 +168,41 @@ def _first_round_qiangjin_actions(state, player):
     )
 
 
+def _strip_unrobbable_kong_unknown(adapter, state, result):
+    if "rob_kong" not in result.unresolved:
+        return result
+    unresolved = tuple(item for item in result.unresolved if item != "rob_kong")
+    p = state.current_player
+    A, T = env.Action, env.ActionType
+    extra = []
+    if state.phase == "AFTER_DRAW":
+        extra.extend(
+            A(p, T.AN_GANG, tile=tile, tiles=(tile,) * 4)
+            for tile in adapter.rules.concealed_kongs(state.hands[p], state.gold_tile)
+        )
+    if state.phase == "AFTER_DISCARD" and state.pending_discard is not None:
+        tile = state.pending_discard["tile"]
+        options = adapter.rules.meld_options(state.hands[p], tile, state.gold_tile)
+        if options.get("ming_gang"):
+            extra.append(A(p, T.MING_GANG, tile=tile, tiles=(tile,) * 4))
+    return ActionReport(result.known_actions + tuple(extra), unresolved)
+
+
+def _strip_confirmed_youjin_boundary(result):
+    """Remove only the obsolete generic Youjin blocker.
+
+    The confirmed single-Youjin entry candidates are materialized explicitly by
+    ``_single_youjin_offer_actions`` after a completed own draw. At the response
+    to the dealer's first discard, Youjin is not the action being resolved at
+    all, so that lower-priority generic UNKNOWN must not prevent CHI/PENG/HU/PASS
+    from reaching the nondealer's actual first draw.
+    """
+    return ActionReport(
+        result.known_actions,
+        tuple(item for item in result.unresolved if item != "youjin_trigger"),
+    )
+
+
 def _first_round_report(adapter, state):
     first = getattr(state, "first_round", None)
     if not isinstance(first, dict) or not first.get("active"):
@@ -197,9 +232,19 @@ def _first_round_report(adapter, state):
             for tile in sorted(set(state.hands[dealer]))
         ))
 
-    # Claims on the dealer's first discard are handled by normal AFTER_DISCARD
-    # legality. PASS reaches NEED_DRAW; only the actual first DRAW opens this
-    # Qiangjin priority check.
+    # The opponent may claim the dealer's first discard normally. The old
+    # generic Youjin UNKNOWN is unrelated to this response and must not block
+    # PASS -> first draw. A claim closes first_round in environment transitions.
+    if (state.phase == "AFTER_DISCARD"
+            and state.current_player == nondealer
+            and first.get("dealer_first_discard_done")
+            and not first.get("nondealer_first_draw_done")):
+        result = _strip_unrobbable_kong_unknown(
+            adapter, state, base_report(adapter, state)
+        )
+        return _strip_confirmed_youjin_boundary(result)
+
+    # PASS above reaches NEED_DRAW; only the actual first DRAW opens Qiangjin.
     if not first.get("nondealer_first_draw_done"):
         return None
     if state.phase != "AFTER_DRAW" or state.current_player != nondealer:
@@ -227,7 +272,19 @@ def _first_round_report(adapter, state):
     if (not first["qiangjin_resolved"][dealer]
             and first["qiangjin_eligible"][dealer]):
         return ActionReport(_first_round_qiangjin_actions(state, dealer))
-    return None
+
+    # Both first-round Qiangjin opportunities are now resolved. Preserve every
+    # ordinary known action (including ordinary Hu/Kong), explicitly add the
+    # confirmed optional single-Youjin entries, and strip only the superseded
+    # generic Youjin UNKNOWN. The first actual ordinary action closes provenance.
+    result = _strip_unrobbable_kong_unknown(
+        adapter, state, base_report(adapter, state)
+    )
+    result = _strip_confirmed_youjin_boundary(result)
+    return ActionReport(
+        _single_youjin_offer_actions(adapter, state) + result.known_actions,
+        result.unresolved,
+    )
 
 
 def _single_youjin_offer_actions(adapter, state):
@@ -245,26 +302,6 @@ def _single_youjin_offer_actions(adapter, state):
         })
         for tile in candidates
     )
-
-
-def _strip_unrobbable_kong_unknown(adapter, state, result):
-    if "rob_kong" not in result.unresolved:
-        return result
-    unresolved = tuple(item for item in result.unresolved if item != "rob_kong")
-    p = state.current_player
-    A, T = env.Action, env.ActionType
-    extra = []
-    if state.phase == "AFTER_DRAW":
-        extra.extend(
-            A(p, T.AN_GANG, tile=tile, tiles=(tile,) * 4)
-            for tile in adapter.rules.concealed_kongs(state.hands[p], state.gold_tile)
-        )
-    if state.phase == "AFTER_DISCARD" and state.pending_discard is not None:
-        tile = state.pending_discard["tile"]
-        options = adapter.rules.meld_options(state.hands[p], tile, state.gold_tile)
-        if options.get("ming_gang"):
-            extra.append(A(p, T.MING_GANG, tile=tile, tiles=(tile,) * 4))
-    return ActionReport(result.known_actions + tuple(extra), unresolved)
 
 
 def report_with_specials(adapter, state):
@@ -304,9 +341,11 @@ def report_with_specials(adapter, state):
             return ActionReport((A(p, T.DRAW, metadata={
                 "source": DrawSource.WALL_HEAD.value}),))
         youjin = _single_youjin_offer_actions(adapter, state)
-        discards = tuple(
-            A(p, T.DISCARD, tile=tile) for tile in sorted(set(state.hands[p])))
-        return ActionReport(youjin + discards)
+        result = _strip_unrobbable_kong_unknown(
+            adapter, state, base_report(adapter, state)
+        )
+        result = _strip_confirmed_youjin_boundary(result)
+        return ActionReport(youjin + result.known_actions, result.unresolved)
     if state.phase == "OPENING_QIANGJIN_CHECK":
         validate(adapter, state)
         special = current_player_special_actions(adapter, state)

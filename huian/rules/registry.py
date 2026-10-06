@@ -299,6 +299,17 @@ RULE_REGISTRY = MappingProxyType({
         EvidenceStatus.CONFIRMED, 1, 4, ImpactLevel.CRITICAL,
         ("match_evidence_001", "evidence_66fe863f"), "huian.rules.special_outcomes",
     ),
+    "settlement.youjin_full": _record(
+        "settlement.youjin_full", RuleDomain.SETTLEMENT,
+        EvidenceStatus.UNKNOWN, 1, None, ImpactLevel.CRITICAL,
+        (), "huian.rules.special_outcomes",
+        depends_on=("settlement.youjin_multiplier",),
+        note=(
+            "Youjin x4 is confirmed, but the full automatic trigger/payment/terminal "
+            "contract remains intentionally unresolved. Manual score observations may "
+            "reference this ID without turning them into rule evidence."
+        ),
+    ),
     "settlement.double_you_multiplier": _record(
         "settlement.double_you_multiplier", RuleDomain.SETTLEMENT,
         EvidenceStatus.CONFIRMED, 1, 8, ImpactLevel.CRITICAL,

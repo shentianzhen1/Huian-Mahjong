@@ -6,6 +6,7 @@ from huian.rules.dealer_base import REPEAT_DEALER_INCREMENT, SITTING_DEALER_BASE
 from huian.rules.registry import (
     DEFAULT_RULE_SNAPSHOT,
     ImpactLevel,
+    RuleNotConfirmedError,
     RuleSnapshot,
 )
 from huian.rules.special_outcomes import special_outcome_profile
@@ -64,12 +65,27 @@ class RuleRegistryTests(unittest.TestCase):
         tianting = DEFAULT_RULE_SNAPSHOT.require_confirmed(
             "state_machine.tianting_status")
         self.assertFalse(shape.value["physical_gold_moved"])
-        self.assertIn("FIRST_ROUND", timing.value)
+        self.assertEqual(
+            timing.value,
+            "OPENING_COMPLETE_THEN_DEALER_FIRST_DISCARD_THEN_NONDEALER_FIRST_DRAW_ONLY",
+        )
         self.assertEqual(priority.value, "NONDEALER_THEN_DEALER")
         self.assertEqual(settlement.value["multiplier"], 2)
         self.assertTrue(settlement.value["uses_ordinary_fan"])
         self.assertEqual(tianting.value["bonus_fan"], 0)
         self.assertEqual(tianting.value["bonus_multiplier"], 1)
+
+    def test_youjin_full_stays_unresolved_while_multiplier_is_confirmed(self):
+        self.assertEqual(
+            DEFAULT_RULE_SNAPSHOT.require_confirmed(
+                "settlement.youjin_multiplier").value,
+            4,
+        )
+        unresolved = DEFAULT_RULE_SNAPSHOT.get("settlement.youjin_full")
+        self.assertEqual(unresolved.status, EvidenceStatus.UNKNOWN)
+        self.assertIsNone(unresolved.value)
+        with self.assertRaises(RuleNotConfirmedError):
+            DEFAULT_RULE_SNAPSHOT.require_confirmed("settlement.youjin_full")
 
     def test_registry_matches_current_high_impact_runtime_constants(self):
         self.assertEqual(

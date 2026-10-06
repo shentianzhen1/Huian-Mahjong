@@ -15,21 +15,28 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(result.status, "UNRESOLVED")
         self.assertTrue(result.unresolved)
 
-    def test_opening_trace_is_reproducible_and_reaches_special_window(self):
+    def test_legacy_opening_trace_is_reproducible_and_stops_at_migration_boundary(self):
         first = Simulator().run_opening(seed=42)
         second = Simulator().run_opening(seed=42)
         self.assertEqual(first, second)
-        self.assertEqual(first.status, "READY")
+        self.assertEqual(first.status, "STOPPED_UNKNOWN")
         self.assertEqual(first.phase, "OPENING_QIANGJIN_CHECK")
-        self.assertFalse(first.unresolved)
+        self.assertTrue({
+            "qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"
+        }.issubset(set(first.unresolved)))
         self.assertEqual(len(first.events), 1)
         self.assertEqual(first.events[0]["action"]["type"], "OPEN_GOLD")
+        self.assertEqual(
+            first.events[0]["action"]["metadata"]["location_evidence"],
+            "SIMULATOR_CONVENTION",
+        )
         self.assertIn(first.dice_total, range(2, 13))
         self.assertGreater(first.wall_remaining, 16)
 
     def test_invalid_opening_input_is_not_relabelled_as_unknown(self):
         with self.assertRaises(ValueError):
             Simulator().run_opening(seed=99, dice_total=1)
+
     def test_explicit_dice_value_is_replayed(self):
         result = Simulator().run_opening(seed=99, dice_total=7)
         self.assertEqual(result.dice_total, 7)
