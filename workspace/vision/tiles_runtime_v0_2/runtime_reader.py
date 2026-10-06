@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from functools import lru_cache
 import json
 from pathlib import Path
 from typing import Iterable
@@ -83,6 +84,17 @@ def identity_gate(
     return candidate_tile_id, "accepted"
 
 
+@lru_cache(maxsize=16)
+def _cached_runtime_resources(root_text: str, session: str | None):
+    # Installed templates are immutable during a session. Keep session-specific
+    # exclusion separate; never reuse another session's training selection.
+    root = Path(root_text)
+    labels = approved_labels(root)
+    training_labels = _training_labels(labels, session)
+    covered, cross_session = _coverage(training_labels)
+    return root, covered, cross_session, TemplateTileClassifier.from_labels(root, training_labels)
+
+
 def read_stable_frames(
     images: Iterable[Image.Image],
     dataset_root: str | Path = "dataset/tiles_runtime_v0_2",
@@ -99,11 +111,9 @@ def read_stable_frames(
     if len(frame_ids) != len(images):
         raise ValueError("frame_ids must match images")
 
-    root = Path(dataset_root)
-    labels = approved_labels(root)
-    training_labels = _training_labels(labels, session)
-    covered, cross_session = _coverage(training_labels)
-    classifier = TemplateTileClassifier.from_labels(root, training_labels)
+    root, covered, cross_session, classifier = _cached_runtime_resources(
+        str(Path(dataset_root).resolve()), session,
+    )
     geometry_frames = [
         detect_dynamic_geometry(image, frame=frame_id, session=session)
         for image, frame_id in zip(images, frame_ids)
