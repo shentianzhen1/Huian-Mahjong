@@ -1,8 +1,44 @@
 from __future__ import annotations
 
 import unittest
+from unittest.mock import patch
+from types import SimpleNamespace
+from PIL import Image
 
 from .runtime_reader import _training_labels, identity_gate
+from . import runtime_reader
+
+
+class RuntimeResourceCacheTests(unittest.TestCase):
+    def setUp(self):
+        runtime_reader._cached_runtime_resources.cache_clear()
+
+    def tearDown(self):
+        runtime_reader._cached_runtime_resources.cache_clear()
+
+    def test_repeated_bursts_build_once_and_session_change_rebuilds(self):
+        labels = [
+            {'tile_id': 'M3', 'approved': True, 'region': 'hand_region', 'source_session': 'a'},
+            {'tile_id': 'P9', 'approved': True, 'region': 'hand_region', 'source_session': 'b'},
+        ]
+        images = [Image.new('RGB', (10, 10)) for _ in range(3)]
+        with (
+            patch.object(runtime_reader, 'approved_labels', return_value=labels) as load,
+            patch.object(runtime_reader.TemplateTileClassifier, 'from_labels') as build,
+            patch.object(runtime_reader, 'detect_dynamic_geometry'),
+            patch.object(runtime_reader, 'fuse_dynamic_geometry', return_value=SimpleNamespace(geometry_untrusted=True, issues=())),
+        ):
+            first = runtime_reader.read_stable_frames(images, 'unused', session='a')
+            second = runtime_reader.read_stable_frames(images, 'unused', session='a')
+            self.assertEqual(load.call_count, 1)
+            self.assertEqual(build.call_count, 1)
+            self.assertEqual(first, second)
+            self.assertEqual(build.call_args.args[1], [labels[1]])
+            runtime_reader.read_stable_frames(images, 'unused', session='b')
+            self.assertEqual(build.call_count, 2)
+            self.assertEqual(build.call_args.args[1], [labels[0]])
+            self.assertFalse(first['safe_for_hint'])
+            self.assertFalse(first['safe_for_executor'])
 
 
 class RuntimeReaderGateTests(unittest.TestCase):
