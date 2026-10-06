@@ -121,7 +121,7 @@ Player clarification from the target Huian two-player room now confirms a common
 - If the opponent self-draws on that opportunity, the opponent wins and the pending Youjin stage is intercepted.
 - If the opponent does not self-draw Hu on that opportunity, the current Youjin stage succeeds.
 - This supersedes the older working note that Triple-You / 三游 / 三金游 could only be intercepted by kong-replacement self-draw.
-- This correction does **not** close the remaining timing gap: the exact point at which a successful stage settles versus remains eligible for a further upgrade is still UNKNOWN and must not be inferred.
+- Settlement/upgrade timing is resolved by the confirmed sequential progression above: after the mandatory opponent discard, single/double proceeds to one progression draw and an optional upgrade; triple settles at ×16.
 
 The response rule is now exposed by `youjin_opponent_response_rule()`; stage entry/upgrade continues to be explicit and evidence-gated rather than inferred from gold count.
 
@@ -172,7 +172,7 @@ The following interaction rules are now CONFIRMED from the player's real-game cl
 - Qiangjin belongs only to the **current acting player** at the applicable node (opening after flower replacement/open-gold, and the corresponding current-player node after draw / flower / kong processing).
 - If that player chooses **PASS / 放弃**, that qiangjin opportunity is closed for the whole turn. The opponent does **not** inherit the window, even if the opponent's hand would otherwise satisfy a qiangjin condition.
 - After PASS, normal flow resumes for the same acting player: a 17-tile action node proceeds to discard; a 16-tile own node proceeds to the normal draw path.
-- Sanjindao is an optional current-player choice, not a once-per-hand lockout. Confirmed entry evidence includes **(a)** the opening check after opening flower replacement/open-gold is complete when the current actor already holds 3+ gold; **(b)** mid-hand when a valid draw changes the player from 2 gold to exactly 3; and **(c)** after a prior PASS, a later own draw while the player still holds exactly 3 gold can offer Sanjindao again. Sanjindao outranks Qiangjin at an eligible node. PASS closes only that current prompt; it does not permanently disable later Sanjindao, ordinary Hu, or Youjin-family play. Current evidence does not yet generalize the later-draw recheck to four gold.
+- Sanjindao is an optional current-player choice, not a once-per-hand lockout. Confirmed entry evidence includes **(a)** the opening check after opening flower replacement/open-gold is complete when the current actor already holds 3+ gold; **(b)** mid-hand when a valid draw changes the player from 2 gold to exactly 3; and **(c)** after a prior PASS, a later own draw while the player still holds exactly 3 gold can offer Sanjindao again. Sanjindao outranks Qiangjin at an eligible node. PASS closes only that current prompt; it does not permanently disable later Sanjindao, ordinary Hu, or Youjin-family play. Four playable gold tiles are physically impossible: the opened indicator reserves one of the four copies.
 - This confirms **window ownership and PASS behavior only**. The exact qiangjin winning decomposition/eligibility, settlement multiplier/payment, terminal flow and next dealer remain UNKNOWN.
 - The current helper `working_qiangjin_eligible()` is only an engineering gate for exercising the window. Its present "gold in hand and not in Youjin" condition is not itself a confirmed qiangjin hand-shape rule. Likewise, any current `QIANGJIN_MULTIPLIER` metadata must not be treated as settlement evidence.
 
@@ -361,11 +361,11 @@ Confirmed from 66fe863f and 7bc12fa (target room):
 - Multipliers: Youjin ×4, Double-You ×8 and Triple-You ×16 are now all direct-settlement CONFIRMED in the target room. match_evidence_002 closes the former Double-You evidence gap with +264/-264. Dealer Youjin hand 5 in match_evidence_001 and the earlier dealer Triple-You +608 both prove there is no extra dealer ×2.
 - The Youjin-side player may PASS opponent discards while climbing the chain.
 
-Still UNKNOWN programmatically:
-- exact trigger predicate for every edge hand (whether gold must complete the pair, all wait sets)
-- whether any room path can skip Youjin and enter Double-You directly (not seen in 7bc12fa)
-- which actions cancel the state in every case
-- opponent Hu sources during Youjin / Double-You / Triple-You beyond the 2026-09-14 oral permissions (this clip does not show the opponent winning)
+Current implementation scope:
+- The confirmed structural single-Youjin predicate and sequential optional upgrades are implemented; stage identity is not inferred from gold count.
+- The one-draw → optional self-Hu → mandatory response-discard cycle and normal flower/Kong continuation are implemented.
+- Rare paths outside this confirmed contract, such as direct Double-You entry without an established single stage, require their own evidence. Do not generalize a reviewed clip to all edge hands.
+- Additional response/flower/Kong footage improves regression coverage; it does not reopen the confirmed core flow or the closed Rob-Kong settlement.
 
 The 66fe863f replay remains one Youjin ×4 path after Chi. Match evidence 001 adds a second Youjin ×4 settlement and, crucially, a dealer Youjin with two gold tiles settling +76 without extra dealer ×2. 7bc12fa adds the climb to Triple-You ×16 and dealer-winner settlement +608.
 
@@ -383,20 +383,15 @@ The user-supplied 惠安 tab lists Youjin/Double/Triple as **4/8/16**, not 4/8/1
 The 2026-09-15 player confirmation now applies 4/8/16 to the target two-player
 room. Flower fan is included before the Hu multiplier in the +608 recording and ordinary direct recordings. Extra Youjin-chain dealer ×2 is now directly rejected for the target room: match_evidence_001 hand 5 is dealer Youjin and settles +76 as `(15+4)×4`, while the earlier dealer Triple-You settles +608 as `(35+3)×16`. The page's outer ×3 must not be applied to the verified two-player calculation.
 
-## Still important UNKNOWN questions
-1. 抢金 remaining gaps: the exact effective Hu decomposition/options and settlement/dealer result. Current-player ownership and PASS-does-not-handoff are resolved; do not re-open them as UNKNOWN.
-2. Actual-room rob-kong evidence: only Added-Gang/ADD_KONG (补杠=蓄杠=加杠) can be robbed; 大明杠/MING_GANG and 暗杠/AN_GANG cannot. Player confirmation also resolves that there is no independent kong fee and no special kong-fee accounting at flow draw. What remains UNKNOWN is the real response UI/decline footage and rob-kong/Gang-Hu scoring.
-3. Sanjindao remaining gaps: non-flower base, payment, terminal settlement accounting and next dealer. Timing now includes opening 3+ gold, the first 2→3 gold arrival, and a later own-draw recheck while exactly 3 gold remain after an earlier PASS. DECLARE/PASS is optional; PASS closes only the current prompt. ×3 is confirmed. The four-gold later-draw recheck remains UNKNOWN.
-4. 三游 / 三金游 remaining gaps: these names mean the same `TRIPLE_YOU` state, distinct from 三金倒. Youjin-family 4/8/16 and `(current dealer base + winner fan) × Hu multiplier` are all directly confirmed: Youjin examples, match_evidence_002 Double-You +264, and 7bc12fa Triple-You +608. Sequential climb Youjin→Double→Triple and self-PASS while climbing are confirmed in that clip. Exact predicate for every upgrade discard, cancellation, opponent Hu windows on video, payer UI and next-dealer result remain UNKNOWN.
-5. Gang-Hu remaining gaps: multiplier/fan, stacking, settlement, and any room option. Its classification after all three completed kong types is confirmed.
-6. Exact Youjin / Double-You / Triple-You triggers and the remaining permission windows not resolved by the confirmed opponent-rights matrix.
-7. Remaining room multipliers outside ordinary Pinghu/Zimo 1/2, Sanjindao ×3, and the fully confirmed Youjin chain ×4/×8/×16. The extra Youjin-chain dealer ×2 hypothesis is closed as false for the target room by dealer Youjin +76 and dealer Triple-You +608.
-8. Exact open-gold procedure when a flower is revealed. External info says the flower counts for dealer, dealer replaces it, then gold is reopened; needs Huian confirmation.
-9. Exact Tianhu timing relative to flower replacement/open-gold.
-10. Exact Tianting definition.
-11. Resolved 2026-09-14: all-PASS advances to the next player's draw.
-12. 8-hand match tie handling.
-13. Ordinary settlement is supported by multiple recordings; remaining work is automatic fan aggregation, unobserved special outcomes and dealer-base transition/cap rules.
+## Current unresolved rules and evidence gaps
+
+1. **Qiangjin — Issue #1:** exact winning/eligibility shape, target-room multiplier and fan stacking, payment, terminal flow and next dealer. Window ownership and PASS behavior are confirmed.
+2. **Sanjindao — Issue #2:** actual terminal formula/base/fan stacking, payment, next dealer and unresolved simultaneous-special priority. ×3 and repeatable later own-draw prompts after PASS are confirmed. Only three playable gold copies exist; four-gold rechecks are impossible, not UNKNOWN.
+3. **Eight-Flower-You — Issue #5:** real target-room settlement and simultaneous-special priority. Fixed 16 fan / ×1 / no additive stacking is WORKING project policy, not target-room confirmation.
+4. **Opening flower-as-gold candidate:** exact flower ownership, continued opening/replacement and physical wall indexing require target-room evidence. Final opened Gold reservation and the three-playable-copy limit are confirmed.
+5. **Low-frequency terminal rules — Issue #9:** target-room Tianhu/Tianting enablement, eligibility/timing/settlement and eight-hand match tie adjudication.
+
+Ordinary fan aggregation, dealer-base progression/cap, Gang-Hu/An-Gang-Hu scoring, and Rob-Kong settlement are implemented and no longer rule blockers. The confirmed Youjin/Double/Triple core is regression maintenance under Issue #3. Rare paths beyond that contract remain evidence-gated; extra footage is not a reason to reopen confirmed rules. Historical source-review limitations below describe those sources, not a new current backlog.
 
 ## External web review — 2026-09-13 (not rule confirmation)
 
@@ -455,8 +450,7 @@ Conflicts and preserved decisions:
 - C3: outer ×3 and non-winner fan adjustment text versus A/B two-player net
   evidence. Do not reinstate legacy subtraction or add the page's outer ×3 to
   two-player results. Extra Youjin-chain dealer ×2 is excluded by ordinary dealer Zimo +68 and by dealer Triple-You +608. The ingested +608 Triple-You confirms flowers are included in
-  winner fan before ×16. Remaining special-outcome flows (抢金, 三金倒, 八花游, rob-kong fees) still need their own footage.
+  winner fan before ×16. 抢金、三金倒、八花游的真实终局仍缺证据；抢杠胡真实录像用于回归，无独立杠费及抢杠结算已确认。
 
-Still missing after the 2026-09-18 clarification: real 补杠/蓄杠/加杠 (ADD_KONG) rob-kong response footage/scoring and Gang-Hu scoring,
-Tianhu/Tianting definitions, extended dealer base/cap and match ties. A listed
+Current unresolved items are listed above. Real ADD_KONG response footage remains useful regression evidence; Rob-Kong/Gang-Hu scoring and dealer-base/cap are resolved. Tianhu/Tianting and match ties remain unresolved. A listed
 multiplier does not establish a win type's eligibility or declaration timing.

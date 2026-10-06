@@ -63,4 +63,4 @@ Tests 和 Vision Regression 对所有 PR 都创建 Scope 检查；为兼容当�
 
 ## 当前排期边界
 
-Public Match Reconstruction #69 优先做独立来源的公开牌身份与连续真实帧误轨迹，再做 actor/turn 和整局自动流水；P0 #1/#2/#4/#5 单独收集真实结算证据。#4 未闭环前不启动新 Agent 版本；Hint Alpha 保持只读，Executor 关闭。不要为了方便出结果，把 UNKNOWN 变成默认结算或自动点击。
+Public Match Reconstruction #69 优先做独立来源的公开牌身份与连续真实帧误轨迹，再做 actor/turn 和整局自动流水；P0 #1/#2/#5 单独收集真实结算证据。#4 已由PR #125闭环，不再阻塞EV；当前Alpha工作仍保留V0.10，不启动新Agent版本；Hint Alpha 保持只读，Executor 关闭。不要为了方便出结果，把 UNKNOWN 变成默认结算或自动点击。
