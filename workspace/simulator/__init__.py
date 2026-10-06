@@ -1,5 +1,6 @@
 """Rule-neutral simulator scaffolding."""
 from .core import RandomAgent, SimulationResult, Simulator, SimulatorConfig, make_wall
+from .staged_opening import run_staged_opening
 from .evaluation import BatchEvaluation, HandSummary, run_many_normal_hands
 from .match import MatchProgressState, MatchScoreState, score_eight_hand_match
 from .match_runner import (MatchHandContext, MatchHandRecord, MatchHandResult,
@@ -11,6 +12,7 @@ from .unknowns import summarize_match_rule_gaps
 from .kong_audit import KongAuditRecorder, KongAuditSummary
 
 __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "make_wall",
+           "run_staged_opening",
            "BatchEvaluation", "HandSummary", "run_many_normal_hands",
            "MatchProgressState", "MatchScoreState", "score_eight_hand_match",
            "MatchHandContext", "MatchHandRecord", "MatchHandResult",
