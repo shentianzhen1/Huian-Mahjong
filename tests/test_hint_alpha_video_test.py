@@ -246,6 +246,10 @@ class ReplayOcrCadenceTests(unittest.TestCase):
         self.assertEqual(public_reader.read_window.call_count, 1)
         self.assertEqual(result["public_state"]["sampled_windows"], 1)
         self.assertGreater(result["public_state"]["reused_windows"], 0)
+        self.assertEqual(result["performance"]["ocr_calls"], 1)
+        self.assertEqual(result["performance"]["ocr_reused_windows"], 5)
+        self.assertTrue(all(row["elapsed_ms"] == 0 for row in result["public_rows"] if row["reused"]))
+        self.assertGreaterEqual(result["performance"]["ocr_total_ms"], 0)
 
 
 class DirectVideoRunnerTests(unittest.TestCase):
@@ -339,6 +343,8 @@ class DirectVideoRunnerTests(unittest.TestCase):
             self.assertFalse(saved["formal_promotion_evidence"])
             self.assertFalse(saved["safe_for_executor"])
             self.assertEqual(saved["timeline"]["status"], "PARTIAL")
+            self.assertEqual(saved["performance"]["ocr_calls"], 2)
+            self.assertTrue(all(row["elapsed_ms"] >= 0 for row in saved["public_rows"]))
 
 
 if __name__ == "__main__":
