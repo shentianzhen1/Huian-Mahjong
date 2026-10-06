@@ -3,7 +3,7 @@
 This runner is deliberately separate from the historical ordinary benchmark.
 It uses the real target-room state machine, including staged flower replacement,
 player-confirmed system-random Gold selection over nonflower tiles, Tianhu,
-Sanjindao, Eight-Flower and first-round Qiangjin.  Unknown contracts still fail
+Sanjindao, Eight-Flower and first-round Qiangjin. Unknown contracts still fail
 closed instead of being replaced with simulator guesses.
 """
 from copy import deepcopy
@@ -33,12 +33,12 @@ def run_target_hand(
     """Run one hand through the confirmed target-room rule path.
 
     The Gold choice is a seeded *simulator convention* over the confirmed
-    nonflower candidate pool.  It is never evidence about the server's unknown
+    nonflower candidate pool. It is never evidence about the server's unknown
     RNG distribution and is never used to predict a live room.
 
     Unlike ``Simulator.run_normal_hand``, this function does not set
     ``simulation_only_normal_hand=True`` and therefore does not bypass special
-    declaration windows.  It stops with ``STOPPED_UNKNOWN`` whenever a later
+    declaration windows. It stops with ``STOPPED_UNKNOWN`` whenever a later
     rule contract is still unresolved.
     """
     if type(max_steps) is not int or max_steps <= 0:
@@ -207,10 +207,12 @@ def run_target_hand(
                 )
                 continue
             if state.phase == "QIANGJIN_DECLARED":
+                # The confirmed first-round Qiangjin path settles immediately.
+                # Reaching this legacy declaration phase would therefore be a
+                # runtime/provenance mismatch, not a newly invented rule gap.
                 return finish(
                     "STOPPED_UNKNOWN",
-                    ("state_machine.qiangjin_legacy_import",),
-                    "legacy_qiangjin_declaration_without_first_round_provenance",
+                    stop_reason="legacy_qiangjin_declaration_without_first_round_provenance",
                 )
 
             if steps >= max_steps:
