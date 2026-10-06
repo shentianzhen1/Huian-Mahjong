@@ -14,7 +14,7 @@ Sanjindao repeated own-draw prompts and Eight-Flower windows remain independent.
 """
 from huian._legacy import env
 from .phases import ActionReport, report as base_report, validate
-from .context import DrawSource, YoujinStage
+from .context import DrawSource, HuContext, WinSource, YoujinStage
 from .special_outcomes import special_outcome_profile
 
 
@@ -203,6 +203,41 @@ def _strip_confirmed_youjin_boundary(result):
     )
 
 
+def _first_round_discard_response_report(adapter, state):
+    """Materialize the confirmed response set before the nondealer's first draw.
+
+    ``base_report`` intentionally fails closed when the responder holds Gold,
+    because generic mid-hand Youjin timing is not a complete action contract.
+    That generic blocker is unrelated to the confirmed first-round sequence and
+    used to erase even PASS. Rebuild only this narrow AFTER_DISCARD node using
+    the same ordinary legality predicates, while preserving any genuinely
+    unresolved discard-Hu settlement.
+    """
+    p = state.current_player
+    hand = state.hands[p]
+    tile = state.pending_discard["tile"]
+    A, T = env.Action, env.ActionType
+    actions = []
+    unknown = []
+    candidates = adapter.rules.meld_options(hand, tile, state.gold_tile)
+    actions.extend(A(p, T.CHI, tile=tile, tiles=seq) for seq in candidates["chi"])
+    if candidates["peng"]:
+        actions.append(A(p, T.PENG, tile=tile, tiles=(tile,) * 3))
+    if candidates["ming_gang"]:
+        # Big exposed Kong from the opponent's discard is confirmed unrobbable.
+        actions.append(A(p, T.MING_GANG, tile=tile, tiles=(tile,) * 4))
+    if adapter.rules.can_win(
+            hand + [tile], state.gold_tile, len(state.melds[p]),
+            "pinghu", winning_tile=tile):
+        context = HuContext(WinSource.DISCARD, tile)
+        actions.append(A(p, T.HU, tile=tile, metadata={
+            "win_source": context.source.value, "kong_kind": None,
+        }))
+        unknown.append("win_declaration_and_settlement")
+    actions.append(A(p, T.PASS))
+    return ActionReport(tuple(actions), tuple(unknown))
+
+
 def _first_round_report(adapter, state):
     first = getattr(state, "first_round", None)
     if not isinstance(first, dict) or not first.get("active"):
@@ -232,17 +267,14 @@ def _first_round_report(adapter, state):
             for tile in sorted(set(state.hands[dealer]))
         ))
 
-    # The opponent may claim the dealer's first discard normally. The old
-    # generic Youjin UNKNOWN is unrelated to this response and must not block
-    # PASS -> first draw. A claim closes first_round in environment transitions.
+    # The opponent may claim the dealer's first discard normally. Generic
+    # mid-hand Youjin UNKNOWN must not erase the confirmed response choices.
+    # A claim closes first_round in environment transitions.
     if (state.phase == "AFTER_DISCARD"
             and state.current_player == nondealer
             and first.get("dealer_first_discard_done")
             and not first.get("nondealer_first_draw_done")):
-        result = _strip_unrobbable_kong_unknown(
-            adapter, state, base_report(adapter, state)
-        )
-        return _strip_confirmed_youjin_boundary(result)
+        return _first_round_discard_response_report(adapter, state)
 
     # PASS above reaches NEED_DRAW; only the actual first DRAW opens Qiangjin.
     if not first.get("nondealer_first_draw_done"):
@@ -340,12 +372,15 @@ def report_with_specials(adapter, state):
         if state.phase == "NEED_DRAW":
             return ActionReport((A(p, T.DRAW, metadata={
                 "source": DrawSource.WALL_HEAD.value}),))
+        # Preserve the pre-migration confirmed Youjin continuation contract.
+        # At this exact node PASS closed the special prompt; ordinary discard
+        # and optional Youjin entry remain actionable without importing the
+        # generic ordinary-Hu UNKNOWN from base_report.
         youjin = _single_youjin_offer_actions(adapter, state)
-        result = _strip_unrobbable_kong_unknown(
-            adapter, state, base_report(adapter, state)
+        discards = tuple(
+            A(p, T.DISCARD, tile=tile) for tile in sorted(set(state.hands[p]))
         )
-        result = _strip_confirmed_youjin_boundary(result)
-        return ActionReport(youjin + result.known_actions, result.unresolved)
+        return ActionReport(youjin + discards)
     if state.phase == "OPENING_QIANGJIN_CHECK":
         validate(adapter, state)
         special = current_player_special_actions(adapter, state)
