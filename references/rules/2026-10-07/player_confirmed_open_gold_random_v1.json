@@ -1,0 +1,41 @@
+{
+  "schema_version": "player_confirmed_open_gold_random_v1",
+  "evidence_id": "player_confirmed_open_gold_random_20261007_v1",
+  "date": "2026-10-07",
+  "evidence_type": "PLAYER_CONFIRMED",
+  "source": "target-room player confirmation in the project conversation",
+  "video_directly_verified": false,
+  "open_gold": {
+    "selection": "SYSTEM_RANDOM",
+    "final_gold_must_be_nonflower": true,
+    "dice_mapping_used": false,
+    "flower_candidate": {
+      "destination": "dealer_flower_zone",
+      "remove_from_wall": true,
+      "replace_or_add_hand_tile": false,
+      "continue_random_selection": true,
+      "new_eighth_flower": "FORCED_EIGHT_FLOWER_TERMINAL_NO_FINAL_GOLD"
+    },
+    "final_indicator_removed_from_drawable_wall": true,
+    "max_playable_gold_copies": 3
+  },
+  "unknown": {
+    "distribution": "UNKNOWN",
+    "rng_algorithm": "UNKNOWN",
+    "rng_seed": "UNKNOWN",
+    "server_implementation": "UNKNOWN",
+    "predictability": "UNKNOWN"
+  },
+  "simulator_policy": {
+    "seeded_pseudorandom_allowed": true,
+    "uniform_sampling_if_used": "SIMULATOR_CONVENTION_ONLY",
+    "must_not_claim_target_room_uniformity": true
+  },
+  "live_policy": {
+    "read_final_visible_gold": true,
+    "read_flower_zones": true,
+    "predict_hidden_random_result": false,
+    "derive_from_dice_or_wall_position": false,
+    "unreadable": "UNKNOWN_OR_ABSTAIN"
+  }
+}
