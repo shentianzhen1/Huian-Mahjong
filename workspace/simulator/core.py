@@ -149,8 +149,24 @@ class Simulator:
         )
 
     def run(self, seed=None, agent=None, max_steps=100):
-        """Keep historical safe stop unless normal mode is explicitly configured."""
-        if self.config is not None and self.config.normal_hand_mode:
+        """Run target-room rules by default; keep explicit legacy profiles stable.
+
+        ``Simulator()`` is now the target-room entrypoint and uses the confirmed
+        staged opening with system-random/nonflower Gold semantics.  Passing an
+        explicit ``SimulatorConfig(normal_hand_mode=True)`` retains the historical
+        ordinary-hand benchmark, including its simulation-only dice convention.
+        """
+        if self.config is None:
+            # Lazy import avoids a module cycle: target_hand uses Simulator for
+            # shared result/config types but the default dispatch lives here.
+            from .target_hand import run_target_hand
+            return run_target_hand(
+                seed=seed,
+                agent=agent,
+                max_steps=max_steps,
+                simulator=self,
+            )
+        if self.config.normal_hand_mode:
             return self.run_normal_hand(seed=seed, agent=agent, max_steps=max_steps)
         game = self.environment_factory(max_steps=max_steps)
         game.reset(wall=make_wall(seed))
