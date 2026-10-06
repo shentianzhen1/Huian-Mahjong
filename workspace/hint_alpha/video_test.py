@@ -421,6 +421,7 @@ def run_video_test(
     on_window=None,
 ):
     """Run original video pixels through Runtime Vision and PublicState OCR."""
+    run_started = time.perf_counter()
     path = Path(path)
     source = probe_video(path)
     if sample_interval_seconds is None:
@@ -512,6 +513,7 @@ def run_video_test(
             or current_seconds - last_ocr_seconds >= REPLAY_OCR_INTERVAL_SECONDS
         )
         if ocr_due:
+            ocr_started = time.perf_counter()
             try:
                 # Two fresh nearby frames retain the 2-vote PublicState gate
                 # while avoiding OCR of the same overlapping frame three times.
@@ -545,12 +547,16 @@ def run_video_test(
                     "error": f"{type(exc).__name__}: {exc}",
                 }
             last_ocr_seconds = current_seconds
+            public_row["elapsed_ms"] = round(
+                (time.perf_counter() - ocr_started) * 1000, 3,
+            )
         elif last_public_row is not None:
             public_row = {
                 "frames": [item[0] for item in burst],
                 "source_seconds": [item[1] for item in burst],
                 "sampled": False,
                 "reused": True,
+                "elapsed_ms": 0.0,
                 "observation": dict(last_public_row.get("observation") or {}),
             }
         else:
@@ -562,7 +568,11 @@ def run_video_test(
                 "skipped": True,
             }
         public_rows.append(public_row)
+        timeline_started = time.perf_counter()
         new_timeline_events = timeline_accumulator.observe(runtime, public_row)
+        runtime.setdefault("timings_ms", {})["timeline"] = round(
+            (time.perf_counter() - timeline_started) * 1000, 3,
+        )
 
         if on_window is not None:
             on_window(
@@ -595,6 +605,15 @@ def run_video_test(
     result["generated_unix_time"] = time.time()
     result["rows"] = runtime_rows
     result["public_rows"] = public_rows
+    result["performance"] = {
+        "clock": "wall_time_not_source_time",
+        "total_elapsed_ms": round((time.perf_counter() - run_started) * 1000, 3),
+        "runtime_total_ms": round(sum(row.get("elapsed_ms", 0.0) for row in runtime_rows), 3),
+        "ocr_total_ms": round(sum(row.get("elapsed_ms", 0.0) for row in public_rows), 3),
+        "ocr_calls": sum(row.get("sampled") is True for row in public_rows),
+        "ocr_reused_windows": sum(row.get("reused") is True for row in public_rows),
+        "note": "Total also includes source probing, hashing, decoding and callbacks; stage times do not establish live latency or accuracy.",
+    }
 
     if output_path is not None:
         output_path = Path(output_path)
