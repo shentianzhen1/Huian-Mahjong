@@ -10,7 +10,7 @@ PR #126 integrates the complete #117 tree at `38ed6b8c5af9473babb509b5553c651f1b
 | Rules / AI | Source runtime fixes and V0.10 baseline; no new strategy promotion |
 | Windows | Retain spawn-safe launch, silent unavailable-OCR behavior and standalone Chinese assistant |
 | Installer | Version from huian.version; current source overlay; complete payload SHA256 inventory |
-| Build verification | Windows CI produces EXE, SHA256 and BUILD_INFO; verifies all payload hashes and spawn |
+| Build verification | Windows CI produces EXE, SHA256 and BUILD_INFO; extracts actual EXE; verifies all payload hashes, spawn and Tk; bundles Tcl/Tk assets |
 
 The upper-left opened-Gold role fix is retained alongside #117's reviewed Gold-skin classification; yellow playable tiles are not removed from concealed geometry. Ambiguous indicators abstain. Main UI manual-score/evidence-marker buttons stay removed.
 

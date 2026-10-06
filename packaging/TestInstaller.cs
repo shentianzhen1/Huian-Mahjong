@@ -11,7 +11,7 @@ class TestInstaller {
         bool check = args.Length == 2 && args[0] == "--extract";
         string target = check ? Path.GetFullPath(args[1]) : Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "HuianMahjongTest", "0.2.0-20261004-" + DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+            "HuianMahjongTest", "__PROJECT_VERSION__-" + DateTime.Now.ToString("yyyyMMddHHmmssfff"));
         try {
             if (Directory.Exists(target)) throw new IOException("安装目标已存在，请使用新目录。");
             Directory.CreateDirectory(target);

@@ -19,12 +19,17 @@ jobs:
           .build-hint/Scripts/python.exe -m pip install '.[hint-alpha]'
       - name: Build offline installer
         run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
-      - name: Verify every payload hash and Windows spawn
+      - name: Extract EXE; verify payload hashes, Windows spawn and Tk
         shell: pwsh
         run: |
-          $payload = Join-Path (Get-ChildItem build -Directory -Filter 'hint-installer-*' | Select-Object -First 1).FullName 'payload'
+          $payload = Join-Path $env:RUNNER_TEMP 'installer-extracted'
+          $installer = (Get-ChildItem dist/*_Setup.exe | Select-Object -First 1).FullName
+          $process = Start-Process -FilePath $installer -ArgumentList @('--extract', $payload) -Wait -PassThru
+          if ($process.ExitCode -ne 0) { exit $process.ExitCode }
           python packaging/verify_payload.py $payload
           & "$payload/runtime/python.exe" -B "$payload/launch.py" --spawn-check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B -c "import tkinter; root = tkinter.Tk(); root.withdraw(); root.destroy(); print('TK_OK')"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v4
         with:

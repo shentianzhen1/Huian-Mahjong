@@ -29,6 +29,7 @@ def main():
                  'vcruntime140.dll', 'vcruntime140_1.dll', 'LICENSE.txt'):
         shutil.copy2(base / name, RUNTIME / name)
     shutil.copytree(base / 'DLLs', RUNTIME / 'DLLs')
+    shutil.copytree(base / 'tcl', RUNTIME / 'tcl')
     shutil.copytree(base / 'Lib', RUNTIME / 'Lib',
                     ignore=shutil.ignore_patterns('site-packages', '__pycache__', 'test', 'tests'))
     site = RUNTIME / 'Lib' / 'site-packages'
@@ -101,10 +102,14 @@ def main():
                 z.write(path, path.relative_to(PAYLOAD))
     exe = DIST / ('HuianMahjong_Test_' + PROJECT_VERSION + '_' + BUILD_ID + '_Setup.exe')
     compiler = Path('C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe')
+    installer_source = BUILD / 'TestInstaller.cs'
+    installer_source.write_text(
+        (ROOT / 'packaging/TestInstaller.cs').read_text(encoding='utf-8').replace(
+            '__PROJECT_VERSION__', PROJECT_VERSION), encoding='utf-8')
     subprocess.run([str(compiler), '/nologo', '/target:winexe', '/platform:x64',
         '/reference:System.IO.Compression.dll', '/reference:System.IO.Compression.FileSystem.dll',
         '/reference:System.Windows.Forms.dll', '/out:' + str(exe),
-        '/resource:' + str(archive) + ',payload.zip', str(ROOT / 'packaging/TestInstaller.cs')], check=True)
+        '/resource:' + str(archive) + ',payload.zip', str(installer_source)], check=True)
     shutil.copy2(PAYLOAD / 'BUILD_INFO.json', DIST / 'BUILD_INFO.json')
     digest = hashlib.sha256(exe.read_bytes()).hexdigest()
     exe.with_suffix('.exe.sha256').write_text(digest + '  ' + exe.name + '\n', encoding='ascii')
