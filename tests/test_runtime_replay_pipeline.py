@@ -140,9 +140,15 @@ class ReplayPipelineTests(unittest.TestCase):
         called = []
         def reader(images, root, **options):
             called.append(options)
-            return trusted_report()
+            return {**trusted_report(), 'standard_class_coverage': {
+                'covered': 33, 'total': 34, 'missing': ['M2'],
+            }}
         result = evaluate_burst([(1, 1, Pixels()), (2, 2, Pixels()), (3, 3, Pixels())],
                                 session='s', dataset_root='unused', reader=reader)
         self.assertFalse(result['display_allowed'])
         self.assertTrue(result['sparse_source_burst'])
         self.assertEqual(called[0]['confidence_threshold'], .82)
+        self.assertEqual(result['runtime_diagnostics']['standard_class_coverage']['missing'], ['M2'])
+        self.assertEqual(set(result['timings_ms']), {'runtime', 'snapshot_advice', 'pixel_hashing'})
+        self.assertTrue(all(value >= 0 for value in result['timings_ms'].values()))
+        self.assertAlmostEqual(sum(result['timings_ms'].values()), result['elapsed_ms'], places=2)
