@@ -41,3 +41,16 @@ Branch comparison with #117 at `38ed6b8` confirms the package branch also lacks
 the development M2 template and direct-video runner. This cache fix does not
 resolve those gaps or missing geometry/Gold identity. Do not claim the branches
 or installed binary are synchronized.
+
+## M2 asset synchronization (2026-10-06)
+
+The reviewed M2 development prototype is now copied byte-for-byte from #117,
+retaining its original source/session, review metadata and asset SHA256
+`13b1b54d7c40c08a2caf0270095b88bf9bb8a91dc5094501dbbc112c64a81326`.
+The source dataset now contains 140 approved templates and 34/34 standard
+classes; this is class coverage, not measured recognition accuracy.
+It removes the missing-class block on the Wan category for otherwise qualified
+tiles. M2 itself still has only one source and remains UNKNOWN under the
+cross-session gate. Excluding that source session removes M2 from training.
+The delivered EXE still contains 139 templates; direct-video runner synchronization
+and Windows rebuilding remain pending.

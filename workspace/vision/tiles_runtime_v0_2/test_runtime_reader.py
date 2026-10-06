@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import unittest
+import hashlib
+import json
+from pathlib import Path
 from unittest.mock import patch
 from types import SimpleNamespace
 from PIL import Image
@@ -39,6 +42,33 @@ class RuntimeResourceCacheTests(unittest.TestCase):
             self.assertEqual(build.call_args.args[1], [labels[0]])
             self.assertFalse(first['safe_for_hint'])
             self.assertFalse(first['safe_for_executor'])
+
+    def test_packaged_m2_closes_category_gap_without_cross_session_promotion(self):
+        root = Path(__file__).resolve().parents[3] / 'dataset/tiles_runtime_v0_2'
+        labels = runtime_reader.approved_labels(root)
+        m2 = [row for row in labels if row['tile_id'] == 'M2']
+        self.assertEqual(len(m2), 1)
+        self.assertEqual(m2[0]['asset_role'], 'development_prototype_only')
+        self.assertEqual(hashlib.sha256((root / m2[0]['image']).read_bytes()).hexdigest(), m2[0]['asset_sha256'])
+        covered, cross = runtime_reader._coverage(labels)
+        self.assertEqual(covered, runtime_reader.STANDARD_CLASSES)
+        manifest = json.loads((root / 'manifest.json').read_text())
+        self.assertEqual(manifest['approved_label_count'], len(labels))
+        self.assertEqual(manifest['standard_tile_class_coverage']['missing'], [])
+        gate_args = dict(region='hand_region', cross_session_classes=cross, confidence_threshold=0.82)
+        self.assertEqual(runtime_reader.identity_gate(
+            'M3', 1.0, covered_classes=covered - {'M2'}, **gate_args,
+        ), ('UNKNOWN', 'category_has_missing_standard_class'))
+        self.assertEqual(runtime_reader.identity_gate(
+            'M3', 1.0, covered_classes=covered, **gate_args,
+        ), ('M3', 'accepted'))
+        self.assertEqual(runtime_reader.identity_gate(
+            'M2', 1.0, region='hand_region', covered_classes=covered,
+            cross_session_classes=cross, confidence_threshold=0.82,
+        ), ('UNKNOWN', 'class_not_cross_session_validated_in_region'))
+        self.assertNotIn('M2', runtime_reader._coverage(
+            runtime_reader._training_labels(labels, m2[0]['source_session']),
+        )[0])
 
 
 class RuntimeReaderGateTests(unittest.TestCase):
