@@ -67,16 +67,32 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None):
     started = time.perf_counter()
     report = reader([item[2] for item in samples], dataset_root,
                     frame_ids=ids, session=session, confidence_threshold=0.82)
+    runtime_finished = time.perf_counter()
     report['stream_epoch'] = epoch
     # Sparse screenshots may diagnose pixels, but do not establish live stability.
     if times[-1] - times[0] > 0.8:
         report = {**report, 'geometry_untrusted': True,
                   'geometry_issues': ['sparse_source_burst']}
     advisory = evaluate_runtime_report(report, captured=times[-1], experimental=True)
+    advisory_finished = time.perf_counter()
+    pixel_hashes = [hashlib.sha256(item[2].tobytes()).hexdigest() for item in samples]
+    hashing_finished = time.perf_counter()
     return {
         'frames': ids, 'source_seconds': times,
-        'pixel_sha256': [hashlib.sha256(item[2].tobytes()).hexdigest() for item in samples],
-        'elapsed_ms': round((time.perf_counter() - started) * 1000, 3),
+        'pixel_sha256': pixel_hashes,
+        'elapsed_ms': round((hashing_finished - started) * 1000, 3),
+        'timings_ms': {
+            'runtime': round((runtime_finished - started) * 1000, 3),
+            'snapshot_advice': round((advisory_finished - runtime_finished) * 1000, 3),
+            'pixel_hashing': round((hashing_finished - advisory_finished) * 1000, 3),
+        },
+        'runtime_diagnostics': {
+            key: report.get(key) for key in (
+                'standard_class_coverage', 'classification_domain_coverage',
+                'real_gold_skin_evidence', 'confidence_threshold',
+                'current_session_excluded_from_templates',
+            )
+        },
         'snapshot': asdict(advisory.snapshot), 'hint': asdict(advisory.hint),
         'display_allowed': advisory.display_allowed,
         'sparse_source_burst': times[-1] - times[0] > 0.8,
