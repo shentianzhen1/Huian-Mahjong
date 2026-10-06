@@ -211,6 +211,19 @@ RULE_REGISTRY = MappingProxyType({
         "DECLARE_OR_PASS_AFTER_COMPLETED_REPLACEMENT", ImpactLevel.HIGH,
         P20261006, "huian.rules.opening_phases",
     ),
+    "state_machine.eight_flower_reprompt": _record(
+        "state_machine.eight_flower_reprompt", RuleDomain.STATE_MACHINE,
+        EvidenceStatus.CONFIRMED, 1,
+        {
+            "pass_scope": "CURRENT_NODE_ONLY",
+            "later_own_draw": "REOFFER_WHILE_STILL_8",
+            "completed_replacement": "REOFFER_WHILE_STILL_8",
+            "same_node_immediate_reprompt": False,
+        },
+        ImpactLevel.HIGH, P20261006, "huian.rules.special_windows",
+        depends_on=("settlement.eight_flower_real",),
+        note="PASS preserves ordinary eight-flower fan but does not permanently lock the special.",
+    ),
     "legality.tianhu_opening": _record(
         "legality.tianhu_opening", RuleDomain.LEGALITY,
         EvidenceStatus.CONFIRMED, 1,
