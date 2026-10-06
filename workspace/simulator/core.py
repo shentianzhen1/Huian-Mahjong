@@ -116,13 +116,27 @@ class Simulator:
             end_event["action"]["metadata"].get("special")
             if end_event is not None else None
         )
+        terminal_event = events[-1] if state.terminal and events else None
+        terminal_metadata = (
+            terminal_event["action"].get("metadata", {})
+            if terminal_event is not None else {}
+        )
+        direct_source = terminal_metadata.get("win_source")
+        direct_special = terminal_metadata.get("special")
+        settled_winners = [
+            seat for seat, reward in enumerate(state.rewards) if reward > 0
+        ] if state.terminal else []
         winner = (
             declaration["winner"] if declaration is not None
-            else end_event["action"]["player"] if special is not None else None
+            else end_event["action"]["player"] if special is not None
+            else settled_winners[0] if len(settled_winners) == 1 else None
         )
         win_source = (
             declaration["source"] if declaration is not None
-            else special.lower() if isinstance(special, str) else None
+            else special.lower() if isinstance(special, str)
+            else direct_source if isinstance(direct_source, str)
+            else direct_special.lower() if isinstance(direct_special, str)
+            else None
         )
         return SimulationResult(
             seed=seed, status=status, events=tuple(events),
