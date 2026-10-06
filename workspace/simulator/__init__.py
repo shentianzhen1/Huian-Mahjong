@@ -6,7 +6,8 @@ from .evaluation import BatchEvaluation, HandSummary, run_many_normal_hands
 from .match import MatchProgressState, MatchScoreState, score_eight_hand_match
 from .match_runner import (MatchHandContext, MatchHandRecord, MatchHandResult,
                            MatchRunResult, MatchRunner, run_eight_hand_match,
-                           run_real_ordinary_match, run_real_youjin_match)
+                           run_real_ordinary_match, run_real_youjin_match,
+                           run_target_room_match)
 from .match_evaluation import (MatchAttemptSummary, PairedMatchEvaluation,
                                run_paired_real_matches)
 from .unknowns import summarize_match_rule_gaps
@@ -18,7 +19,7 @@ __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "m
            "MatchProgressState", "MatchScoreState", "score_eight_hand_match",
            "MatchHandContext", "MatchHandRecord", "MatchHandResult",
            "MatchRunResult", "MatchRunner", "run_eight_hand_match",
-           "run_real_ordinary_match", "run_real_youjin_match",
+           "run_real_ordinary_match", "run_real_youjin_match", "run_target_room_match",
            "MatchAttemptSummary",
            "PairedMatchEvaluation", "run_paired_real_matches",
            "summarize_match_rule_gaps", "CalibratingShantenAgent",
