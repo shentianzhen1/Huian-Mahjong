@@ -31,6 +31,16 @@ def component(region, tile, index=0, *, accepted=True):
     }
 
 
+def gold_observation(frame, tile):
+    return {
+        "frame": frame,
+        "candidate_tile_id": tile,
+        "tile_id": tile,
+        "tile_confidence": 0.95,
+        "identity_reason": "accepted",
+    }
+
+
 def report(hand=HAND, *, gold="B", session="runtime-a", epoch=0, melds=()):
     concealed = [component("hand", tile, i) for i, tile in enumerate(hand)]
     meld_components = [
@@ -44,6 +54,9 @@ def report(hand=HAND, *, gold="B", session="runtime-a", epoch=0, melds=()):
         "stream_epoch": epoch,
         "frames": [100, 101, 102],
         "components": [*concealed, *meld_components, *gold_component],
+        "gold_identity_observations": [
+            gold_observation(frame, gold) for frame in (100, 101, 102)
+        ],
         "concealed_tile_count": len(concealed),
         "all_concealed_tile_ids_trusted": all(tile != "UNKNOWN" for tile in hand),
         "geometry_untrusted": False,
@@ -107,29 +120,17 @@ class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
         self.assertIn("gold_untrusted", gold_result.issues)
         self.assertFalse(gold_result.allows(SnapshotCapability.SHANTEN))
 
-    def test_matching_gold_skin_copies_establish_opened_gold_identity(self):
+    def test_multiframe_gold_consensus_establishes_opened_gold_identity(self):
         source = report(gold="B")
-        source["components"][-1]["region_candidate"] = "hand"
-        source["components"][-1]["gold_skin"] = True
-        source["components"].append(
-            {
-                **source["components"][-1],
-                "region_candidate": "draw_visual",
-                "normalized_bbox": [0.90, 0.80, 0.035, 0.10],
-            }
-        )
-        source["concealed_tile_count"] += 2
-        # The report declares these two gold-skinned copies in addition to the
-        # regular concealed identities used by this synthetic adapter fixture.
-        source["all_concealed_tile_ids_trusted"] = True
         snapshot = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertEqual(snapshot.gold_tile, "B")
         self.assertTrue(snapshot.gold_trusted)
 
-        source["components"][-1]["tile_id"] = "R"
+        source["gold_identity_observations"][1] = gold_observation(101, "R")
         conflict = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertIsNone(conflict.gold_tile)
         self.assertFalse(conflict.gold_trusted)
+        self.assertIn("runtime_gold_identity_conflict", conflict.adapter_issues)
 
     def test_unknown_player_meld_identities_still_preserve_meld_count(self):
         snapshot = current_snapshot_from_runtime(
