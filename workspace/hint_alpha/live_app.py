@@ -33,11 +33,13 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         # Tk event loop starts. Install state after Tk itself is initialized so
         # no pre-Tk attribute behavior is changed.
         self.runtime_advice_pipeline = RuntimeAdvicePipeline()
+        self._gold_hand_number = None
 
     def _invalidate_advice(self, reason):
         pipeline = getattr(self, "runtime_advice_pipeline", None)
         if pipeline is not None:
             pipeline.reset()
+        self._gold_hand_number = None
         return super()._invalidate_advice(reason)
 
     def _update_public_view(self, observation):
@@ -45,8 +47,12 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         # Gold may legitimately change while capture generation stays constant.
         # Only an initial or sequentially confirmed PublicState hand boundary
         # can clear the previous hand's Gold; regressions/jumps fail closed.
-        if confirmed_public_hand_boundary(self.timeline_hand, observation):
+        # Presentation may display a rejected OCR jump/regression. Keep the
+        # trusted Gold boundary independent so that display cannot authorize
+        # a later reset (e.g. 3 -> 2 -> 3 or 3 -> 5 -> 6).
+        if confirmed_public_hand_boundary(self._gold_hand_number, observation):
             self.runtime_advice_pipeline.reset()
+            self._gold_hand_number = observation.hand_number
         return super()._update_public_view(observation)
 
     def _consume_runtime_result(self):
