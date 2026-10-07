@@ -1,0 +1,57 @@
+{
+  "schema_version": "whole_hand_priority_class_lineage_audit_v0_1",
+  "development_only": true,
+  "audit_date": "2026-10-07",
+  "policy": {
+    "independence_key": "reviewed original_match_group backed by exact source SHA256",
+    "source_session_is_independence_evidence": false,
+    "adjacent_frames_are_independent_sources": false,
+    "confidence_threshold": 0.82,
+    "confidence_threshold_changed": false,
+    "safe_for_runtime_promotion": false,
+    "safe_for_executor": false
+  },
+  "new_reviewed_source": {
+    "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+    "source_session": "session_real_20261003_e5b8d8e1",
+    "original_match_group": "real_match_2026_10_03_recent_game_segment_smallest",
+    "evidence_path": "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json",
+    "asset_sync_status": "PRIVATE_TILE_ASSETS_NOT_YET_COMMITTED",
+    "may_be_used_as_formal_holdout": false
+  },
+  "classes": {
+    "M2": {
+      "existing_source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "existing_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "existing_lineage_status": "REVIEWED",
+      "new_source_contains_reviewed_crop": true,
+      "new_source_is_distinct_original_match": true,
+      "post_asset_sync_status": "TWO_REVIEWED_ORIGINAL_MATCH_GROUPS_AVAILABLE",
+      "next_action": "sync the reviewed M2 tile-only asset and label from the pinned private source"
+    },
+    "M7": {
+      "existing_source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "existing_match_group": "reviewed_match_concealed_recovery_a",
+      "existing_lineage_status": "REVIEWED",
+      "new_source_contains_reviewed_crop": true,
+      "new_source_is_distinct_original_match": true,
+      "post_asset_sync_status": "TWO_REVIEWED_ORIGINAL_MATCH_GROUPS_AVAILABLE",
+      "next_action": "sync the reviewed M7 tile-only asset and label from the pinned private source"
+    },
+    "P2": {
+      "existing_source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "existing_source_session": "session_5e02f7d0458be0a9",
+      "existing_match_group": null,
+      "existing_lineage_status": "UNKNOWN_ORIGINAL_MATCH",
+      "new_source_contains_reviewed_crop": true,
+      "new_source_is_distinct_original_match_from_known_registry_groups": true,
+      "post_asset_sync_status": "STILL_NOT_TWO_REVIEWED_ORIGINAL_MATCH_GROUPS_UNTIL_OLD_SOURCE_RECOVERED",
+      "next_action": "recover exact-SHA original-match evidence for 5e02f7d... before treating P2 as independently cross-match qualified"
+    }
+  },
+  "classifier_implication": {
+    "M2_M7": "eligible for two-match development support after private asset sync; do not count the current source as its own holdout",
+    "P2": "remain fail-closed for original-match qualification until 5e02f7d lineage is recovered",
+    "ab_split_requirement": "template and candidate models must be evaluated on identical crops with whole original matches kept on one side of the split"
+  }
+}
