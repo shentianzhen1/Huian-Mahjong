@@ -86,6 +86,13 @@ def _build_filtered_dataset_view(dataset_root: Path, scratch_root: Path, exclude
     labels_path = _labels_path(view_root)
     rows = [json.loads(line) for line in labels_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     kept, stats = _filter_label_rows(rows, excluded_shas)
+
+    # Most large immutable template assets can safely be hard-linked into the
+    # scratch view, but the filtered labels file is intentionally rewritten.
+    # Break that hard link first so truncating/replacing the scratch labels can
+    # never mutate the source Runtime dataset on filesystems where os.link()
+    # succeeds.
+    labels_path.unlink()
     labels_path.write_text(
         "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in kept),
         encoding="utf-8",
