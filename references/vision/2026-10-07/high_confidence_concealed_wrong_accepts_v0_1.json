@@ -39,11 +39,16 @@
   "observed_pattern": "Both current high-confidence ordinary errors collapse neighboring Wan identities M5/M7 into M6. Central edge trim lowers confidence but does not cross the frozen 0.82 reject gate.",
   "classifier_risk": {
     "current_class_score": "maximum NCC over every template in the candidate class",
-    "risk": "one unusually similar exemplar can dominate a class score even when other source groups do not agree",
-    "m6_ordinary_source_note": "M6 has ordinary reviewed exemplars from at least session_781bfe34c40993ef and session_eight_hand_match_a; the former still lacks reviewed original-match lineage. A gold-skin-only M6 exemplar is not ordinary concealed training evidence.",
-    "source_session_is_independent_match_evidence": false
+    "risk": "one unusually similar exemplar can dominate a class score even when other reviewed original matches do not agree",
+    "m6_ordinary_source_note": "M6 has two ordinary source sessions but only one reviewed independent original-match group. The ordinary sources are reviewed 1560c1... from reviewed_match_2026_09_19_eight_hand and unresolved 781bfe...; a separate fba5f67d... M6 asset is gold_skin_only and is not ordinary concealed support.",
+    "ordinary_m6_template_count": 2,
+    "ordinary_m6_distinct_source_session_count": 2,
+    "ordinary_m6_reviewed_original_match_group_count": 1,
+    "ordinary_m6_unresolved_source_sha_count": 1,
+    "source_session_is_independent_match_evidence": false,
+    "lineage_audit_ref": "references/vision/2026-10-07/m6_concealed_template_lineage_audit_v0_1.json"
   },
-  "next_step": "Run template_source_consensus_probe on the two pinned private crops. Record winning exemplar provenance, per-source maxima, top1/top2 class margin and whether two independent reviewed original-match groups support M6 before considering any stricter acceptance rule.",
+  "next_step": "Run the v0.2 template_source_consensus_probe on the two pinned private crops. Record the exact winning M6 exemplar plus per-original-match maxima. Do not treat the unresolved 781b... source as independent-match support until exact-SHA recovery and human original-match review are complete.",
   "safe_for_runtime_change": false,
   "safe_for_hint_promotion": false,
   "safe_for_executor": false
