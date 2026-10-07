@@ -3,6 +3,10 @@
 This is a local provenance-recovery helper. It hashes files under one or more
 roots and reports only exact SHA256 matches from the frozen recovery queue.
 It never infers or writes an original match_group.
+
+The default queue is the current full Runtime concealed identity domain
+(``hand_region`` + ``draw_visual``). Historical queues remain supported through
+``--queue`` for reproducibility.
 """
 from __future__ import annotations
 
@@ -14,8 +18,8 @@ from typing import Iterable
 
 
 DEFAULT_QUEUE = Path(
-    "references/vision/2026-10-01/"
-    "concealed_template_lineage_recovery_queue_v0_1.json"
+    "references/vision/2026-10-07/"
+    "concealed_full_domain_lineage_recovery_queue_v0_1.json"
 )
 
 
