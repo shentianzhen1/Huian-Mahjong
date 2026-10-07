@@ -63,8 +63,9 @@ threshold relaxation, Vision promotion or Executor activation.
 1. **Whole current-hand reliability:** source-qualified Windows sessions with
    reviewed frame truth; include no meld, one/multiple melds, separate draw,
    hand sorting, yellow Gold skin, prompts/shadows and resolution changes.
-   Collect the twelve concealed support gaps from independently identified
-   original matches. Score the frozen current bank first; review/intake belongs
+   First recover and source-group existing reviewed material for the twelve
+   concealed support gaps; collect additional independent original matches only
+   for gaps that remain after recovery. Score the frozen current bank first; review/intake belongs
    to a separate development set, never the untouched promotion holdout.
 2. **Own meld count before full identity:** evaluate actual detector boxes and
    group boundaries, including FLAT, STACKED, add-kong and residual fragments.
@@ -89,3 +90,28 @@ are introduced here; Issue #7's frozen independent gate remains authoritative.
 
 Private full frames/video remain outside GitHub. Green CI proves regression
 contracts, not the requested real-world recognition reliability.
+
+## Existing-sample recovery audit
+
+The 2026-10-07 inventory verifies 145 approved labels and 145 unique existing
+template files. The real `prepare_runtime_resources()` loader consumes all 145
+labels: 144 ordinary templates and 145 Gold-normalized identity templates. One
+Gold-skin-only crop is deliberately excluded from the ordinary bank. The old
+manifest count of 142 was stale metadata, not a runtime loading cap.
+
+All 121 supplied `asset_sha256` values match crop bytes. The remaining 24 legacy
+rows do not supply that field; their `sha256` identifies the original source,
+not the crop, and must not be interpreted as a failed crop hash. Twelve stored
+source sessions do not by themselves establish twelve independent matches.
+
+The existing private 36-face confirmed packet contains public meld faces
+(12 groups from two original matches), so it cannot silently fill concealed-hand
+support gaps. Historical V0.1 full labels/ROIs are local-only and absent from
+this checkout; their migration completeness remains unverified. This does not
+prove those assets were lost. Recover available reviewed local assets with
+`legacy_reviewed_recovery.py` and preserve original-match provenance before
+requesting new recordings. No private packet or raw frame was added to GitHub.
+
+`dataset/tiles_runtime_v0_2/runtime_asset_inventory_20261007.json` supersedes
+historical inventory counts only. Historical accuracy reports remain historical;
+this audit does not refresh their measurements or relax any confidence gate.
