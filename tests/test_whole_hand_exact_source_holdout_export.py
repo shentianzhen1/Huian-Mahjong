@@ -40,7 +40,7 @@ class WholeHandExactSourceHoldoutExportTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             _normalize_shas(["not-a-sha"])
 
-    def test_filtered_scratch_view_never_mutates_source_labels(self):
+    def test_filtered_scratch_view_filters_primary_and_sidecar_without_mutating_source(self):
         with TemporaryDirectory() as source_tmp, TemporaryDirectory() as scratch_tmp:
             source_root = Path(source_tmp)
             (source_root / "templates" / "hand").mkdir(parents=True)
@@ -55,6 +55,18 @@ class WholeHandExactSourceHoldoutExportTests(unittest.TestCase):
             ).encode("utf-8")
             source_labels.write_bytes(original_bytes)
 
+            additions = source_root / "labels_reviewed_additions"
+            additions.mkdir()
+            sidecar_rows = [
+                {"tile_id": "S2", "sha256": SHA_A, "approved": True},
+                {"tile_id": "S3", "sha256": SHA_B, "approved": True},
+            ]
+            source_sidecar = additions / "reviewed.jsonl"
+            sidecar_original_bytes = "".join(
+                json.dumps(row, ensure_ascii=False) + "\n" for row in sidecar_rows
+            ).encode("utf-8")
+            source_sidecar.write_bytes(sidecar_original_bytes)
+
             filtered_root, stats = _build_filtered_dataset_view(
                 source_root,
                 Path(scratch_tmp),
@@ -62,13 +74,27 @@ class WholeHandExactSourceHoldoutExportTests(unittest.TestCase):
             )
 
             self.assertEqual(source_labels.read_bytes(), original_bytes)
-            self.assertEqual(stats["excluded_label_count"], 1)
-            filtered_rows = [
+            self.assertEqual(source_sidecar.read_bytes(), sidecar_original_bytes)
+            self.assertEqual(stats["input_label_count"], 4)
+            self.assertEqual(stats["kept_label_count"], 2)
+            self.assertEqual(stats["excluded_label_count"], 2)
+            self.assertEqual(stats["excluded_tile_ids"], ["M6", "S2"])
+            self.assertEqual(stats["filtered_label_file_count"], 2)
+
+            filtered_primary = [
                 json.loads(line)
                 for line in (filtered_root / "labels.jsonl").read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(filtered_rows, [source_rows[1]])
+            filtered_sidecar = [
+                json.loads(line)
+                for line in (
+                    filtered_root / "labels_reviewed_additions" / "reviewed.jsonl"
+                ).read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertEqual(filtered_primary, [source_rows[1]])
+            self.assertEqual(filtered_sidecar, [sidecar_rows[1]])
             self.assertEqual(
                 (source_root / "templates" / "hand" / "dummy.png").read_bytes(),
                 b"immutable-template",
