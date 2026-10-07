@@ -12,13 +12,25 @@
   "checkpoints_seconds": [40.0, 52.0, 110.0, 175.0],
   "frozen_runtime_threshold": 0.82,
   "threshold_changed": false,
-  "runtime_changed_for_measurement": false,
+  "runtime_changed_for_measurement": true,
+  "runtime_change_scope": "one reviewed independent Sep-19 S2 concealed template was added; threshold, Runtime reader logic, V0.10 strategy and Executor state were unchanged",
   "execution": {
-    "packaged_runtime_source_head": "cc46c47f75afc51ee48ad558820a6bbd35eb9260",
-    "packaged_installer_workflow_run": 144,
-    "runtime_payload_extracted_from_green_windows_test_installer": true,
-    "current_evaluation_branch_at_truth_seed_ci": "5271ff408f75130e260edb96e1c3ab5220b2de70",
-    "note": "Commits after the packaged source head through 5271ff40 added evaluation/provenance tooling and truth evidence; the frozen Runtime reader, detector/classifier path, dataset and 0.82 threshold used for this measurement were not modified by those commits."
+    "packaged_runtime_source_head": "ef825038967d99df1119475505e24d32e56c097c",
+    "packaged_pr_merge_commit": "1b33a1f2236d14367fa89954142c90a49c345dc6",
+    "packaged_installer_workflow_run": 160,
+    "runtime_payload_extracted_from_verified_windows_test_installer": true,
+    "host_replay_environment": "Linux host OpenCV/Pillow/NumPy with pure project source/data extracted from the verified Windows installer payload",
+    "note": "The exact packaged dataset/source was re-run on the same four reviewed Sep-26 checkpoints. The 0.82 threshold was not changed."
+  },
+  "packaging_integrity": {
+    "reviewed_s2_asset": "templates/hand/tile_34928d2442cfb53b_S2.pgm",
+    "reviewed_s2_asset_sha256": "c84dbd46e4ce63e97c4e1dcdf687a2e661f58d43ab2d44a4ab7c3af3c2bfefda",
+    "reviewed_s2_grayscale_pixel_sha256": "c96297546d4a4808beceff7ec727769e1c46dd1346cb271db423f64bc32f3a36",
+    "windows_line_ending_conversion_blocked": true,
+    "verify_payload_exit_code_guard": true,
+    "verified_payload_files": 3638,
+    "verified_labels": 146,
+    "installer_validation_result": "PASS"
   },
   "crop_review": {
     "truth_slots": 51,
@@ -37,51 +49,54 @@
     "tile_count": 51,
     "raw_top1_correct": 51,
     "raw_top1_accuracy": 1.0,
-    "accepted_correct_at_0_82": 45,
-    "accepted_correct_rate": 0.8823529411764706,
+    "accepted_correct_at_0_82": 49,
+    "accepted_correct_rate": 0.9607843137254902,
     "wrong_accepted": 0,
-    "rejected": 6,
-    "reject_rate": 0.11764705882352941,
+    "rejected": 2,
+    "reject_rate": 0.0392156862745098,
     "whole_hand_raw_exact": 4,
     "whole_hand_raw_exact_rate": 1.0,
-    "whole_hand_runtime_exact": 1,
-    "whole_hand_runtime_exact_rate": 0.25,
+    "whole_hand_runtime_exact": 2,
+    "whole_hand_runtime_exact_rate": 0.5,
     "whole_hand_wrong_accepted_count": 0,
     "rejection_breakdown": {
-      "S2_below_0_82": 6
+      "S2_below_0_82": 2
     },
-    "S2_observed_confidence_range": [0.681748, 0.695552]
+    "S2_observed_confidence_range": [0.816952, 0.824009],
+    "key_result": "Adding one reviewed Sep-19 S2 template improved accepted-correct coverage from 45/51 to 49/51 with zero new wrong accepts and improved fully accepted whole hands from 1/4 to 2/4."
   },
   "exact_source_sha_filtered": {
-    "interpretation": "Direct exact-source label leakage removed before invoking the same frozen exporter. This is stricter than the product-realistic run but still does not prove original-match disjointness for every derivative/source file.",
+    "interpretation": "Direct exact-source label leakage removed from both primary labels and reviewed-addition sidecars before invoking the same frozen exporter. This is stricter than the product-realistic run but still does not prove original-match disjointness for every derivative/source file.",
     "filter_key": "exact_source_sha256",
     "excluded_sha256": ["fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3"],
-    "input_label_count": 145,
+    "input_label_count": 146,
+    "kept_label_count": 145,
     "excluded_label_count": 1,
+    "filtered_label_file_count": 2,
     "excluded_label_tile_ids": ["M6"],
     "excluded_gold_skin_only_label_count": 1,
     "tile_count": 51,
     "raw_top1_correct": 51,
     "raw_top1_accuracy": 1.0,
-    "accepted_correct_at_0_82": 39,
-    "accepted_correct_rate": 0.7647058823529411,
+    "accepted_correct_at_0_82": 43,
+    "accepted_correct_rate": 0.8431372549019608,
     "wrong_accepted": 0,
-    "rejected": 12,
-    "reject_rate": 0.23529411764705882,
+    "rejected": 8,
+    "reject_rate": 0.1568627450980392,
     "whole_hand_raw_exact": 4,
     "whole_hand_raw_exact_rate": 1.0,
     "whole_hand_runtime_exact": 0,
     "whole_hand_runtime_exact_rate": 0.0,
     "whole_hand_wrong_accepted_count": 0,
     "rejection_breakdown": {
-      "S2_below_0_82": 6,
+      "S2_below_0_82": 2,
       "yellow_gold_M6_no_remaining_real_gold_skin_qualification_or_below_threshold": 6
     },
-    "key_result": "Removing the one same-source gold-skin-only M6 label changes acceptance/qualification of yellow M6 appearances but does not change any raw Top-1 identity on the 51 reviewed slots."
+    "key_result": "The independent Sep-19 S2 template remains active after excluding the Sep-26 source and reduces S2 rejections from six to two. Removing the one same-source gold-skin-only M6 label still blocks six yellow-M6 observations without changing any raw Top-1 identity."
   },
   "offline_replay_latency": {
     "sample_count": 4,
-    "environment": "current analysis Linux environment using extracted packaged Python project source/data with host OpenCV/Pillow/NumPy; private MP4 local filesystem",
+    "environment": "analysis Linux environment using extracted packaged Python project source/data with host OpenCV/Pillow/NumPy; private MP4 local filesystem",
     "vision_five_frame_burst_ms": {
       "p50": 460.39,
       "p95": 519.72,
@@ -98,13 +113,14 @@
     "not_live_mirror_latency": true
   },
   "conclusions": [
-    "Concealed/draw geometry is again stable on this second real original match: all 51 reviewed truth slots were detected with no misses or extras across four checkpoints.",
-    "Raw template identity is substantially stronger on this Sep-26 match than on the Oct-3 diagnostic: 51/51 reviewed crops rank the correct class first, including yellow M6 appearances.",
-    "The fixed Runtime 0.82 gate, not raw Top-1 identity, is the immediate whole-hand blocker on this batch: S2 is consistently ranked correctly but rejected around 0.68-0.70.",
-    "Exact-source exclusion shows the known Sep-26 gold-skin-only M6 evidence materially affects yellow-Gold acceptance, so product-realistic and source-filtered metrics must remain separate.",
-    "There are zero wrong accepted tiles in either run, but only 1/4 product-realistic whole hands and 0/4 exact-source-filtered whole hands are fully accepted; this batch therefore does not justify lowering the 0.82 threshold or promoting a classifier."
+    "Concealed/draw geometry remains stable on this second real original match: all 51 reviewed truth slots were detected with no misses or extras across four checkpoints.",
+    "Raw template identity remains 51/51 on the Sep-26 batch after the reviewed S2 addition and packaging fixes.",
+    "The reviewed Sep-19 S2 addition materially improves fixed-threshold coverage without increasing wrong accepts: product-realistic acceptance rises to 49/51 and fully accepted hands rise to 2/4.",
+    "The two remaining product-realistic rejections are both correctly ranked S2 at about 0.817, just below the frozen 0.82 gate; this does not justify lowering the threshold.",
+    "Exact-source exclusion confirms the S2 gain survives removal of Sep-26 direct-source labels, while six yellow-M6 observations still depend on same-source Gold appearance support.",
+    "Windows installer verification is now fail-closed and the reviewed PGM asset is preserved byte-for-byte across checkout and packaging."
   ],
-  "next_step": "Prioritize independent reviewed S2 and yellow-Gold appearance support, then re-run the identical four checkpoints. In parallel continue original-match lineage recovery for the six unresolved concealed source SHAs and compare a pretrained MobileNet candidate only on source-disjoint identical crops.",
+  "next_step": "Select any additional S2 training appearance using Sep-19-only quality/stability criteria, not Sep-26 holdout scores, and seek independent reviewed yellow-Gold M6 appearance support. Then re-run these identical four checkpoints. In parallel continue original-match lineage recovery for the six unresolved concealed source SHAs.",
   "safe_for_runtime_change": false,
   "safe_for_hint_promotion": false,
   "safe_for_executor": false
