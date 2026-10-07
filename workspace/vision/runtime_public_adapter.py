@@ -247,14 +247,13 @@ def current_snapshot_from_runtime(
     if not hand_trusted:
         issues.append("runtime_hand_not_fully_trusted")
 
+    # Opening facts require the explicit visible indicator. A playable tile's
+    # yellow skin is not another indicator and cannot replace a missing one.
     gold_components = [
         item
         for item in components
         if isinstance(item, dict)
-        and (
-            item.get("region_candidate") == "gold"
-            or item.get("gold_skin") is True
-        )
+        and item.get("region_candidate") == "gold"
     ]
     gold_tile, gold_trusted = _trusted_gold_from_runtime(
         report,

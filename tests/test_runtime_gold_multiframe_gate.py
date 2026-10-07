@@ -67,6 +67,20 @@ class RuntimeGoldMultiframeGateTests(unittest.TestCase):
         self.assertEqual(snapshot.gold_tile, "M5")
         self.assertNotIn("runtime_gold_not_fully_trusted", snapshot.adapter_issues)
 
+    def test_playable_gold_skin_does_not_count_as_opened_indicator(self):
+        source = report([gold_observation(98), gold_observation(99), gold_observation(100)])
+        source["components"].append(dict(gold_component(), region_candidate="hand"))
+        snapshot = current_snapshot_from_runtime(source, timestamp_seconds=1.0)
+        self.assertTrue(snapshot.gold_trusted)
+        self.assertEqual(snapshot.gold_tile, "M5")
+
+    def test_playable_gold_skin_cannot_replace_missing_opened_indicator(self):
+        source = report([gold_observation(98), gold_observation(99), gold_observation(100)])
+        source["components"][0]["region_candidate"] = "hand"
+        snapshot = current_snapshot_from_runtime(source, timestamp_seconds=1.0)
+        self.assertFalse(snapshot.gold_trusted)
+        self.assertIsNone(snapshot.gold_tile)
+
     def test_conflicting_gold_identities_fail_closed_to_unknown(self):
         source = report([
             gold_observation(98, "M5"),

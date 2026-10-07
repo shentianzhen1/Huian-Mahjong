@@ -22,6 +22,21 @@ class _Geometry:
 
 
 class RuntimeGoldMultiframeReaderTests(unittest.TestCase):
+    def test_only_explicit_indicator_is_classified_for_opening_fact(self):
+        images = [Image.new("RGB", (16, 16), "white") for _ in range(3)]
+        geometries = [_Geometry(i) for i in range(3)]
+        for geometry in geometries:
+            playable = _GoldComponent()
+            playable.region_candidate = "hand"
+            geometry.components.append(playable)
+        with patch("workspace.vision.tiles_runtime_v0_2.runtime_reader._classify_runtime_component",
+                   return_value={"tile_id": "M5", "identity_reason": "accepted"}) as classify:
+            observations = _gold_identity_observations(images, geometries, classifier=object(),
+                covered_by_region={}, cross_session={}, confidence_threshold=0.82, gold_skin_covered=set())
+        self.assertEqual(classify.call_count, 3)
+        self.assertTrue(all(row["tile_id"] == "M5" for row in observations))
+        self.assertTrue(all(call.args[0].region_candidate == "gold" for call in classify.call_args_list))
+
     def test_each_burst_frame_is_classified_independently(self) -> None:
         images = [
             Image.new("RGB", (16, 16), (10, 0, 0)),

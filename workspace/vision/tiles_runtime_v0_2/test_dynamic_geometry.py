@@ -36,7 +36,7 @@ class UpperGoldRoleTests(unittest.TestCase):
                     gold = [c for c in result.components if c.region_candidate == 'gold']
                     self.assertEqual(len(gold), 1)
                     self.assertLess(gold[0].normalized_bbox[1], 0.4)
-                    self.assertEqual(sum(c.gold_skin for c in result.components), len(indices))
+                    self.assertEqual(sum(c.gold_skin for c in result.components if c.region_candidate == "hand"), len(indices))
 
     def test_yellow_draw_remains_a_playable_copy(self):
         result = detect_dynamic_geometry(self.frame(draw_gold=True))

@@ -493,6 +493,9 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
                 0.90,
                 frame,
                 session,
+                # The explicit indicator was detected by its yellow skin.
+                # Appearance is distinct from its opened-Gold region role.
+                gold_skin=True,
             )
         )
     components.sort(key=lambda item: item.pixel_bbox[0])

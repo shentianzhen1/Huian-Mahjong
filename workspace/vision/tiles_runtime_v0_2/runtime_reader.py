@@ -290,10 +290,12 @@ def _gold_identity_observations(
             })
             continue
 
+        # Yellow playable hand/draw tiles carry appearance metadata, not the
+        # opened-indicator role. Never derive opening facts from those tiles.
         gold_components = [
             component
             for component in geometry.components
-            if component.region_candidate == "gold" or _component_gold_skin(component)
+            if component.region_candidate == "gold"
         ]
         if len(gold_components) != 1:
             observations.append({
