@@ -22,13 +22,14 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
     """Hint Alpha UI with explicit per-live-session opening fact state."""
 
     def __init__(self, demo=False, experimental_runtime_advisory=False):
-        # Install before the base constructor so any early fail-closed path may
-        # safely reset it. No module-level tracker is shared across app objects.
-        self.runtime_advice_pipeline = RuntimeAdvicePipeline()
         super().__init__(
             demo=demo,
             experimental_runtime_advisory=experimental_runtime_advisory,
         )
+        # The base constructor does not consume live Runtime results until the
+        # Tk event loop starts. Install state after Tk itself is initialized so
+        # no pre-Tk attribute behavior is changed.
+        self.runtime_advice_pipeline = RuntimeAdvicePipeline()
 
     def _invalidate_advice(self, reason):
         pipeline = getattr(self, "runtime_advice_pipeline", None)
