@@ -8,6 +8,11 @@ bundle under a caller-provided local output directory.
 The 0.82 identity threshold is intentionally hard-coded here. This tool is not
 an optimization loop and must not be used to tune the threshold on the reviewed
 batch.
+
+Vision-only imports stay inside the execution functions so the repository's
+core test matrix can import the pure alignment helpers without installing
+OpenCV/Pillow. Running the exporter itself still requires the normal Vision
+extras, exactly like Runtime V0.2.
 """
 from __future__ import annotations
 
@@ -16,11 +21,8 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
-import cv2
-from PIL import Image
-
-from .runtime_reader import prepare_runtime_resources, read_stable_frames
 from .whole_hand_eval import FROZEN_CONFIDENCE_THRESHOLD
 
 
@@ -53,7 +55,10 @@ def _load_truth_seed(path: Path) -> dict:
     return payload
 
 
-def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Image.Image], dict]:
+def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Any], dict]:
+    import cv2
+    from PIL import Image
+
     capture = cv2.VideoCapture(str(video_path))
     if not capture.isOpened():
         raise ValueError(f"Could not open video: {video_path}")
@@ -72,7 +77,7 @@ def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Image
         raise ValueError("Could not form a five-frame burst at requested timestamp")
 
     capture.set(cv2.CAP_PROP_POS_FRAMES, frame_ids[0])
-    images: list[Image.Image] = []
+    images: list[Any] = []
     decoded_ids: list[int] = []
     for frame_id in frame_ids:
         ok, frame = capture.read()
@@ -99,7 +104,7 @@ def _component_sort_key(component: dict) -> tuple[int, int, int]:
 def _save_component_crops(
     sample_dir: Path,
     components: list[dict],
-    images_by_frame: dict[int, Image.Image],
+    images_by_frame: dict[int, Any],
 ) -> list[dict]:
     output: list[dict] = []
     sample_dir.mkdir(parents=True, exist_ok=True)
@@ -225,6 +230,10 @@ def export_baseline(
     dataset_root: Path,
     output_dir: Path,
 ) -> dict:
+    # Keep the Vision dependency boundary lazy. Core CI intentionally does not
+    # install OpenCV/Pillow, while this execution path is part of Vision.
+    from .runtime_reader import prepare_runtime_resources, read_stable_frames
+
     seed = _load_truth_seed(truth_seed_path)
     source_hash = _sha256(video_path)
     expected_hash = str(seed["source"].get("sha256") or "").lower()
