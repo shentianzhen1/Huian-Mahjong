@@ -115,3 +115,39 @@ requesting new recordings. No private packet or raw frame was added to GitHub.
 `dataset/tiles_runtime_v0_2/runtime_asset_inventory_20261007.json` supersedes
 historical inventory counts only. Historical accuracy reports remain historical;
 this audit does not refresh their measurements or relax any confidence gate.
+
+## Batch recovery for the current gaps
+
+The scan-only `legacy_reviewed_batch` command selects support gaps from current
+approved concealed labels (hand plus draw, excluding Gold-only skins). It writes
+one contact sheet/plan per target and a batch plan under the ignored Runtime
+work tree. Runtime labels/templates are untouched. Gold-region candidates are
+counted separately from usable concealed candidates. A missing local dataset is
+reported as `LEGACY_LABELS_UNAVAILABLE`, not as zero available old samples.
+
+Run from the repository root on the machine holding the old reviewed dataset:
+
+```powershell
+python -m workspace.vision.tiles_runtime_v0_2.legacy_reviewed_batch --legacy-dataset dataset/tiles_v0_1
+```
+
+Use `--legacy-dataset` with the actual archived dataset directory if different.
+The current targets are the twelve concealed classes listed above. Reapproval
+and an explicitly reviewed original-match grouping are still required before
+admission; finding crops does not automatically resolve independent support.
+
+The exact-SHA recovery queue now isolates four unresolved sources affecting six
+existing labels: W, M9, SOUTH and S9. Other gap classes have reviewed source
+lineage but still lack the required stored-session support. This queue resolves
+provenance questions, not missing second-match samples. It supplements the
+historical, already-resolved M1/M3 queue without changing that frozen artifact.
+
+```powershell
+python -m workspace.vision.concealed_template_local_sha_scan D:\huianmahjong\HuianMahjong_Codex_Handoff --queue references/vision/2026-10-07/concealed_support_gap_lineage_recovery_queue_v0_1.json --output dataset/tiles_runtime_v0_2/work/local_gap_sha_scan.json
+```
+
+The scan output contains private local paths and must remain local. If an output
+parent is absent, create it first. Exact SHA matches require source review and
+never automatically assign original matches. Repository-wide search found the
+four SHA values in historical Phase5B selection records, but those records do
+not identify independent original matches, so no lineage mapping was invented.
