@@ -45,10 +45,11 @@ assert window.assistant_window is assistant
 assert '未知' in window.simple_hint.get()
 window.open_diagnostics()
 window.update()
-assert window.pages.tab(1, 'text') == '实时对局流水'
+assert window.notebook.tab(0, 'text') == '实时流水'
 window._start_evidence()
-window._update_timeline()
-assert len(window.timeline_table.get_children()) >= 2
+window._append_timeline('system', 'INSTALL_SMOKE', key=('install-smoke', 1))
+window.update()
+assert 'INSTALL_SMOKE' in window.timeline_text.get('1.0', 'end')
 window.open_manual_hand()
 window.update()
 window.close()
