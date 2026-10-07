@@ -1,8 +1,10 @@
 """Build a metadata-only recovery queue for concealed-template match lineage.
 
 This tool never guesses match groups from source_session names. It summarizes
-approved hand labels whose exact source SHA has no reviewed original-match
-lineage so a human can recover provenance from archived source records.
+approved concealed-identity labels whose exact source SHA has no reviewed
+original-match lineage so a human can recover provenance from archived source
+records. Runtime pools ``hand_region`` and ``draw_visual`` into the same
+concealed identity domain, so lineage recovery must audit both regions.
 """
 from __future__ import annotations
 
@@ -18,6 +20,9 @@ from workspace.vision.concealed_template_match_lineage import (
 )
 
 
+CONCEALED_IDENTITY_SOURCE_REGIONS = frozenset({"hand_region", "draw_visual"})
+
+
 def build_lineage_recovery_queue(
     labels: Iterable[dict[str, Any]],
     lineage_by_sha: dict[str, ConcealedTemplateSource],
@@ -27,7 +32,7 @@ def build_lineage_recovery_queue(
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in labels:
         if (
-            row.get("region") != "hand_region"
+            row.get("region") not in CONCEALED_IDENTITY_SOURCE_REGIONS
             or row.get("gold_skin_only")
             or not (
                 row.get("status") == "approved"
