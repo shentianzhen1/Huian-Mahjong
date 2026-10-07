@@ -58,6 +58,17 @@ not permission to lower the 0.82 threshold or admit unreviewed templates.
 No CurrentAgent V0.10 changes, hidden-rule guesses, dark-face fallback,
 threshold relaxation, Vision promotion or Executor activation.
 
+### Worker-error recovery follow-up
+
+An accepted live Runtime worker error now interrupts the hand/meld confirmation
+streak. Recovery requires two new valid distinct identity frames, even when the
+first recovered hand matches the hand shown before the error. Previously the UI
+blocked on error but retained confirmation votes, allowing immediate restoration
+after one recovered observation. Confirmed Gold and Gold conflicts remain scoped
+to the hand and are not cleared by a classifier error. Wrong-session,
+wrong-generation and expired worker errors are ignored before interruption;
+stateless replay and other live pipeline contexts remain unaffected.
+
 ## Next executable order
 
 1. **Whole current-hand reliability:** source-qualified Windows sessions with

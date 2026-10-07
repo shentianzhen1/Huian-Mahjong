@@ -8,7 +8,9 @@ from unittest.mock import Mock, patch
 
 from tests.test_live_opening_tracker import runtime_report
 from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability
-from workspace.hint_alpha.runtime_pipeline import RuntimeAdvicePipeline, evaluate_runtime_report
+from workspace.hint_alpha.runtime_pipeline import (
+    RuntimeAdvicePipeline, evaluate_runtime_report, interrupt_runtime_observations,
+)
 from workspace.hint_alpha.live_guard import LiveAdviceGuard
 from workspace.vision.runtime_public_adapter import current_snapshot_from_runtime
 
@@ -131,6 +133,20 @@ class LiveSnapshotStabilityTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 LiveSnapshotStability(**kwargs)
 
+    def test_error_interrupt_is_scoped_and_does_not_clear_gold_conflict(self):
+        other = RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability())
+        other.evaluate(burst(3), captured=1, experimental=True)
+        self.evaluate(burst(3), 1)
+        conflict = self.evaluate(burst(6, gold='P9'), 1.4)
+        self.assertFalse(conflict.display_allowed)
+        with self.pipeline.bind():
+            interrupt_runtime_observations()
+        missing = self.evaluate(burst(9, include_gold=False), 1.8)
+        self.assertFalse(missing.display_allowed)
+        self.assertFalse(missing.snapshot.gold_trusted)
+        interrupt_runtime_observations()  # Unbound calls cannot reset another UI.
+        self.assertTrue(other.evaluate(burst(6), captured=1.8, experimental=True).display_allowed)
+
     @unittest.skipIf(LiveHintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
     def test_live_ui_consumer_uses_confirmation_gate(self):
         app = LiveHintAlphaApp.__new__(LiveHintAlphaApp)
@@ -162,3 +178,54 @@ class LiveSnapshotStabilityTests(unittest.TestCase):
         self.assertIn('牌面未确认', HintAlphaApp._format_own_melds(unknown))
         known = replace(snapshot, melds=((('P6', 'P6', 'P6'),), ()))
         self.assertIn('六筒', HintAlphaApp._format_own_melds(known))
+
+    @unittest.skipIf(LiveHintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
+    def test_worker_error_breaks_confirmation_but_preserves_gold(self):
+        app = LiveHintAlphaApp.__new__(LiveHintAlphaApp)
+        app.runtime_advice_pipeline = self.pipeline
+        app.live_guard = LiveAdviceGuard()
+        app.evidence = SimpleNamespace(session_id='runtime-live', mark=Mock())
+        app.runtime_result_queue = queue.Queue()
+        app.runtime_status = app.hint_status = app.turn_status = Mock()
+        app.experimental_runtime_advisory = True
+        app._update_snapshot_view = app._refresh_health = Mock()
+        app.source = {}
+        app.last_runtime_event_key = None
+        for frame, captured, kind, value, allowed in (
+            (3, 1, 'ok', burst(3), False),
+            (6, 1.4, 'ok', burst(6), True),
+            (9, 1.8, 'error', 'temporary classifier error', False),
+            (12, 2.2, 'ok', burst(12, include_gold=False), False),
+            (15, 2.6, 'ok', burst(15, include_gold=False), True),
+        ):
+            app.live_guard.observe(frame, captured)
+            app.runtime_result_queue.put(('error' if kind == 'error' else 'ok',
+                                          'runtime-live', 0, captured, value))
+            with patch('workspace.hint_alpha.app.time.monotonic', return_value=captured):
+                app._consume_runtime_result()
+            if kind == 'error':
+                self.assertIn('BLOCKED', app.hint_status.set.call_args.args[0])
+            else:
+                payload = app.evidence.mark.call_args.args[1]
+                self.assertEqual(payload['display_allowed'], allowed)
+                self.assertEqual(payload['gold_tile'], 'B')
+
+    @unittest.skipIf(LiveHintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
+    def test_rejected_old_worker_error_does_not_interrupt_current_confirmation(self):
+        self.evaluate(burst(3), 1)
+        app = LiveHintAlphaApp.__new__(LiveHintAlphaApp)
+        app.runtime_advice_pipeline = self.pipeline
+        app.live_guard = LiveAdviceGuard()
+        app.live_guard.observe(6, 1.8)
+        app.evidence = SimpleNamespace(session_id='runtime-live', mark=Mock())
+        app.runtime_result_queue = queue.Queue()
+        app.runtime_status = app.hint_status = Mock()
+        for session, generation, captured in (
+            ('old-session', 0, 1.4), ('runtime-live', -1, 1.4),
+            ('runtime-live', 0, -2),
+        ):
+            app.runtime_result_queue.put(('error', session, generation, captured, 'old error'))
+            with patch('workspace.hint_alpha.app.time.monotonic', return_value=1.8):
+                app._consume_runtime_result()
+        app.hint_status.set.assert_not_called()
+        self.assertTrue(self.evaluate(burst(6), 1.8).display_allowed)

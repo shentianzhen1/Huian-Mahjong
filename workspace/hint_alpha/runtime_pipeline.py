@@ -23,6 +23,18 @@ _ACTIVE_STABILITY_TRACKER: ContextVar[LiveSnapshotStability | None] = ContextVar
 )
 
 
+def interrupt_runtime_observations():
+    """Break live identity confirmation after an accepted worker error.
+
+    The persisted opening fact belongs to the hand, not to one successful
+    classification burst. Keep Gold memory and conflicts until a trusted reset.
+    Stateless callers have no confirmation streak to interrupt.
+    """
+    tracker = _ACTIVE_STABILITY_TRACKER.get()
+    if tracker is not None:
+        tracker.reset()
+
+
 def confirmed_public_hand_boundary(previous_hand, observation, *, minimum_votes=2):
     """Return True only for an initial or sequentially confirmed public hand.
 

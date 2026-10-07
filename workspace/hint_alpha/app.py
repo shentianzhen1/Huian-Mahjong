@@ -34,7 +34,7 @@ from workspace.vision.capture_validator.backend import (
 from workspace.vision.capture_validator.media import FrameHealth
 from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 
-from .runtime_pipeline import evaluate_runtime_report
+from .runtime_pipeline import evaluate_runtime_report, interrupt_runtime_observations
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 from .manual_input import evaluate_manual_input, observed_score_entry
@@ -1499,6 +1499,7 @@ class HintAlphaApp(tk.Tk):
             return
         self.live_guard.last_result = captured
         if kind == "error":
+            interrupt_runtime_observations()
             self.runtime_status.set(f"Runtime Vision暂不可用：{value}")
             self.ui_hand_ok = False
             self.ui_gold_ok = False
