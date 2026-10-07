@@ -38,6 +38,25 @@ The first three checkpoints contain 43 truth tiles under the ordinary hand appea
 
 `P2` is a useful distinction: the classifier predicts it correctly at about 0.90–0.92 confidence in these checkpoints, but Runtime keeps it UNKNOWN because concealed-domain cross-source qualification is incomplete. That is a sample/support gap, not evidence that the P2 visual classifier itself is failing.
 
+## Central-edge trim development A/B
+
+A development-only candidate named `central7` adds one step **after** the existing bright tile-face normalization: trim 7% from each horizontal edge and 4% from each vertical edge before the same grayscale/equalization/template comparison. The production `TemplateTileClassifier` is unchanged.
+
+On the same 43 ordinary real-match crops, central7 improved raw top-1 from **34/43 (79.07%)** to about **37/43 (~86%)** and removed the four observed `S4 -> S6` raw errors. However, the result that matters for Hint Alpha did not improve at the frozen gate: it remained **31/43 accepted, 29 correct, 2 wrong**, and **0/3 exact whole hands** were advice-eligible.
+
+A second historical leave-`source_session`-out diagnostic was run on the tracked Runtime V0.2 reviewed crops. This is only a regression check; a `source_session` is explicitly **not** counted as independent-original-match evidence.
+
+| Scope | Variant | Raw top-1 | Accepted @0.82 | Correct accepted | Wrong accepted |
+| --- | --- | ---: | ---: | ---: | ---: |
+| pooled concealed | baseline | 95/142 (66.90%) | 51 | 51 | 0 |
+| pooled concealed | central7 | 98/142 (69.01%) | 52 | 52 | 0 |
+| same region | baseline | 95/142 (66.90%) | 50 | 50 | 0 |
+| same region | central7 | 98/142 (69.01%) | 51 | 51 | 0 |
+
+Decision: **do not promote central7 into Runtime yet**. It is not a regression on this historical diagnostic and gains one safe accepted crop, but it does not reduce the two current real-match wrong accepts, does not improve whole-hand exact eligibility, and does not address the shadow/Gold appearance collapse. Keep it as a reproducible candidate rather than treating raw top-1 improvement as product progress.
+
+The reproducible runner is `workspace/vision/tiles_runtime_v0_2/template_preprocess_ab.py`. It fixes the comparison threshold at 0.82, uses identical query crops for baseline and candidate, and marks `source_session` evaluation as development-only.
+
 ## Shadow + Gold appearance checkpoint
 
 At the fourth checkpoint the reviewed hand is structurally detected correctly (13 concealed + 1 draw), but the displayed appearance changes: the concealed row is shadowed and the drawn P9 uses the yellow Gold skin.
@@ -51,10 +70,11 @@ This is a separate appearance-domain problem and should not be averaged away as 
 ## Priority from this diagnostic
 
 1. Keep concealed-hand geometry unchanged for now; this batch does not show a count/crop bottleneck.
-2. Strengthen the `S4/S6` and `M2/M3` boundaries first, then `M5/M7/M6`.
-3. Recover or collect an independent concealed P2 source so correct high-confidence P2 predictions can pass the existing support gate without lowering 0.82.
-4. Add shadow, brightness, small translation/scale and yellow Gold appearance augmentation to the learned-classifier experiment.
-5. Compare template vs learned candidate on the **same reviewed crops**, grouped by `original_match_group`; only promote after an independent match shows better whole-hand exact/coverage without increasing wrong accepts.
-6. Capture-to-advice p50/p95 remains a separate acceptance item; this offline diagnostic does not claim end-to-end live latency.
+2. Diagnose the **two high-confidence ordinary wrong accepts** first; improving raw top-1 without removing them is not enough.
+3. Treat the shadowed-hand / yellow-Gold appearance state as an explicit robustness domain; test normalization/augmentation while keeping 0.82 frozen.
+4. Recover or collect an independent concealed P2 source so correct high-confidence P2 predictions can pass the existing support gate without lowering 0.82.
+5. Continue strengthening `M2/M3` and `M5/M7/M6`; central7 alone is insufficient even though it helped the raw `S4/S6` boundary.
+6. Compare template vs learned candidate on the **same reviewed crops**, grouped by `original_match_group`; only promote after an independent match shows better whole-hand exact/coverage without increasing wrong accepts.
+7. Capture-to-advice p50/p95 remains a separate acceptance item; this offline diagnostic does not claim end-to-end live latency.
 
 The dedicated `whole_hand_error_analysis.py` helper reports all raw confusion pairs, including wrong top-1 predictions later rejected below 0.82, so classifier selection cannot hide weak boundaries behind abstention.
