@@ -1,0 +1,37 @@
+{
+  "schema_version": "concealed_lineage_drive_hash_audit_v0_1",
+  "audit_date": "2026-10-07",
+  "scope": "Exact SHA-256 comparison between the currently accessible 2026-09-19 Drive replay files and the six unresolved full concealed-domain lineage targets.",
+  "method": "download_raw_file_then_sha256_exact_match",
+  "drive_set": {
+    "description": "2026-09-19 eight-hand replay files documented by drive_8hand_tiles_v0_1_baseline.md, plus later 14.mp4 checked opportunistically",
+    "files": [
+      {"name": "3.mp4", "sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3"},
+      {"name": "4.mp4", "sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22"},
+      {"name": "5.mp4", "sha256": "cf1451e8cc18561d8c3d0250826f79eebcf71904aaf337c74edc41ba46c0f636"},
+      {"name": "9.mp4", "sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e"},
+      {"name": "10.mp4", "sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245"},
+      {"name": "11.mp4", "sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78"},
+      {"name": "12.mp4", "sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757"},
+      {"name": "13.mp4", "sha256": "4333a11966bd364f3388b2bf3677900eed50faf6b0d6739cf9399e901de196fc"},
+      {"name": "14.mp4", "sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d"}
+    ]
+  },
+  "unresolved_target_shas": [
+    "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+    "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+    "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+    "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+    "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+    "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226"
+  ],
+  "matched_unresolved_targets": [],
+  "unmatched_unresolved_target_count": 6,
+  "finding": "None of the six unresolved source SHA256 values is the byte-identical accessible Drive 8-hand replay file. Do not bind those sources to the 2026-09-19 match solely because Runtime V0.2 recovery descended from the older eight-hand dataset.",
+  "next_step": "Run concealed_template_local_sha_scan.py against the historical local recovery/capture directories on the machine that held the Runtime V0.2 source files; exact matches still require human original-match review before registry admission.",
+  "match_group_inference_allowed": false,
+  "safe_to_auto_bind_match_group": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
