@@ -112,9 +112,12 @@ def live_opening_fact_from_snapshot(
     )
 
 
+# Only explicit identity contradictions make the capture scope sticky-UNKNOWN.
+# ``runtime_gold_component_conflict`` is intentionally not included because the
+# current adapter uses that same issue when the Gold component is temporarily
+# absent; absence must be allowed to reuse an already established visible Gold.
 _GOLD_CONFLICT_ISSUES = frozenset(
     {
-        "runtime_gold_component_conflict",
         "runtime_gold_identity_conflict",
         "runtime_gold_fused_identity_conflict",
         "live_gold_flower_forbidden",
@@ -145,8 +148,8 @@ class LiveOpeningTracker:
       ``(source_session, stream_epoch)``;
     * a later missing/temporarily untrusted read may reuse that established
       public fact;
-    * a different trusted Gold, a Gold identity conflict, or a forbidden flower
-      makes the scope sticky-UNKNOWN until the capture scope changes;
+    * a different trusted Gold, an explicit identity conflict, or a forbidden
+      flower makes the scope sticky-UNKNOWN until the capture scope changes;
     * changing session or stream epoch resets the fact.
 
     It never reconstructs a wall index and never imports simulator selection,
