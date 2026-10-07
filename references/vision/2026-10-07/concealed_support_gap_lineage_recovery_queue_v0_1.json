@@ -41,11 +41,13 @@
         "session_5e02f7d0458be0a9"
       ],
       "tile_classes": [
+        "P2",
         "SOUTH"
       ],
-      "approved_label_count": 2,
+      "approved_label_count": 3,
       "source_frames": [
         0,
+        60,
         180
       ],
       "status": "UNKNOWN_ORIGINAL_MATCH",
@@ -70,7 +72,7 @@
     }
   ],
   "unresolved_source_count": 4,
-  "unresolved_label_count": 6,
+  "unresolved_label_count": 7,
   "formal_promotion_evidence": false,
   "safe_for_runtime": false,
   "safe_for_hint": false,
@@ -90,5 +92,5 @@
     "SOUTH",
     "W"
   ],
-  "scope": "Existing concealed support gaps only; stored sessions do not establish original-match independence."
+  "scope": "Existing concealed support gaps across hand_region and draw_visual; stored sessions do not establish original-match independence."
 }
