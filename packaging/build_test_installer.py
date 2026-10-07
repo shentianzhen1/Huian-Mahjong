@@ -53,16 +53,29 @@ def main():
     labels = dataset / 'labels.jsonl'
     shutil.copy2(labels, dataset_target / 'labels.jsonl')
     shutil.copy2(dataset / 'manifest.json', dataset_target / 'manifest.json')
+
+    label_paths = [labels]
+    reviewed_additions = dataset / 'labels_reviewed_additions'
+    if reviewed_additions.is_dir():
+        reviewed_target = dataset_target / 'labels_reviewed_additions'
+        reviewed_target.mkdir(parents=True, exist_ok=True)
+        for sidecar in sorted(reviewed_additions.glob('*.jsonl')):
+            if not sidecar.is_file():
+                continue
+            shutil.copy2(sidecar, reviewed_target / sidecar.name)
+            label_paths.append(sidecar)
+
     template_hashes = {}
-    for row in (json.loads(line) for line in labels.read_text(encoding='utf-8').splitlines() if line):
-        if not (row.get('approved') is True or row.get('status') == 'approved'):
-            continue
-        template = (dataset / row['image']).resolve()
-        relative = template.relative_to(dataset.resolve())
-        destination = dataset_target / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(template, destination)
-        template_hashes[relative.as_posix()] = hashlib.sha256(template.read_bytes()).hexdigest()
+    for label_path in label_paths:
+        for row in (json.loads(line) for line in label_path.read_text(encoding='utf-8').splitlines() if line):
+            if not (row.get('approved') is True or row.get('status') == 'approved'):
+                continue
+            template = (dataset / row['image']).resolve()
+            relative = template.relative_to(dataset.resolve())
+            destination = dataset_target / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(template, destination)
+            template_hashes[relative.as_posix()] = hashlib.sha256(template.read_bytes()).hexdigest()
     # Phase detector requires these six already-reviewed UI templates.
     evidence = Path('references/capture_review/2026-09-13')
     (site / evidence).mkdir(parents=True)
