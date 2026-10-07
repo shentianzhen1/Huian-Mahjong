@@ -15,10 +15,18 @@ def verify(root):
     for relative, digest in manifest['source_sha256'].items():
         assert hashlib.sha256((site / relative).read_bytes()).hexdigest() == digest, relative
     dataset = site / 'dataset/tiles_runtime_v0_2'
+    for inventory in ('label_sha256', 'template_sha256'):
+        for relative, digest in manifest[inventory].items():
+            path = dataset / relative
+            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                raise SystemExit(f'Build-source mismatch: {relative}')
     label_paths = [dataset / 'labels.jsonl']
     reviewed_additions = dataset / 'labels_reviewed_additions'
     if reviewed_additions.is_dir():
         label_paths.extend(sorted(reviewed_additions.glob('*.jsonl')))
+    actual_labels = {path.relative_to(dataset).as_posix() for path in label_paths}
+    if actual_labels != set(manifest['label_sha256']):
+        raise SystemExit('Reviewed label inventory mismatch')
     labels = [
         json.loads(line)
         for label_path in label_paths
@@ -29,6 +37,8 @@ def verify(root):
         if row.get('approved') is True or row.get('status') == 'approved':
             template = dataset / row['image']
             assert template.is_file(), row['image']
+            if row['image'] not in manifest['template_sha256']:
+                raise SystemExit(f"Template absent from build-source inventory: {row['image']}")
             if row.get('asset_sha256'):
                 assert hashlib.sha256(template.read_bytes()).hexdigest() == row['asset_sha256'], row['image']
     assert (dataset / 'manifest.json').is_file()

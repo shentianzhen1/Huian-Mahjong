@@ -91,6 +91,8 @@ def main():
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     manifest = {'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
                 'source_sha256': source_hashes, 'template_sha256': template_hashes,
+                'label_sha256': {path.relative_to(dataset).as_posix():
+                    hashlib.sha256(path.read_bytes()).hexdigest() for path in label_paths},
                 'shanten_advisory_connected': True, 'experimental_runtime_advisory': True,
                 'executor_enabled': False, 'live_ai_advice_connected': False,
                 'dependencies': subprocess.check_output([str(ROOT / '.build-hint/Scripts/python.exe'),
