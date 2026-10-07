@@ -16,8 +16,11 @@ from workspace.vision.tiles_runtime_v0_2.concealed_shadow_appearance_probe impor
 
 def _synthetic_tile(*, bottom_value: int) -> Image.Image:
     array = np.full((100, 70, 3), 225, dtype=np.uint8)
-    # Simple dark glyph that does not touch the side-background measurement.
-    array[20:70, 28:42] = 50
+    # Use two compact glyph fragments.  The production probe intentionally
+    # rejects tall/broad connected components because those are much more
+    # likely to be UI bands or borders than tile identity.
+    array[22:42, 25:35] = 50
+    array[48:66, 38:48] = 50
     array[82:, :, :] = bottom_value
     return Image.fromarray(array, mode="RGB")
 
@@ -49,7 +52,7 @@ class ConcealedShadowAppearanceProbeTests(unittest.TestCase):
         self.assertGreater(int(ordinary.max()), 0)
         self.assertGreater(int(shadowed.max()), 0)
         # The horizontal bottom band must not become the identity itself.  A
-        # simple synthetic glyph should remain broadly similar after shadowing.
+        # compact synthetic glyph should remain broadly similar after shadowing.
         score = np.corrcoef(ordinary.ravel(), shadowed.ravel())[0, 1]
         self.assertGreater(score, 0.80)
 
