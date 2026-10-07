@@ -43,6 +43,14 @@ STANDARD_CLASSES = frozenset(
     + [f"S{i}" for i in range(1, 10)]
     + ["E", "SOUTH", "W", "N", "R", "G", "B"]
 )
+APPEARANCE_AUGMENTATION_VERSION = "v0_2_real_bottom_shadow"
+# The revealed 2026-10-03 pair measured its strongest horizontal shadow in the
+# bottom 82%-100% of the normalized tile face. Ordinary samples were about >=-35
+# bottom-minus-middle luminance while the shadow state was <=-67. Keep this as a
+# deterministic training augmentation only; it is not a Runtime detector/gate.
+OBSERVED_SHADOW_FEATHER_START = 0.72
+OBSERVED_SHADOW_FULL_BAND_START = 0.82
+OBSERVED_SHADOW_DARKEN_DELTA = 72.0
 
 
 def _approved(row: dict[str, Any]) -> bool:
@@ -167,6 +175,41 @@ def _square_tile_canvas(image: Any) -> Any:
     return canvas
 
 
+def _bottom_shadow_variant(image: Any) -> Any:
+    """Apply the observed bottom-band appearance without changing geometry.
+
+    The transform is intentionally simple and deterministic. It starts a linear
+    darkening ramp at 72% of the source crop, reaches the observed shadow band at
+    82%, then subtracts 72 luminance levels through the bottom. The source crop
+    size is preserved so this can only affect learned appearance robustness.
+    """
+    from PIL import Image
+    import numpy as np
+
+    source = image.convert("RGB")
+    array = np.asarray(source).astype(np.float32)
+    height = array.shape[0]
+    feather_start = max(
+        0, min(height, int(round(height * OBSERVED_SHADOW_FEATHER_START)))
+    )
+    full_start = max(
+        feather_start,
+        min(height, int(round(height * OBSERVED_SHADOW_FULL_BAND_START))),
+    )
+    if full_start > feather_start:
+        ramp = np.linspace(
+            0.0,
+            OBSERVED_SHADOW_DARKEN_DELTA,
+            full_start - feather_start,
+            endpoint=False,
+            dtype=np.float32,
+        ).reshape(-1, 1, 1)
+        array[feather_start:full_start] -= ramp
+    if full_start < height:
+        array[full_start:] -= OBSERVED_SHADOW_DARKEN_DELTA
+    return Image.fromarray(np.clip(array, 0, 255).astype(np.uint8))
+
+
 def _appearance_variants(image: Any) -> list[Any]:
     """Deterministic development variants requested by the whole-hand audit."""
     from PIL import Image, ImageEnhance
@@ -188,6 +231,7 @@ def _appearance_variants(image: Any) -> list[Any]:
         rows.append(canvas)
 
     rows.append(ImageEnhance.Brightness(base).enhance(0.50))
+    rows.append(_square_tile_canvas(_bottom_shadow_variant(image)))
 
     array = np.asarray(base).astype(np.float32)
     luminance = array.mean(axis=2, keepdims=True) / 255.0
@@ -382,10 +426,19 @@ def run_feasibility(
 
     total = len(results)
     return {
-        "schema_version": "concealed_mobilenet_v3_small_feasibility_ab_v0_1",
+        "schema_version": "concealed_mobilenet_v3_small_feasibility_ab_v0_2",
         "status": "DEVELOPMENT_RAW_TOP1_ONLY_NOT_RUNTIME_CALIBRATED",
         "model": MODEL_NAME,
         "weights": weight_name,
+        "pretrained_weights_required": True,
+        "appearance_augmentation_version": APPEARANCE_AUGMENTATION_VERSION,
+        "observed_bottom_shadow_augmentation": {
+            "enabled": True,
+            "feather_start_fraction": OBSERVED_SHADOW_FEATHER_START,
+            "full_band_start_fraction": OBSERVED_SHADOW_FULL_BAND_START,
+            "darken_delta": OBSERVED_SHADOW_DARKEN_DELTA,
+            "runtime_gate": False,
+        },
         "training_selection": selection,
         "query_match_groups": sorted(query_match_groups),
         "same_query_crops_for_template_and_candidate": True,
