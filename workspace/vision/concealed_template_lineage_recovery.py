@@ -1,10 +1,12 @@
-"""Build a metadata-only recovery queue for concealed-template match lineage.
+"""Build metadata-only recovery queues for concealed-template match lineage.
 
-This tool never guesses match groups from source_session names. It summarizes
-approved concealed-identity labels whose exact source SHA has no reviewed
-original-match lineage so a human can recover provenance from archived source
-records. Runtime pools ``hand_region`` and ``draw_visual`` into the same
-concealed identity domain, so lineage recovery must audit both regions.
+This tool never guesses match groups from source_session names. Historical
+Oct-1 recovery artifacts were built from ``hand_region`` only, so
+``build_lineage_recovery_queue`` preserves that default for reproducibility.
+Current Runtime Vision pools ``hand_region`` and ``draw_visual`` into the same
+concealed identity domain; new audits must use
+``build_concealed_identity_lineage_recovery_queue`` so draw-position labels
+cannot silently escape original-match lineage review.
 """
 from __future__ import annotations
 
@@ -20,6 +22,7 @@ from workspace.vision.concealed_template_match_lineage import (
 )
 
 
+HAND_ONLY_SOURCE_REGIONS = frozenset({"hand_region"})
 CONCEALED_IDENTITY_SOURCE_REGIONS = frozenset({"hand_region", "draw_visual"})
 
 
@@ -28,11 +31,18 @@ def build_lineage_recovery_queue(
     lineage_by_sha: dict[str, ConcealedTemplateSource],
     *,
     target_classes: set[str] | None = None,
+    source_regions: frozenset[str] = HAND_ONLY_SOURCE_REGIONS,
 ) -> dict[str, Any]:
+    """Build a fail-closed queue for explicitly selected identity regions.
+
+    The default remains hand-only solely so frozen historical artifacts stay
+    reproducible. New concealed Runtime audits should call the dedicated
+    wrapper below rather than relying on this default.
+    """
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in labels:
         if (
-            row.get("region") not in CONCEALED_IDENTITY_SOURCE_REGIONS
+            row.get("region") not in source_regions
             or row.get("gold_skin_only")
             or not (
                 row.get("status") == "approved"
@@ -100,6 +110,21 @@ def build_lineage_recovery_queue(
     }
 
 
+def build_concealed_identity_lineage_recovery_queue(
+    labels: Iterable[dict[str, Any]],
+    lineage_by_sha: dict[str, ConcealedTemplateSource],
+    *,
+    target_classes: set[str] | None = None,
+) -> dict[str, Any]:
+    """Audit every region used by Runtime's pooled concealed identity gate."""
+    return build_lineage_recovery_queue(
+        labels,
+        lineage_by_sha,
+        target_classes=target_classes,
+        source_regions=CONCEALED_IDENTITY_SOURCE_REGIONS,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -118,6 +143,11 @@ def main() -> None:
         nargs="*",
         default=["M1", "M3"],
     )
+    parser.add_argument(
+        "--concealed-domain",
+        action="store_true",
+        help="include draw_visual because Runtime pools it with hand_region",
+    )
     parser.add_argument("--output")
     args = parser.parse_args()
 
@@ -127,7 +157,12 @@ def main() -> None:
         if line.strip()
     ]
     registry = load_concealed_template_lineage(args.lineage)
-    report = build_lineage_recovery_queue(
+    builder = (
+        build_concealed_identity_lineage_recovery_queue
+        if args.concealed_domain
+        else build_lineage_recovery_queue
+    )
+    report = builder(
         labels,
         registry,
         target_classes=set(args.classes) if args.classes else None,
