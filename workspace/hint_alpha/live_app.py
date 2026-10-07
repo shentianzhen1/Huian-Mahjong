@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 
 from . import app as shell
+from .live_snapshot_stability import LiveSnapshotStability
 from .runtime_pipeline import (
     RuntimeAdvicePipeline,
     confirmed_public_hand_boundary,
@@ -32,7 +33,9 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         # The base constructor does not consume live Runtime results until the
         # Tk event loop starts. Install state after Tk itself is initialized so
         # no pre-Tk attribute behavior is changed.
-        self.runtime_advice_pipeline = RuntimeAdvicePipeline()
+        self.runtime_advice_pipeline = RuntimeAdvicePipeline(
+            stability_tracker=LiveSnapshotStability(),
+        )
         self._gold_hand_number = None
 
     def _invalidate_advice(self, reason):

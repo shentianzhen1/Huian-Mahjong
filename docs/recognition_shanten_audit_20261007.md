@@ -1,0 +1,91 @@
+# Current hand / meld / shanten audit — 2026-10-07
+
+User's near-term objective: stable current-hand and exposed-meld observations,
+then ordinary structural shanten and minimum-shanten discard suggestions.
+Execution truth remains Issues #69/#45/#7. Audited draft base: PR #126
+`2fafd7efb8fb08dc5b5c26290ad5f3d9999a87d1`; all five workflows passed.
+PR #126 and #117 remain Draft/unmerged. This is not a main release.
+
+## Findings
+
+| Boundary | Verified current behavior | Remaining limit |
+| --- | --- | --- |
+| Capture / installed UI | Windows build extracts and hashes payload, checks spawn/Tk and starts LiveHintAlphaApp | Actual mirrored game, latency and disconnect recovery are not validated by the synthetic installer smoke |
+| Concealed identity | Reviewed bank covers 34 standard classes; only 22 have at least two stored concealed source sessions | Twelve classes lack that support; any rejected tile blocks the complete hand. Stored sessions alone do not prove independent original matches |
+| Gold | Dedicated multiframe gate and capture-scoped persistence; trusted hand boundary is independent of display OCR | Eleven classes lack two stored Gold-domain source sessions. Physical opening is not inferred |
+| Hand stability | Runtime freezes geometry counts across 3–5 frames but classifies the selected hand frame | Geometry stability alone does not prove hand identity stability |
+| Own meld count | Dynamic components are grouped; count-only incomplete groups require concealed-count corroboration | An unexplained extra fragment could previously be silently dropped while the retained count remained trusted |
+| Meld identity | Strict public identity adapter/normalized FLAT and STACKED experiments exist | Runtime reader does not emit a qualified public_identity_result for meld components. SIFT/MobileNet offline success is not live full-meld accuracy |
+| Shanten | Rules-independent structural calculator consumes complete hand + trusted Gold + own meld count | Public identity UNKNOWN permits structural shanten only; remaining-copy/danger and special-Hu eligibility remain separate |
+| Reporting | Frozen private-source replay can reproduce saved accepted/blocked snapshots | The recorded 8/13 accepted windows are same-source development smoke, not full-hand accuracy or Windows live acceptance |
+
+Full-bank missing two-session support at this audit:
+
+- Concealed: B, G, M2, M4, M7, M8, M9, N, P2, S9, SOUTH, W.
+- Gold: B, G, M2, M4, M7, M8, M9, P2, S9, SOUTH, W.
+
+Reproduce the inventory with `prepare_runtime_resources()` and compare
+`covered_by_region[domain]` against `cross_session[domain]`. Query-session
+exclusion can remove additional coverage. These are collection priorities,
+not permission to lower the 0.82 threshold or admit unreviewed templates.
+
+## Implemented audit fixes
+
+1. Live-only `LiveSnapshotStability` requires two matching current observations
+   from **distinct actual classified frames**, with increasing capture times,
+   in the same session/epoch and within a two-second gap. Hand multiset, Gold
+   and observed own meld groups must agree. Sorting or merging draw_visual into
+   hand does not manufacture a hand change. Overlapping burst IDs do not count
+   the same selected identity frame twice.
+2. A changed/UNKNOWN/conflicted/physically impossible hand immediately blocks
+   advice; no prior hand is substituted. Capture/confirmed-hand resets forget
+   the confirmation streak. This adds at least one live read interval before
+   initial or changed-hand advice; actual added latency needs measurement.
+3. The live entry point enables this guard. The frozen Runtime reader,
+   classifier scores/thresholds and stateless replay boundary remain unchanged.
+   A stateless replay's accepted-window count must not be reported as acceptance
+   of this guarded live path.
+4. Unexplained meld fragments make the observed meld count untrusted. Rejected
+   hand component identity cannot be overridden by a report-level trust flag.
+   Nonfinite public identity scores/margins are rejected. Malformed/illegal
+   known meld structures or Gold in an exposed meld block advisory calculations;
+   legitimate three/four-slot UNKNOWN meld identities remain UNKNOWN.
+5. The UI distinguishes unknown meld identity from its trusted group count,
+   displaying known group faces only when present. Advisory evidence now records
+   hand/meld trust, meld values, Gold provenance, source frames, capture time,
+   Runtime inference elapsed time and per-region identity rejection reasons.
+
+No CurrentAgent V0.10 changes, hidden-rule guesses, dark-face fallback,
+threshold relaxation, Vision promotion or Executor activation.
+
+## Next executable order
+
+1. **Whole current-hand reliability:** source-qualified Windows sessions with
+   reviewed frame truth; include no meld, one/multiple melds, separate draw,
+   hand sorting, yellow Gold skin, prompts/shadows and resolution changes.
+   Collect the twelve concealed support gaps from independently identified
+   original matches. Score the frozen current bank first; review/intake belongs
+   to a separate development set, never the untouched promotion holdout.
+2. **Own meld count before full identity:** evaluate actual detector boxes and
+   group boundaries, including FLAT, STACKED, add-kong and residual fragments.
+   Count-only successes must be reported separately from exact face successes.
+3. **Qualified live public identity input:** verify the existing normalization,
+   segmentation and source-disjoint public bank can be used on actual Runtime
+   detector output. Preserve missing-class/occluded-face UNKNOWN. Do not connect
+   an offline experimental winner as a Runtime accepted identity.
+4. **End-to-end live acceptance:** run the installed guarded UI on a real mirror;
+   verify acquisition, changed-hand suppression, recovery and confirmed new-hand
+   reset. Read-only structural shanten is the immediate output. Complete rivers,
+   danger, action ledger, special-rule migration and new Agent experiments do not
+   become prerequisites for this scoped acceptance.
+
+For each reviewed session report: exact tile accuracy, exact **whole hand**
+accuracy, displayed/blocked windows, wrong accepted hands, own meld-count
+accuracy, exact meld-face accuracy, source/epoch conflicts, Runtime and total
+capture-to-advice p50/p95 time, and acquisition/recovery times. Do not quote
+accepted-only tile accuracy without its rejection fraction or substitute
+geometry/test pass rates for identity accuracy. No new numeric promotion gates
+are introduced here; Issue #7's frozen independent gate remains authoritative.
+
+Private full frames/video remain outside GitHub. Green CI proves regression
+contracts, not the requested real-world recognition reliability.

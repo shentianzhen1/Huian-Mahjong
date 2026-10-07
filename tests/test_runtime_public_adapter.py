@@ -141,6 +141,26 @@ class RuntimePublicAdapterMeldTests(unittest.TestCase):
         snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertEqual(snapshot.groups[0].tiles, (None, None, None))
 
+    def test_nonfinite_meld_scores_never_become_identity(self):
+        for field in ('score', 'margin'):
+            for value in (float('nan'), float('inf')):
+                accepted = dict(region='public_meld', read_only_runtime_candidate='P6',
+                    safe_for_runtime=True, safe_for_executor=False, formal_promotion_evidence=False,
+                    winner_independent_match_groups=2, eligible_class_count=2,
+                    score=0.96, margin=0.10)
+                accepted[field] = value
+                source = report([component(0.05, 'meld', public_identity_result=accepted),
+                    component(0.09, 'meld'), component(0.13, 'meld')])
+                result = player_meld_snapshot_from_runtime(source, timestamp_seconds=2)
+                self.assertIsNone(result.groups[0].tiles[0])
+
+    def test_unexplained_fragment_prevents_trusted_meld_count(self):
+        source = report([component(0.05, 'meld'), component(0.09, 'meld'),
+            component(0.13, 'meld'), component(0.35, 'meld')], concealed_count=13)
+        result = player_meld_snapshot_from_runtime(source, timestamp_seconds=2)
+        self.assertEqual(len(result.groups), 1)
+        self.assertFalse(result.trusted)
+
     def test_distant_meld_components_form_separate_groups(self):
         source = report(
             [

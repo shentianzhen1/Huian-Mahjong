@@ -183,6 +183,30 @@ def assess_current_snapshot(
         global_issues.append("playable_gold_copy_overflow")
 
     open_melds = len(snapshot.melds[0])
+    for seat, groups in enumerate(snapshot.melds):
+        if len(groups) > 5:
+            global_issues.append(f"meld_count_invalid:{seat}")
+        for index, group in enumerate(groups):
+            # Manual count-only slots deliberately carry no claimed physical
+            # structure. A visual observer may not use that shorthand.
+            manual_count_slot = snapshot.input_source == "user_entered" and group == (None,)
+            if len(group) not in {3, 4} and not manual_count_slot:
+                global_issues.append(f"meld_shape_invalid:{seat}:{index}")
+            if snapshot.gold_tile is not None and snapshot.gold_tile in group:
+                global_issues.append(f"gold_in_meld:{seat}:{index}")
+            if group and all(tile in env.BASE_TILES for tile in group):
+                identical = len(set(group)) == 1
+                sequence = (
+                    len(group) == 3
+                    and all(len(tile) == 2 and tile[0] in "MPS" and tile[1] in "123456789"
+                            for tile in group)
+                    and len({tile[0] for tile in group}) == 1
+                    and sorted(int(tile[1]) for tile in group)
+                    == list(range(min(int(tile[1]) for tile in group),
+                                  min(int(tile[1]) for tile in group) + 3))
+                )
+                if not identical and not sequence:
+                    global_issues.append(f"meld_identity_structure_conflict:{seat}:{index}")
     if open_melds > 5:
         global_issues.append("player_meld_count_invalid")
     elif snapshot.hand_trusted and snapshot.meld_trusted[0]:

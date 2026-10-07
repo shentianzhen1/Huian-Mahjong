@@ -11,11 +11,15 @@ from workspace.vision.live_opening_fact import (
 )
 from workspace.vision.runtime_public_adapter import current_snapshot_from_runtime
 from .current_snapshot_advisor import analyze_snapshot_shanten
+from .live_snapshot_stability import LiveSnapshotStability
 
 
 _ACTIVE_OPENING_TRACKER: ContextVar[LiveOpeningTracker | None] = ContextVar(
     "hint_alpha_active_opening_tracker",
     default=None,
+)
+_ACTIVE_STABILITY_TRACKER: ContextVar[LiveSnapshotStability | None] = ContextVar(
+    "hint_alpha_active_stability_tracker", default=None,
 )
 
 
@@ -70,6 +74,7 @@ def evaluate_runtime_report(
     captured,
     experimental=False,
     opening_tracker: LiveOpeningTracker | None = None,
+    stability_tracker: LiveSnapshotStability | None = None,
 ):
     """Evaluate one Runtime burst without enabling any action path.
 
@@ -87,6 +92,9 @@ def evaluate_runtime_report(
         opening_fact = live_opening_fact_from_snapshot(snapshot)
     else:
         snapshot, opening_fact = tracker.update(snapshot)
+    stability_tracker = stability_tracker or _ACTIVE_STABILITY_TRACKER.get()
+    if stability_tracker is not None:
+        snapshot = stability_tracker.update(snapshot, report)
     hint = analyze_snapshot_shanten(snapshot)
     return RuntimeAdvice(
         snapshot=snapshot,
@@ -104,18 +112,23 @@ class RuntimeAdvicePipeline:
     """Long-lived advisory session with explicitly resettable Gold memory."""
 
     opening_tracker: LiveOpeningTracker = field(default_factory=LiveOpeningTracker)
+    stability_tracker: LiveSnapshotStability | None = None
 
     def reset(self) -> None:
         """Forget all persisted opening facts at a trusted boundary."""
         self.opening_tracker.reset()
+        if self.stability_tracker is not None:
+            self.stability_tracker.reset()
 
     @contextmanager
     def bind(self):
         """Bind this pipeline only for the current synchronous UI evaluation."""
         token = _ACTIVE_OPENING_TRACKER.set(self.opening_tracker)
+        stability_token = _ACTIVE_STABILITY_TRACKER.set(self.stability_tracker)
         try:
             yield self
         finally:
+            _ACTIVE_STABILITY_TRACKER.reset(stability_token)
             _ACTIVE_OPENING_TRACKER.reset(token)
 
     def evaluate(self, report, *, captured, experimental=False) -> RuntimeAdvice:
@@ -124,4 +137,5 @@ class RuntimeAdvicePipeline:
             captured=captured,
             experimental=experimental,
             opening_tracker=self.opening_tracker,
+            stability_tracker=self.stability_tracker,
         )

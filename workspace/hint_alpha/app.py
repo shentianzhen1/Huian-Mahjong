@@ -599,6 +599,20 @@ class HintAlphaApp(tk.Tk):
         self._refresh_header()
         self._refresh_health()
 
+    @classmethod
+    def _format_own_melds(cls, snapshot):
+        if not snapshot.meld_trusted[0]:
+            return "我的副露：UNKNOWN"
+        groups = snapshot.melds[0]
+        if not groups:
+            return "我的副露：0 组"
+        faces = " / ".join(
+            "牌面未确认" if any(tile is None for tile in group)
+            else cls._display_tiles(group)
+            for group in groups
+        )
+        return f"我的副露：{len(groups)} 组（{faces}）"
+
     def _update_snapshot_view(self, snapshot, result, *, source_label):
         own_hand = tuple(snapshot.own_hand)
         trusted_hand = bool(snapshot.hand_trusted) and bool(own_hand)
@@ -611,14 +625,7 @@ class HintAlphaApp(tk.Tk):
         else:
             self.table_hand_status.set("我的手牌：UNKNOWN")
 
-        own_meld_count = len(snapshot.melds[0]) if snapshot.melds else 0
-        if snapshot.meld_trusted[0]:
-            self.table_meld_status.set(
-                f"我的副露：{own_meld_count} 组"
-                + ("（牌面可能为 UNKNOWN）" if own_meld_count else "")
-            )
-        else:
-            self.table_meld_status.set("我的副露：UNKNOWN")
+        self.table_meld_status.set(self._format_own_melds(snapshot))
 
         if self.ui_gold_ok:
             gold = snapshot.gold_tile
@@ -1374,6 +1381,7 @@ class HintAlphaApp(tk.Tk):
 
     def _runtime_worker(self, samples, session_id, generation, captured, output_queue):
         try:
+            started = time.monotonic()
             # Lazy import keeps non-Vision Hint Alpha utilities importable
             # without forcing OpenCV into every core-only process.
             from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
@@ -1390,6 +1398,7 @@ class HintAlphaApp(tk.Tk):
                 confidence_threshold=0.82,
             )
             report["stream_epoch"] = generation
+            report["runtime_elapsed_seconds"] = time.monotonic() - started
             payload = ("ok", session_id, generation, captured, report)
         except Exception as exc:
             payload = ("error", session_id, generation, captured, f"{type(exc).__name__}: {exc}")
@@ -1538,6 +1547,8 @@ class HintAlphaApp(tk.Tk):
             tuple((item.discard, item.shanten) for item in result.best_discards),
             snapshot.gold_tile,
             snapshot.own_hand,
+            snapshot.melds,
+            snapshot.meld_trusted,
             result.issues,
         )
         if self.evidence and event_key != self.last_runtime_event_key:
@@ -1549,6 +1560,25 @@ class HintAlphaApp(tk.Tk):
                     "shanten": result.shanten,
                     "hand": list(snapshot.own_hand),
                     "gold_tile": snapshot.gold_tile,
+                    "hand_trusted": snapshot.hand_trusted,
+                    "melds": snapshot.melds,
+                    "meld_trusted": snapshot.meld_trusted,
+                    "opening_fact": asdict(advisory.opening_fact),
+                    "runtime_frames": report.get("frames", []),
+                    "captured_monotonic": captured,
+                    "runtime_elapsed_seconds": report.get("runtime_elapsed_seconds"),
+                    "identity_rejections": {
+                        region: [
+                            item.get("identity_reason", "missing")
+                            for item in report.get("components", ())
+                            if item.get("region_candidate") in regions
+                            and item.get("identity_reason") != "accepted"
+                        ]
+                        for region, regions in (
+                            ("hand", {"hand", "draw_visual"}),
+                            ("meld", {"meld"}),
+                        )
+                    },
                     "best_discards": [
                         {
                             "tile": item.discard,

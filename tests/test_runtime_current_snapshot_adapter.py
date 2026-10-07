@@ -183,5 +183,14 @@ class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
         self.assertIn("physical_copy_overflow:M1", result.issues)
 
 
+class RuntimeHandTrustRegressionTests(unittest.TestCase):
+    def test_declared_trust_cannot_override_rejected_component(self):
+        candidate = report()
+        candidate['components'][0]['identity_reason'] = 'below_confidence_threshold'
+        snapshot = current_snapshot_from_runtime(candidate, timestamp_seconds=1)
+        self.assertFalse(snapshot.hand_trusted)
+        self.assertFalse(assess_current_snapshot(snapshot).allows(SnapshotCapability.SHANTEN))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -7,6 +7,7 @@ identities with concealed-hand templates, and never changes Rules or Executor.
 from __future__ import annotations
 
 from collections import Counter
+import math
 from dataclasses import dataclass
 from statistics import median
 from typing import Any, Iterable
@@ -130,7 +131,7 @@ def _meld_identity(item: dict[str, Any]) -> str | None:
         margin = float(result.get("margin"))
     except (TypeError, ValueError):
         return None
-    if score < 0.93 or margin < 0.075:
+    if not math.isfinite(score) or not math.isfinite(margin) or score < 0.93 or margin < 0.075:
         return None
     return tile_id
 
@@ -241,6 +242,7 @@ def current_snapshot_from_runtime(
         and declared_count == len(concealed)
         and concealed
         and all(tile is not None for tile in own_hand)
+        and all(item.get("identity_reason") == "accepted" for item in concealed)
     )
     if not hand_trusted:
         issues.append("runtime_hand_not_fully_trusted")
@@ -418,7 +420,7 @@ def player_meld_snapshot_from_runtime(
         item for item in report.get("components", ())
         if item.get("region_candidate") == "meld"
     ]
-    trusted = not bool(report.get("geometry_untrusted"))
+    trusted = not bool(report.get("geometry_untrusted", True))
     if not trusted:
         components = []
 
@@ -433,9 +435,11 @@ def player_meld_snapshot_from_runtime(
     )
 
     groups: list[MeldGroup] = []
+    discarded_cluster = False
     for cluster in clusters:
         if len(cluster) not in {3, 4}:
             if not preserve_count_only_incomplete:
+                discarded_cluster = True
                 # Do not invent a semantic meld from weak geometry alone.
                 continue
             # Concealed count and independently separated meld geometry agree
@@ -468,7 +472,7 @@ def player_meld_snapshot_from_runtime(
         actor="player",
         groups=tuple(groups),
         frame=(report.get("frames") or [None])[-1],
-        trusted=trusted,
+        trusted=trusted and not discarded_cluster,
         evidence_refs=_runtime_refs(report, components),
         source_session=report.get("session") or None,
         stream_epoch=report.get("stream_epoch", 0),

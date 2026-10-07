@@ -1,9 +1,23 @@
 # PROJECT_STATUS — Current Snapshot
 
-**Snapshot date:** 2026-10-06
+**Snapshot date:** 2026-10-07
 **Execution truth:** GitHub Issues
 **Rule truth:** RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md
 **History:** CHANGELOG.md
+
+## Near-term user objective
+
+Stable current hand / own exposed-meld observations -> structural shanten and
+minimum-shanten discard suggestions, under Issues #69/#45. The current focus is
+complete-hand acceptance and actual detector-path meld counts/identities,
+not another Agent line or exhaustive action transcription.
+See [2026-10-07 recognition audit](docs/recognition_shanten_audit_20261007.md)
+for current support gaps, fixes and source-qualified acceptance measurements.
+Live-only cross-burst identity confirmation blocks changed/missing observations;
+frozen Runtime scoring and stateless replay remain separate. Full-bank concealed
+coverage is 34/34, but only 22 classes have two stored source sessions; that
+inventory is not independent-match accuracy. Full meld identity is not yet a
+qualified live Runtime input. V0.10 unchanged; Executor OFF.
 
 ## Branch and release scope
 
@@ -42,8 +56,8 @@ promotion or source-disjoint evidence.
 Native private first-hand 173–176s replay now observes 8 structural advice
 windows, 5 blocked windows and 1 recovery across 13 overlapping bursts. This
 same-source smoke does not validate tile accuracy, strategic discard quality or
-full-match recovery. Windows live capture/freshness/recovery acceptance remains
-pending. Linux CI does not prove Windows usability. See docs/issue69_alpha_build.md.
+full-match recovery. Windows installed live-entrypoint smoke now passes in PR #126; actual
+mirrored-game capture/freshness/recovery acceptance remains pending. Linux CI does not prove Windows usability. See docs/issue69_alpha_build.md.
 
 An earlier same-original 160–164s source-locked replay adds two consecutive
 automatic post-draw structural discard windows (M3/P5/P7/P9 tied at minimal
