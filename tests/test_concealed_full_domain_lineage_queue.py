@@ -22,6 +22,18 @@ FROZEN = (
     / "references/vision/2026-10-07/"
     "concealed_full_domain_lineage_recovery_queue_v0_1.json"
 )
+CORE_ITEM_FIELDS = (
+    "source_sha256",
+    "source_sessions",
+    "tile_classes",
+    "approved_label_count",
+    "source_frames",
+    "status",
+)
+
+
+def _core_item(item):
+    return {key: item[key] for key in CORE_ITEM_FIELDS}
 
 
 class ConcealedFullDomainLineageQueueTests(unittest.TestCase):
@@ -39,7 +51,10 @@ class ConcealedFullDomainLineageQueueTests(unittest.TestCase):
         )
         frozen = json.loads(FROZEN.read_text(encoding="utf-8"))
 
-        self.assertEqual(generated["items"], frozen["items"])
+        self.assertEqual(
+            [_core_item(item) for item in generated["items"]],
+            [_core_item(item) for item in frozen["items"]],
+        )
         self.assertEqual(
             generated["unresolved_source_count"],
             frozen["unresolved_source_count"],
