@@ -7,7 +7,8 @@ class. ``source_session`` remains visible only as a storage/debugging signal;
 it is never treated as proof of an independent original match.
 
 The probe is diagnostic only. It never changes Runtime acceptance, the frozen
-0.82 threshold, Hint Alpha, or Executor behavior.
+0.82 threshold, Hint Alpha, or Executor behavior. Heavy Vision dependencies are
+loaded lazily so lineage-only tests can run in core environments.
 """
 from __future__ import annotations
 
@@ -15,19 +16,11 @@ import argparse
 from collections import defaultdict
 import json
 from pathlib import Path
-from typing import Iterable
-
-import cv2
-from PIL import Image
+from typing import Any, Iterable
 
 from workspace.vision.concealed_template_match_lineage import (
     ConcealedTemplateSource,
     load_concealed_template_lineage,
-)
-from workspace.vision.tiles_v0_1.labels import approved_labels
-from workspace.vision.tiles_v0_1.template_classifier import (
-    _canonical_region,
-    _feature,
 )
 
 
@@ -45,7 +38,9 @@ def _sample_key(row: dict) -> str:
     )
 
 
-def _load_label_crop(root: Path, row: dict) -> Image.Image:
+def _load_label_crop(root: Path, row: dict) -> Any:
+    from PIL import Image
+
     path = root / row["image"]
     with Image.open(path) as source:
         image = source.convert("RGB")
@@ -60,6 +55,9 @@ def _concealed_labels(
     *,
     exclude_source_session: str | None = None,
 ) -> list[dict]:
+    from workspace.vision.tiles_v0_1.labels import approved_labels
+    from workspace.vision.tiles_v0_1.template_classifier import _canonical_region
+
     rows: list[dict] = []
     for row in approved_labels(dataset_root):
         region = _canonical_region(row.get("region"))
@@ -231,6 +229,10 @@ def probe_query(
     exclude_source_session: str | None = None,
     top_n: int = 8,
 ) -> dict[str, object]:
+    import cv2
+    from PIL import Image
+    from workspace.vision.tiles_v0_1.template_classifier import _canonical_region, _feature
+
     root = Path(dataset_root)
     query = Path(query_path)
     if not query.is_file():
