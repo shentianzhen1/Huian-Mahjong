@@ -20,6 +20,14 @@ class HintAlphaLiveEntrypointTests(unittest.TestCase):
         self.assertIn("live_app.main()", launcher)
         self.assertNotIn("\n    app.main()", launcher)
 
+    def test_windows_ci_executes_installed_live_ui_smoke(self):
+        workflow = (
+            ROOT / ".github" / "workflows" / "test-installer.yml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("packaging/smoke_test_installed.py $payload", workflow)
+        self.assertIn("live UI smoke", workflow)
+
     def test_live_wiring_resets_on_confirmed_hand_boundary_and_binds_runtime(self):
         path = ROOT / "workspace" / "hint_alpha" / "live_app.py"
         source = path.read_text(encoding="utf-8")
