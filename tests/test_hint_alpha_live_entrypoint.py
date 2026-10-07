@@ -25,9 +25,10 @@ class HintAlphaLiveEntrypointTests(unittest.TestCase):
         source = path.read_text(encoding="utf-8")
         ast.parse(source, filename=str(path))
 
-        self.assertIn("hand_number != self.timeline_hand", source)
+        self.assertIn("confirmed_public_hand_boundary", source)
         self.assertIn("self.runtime_advice_pipeline.reset()", source)
         self.assertIn("with self.runtime_advice_pipeline.bind()", source)
+        self.assertIn("regressions/jumps fail closed", source)
         self.assertIn("Executor remains\nOFF", source)
         self.assertNotIn("workspace.simulator", source)
         self.assertNotIn("dice_total", source)
