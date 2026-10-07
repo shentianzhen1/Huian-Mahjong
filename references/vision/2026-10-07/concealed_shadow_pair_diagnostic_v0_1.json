@@ -1,5 +1,5 @@
 {
-  "schema_version": "concealed_shadow_pair_diagnostic_v0_2",
+  "schema_version": "concealed_shadow_pair_diagnostic_v0_3",
   "status": "SAME_MATCH_DEVELOPMENT_DIAGNOSTIC_NOT_HOLDOUT",
   "source": {
     "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
@@ -40,11 +40,24 @@
       "morphology": "2x2 open",
       "component_filter": "drop area<8, width>=80% of working width, height>=50% of working height",
       "final_feature": "surviving glyph bounding box aspect-fit to 48x72 binary canvas"
-    },
-    "interpretation": "The bottom shadow band is a material appearance nuisance. A glyph-focused representation is substantially more invariant than plain grayscale or simple vertical trimming on this revealed same-match pair, but 12/13 is still not full-template-bank or independent-match evidence."
+    }
   },
-  "decision": "Prefer shadow_glyph_mask_feature over simple vertical trim as the next shadow-specific classifier candidate. Do not wire either candidate or the -50 appearance threshold into Runtime yet. Keep the production identity threshold at 0.82 unchanged.",
-  "next_step": "Run a parallel glyph-mask identity bank against the full tracked ordinary template set on the exact private 46s crops, and separately measure glyph-mask class separability on tracked reviewed crops. Candidate scores are not calibrated Runtime confidence. Require a separate original-match whole-hand validation before promotion.",
+  "tracked_cross_source_glyph_ab": {
+    "scope": "142 tracked non-Gold concealed labels; leave-source_session-out development diagnostic only",
+    "baseline_raw_top1": "95/142 (66.90%)",
+    "glyph_mask_raw_top1": "10/142 (7.04%)",
+    "candidate_score_calibrated_to_runtime_confidence": false,
+    "runtime_threshold_metrics_valid_for_candidate": false,
+    "dominant_failure": "many unrelated classes collapse toward P5/P3-like mask shapes",
+    "interpretation": "The 12/13 paired result is same-source style invariance, not cross-source identity separability. The glyph mask discards too much discriminative appearance to serve as a standalone classifier or general template bank."
+  },
+  "additional_manual_preprocess_probe": {
+    "shadow_brightness_compensation_best_same_match_exact": "9/13",
+    "edge_hog_or_trim_best_same_match_exact": "9/13",
+    "interpretation": "Simple handcrafted shadow correction appears saturated below the glyph same-source result and does not justify more Runtime preprocessing complexity."
+  },
+  "decision": "Reject shadow_glyph_mask_feature as a standalone identity classifier. Keep the explicit shadow appearance detector as a useful diagnostic candidate only. Do not wire the -50 detector threshold, glyph mask, or trim into Runtime. Keep the production identity threshold at 0.82 unchanged.",
+  "next_step": "Move shadow identity feasibility to pretrained learned features with explicit shadow augmentation while preserving the ordinary template path. Reuse the existing development-only MobileNetV3-Small infrastructure; candidate scores remain uncalibrated and formal promotion still requires original-match-disjoint whole-hand validation.",
   "safe_for_runtime_change": false,
   "safe_for_hint_promotion": false,
   "safe_for_executor": false
