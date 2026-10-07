@@ -127,6 +127,7 @@ def _component_gold_skin(component) -> bool:
     """
     return bool(getattr(component, "gold_skin", False))
 
+
 def identity_gate(
     candidate_tile_id: str,
     confidence: float,
@@ -171,6 +172,161 @@ def prepare_runtime_resources(dataset_root, session=None):
     root = Path(dataset_root).resolve()
     return _cached_runtime_resources(str(root), session)
 
+
+def _classify_runtime_component(
+    component,
+    image: Image.Image,
+    *,
+    all_boxes,
+    classifier,
+    covered_by_region: dict[str, set[str]],
+    cross_session: dict[str, set[str]],
+    confidence_threshold: float,
+    gold_skin_covered: set[str],
+) -> dict:
+    """Classify one geometry component with the same fail-closed runtime gates."""
+    item = component.to_dict()
+    item.update({
+        "candidate_tile_id": None,
+        "tile_id": "UNKNOWN",
+        "tile_confidence": 0.0,
+        "identity_reason": "region_not_classified",
+    })
+    gold_skin = _component_gold_skin(component)
+    classifier_region = (
+        "gold_region"
+        if gold_skin
+        else CLASSIFIER_REGIONS.get(component.region_candidate)
+    )
+    if classifier_region is None:
+        return item
+
+    crop_bbox = classification_crop_bbox(
+        component.pixel_bbox,
+        frame_size=image.size,
+        neighbors=[box for box in all_boxes if box != component.pixel_bbox],
+    )
+    x, y, width, height = crop_bbox
+    crop = image.crop((x, y, x + width, y + height))
+    try:
+        if gold_skin:
+            prediction = classifier.classify_gold_skin(crop)
+        elif component.region_candidate in {"hand", "draw_visual"}:
+            prediction = classifier.classify(
+                crop,
+                region=CONCEALED_IDENTITY_GATE_REGION,
+            )
+        else:
+            prediction = classifier.classify(
+                crop,
+                region=classifier_region,
+            )
+    except ValueError:
+        item["identity_reason"] = "no_templates_for_region"
+        return item
+
+    gate_region = (
+        GOLD_IDENTITY_GATE_REGION
+        if gold_skin
+        else (
+            CONCEALED_IDENTITY_GATE_REGION
+            if component.region_candidate in {"hand", "draw_visual"}
+            else classifier_region
+        )
+    )
+    tile_id, reason = identity_gate(
+        prediction.tile_id,
+        prediction.confidence,
+        region=gate_region,
+        covered_classes=covered_by_region.get(gate_region, set()),
+        cross_session_classes=cross_session,
+        confidence_threshold=confidence_threshold,
+    )
+    if (
+        gold_skin
+        and tile_id != "UNKNOWN"
+        and prediction.tile_id not in gold_skin_covered
+    ):
+        tile_id = "UNKNOWN"
+        reason = "class_missing_real_gold_skin_example"
+    item.update({
+        "classification_crop_bbox": list(crop_bbox),
+        "candidate_tile_id": prediction.tile_id,
+        "tile_id": tile_id,
+        "tile_confidence": round(prediction.confidence, 6),
+        "identity_reason": reason,
+    })
+    return item
+
+
+def _gold_identity_observations(
+    images: list[Image.Image],
+    geometry_frames,
+    *,
+    classifier,
+    covered_by_region: dict[str, set[str]],
+    cross_session: dict[str, set[str]],
+    confidence_threshold: float,
+    gold_skin_covered: set[str],
+) -> list[dict]:
+    """Classify the visible Gold independently in every burst frame.
+
+    Geometry stability alone is not identity stability.  This evidence stream
+    intentionally records a separate identity decision for each frame so the
+    public adapter can require cross-frame agreement before exposing Gold to
+    Hint Alpha.  Hidden dice, wall position, RNG seed and other inferred
+    opening metadata never participate here.
+    """
+    observations: list[dict] = []
+    for image, geometry in zip(images, geometry_frames):
+        frame = geometry.frame
+        if geometry.geometry_untrusted:
+            observations.append({
+                "frame": frame,
+                "candidate_tile_id": None,
+                "tile_id": "UNKNOWN",
+                "tile_confidence": 0.0,
+                "identity_reason": "frame_geometry_untrusted",
+            })
+            continue
+
+        gold_components = [
+            component
+            for component in geometry.components
+            if component.region_candidate == "gold" or _component_gold_skin(component)
+        ]
+        if len(gold_components) != 1:
+            observations.append({
+                "frame": frame,
+                "candidate_tile_id": None,
+                "tile_id": "UNKNOWN",
+                "tile_confidence": 0.0,
+                "identity_reason": "gold_component_count_not_one",
+                "gold_component_count": len(gold_components),
+            })
+            continue
+
+        all_boxes = [component.pixel_bbox for component in geometry.components]
+        classified = _classify_runtime_component(
+            gold_components[0],
+            image,
+            all_boxes=all_boxes,
+            classifier=classifier,
+            covered_by_region=covered_by_region,
+            cross_session=cross_session,
+            confidence_threshold=confidence_threshold,
+            gold_skin_covered=gold_skin_covered,
+        )
+        observations.append({
+            "frame": frame,
+            "candidate_tile_id": classified.get("candidate_tile_id"),
+            "tile_id": classified.get("tile_id", "UNKNOWN"),
+            "tile_confidence": classified.get("tile_confidence", 0.0),
+            "identity_reason": classified.get("identity_reason", "region_not_classified"),
+        })
+    return observations
+
+
 def read_stable_frames(
     images: Iterable[Image.Image],
     dataset_root: str | Path = "dataset/tiles_runtime_v0_2",
@@ -190,9 +346,6 @@ def read_stable_frames(
         raise ValueError("frame_ids must match images")
 
     resources = resources or prepare_runtime_resources(dataset_root, session)
-    root = resources["root"]
-    labels = resources["labels"]
-    training_labels = resources["training_labels"]
     covered = resources["covered"]
     covered_by_region = resources["covered_by_region"]
     cross_session = resources["cross_session"]
@@ -249,10 +402,21 @@ def read_stable_frames(
         return {
             **base,
             "components": [],
+            "gold_identity_observations": [],
             "concealed_tile_count": None,
             "all_concealed_tile_ids_trusted": False,
             "reason": "geometry_not_stable",
         }
+
+    gold_identity_observations = _gold_identity_observations(
+        images,
+        geometry_frames,
+        classifier=classifier,
+        covered_by_region=covered_by_region,
+        cross_session=cross_session,
+        confidence_threshold=confidence_threshold,
+        gold_skin_covered=gold_skin_covered,
+    )
 
     chosen_index = max(
         index for index, geometry in enumerate(geometry_frames)
@@ -260,77 +424,19 @@ def read_stable_frames(
     )
     image = images[chosen_index]
     all_boxes = [component.pixel_bbox for component in fused.components]
-    observations = []
-    for component in fused.components:
-        item = component.to_dict()
-        item.update({
-            "candidate_tile_id": None,
-            "tile_id": "UNKNOWN",
-            "tile_confidence": 0.0,
-            "identity_reason": "region_not_classified",
-        })
-        gold_skin = _component_gold_skin(component)
-        classifier_region = (
-            "gold_region"
-            if gold_skin
-            else CLASSIFIER_REGIONS.get(component.region_candidate)
+    observations = [
+        _classify_runtime_component(
+            component,
+            image,
+            all_boxes=all_boxes,
+            classifier=classifier,
+            covered_by_region=covered_by_region,
+            cross_session=cross_session,
+            confidence_threshold=confidence_threshold,
+            gold_skin_covered=gold_skin_covered,
         )
-        if classifier_region is not None:
-            crop_bbox = classification_crop_bbox(
-                component.pixel_bbox,
-                frame_size=image.size,
-                neighbors=[box for box in all_boxes if box != component.pixel_bbox],
-            )
-            x, y, width, height = crop_bbox
-            crop = image.crop((x, y, x + width, y + height))
-            try:
-                if gold_skin:
-                    prediction = classifier.classify_gold_skin(crop)
-                elif component.region_candidate in {"hand", "draw_visual"}:
-                    prediction = classifier.classify(
-                        crop,
-                        region=CONCEALED_IDENTITY_GATE_REGION,
-                    )
-                else:
-                    prediction = classifier.classify(
-                        crop,
-                        region=classifier_region,
-                    )
-            except ValueError:
-                item["identity_reason"] = "no_templates_for_region"
-            else:
-                gate_region = (
-                    GOLD_IDENTITY_GATE_REGION
-                    if gold_skin
-                    else (
-                        CONCEALED_IDENTITY_GATE_REGION
-                        if component.region_candidate in {"hand", "draw_visual"}
-                        else classifier_region
-                    )
-                )
-                tile_id, reason = identity_gate(
-                    prediction.tile_id,
-                    prediction.confidence,
-                    region=gate_region,
-                    covered_classes=covered_by_region.get(gate_region, set()),
-                    cross_session_classes=cross_session,
-                    confidence_threshold=confidence_threshold,
-                )
-                if (
-                    gold_skin
-                    and tile_id != "UNKNOWN"
-                    and prediction.tile_id not in gold_skin_covered
-                ):
-                    tile_id = "UNKNOWN"
-                    reason = "class_missing_real_gold_skin_example"
-                item.update({
-                    "classification_crop_bbox": list(crop_bbox),
-                    "candidate_tile_id": prediction.tile_id,
-                    "tile_id": tile_id,
-                    "tile_confidence": round(prediction.confidence, 6),
-                    "identity_reason": reason,
-                })
-        observations.append(item)
+        for component in fused.components
+    ]
 
     concealed = [
         item for item in observations
@@ -339,6 +445,7 @@ def read_stable_frames(
     return {
         **base,
         "components": observations,
+        "gold_identity_observations": gold_identity_observations,
         "concealed_tile_count": len(concealed),
         "all_concealed_tile_ids_trusted": bool(concealed) and all(
             item["tile_id"] != "UNKNOWN" for item in concealed
