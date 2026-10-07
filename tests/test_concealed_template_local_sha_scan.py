@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 from workspace.vision.concealed_template_local_sha_scan import (
+    DEFAULT_QUEUE,
     build_scan_report,
     load_target_shas,
     scan_exact_sha_matches,
@@ -12,20 +13,34 @@ from workspace.vision.concealed_template_local_sha_scan import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-QUEUE = (
+HISTORICAL_QUEUE = (
     ROOT
     / "references/vision/2026-10-01/"
     "concealed_template_lineage_recovery_queue_v0_1.json"
 )
+CURRENT_QUEUE = ROOT / DEFAULT_QUEUE
 
 
 class ConcealedTemplateLocalShaScanTests(unittest.TestCase):
-    def test_resolved_frozen_queue_has_no_scan_targets(self):
-        frozen = json.loads(QUEUE.read_text(encoding="utf-8"))
+    def test_default_queue_targets_current_full_concealed_domain(self):
+        self.assertEqual(
+            DEFAULT_QUEUE.as_posix(),
+            "references/vision/2026-10-07/"
+            "concealed_full_domain_lineage_recovery_queue_v0_1.json",
+        )
+        targets = load_target_shas(CURRENT_QUEUE)
+        self.assertEqual(len(targets), 6)
+        self.assertIn(
+            "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+            targets,
+        )
+
+    def test_resolved_historical_queue_has_no_scan_targets(self):
+        frozen = json.loads(HISTORICAL_QUEUE.read_text(encoding="utf-8"))
         self.assertEqual(frozen["unresolved_source_count"], 0)
         self.assertEqual(frozen["items"], [])
         with self.assertRaisesRegex(ValueError, "no unresolved SHA256 targets"):
-            load_target_shas(QUEUE)
+            load_target_shas(HISTORICAL_QUEUE)
 
     def test_scan_only_reports_exact_sha_matches_and_never_auto_binds(self):
         with tempfile.TemporaryDirectory() as tmp:
