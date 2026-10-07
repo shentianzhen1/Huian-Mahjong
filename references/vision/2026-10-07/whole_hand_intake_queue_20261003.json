@@ -1,0 +1,65 @@
+{
+  "schema_version": "vision_runtime_v0_2_reviewed_intake_queue_v0_1",
+  "status": "reviewed_private_source_pending_asset_sync",
+  "purpose": "fill pre-existing concealed source-support gaps without treating this revealed match as holdout evidence",
+  "source": {
+    "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+    "source_session": "session_real_20261003_e5b8d8e1",
+    "original_match_group": "real_match_2026_10_03_recent_game_segment_smallest",
+    "private": true
+  },
+  "reviewer": "chat_review_2026-10-07",
+  "items": [
+    {
+      "tile_id": "P2",
+      "source_frame": 1176,
+      "bbox": [548, 1114, 122, 163],
+      "slot": 2,
+      "region": "hand_region",
+      "gold_skin_only": false,
+      "reason": "pre-existing concealed identity support gap; current library has one stored source session"
+    },
+    {
+      "tile_id": "M2",
+      "source_frame": 1176,
+      "bbox": [1930, 1114, 122, 163],
+      "slot": 13,
+      "region": "hand_region",
+      "gold_skin_only": false,
+      "reason": "pre-existing concealed identity support gap; current library has one stored source session"
+    },
+    {
+      "tile_id": "M7",
+      "source_frame": 1176,
+      "bbox": [2181, 1114, 122, 163],
+      "slot": 15,
+      "region": "hand_region",
+      "gold_skin_only": false,
+      "reason": "pre-existing concealed identity support gap; current library has one stored source session"
+    },
+    {
+      "tile_id": "P9",
+      "source_frame": 2706,
+      "bbox": [2378, 1092, 122, 154],
+      "slot": 13,
+      "region": "draw_visual",
+      "gold_skin_only": true,
+      "reason": "reviewed real yellow Gold-skin appearance; Gold-only evidence must not train ordinary concealed identity"
+    }
+  ],
+  "local_validation": {
+    "reviewed_tile_intake_reproduced": true,
+    "same_session_exclusion_keeps_P2_M2_M7_unqualified_on_source_replay": true,
+    "future_other_session_would_have_two_stored_sessions_for_P2_M2_M7": true,
+    "raw_or_derived_pixels_committed": false
+  },
+  "evidence_policy": {
+    "same_match_samples_share_one_source_session": true,
+    "revealed_match_is_development_only": true,
+    "may_not_be_used_as_independent_holdout": true,
+    "confidence_threshold": 0.82,
+    "confidence_threshold_changed": false,
+    "safe_for_executor": false
+  },
+  "next_step": "On the private-source machine, run reviewed_tile_intake for each item using the pinned source SHA/session, verify generated asset hashes, then sync only tile-only privacy assets plus labels."
+}
