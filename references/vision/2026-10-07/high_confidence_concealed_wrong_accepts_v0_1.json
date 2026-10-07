@@ -1,0 +1,50 @@
+{
+  "schema_version": "concealed_high_confidence_wrong_accepts_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION_EVIDENCE",
+  "source": {
+    "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+    "private_pixels_committed": false
+  },
+  "frozen_runtime_threshold": 0.82,
+  "baseline": {
+    "ordinary_tiles": 43,
+    "accepted": 31,
+    "accepted_correct": 29,
+    "wrong_accepted": 2,
+    "whole_hands_advice_eligible": 0
+  },
+  "wrong_accepts": [
+    {
+      "sample_id": "real_20261003_t20_normal_16",
+      "truth_tile": "M7",
+      "predicted_tile": "M6",
+      "baseline_confidence": 0.9200868606567383,
+      "central7_predicted_tile": "M6",
+      "central7_confidence": 0.8735002279281616,
+      "baseline_accepted_at_0_82": true,
+      "central7_accepted_at_0_82": true
+    },
+    {
+      "sample_id": "real_20261003_t30_post_peng_13",
+      "truth_tile": "M5",
+      "predicted_tile": "M6",
+      "baseline_confidence": 0.9267216920852661,
+      "central7_predicted_tile": "M6",
+      "central7_confidence": 0.8657265305519104,
+      "baseline_accepted_at_0_82": true,
+      "central7_accepted_at_0_82": true
+    }
+  ],
+  "observed_pattern": "Both current high-confidence ordinary errors collapse neighboring Wan identities M5/M7 into M6. Central edge trim lowers confidence but does not cross the frozen 0.82 reject gate.",
+  "classifier_risk": {
+    "current_class_score": "maximum NCC over every template in the candidate class",
+    "risk": "one unusually similar exemplar can dominate a class score even when other source groups do not agree",
+    "m6_ordinary_source_note": "M6 has ordinary reviewed exemplars from at least session_781bfe34c40993ef and session_eight_hand_match_a; the former still lacks reviewed original-match lineage. A gold-skin-only M6 exemplar is not ordinary concealed training evidence.",
+    "source_session_is_independent_match_evidence": false
+  },
+  "next_step": "Run template_source_consensus_probe on the two pinned private crops. Record winning exemplar provenance, per-source maxima, top1/top2 class margin and whether two independent reviewed original-match groups support M6 before considering any stricter acceptance rule.",
+  "safe_for_runtime_change": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false
+}
