@@ -2,9 +2,21 @@ import tempfile
 from pathlib import Path
 import unittest
 
+try:
+    import numpy as np
+    from PIL import Image
+except ImportError:  # Core-only environments may omit Vision dependencies.
+    np = None
+    Image = None
+
 from workspace.vision.concealed_template_match_lineage import ConcealedTemplateSource
 from workspace.vision.tiles_runtime_v0_2.concealed_mobilenet_ab import (
+    APPEARANCE_AUGMENTATION_VERSION,
     FROZEN_CONFIDENCE_THRESHOLD,
+    OBSERVED_SHADOW_DARKEN_DELTA,
+    OBSERVED_SHADOW_FULL_BAND_START,
+    _appearance_variants,
+    _bottom_shadow_variant,
     resolve_private_crop,
     select_training_labels,
 )
@@ -89,6 +101,37 @@ class ConcealedMobileNetABTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(ValueError, "escapes crop root"):
                 resolve_private_crop(root, "private://../outside.png")
+
+    @unittest.skipUnless(Image is not None and np is not None, "Vision deps unavailable")
+    def test_observed_bottom_shadow_variant_is_deterministic_and_geometry_safe(self):
+        source = Image.new("RGB", (40, 100), (200, 200, 200))
+
+        first = _bottom_shadow_variant(source)
+        second = _bottom_shadow_variant(source)
+        first_array = np.asarray(first)
+        second_array = np.asarray(second)
+
+        self.assertEqual(first.size, source.size)
+        self.assertTrue(np.array_equal(first_array, second_array))
+        self.assertEqual(float(first_array[50].mean()), 200.0)
+        full_band_row = int(round(source.height * OBSERVED_SHADOW_FULL_BAND_START))
+        expected_bottom = 200.0 - OBSERVED_SHADOW_DARKEN_DELTA
+        self.assertAlmostEqual(float(first_array[full_band_row].mean()), expected_bottom)
+        self.assertAlmostEqual(float(first_array[-1].mean()), expected_bottom)
+
+    @unittest.skipUnless(Image is not None and np is not None, "Vision deps unavailable")
+    def test_appearance_bank_includes_one_observed_shadow_variant(self):
+        source = Image.new("RGB", (40, 100), (200, 200, 200))
+        variants = _appearance_variants(source)
+
+        self.assertEqual(APPEARANCE_AUGMENTATION_VERSION, "v0_2_real_bottom_shadow")
+        self.assertEqual(len(variants), 9)
+        self.assertTrue(all(image.size == (224, 224) for image in variants))
+        # Index 7 is the new shadow variant; its lower tile band must be darker
+        # than the ordinary base while the input geometry is still unchanged.
+        base = np.asarray(variants[0]).astype(np.float32)
+        shadow = np.asarray(variants[7]).astype(np.float32)
+        self.assertLess(float(shadow[180:205].mean()), float(base[180:205].mean()))
 
 
 if __name__ == "__main__":
