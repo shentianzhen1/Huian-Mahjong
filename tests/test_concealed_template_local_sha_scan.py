@@ -8,6 +8,7 @@ from workspace.vision.concealed_template_local_sha_scan import (
     DEFAULT_QUEUE,
     build_scan_report,
     load_target_shas,
+    resolve_scan_roots,
     scan_exact_sha_matches,
 )
 
@@ -63,6 +64,7 @@ class ConcealedTemplateLocalShaScanTests(unittest.TestCase):
             self.assertFalse(report["safe_to_auto_bind_match_group"])
             self.assertEqual(report["matched_target_count"], 1)
             self.assertEqual(report["unmatched_target_count"], 1)
+            self.assertTrue(report["match_group_review_required"])
             found = next(
                 row for row in report["matches"]
                 if row["source_sha256"] == target
@@ -71,6 +73,50 @@ class ConcealedTemplateLocalShaScanTests(unittest.TestCase):
                 found["status"],
                 "EXACT_SHA_FOUND_NEEDS_MATCH_REVIEW",
             )
+
+    def test_defaults_use_historical_roots_in_priority_order(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            capture = project / "data" / "capture_validation"
+            private = project / "data" / "issue69_private"
+            references = project / "references"
+            capture.mkdir(parents=True)
+            references.mkdir(parents=True)
+
+            roots, missing, used_defaults = resolve_scan_roots(
+                [], project_root=project
+            )
+
+            self.assertTrue(used_defaults)
+            self.assertEqual(roots, [capture, references])
+            self.assertEqual(missing, [private])
+
+    def test_default_mode_refuses_to_broaden_when_history_is_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(
+                FileNotFoundError, "historical default scan roots"
+            ):
+                resolve_scan_roots([], project_root=tmp)
+
+    def test_exact_scan_accepts_arbitrary_suffix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "old-static-source.weird"
+            payload = b"anonymous historical concealed source"
+            source.write_bytes(payload)
+            digest = hashlib.sha256(payload).hexdigest()
+
+            matches = scan_exact_sha_matches([root], {digest})
+
+            self.assertEqual(matches[digest], [str(source)])
+
+    def test_explicit_roots_never_fall_back_to_defaults(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            explicit = Path(tmp) / "custom"
+            roots, missing, used_defaults = resolve_scan_roots([explicit])
+            self.assertEqual(roots, [explicit])
+            self.assertEqual(missing, [])
+            self.assertFalse(used_defaults)
 
 
 if __name__ == "__main__":
