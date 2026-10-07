@@ -8,6 +8,10 @@
   ],
   "match_group_inference_allowed": false,
   "source_session_is_match_evidence": false,
+  "accessible_drive_exact_sha_exhausted": true,
+  "accessible_drive_audit_ref": "references/vision/2026-10-07/concealed_lineage_drive_hash_audit_v0_1.json",
+  "next_recovery_surface": "historical_local_recovery_or_capture_directories",
+  "next_recovery_tool": "workspace/vision/concealed_template_local_sha_scan.py",
   "items": [
     {
       "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
