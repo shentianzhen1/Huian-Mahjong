@@ -43,6 +43,71 @@ def _identity(item: dict[str, Any]) -> str | None:
     return str(value)
 
 
+def _trusted_gold_from_runtime(
+    report: dict[str, Any],
+    gold_components: list[dict[str, Any]],
+    *,
+    geometry_trusted: bool,
+    issues: list[str],
+) -> tuple[str | None, bool]:
+    """Require independent same-identity Gold reads from at least two frames.
+
+    Runtime burst geometry stability is not proof of tile identity stability.
+    Only explicit per-frame Gold classifications emitted by Runtime Vision may
+    promote a Gold tile into the current-table snapshot. Hidden dice, wall
+    positions, random seeds or any other opening inference are intentionally
+    ignored by this adapter.
+    """
+    if not geometry_trusted:
+        return None, False
+    if len(gold_components) != 1:
+        issues.append("runtime_gold_component_conflict")
+        return None, False
+
+    observations = report.get("gold_identity_observations")
+    if not isinstance(observations, list) or not observations:
+        issues.append("runtime_gold_multiframe_evidence_missing")
+        return None, False
+    if not all(isinstance(item, dict) for item in observations):
+        issues.append("runtime_gold_multiframe_evidence_invalid")
+        return None, False
+
+    report_frames = report.get("frames")
+    allowed_frames = set(report_frames) if isinstance(report_frames, (list, tuple)) else set()
+    observed_frames = [item.get("frame") for item in observations]
+    if (
+        any(frame is None for frame in observed_frames)
+        or any(frame not in allowed_frames for frame in observed_frames)
+        or len(set(observed_frames)) < 2
+    ):
+        issues.append("runtime_gold_frame_scope_conflict")
+        return None, False
+
+    identities = [_identity(item) for item in observations]
+    known_identities = {tile_id for tile_id in identities if tile_id is not None}
+    if len(known_identities) > 1:
+        issues.append("runtime_gold_identity_conflict")
+        return None, False
+    if (
+        not identities
+        or any(tile_id is None for tile_id in identities)
+        or any(item.get("identity_reason") != "accepted" for item in observations)
+    ):
+        issues.append("runtime_gold_frame_identity_untrusted")
+        return None, False
+
+    gold_tile = identities[0]
+    if gold_tile is None or any(tile_id != gold_tile for tile_id in identities):
+        issues.append("runtime_gold_identity_conflict")
+        return None, False
+
+    chosen = gold_components[0]
+    if _identity(chosen) != gold_tile or chosen.get("identity_reason") != "accepted":
+        issues.append("runtime_gold_fused_identity_conflict")
+        return None, False
+    return gold_tile, True
+
+
 def _meld_identity(item: dict[str, Any]) -> str | None:
     """Accept only identities produced by the strict read-only public-meld gate."""
     result = item.get("public_identity_result")
@@ -189,18 +254,11 @@ def current_snapshot_from_runtime(
             or item.get("gold_skin") is True
         )
     ]
-    gold_identities = {_identity(item) for item in gold_components}
-    gold_identities.discard(None)
-    gold_tile = next(iter(gold_identities)) if len(gold_identities) == 1 else None
-    gold_trusted = bool(
-        geometry_trusted
-        and gold_components
-        and gold_tile is not None
-        and all(
-            _identity(item) == gold_tile
-            and item.get("identity_reason") == "accepted"
-            for item in gold_components
-        )
+    gold_tile, gold_trusted = _trusted_gold_from_runtime(
+        report,
+        gold_components,
+        geometry_trusted=geometry_trusted,
+        issues=issues,
     )
     if not gold_trusted:
         issues.append("runtime_gold_not_fully_trusted")
