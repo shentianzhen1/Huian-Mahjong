@@ -112,14 +112,25 @@ def baseline_feature(image: Image.Image) -> np.ndarray:
     return _feature(image, region="concealed_identity")
 
 
-def _feature_bank(
+def _precompute_features(
     dataset_root: Path,
     rows: list[dict],
     feature_fn: Callable[[Image.Image], np.ndarray],
+) -> dict[str, np.ndarray]:
+    """Extract each reviewed crop once; split logic only reuses cached tensors."""
+    return {
+        _sample_key(row): feature_fn(_load_crop(dataset_root, row))
+        for row in rows
+    }
+
+
+def _feature_bank(
+    rows: list[dict],
+    features: dict[str, np.ndarray],
 ) -> dict[str, list[np.ndarray]]:
     bank: dict[str, list[np.ndarray]] = defaultdict(list)
     for row in rows:
-        bank[row["tile_id"]].append(feature_fn(_load_crop(dataset_root, row)))
+        bank[row["tile_id"]].append(features[_sample_key(row)])
     return dict(bank)
 
 
@@ -151,6 +162,7 @@ def evaluate_feature(
     """Leave one source_session out using identical approved query crops."""
     root = Path(dataset_root)
     rows = _concealed_rows(root)
+    features = _precompute_features(root, rows, feature_fn)
     results: list[SampleResult] = []
     for query in rows:
         query_region = _canonical_region(query["region"])
@@ -163,9 +175,9 @@ def evaluate_feature(
                 or _canonical_region(row["region"]) == query_region
             )
         ]
-        bank = _feature_bank(root, train, feature_fn)
+        bank = _feature_bank(train, features)
         predicted, confidence = _classify_feature(
-            feature_fn(_load_crop(root, query)), bank
+            features[_sample_key(query)], bank
         )
         accepted = predicted is not None and confidence >= RUNTIME_THRESHOLD
         results.append(
