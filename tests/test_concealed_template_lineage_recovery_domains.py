@@ -1,7 +1,7 @@
 import unittest
 
 from workspace.vision.concealed_template_lineage_recovery import (
-    build_lineage_recovery_queue,
+    build_concealed_identity_lineage_recovery_queue,
 )
 
 
@@ -38,7 +38,7 @@ class ConcealedTemplateLineageRecoveryDomainTests(unittest.TestCase):
             },
         ]
 
-        report = build_lineage_recovery_queue(
+        report = build_concealed_identity_lineage_recovery_queue(
             labels,
             {},
             target_classes={"P2", "SOUTH", "P9"},
@@ -48,6 +48,22 @@ class ConcealedTemplateLineageRecoveryDomainTests(unittest.TestCase):
         self.assertEqual(report["unresolved_label_count"], 2)
         self.assertEqual(report["items"][0]["tile_classes"], ["P2", "SOUTH"])
         self.assertEqual(report["items"][0]["source_frames"], [60, 180])
+
+    def test_legacy_builder_remains_hand_only_for_frozen_artifacts(self):
+        from workspace.vision.concealed_template_lineage_recovery import (
+            build_lineage_recovery_queue,
+        )
+
+        labels = [
+            {
+                "tile_id": "P2",
+                "region": "draw_visual",
+                "approved": True,
+                "sha256": "b" * 64,
+            }
+        ]
+        report = build_lineage_recovery_queue(labels, {}, target_classes={"P2"})
+        self.assertEqual(report["items"], [])
 
 
 if __name__ == "__main__":
