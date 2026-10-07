@@ -1,0 +1,2 @@
+# Preserve reviewed image assets byte-for-byte across platforms.
+*.pgm -text
