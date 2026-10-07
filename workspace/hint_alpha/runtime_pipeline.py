@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
+from numbers import Integral
 
 from workspace.vision.live_opening_fact import (
     LiveOpeningFact,
@@ -16,6 +17,42 @@ _ACTIVE_OPENING_TRACKER: ContextVar[LiveOpeningTracker | None] = ContextVar(
     "hint_alpha_active_opening_tracker",
     default=None,
 )
+
+
+def confirmed_public_hand_boundary(previous_hand, observation, *, minimum_votes=2):
+    """Return True only for an initial or sequentially confirmed public hand.
+
+    Runtime ``stream_epoch`` is a capture generation and can span multiple
+    Mahjong hands, so it cannot reset Gold by itself. PublicState hand number is
+    the observable boundary, but a regression or jump must not clear a conflict.
+    With an existing hand, only N -> N+1 is accepted. With no prior hand, an
+    in-range consensus establishes the initial hand boundary.
+    """
+    if isinstance(minimum_votes, bool) or not isinstance(minimum_votes, Integral):
+        raise ValueError("minimum_votes must be an integer")
+    if minimum_votes < 1:
+        raise ValueError("minimum_votes must be >= 1")
+
+    hand_number = getattr(observation, "hand_number", None)
+    hand_votes = getattr(observation, "hand_votes", 0)
+    if (
+        isinstance(hand_number, bool)
+        or not isinstance(hand_number, Integral)
+        or not 1 <= hand_number <= 8
+    ):
+        return False
+    if (
+        isinstance(hand_votes, bool)
+        or not isinstance(hand_votes, Integral)
+        or hand_votes < minimum_votes
+    ):
+        return False
+
+    if previous_hand is None:
+        return True
+    if isinstance(previous_hand, bool) or not isinstance(previous_hand, Integral):
+        return False
+    return hand_number == previous_hand + 1
 
 
 @dataclass(frozen=True)
