@@ -259,6 +259,58 @@ class LiveOpeningTrackerTests(unittest.TestCase):
         self.assertIsNone(conflict.snapshot.gold_tile)
         self.assertIn("gold_untrusted", conflict.hint.issues)
 
+    def test_confirmed_hand_boundary_reset_allows_new_gold_same_capture_epoch(self):
+        pipeline = RuntimeAdvicePipeline()
+        first = pipeline.evaluate(
+            runtime_report(gold="B", frames=(1, 2, 3), epoch=0),
+            captured=1.0,
+            experimental=True,
+        )
+
+        # PublicState hand-number transition is the trusted external boundary.
+        # Capture session and stream_epoch deliberately stay unchanged.
+        pipeline.reset()
+        second = pipeline.evaluate(
+            runtime_report(gold="R", frames=(4, 5, 6), epoch=0),
+            captured=2.0,
+            experimental=True,
+        )
+
+        self.assertTrue(first.hint.allowed)
+        self.assertTrue(second.hint.allowed)
+        self.assertEqual(second.snapshot.gold_tile, "R")
+        self.assertEqual(second.opening_fact.status, LiveOpeningFactStatus.TRUSTED)
+
+    def test_bound_pipeline_is_context_local_and_does_not_leak_to_stateless_calls(self):
+        pipeline = RuntimeAdvicePipeline()
+        first_report = runtime_report(gold="B", frames=(1, 2, 3))
+        missing_report = runtime_report(frames=(4, 5, 6), include_gold=False)
+
+        with pipeline.bind():
+            first = runtime_pipeline.evaluate_runtime_report(
+                first_report,
+                captured=1.0,
+                experimental=True,
+            )
+            carried = runtime_pipeline.evaluate_runtime_report(
+                missing_report,
+                captured=2.0,
+                experimental=True,
+            )
+
+        isolated = runtime_pipeline.evaluate_runtime_report(
+            missing_report,
+            captured=3.0,
+            experimental=True,
+        )
+
+        self.assertTrue(first.hint.allowed)
+        self.assertTrue(carried.hint.allowed)
+        self.assertEqual(carried.snapshot.gold_tile, "B")
+        self.assertFalse(isolated.hint.allowed)
+        self.assertIsNone(isolated.snapshot.gold_tile)
+        self.assertEqual(isolated.opening_fact.status, LiveOpeningFactStatus.UNKNOWN)
+
     def test_live_pipeline_has_no_simulator_dice_or_wall_dependency(self):
         source = inspect.getsource(live_opening_fact) + inspect.getsource(runtime_pipeline)
 
