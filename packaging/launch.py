@@ -30,9 +30,9 @@ def main():
             output.close()
             output.join_thread()
         return
-    from workspace.hint_alpha import app, doctor
-    app.OUTPUT = root / "data" / "hint_alpha"
-    doctor.DEFAULT_OUTPUT = app.OUTPUT
+    from workspace.hint_alpha import app as shell_app, doctor, live_app
+    shell_app.OUTPUT = root / "data" / "hint_alpha"
+    doctor.DEFAULT_OUTPUT = shell_app.OUTPUT
     if "--check" in sys.argv:
         sys.argv = [sys.argv[0], "--require-live"]
         raise SystemExit(doctor.main())
@@ -40,7 +40,7 @@ def main():
         sys.argv.remove("--standard")
     elif "--experimental-runtime-advisory" not in sys.argv:
         sys.argv.append("--experimental-runtime-advisory")
-    app.main()
+    live_app.main()
 
 
 if __name__ == "__main__":
