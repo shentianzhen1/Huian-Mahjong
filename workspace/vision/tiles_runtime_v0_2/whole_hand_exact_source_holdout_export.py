@@ -27,6 +27,7 @@ from .whole_hand_baseline_export import export_baseline, _load_truth_seed
 
 
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_REVIEWED_ADDITIONS_DIR = "labels_reviewed_additions"
 
 
 def _normalize_shas(values: Iterable[str]) -> tuple[str, ...]:
@@ -60,14 +61,19 @@ def _filter_label_rows(rows: Iterable[dict], excluded_shas: Iterable[str]) -> tu
     }
 
 
-def _labels_path(root: Path) -> Path:
+def _label_paths(root: Path) -> list[Path]:
     runtime = root / "labels.jsonl"
-    if runtime.is_file():
-        return runtime
     legacy = root / "labels" / "tiles.jsonl"
-    if legacy.is_file():
-        return legacy
-    raise ValueError(f"dataset has no labels file: {root}")
+    primary = runtime if runtime.is_file() else legacy
+    paths: list[Path] = []
+    if primary.is_file():
+        paths.append(primary)
+    additions = root / _REVIEWED_ADDITIONS_DIR
+    if additions.is_dir():
+        paths.extend(sorted(path for path in additions.glob("*.jsonl") if path.is_file()))
+    if not paths:
+        raise ValueError(f"dataset has no labels file: {root}")
+    return paths
 
 
 def _link_or_copy(source: str, destination: str) -> str:
@@ -83,21 +89,45 @@ def _build_filtered_dataset_view(dataset_root: Path, scratch_root: Path, exclude
     view_root = scratch_root / "dataset_exact_source_filtered"
     shutil.copytree(source_root, view_root, copy_function=_link_or_copy)
 
-    labels_path = _labels_path(view_root)
-    rows = [json.loads(line) for line in labels_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    kept, stats = _filter_label_rows(rows, excluded_shas)
+    exclusions = _normalize_shas(excluded_shas)
+    aggregate = {
+        "excluded_source_shas": list(exclusions),
+        "input_label_count": 0,
+        "kept_label_count": 0,
+        "excluded_label_count": 0,
+        "excluded_gold_skin_label_count": 0,
+        "excluded_tile_ids": [],
+        "filter_key": "exact_source_sha256",
+        "filtered_label_file_count": 0,
+    }
+    removed_tile_ids: set[str] = set()
 
-    # Most large immutable template assets can safely be hard-linked into the
-    # scratch view, but the filtered labels file is intentionally rewritten.
-    # Break that hard link first so truncating/replacing the scratch labels can
-    # never mutate the source Runtime dataset on filesystems where os.link()
-    # succeeds.
-    labels_path.unlink()
-    labels_path.write_text(
-        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in kept),
-        encoding="utf-8",
-    )
-    return view_root, stats
+    for labels_path in _label_paths(view_root):
+        rows = [
+            json.loads(line)
+            for line in labels_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        kept, stats = _filter_label_rows(rows, exclusions)
+        aggregate["input_label_count"] += stats["input_label_count"]
+        aggregate["kept_label_count"] += stats["kept_label_count"]
+        aggregate["excluded_label_count"] += stats["excluded_label_count"]
+        aggregate["excluded_gold_skin_label_count"] += stats["excluded_gold_skin_label_count"]
+        aggregate["filtered_label_file_count"] += 1
+        removed_tile_ids.update(stats["excluded_tile_ids"])
+
+        # Most large immutable template assets can safely be hard-linked into
+        # the scratch view, but every labels file is intentionally rewritten.
+        # Break each hard link first so filtering a sidecar can never mutate the
+        # committed/runtime source dataset on filesystems where os.link works.
+        labels_path.unlink()
+        labels_path.write_text(
+            "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in kept),
+            encoding="utf-8",
+        )
+
+    aggregate["excluded_tile_ids"] = sorted(removed_tile_ids)
+    return view_root, aggregate
 
 
 def _sha256(path: Path) -> str:
@@ -145,9 +175,10 @@ def export_exact_source_holdout(
         "runtime_threshold_changed": False,
         "formal_original_match_disjointness_established": False,
         "interpretation": (
-            "Direct exact-source template leakage is removed. This alone does not prove "
-            "original-match-disjoint validation; reviewed lineage must also rule out other "
-            "files/derivatives from the same original match."
+            "Direct exact-source template leakage is removed from the primary labels file "
+            "and all reviewed-addition sidecars. This alone does not prove original-match-"
+            "disjoint validation; reviewed lineage must also rule out other files/derivatives "
+            "from the same original match."
         ),
     }
     report["safe_for_runtime_change"] = False
