@@ -162,3 +162,29 @@ parent is absent, create it first. Exact SHA matches require source review and
 never automatically assign original matches. Repository-wide search found the
 four SHA values in historical Phase5B selection records, but those records do
 not identify independent original matches, so no lineage mapping was invented.
+
+## Private exposed-meld packet restoration
+
+The existing `huian_36_user_confirmed_private_v01.zip` has now been restored into
+the private working environment. All 36 PNG bytes match their reviewed crop
+hashes, and its approved-label manifest matches the hash pinned by the current
+recovery result V0.3. This is current byte-integrity verification; original
+video frames were not rehashed/re-extracted in this audit.
+
+The repository already held recovered evidence for five groups, not zero:
+G02, G03, G07, G08 and G09 (15 faces). The actual existing private SIFT loader
+successfully loaded those 15 faces. The public development bank contributes
+21 other templates; the combined bank has 36 templates. This combined total
+must not be confused with admission of all 36 faces from the private packet.
+
+| Packet portion | Faces | Current status |
+| --- | ---: | --- |
+| G02/G03/G07/G08/G09 | 15 | Existing recovery evidence verified and loaded into development SIFT |
+| G04 | 3 | Source SHA mismatch remains blocked |
+| G01/G05/G06/G10/G11/G12 | 18 | Packet pixels restored; no current per-group recovery result |
+
+No new template was admitted, and no private pixels or filenames identifying
+original videos were committed. This development bank is separate from real
+Runtime/Hint meld identity. Source disjointness, missing classes and blocked
+sources retain their existing gates. The metadata-only inventory is
+`references/vision/2026-10-07/private_public_meld_recovery_inventory_v0_1.json`.

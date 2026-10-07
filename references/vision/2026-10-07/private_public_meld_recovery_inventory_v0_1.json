@@ -1,0 +1,207 @@
+{
+  "schema_version": "private_public_meld_recovery_inventory_v1",
+  "audit_date": "2026-10-07",
+  "audited_head": "c2bcdf412203dd6c5bf43eac609787df6699a868",
+  "packet_name": "huian_36_user_confirmed_private_v01.zip",
+  "packet_sha256": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c",
+  "private_label_manifest_sha256": "9d89e9cf2f7859a2a24bebce91632e854299df2404c92f0fdf9a96e3a2884427",
+  "verified_crop_count": 36,
+  "verified_group_count": 12,
+  "original_match_count": 2,
+  "existing_public_meld_template_count": 21,
+  "loaded_private_template_count": 15,
+  "combined_development_sift_template_count": 36,
+  "private_loader_report": {
+    "schema_version": "public_meld_private_sift_load_v0_1",
+    "private_template_count": 15,
+    "recovery_ids": [
+      "G02_hand2_m345",
+      "G03_hand2_m123",
+      "G07_hand5_p345",
+      "G08_hand5_m567",
+      "G09_hand6_p789"
+    ],
+    "tile_ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M3",
+      "M4",
+      "M5",
+      "M5",
+      "M6",
+      "M7",
+      "P3",
+      "P4",
+      "P5",
+      "P7",
+      "P8",
+      "P9"
+    ],
+    "private_pixels_committed_to_repository": false,
+    "source_disjoint_holdout": false,
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  },
+  "groups": [
+    {
+      "group_id": "G01",
+      "tile_ids": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "frame_index": 1508,
+      "crop_hashes_verified": true,
+      "status": "NOT_IN_CURRENT_RECOVERY_RESULT"
+    },
+    {
+      "group_id": "G02",
+      "tile_ids": [
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "frame_index": 2465,
+      "crop_hashes_verified": true,
+      "status": "DEVELOPMENT_SIFT_LOADED"
+    },
+    {
+      "group_id": "G03",
+      "tile_ids": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "frame_index": 2465,
+      "crop_hashes_verified": true,
+      "status": "DEVELOPMENT_SIFT_LOADED"
+    },
+    {
+      "group_id": "G04",
+      "tile_ids": [
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "source_sha256": "cf1451e8cc18561d8c3d0250826f79eebcf71904aaf337c74edc41ba46c0f636",
+      "frame_index": 4930,
+      "crop_hashes_verified": true,
+      "status": "BLOCKED_SOURCE_SHA_MISMATCH"
+    },
+    {
+      "group_id": "G05",
+      "tile_ids": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e",
+      "frame_index": 2436,
+      "crop_hashes_verified": true,
+      "status": "NOT_IN_CURRENT_RECOVERY_RESULT"
+    },
+    {
+      "group_id": "G06",
+      "tile_ids": [
+        "M7",
+        "M8",
+        "M9"
+      ],
+      "source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e",
+      "frame_index": 2436,
+      "crop_hashes_verified": true,
+      "status": "NOT_IN_CURRENT_RECOVERY_RESULT"
+    },
+    {
+      "group_id": "G07",
+      "tile_ids": [
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "frame_index": 2610,
+      "crop_hashes_verified": true,
+      "status": "DEVELOPMENT_SIFT_LOADED"
+    },
+    {
+      "group_id": "G08",
+      "tile_ids": [
+        "M5",
+        "M6",
+        "M7"
+      ],
+      "source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "frame_index": 2610,
+      "crop_hashes_verified": true,
+      "status": "DEVELOPMENT_SIFT_LOADED"
+    },
+    {
+      "group_id": "G09",
+      "tile_ids": [
+        "P7",
+        "P8",
+        "P9"
+      ],
+      "source_sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "frame_index": 1740,
+      "crop_hashes_verified": true,
+      "status": "DEVELOPMENT_SIFT_LOADED"
+    },
+    {
+      "group_id": "G10",
+      "tile_ids": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "source_sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757",
+      "frame_index": 2494,
+      "crop_hashes_verified": true,
+      "status": "NOT_IN_CURRENT_RECOVERY_RESULT"
+    },
+    {
+      "group_id": "G11",
+      "tile_ids": [
+        "W",
+        "W",
+        "W"
+      ],
+      "source_sha256": "4333a11966bd364f3388b2bf3677900eed50faf6b0d6739cf9399e901de196fc",
+      "frame_index": 1682,
+      "crop_hashes_verified": true,
+      "status": "NOT_IN_CURRENT_RECOVERY_RESULT"
+    },
+    {
+      "group_id": "G12",
+      "tile_ids": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "frame_index": 2475,
+      "crop_hashes_verified": true,
+      "status": "NOT_IN_CURRENT_RECOVERY_RESULT"
+    }
+  ],
+  "remaining_not_loaded_face_count": 21,
+  "remaining_blocked_source_face_count": 3,
+  "remaining_without_recovery_result_face_count": 18,
+  "new_templates_admitted": 0,
+  "original_videos_reverified_this_audit": false,
+  "note": "Existing recovery evidence and exact current ZIP bytes verified. Source-frame pixel verification is historical, not rerun. Not all restored packet faces are eligible for current development loading.",
+  "private_pixels_committed_to_repository": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
