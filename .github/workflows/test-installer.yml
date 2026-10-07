@@ -27,6 +27,7 @@ jobs:
           $process = Start-Process -FilePath $installer -ArgumentList @('--extract', $payload) -Wait -PassThru
           if ($process.ExitCode -ne 0) { exit $process.ExitCode }
           python packaging/verify_payload.py $payload
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           & "$payload/runtime/python.exe" -B "$payload/launch.py" --spawn-check
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           & "$payload/runtime/python.exe" -B -c "import tkinter; root = tkinter.Tk(); root.withdraw(); root.destroy(); print('TK_OK')"
