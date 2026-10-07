@@ -5,7 +5,7 @@ This thin wiring layer binds its existing Runtime Vision evaluation to one
 ``RuntimeAdvicePipeline`` and resets that pipeline only at trusted boundaries:
 
 * capture invalidation / restart; or
-* a PublicState observation that confirms a different hand number.
+* a PublicState observation that confirms the initial hand or N -> N+1.
 
 A different visible Gold by itself never infers a new hand. Executor remains
 OFF; this module only affects read-only advice/state presentation.
@@ -15,7 +15,10 @@ from __future__ import annotations
 import argparse
 
 from . import app as shell
-from .runtime_pipeline import RuntimeAdvicePipeline
+from .runtime_pipeline import (
+    RuntimeAdvicePipeline,
+    confirmed_public_hand_boundary,
+)
 
 
 class LiveHintAlphaApp(shell.HintAlphaApp):
@@ -39,11 +42,10 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
 
     def _update_public_view(self, observation):
         # stream_epoch is a capture generation, not a Mahjong-hand identifier.
-        # Therefore Gold may legitimately change across two hands while the
-        # capture generation stays constant. Only a trusted PublicState hand
-        # number transition is allowed to reset the persisted Gold here.
-        hand_number = observation.hand_number
-        if hand_number is not None and hand_number != self.timeline_hand:
+        # Gold may legitimately change while capture generation stays constant.
+        # Only an initial or sequentially confirmed PublicState hand boundary
+        # can clear the previous hand's Gold; regressions/jumps fail closed.
+        if confirmed_public_hand_boundary(self.timeline_hand, observation):
             self.runtime_advice_pipeline.reset()
         return super()._update_public_view(observation)
 
