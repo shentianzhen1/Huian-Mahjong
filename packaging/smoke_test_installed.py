@@ -13,13 +13,14 @@ dataset = site / 'dataset/tiles_runtime_v0_2'
 for relative, expected in manifest['template_sha256'].items():
     assert hashlib.sha256((dataset / relative).read_bytes()).hexdigest() == expected, relative
 
-from workspace.hint_alpha import app
+from workspace.hint_alpha import app, live_app
 from workspace.hint_alpha.manual_input import evaluate_manual_input
 from workspace.hint_alpha.runtime_pipeline import evaluate_runtime_report
 from workspace.vision.tiles_v0_1.labels import approved_labels
 from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
 
 assert Path(app.__file__).resolve().is_relative_to(site)
+assert Path(live_app.__file__).resolve().is_relative_to(site)
 assert Path(app.PROJECT_ROOT) == site
 labels = approved_labels(dataset)
 TemplateTileClassifier.from_labels(dataset, labels)
@@ -33,7 +34,8 @@ unknown = evaluate_runtime_report(dict(session='smoke', stream_epoch=0,
     frames=[1, 2, 3], components=[], geometry_untrusted=True), captured=1, experimental=True)
 assert not unknown.display_allowed and not unknown.safe_for_executor
 app.OUTPUT = root / 'data/hint_alpha'
-window = app.HintAlphaApp(demo=True, experimental_runtime_advisory=True)
+window = live_app.LiveHintAlphaApp(demo=True, experimental_runtime_advisory=True)
+assert window.runtime_advice_pipeline is not None
 window.withdraw()
 window.update()
 window.open_assistant()
@@ -53,4 +55,5 @@ window.close()
 print(json.dumps({'source_files_verified': len(manifest['source_sha256']),
     'templates_verified': len(manifest['template_sha256']), 'shanten': hint.shanten,
     'discard_candidates': [item.discard for item in hint.best_discards],
-    'unknown_abstention': True, 'ui': 'PASS', 'executor_enabled': False}))
+    'unknown_abstention': True, 'live_entrypoint': True,
+    'ui': 'PASS', 'executor_enabled': False}))
