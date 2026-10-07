@@ -1,6 +1,10 @@
+import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 
 from workspace.vision.tiles_runtime_v0_2.whole_hand_exact_source_holdout_export import (
+    _build_filtered_dataset_view,
     _filter_label_rows,
     _normalize_shas,
 )
@@ -35,6 +39,40 @@ class WholeHandExactSourceHoldoutExportTests(unittest.TestCase):
     def test_invalid_sha_fails_closed(self):
         with self.assertRaises(ValueError):
             _normalize_shas(["not-a-sha"])
+
+    def test_filtered_scratch_view_never_mutates_source_labels(self):
+        with TemporaryDirectory() as source_tmp, TemporaryDirectory() as scratch_tmp:
+            source_root = Path(source_tmp)
+            (source_root / "templates" / "hand").mkdir(parents=True)
+            (source_root / "templates" / "hand" / "dummy.png").write_bytes(b"immutable-template")
+            source_rows = [
+                {"tile_id": "M6", "sha256": SHA_A, "approved": True},
+                {"tile_id": "P3", "sha256": SHA_B, "approved": True},
+            ]
+            source_labels = source_root / "labels.jsonl"
+            original_bytes = "".join(
+                json.dumps(row, ensure_ascii=False) + "\n" for row in source_rows
+            ).encode("utf-8")
+            source_labels.write_bytes(original_bytes)
+
+            filtered_root, stats = _build_filtered_dataset_view(
+                source_root,
+                Path(scratch_tmp),
+                [SHA_A],
+            )
+
+            self.assertEqual(source_labels.read_bytes(), original_bytes)
+            self.assertEqual(stats["excluded_label_count"], 1)
+            filtered_rows = [
+                json.loads(line)
+                for line in (filtered_root / "labels.jsonl").read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertEqual(filtered_rows, [source_rows[1]])
+            self.assertEqual(
+                (source_root / "templates" / "hand" / "dummy.png").read_bytes(),
+                b"immutable-template",
+            )
 
 
 if __name__ == "__main__":
