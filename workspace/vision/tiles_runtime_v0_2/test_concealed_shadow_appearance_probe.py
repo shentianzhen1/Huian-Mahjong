@@ -9,6 +9,7 @@ from workspace.vision.tiles_runtime_v0_2.concealed_shadow_appearance_probe impor
     DEVELOPMENT_SHADOW_DELTA_THRESHOLD,
     bottom_shadow_delta,
     shadow_appearance_candidate,
+    shadow_glyph_mask_feature,
     shadow_template_normalize,
 )
 
@@ -16,7 +17,7 @@ from workspace.vision.tiles_runtime_v0_2.concealed_shadow_appearance_probe impor
 def _synthetic_tile(*, bottom_value: int) -> Image.Image:
     array = np.full((100, 70, 3), 225, dtype=np.uint8)
     # Simple dark glyph that does not touch the side-background measurement.
-    array[20:75, 28:42] = 50
+    array[20:70, 28:42] = 50
     array[82:, :, :] = bottom_value
     return Image.fromarray(array, mode="RGB")
 
@@ -39,6 +40,18 @@ class ConcealedShadowAppearanceProbeTests(unittest.TestCase):
         normalized = shadow_template_normalize(image)
         self.assertLess(normalized.height, image.height)
         self.assertGreaterEqual(normalized.height, 12)
+
+    def test_glyph_mask_has_fixed_feature_shape_and_discards_wide_shadow_band(self):
+        ordinary = shadow_glyph_mask_feature(_synthetic_tile(bottom_value=220))
+        shadowed = shadow_glyph_mask_feature(_synthetic_tile(bottom_value=125))
+        self.assertEqual(ordinary.shape, (72, 48))
+        self.assertEqual(shadowed.shape, (72, 48))
+        self.assertGreater(int(ordinary.max()), 0)
+        self.assertGreater(int(shadowed.max()), 0)
+        # The horizontal bottom band must not become the identity itself.  A
+        # simple synthetic glyph should remain broadly similar after shadowing.
+        score = np.corrcoef(ordinary.ravel(), shadowed.ravel())[0, 1]
+        self.assertGreater(score, 0.80)
 
 
 if __name__ == "__main__":
