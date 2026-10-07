@@ -1,0 +1,111 @@
+{
+  "schema_version": "whole_hand_20260926_independent_match_diagnostic_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_FORMAL_PROMOTION_EVIDENCE",
+  "source": {
+    "filename": "ScreenRecording_09-26-2026 22-23-34_1.mp4",
+    "sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "private_raw_video": true,
+    "raw_or_derived_pixels_committed": false
+  },
+  "truth_seed": "references/vision/2026-10-07/whole_hand_truth_seed_20260926_first_hand_v0_1.json",
+  "checkpoints_seconds": [40.0, 52.0, 110.0, 175.0],
+  "frozen_runtime_threshold": 0.82,
+  "threshold_changed": false,
+  "runtime_changed_for_measurement": false,
+  "execution": {
+    "packaged_runtime_source_head": "cc46c47f75afc51ee48ad558820a6bbd35eb9260",
+    "packaged_installer_workflow_run": 144,
+    "runtime_payload_extracted_from_green_windows_test_installer": true,
+    "current_evaluation_branch_at_truth_seed_ci": "5271ff408f75130e260edb96e1c3ab5220b2de70",
+    "note": "Commits after the packaged source head through 5271ff40 added evaluation/provenance tooling and truth evidence; the frozen Runtime reader, detector/classifier path, dataset and 0.82 threshold used for this measurement were not modified by those commits."
+  },
+  "crop_review": {
+    "truth_slots": 51,
+    "detected_slots": 51,
+    "missed_slots": 0,
+    "extra_slots": 0,
+    "exact_count_checkpoints": 4,
+    "checkpoint_count": 4,
+    "reviewed_crop_count": 51,
+    "crop_ok_count": 51,
+    "bad_crop_count": 0,
+    "prompt_overlay_note": "110s and 175s contain UI prompt pointers above some tile crops, but the tile faces remain complete and readable; no reviewed crop was reclassified as occluded/bad."
+  },
+  "current_runtime_template_bank": {
+    "interpretation": "Product-realistic current-template behavior; not source-disjoint generalization evidence because this exact source contributes limited reviewed evidence elsewhere.",
+    "tile_count": 51,
+    "raw_top1_correct": 51,
+    "raw_top1_accuracy": 1.0,
+    "accepted_correct_at_0_82": 45,
+    "accepted_correct_rate": 0.8823529411764706,
+    "wrong_accepted": 0,
+    "rejected": 6,
+    "reject_rate": 0.11764705882352941,
+    "whole_hand_raw_exact": 4,
+    "whole_hand_raw_exact_rate": 1.0,
+    "whole_hand_runtime_exact": 1,
+    "whole_hand_runtime_exact_rate": 0.25,
+    "whole_hand_wrong_accepted_count": 0,
+    "rejection_breakdown": {
+      "S2_below_0_82": 6
+    },
+    "S2_observed_confidence_range": [0.681748, 0.695552]
+  },
+  "exact_source_sha_filtered": {
+    "interpretation": "Direct exact-source label leakage removed before invoking the same frozen exporter. This is stricter than the product-realistic run but still does not prove original-match disjointness for every derivative/source file.",
+    "filter_key": "exact_source_sha256",
+    "excluded_sha256": ["fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3"],
+    "input_label_count": 145,
+    "excluded_label_count": 1,
+    "excluded_label_tile_ids": ["M6"],
+    "excluded_gold_skin_only_label_count": 1,
+    "tile_count": 51,
+    "raw_top1_correct": 51,
+    "raw_top1_accuracy": 1.0,
+    "accepted_correct_at_0_82": 39,
+    "accepted_correct_rate": 0.7647058823529411,
+    "wrong_accepted": 0,
+    "rejected": 12,
+    "reject_rate": 0.23529411764705882,
+    "whole_hand_raw_exact": 4,
+    "whole_hand_raw_exact_rate": 1.0,
+    "whole_hand_runtime_exact": 0,
+    "whole_hand_runtime_exact_rate": 0.0,
+    "whole_hand_wrong_accepted_count": 0,
+    "rejection_breakdown": {
+      "S2_below_0_82": 6,
+      "yellow_gold_M6_no_remaining_real_gold_skin_qualification_or_below_threshold": 6
+    },
+    "key_result": "Removing the one same-source gold-skin-only M6 label changes acceptance/qualification of yellow M6 appearances but does not change any raw Top-1 identity on the 51 reviewed slots."
+  },
+  "offline_replay_latency": {
+    "sample_count": 4,
+    "environment": "current analysis Linux environment using extracted packaged Python project source/data with host OpenCV/Pillow/NumPy; private MP4 local filesystem",
+    "vision_five_frame_burst_ms": {
+      "p50": 460.39,
+      "p95": 519.72,
+      "min": 412.16,
+      "max": 522.47
+    },
+    "video_seek_decode_plus_vision_ms": {
+      "p50": 942.75,
+      "p95": 1074.61,
+      "min": 758.17,
+      "max": 1082.86
+    },
+    "not_capture_to_advice_latency": true,
+    "not_live_mirror_latency": true
+  },
+  "conclusions": [
+    "Concealed/draw geometry is again stable on this second real original match: all 51 reviewed truth slots were detected with no misses or extras across four checkpoints.",
+    "Raw template identity is substantially stronger on this Sep-26 match than on the Oct-3 diagnostic: 51/51 reviewed crops rank the correct class first, including yellow M6 appearances.",
+    "The fixed Runtime 0.82 gate, not raw Top-1 identity, is the immediate whole-hand blocker on this batch: S2 is consistently ranked correctly but rejected around 0.68-0.70.",
+    "Exact-source exclusion shows the known Sep-26 gold-skin-only M6 evidence materially affects yellow-Gold acceptance, so product-realistic and source-filtered metrics must remain separate.",
+    "There are zero wrong accepted tiles in either run, but only 1/4 product-realistic whole hands and 0/4 exact-source-filtered whole hands are fully accepted; this batch therefore does not justify lowering the 0.82 threshold or promoting a classifier."
+  ],
+  "next_step": "Prioritize independent reviewed S2 and yellow-Gold appearance support, then re-run the identical four checkpoints. In parallel continue original-match lineage recovery for the six unresolved concealed source SHAs and compare a pretrained MobileNet candidate only on source-disjoint identical crops.",
+  "safe_for_runtime_change": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false
+}
