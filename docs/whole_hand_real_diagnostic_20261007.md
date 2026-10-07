@@ -86,26 +86,48 @@ The shadow is not merely a vague brightness shift. A paired development measurem
 
 A development threshold of `-50` cleanly separates this one revealed source, but it is **not** promoted to Runtime.
 
+### Handcrafted shadow probes
+
 Three same-match 40s→46s paired feature probes were compared on the identical 13-tile truth sequence:
 
 - current grayscale-style reproduction: about **6/13** exact
 - simple vertical trim removing the bottom band: **9/13** exact
-- glyph-focused binary mask: **12/13 = 92.31%** exact
+- glyph-focused binary mask: **12/13 = 92.31%** exact, with only `M3 -> M2` remaining
 
-The glyph-mask candidate keeps the upper face, extracts dark/chromatic glyph and dot components, rejects broad UI/background bands, crops surviving glyph geometry and aspect-fits it to a 48×72 binary canvas. Its only remaining same-match paired confusion is **`M3 -> M2`**.
+The 12/13 number initially looked promising, but a tracked cross-source check disproved its suitability as an identity classifier. On **142 tracked non-Gold concealed labels** under leave-`source_session`-out development evaluation:
 
-This is strong feasibility evidence that the bottom shadow should be treated as an explicit appearance domain, but it is still **not full-template-bank or independent-match evidence**. The production 0.82 confidence scale cannot be applied to glyph-mask NCC scores until separately calibrated.
+- ordinary baseline raw top-1: **95/142 = 66.90%**
+- glyph-mask raw top-1: **10/142 = 7.04%**
 
-Machine-readable detail: `references/vision/2026-10-07/concealed_shadow_pair_diagnostic_v0_1.json`. Candidate code: `workspace/vision/tiles_runtime_v0_2/concealed_shadow_appearance_probe.py`.
+Many unrelated classes collapse toward `P5`/`P3`-like binary shapes. Therefore the 12/13 paired result measures **same-source style invariance**, not cross-source tile-identity separability.
+
+Additional handcrafted attempts — bottom-band brightness compensation, affine/gain correction, edge/HOG/Sobel/Canny/CLAHE/adaptive-threshold variants — topped out around **9/13** on the same revealed pair and did not justify more Runtime preprocessing complexity.
+
+**Decision:** reject glyph-mask as a standalone classifier/general template bank. Keep the explicit shadow-state measurement only as a development diagnostic candidate. Do not wire the `-50` appearance threshold, glyph mask, vertical trim, or any handcrafted correction into Runtime.
+
+Machine-readable detail: `references/vision/2026-10-07/concealed_shadow_pair_diagnostic_v0_1.json`.
+
+## Learned shadow candidate
+
+The next shadow-identity experiment reuses the existing development-only `MobileNetV3-Small` feasibility path rather than introducing another classifier architecture. Its training augmentation should explicitly include the observed bottom-shadow band in addition to the existing brightness, slight translation/scale and yellow-Gold variants.
+
+Boundaries remain strict:
+
+- pretrained features only; do not substitute randomly initialized weights
+- whole `original_match_group` is the independence unit when reviewed lineage exists
+- unresolved-lineage sources remain excluded in strict evaluation
+- candidate cosine scores are **not** calibrated Runtime confidence and must not be compared to 0.82 as an acceptance rate
+- Runtime template path, 0.82 gate, Hint Alpha behavior and Executor remain unchanged
+- promotion requires a different original-match whole-hand validation set and no increase in wrong accepted hands
 
 ## Priority from this diagnostic
 
 1. Keep concealed-hand geometry unchanged for now; this batch does not show a count/crop bottleneck.
-2. Audit the `M5/M7 -> M6` high-confidence collapse with exact winning-template provenance and real original-match source consensus; do not solve it by raising/lowering 0.82 ad hoc.
-3. Run glyph-mask against the full tracked template bank and measure ordinary class separability using identical query crops; treat its scores as raw only until calibrated.
-4. Validate shadow-state detection and glyph-mask identity on a **different original match** before any Runtime switch.
-5. Recover or collect independent concealed sources for remaining support/lineage gaps, including P2.
-6. Continue source-disjoint template vs pretrained-MobileNet work only after lineage is sufficient; candidate confidence must be calibrated without changing the production 0.82 gate.
+2. Audit the `M5/M7 -> M6` high-confidence collapse with exact winning-template provenance and reviewed original-match source consensus; do not solve it by ad-hoc threshold changes.
+3. Add the real observed bottom-shadow appearance as deterministic **training augmentation** to the existing pretrained-MobileNet development runner; do not create another handcrafted Runtime branch.
+4. Run template vs pretrained-MobileNet on the same reviewed crops, grouped by `original_match_group`, once lineage coverage and pretrained weights permit a valid A/B.
+5. Validate the shadow appearance state and any learned candidate on a **different original match** before any Runtime switch.
+6. Recover or collect independent concealed sources for remaining support/lineage gaps, including P2.
 7. Add a separate real-match whole-hand holdout and measure exact-hand rate, wrong accepted hands, reject rate and capture-to-advice p50/p95 before classifier promotion.
 
 The dedicated `whole_hand_error_analysis.py` helper reports raw confusion pairs even when later rejected, so classifier selection cannot hide weak boundaries behind abstention.
