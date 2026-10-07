@@ -1,5 +1,5 @@
 {
-  "schema_version": "concealed_shadow_pair_diagnostic_v0_1",
+  "schema_version": "concealed_shadow_pair_diagnostic_v0_2",
   "status": "SAME_MATCH_DEVELOPMENT_DIAGNOSTIC_NOT_HOLDOUT",
   "source": {
     "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
@@ -29,12 +29,22 @@
   "paired_normalization_probe": {
     "comparison": "same concealed truth at 40s vs 46s; 13 tiles; revealed same-match diagnostic only",
     "current_equalized_gray_self_bank_exact": "6/13 in the fixed-slot reproduction",
-    "best_simple_vertical_trim_self_bank_exact": "9/13",
-    "candidate_geometry": {"top_trim": 0.06, "bottom_trim": 0.20},
-    "interpretation": "The bottom shadow band is a material appearance/geometry nuisance. Removing it improves same-match paired self-consistency, but 9/13 is not enough and is not full-template or independent-match evidence."
+    "simple_vertical_trim_self_bank_exact": "9/13",
+    "simple_vertical_trim_geometry": {"top_trim": 0.06, "bottom_trim": 0.20},
+    "shadow_glyph_mask_self_bank_exact": "12/13 (92.31%)",
+    "shadow_glyph_mask_remaining_confusions": ["M3->M2"],
+    "shadow_glyph_mask_definition": {
+      "normalized_face_x_range": "5%-95%",
+      "normalized_face_y_range": "2%-88%",
+      "foreground_rule": "gray < 160 OR HSV saturation > 40",
+      "morphology": "2x2 open",
+      "component_filter": "drop area<8, width>=80% of working width, height>=50% of working height",
+      "final_feature": "surviving glyph bounding box aspect-fit to 48x72 binary canvas"
+    },
+    "interpretation": "The bottom shadow band is a material appearance nuisance. A glyph-focused representation is substantially more invariant than plain grayscale or simple vertical trimming on this revealed same-match pair, but 12/13 is still not full-template-bank or independent-match evidence."
   },
-  "decision": "Treat the bottom-shadow row as an explicit appearance state worth a separate shadow-normalized identity experiment. Do not wire the detector or trim into Runtime yet. Keep the 0.82 identity threshold unchanged.",
-  "next_step": "Run the shadow appearance probe and a parallel shadow-normalized template bank on the exact private 46s crops, then validate on a separate original match before promotion.",
+  "decision": "Prefer shadow_glyph_mask_feature over simple vertical trim as the next shadow-specific classifier candidate. Do not wire either candidate or the -50 appearance threshold into Runtime yet. Keep the production identity threshold at 0.82 unchanged.",
+  "next_step": "Run a parallel glyph-mask identity bank against the full tracked ordinary template set on the exact private 46s crops, and separately measure glyph-mask class separability on tracked reviewed crops. Candidate scores are not calibrated Runtime confidence. Require a separate original-match whole-hand validation before promotion.",
   "safe_for_runtime_change": false,
   "safe_for_hint_promotion": false,
   "safe_for_executor": false
