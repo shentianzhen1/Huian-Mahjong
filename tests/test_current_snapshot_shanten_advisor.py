@@ -22,6 +22,10 @@ POST_DRAW = (
     "R", "R", "R",
     "B", "N",
 )
+COUNT_ONLY_HAND = (
+    "M6", "M6", "P3", "P4", "P5",
+    "P5", "P7", "P7", "P9", "P9",
+)
 
 
 def snapshot(
@@ -44,6 +48,26 @@ def snapshot(
         gold_trusted=gold_trusted,
         river_trusted=(public_trusted, public_trusted),
         meld_trusted=(True, public_trusted),
+    )
+
+
+def count_only_snapshot(*, input_source: str, meld_slot: tuple[None, ...]):
+    manual = input_source == "user_entered"
+    return CurrentTableSnapshot(
+        timestamp_seconds=2.0,
+        source_session="manual:count-only" if manual else "runtime-count-only",
+        stream_epoch=0,
+        stable_frames=0 if manual else 3,
+        own_hand=COUNT_ONLY_HAND,
+        gold_tile="M6",
+        rivers=((), ()),
+        melds=((meld_slot, meld_slot), ()),
+        hand_trusted=True,
+        gold_trusted=True,
+        river_trusted=(False, False),
+        meld_trusted=(True, False),
+        adapter_issues=("user_entered_unverified",) if manual else (),
+        input_source=input_source,
     )
 
 
@@ -119,6 +143,44 @@ class CurrentSnapshotShantenAdvisorTests(unittest.TestCase):
         self.assertEqual(result.shanten, -1)
         self.assertEqual(result.best_discards, ())
         self.assertFalse(result.safe_for_executor)
+
+    def test_count_only_meld_encodings_match_structural_shanten(self):
+        manual = analyze_snapshot_shanten(
+            count_only_snapshot(
+                input_source="user_entered",
+                meld_slot=(None,),
+            )
+        )
+        runtime = analyze_snapshot_shanten(
+            count_only_snapshot(
+                input_source="runtime_vision",
+                meld_slot=(None, None, None),
+            )
+        )
+
+        for result in (manual, runtime):
+            self.assertTrue(result.allowed)
+            self.assertEqual(result.status, "PARTIAL")
+            self.assertEqual(result.phase, "PRE_DRAW")
+            self.assertEqual(result.best_discards, ())
+            self.assertFalse(result.visible_remainders_used)
+            self.assertFalse(result.safe_for_executor)
+            self.assertIn("meld_identity_unknown:0", result.issues)
+
+        self.assertEqual(manual.shanten, runtime.shanten)
+
+    def test_runtime_cannot_use_manual_count_only_slot(self):
+        result = analyze_snapshot_shanten(
+            count_only_snapshot(
+                input_source="runtime_vision",
+                meld_slot=(None,),
+            )
+        )
+        self.assertFalse(result.allowed)
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertIsNone(result.shanten)
+        self.assertEqual(result.best_discards, ())
+        self.assertIn("meld_shape_invalid:0:0", result.issues)
 
 
 if __name__ == "__main__":
