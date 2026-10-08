@@ -103,7 +103,7 @@ class EvidenceSession:
         image.save(path, format="PNG")
         self.mark(
             "FRAME_SAVED",
-            {"label": str(label), "path": str(path.relative_to(self.path)), **dict(payload or {})},
+            {"label": str(label), "path": path.relative_to(self.path).as_posix(), **dict(payload or {})},
             source=source,
         )
         return path
@@ -127,7 +127,6 @@ class EvidenceSession:
         with self._lock:
             if self._closed:
                 return None
-            self._closed = True
             completion = {
                 "schema_version": 1,
                 "session_id": self.session_id,
@@ -140,4 +139,5 @@ class EvidenceSession:
                 "agent_version": CURRENT_AGENT_VERSION,
             }
             _write_json(self.path / "completion.json", completion)
+            self._closed = True
             return completion

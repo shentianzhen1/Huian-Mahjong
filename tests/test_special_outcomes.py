@@ -6,26 +6,27 @@ from huian.rules import EvidenceStatus
 
 
 class SpecialOutcomeRegistryTests(unittest.TestCase):
-    def test_qiangjin_does_not_publish_an_unverified_multiplier(self):
+    def test_qiangjin_is_player_confirmed_first_round_normal_zimo_settlement(self):
         profile = special_outcome_profile("QIANGJIN")
-        self.assertIsNone(profile.multiplier)
-        self.assertEqual(profile.multiplier_status, EvidenceStatus.UNKNOWN)
-        self.assertFalse(profile.settlement_ready)
-        self.assertEqual(profile.settlement_rule_id, "qiangjin_settlement")
-        self.assertNotIn("multiplier", profile.action_metadata)
+        self.assertEqual(profile.multiplier, 2)
+        self.assertEqual(profile.multiplier_status, EvidenceStatus.CONFIRMED)
+        self.assertTrue(profile.settlement_ready)
+        self.assertEqual(profile.settlement_rule_id, "settlement.qiangjin_full")
+        self.assertEqual(profile.action_metadata["multiplier"], 2)
+        self.assertEqual(profile.action_metadata["multiplier_evidence"], "CONFIRMED")
 
     def test_confirmed_and_project_multipliers_are_distinguished(self):
         sanjindao = special_outcome_profile("SANJINDAO")
         self.assertEqual(sanjindao.multiplier, 3)
         self.assertEqual(sanjindao.multiplier_status, EvidenceStatus.CONFIRMED)
-        self.assertFalse(sanjindao.settlement_ready)
+        self.assertTrue(sanjindao.settlement_ready)
 
         eight = special_outcome_profile("EIGHT_FLOWER_YOU")
         self.assertEqual(eight.multiplier, 1)
         self.assertEqual(eight.fixed_fan, 16)
-        self.assertEqual(eight.multiplier_status, EvidenceStatus.WORKING)
+        self.assertEqual(eight.multiplier_status, EvidenceStatus.CONFIRMED)
         self.assertTrue(eight.settlement_ready)
-        self.assertTrue(eight.project_rule)
+        self.assertFalse(eight.project_rule)
         self.assertEqual(eight.action_metadata["fixed_fan"], 16)
 
         youjin = special_outcome_profile("YOUJIN")
@@ -34,9 +35,7 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
 
         double_you = special_outcome_profile("DOUBLE_YOU")
         self.assertEqual(double_you.multiplier, 8)
-        self.assertEqual(
-            double_you.multiplier_status, EvidenceStatus.CONFIRMED
-        )
+        self.assertEqual(double_you.multiplier_status, EvidenceStatus.CONFIRMED)
         self.assertFalse(double_you.settlement_ready)
 
         triple_you = special_outcome_profile("TRIPLE_YOU")
@@ -45,12 +44,13 @@ class SpecialOutcomeRegistryTests(unittest.TestCase):
 
         rob_kong = special_outcome_profile("ROB_KONG_HU")
         self.assertEqual(rob_kong.multiplier, 2)
-        self.assertEqual(
-            rob_kong.multiplier_status, EvidenceStatus.CONFIRMED
-        )
-        self.assertFalse(rob_kong.settlement_ready)
+        self.assertEqual(rob_kong.multiplier_status, EvidenceStatus.CONFIRMED)
+        self.assertTrue(rob_kong.settlement_ready)
+        self.assertIsNone(rob_kong.settlement_rule_id)
 
     def test_phase_and_source_lookup_agree_for_declared_specials(self):
+        # QIANGJIN_DECLARED remains readable for historical/imported evidence;
+        # new staged runtime Qiangjin settles atomically from first_round facts.
         self.assertEqual(
             special_outcome_for_phase("QIANGJIN_DECLARED").key, "QIANGJIN")
         self.assertEqual(

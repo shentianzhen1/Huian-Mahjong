@@ -1,0 +1,949 @@
+{
+  "schema_version": "flat_meld_sift_low_data_diagnostic_dev_v0_1",
+  "group_count": 7,
+  "input_sha256": {
+    "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+    "references/vision/2026-09-22/public_detector_calibration_v0_1.json": "c1806a48dfe1f3800da75f41f578b397d077e2aba4068b5f599c7d7495dfae03",
+    "references/vision/2026-09-24/public_identity_source_groups.development.json": "5eaa25861b77925739dec39c18da0dfef9450cf9729e9a2a8d4f5ddde9924248",
+    "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json": "6cf0d63b66215f0833f822170e066123ff8c5286834030c74eab1d912295a744"
+  },
+  "private_template_load": {
+    "schema_version": "public_meld_private_sift_load_v0_1",
+    "private_template_count": 15,
+    "recovery_ids": [
+      "G02_hand2_m345",
+      "G03_hand2_m123",
+      "G07_hand5_p345",
+      "G08_hand5_m567",
+      "G09_hand6_p789"
+    ],
+    "tile_ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M3",
+      "M4",
+      "M5",
+      "M5",
+      "M6",
+      "M7",
+      "P3",
+      "P4",
+      "P5",
+      "P7",
+      "P8",
+      "P9"
+    ],
+    "private_pixels_committed_to_repository": false,
+    "source_disjoint_holdout": false,
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  },
+  "summary": {
+    "strict_two_other_matches": {
+      "fully_scorable_reviewed_groups": 0,
+      "correct_ranked_groups_among_scorable": 0
+    },
+    "offline_one_other_match_diagnostic": {
+      "fully_scorable_reviewed_groups": 2,
+      "correct_ranked_groups_among_scorable": 1
+    }
+  },
+  "rows": [
+    {
+      "sample_id": "66fe_player_peng_p1_040s",
+      "expected_tiles": [
+        "P1",
+        "P1",
+        "P1"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            "S4",
+            "M6",
+            "P6"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8",
+              "S4"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8",
+              "S4"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8",
+              "S4"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "P8",
+            "P6",
+            "P7"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    },
+    {
+      "sample_id": "66fe_player_chi_s789_082s",
+      "expected_tiles": [
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            "S4",
+            "P7",
+            "S4"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8",
+              "S4"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8",
+              "S4"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8",
+              "S4"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "S3",
+            "S2",
+            "S6"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S3",
+            "S3",
+            "S3"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    },
+    {
+      "sample_id": "b389_player_chi_m456_035s",
+      "expected_tiles": [
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "S4"
+            ],
+            [
+              "S4"
+            ],
+            [
+              "S4"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "M4",
+            "M5",
+            "M3"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ]
+          ],
+          "expected_group_classes_all_scorable": true,
+          "ranked_group": [
+            "M4",
+            "M5",
+            "M3"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    },
+    {
+      "sample_id": "b389_player_chi_p678_057s",
+      "expected_tiles": [
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "S4"
+            ],
+            [
+              "S4"
+            ],
+            [
+              "S4"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "P6",
+            "P7",
+            "P8"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ]
+          ],
+          "expected_group_classes_all_scorable": true,
+          "ranked_group": [
+            "P6",
+            "P7",
+            "P8"
+          ],
+          "ranked_group_matches_reviewed_truth": true,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    },
+    {
+      "sample_id": "eight_hand_hand7_player_chi_p456_060s",
+      "expected_tiles": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            null,
+            null,
+            null
+          ],
+          "eligible_classes_by_face": [
+            [],
+            [],
+            []
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": null,
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "P7",
+            "P7",
+            "P6"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P1",
+              "P6",
+              "P7",
+              "P8",
+              "S2",
+              "S3",
+              "S4",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P1",
+              "P6",
+              "P7",
+              "P8",
+              "S2",
+              "S3",
+              "S4",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P1",
+              "P6",
+              "P7",
+              "P8",
+              "S2",
+              "S3",
+              "S4",
+              "S7",
+              "S8",
+              "S9"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "P7",
+            "P7",
+            "P7"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    },
+    {
+      "sample_id": "eight_hand_hand4_player_chi_s456_064s",
+      "expected_tiles": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            null,
+            null,
+            null
+          ],
+          "eligible_classes_by_face": [
+            [],
+            [],
+            []
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": null,
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "S4",
+            "S4",
+            "S3"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P1",
+              "P6",
+              "P7",
+              "P8",
+              "S2",
+              "S3",
+              "S4",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P1",
+              "P6",
+              "P7",
+              "P8",
+              "S2",
+              "S3",
+              "S4",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P1",
+              "P6",
+              "P7",
+              "P8",
+              "S2",
+              "S3",
+              "S4",
+              "S7",
+              "S8",
+              "S9"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S4",
+            "S2",
+            "S3"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    },
+    {
+      "sample_id": "special14_player_chi_s234_088s",
+      "expected_tiles": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "geometry": "FLAT",
+      "split_count": 3,
+      "modes": {
+        "strict_two_other_matches": {
+          "minimum_other_original_matches": 2,
+          "face_top1": [
+            "M4",
+            "M4",
+            "P6"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8"
+            ],
+            [
+              "M4",
+              "M5",
+              "M6",
+              "P6",
+              "P7",
+              "P8"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "M4",
+            "M5",
+            "M6"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        },
+        "offline_one_other_match_diagnostic": {
+          "minimum_other_original_matches": 1,
+          "face_top1": [
+            "S4",
+            "S5",
+            "S4"
+          ],
+          "eligible_classes_by_face": [
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ],
+            [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6",
+              "M7",
+              "P1",
+              "P3",
+              "P4",
+              "P5",
+              "P6",
+              "P7",
+              "P8",
+              "P9",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9"
+            ]
+          ],
+          "expected_group_classes_all_scorable": false,
+          "ranked_group": [
+            "S4",
+            "S4",
+            "S4"
+          ],
+          "ranked_group_matches_reviewed_truth": false,
+          "group_identity_status": "UNKNOWN",
+          "safe_for_runtime": false
+        }
+      }
+    }
+  ],
+  "one_match_mode_is_frozen_candidate": false,
+  "query_original_match_excluded": true,
+  "query_exact_sha_excluded": true,
+  "query_image_sha_verified": true,
+  "previously_inspected": true,
+  "blind_validation": false,
+  "runtime_threshold_changed": false,
+  "scorer_parameters_changed": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

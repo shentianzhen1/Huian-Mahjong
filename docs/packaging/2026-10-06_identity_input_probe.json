@@ -1,0 +1,583 @@
+{
+  "schema_version": "identity_input_probe_v0_1",
+  "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+  "frame_ids": [
+    0,
+    9,
+    18
+  ],
+  "source_seconds": [
+    0.0,
+    0.3,
+    0.6
+  ],
+  "pixel_sha256": [
+    "082cc971c9204923e274949cc65ec0d0ce3ed3160b4fd0db20e6f925f44f891f",
+    "a0abe7b205459d1a257a64cb9b6711052732d4d10e76da6690456511159c03e0",
+    "08651ae76298ce6129bbc5048c5e9cd981f3e5683e2dd5066fca06d1d5ac014d"
+  ],
+  "original_session_binding": "sha_derived_no_original_match_exclusion_claim",
+  "domain_coverage": {
+    "hand_region": {
+      "covered": 28,
+      "total": 34,
+      "missing": [
+        "G",
+        "M6",
+        "M7",
+        "M8",
+        "N",
+        "P2"
+      ],
+      "classes": [
+        "B",
+        "E",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M9",
+        "P1",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "R",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "SOUTH",
+        "W"
+      ]
+    },
+    "draw_visual": {
+      "covered": 11,
+      "total": 34,
+      "missing": [
+        "B",
+        "E",
+        "M1",
+        "M2",
+        "M4",
+        "M9",
+        "N",
+        "P1",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P8",
+        "R",
+        "S1",
+        "S2",
+        "S4",
+        "S5",
+        "S7",
+        "S8",
+        "S9",
+        "SOUTH",
+        "W"
+      ],
+      "classes": [
+        "G",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "P2",
+        "P7",
+        "P9",
+        "S3",
+        "S6"
+      ]
+    },
+    "gold_region": {
+      "covered": 2,
+      "total": 34,
+      "missing": [
+        "B",
+        "E",
+        "G",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "R",
+        "S1",
+        "S2",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "SOUTH",
+        "W"
+      ],
+      "classes": [
+        "N",
+        "S3"
+      ]
+    }
+  },
+  "rows": [
+    {
+      "region": "gold",
+      "gold_skin": false,
+      "runtime_reason": "below_confidence_threshold",
+      "variants": {
+        "current_region": {
+          "bbox": [
+            107,
+            41,
+            42,
+            57
+          ],
+          "ranking": [
+            {
+              "tile": "N",
+              "raw_ncc": 0.128773
+            },
+            {
+              "tile": "S3",
+              "raw_ncc": -0.056361
+            }
+          ]
+        },
+        "tight_region": {
+          "bbox": [
+            110,
+            48,
+            36,
+            48
+          ],
+          "ranking": [
+            {
+              "tile": "N",
+              "raw_ncc": -0.022289
+            },
+            {
+              "tile": "S3",
+              "raw_ncc": -0.053097
+            }
+          ]
+        },
+        "symmetric_pooled_gold": {
+          "bbox": [
+            110,
+            48,
+            36,
+            48
+          ],
+          "ranking": [
+            {
+              "tile": "M9",
+              "raw_ncc": 0.355132
+            },
+            {
+              "tile": "P2",
+              "raw_ncc": 0.300761
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.279057
+            }
+          ]
+        }
+      }
+    },
+    {
+      "region": "hand",
+      "gold_skin": true,
+      "runtime_reason": "gold_skin_identity_unqualified",
+      "variants": {
+        "current_region": {
+          "bbox": [
+            118,
+            442,
+            48,
+            64
+          ],
+          "ranking": [
+            {
+              "tile": "M3",
+              "raw_ncc": 0.476281
+            },
+            {
+              "tile": "P5",
+              "raw_ncc": 0.315838
+            },
+            {
+              "tile": "M5",
+              "raw_ncc": 0.312846
+            }
+          ]
+        },
+        "tight_region": {
+          "bbox": [
+            118,
+            442,
+            48,
+            64
+          ],
+          "ranking": [
+            {
+              "tile": "M3",
+              "raw_ncc": 0.476281
+            },
+            {
+              "tile": "P5",
+              "raw_ncc": 0.315838
+            },
+            {
+              "tile": "M5",
+              "raw_ncc": 0.312846
+            }
+          ]
+        },
+        "symmetric_pooled_gold": {
+          "bbox": [
+            118,
+            442,
+            48,
+            64
+          ],
+          "ranking": [
+            {
+              "tile": "M3",
+              "raw_ncc": 0.479758
+            },
+            {
+              "tile": "M5",
+              "raw_ncc": 0.389356
+            },
+            {
+              "tile": "M9",
+              "raw_ncc": 0.273988
+            }
+          ]
+        }
+      }
+    },
+    {
+      "region": "hand",
+      "gold_skin": false,
+      "runtime_reason": "below_confidence_threshold",
+      "variants": {
+        "current_region": {
+          "bbox": [
+            167,
+            433,
+            49,
+            77
+          ],
+          "ranking": [
+            {
+              "tile": "P3",
+              "raw_ncc": 0.817065
+            },
+            {
+              "tile": "SOUTH",
+              "raw_ncc": 0.370765
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.366001
+            }
+          ]
+        },
+        "tight_region": {
+          "bbox": [
+            167,
+            442,
+            49,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "P3",
+              "raw_ncc": 0.633237
+            },
+            {
+              "tile": "P5",
+              "raw_ncc": 0.270074
+            },
+            {
+              "tile": "SOUTH",
+              "raw_ncc": 0.25764
+            }
+          ]
+        },
+        "symmetric_pooled_gold": {
+          "bbox": [
+            167,
+            442,
+            49,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "P3",
+              "raw_ncc": 0.553414
+            },
+            {
+              "tile": "S2",
+              "raw_ncc": 0.232928
+            },
+            {
+              "tile": "E",
+              "raw_ncc": 0.226143
+            }
+          ]
+        }
+      }
+    },
+    {
+      "region": "hand",
+      "gold_skin": false,
+      "runtime_reason": "below_confidence_threshold",
+      "variants": {
+        "current_region": {
+          "bbox": [
+            565,
+            433,
+            49,
+            77
+          ],
+          "ranking": [
+            {
+              "tile": "P8",
+              "raw_ncc": 0.759059
+            },
+            {
+              "tile": "P6",
+              "raw_ncc": 0.61991
+            },
+            {
+              "tile": "P7",
+              "raw_ncc": 0.591042
+            }
+          ]
+        },
+        "tight_region": {
+          "bbox": [
+            566,
+            442,
+            48,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "P8",
+              "raw_ncc": 0.645365
+            },
+            {
+              "tile": "P6",
+              "raw_ncc": 0.509512
+            },
+            {
+              "tile": "P7",
+              "raw_ncc": 0.449771
+            }
+          ]
+        },
+        "symmetric_pooled_gold": {
+          "bbox": [
+            566,
+            442,
+            48,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "P6",
+              "raw_ncc": 0.434607
+            },
+            {
+              "tile": "P8",
+              "raw_ncc": 0.369463
+            },
+            {
+              "tile": "P7",
+              "raw_ncc": 0.326614
+            }
+          ]
+        }
+      }
+    },
+    {
+      "region": "hand",
+      "gold_skin": false,
+      "runtime_reason": "below_confidence_threshold",
+      "variants": {
+        "current_region": {
+          "bbox": [
+            714,
+            433,
+            50,
+            77
+          ],
+          "ranking": [
+            {
+              "tile": "S2",
+              "raw_ncc": 0.644122
+            },
+            {
+              "tile": "R",
+              "raw_ncc": 0.467828
+            },
+            {
+              "tile": "E",
+              "raw_ncc": 0.453539
+            }
+          ]
+        },
+        "tight_region": {
+          "bbox": [
+            715,
+            442,
+            48,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "S2",
+              "raw_ncc": 0.549383
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.40758
+            },
+            {
+              "tile": "R",
+              "raw_ncc": 0.378463
+            }
+          ]
+        },
+        "symmetric_pooled_gold": {
+          "bbox": [
+            715,
+            442,
+            48,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "S2",
+              "raw_ncc": 0.37812
+            },
+            {
+              "tile": "P2",
+              "raw_ncc": 0.354212
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.312422
+            }
+          ]
+        }
+      }
+    },
+    {
+      "region": "hand",
+      "gold_skin": false,
+      "runtime_reason": "below_confidence_threshold",
+      "variants": {
+        "current_region": {
+          "bbox": [
+            764,
+            433,
+            49,
+            77
+          ],
+          "ranking": [
+            {
+              "tile": "S2",
+              "raw_ncc": 0.72497
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.527044
+            },
+            {
+              "tile": "R",
+              "raw_ncc": 0.50702
+            }
+          ]
+        },
+        "tight_region": {
+          "bbox": [
+            765,
+            442,
+            48,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "S2",
+              "raw_ncc": 0.532955
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.44157
+            },
+            {
+              "tile": "E",
+              "raw_ncc": 0.351923
+            }
+          ]
+        },
+        "symmetric_pooled_gold": {
+          "bbox": [
+            765,
+            442,
+            48,
+            65
+          ],
+          "ranking": [
+            {
+              "tile": "S2",
+              "raw_ncc": 0.412794
+            },
+            {
+              "tile": "P2",
+              "raw_ncc": 0.368727
+            },
+            {
+              "tile": "M3",
+              "raw_ncc": 0.368202
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "note": "Raw A/B correlations are not Runtime confidence, identity acceptance or independent accuracy."
+}

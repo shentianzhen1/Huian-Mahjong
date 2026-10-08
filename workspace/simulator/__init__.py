@@ -1,21 +1,25 @@
 """Rule-neutral simulator scaffolding."""
 from .core import RandomAgent, SimulationResult, Simulator, SimulatorConfig, make_wall
+from .staged_opening import run_random_staged_opening, run_staged_opening
+from .target_hand import run_target_hand
 from .evaluation import BatchEvaluation, HandSummary, run_many_normal_hands
 from .match import MatchProgressState, MatchScoreState, score_eight_hand_match
 from .match_runner import (MatchHandContext, MatchHandRecord, MatchHandResult,
                            MatchRunResult, MatchRunner, run_eight_hand_match,
-                           run_real_ordinary_match, run_real_youjin_match)
+                           run_real_ordinary_match, run_real_youjin_match,
+                           run_target_room_match)
 from .match_evaluation import (MatchAttemptSummary, PairedMatchEvaluation,
                                run_paired_real_matches)
 from .unknowns import summarize_match_rule_gaps
 from .kong_audit import KongAuditRecorder, KongAuditSummary
 
 __all__ = ["RandomAgent", "SimulationResult", "Simulator", "SimulatorConfig", "make_wall",
+           "run_staged_opening", "run_random_staged_opening", "run_target_hand",
            "BatchEvaluation", "HandSummary", "run_many_normal_hands",
            "MatchProgressState", "MatchScoreState", "score_eight_hand_match",
            "MatchHandContext", "MatchHandRecord", "MatchHandResult",
            "MatchRunResult", "MatchRunner", "run_eight_hand_match",
-           "run_real_ordinary_match", "run_real_youjin_match",
+           "run_real_ordinary_match", "run_real_youjin_match", "run_target_room_match",
            "MatchAttemptSummary",
            "PairedMatchEvaluation", "run_paired_real_matches",
            "summarize_match_rule_gaps", "CalibratingShantenAgent",

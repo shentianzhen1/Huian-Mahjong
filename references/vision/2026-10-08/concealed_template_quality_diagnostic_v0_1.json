@@ -1,0 +1,102 @@
+{
+  "schema_version": "concealed_template_quality_diagnostic_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_RUNTIME_CHANGE",
+  "audit_date": "2026-10-08",
+  "frozen_runtime_threshold": 0.82,
+  "threshold_changed": false,
+  "runtime_changed": false,
+  "hint_changed": false,
+  "executor_changed": false,
+  "source_session_is_independence_evidence": false,
+  "formal_promotion_evidence": false,
+  "s4_s6": {
+    "finding": "All four corrected 2026-10-03 S4->S6 raw confusions are won by the same legacy S6 asset. Direct pixel review shows that asset contains adjacent-tile remnants instead of a clean single-tile face.",
+    "candidate_image": "templates/hand/960_hand_region_s05_S6.png",
+    "candidate_tile": "S6",
+    "candidate_source_session": "session_5d8a0e3c",
+    "candidate_source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+    "real_query_scores": [
+      {"checkpoint_seconds": 20, "truth": "S4", "baseline_candidate": "S6", "baseline_score": 0.577036, "best_true_s4_score": 0.565022},
+      {"checkpoint_seconds": 30, "truth": "S4", "baseline_candidate": "S6", "baseline_score": 0.576095, "best_true_s4_score": 0.555653},
+      {"checkpoint_seconds": 40, "truth": "S4", "baseline_candidate": "S6", "baseline_score": 0.579946, "best_true_s4_score": 0.566044},
+      {"checkpoint_seconds": 40, "truth": "S4", "region": "draw_visual", "baseline_candidate": "S6", "baseline_score": 0.572948, "best_true_s4_score": 0.557880}
+    ],
+    "exact_candidate_quarantine_ab": {
+      "private_same_match_development_queries": {
+        "baseline_raw_top1_correct": 36,
+        "candidate_raw_top1_correct": 40,
+        "total": 43,
+        "baseline_confusions": {"S4->S6": 4, "M2->M3": 3},
+        "candidate_confusions": {"M2->M3": 3},
+        "baseline_accepted_at_0_82": 31,
+        "candidate_accepted_at_0_82": 31,
+        "baseline_wrong_accepted": 0,
+        "candidate_wrong_accepted": 0,
+        "interpretation": "revealed same-match development evidence only"
+      },
+      "leave_source_session_out": {
+        "baseline_correct": 97,
+        "candidate_correct": 97,
+        "scorable": 130,
+        "baseline_accuracy": 0.7461538462,
+        "candidate_accuracy": 0.7461538462,
+        "unscorable": 14,
+        "changed_predictions": 2,
+        "changed_prediction_note": "Two held-out S4 queries remain wrong but move from S6 to other low-confidence wrong classes; total LOSO correctness is unchanged.",
+        "interpretation": "storage-session regression only, never independent original-match promotion evidence"
+      },
+      "concealed_support": {
+        "approved_concealed_labels": 144,
+        "classes": 34,
+        "s6_support_before": 6,
+        "s6_support_after": 5,
+        "classes_losing_all_support": []
+      }
+    },
+    "global_legacy_removal_rejected": {
+      "reason": "Removing every non-tile_* legacy asset is too broad. M4 and S3 have no modern tile_* concealed support, so a global legacy purge can create new coverage failures even though some aggregate development metrics improve.",
+      "classes_without_modern_tile_asset": ["M4", "S3"]
+    },
+    "decision": "Keep this exact S6 asset as a quarantine candidate only. Do not mutate Runtime labels until a new source-disjoint batch confirms no regression."
+  },
+  "m2_m3": {
+    "finding": "The three remaining corrected M2 queries are a true cross-render-domain classification problem, not a truth-label defect or a threshold problem.",
+    "committed_m2_concealed_template_count": 1,
+    "committed_m2_source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+    "committed_m2_original_match_group": "reviewed_match_2026_09_19_eight_hand",
+    "source_video_hash_reverified": true,
+    "source_video_crop_matches_committed_template_appearance": true,
+    "old_m2_template_scores_on_20261003_queries": [0.036518, 0.036216, 0.022887],
+    "winning_m3_template": "templates/hand/tile_9fe4ec26c4524a4b_M3.png",
+    "winning_m3_scores": [0.790074, 0.789479, 0.780087],
+    "pending_20261003_reviewed_m2_crop": {
+      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "source_frame": 1176,
+      "bbox": [1930, 1114, 122, 163],
+      "same_match_query_scores": [0.733876, 0.731180, 0.703005],
+      "cross_match_ncc_to_existing_20160919_m2_template": 0.131539,
+      "note": "Even this same-match reviewed M2 crop does not outrank the M3 winner on the three revealed queries. Syncing it may improve support provenance but is not by itself an identity fix."
+    },
+    "rejected_development_variants": [
+      "simple translation/scale alignment",
+      "upper-glyph-only Wan reranking",
+      "dark-stroke glyph masks",
+      "global inner-face brightness threshold changes",
+      "side-trim-only normalization"
+    ],
+    "brightness_threshold_probe": {
+      "threshold_150_leave_source_session_out_correct": 103,
+      "threshold_150_leave_source_session_out_scorable": 130,
+      "threshold_150_private_real_raw_top1_correct": 40,
+      "threshold_150_private_real_accepted_at_0_82": 24,
+      "baseline_private_real_accepted_at_0_82": 31,
+      "m2_fixed": false,
+      "decision": "reject; it trades away too much accepted coverage and still does not fix M2"
+    },
+    "decision": "Do not lower 0.82 and do not add an M2-specific heuristic. Treat M2/M3 as a cross-domain representation/data-diversity problem. Prefer a source-grouped learned candidate or genuinely diverse reviewed M2 sources, evaluated on a different original match."
+  },
+  "next_step": "Keep the exact S6 quarantine candidate offline until a new source-disjoint whole-hand batch is available. For M2/M3, use whole-original-match separation to evaluate a learned representation or additional genuinely independent M2 appearances; do not use the revealed 2026-10-03 match as its own promotion holdout.",
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

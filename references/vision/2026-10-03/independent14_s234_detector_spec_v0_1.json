@@ -1,0 +1,16 @@
+{
+  "schema_version": "independent14_s234_detector_development_spec_v0_1",
+  "excluded_same_match_aliases": ["reviewed_recording_14", "special_14_match"],
+  "sources": [{
+    "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+    "groups": [{
+      "group_id": "special14_player_chi_s234_088s",
+      "frame_indices": [2549, 2552, 2555],
+      "face_bboxes": [[95,410,45,65],[140,410,44,65],[184,410,45,65]],
+      "reviewed_candidate_tiles": ["S2", "S3", "S4"]
+    }]
+  }],
+  "reviewed_rectangle_used_only_for_audit_target_association": true,
+  "formal_holdout": false,
+  "development_only": true
+}

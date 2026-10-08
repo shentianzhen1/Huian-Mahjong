@@ -1,0 +1,42 @@
+name: Windows test installer
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installer:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 126
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - name: Install package dependencies
+        run: |
+          python -m venv .build-hint
+          .build-hint/Scripts/python.exe -m pip install '.[hint-alpha]'
+      - name: Build offline installer
+        run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
+      - name: Extract EXE; verify payload hashes, Windows spawn and live UI smoke
+        shell: pwsh
+        run: |
+          $payload = Join-Path $env:RUNNER_TEMP 'installer-extracted'
+          $installer = (Get-ChildItem dist/*_Setup.exe | Select-Object -First 1).FullName
+          $process = Start-Process -FilePath $installer -ArgumentList @('--extract', $payload) -Wait -PassThru
+          if ($process.ExitCode -ne 0) { exit $process.ExitCode }
+          python packaging/verify_payload.py $payload
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B "$payload/launch.py" --spawn-check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B -c "import tkinter; root = tkinter.Tk(); root.withdraw(); root.destroy(); print('TK_OK')"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B packaging/smoke_test_installed.py $payload
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HuianMahjong-Windows-test-installer
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30

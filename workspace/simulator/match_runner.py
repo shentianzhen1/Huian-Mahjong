@@ -282,6 +282,106 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
     return MatchRunner(run_hand).run(initial_dealer=initial_dealer)
 
 
+def run_target_room_match(seed=0, *, agent_factories=None, max_steps=1000,
+                          initial_dealer=0, simulator=None,
+                          agent_seed_keys=(0, 1)):
+    """Run the fixed eight-hand match through the target-room staged rules.
+
+    Each hand uses ``run_target_hand``: completed hands have real target-room
+    settlement and advance the score/dealer ledger; unresolved rule contracts
+    stop the match before mutating that hand's score. Engineering limits or
+    runtime/provenance mismatches raise instead of being mislabeled as rule
+    UNKNOWN.
+
+    Gold selection follows the player-confirmed SYSTEM_RANDOM/NONFLOWER pool.
+    The seeded uniform selector is only a reproducible simulator convention;
+    no target-room RNG distribution is inferred.
+    """
+    if type(seed) is not int:
+        raise ValueError("seed must be an integer")
+    if type(max_steps) is not int or max_steps <= 0:
+        raise ValueError("max_steps must be a positive integer")
+    if type(initial_dealer) is not int or initial_dealer not in (0, 1):
+        raise ValueError("initial_dealer must be seat 0 or 1")
+    agent_seed_keys = tuple(agent_seed_keys)
+    if (len(agent_seed_keys) != 2
+            or any(type(key) is not int or key not in (0, 1)
+                   for key in agent_seed_keys)
+            or set(agent_seed_keys) != {0, 1}):
+        raise ValueError("agent_seed_keys must be a permutation of (0, 1)")
+
+    from .core import RandomAgent, Simulator
+    from .target_hand import run_target_hand
+    factories = tuple(agent_factories) if agent_factories is not None else (
+        RandomAgent, RandomAgent)
+    if len(factories) != 2 or not all(callable(factory) for factory in factories):
+        raise ValueError("Two callable agent factories are required")
+    if simulator is None:
+        simulator = Simulator()
+
+    def run_hand(context):
+        hand_seed = seed * 1000 + context.hand_index
+        agents = tuple(
+            factory(seed=hand_seed * 2 + agent_seed_keys[seat])
+            for seat, factory in enumerate(factories)
+        )
+        observation_context = MatchObservationContext(
+            scores=context.scores,
+            hand_index=context.hand_index,
+            hands_remaining=context.hands_remaining,
+            dealer=context.dealer,
+            current_dealer_base=context.current_dealer_base,
+            consecutive_dealer_hands=context.consecutive_dealer_hands,
+        )
+        result = run_target_hand(
+            seed=hand_seed,
+            gold_random_seed=hand_seed,
+            simulator=simulator,
+            agents=agents,
+            max_steps=max_steps,
+            dealer=context.dealer,
+            current_dealer_base=context.current_dealer_base,
+            match_context=observation_context,
+        )
+        if result.status == "COMPLETED":
+            if not getattr(result, "real_scoring", False):
+                raise ValueError("target-room match requires real-scoring hand results")
+            return MatchHandResult.settled(
+                result.rewards,
+                winner=result.winner,
+                terminal_reason=result.terminal_reason,
+                win_source=result.win_source,
+            )
+        if result.status == "STOPPED_UNKNOWN":
+            if not result.unresolved:
+                raise RuntimeError(
+                    "target-room hand stopped without an auditable rule gap: "
+                    f"{result.stop_reason or 'no stop reason'}"
+                )
+            evidence = deepcopy(result.unknown_evidence)
+            if evidence is None:
+                evidence = {}
+            evidence["match_context"] = {
+                "hand_index": context.hand_index,
+                "dealer": context.dealer,
+                "current_dealer_base": context.current_dealer_base,
+                "scores": list(context.scores),
+                "hands_remaining": context.hands_remaining,
+                "consecutive_dealer_hands": context.consecutive_dealer_hands,
+                "hand_seed": hand_seed,
+                "gold_random_seed": hand_seed,
+            }
+            return MatchHandResult.unknown(
+                *result.unresolved, evidence=evidence
+            )
+        raise RuntimeError(
+            f"target-room hand did not settle safely: {result.status} "
+            f"({result.stop_reason or 'no stop reason'})"
+        )
+
+    return MatchRunner(run_hand).run(initial_dealer=initial_dealer)
+
+
 def run_real_youjin_match(seed=0, *, agent_factories=None, max_steps=1000,
                           initial_dealer=0, simulator=None,
                           agent_seed_keys=(0, 1)):

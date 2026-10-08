@@ -1,0 +1,77 @@
+{
+  "schema_version": "issue69_hand1_post_s456_to_gold_draw_window_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "role": "exact_full_source_recording",
+    "source_session": "session_fba5f67d244fb5bd",
+    "sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "fps": 59.15134447182431,
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "independent_match_group_credit": false
+  },
+  "event_window": [
+    {
+      "approx_seconds": 83,
+      "approx_frame": 4909,
+      "state": "POST_S456_OPPONENT_DISCARD_SEQUENCE"
+    },
+    {
+      "approx_seconds": 87,
+      "approx_frame": 5146,
+      "state": "PLAYER_DRAW_DISCARD_SEQUENCE"
+    },
+    {
+      "approx_seconds": 89,
+      "approx_frame": 5264,
+      "state": "PLAYER_DISCARD_DISPLAY_VISIBLE"
+    },
+    {
+      "approx_seconds": 90,
+      "approx_frame": 5324,
+      "state": "OPPONENT_NEXT_DISCARD_SEQUENCE"
+    },
+    {
+      "approx_seconds": 91,
+      "approx_frame": 5383,
+      "state": "PLAYER_RIGHT_DRAW_REGION_NEW_TILE_VISIBLE"
+    },
+    {
+      "approx_seconds": 92,
+      "approx_frame": 5442,
+      "state": "PLAYER_HAND_PROMPT_STATE_VISIBLE"
+    }
+  ],
+  "machine_interpretation": {
+    "ordered_turn_sequence_observed": true,
+    "first_opponent_discard_identity": "UNKNOWN",
+    "player_draw_identity": "UNKNOWN",
+    "player_discard_identity": "UNKNOWN",
+    "second_opponent_discard_identity": "UNKNOWN",
+    "final_player_draw_identity": "UNKNOWN",
+    "final_player_draw_is_gold_machine_confirmed": false
+  },
+  "human_reviewed_truth": {
+    "first_opponent_discard": "M8",
+    "player_draw": "N",
+    "player_discard": "N",
+    "second_opponent_discard": "M8",
+    "final_player_draw": "M6_GOLD",
+    "used_for_runtime_promotion": false
+  },
+  "caveats": [
+    "Approximate frames are ordering anchors, not identity observations.",
+    "The final draw is human-reviewed as gold M6, but this artifact does not promote gold identity.",
+    "No hand-shadow evidence is used."
+  ],
+  "privacy": {
+    "full_source_committed": false,
+    "full_frame_committed": false,
+    "metadata_only": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

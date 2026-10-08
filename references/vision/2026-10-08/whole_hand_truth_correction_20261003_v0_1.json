@@ -1,0 +1,22 @@
+{
+  "schema_version": "vision_whole_hand_truth_correction_v0_1",
+  "status": "DEVELOPMENT_EVIDENCE_CORRECTION_NOT_PROMOTION_EVIDENCE",
+  "audit_date": "2026-10-08",
+  "source": {"filename": "ScreenRecording_10-03-2026 22-36-10_1.mov", "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14", "original_match_group": "reviewed_match_2026_10_03_recent_real_game", "private_raw_video": true, "private_detector_crops": true, "pixels_committed": false},
+  "method": {"authority": "direct visual re-review of original source frames and frozen detector crops", "classifier_output_used_to_assign_truth": false, "same_match_is_independent_holdout": false, "runtime_threshold": 0.82, "runtime_threshold_changed": false},
+  "corrections": [
+    {"evidence_timestamp_seconds": 20.0, "sample_id": "real_20261003_t20_normal_16", "detector_slot": 15, "previous_truth": "M7", "corrected_truth": "M6", "visual_basis": "tile face clearly reads 六萬; frozen detector candidate M6 at about 0.9201 was correct, not a wrong accept"},
+    {"evidence_timestamp_seconds": 30.0, "sample_id": "real_20261003_t30_post_peng_13", "detector_slot": 12, "previous_truth": "M5", "corrected_truth": "M6", "visual_basis": "tile face clearly reads 六萬; frozen detector candidate M6 at about 0.9267 was correct, not a wrong accept"},
+    {"evidence_timestamp_seconds": 40.0, "sample_id": "20261003-seg-shae5b8-t40.0", "detector_slot": 9, "previous_truth": "S7", "corrected_truth": "S5", "visual_basis": "tile face is five bamboo; frozen detector candidate S5 at about 0.915 was correct"},
+    {"evidence_timestamp_seconds": 46.0, "sample_id": "20261003-seg-shae5b8-t46.0", "detector_slot": 9, "previous_truth": "S7", "corrected_truth": "S5", "visual_basis": "same hand remains directly visible under shadow; source frame shows five bamboo, not seven bamboo"}
+  ],
+  "corrected_ordinary_43_tile_metrics": {"raw_top1_correct": 36, "raw_top1_total": 43, "raw_top1_rate": 0.8372093023, "remaining_raw_confusions": {"S4->S6": 4, "M2->M3": 3}, "threshold_only_accepted": 31, "threshold_only_correct": 31, "threshold_only_wrong": 0, "runtime_exposed": 25, "runtime_exposed_correct": 25, "runtime_exposed_wrong": 0, "whole_hands_advice_eligible": 0, "whole_hands_total": 3},
+  "central7_same_crops_after_truth_correction": {"raw_top1_correct": 39, "raw_top1_total": 43, "raw_top1_rate": 0.9069767442, "threshold_only_accepted": 31, "threshold_only_correct": 31, "threshold_only_wrong": 0, "remaining_raw_confusions": {"M2->M3": 3, "S4->S6": 1}, "promoted": false},
+  "product_implication": "The apparent M5/M7->M6 high-confidence failure was a truth-label defect, not a Runtime classifier defect. Product readiness does not change because every ordinary whole hand still contains at least one rejected/UNKNOWN identity; the real ordinary visual confusions to investigate are S4/S6 and M2/M3.",
+  "lineage_implication": "Do not sync the frame 1176 slot 15 crop as M7. The unresolved 781b... M6 source remains lineage-UNKNOWN but the corrected examples are not evidence that it causes wrong accepts.",
+  "affected_artifacts": ["references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json", "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json", "references/vision/2026-10-07/whole_hand_priority_class_lineage_audit_v0_1.json", "references/vision/2026-10-07/high_confidence_concealed_wrong_accepts_v0_1.json", "references/vision/2026-10-07/m6_concealed_template_lineage_audit_v0_1.json", "docs/whole_hand_real_diagnostic_20261007.md"],
+  "safe_for_runtime_change": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false,
+  "formal_promotion_evidence": false
+}

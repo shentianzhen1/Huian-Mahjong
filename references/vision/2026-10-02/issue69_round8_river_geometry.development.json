@@ -1,0 +1,28 @@
+{
+  "schema_version": "source_river_geometry_v0_1",
+  "source_session": "reviewed_match_2026_09_26_eight_hand",
+  "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+  "frame_size": [1108, 512],
+  "reviewed_frame_span": [2880, 5340],
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "zones": [
+    {
+      "actor": "opponent",
+      "bbox": [0.335, 0.215, 0.315, 0.100],
+      "single_width": [0.026, 0.036],
+      "single_height": [0.065, 0.090]
+    },
+    {
+      "actor": "player",
+      "bbox": [0.300, 0.525, 0.380, 0.175],
+      "single_width": [0.026, 0.038],
+      "single_height": [0.065, 0.095]
+    }
+  ],
+  "calibration_scope": "Round 8 actual-play source, 96-178s. River zones reviewed against stable states around 100, 112, 120, 132, 144, 160 and 176 seconds. Player zone deliberately covers late two-row river growth. Exact-source development calibration only.",
+  "evidence_refs": [
+    "local decoded Round 8 stable public-river states at 100s,112s,120s,132s,144s,160s,176s; source SHA verified before review"
+  ],
+  "safety": "Geometry only. No tile identity, turn or action truth is encoded. UNKNOWN/fail-closed downstream policy remains required."
+}

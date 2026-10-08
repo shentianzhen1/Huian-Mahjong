@@ -1,0 +1,46 @@
+{
+  "schema_version": "opponent_meld_template_coverage_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_0926_hand1_s456",
+  "query_match_group_excluded": "reviewed_match_2026_09_26_first_hand",
+  "target_tiles": ["S4", "S5", "S6"],
+  "per_tile": {
+    "S4": {
+      "qualified_label_count": 2,
+      "independent_match_group_count": 2,
+      "labels_by_match_group": {
+        "reviewed_match_concealed_recovery_a": 1,
+        "reviewed_match_concealed_recovery_b": 1
+      }
+    },
+    "S5": {
+      "qualified_label_count": 1,
+      "independent_match_group_count": 1,
+      "labels_by_match_group": {
+        "reviewed_match_concealed_recovery_b": 1
+      }
+    },
+    "S6": {
+      "qualified_label_count": 1,
+      "independent_match_group_count": 1,
+      "labels_by_match_group": {
+        "reviewed_match_concealed_recovery_b": 1
+      }
+    }
+  },
+  "minimum_independent_match_groups_across_targets": 1,
+  "interpretation_gate": "DATA_COVERAGE_THIN",
+  "interpretation": [
+    "S4 has two independent original-match sources after excluding the S456 query match.",
+    "S5 and S6 each have only one independent original-match source, both from reviewed_match_concealed_recovery_b.",
+    "The current S456 failure cannot justify changing the production splitter or lowering identity thresholds; real cross-match opponent-domain coverage should be increased first."
+  ],
+  "evidence_role": "development_measurement_only",
+  "blind_validation": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

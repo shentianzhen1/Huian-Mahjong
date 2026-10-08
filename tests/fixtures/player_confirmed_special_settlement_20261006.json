@@ -1,0 +1,69 @@
+{
+  "evidence_type": "PLAYER_CONFIRMED",
+  "evidence_id": "player_confirmed_special_rules_20261006_v1",
+  "video_directly_verified": false,
+  "cases": [
+    {
+      "kind": null,
+      "tile": null,
+      "kong_fan": 0,
+      "base": 10,
+      "net": 30
+    },
+    {
+      "kind": "ADDED_GANG",
+      "tile": "M9",
+      "kong_fan": 2,
+      "base": 10,
+      "net": 36
+    },
+    {
+      "kind": "MING_GANG",
+      "tile": "M9",
+      "kong_fan": 2,
+      "base": 15,
+      "net": 51
+    },
+    {
+      "kind": "MING_GANG",
+      "tile": "R",
+      "kong_fan": 3,
+      "base": 20,
+      "net": 69
+    },
+    {
+      "kind": "ADDED_GANG",
+      "tile": "M9",
+      "kong_fan": 2,
+      "base": 15,
+      "net": 51
+    },
+    {
+      "kind": "ADDED_GANG",
+      "tile": "R",
+      "kong_fan": 3,
+      "base": 20,
+      "net": 69
+    },
+    {
+      "kind": "AN_GANG",
+      "tile": "M9",
+      "kong_fan": 3,
+      "base": 25,
+      "net": 84
+    },
+    {
+      "kind": "AN_GANG",
+      "tile": "R",
+      "kong_fan": 4,
+      "base": 30,
+      "net": 102
+    }
+  ],
+  "eight_flower": {
+    "base": 15,
+    "fixed_fan": 16,
+    "multiplier": 1,
+    "net": 31
+  }
+}

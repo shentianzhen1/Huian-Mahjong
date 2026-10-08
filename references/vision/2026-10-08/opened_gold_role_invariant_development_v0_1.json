@@ -1,0 +1,103 @@
+{
+  "schema_version": "opened_gold_role_invariant_development_v0_1",
+  "status": "REVEALED_DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION",
+  "audit_date": "2026-10-08",
+  "runtime_source_head": "59b3a399c42ee7abc832d481648a29f6f5cb7013",
+  "premise_under_test": "opened Gold and concealed tiles share the same underlying face artwork but are rendered at different UI roles/scales",
+  "method": {
+    "family_stage": "full-face dark/red/green/blue layout map with small translation tolerance",
+    "identity_stage": "glyph-normalized dark/red/green/blue descriptor inside the selected family",
+    "decision": "use glyph winner only when Top1-minus-Top2 glyph margin >= 0.03; otherwise use full-face winner",
+    "development_glyph_margin_switch": 0.03,
+    "glyph_margin_selected_on_revealed_development_data": true,
+    "scores_are_runtime_confidence": false,
+    "runtime_identity_threshold_reference": 0.82
+  },
+  "evidence_policy": {
+    "template_bank_filter": "exact source SHA must have reviewed original_match_group lineage and every template from the query original match is excluded",
+    "source_session_used_as_independence_signal": false,
+    "unknown_lineage_templates_excluded": true,
+    "adjacent_frames_count_as_independent_sources": false,
+    "same_match_different_clips_count_as_independent_sources": false
+  },
+  "development_query_groups": [
+    {
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "note": "nine opened-Gold identities from one original match; seven scorable under strict reviewed match-disjoint class coverage",
+      "scorable_query_count": 7,
+      "correct_query_count": 5,
+      "unscorable_query_count": 2,
+      "queries": [
+        {"source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3", "source_frame": 300, "truth_tile": "G", "candidate_tile": "S8", "correct": false, "family": "S", "decision_feature": "glyph", "glyph_margin": 0.06478411, "status": "SCORED"},
+        {"source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22", "source_frame": 300, "truth_tile": "M8", "candidate_tile": "M8", "correct": true, "family": "M", "decision_feature": "full_face", "glyph_margin": 0.016411424, "status": "SCORED"},
+        {"source_sha256": "cf1451e8cc18561d8c3d0250826f79eebcf71904aaf337c74edc41ba46c0f636", "source_frame": 300, "truth_tile": "P5", "candidate_tile": "P5", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.067103028, "status": "SCORED"},
+        {"source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e", "source_frame": 300, "truth_tile": "M3", "candidate_tile": "M1", "correct": false, "family": "M", "decision_feature": "full_face", "glyph_margin": 0.019277811, "status": "SCORED"},
+        {"source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245", "source_frame": 300, "truth_tile": "P2", "status": "UNSCORABLE_NO_REVIEWED_MATCH_DISJOINT_CLASS_REFERENCE"},
+        {"source_sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78", "source_frame": 300, "truth_tile": "M7", "candidate_tile": "M7", "correct": true, "family": "M", "decision_feature": "full_face", "glyph_margin": 0.012976587, "status": "SCORED"},
+        {"source_sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757", "source_frame": 300, "truth_tile": "B", "candidate_tile": "B", "correct": true, "family": "H", "decision_feature": "glyph", "glyph_margin": 0.254176229, "status": "SCORED"},
+        {"source_sha256": "4333a11966bd364f3388b2bf3677900eed50faf6b0d6739cf9399e901de196fc", "source_frame": 300, "truth_tile": "P4", "candidate_tile": "P4", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.130538821, "status": "SCORED"},
+        {"source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d", "source_frame": 300, "truth_tile": "SOUTH", "status": "UNSCORABLE_NO_REVIEWED_MATCH_DISJOINT_CLASS_REFERENCE"}
+      ]
+    },
+    {
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "truth_tile": "M6",
+      "query_count": 4,
+      "correct_query_count": 4,
+      "queries": [
+        {"timestamp_seconds": 40.0, "truth_tile": "M6", "candidate_tile": "M6", "correct": true, "family": "M", "decision_feature": "glyph", "glyph_margin": 0.034864962},
+        {"timestamp_seconds": 52.0, "truth_tile": "M6", "candidate_tile": "M6", "correct": true, "family": "M", "decision_feature": "glyph", "glyph_margin": 0.034834862},
+        {"timestamp_seconds": 110.0, "truth_tile": "M6", "candidate_tile": "M6", "correct": true, "family": "M", "decision_feature": "glyph", "glyph_margin": 0.034287572},
+        {"timestamp_seconds": 175.0, "truth_tile": "M6", "candidate_tile": "M6", "correct": true, "family": "M", "decision_feature": "glyph", "glyph_margin": 0.034853458}
+      ]
+    },
+    {
+      "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "truth_tile": "P9",
+      "query_count": 5,
+      "correct_query_count": 5,
+      "queries": [
+        {"timestamp_seconds": 3.0, "truth_tile": "P9", "candidate_tile": "P9", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.133668959},
+        {"timestamp_seconds": 10.0, "truth_tile": "P9", "candidate_tile": "P9", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.135683298},
+        {"timestamp_seconds": 30.0, "truth_tile": "P9", "candidate_tile": "P9", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.135605156},
+        {"timestamp_seconds": 40.0, "truth_tile": "P9", "candidate_tile": "P9", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.135683298},
+        {"timestamp_seconds": 46.0, "truth_tile": "P9", "candidate_tile": "P9", "correct": true, "family": "P", "decision_feature": "glyph", "glyph_margin": 0.136030853}
+      ]
+    }
+  ],
+  "aggregate": {
+    "scored_frame_query_count": 16,
+    "correct_frame_query_count": 14,
+    "revealed_original_match_group_count": 3,
+    "frame_level_ratio_is_formal_accuracy_claim": false,
+    "formal_independent_holdout_count": 0
+  },
+  "known_failures": [
+    {"match_group": "reviewed_match_2026_09_19_eight_hand", "truth_tile": "G", "candidate_tile": "S8", "failure_scope": "wrong_family"},
+    {"match_group": "reviewed_match_2026_09_19_eight_hand", "truth_tile": "M3", "candidate_tile": "M1", "failure_scope": "same_family_full_face_fallback"}
+  ],
+  "fragility_check": {
+    "glyph_margin_sweep": [
+      {"margin": 0.02, "m6_correct": 4, "p9_correct": 5, "sep19_correct": 5, "total_correct": 14},
+      {"margin": 0.025, "m6_correct": 4, "p9_correct": 5, "sep19_correct": 5, "total_correct": 14},
+      {"margin": 0.03, "m6_correct": 4, "p9_correct": 5, "sep19_correct": 5, "total_correct": 14},
+      {"margin": 0.035, "m6_correct": 0, "p9_correct": 5, "sep19_correct": 5, "total_correct": 10},
+      {"margin": 0.04, "m6_correct": 0, "p9_correct": 5, "sep19_correct": 5, "total_correct": 10}
+    ],
+    "finding": "M6 depends on a narrow revealed-development margin boundary (about 0.0343-0.0349), so the candidate is too fragile for Runtime wiring."
+  },
+  "finding": "Reusing ordinary reviewed tile faces through role-invariant family/glyph features is substantially more promising than resize-only projection on the revealed development set, but the current switch is fragile and the development set is revealed.",
+  "next_step": "Keep this candidate offline. Validate it unchanged on a new unseen original match containing multiple opened-Gold identities; do not tune the margin after viewing that holdout. If it generalizes, calibrate scores separately without changing Runtime threshold 0.82 before any integration.",
+  "new_templates_admitted": 0,
+  "runtime_changed": false,
+  "hint_changed": false,
+  "executor_changed": false,
+  "runtime_identity_threshold_changed": false,
+  "raw_or_derived_pixels_committed": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

@@ -151,9 +151,9 @@
         "S9"
       ],
       "bbox": [
-        0.094646,
+        0.225621,
         0.852083,
-        0.126195,
+        0.123327,
         0.135417
       ],
       "status": "bbox_reviewed",
@@ -161,7 +161,8 @@
       "notes": [
         "player-side exposed Chi reference",
         "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only",
-        "2026-09-22 correction: prior x coordinate incorrectly pointed to a later bottom group; pixel re-review places S789 at the left exposed group"
+        "2026-09-22 correction: prior x coordinate incorrectly pointed to a later bottom group; pixel re-review places S789 at the left exposed group",
+        "2026-10-03 supersedes 2026-09-22 correction: S789 is the second exposed group at x236..365; old x99..231 covered P1. Verified directly against locked source pixels."
       ]
     },
     {
@@ -393,6 +394,96 @@
       "notes": [
         "Zimo x2, dealer5/base30, +68/-68"
       ]
+    },
+    {
+      "sample_id": "eight_hand_hand7_player_chi_p456_060s",
+      "source_session": "eight_hand_match_a_hand7",
+      "source_sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757",
+      "image_path": "references/vision/2026-09-30/public_meld_crops/eight_hand_12_p456.jpg",
+      "image_sha256": "909399dcac9f40b344f5b824e61041a44e402f2ff20d0d815d0dc057057f2656",
+      "frame_index": 1740,
+      "time_ms": 60000,
+      "actor": "player",
+      "target": "meld",
+      "expected_tile": null,
+      "expected_tiles": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "status": "bbox_reviewed",
+      "observation": "Privacy-bounded exposed P456 group crop from the older eight-hand match.",
+      "notes": [
+        "exact exposed-group crop only; original full frame remains private",
+        "same match_group as the other older eight-hand clips; must not count as an independent match"
+      ],
+      "context_scope": "identity_crop"
+    },
+    {
+      "sample_id": "eight_hand_hand4_player_chi_s456_064s",
+      "source_session": "eight_hand_match_a_hand4",
+      "source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e",
+      "image_path": "references/vision/2026-09-30/public_meld_crops/eight_hand_9_s456.jpg",
+      "image_sha256": "69b026d04d2115d9b96af230a073d0b9b4e5ccefc6265145c0a0c0f0405385bd",
+      "frame_index": 1856,
+      "time_ms": 64000,
+      "actor": "player",
+      "target": "meld",
+      "expected_tile": null,
+      "expected_tiles": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "status": "bbox_reviewed",
+      "observation": "Privacy-bounded exposed S456 group crop from the older eight-hand match.",
+      "notes": [
+        "exact exposed-group crop only; original full frame remains private",
+        "same match_group as the other older eight-hand clips; must not count as an independent match"
+      ],
+      "context_scope": "identity_crop"
+    },
+    {
+      "sample_id": "special14_player_chi_s234_088s",
+      "source_session": "special_14_match",
+      "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "image_path": "references/vision/2026-09-30/public_meld_crops/special_14_s234.jpg",
+      "image_sha256": "5d6e8701554d4489aac07264b01e45935e2fd742648f29ee97cbc34f2eb352c9",
+      "frame_index": 2552,
+      "time_ms": 88000,
+      "actor": "player",
+      "target": "meld",
+      "expected_tile": null,
+      "expected_tiles": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "status": "bbox_reviewed",
+      "observation": "Privacy-bounded exposed S234 group crop from a separate reviewed match.",
+      "notes": [
+        "exact exposed-group crop only; original full frame remains private",
+        "distinct match_group from the older eight-hand match"
+      ],
+      "context_scope": "identity_crop"
     }
   ]
 }

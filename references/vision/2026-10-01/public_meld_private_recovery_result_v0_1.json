@@ -1,0 +1,60 @@
+{
+  "schema_version": "public_meld_private_recovery_result_v0_1",
+  "checked_on": "2026-10-01",
+  "items": [
+    {
+      "recovery_id": "G04_hand3_m456",
+      "status": "BLOCKED_SOURCE_SHA_MISMATCH",
+      "private_template_eligible": false,
+      "holdout_eligible": false,
+      "notes": [
+        "currently accessible Drive 5.mp4 does not match repository source evidence for the original 5.mov",
+        "no pixel recovery accepted"
+      ]
+    },
+    {
+      "recovery_id": "G09_hand6_p789",
+      "status": "PRIVATE_TEMPLATE_EVIDENCE_RECOVERED",
+      "source_sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "timestamp_seconds": 60.0,
+      "frame_index": 1740,
+      "frame_lineage_mode": "direct_source_frame_no_derivative",
+      "group_bbox": [96, 403, 131, 73],
+      "private_label_manifest_name": "private_approved_labels.json",
+      "private_label_manifest_sha256": "9d89e9cf2f7859a2a24bebce91632e854299df2404c92f0fdf9a96e3a2884427",
+      "faces": [
+        {
+          "tile_id": "P7",
+          "bbox": [96, 403, 44, 73],
+          "crop_sha256": "638a470b4c627886304b64cfcc52b2d1c48953255f5296ad39a7f6b5205194cb",
+          "pixel_exact_from_source_frame": true
+        },
+        {
+          "tile_id": "P8",
+          "bbox": [140, 403, 43, 73],
+          "crop_sha256": "c0dfe0557039edf53d63dde98f37dd9228d62cd10ea6db77b060a48f3bfa53ad",
+          "pixel_exact_from_source_frame": true
+        },
+        {
+          "tile_id": "P9",
+          "bbox": [183, 403, 44, 73],
+          "crop_sha256": "a33d1ac4f6823e0878ee597f90674b3632a065f8953c077d8f5e09a64858f78c",
+          "pixel_exact_from_source_frame": true
+        }
+      ],
+      "private_template_eligible": true,
+      "public_repo_pixels_committed": false,
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "holdout_eligible": false,
+      "formal_promotion_evidence": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    }
+  ],
+  "runtime_policy": {
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}

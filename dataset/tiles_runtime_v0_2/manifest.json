@@ -17,19 +17,17 @@
     "roi_profiles/huian_1046x480_v0_2.json",
     "roi_profiles/huian_960x448_v0_2.json"
   ],
-  "approved_label_count": 139,
-  "template_count": 139,
+  "approved_label_count": 145,
+  "template_count": 145,
   "template_regions": {
-    "hand": 123,
+    "hand": 129,
     "draw_visual": 14,
     "gold": 2
   },
   "standard_tile_class_coverage": {
-    "covered": 33,
+    "covered": 34,
     "total": 34,
-    "missing": [
-      "M2"
-    ]
+    "missing": []
   },
   "test_build_scope": "stable hand/draw_visual/gold snapshots only; low-confidence or unsupported classes return UNKNOWN; no automatic UI action",
   "test_build_tile_confidence_threshold": 0.82,
@@ -47,5 +45,21 @@
     "formal_tile_labeling_allowed": false
   },
   "phase6_asset_role": "development_prototype_only",
-  "runtime_known_session_policy": "exclude current source_session from template training when session is supplied"
+  "runtime_known_session_policy": "exclude current source_session from template training when session is supplied",
+  "concealed_identity_coverage": {
+    "covered": 34,
+    "total": 34,
+    "missing": [],
+    "multi_session_covered": 22,
+    "note": "Class coverage is complete, but per-class confidence and cross-session gates still apply."
+  },
+  "current_validation_summary": "validation/reports/runtime_current_validation_summary_v0_2.json",
+  "current_validation_ci": {
+    "head_sha": "e90e261ad3ac63e4825dcce2d75d813ab8a8ac4f",
+    "vision_run_id": 36680663119,
+    "artifact_id": 11082051061,
+    "result": "success"
+  },
+  "tracked_full_validation_report_refresh_pending": true,
+  "current_asset_inventory": "runtime_asset_inventory_20261007.json"
 }

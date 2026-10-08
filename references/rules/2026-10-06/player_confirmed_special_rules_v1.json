@@ -1,0 +1,183 @@
+{
+  "schema_version": "player_confirmed_special_rules_v1",
+  "evidence_id": "player_confirmed_special_rules_20261006_v1",
+  "date": "2026-10-06",
+  "timezone": "Asia/Shanghai",
+  "evidence_type": "PLAYER_CONFIRMED",
+  "source": "target-room player confirmations in the project conversation",
+  "video_directly_verified": false,
+  "runtime_migrated": false,
+  "executor_enabled": false,
+  "document": "references/rules/2026-10-06/player_confirmed_special_rules.md",
+  "dealer_flow": {
+    "scope": "all_hu_methods",
+    "dealer_win": "continue_and_add_5",
+    "non_dealer_win": "switch_and_reset_10",
+    "draw": "continue_and_add_5"
+  },
+  "match_tie": "draw_no_extra_hand_no_dealer_tiebreak",
+  "qiangjin": {
+    "window": "first_round_only_after_flower_replacement_and_open_gold",
+    "dealer_analysis": "after_first_discard_add_virtual_opened_gold_to_16",
+    "non_dealer_analysis": "replace_first_drawn_tile_with_virtual_opened_gold_in_17",
+    "analysis_tile_count": 17,
+    "meld_count": 5,
+    "pair_count": 1,
+    "seat_order": [
+      "non_dealer",
+      "dealer"
+    ],
+    "dealer_waits_for_non_dealer_first_draw_check": true,
+    "later_draw_flower_kong_reprompt": false,
+    "normal_fan": true,
+    "multiplier": 2,
+    "formula": "(dealer_base + normal_winner_fan) * 2"
+  },
+  "sanjindao": {
+    "playable_gold_count": 3,
+    "optional": true,
+    "pass_closes_current_node_only": true,
+    "later_own_draw_reprompt": true,
+    "multiplier": 3,
+    "included_fan": [
+      "completed_kong"
+    ],
+    "excluded_fan": [
+      "gold",
+      "flower",
+      "triplet",
+      "other_ordinary_fan"
+    ],
+    "formula": "(dealer_base + completed_kong_fan) * 3",
+    "simultaneous_both_seats": "physically_impossible"
+  },
+  "eight_flower_you": {
+    "flower_count": 8,
+    "ordinary_hu_structure_required": false,
+    "fixed_fan": 16,
+    "multiplier": 1,
+    "additive_fan_allowed": false,
+    "formula": "dealer_base + 16",
+    "new_eighth_flower_inside_open_gold_loop": "automatic_terminal_no_pass_no_gold_no_tianhu",
+    "all_other_collection_nodes": "declare_or_pass",
+    "pass_preserves_ordinary_flower_fan": 8,
+    "later_own_draw_or_completed_replacement_reprompt_if_still_8": true,
+    "same_node_immediate_reprompt": false
+  },
+  "tianhu": {
+    "dealer_only": true,
+    "non_dealer_dihu_enabled": false,
+    "window": "after_completed_replacements_and_determined_gold_before_first_discard",
+    "hand_size": 17,
+    "meld_count": 5,
+    "pair_count": 1,
+    "gold_wildcard": true,
+    "automatic": true,
+    "pass_allowed": false,
+    "additive_fan_allowed": false,
+    "multiplier": 2,
+    "formula": "dealer_base * 2"
+  },
+  "tianting": {
+    "window": "after_completed_replacements_and_determined_gold",
+    "dealer_analysis": "16_tiles_after_first_discard",
+    "non_dealer_analysis": "initial_16_before_first_draw",
+    "gold_wildcard": true,
+    "status_only": true,
+    "additional_fan": 0,
+    "additional_multiplier": 1,
+    "skip_if_tianhu_ends_hand": true
+  },
+  "priority": {
+    "process_event_outside_later_comparison": "new_eighth_flower_inside_open_gold_loop",
+    "same_node_order": [
+      "TIANHU",
+      "EIGHT_FLOWER_YOU",
+      "SANJINDAO",
+      "QIANGJIN",
+      "ROB_KONG_HU",
+      "ORDINARY_HU",
+      "YOUJIN_FAMILY"
+    ],
+    "qiangjin_seat_order": [
+      "non_dealer",
+      "dealer"
+    ],
+    "compare_only_currently_legal_unpassed_opportunities": true,
+    "existing_youjin_response_and_progression_not_rewritten_by_rank_alone": true
+  },
+  "open_gold_flower": {
+    "destination": "dealer_flower_zone",
+    "replace_or_add_hand_tile": false,
+    "remove_from_wall": true,
+    "counts_for_flower_fan_and_eight_flower": true,
+    "continue_next_candidate_unless_new_eighth_flower_ends_hand": true,
+    "final_indicator_removed_from_drawable_wall": true,
+    "max_playable_gold_copies": 3,
+    "dealer_hand_size": 17,
+    "non_dealer_hand_size": 16
+  },
+  "hidden_open_gold_location": {
+    "dice_mapping": "UNKNOWN",
+    "tile_or_stack_counting": "UNKNOWN",
+    "direction": "UNKNOWN",
+    "random_distribution": "UNKNOWN",
+    "live_policy": "read_final_visible_gold_and_both_flower_zones_do_not_infer_hidden_location",
+    "unreadable_policy": "UNKNOWN"
+  },
+  "existing_video_support": {
+    "direct_terminal_methods": [
+      "ORDINARY_ZIMO",
+      "YOUJIN",
+      "DOUBLE_YOU",
+      "TRIPLE_YOU"
+    ],
+    "repeat_sanjindao_prompt_identity": "player_clarification_with_occluded_button",
+    "not_directly_covered": [
+      "QIANGJIN_TERMINAL",
+      "SANJINDAO_TERMINAL",
+      "EIGHT_FLOWER_YOU",
+      "TIANHU",
+      "TIANTING",
+      "OPEN_GOLD_FLOWER_FULL_PROCESS",
+      "MATCH_TIE"
+    ],
+    "full_original_videos_replayed_this_audit": false
+  },
+  "runtime_migration": {
+    "snapshot_label": "huian-target-2026-10-06-opening-r1",
+    "implemented": [
+      "sanjindao_kong_only_settlement_api",
+      "eight_flower_confirmed_fixed16_settlement_api",
+      "staged_pre_gold_replacement_eight_flower_declare_pass",
+      "explicit_opening_candidate_flower_consumption_no_hand_replacement",
+      "new_eighth_candidate_flower_forced_no_gold_terminal",
+      "dealer_tianhu_after_gold_automatic_base_x2"
+    ],
+    "regression_verified": [
+      "both_seats_zero_sum_144_tiles",
+      "special_results_use_existing_dealer_flow",
+      "pre_gold_choice_and_pass_then_tianhu",
+      "both_dealer_identities_gold_wildcard_tianhu_no_additive_fan",
+      "explicit_candidates_no_hidden_location_inference",
+      "opening_rollback_and_atomic_errors"
+    ],
+    "pending": [
+      "first_round_qiangjin",
+      "eight_flower_later_draw_reprompt",
+      "tianting",
+      "same_node_priority",
+      "full_special_simulator_integration",
+      "all_methods_match_tie_regression",
+      "default_opening_and_live_routing_to_staged_api"
+    ],
+    "installer": "CI rebuild required; not a complete special-rule release",
+    "api_boundary": {
+      "entry": "HuianEnvironment.begin_confirmed_opening()",
+      "candidate": "reveal_opening_candidate(wall_index=..., current_dealer_base=...)",
+      "location": "Explicit scripted-wall candidate; no target-room dice mapping inferred",
+      "non_tianhu": "OPENING_POST_GOLD_PENDING safely blocks until Qiangjin/Tianting migration",
+      "legacy": "begin_opening(dice_total) remains a separately labelled simulator convention; refuses eight-flower windows that require staged API"
+    }
+  }
+}

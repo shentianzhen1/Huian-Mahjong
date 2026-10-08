@@ -1,0 +1,86 @@
+{
+  "schema_version": "issue69_hand1_m9_draw_s4_discard_s5_chi_window_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "role": "exact_full_source_recording",
+    "source_session": "session_fba5f67d244fb5bd",
+    "sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "bytes": 189952700,
+    "fps": 59.15134447182431,
+    "resolution": [
+      2796,
+      1290
+    ],
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "independent_match_group_credit": false
+  },
+  "event_window": {
+    "opponent_discard_display": {
+      "approx_seconds": 74,
+      "state": "TOP_DISCARD_DISPLAY_VISIBLE"
+    },
+    "player_hand_discard_transition": {
+      "approx_seconds": 76.4,
+      "state": "PLAYER_HAND_LAYOUT_TRANSITION"
+    },
+    "claimed_tile_motion": {
+      "approx_seconds": 76.8,
+      "state": "CLAIMED_TILE_OR_DISCARD_MOTION_VISIBLE"
+    },
+    "opponent_claim_animation_onset": {
+      "frame": 4858,
+      "source_time_seconds": 82.1283107489,
+      "state": "OPPONENT_CLAIM_ANIMATION_ONSET"
+    },
+    "opponent_new_meld_visible": {
+      "approx_seconds": 82.5,
+      "state": "OPPONENT_NEW_PUBLIC_MELD_VISIBLE"
+    }
+  },
+  "machine_safe_sequence": [
+    "TOP_DISCARD_DISPLAY_VISIBLE",
+    "PLAYER_HAND_LAYOUT_TRANSITION",
+    "CLAIMED_TILE_OR_DISCARD_MOTION_VISIBLE",
+    "OPPONENT_CLAIM_ANIMATION_ONSET",
+    "OPPONENT_NEW_PUBLIC_MELD_VISIBLE"
+  ],
+  "machine_interpretation": {
+    "opponent_discard_event_observed": true,
+    "opponent_discard_tile_identity": "UNKNOWN",
+    "player_draw_event_observed": false,
+    "player_draw_tile_identity": "UNKNOWN",
+    "player_discard_event_observed": true,
+    "player_discard_tile_identity": "UNKNOWN",
+    "opponent_claim_event_observed": true,
+    "opponent_claim_kind": "UNKNOWN",
+    "opponent_new_meld_observed": true,
+    "opponent_new_meld_identity": "UNKNOWN"
+  },
+  "human_reviewed_truth": {
+    "opponent_discard_tile": "M9",
+    "player_draw_tile": "S4",
+    "player_discard_tile": "S5",
+    "opponent_action": "CHI",
+    "opponent_meld": [
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "used_for_runtime_promotion": false
+  },
+  "links": {
+    "opponent_s456_review_id": "opp_meld_0926_hand1_s456",
+    "note": "Existing S456 identity review remains a separate evidence path; this window does not promote it."
+  },
+  "privacy": {
+    "full_source_committed": false,
+    "full_frame_committed": false,
+    "metadata_only": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

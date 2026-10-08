@@ -1,0 +1,96 @@
+{
+  "schema_version": "concealed_template_lineage_recovery_queue_v0_1",
+  "development_only": true,
+  "match_group_inference_allowed": false,
+  "items": [
+    {
+      "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "source_sessions": [
+        "session_0e565528164aa77f"
+      ],
+      "tile_classes": [
+        "W"
+      ],
+      "approved_label_count": 1,
+      "source_frames": [
+        60
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    },
+    {
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "source_sessions": [
+        "session_59460988023cc9f1"
+      ],
+      "tile_classes": [
+        "M9"
+      ],
+      "approved_label_count": 2,
+      "source_frames": [
+        0
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    },
+    {
+      "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "source_sessions": [
+        "session_5e02f7d0458be0a9"
+      ],
+      "tile_classes": [
+        "P2",
+        "SOUTH"
+      ],
+      "approved_label_count": 3,
+      "source_frames": [
+        0,
+        60,
+        180
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    },
+    {
+      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+      "source_sessions": [
+        "session_781bfe34c40993ef"
+      ],
+      "tile_classes": [
+        "S9"
+      ],
+      "approved_label_count": 1,
+      "source_frames": [
+        300
+      ],
+      "status": "UNKNOWN_ORIGINAL_MATCH",
+      "required_evidence": "reviewed source record tying this exact SHA256 to one original recorded match_group",
+      "session_name_is_not_evidence": true
+    }
+  ],
+  "unresolved_source_count": 4,
+  "unresolved_label_count": 7,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "audit_date": "2026-10-07",
+  "target_classes": [
+    "B",
+    "G",
+    "M2",
+    "M4",
+    "M7",
+    "M8",
+    "M9",
+    "N",
+    "P2",
+    "S9",
+    "SOUTH",
+    "W"
+  ],
+  "scope": "Existing concealed support gaps across hand_region and draw_visual; stored sessions do not establish original-match independence."
+}

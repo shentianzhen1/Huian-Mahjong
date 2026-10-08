@@ -1,0 +1,57 @@
+name: Dev MobileNetV3 Weight Cache
+
+on:
+  push:
+    branches:
+      - codex/hint-alpha-local-test-sync-20261004
+    paths:
+      - .github/workflows/dev-mobilenet-weights.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Prepare official MobileNetV3-Small weights
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download pinned torchvision weight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact
+          url='https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth'
+          curl --fail --location --retry 3 --output artifact/mobilenet_v3_small-047dcff4.pth "$url"
+          sha256sum artifact/mobilenet_v3_small-047dcff4.pth | tee artifact/SHA256SUMS.txt
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path('artifact/mobilenet_v3_small-047dcff4.pth')
+          digest = hashlib.sha256(path.read_bytes()).hexdigest()
+          if not digest.startswith('047dcff4'):
+              raise SystemExit(f'unexpected torchvision weight SHA256: {digest}')
+          payload = {
+              'development_only': True,
+              'model': 'mobilenet_v3_small',
+              'weights': 'IMAGENET1K_V1',
+              'source_url': 'https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth',
+              'sha256': digest,
+              'expected_sha256_prefix': '047dcff4',
+              'runtime_changed': False,
+              'runtime_threshold_changed': False,
+              'formal_promotion_evidence': False,
+          }
+          Path('artifact/manifest.json').write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Upload development weight artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dev-mobilenet-v3-small-imagenet1k-v1
+          path: artifact/
+          if-no-files-found: error
+          retention-days: 7

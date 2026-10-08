@@ -1,0 +1,90 @@
+{
+  "schema_version": "concealed_source_disjoint_fallback_ab_v0_1",
+  "status": "DEVELOPMENT_MATCHED_CROP_AB_NOT_RUNTIME_PROMOTION",
+  "purpose": "Freeze the Sep-26 support expansion plus conservative tight-crop fallback result on the revealed Oct-3 43-tile ordinary whole-hand batch without changing Runtime, the 0.82 identity threshold, V0.10 strategy, Hint Alpha read-only status, or Executor OFF.",
+  "support": {
+    "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "source_sha256": "05ef070ea185e7c224126eadd527e77075f8b85e86ed49326d981ead81fb5738",
+    "source_session": "session_real_20260926_eight_hand",
+    "all_support_assets_count_as_one_original_match": true,
+    "m2_staging_manifest": "references/vision/2026-10-08/reviewed_tile_intake_staging_20260926_m2.jsonl",
+    "support_expansion_staging_manifest": "references/vision/2026-10-08/reviewed_tile_intake_staging_20260926_support_expansion.jsonl",
+    "support_classes": ["M1", "M2", "P2", "S3", "S4", "S7"],
+    "binary_assets_committed": false,
+    "final_labels_updated": false,
+    "runtime_template_bank_updated": false
+  },
+  "query": {
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+    "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+    "revealed_development_match": true,
+    "fresh_promotion_holdout": false,
+    "ordinary_tiles": 43,
+    "whole_hands": 3,
+    "checkpoints_seconds": [20.0, 30.0, 40.0]
+  },
+  "baseline_runtime": {
+    "raw_top1_correct": 36,
+    "raw_top1_total": 43,
+    "runtime_accepted_correct": 25,
+    "runtime_wrong_accepted": 0,
+    "runtime_rejected": 18,
+    "whole_hands_complete": 0,
+    "whole_hands_total": 3
+  },
+  "support_expansion_primary_crop_only": {
+    "raw_top1_correct": 40,
+    "raw_top1_total": 43,
+    "runtime_accepted_correct": 35,
+    "runtime_wrong_accepted": 0,
+    "runtime_rejected": 8,
+    "whole_hands_complete": 0,
+    "whole_hands_total": 3,
+    "per_hand": [
+      {"checkpoint_seconds": 20.0, "truth_tiles": 16, "accepted_correct": 14, "wrong_accepted": 0, "rejected": 2, "complete": false},
+      {"checkpoint_seconds": 30.0, "truth_tiles": 13, "accepted_correct": 11, "wrong_accepted": 0, "rejected": 2, "complete": false},
+      {"checkpoint_seconds": 40.0, "truth_tiles": 14, "accepted_correct": 10, "wrong_accepted": 0, "rejected": 4, "complete": false}
+    ],
+    "remaining_rejections": {
+      "M2": 3,
+      "S3": 1,
+      "S4": 4
+    }
+  },
+  "conservative_tight_fallback": {
+    "policy": [
+      "Run the current expanded Runtime classification crop first.",
+      "Never override an identity already accepted by the primary Runtime path.",
+      "Only when the primary identity is UNKNOWN, classify the same trusted geometry component using its tight detector pixel_bbox.",
+      "The fallback must independently pass the unchanged 0.82 confidence threshold and the existing identity/source-support gates.",
+      "No tile-class-specific override or threshold exception is permitted."
+    ],
+    "runtime_identity_threshold": 0.82,
+    "threshold_changed": false,
+    "accepted_correct": 43,
+    "wrong_accepted": 0,
+    "rejected": 0,
+    "whole_hands_complete": 3,
+    "whole_hands_total": 3,
+    "per_hand": [
+      {"checkpoint_seconds": 20.0, "truth_tiles": 16, "accepted_correct": 16, "wrong_accepted": 0, "rejected": 0, "complete": true},
+      {"checkpoint_seconds": 30.0, "truth_tiles": 13, "accepted_correct": 13, "wrong_accepted": 0, "rejected": 0, "complete": true},
+      {"checkpoint_seconds": 40.0, "truth_tiles": 14, "accepted_correct": 14, "wrong_accepted": 0, "rejected": 0, "complete": true}
+    ],
+    "important_negative_control": {
+      "tight_crop_as_global_replacement_rejected": true,
+      "reason": "Using tight crops as the only classifier input reduced coverage and produced high-confidence M3-to-M2 wrong accepts around 0.842-0.844 on the same batch. The primary-first fallback prevents those wrong overrides because the primary M3 identities were already accepted."
+    }
+  },
+  "interpretation": "Source-qualified Sep-26 appearance support plus a primary-first tight-crop fallback closes the revealed Oct-3 43/43 ordinary matched-crop batch with zero wrong accepts and 3/3 complete hands. This is a strong development result, not promotion evidence, because Oct-3 has been inspected repeatedly during development and is no longer a fresh original-match holdout.",
+  "runtime_changed": false,
+  "runtime_identity_threshold": 0.82,
+  "current_agent": "MeldAwareShantenAgent V0.10",
+  "hint_alpha": "internal_read_only",
+  "executor_enabled": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false,
+  "next_gate": "Acquire a fresh original-match whole-hand batch not used for support or tuning. Re-run the exact primary-first fallback policy and measure exact-hand rate, wrong accepted hands, reject rate, and live capture-to-advice latency before any Runtime wiring."
+}

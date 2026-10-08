@@ -1,0 +1,29 @@
+{
+  "schema_version": "opponent_meld_boundary_diagnostic_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_0926_hand1_s456",
+  "purpose": "development_only_split_boundary_sensitivity",
+  "radius_px_on_normalized_row": 6,
+  "candidate_count": 169,
+  "correct_candidate_count": 0,
+  "best_correct_candidates": [],
+  "baseline": {
+    "boundary_delta_px": [0, 0],
+    "top_tiles": ["S4", "S4", "S4"],
+    "top_score": 0.81129756,
+    "runner_up_tiles": ["S6", "S5", "S4"],
+    "runner_up_score": 0.78595841,
+    "margin": 0.02533916,
+    "correct": false
+  },
+  "interpretation": "No tested normalized split-boundary perturbation recovered S4/S5/S6 as legal-group Top1. Do not change the production splitter from this evidence; prioritize opponent-domain identity diagnostics.",
+  "evidence_role": "development_measurement_only",
+  "blind_validation": false,
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

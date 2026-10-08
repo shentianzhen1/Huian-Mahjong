@@ -1,0 +1,98 @@
+{
+  "schema_version": "s789_template_location_correction_dev_v0_1",
+  "basis_commit": "1b5136fa593858c3acd4d774f7c8544144dc2708",
+  "review": "assistant_direct_source_pixel_review",
+  "source_image": "references/gameplay/2026-09-15/66fe863f_youjin100/chi_s789_youjin_hint_082000ms.jpg",
+  "corrections": [
+    {
+      "label_id": "public_meld_s7",
+      "tile_id": "S7",
+      "source_image_sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "old_bbox": [
+        0.094646,
+        0.852083,
+        0.042065,
+        0.135417
+      ],
+      "corrected_bbox": [
+        0.225621,
+        0.852083,
+        0.041109,
+        0.135417
+      ],
+      "old_roi_visible_identity": "P1",
+      "corrected_roi_visual_identity": "S7"
+    },
+    {
+      "label_id": "public_meld_s8",
+      "tile_id": "S8",
+      "source_image_sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "old_bbox": [
+        0.136711,
+        0.852083,
+        0.042065,
+        0.135417
+      ],
+      "corrected_bbox": [
+        0.26673,
+        0.852083,
+        0.041109,
+        0.135417
+      ],
+      "old_roi_visible_identity": "P1",
+      "corrected_roi_visual_identity": "S8"
+    },
+    {
+      "label_id": "public_meld_s9",
+      "tile_id": "S9",
+      "source_image_sha256": "554efa8af6f9a4d2b3f59188be7c6dcb96e8491d81685502f236b67ce549e5f6",
+      "old_bbox": [
+        0.178776,
+        0.852083,
+        0.042065,
+        0.135417
+      ],
+      "corrected_bbox": [
+        0.307839,
+        0.852083,
+        0.041109,
+        0.135417
+      ],
+      "old_roi_visible_identity": "P1",
+      "corrected_roi_visual_identity": "S9"
+    }
+  ],
+  "old_manifest_sha256": "c79cdce725b7a4e7c41240989f2ec2b2a02f0189f2d96c624fe0aa6432460531",
+  "new_manifest_sha256": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+  "corrected_group_pixel_bbox": [
+    236,
+    409,
+    129,
+    65
+  ],
+  "public_meld_template_visual_audit_count": 21,
+  "additional_apparent_identity_location_mismatches": 0,
+  "scope_limit": "public manifest public_meld faces only; not concealed/river/action/private",
+  "historical_result_policy": "Reports using the old S789 ROIs are dated contaminated-bank outputs. Do not treat them as current classifier evidence without rerunning. Raw historical files remain unchanged.",
+  "known_affected_reports": [
+    "references/vision/2026-10-03/existing_meld_intake_frozen_sift_probe_v0_1.json",
+    "references/vision/2026-10-03/flat_meld_sift_low_data_diagnostic_v0_1.json",
+    "references/vision/2026-10-03/issue69_flat_group_identity_gate_probe_v0_1.json"
+  ],
+  "known_affected_reports_exhaustive": false,
+  "new_fixed_query_result": {
+    "S8_face_count": 15,
+    "before_top1_matches": 0,
+    "after_top1_matches": 15,
+    "other_original_match_support": 1,
+    "independent_query_group_count": 1,
+    "strict_two_other_match_scorable_faces": 0
+  },
+  "scorer_parameters_changed": false,
+  "query_crops_changed": false,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

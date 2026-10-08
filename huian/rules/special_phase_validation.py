@@ -188,7 +188,7 @@ def _validate_pending_hu(state):
         if state.gold_tile is None or state.hands[pending["winner"]].count(state.gold_tile) != 3:
             raise ValueError("Sanjindao declaration must retain exactly three gold tiles")
         return
-    if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
+    if state.phase in ("EIGHT_FLOWER_YOU_DECLARED", "OPENING_EIGHT_FLOWER_DECLARED"):
         expected = {"winner", "source", "flower_count", "fixed_fan",
                     "multiplier", "project_rule"}
         if (not isinstance(pending, dict) or set(pending) != expected
@@ -199,7 +199,7 @@ def _validate_pending_hu(state):
                 or pending["flower_count"] != 8
                 or pending["fixed_fan"] != 16
                 or pending["multiplier"] != 1
-                or pending["project_rule"] is not True):
+                or pending["project_rule"] is not False):
             raise ValueError(
                 "EIGHT_FLOWER_YOU_DECLARED requires fixed 16 fan and no extra multiplier"
             )

@@ -1,0 +1,39 @@
+{
+  "schema_version": "public_identity_query_images_v0_1",
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "query_only": true,
+  "training_template_eligible": false,
+  "source_session": "session_fba5f67d244fb5bd",
+  "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+  "match_group": "reviewed_match_2026_09_26_first_hand",
+  "notes": [
+    "Exact single-tile query crops only; no full target frame is committed.",
+    "These crops are never added to the public template bank.",
+    "CI recomputes the public-face feature from pixels instead of storing compressed feature arrays."
+  ],
+  "queries": [
+    {
+      "query_id": "first_hand_174s_p6",
+      "expected_tile": "P6",
+      "region": "public_meld",
+      "image_path": "references/vision/2026-09-30/public_query_crops/first_hand_174s_p6.jpg",
+      "image_sha256": "612cce1ba08ef4678cf3df918e5fe2d041f47aa88f23165706628e3fa93171dc",
+      "image_size": [
+        110,
+        170
+      ]
+    },
+    {
+      "query_id": "first_hand_174s_s4",
+      "expected_tile": "S4",
+      "region": "public_meld",
+      "image_path": "references/vision/2026-09-30/public_query_crops/first_hand_174s_s4.jpg",
+      "image_sha256": "300d85889e5e0c8cfe5c25c7b3b99fae342ce07771b477be8fe5f09591db855c",
+      "image_size": [
+        115,
+        170
+      ]
+    }
+  ]
+}

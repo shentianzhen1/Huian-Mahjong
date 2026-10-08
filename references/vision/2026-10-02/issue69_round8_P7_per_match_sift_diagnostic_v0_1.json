@@ -1,0 +1,432 @@
+{
+  "schema_version": "round8_confirmed_P7_per_match_sift_diagnostic_v0_1",
+  "frame_index": 3566,
+  "expected_tile": "P7",
+  "truth_evidence_path": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+  "exact_pixel_match_to_reviewed_crop": true,
+  "rows": [
+    {
+      "condition": "native_P7",
+      "face_size": [
+        24,
+        27
+      ],
+      "query_descriptor_count": 100,
+      "P7_rank_among_eligible": 4,
+      "classes": [
+        {
+          "tile_id": "S4",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01788159,
+            "reviewed_recording_14": 0.01698262
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.01698262
+        },
+        {
+          "tile_id": "P6",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.01593299,
+            "reviewed_match_2026_09_19_eight_hand": 0.01679176
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.01593299
+        },
+        {
+          "tile_id": "M4",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00712909,
+            "reviewed_match_2026_09_19_eight_hand": 0.01062218
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00712909
+        },
+        {
+          "tile_id": "P7",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.01437373,
+            "reviewed_match_2026_09_19_eight_hand": 0.00339292
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00339292
+        },
+        {
+          "tile_id": "M5",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00608695,
+            "reviewed_match_2026_09_19_eight_hand": 0.00339124
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00339124
+        },
+        {
+          "tile_id": "M6",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00329413,
+            "reviewed_match_2026_09_19_eight_hand": 0.00282523
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00282523
+        },
+        {
+          "tile_id": "P8",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.01574819,
+            "reviewed_match_2026_09_19_eight_hand": 0.00278591
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00278591
+        },
+        {
+          "tile_id": "P1",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01555562
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S7",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01503262
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S8",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.00591591
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S9",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01518482
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P4",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00590015
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P5",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01525491
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S5",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00684686
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S6",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01741288
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S2",
+          "best_score_by_match_group": {
+            "reviewed_recording_14": 0.01316267
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S3",
+          "best_score_by_match_group": {
+            "reviewed_recording_14": 0.00785501
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P9",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01722876
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M3",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00352492
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M7",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00736785
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M1",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00903633
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M2",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00625608
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P3",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00641001
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        }
+      ]
+    },
+    {
+      "condition": "normalized_P7",
+      "face_size": [
+        84,
+        96
+      ],
+      "query_descriptor_count": 100,
+      "P7_rank_among_eligible": 4,
+      "classes": [
+        {
+          "tile_id": "S4",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01590754,
+            "reviewed_recording_14": 0.01585377
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.01585377
+        },
+        {
+          "tile_id": "P8",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.0150465,
+            "reviewed_match_2026_09_19_eight_hand": 0.01583628
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.0150465
+        },
+        {
+          "tile_id": "M6",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00956165,
+            "reviewed_match_2026_09_19_eight_hand": 0.01548192
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00956165
+        },
+        {
+          "tile_id": "P7",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00632114,
+            "reviewed_match_2026_09_19_eight_hand": 0.00704606
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00632114
+        },
+        {
+          "tile_id": "P6",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.01548036,
+            "reviewed_match_2026_09_19_eight_hand": 0.00329085
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00329085
+        },
+        {
+          "tile_id": "M4",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00321099,
+            "reviewed_match_2026_09_19_eight_hand": 0.01645517
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00321099
+        },
+        {
+          "tile_id": "M5",
+          "best_score_by_match_group": {
+            "reviewed_recording_b389": 0.00655911,
+            "reviewed_match_2026_09_19_eight_hand": 0.00304753
+          },
+          "eligible": true,
+          "conservative_second_group_score": 0.00304753
+        },
+        {
+          "tile_id": "P1",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01571918
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S7",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01548088
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S8",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01565037
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S9",
+          "best_score_by_match_group": {
+            "reviewed_recording_66fe": 0.01555475
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P4",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.0036161
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P5",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00313026
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S5",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.016072
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S6",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01605935
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S2",
+          "best_score_by_match_group": {
+            "reviewed_recording_14": 0.00350494
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "S3",
+          "best_score_by_match_group": {
+            "reviewed_recording_14": 0.01590673
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P9",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01698296
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M3",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00956923
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M7",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.0065816
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M1",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00894899
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "M2",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.01252102
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        },
+        {
+          "tile_id": "P3",
+          "best_score_by_match_group": {
+            "reviewed_match_2026_09_19_eight_hand": 0.00337506
+          },
+          "eligible": false,
+          "conservative_second_group_score": null
+        }
+      ]
+    }
+  ],
+  "query_original_match_excluded": true,
+  "candidate_parameters_changed": false,
+  "scores_are_probabilities": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "interpretation": {
+    "P7_rank_native": 4,
+    "P7_rank_normalized": 4,
+    "S4_scores_exceed_P7_across_both_source_groups": true,
+    "weak_single_template_not_sole_explanation": true,
+    "independence_gate_relaxation_justified": false,
+    "classification_feature_limitation_observed_on_this_face": true,
+    "generalization_claimed": false,
+    "next_step": "Compare alternative identity features on a fixed pixel-bound reviewed packet, reporting both errors and abstentions; retain SIFT as frozen baseline."
+  }
+}

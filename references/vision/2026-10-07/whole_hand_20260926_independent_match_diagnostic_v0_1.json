@@ -1,0 +1,141 @@
+{
+  "schema_version": "whole_hand_20260926_independent_match_diagnostic_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_FORMAL_PROMOTION_EVIDENCE",
+  "source": {
+    "filename": "ScreenRecording_09-26-2026 22-23-34_1.mp4",
+    "sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "private_raw_video": true,
+    "raw_or_derived_pixels_committed": false
+  },
+  "truth_seed": "references/vision/2026-10-07/whole_hand_truth_seed_20260926_first_hand_v0_1.json",
+  "checkpoints_seconds": [40.0, 52.0, 110.0, 175.0],
+  "frozen_runtime_threshold": 0.82,
+  "threshold_changed": false,
+  "runtime_change_scope": "Two reviewed Sep-19 S2 concealed templates from the same reviewed original match were added as appearance augmentation. Threshold, Runtime reader logic, V0.10 strategy and Executor state were unchanged. The two S2 frames count as one original-match source, never two independent sources.",
+  "execution": {
+    "packaged_runtime_source_head": "bf73dd363a8e1b0e9eb483a3f54e9cc831521777",
+    "packaged_pr_merge_commit": "bae1ebd10719120ddcaf41ebb447e20ff537bbef",
+    "packaged_installer_workflow_run": 162,
+    "packaged_installer_artifact_id": 11500466340,
+    "runtime_payload_extracted_from_verified_windows_test_installer": true,
+    "host_replay_environment": "Linux host OpenCV/Pillow/NumPy with pure project source/data extracted from the verified Windows installer payload",
+    "note": "The exact packaged dataset/source was re-run on the same four reviewed Sep-26 checkpoints. The 0.82 threshold was not changed."
+  },
+  "packaging_integrity": {
+    "verify_payload_exit_code_guard": true,
+    "windows_pgm_line_ending_conversion_blocked": true,
+    "verified_payload_files": 3640,
+    "verified_labels": 147,
+    "verified_templates": 147,
+    "installer_validation_result": "PASS"
+  },
+  "reviewed_s2_augmentation": {
+    "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+    "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+    "independent_original_match_count": 1,
+    "source_session_is_independence_signal": false,
+    "samples": [
+      {
+        "frame": 795,
+        "bbox": [347, 407, 46, 71],
+        "asset": "templates/hand/tile_34928d2442cfb53b_S2.pgm",
+        "asset_sha256": "c84dbd46e4ce63e97c4e1dcdf687a2e661f58d43ab2d44a4ab7c3af3c2bfefda"
+      },
+      {
+        "frame": 1508,
+        "bbox": [300, 407, 46, 71],
+        "asset": "templates/hand/tile_918e71bb57c31ab7_S2.png",
+        "asset_sha256": "918e71bb57c31ab733fa0f21fbf375675d7d3df84bed671f48a17204e63b02bf",
+        "selection_policy": "sep19_only_lowest_confidence_clear_normal_height_s2_candidate",
+        "selection_used_sep26_holdout": false
+      }
+    ],
+    "interpretation": "The second S2 is a same-match hard-example appearance augmentation selected only from Sep-19 source-side quality/stability criteria. It does not add an independent match group."
+  },
+  "crop_review": {
+    "truth_slots": 51,
+    "detected_slots": 51,
+    "missed_slots": 0,
+    "extra_slots": 0,
+    "exact_count_checkpoints": 4,
+    "checkpoint_count": 4,
+    "reviewed_crop_count": 51,
+    "crop_ok_count": 51,
+    "bad_crop_count": 0,
+    "prompt_overlay_note": "110s and 175s contain UI prompt pointers above some tile crops, but the tile faces remain complete and readable."
+  },
+  "current_runtime_template_bank": {
+    "interpretation": "Product-realistic current-template behavior; not source-disjoint generalization evidence because this exact source contributes limited reviewed Gold evidence elsewhere.",
+    "tile_count": 51,
+    "raw_top1_correct": 51,
+    "raw_top1_accuracy": 1.0,
+    "accepted_correct_at_0_82": 51,
+    "accepted_correct_rate": 1.0,
+    "wrong_accepted": 0,
+    "rejected": 0,
+    "reject_rate": 0.0,
+    "whole_hand_raw_exact": 4,
+    "whole_hand_raw_exact_rate": 1.0,
+    "whole_hand_runtime_exact": 4,
+    "whole_hand_runtime_exact_rate": 1.0,
+    "whole_hand_wrong_accepted_count": 0,
+    "S2_observed_confidences": [0.821546, 0.822343, 0.821595, 0.824009, 0.821923, 0.822395],
+    "key_result": "On the four reviewed Sep-26 checkpoints, the latest verified packaged Runtime accepts every one of 51 truth tiles correctly at the unchanged 0.82 gate, with zero wrong accepts and all four whole hands fully accepted."
+  },
+  "exact_source_sha_filtered": {
+    "interpretation": "Direct exact-source label leakage removed from the primary labels file and all reviewed-addition sidecars before invoking the same frozen exporter. Exact-SHA filtering still does not prove every same-match derivative has been excluded.",
+    "filter_key": "exact_source_sha256",
+    "excluded_sha256": ["fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3"],
+    "input_label_count": 147,
+    "kept_label_count": 146,
+    "excluded_label_count": 1,
+    "filtered_label_file_count": 3,
+    "excluded_label_tile_ids": ["M6"],
+    "excluded_gold_skin_only_label_count": 1,
+    "tile_count": 51,
+    "raw_top1_correct": 51,
+    "raw_top1_accuracy": 1.0,
+    "accepted_correct_at_0_82": 45,
+    "accepted_correct_rate": 0.8823529411764706,
+    "wrong_accepted": 0,
+    "rejected": 6,
+    "reject_rate": 0.11764705882352941,
+    "whole_hand_raw_exact": 4,
+    "whole_hand_raw_exact_rate": 1.0,
+    "whole_hand_runtime_exact": 0,
+    "whole_hand_runtime_exact_rate": 0.0,
+    "whole_hand_wrong_accepted_count": 0,
+    "rejection_breakdown": {
+      "yellow_gold_M6_without_remaining_real_gold_skin_qualification_or_below_threshold": 6,
+      "S2_below_0_82": 0
+    },
+    "S2_observed_confidences": [0.821546, 0.822343, 0.821595, 0.824009, 0.821923, 0.822395],
+    "key_result": "Both Sep-19 S2 augmentations remain available after excluding every Sep-26 exact-source label, and all six Sep-26 S2 observations still pass 0.82. The only six remaining rejections are yellow-Gold M6 appearances after removal of the same-source Gold M6 evidence."
+  },
+  "offline_replay_latency": {
+    "sample_count": 4,
+    "vision_five_frame_burst_ms_previous_measurement": {
+      "p50": 460.39,
+      "p95": 519.72
+    },
+    "video_seek_decode_plus_vision_ms_previous_measurement": {
+      "p50": 942.75,
+      "p95": 1074.61
+    },
+    "not_capture_to_advice_latency": true,
+    "not_live_mirror_latency": true
+  },
+  "conclusions": [
+    "Concealed/draw geometry remains stable on this second real original match: all 51 reviewed truth slots are detected with no misses or extras across four checkpoints.",
+    "The verified packaged product path now reaches 51/51 correct accepted tiles and 4/4 fully accepted whole hands on this Sep-26 diagnostic, with zero wrong accepts and without lowering 0.82.",
+    "S2 is no longer a blocker on this Sep-26 diagnostic: all six S2 observations pass even after exact-source Sep-26 labels are removed.",
+    "The two Sep-19 S2 templates are same-match appearance augmentation and count as only one reviewed original-match source; they do not establish broad independent S2 generalization by themselves.",
+    "Exact-source exclusion leaves six yellow-Gold M6 rejections and no S2 rejections, making independent yellow-Gold M6 appearance support the next Sep-26 source-disjoint blocker.",
+    "This Sep-26 result does not erase the Oct-3 shadow and M2/M3/M5/M7/M6 appearance failures; overall production hand recognition is not yet proven stable across matches."
+  ],
+  "next_step": "Prioritize independent reviewed yellow-Gold M6 appearance support from a different original match, then re-run these identical four Sep-26 checkpoints. In parallel continue broader Oct-3 hard-confusion/shadow work and original-match lineage recovery for unresolved concealed sources.",
+  "safe_for_runtime_change": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false
+}

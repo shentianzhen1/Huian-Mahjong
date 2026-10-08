@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "huian-mahjong-assistant"
-version = "0.2.0"
+version = "0.2.1"
 description = "Evidence-driven Huian two-player Mahjong: rules, environment, 8-hand simulation, AI, and vision; UNKNOWN rules are never hard-coded"
 keywords = ["mahjong", "huian", "python", "computer-vision", "game-ai"]
 readme = "README.md"
@@ -21,6 +21,7 @@ dev = [
     "ruff>=0.6",
     "black>=24.0",
     "coverage>=7,<8",
+    "pytest>=8,<10",
 ]
 vision = [
     "opencv-python-headless>=4.10,<6",
@@ -53,6 +54,9 @@ exclude = [
     "references*",
 ]
 namespaces = true
+
+[tool.setuptools.exclude-package-data]
+"*" = ["test_*.py", "**/test_*.py"]
 
 [tool.ruff]
 line-length = 100

@@ -1,0 +1,240 @@
+{
+  "schema_version": "public_meld_fixed_packet_feature_comparison_v0_1",
+  "fixed_queries": [
+    "hand1_P6",
+    "hand1_S4",
+    "round8_P9",
+    "round8_P8",
+    "round8_P7"
+  ],
+  "round8_review_frame": 3566,
+  "round8_truth_evidence_path": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+  "query_original_match_excluded": true,
+  "query_packet_original_match_count": 1,
+  "minimum_other_match_groups": 2,
+  "identity_inset": 0,
+  "features": "existing repository implementations, no parameter tuning",
+  "private_recovery_metadata_path": "references/vision/2026-10-02/public_meld_private_recovery_result_v0_3.json",
+  "results": {
+    "legacy_gray": {
+      "exact_correct": 0,
+      "query_count": 5,
+      "eligible_truth_correct": 0,
+      "eligible_truth_count": 4,
+      "rows": [
+        {
+          "expected_tile": "P6",
+          "winner": "M4",
+          "winner_score": -0.043644,
+          "runner_up": "S4",
+          "runner_up_score": -0.094784,
+          "margin": 0.05114,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "hand1_P6",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "S4",
+          "winner": "P7",
+          "winner_score": 0.03242,
+          "runner_up": "P8",
+          "runner_up_score": -0.00374,
+          "margin": 0.036161,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "hand1_S4",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "P9",
+          "winner": "S4",
+          "winner_score": 0.075163,
+          "runner_up": "P8",
+          "runner_up_score": -0.038851,
+          "margin": 0.114014,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P9",
+          "expected_class_eligible": false
+        },
+        {
+          "expected_tile": "P8",
+          "winner": "M5",
+          "winner_score": 0.073003,
+          "runner_up": "M4",
+          "runner_up_score": 0.003048,
+          "margin": 0.069955,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P8",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "P7",
+          "winner": "P8",
+          "winner_score": 0.037675,
+          "runner_up": "M4",
+          "runner_up_score": -0.007327,
+          "margin": 0.045002,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P7",
+          "expected_class_eligible": true
+        }
+      ]
+    },
+    "gray_edge": {
+      "exact_correct": 1,
+      "query_count": 5,
+      "eligible_truth_correct": 1,
+      "eligible_truth_count": 4,
+      "rows": [
+        {
+          "expected_tile": "P6",
+          "winner": "M5",
+          "winner_score": 0.141636,
+          "runner_up": "P6",
+          "runner_up_score": 0.120445,
+          "margin": 0.021191,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "hand1_P6",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "S4",
+          "winner": "P8",
+          "winner_score": 0.128562,
+          "runner_up": "M5",
+          "runner_up_score": 0.089272,
+          "margin": 0.03929,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "hand1_S4",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "P9",
+          "winner": "P6",
+          "winner_score": 0.12391,
+          "runner_up": "S4",
+          "runner_up_score": 0.122006,
+          "margin": 0.001904,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P9",
+          "expected_class_eligible": false
+        },
+        {
+          "expected_tile": "P8",
+          "winner": "P6",
+          "winner_score": 0.160424,
+          "runner_up": "S4",
+          "runner_up_score": 0.141648,
+          "margin": 0.018776,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P8",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "P7",
+          "winner": "P7",
+          "winner_score": 0.172944,
+          "runner_up": "S4",
+          "runner_up_score": 0.101987,
+          "margin": 0.070957,
+          "eligible_class_count": 7,
+          "top1_correct": true,
+          "query_id": "round8_P7",
+          "expected_class_eligible": true
+        }
+      ]
+    },
+    "lab_chroma_edge": {
+      "exact_correct": 1,
+      "query_count": 5,
+      "eligible_truth_correct": 1,
+      "eligible_truth_count": 4,
+      "rows": [
+        {
+          "expected_tile": "P6",
+          "winner": "M5",
+          "winner_score": 0.118512,
+          "runner_up": "P6",
+          "runner_up_score": 0.117414,
+          "margin": 0.001098,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "hand1_P6",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "S4",
+          "winner": "P8",
+          "winner_score": 0.091585,
+          "runner_up": "M5",
+          "runner_up_score": 0.071107,
+          "margin": 0.020478,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "hand1_S4",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "P9",
+          "winner": "M5",
+          "winner_score": 0.114867,
+          "runner_up": "P8",
+          "runner_up_score": 0.093138,
+          "margin": 0.021729,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P9",
+          "expected_class_eligible": false
+        },
+        {
+          "expected_tile": "P8",
+          "winner": "P8",
+          "winner_score": 0.194354,
+          "runner_up": "M5",
+          "runner_up_score": 0.186729,
+          "margin": 0.007625,
+          "eligible_class_count": 7,
+          "top1_correct": true,
+          "query_id": "round8_P8",
+          "expected_class_eligible": true
+        },
+        {
+          "expected_tile": "P7",
+          "winner": "P6",
+          "winner_score": 0.310635,
+          "runner_up": "P7",
+          "runner_up_score": 0.298022,
+          "margin": 0.012613,
+          "eligible_class_count": 7,
+          "top1_correct": false,
+          "query_id": "round8_P7",
+          "expected_class_eligible": true
+        }
+      ]
+    }
+  },
+  "neural_comparison_status": "NOT_RUN_DEPENDENCIES_AND_WEIGHTS_UNAVAILABLE",
+  "development_only": true,
+  "previously_inspected_queries": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "interpretation": {
+    "legacy_gray_correct": "0/5",
+    "gray_edge_correct": "1/5",
+    "lab_chroma_edge_correct": "1/5",
+    "P9_missing_eligible_template_support": true,
+    "no_existing_feature_variant_justifies_replacement": true,
+    "neural_result_claimed": false
+  }
+}

@@ -20,6 +20,7 @@ def component(
     y: float = 0.80,
     width: float = 0.04,
     height: float = 0.10,
+    public_identity_result: dict | None = None,
 ) -> dict:
     return {
         "normalized_bbox": [x, y, width, height],
@@ -28,6 +29,7 @@ def component(
         "frame": frame,
         "tile_id": tile_id,
         "tile_confidence": confidence,
+        "public_identity_result": public_identity_result,
     }
 
 
@@ -81,7 +83,7 @@ class RuntimePublicAdapterMeldTests(unittest.TestCase):
         self.assertFalse(group.identities_complete)
         self.assertIn("runtime:session_test:frame:100", group.evidence_refs)
 
-    def test_future_trusted_meld_identity_is_preserved_without_new_classifier_logic(self):
+    def test_direct_meld_tile_id_cannot_bypass_public_identity_gate(self):
         source = report(
             [
                 component(0.05, "meld", tile_id="P3"),
@@ -90,8 +92,74 @@ class RuntimePublicAdapterMeldTests(unittest.TestCase):
             ]
         )
         snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
+        self.assertEqual(snapshot.groups[0].tiles, (None, None, None))
+        self.assertFalse(snapshot.groups[0].identities_complete)
+
+    def test_gated_read_only_public_meld_identity_is_preserved(self):
+        def accepted(tile_id: str) -> dict:
+            return {
+                "region": "public_meld",
+                "read_only_runtime_candidate": tile_id,
+                "safe_for_runtime": True,
+                "safe_for_executor": False,
+                "formal_promotion_evidence": False,
+                "winner_independent_match_groups": 2,
+                "eligible_class_count": 2,
+                "score": 0.96,
+                "margin": 0.10,
+            }
+
+        source = report(
+            [
+                component(0.05, "meld", public_identity_result=accepted("P3")),
+                component(0.09, "meld", public_identity_result=accepted("P4")),
+                component(0.13, "meld", public_identity_result=accepted("P5")),
+            ]
+        )
+        snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertEqual(snapshot.groups[0].tiles, ("P3", "P4", "P5"))
         self.assertTrue(snapshot.groups[0].identities_complete)
+
+    def test_public_meld_gate_rejects_low_score_or_executor_safe_metadata(self):
+        weak = {
+            "region": "public_meld",
+            "read_only_runtime_candidate": "P6",
+            "safe_for_runtime": True,
+            "safe_for_executor": False,
+            "formal_promotion_evidence": False,
+            "winner_independent_match_groups": 2,
+            "eligible_class_count": 2,
+            "score": 0.91,
+            "margin": 0.10,
+        }
+        unsafe = {**weak, "score": 0.96, "safe_for_executor": True}
+        source = report([
+            component(0.05, "meld", public_identity_result=weak),
+            component(0.09, "meld", public_identity_result=unsafe),
+            component(0.13, "meld"),
+        ])
+        snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
+        self.assertEqual(snapshot.groups[0].tiles, (None, None, None))
+
+    def test_nonfinite_meld_scores_never_become_identity(self):
+        for field in ('score', 'margin'):
+            for value in (float('nan'), float('inf')):
+                accepted = dict(region='public_meld', read_only_runtime_candidate='P6',
+                    safe_for_runtime=True, safe_for_executor=False, formal_promotion_evidence=False,
+                    winner_independent_match_groups=2, eligible_class_count=2,
+                    score=0.96, margin=0.10)
+                accepted[field] = value
+                source = report([component(0.05, 'meld', public_identity_result=accepted),
+                    component(0.09, 'meld'), component(0.13, 'meld')])
+                result = player_meld_snapshot_from_runtime(source, timestamp_seconds=2)
+                self.assertIsNone(result.groups[0].tiles[0])
+
+    def test_unexplained_fragment_prevents_trusted_meld_count(self):
+        source = report([component(0.05, 'meld'), component(0.09, 'meld'),
+            component(0.13, 'meld'), component(0.35, 'meld')], concealed_count=13)
+        result = player_meld_snapshot_from_runtime(source, timestamp_seconds=2)
+        self.assertEqual(len(result.groups), 1)
+        self.assertFalse(result.trusted)
 
     def test_distant_meld_components_form_separate_groups(self):
         source = report(
@@ -107,6 +175,40 @@ class RuntimePublicAdapterMeldTests(unittest.TestCase):
         snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertEqual(len(snapshot.groups), 2)
         self.assertTrue(all(len(group.tiles) == 3 for group in snapshot.groups))
+
+    def test_incomplete_second_cluster_preserves_count_when_hand_size_agrees(self):
+        source = report(
+            [
+                component(0.05, "meld"),
+                component(0.09, "meld"),
+                component(0.13, "meld"),
+                component(0.17, "meld"),
+                component(0.32, "meld"),
+                component(0.36, "meld"),
+            ],
+            concealed_count=11,
+        )
+        snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
+        self.assertTrue(snapshot.trusted)
+        self.assertEqual(len(snapshot.groups), 2)
+        self.assertEqual(len(snapshot.groups[0].tiles), 4)
+        self.assertEqual(snapshot.groups[1].tiles, (None, None, None))
+        self.assertFalse(snapshot.groups[1].identities_complete)
+
+    def test_incomplete_cluster_is_not_promoted_without_hand_count_corroboration(self):
+        source = report(
+            [
+                component(0.05, "meld"),
+                component(0.09, "meld"),
+                component(0.13, "meld"),
+                component(0.17, "meld"),
+                component(0.32, "meld"),
+                component(0.36, "meld"),
+            ],
+            concealed_count=13,
+        )
+        snapshot = player_meld_snapshot_from_runtime(source, timestamp_seconds=2.0)
+        self.assertEqual(len(snapshot.groups), 1)
 
     def test_stacked_four_face_group_stays_one_group(self):
         source = report(
