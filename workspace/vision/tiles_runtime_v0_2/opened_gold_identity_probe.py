@@ -14,6 +14,31 @@ from pathlib import Path
 FROZEN_THRESHOLD = 0.82
 
 
+def summarize_match_disjoint_examples(examples, *, expected_tile, source_sha,
+                                     query_match_group, lineage):
+    """Exclude unknown lineage and every template from the query match.
+
+    The query group comes from the reviewed export, not its session name.
+    This is a development ranking audit, not an accuracy/promotion gate.
+    """
+    from workspace.vision.concealed_template_match_lineage import (
+        qualify_concealed_template_labels,
+    )
+    query_source = lineage.get(source_sha)
+    if query_source is not None and query_source.match_group != query_match_group:
+        raise ValueError('query original-match group conflicts with reviewed SHA lineage')
+    rows = [dict(row, sha256=row.get('source_sha256')) for row in examples]
+    qualified, audit = qualify_concealed_template_labels(
+        rows, lineage, query_match_group=query_match_group)
+    result = summarize_examples(qualified, expected_tile=expected_tile,
+                                excluded_source_shas=[source_sha])
+    result['lineage_audit'] = audit
+    result['filter_scope'] = 'reviewed_exact_SHA_original_match_disjoint_bank'
+    result['original_match_disjointness_established'] = bool(qualified)
+    result['formal_promotion_evidence'] = False
+    return result
+
+
 def summarize_examples(examples, *, expected_tile, excluded_source_shas=()):
     excluded = set(excluded_source_shas)
     winners = {}
@@ -49,7 +74,8 @@ def summarize_examples(examples, *, expected_tile, excluded_source_shas=()):
     }
 
 
-def probe_export(export_path, dataset_root, *, expected_tile):
+def probe_export(export_path, dataset_root, *, expected_tile, lineage_path=None,
+                 repository_root=None):
     import cv2
     import numpy as np
     from PIL import Image
@@ -59,6 +85,17 @@ def probe_export(export_path, dataset_root, *, expected_tile):
     export_path, dataset_root = Path(export_path), Path(dataset_root)
     export = json.loads(export_path.read_text(encoding='utf-8'))
     source_sha = export['source']['sha256']
+    lineage = None
+    if lineage_path is not None:
+        from workspace.vision.concealed_template_match_lineage import (
+            load_concealed_template_lineage, verify_lineage_evidence_paths,
+        )
+        if repository_root is None:
+            raise ValueError('repository_root is required to verify lineage evidence paths')
+        lineage = load_concealed_template_lineage(lineage_path)
+        issues = verify_lineage_evidence_paths(lineage, repository_root)
+        if issues:
+            raise ValueError(f'lineage evidence paths failed verification: {issues}')
     labels = approved_labels(dataset_root)
     bank = []
     for label in labels:
@@ -104,14 +141,23 @@ def probe_export(export_path, dataset_root, *, expected_tile):
                              'source_region': label.get('region'),
                              'gold_skin_only': bool(label.get('gold_skin_only')),
                              'feature_degenerate': degenerate, 'score': score})
-        samples.append({'timestamp_seconds': sample['timestamp_seconds'],
+        result = {'timestamp_seconds': sample['timestamp_seconds'],
                         'status': 'SCORED_DETECTOR_CROP',
                         'pixel_bbox': component['pixel_bbox'],
                         'classification_crop_bbox': component['classification_crop_bbox'],
                         'query_size': query_size, 'query_bright_face_bbox': face_box,
+                        'current_runtime_identity': {
+                            key: component.get(key) for key in (
+                                'candidate_tile_id', 'tile_id', 'tile_confidence',
+                                'identity_reason')},
                         'current_bank': summarize_examples(examples, expected_tile=expected_tile),
                         'exact_source_filtered': summarize_examples(examples,
-                            expected_tile=expected_tile, excluded_source_shas=[source_sha])})
+                            expected_tile=expected_tile, excluded_source_shas=[source_sha])}
+        if lineage is not None:
+            result['reviewed_match_disjoint'] = summarize_match_disjoint_examples(
+                examples, expected_tile=expected_tile, source_sha=source_sha,
+                query_match_group=export['original_match_group'], lineage=lineage)
+        samples.append(result)
     return {'schema_version': 'opened_gold_identity_probe_v0_1',
             'status': 'DEVELOPMENT_APPEARANCE_DIAGNOSTIC',
             'source_sha256': source_sha,
@@ -119,6 +165,7 @@ def probe_export(export_path, dataset_root, *, expected_tile):
             'expected_opened_tile': expected_tile,
             'expected_identity_authority': 'caller_direct_visible_indicator_review',
             'feature_path': 'unchanged _feature(region=gold_region)',
+            'reviewed_match_disjoint_filter_requested': lineage is not None,
             'source_session_is_independence_signal': False,
             'raw_or_derived_pixels_in_report': False,
             'runtime_changed': False, 'threshold_changed': False,
@@ -133,8 +180,15 @@ def main():
     parser.add_argument('--expected-tile', required=True,
                         help='Explicit direct visual review; never inferred from a hand tile')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--lineage', type=Path,
+                        help='Optional reviewed development SHA-to-original-match registry')
+    parser.add_argument('--repository-root', type=Path,
+                        help='Required with --lineage to verify its evidence paths')
     args = parser.parse_args()
-    report = probe_export(args.baseline_export, args.dataset, expected_tile=args.expected_tile)
+    if args.lineage is not None and args.repository_root is None:
+        parser.error('--repository-root is required with --lineage')
+    report = probe_export(args.baseline_export, args.dataset, expected_tile=args.expected_tile,
+                          lineage_path=args.lineage, repository_root=args.repository_root)
     args.output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(f"Opened-Gold diagnostic: {len(report['samples'])} checkpoints; no Runtime changes")
 
