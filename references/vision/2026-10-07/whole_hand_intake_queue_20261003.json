@@ -5,10 +5,10 @@
   "source": {
     "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
     "source_session": "session_real_20261003_e5b8d8e1",
-    "original_match_group": "real_match_2026_10_03_recent_game_segment_smallest",
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
     "private": true
   },
-  "reviewer": "chat_review_2026-10-07",
+  "reviewer": "chat_review_2026-10-08",
   "items": [
     {
       "tile_id": "P2",
@@ -17,7 +17,7 @@
       "slot": 2,
       "region": "hand_region",
       "gold_skin_only": false,
-      "reason": "pre-existing concealed identity support gap; current library has one stored source session"
+      "reason": "pre-existing concealed identity support gap; old source lineage remains unresolved, so this does not by itself establish two reviewed original matches"
     },
     {
       "tile_id": "M2",
@@ -26,7 +26,7 @@
       "slot": 13,
       "region": "hand_region",
       "gold_skin_only": false,
-      "reason": "pre-existing concealed identity support gap; current library has one stored source session"
+      "reason": "pre-existing concealed identity support gap; this source can provide a second reviewed original-match group after tile-only asset sync"
     },
     {
       "tile_id": "M7",
@@ -35,7 +35,16 @@
       "slot": 15,
       "region": "hand_region",
       "gold_skin_only": false,
-      "reason": "pre-existing concealed identity support gap; current library has one stored source session"
+      "reason": "pre-existing concealed identity support gap; this source can provide a second reviewed original-match group after tile-only asset sync"
+    },
+    {
+      "tile_id": "M6",
+      "source_frame": 178,
+      "bbox": [1928, 1091, 125, 194],
+      "slot": 13,
+      "region": "hand_region",
+      "gold_skin_only": false,
+      "reason": "clean ordinary M6 concealed crop from a second reviewed original match; useful as role-invariant opened-Gold development support, but temporary Gold-domain projection still loses to M7 and remains far below the frozen 0.82 Runtime threshold"
     },
     {
       "tile_id": "P9",
@@ -47,19 +56,35 @@
       "reason": "reviewed real yellow Gold-skin appearance; Gold-only evidence must not train ordinary concealed identity"
     }
   ],
+  "same_match_corroboration": {
+    "M6": {
+      "secondary_timestamp_seconds": 10.0,
+      "secondary_source_frame": 590,
+      "secondary_bbox": [2054, 1084, 125, 202],
+      "runtime_candidate": "M6",
+      "runtime_confidence": 0.905541,
+      "counts_as_independent_source": false
+    }
+  },
   "local_validation": {
     "reviewed_tile_intake_reproduced": true,
-    "same_session_exclusion_keeps_P2_M2_M7_unqualified_on_source_replay": true,
-    "future_other_session_would_have_two_stored_sessions_for_P2_M2_M7": true,
+    "same_original_match_never_self_validates_source_support": true,
+    "post_sync_M2_M7_M6_can_each_have_two_reviewed_original_match_groups": true,
+    "P2_remains_lineage_blocked_until_old_source_is_recovered": true,
+    "M6_cross_role_projection_alone_does_not_clear_opened_gold_identity": true,
     "raw_or_derived_pixels_committed": false
   },
   "evidence_policy": {
-    "same_match_samples_share_one_source_session": true,
+    "same_match_samples_share_one_original_match_group": true,
+    "source_session_is_independence_evidence": false,
+    "adjacent_frames_are_independent_sources": false,
     "revealed_match_is_development_only": true,
     "may_not_be_used_as_independent_holdout": true,
     "confidence_threshold": 0.82,
     "confidence_threshold_changed": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
     "safe_for_executor": false
   },
-  "next_step": "On the private-source machine, run reviewed_tile_intake for each item using the pinned source SHA/session, verify generated asset hashes, then sync only tile-only privacy assets plus labels."
+  "next_step": "On the private-source machine, run reviewed_tile_intake for selected items using the pinned source SHA/session. M6 is approved only as a pending ordinary concealed development source; do not auto-admit it as an opened-Gold Runtime fix. Verify generated asset hashes before syncing any tile-only privacy asset plus label."
 }

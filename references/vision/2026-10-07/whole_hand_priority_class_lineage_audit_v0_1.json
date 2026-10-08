@@ -1,7 +1,7 @@
 {
   "schema_version": "whole_hand_priority_class_lineage_audit_v0_1",
   "development_only": true,
-  "audit_date": "2026-10-07",
+  "audit_date": "2026-10-08",
   "policy": {
     "independence_key": "reviewed original_match_group backed by exact source SHA256",
     "source_session_is_independence_evidence": false,
@@ -14,8 +14,9 @@
   "new_reviewed_source": {
     "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
     "source_session": "session_real_20261003_e5b8d8e1",
-    "original_match_group": "real_match_2026_10_03_recent_game_segment_smallest",
-    "evidence_path": "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json",
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+    "evidence_path": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json",
+    "intake_path": "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json",
     "asset_sync_status": "PRIVATE_TILE_ASSETS_NOT_YET_COMMITTED",
     "may_be_used_as_formal_holdout": false
   },
@@ -38,6 +39,18 @@
       "post_asset_sync_status": "TWO_REVIEWED_ORIGINAL_MATCH_GROUPS_AVAILABLE",
       "next_action": "sync the reviewed M7 tile-only asset and label from the pinned private source"
     },
+    "M6": {
+      "existing_source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "existing_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "existing_lineage_status": "REVIEWED",
+      "new_source_contains_reviewed_crop": true,
+      "new_source_primary_frame": 178,
+      "new_source_runtime_concealed_confidence": 0.918908,
+      "new_source_is_distinct_original_match": true,
+      "post_asset_sync_status": "TWO_REVIEWED_ORIGINAL_MATCH_GROUPS_AVAILABLE_FOR_ORDINARY_CONCEALED_M6",
+      "opened_gold_implication": "ordinary M6 support improves after asset sync, but temporary Gold-domain projection remains below M7 and far below Runtime threshold 0.82; this is not an opened-Gold acceptance change",
+      "next_action": "keep M6 as a pending ordinary concealed tile-only development source; do not auto-admit it as an opened-Gold Runtime fix"
+    },
     "P2": {
       "existing_source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
       "existing_source_session": "session_5e02f7d0458be0a9",
@@ -50,8 +63,9 @@
     }
   },
   "classifier_implication": {
-    "M2_M7": "eligible for two-match development support after private asset sync; do not count the current source as its own holdout",
+    "M2_M7_M6": "eligible for two-match development support after private asset sync; do not count the current source as its own holdout",
     "P2": "remain fail-closed for original-match qualification until 5e02f7d lineage is recovered",
+    "opened_gold": "the new ordinary M6 crop supports role-invariant development but does not justify Runtime wiring or any change to 0.82",
     "ab_split_requirement": "template and candidate models must be evaluated on identical crops with whole original matches kept on one side of the split"
   }
 }

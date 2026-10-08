@@ -82,6 +82,11 @@
       "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
       "match_group": "reviewed_match_concealed_recovery_a",
       "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "match_group": "reviewed_match_2026_10_03_recent_real_game",
+      "evidence_path": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json"
     }
   ]
 }

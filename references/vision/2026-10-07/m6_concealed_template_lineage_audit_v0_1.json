@@ -1,8 +1,8 @@
 {
   "schema_version": "m6_concealed_template_lineage_audit_v0_1",
-  "audit_date": "2026-10-07",
+  "audit_date": "2026-10-08",
   "development_only": true,
-  "scope": "Approved ordinary concealed identity templates for tile M6 in dataset/tiles_runtime_v0_2/labels.jsonl, excluding Gold-skin-only identity assets.",
+  "scope": "Approved ordinary concealed identity templates for tile M6 in dataset/tiles_runtime_v0_2/labels.jsonl, excluding Gold-skin-only identity assets. Pending reviewed intake sources are reported separately and are not counted as committed templates.",
   "ordinary_m6_templates": [
     {
       "template_id": "tile_d5f8cdd914564156",
@@ -26,6 +26,32 @@
       "lineage_evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
     }
   ],
+  "pending_reviewed_ordinary_m6_sources": [
+    {
+      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "source_session": "session_real_20261003_e5b8d8e1",
+      "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+      "source_frame": 178,
+      "timestamp_seconds": 3.0,
+      "bbox": [1928, 1091, 125, 194],
+      "region": "hand_region",
+      "runtime_candidate": "M6",
+      "runtime_confidence": 0.918908,
+      "review_authority": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json",
+      "intake_path": "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json",
+      "status": "REVIEWED_SOURCE_PENDING_TILE_ONLY_ASSET_SYNC",
+      "counts_in_committed_template_totals": false,
+      "role_scope": "ordinary concealed development source; not an opened-Gold Runtime acceptance change"
+    }
+  ],
+  "same_match_corroboration": {
+    "source_frame": 590,
+    "timestamp_seconds": 10.0,
+    "bbox": [2054, 1084, 125, 202],
+    "runtime_candidate": "M6",
+    "runtime_confidence": 0.905541,
+    "counts_as_additional_original_match": false
+  },
   "excluded_gold_skin_only_m6_templates": [
     {
       "template_id": "tile_2e4c09fcd9e3ed8f",
@@ -42,13 +68,15 @@
   "ordinary_unresolved_source_shas": [
     "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82"
   ],
-  "finding": "The ordinary M6 class currently has two source sessions but only one reviewed independent original-match group. Therefore session count cannot establish cross-match M6 consensus. The unresolved 781b... source must not be counted as independent-match support until exact-SHA source recovery and human original-match review are complete.",
+  "post_pending_asset_sync_reviewed_original_match_group_count": 2,
+  "finding": "The committed ordinary M6 bank still has only one reviewed independent original-match group. The reviewed 2026-10-03 source can become a second reviewed ordinary M6 match group after its tile-only asset and label are synced. The unresolved 781b... source remains UNKNOWN and must not be counted. This pending source does not by itself solve explicit opened-Gold identity: temporary Gold-domain projection remains below M7 and far below the frozen 0.82 Runtime threshold.",
   "relation_to_wrong_accepts": {
     "observed_errors": ["M7->M6", "M5->M6"],
     "frozen_threshold": 0.82,
-    "note": "Both errors are accepted above the frozen threshold. The updated template_source_consensus_probe must be run on the two private query crops to identify which M6 exemplar wins and to record per-original-match maxima. Regardless of the winner, the current tracked M6 bank does not yet contain two reviewed independent ordinary match groups."
+    "note": "The additional reviewed M6 source is useful for future source-qualified classifier work, but no Runtime template or threshold change is justified until an unchanged candidate passes a new original-match holdout without increasing wrong accepts."
   },
   "source_session_is_independent_match_evidence": false,
+  "adjacent_frames_are_independent_match_evidence": false,
   "match_group_inference_allowed": false,
   "runtime_change_justified": false,
   "safe_for_runtime": false,
