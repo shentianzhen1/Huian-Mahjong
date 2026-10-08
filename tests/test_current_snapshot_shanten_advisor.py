@@ -51,14 +51,19 @@ def snapshot(
     )
 
 
-def count_only_snapshot(*, input_source: str, meld_slot: tuple[None, ...]):
+def count_only_snapshot(
+    *,
+    input_source: str,
+    meld_slot: tuple[None, ...],
+    hand=COUNT_ONLY_HAND,
+):
     manual = input_source == "user_entered"
     return CurrentTableSnapshot(
         timestamp_seconds=2.0,
         source_session="manual:count-only" if manual else "runtime-count-only",
         stream_epoch=0,
         stable_frames=0 if manual else 3,
-        own_hand=COUNT_ONLY_HAND,
+        own_hand=tuple(hand),
         gold_tile="M6",
         rivers=((), ()),
         melds=((meld_slot, meld_slot), ()),
@@ -168,6 +173,40 @@ class CurrentSnapshotShantenAdvisorTests(unittest.TestCase):
             self.assertIn("meld_identity_unknown:0", result.issues)
 
         self.assertEqual(manual.shanten, runtime.shanten)
+
+    def test_count_only_post_draw_keeps_structural_discard_advice(self):
+        post_draw = (*COUNT_ONLY_HAND, "N")
+        manual = analyze_snapshot_shanten(
+            count_only_snapshot(
+                input_source="user_entered",
+                meld_slot=(None,),
+                hand=post_draw,
+            )
+        )
+        runtime = analyze_snapshot_shanten(
+            count_only_snapshot(
+                input_source="runtime_vision",
+                meld_slot=(None, None, None),
+                hand=post_draw,
+            )
+        )
+
+        for result in (manual, runtime):
+            self.assertTrue(result.allowed)
+            self.assertEqual(result.status, "PARTIAL")
+            self.assertEqual(result.phase, "POST_DRAW")
+            self.assertTrue(result.best_discards)
+            self.assertTrue(
+                all(item.total_live_copies is None for item in result.best_discards)
+            )
+            self.assertFalse(result.visible_remainders_used)
+            self.assertFalse(result.safe_for_executor)
+            self.assertIn("meld_identity_unknown:0", result.issues)
+
+        self.assertEqual(
+            tuple((item.discard, item.shanten) for item in manual.best_discards),
+            tuple((item.discard, item.shanten) for item in runtime.best_discards),
+        )
 
     def test_runtime_cannot_use_manual_count_only_slot(self):
         result = analyze_snapshot_shanten(
