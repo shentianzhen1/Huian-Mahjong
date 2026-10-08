@@ -15,6 +15,8 @@ python -m pip install -e .
 python -B -m unittest discover -s tests -v
 ```
 
+完整测试套件（含 `unittest` 发现不到的函数式 pytest 测试）是 `python -B -m pytest -q tests`。需要先安装 pytest；未装 Vision 依赖时，依赖 OpenCV/Pillow 的测试会跳过。
+
 可选开发工具：`python -m pip install -e ".[dev]"`。Vision 使用 `python -m pip install -e ".[vision]"`。核心测试只依赖 Python 标准库；在仓库根目录直接跑 `unittest` 仍可以。
 
 Linux / macOS：
@@ -69,7 +71,7 @@ python -B -m unittest discover -s tests -v
 
 这几个版本号含义不同，不互相替代：
 
-- Project release：当前 `0.2.0`，对应 Python 安装包 / 仓库集成版本。
+- Project release：当前 `0.2.1`，对应 Python 安装包 / 仓库集成版本。
 - RuleSnapshot：用 SHA-256 fingerprint 标识精确规则证据快照；规则变化时 fingerprint 变化。
 - Agent：当前正式策略 `MeldAwareShantenAgent V0.10`，独立于项目 release。
 - Vision：Runtime Vision V0.2 是视觉子系统版本，目前仍是 experimental/read-only，不等同项目 release。
@@ -82,6 +84,12 @@ python -B -m unittest discover -s tests -v
 
 ```powershell
 python -B -m unittest discover -s tests -v
+```
+
+`unittest discover` 不会收集 `tests/` 里的函数式 pytest 测试。完整套件用：
+
+```powershell
+python -B -m pytest -q tests
 ```
 
 完整本地回归：

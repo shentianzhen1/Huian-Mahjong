@@ -198,7 +198,19 @@ def main() -> None:
     parser.add_argument("--truth", default="dataset/tiles_runtime_v0_2/validation/holdout/geometry_holdout_ground_truth_v0_2.jsonl")
     parser.add_argument("--media-root", default="data/capture_validation")
     args = parser.parse_args()
-    print(json.dumps(evaluate(Path(args.dataset), Path(args.plan), Path(args.truth), locate_sources(Path(args.media_root))), ensure_ascii=False, indent=2))
+    dataset = Path(args.dataset)
+    output = dataset / "validation" / "reports" / "phase5c_blind_holdout_validation_v0_2.json"
+    report = evaluate(
+        dataset,
+        Path(args.plan),
+        Path(args.truth),
+        locate_sources(Path(args.media_root)),
+        output_path=output,
+    )
+    print(
+        f"wrote {output}; phase6_formal_tile_labeling_allowed="
+        f"{bool(report['phase6_formal_tile_labeling_allowed'])}"
+    )
 
 
 if __name__ == "__main__":
