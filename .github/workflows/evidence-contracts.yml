@@ -46,6 +46,8 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
       - name: Install Vision dependencies for real-frame contract checks
         run: python -m pip install -e ".[vision]"
       - name: Verify public detector source hashes and locked calibration
