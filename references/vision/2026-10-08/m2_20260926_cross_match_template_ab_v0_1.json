@@ -1,6 +1,6 @@
 {
   "schema_version": "m2_20260926_cross_match_template_ab_v0_1",
-  "status": "DEVELOPMENT_CROSS_ORIGINAL_MATCH_AB_NOT_RUNTIME_PROMOTION",
+  "status": "ASSET_HASHES_VERIFIED_PRIVATE_PIXEL_EXACT_NOT_RUNTIME_PROMOTION",
   "purpose": "Freeze the reviewed September-26 high-resolution M2 support result against the held-out October-3 M2/M3 confusion family while preserving original-match provenance and the Runtime 0.82 boundary.",
   "support_source": {
     "filename": "ScreenRecording_09-26-2026 22-26-47_1.mp4",
@@ -8,6 +8,7 @@
     "duration_seconds_approx": 217.098,
     "frame_count": 12880,
     "frame_index": 148,
+    "decoded_frame_pixel_exact_verified": true,
     "original_match_group": "reviewed_match_2026_09_26_eight_hand",
     "legacy_match_group_alias": "reviewed_match_2026_09_26_hands_2_to_4",
     "same_original_match_byte_variants": [
@@ -26,16 +27,23 @@
         "slot": 6,
         "bbox": [1050, 1113, 123, 164],
         "tile_id": "M2",
-        "asset_sha256": null
+        "sample_id": "tile_509c0534c997767f",
+        "image": "templates/hand/tile_509c0534c997767f_M2.png",
+        "asset_sha256": "bf84e155ce8de5b67d6e0543a992f28ce09c68a8d4ba94a24dbf19cef37aac80",
+        "pixel_exact_from_decoded_source_frame": true
       },
       {
         "slot": 7,
         "bbox": [1176, 1114, 123, 163],
         "tile_id": "M2",
-        "asset_sha256": null
+        "sample_id": "tile_64f124eb6a342eab",
+        "image": "templates/hand/tile_64f124eb6a342eab_M2.png",
+        "asset_sha256": "6d36389dc52fc722afa4ea68913c54d6962304711f2687bcd568d57e80a51921",
+        "pixel_exact_from_decoded_source_frame": true
       }
     ],
-    "tile_only_asset_hash_status": "PENDING_PRIVATE_REGENERATION",
+    "tile_only_asset_hash_status": "VERIFIED_PRIVATE_PIXEL_EXACT",
+    "staging_manifest": "references/vision/2026-10-08/reviewed_tile_intake_staging_20260926_m2.jsonl",
     "binary_assets_committed": false,
     "final_labels_updated": false,
     "runtime_template_bank_updated": false
@@ -105,5 +113,5 @@
   "safe_for_runtime": false,
   "safe_for_hint_promotion": false,
   "safe_for_executor": false,
-  "next_step": "Regenerate the two tile-only crops on the private exact-source machine, pin their asset SHA256 values, then use append-safe reviewed intake and rerun source-grouped whole-hand diagnostics. Do not lower 0.82 or count any Sep-26 chunk/re-encode as another independent original match."
+  "next_step": "Use these exact hash-pinned staging rows for source-grouped whole-hand candidate evaluation. Persist or admit the binary tile assets into final labels only after the candidate improves exact-hand completeness without increasing wrong accepts; do not lower 0.82 or count any Sep-26 chunk/re-encode as another independent original match."
 }
