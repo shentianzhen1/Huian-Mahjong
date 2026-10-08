@@ -61,7 +61,7 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
         cls.audit = json.loads(AUDIT.read_text(encoding="utf-8"))
 
     def test_registry_is_exact_sha_and_evidence_paths_exist(self):
-        self.assertEqual(len(self.registry), 16)
+        self.assertEqual(len(self.registry), 17)
         self.assertEqual(verify_lineage_evidence_paths(self.registry, ROOT), [])
 
         old_match_shas = {
@@ -80,6 +80,17 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
                 for sha in old_match_shas
             },
             {"reviewed_match_2026_09_19_eight_hand"},
+        )
+        october_sha = (
+            "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14"
+        )
+        self.assertEqual(
+            self.registry[october_sha].match_group,
+            "reviewed_match_2026_10_03_recent_real_game",
+        )
+        self.assertEqual(
+            self.registry[october_sha].evidence_path,
+            "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json",
         )
 
     def test_source_session_name_never_substitutes_for_missing_sha_lineage(self):
