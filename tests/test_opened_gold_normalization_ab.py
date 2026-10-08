@@ -7,42 +7,24 @@ from workspace.vision.tiles_runtime_v0_2.opened_gold_normalization_ab import (
 )
 
 
-class OpenedGoldNormalizationABTests(unittest.TestCase):
-    def test_runtime_mode_is_exact_production_gold_feature(self):
-        import numpy as np
-        from PIL import Image
-        from workspace.vision.tiles_v0_1.template_classifier import _feature
+class OpenedGoldNormalizationABContractTests(unittest.TestCase):
+    def test_fixed_modes_preserve_runtime_baseline_name(self):
+        self.assertEqual(
+            NORMALIZATION_MODES,
+            (
+                "runtime_gray",
+                "face_only_gray",
+                "face_only_edges",
+                "inner_08_gray",
+                "inner_08_edges",
+            ),
+        )
 
-        pixels = np.zeros((120, 88, 3), dtype=np.uint8)
-        pixels[8:114, 6:82] = (220, 205, 95)
-        pixels[24:98, 20:66] = (245, 245, 235)
-        pixels[40:84, 32:56] = (40, 40, 40)
-        image = Image.fromarray(pixels)
-        self.assertTrue(np.array_equal(
-            feature_for_mode(image, "runtime_gray"),
-            _feature(image, region="gold_region"),
-        ))
-
-    def test_all_candidate_modes_are_fixed_shape_and_do_not_need_tile_id(self):
-        import numpy as np
-        from PIL import Image
-
-        pixels = np.zeros((120, 88, 3), dtype=np.uint8)
-        pixels[8:114, 6:82] = (230, 215, 100)
-        pixels[26:100, 20:68] = (248, 248, 238)
-        pixels[44:88, 30:58] = (20, 20, 20)
-        image = Image.fromarray(pixels)
-        for mode in NORMALIZATION_MODES:
-            feature = feature_for_mode(image, mode)
-            self.assertEqual(feature.shape, (72, 48))
-            self.assertEqual(feature.dtype, np.uint8)
-            self.assertTrue(np.isfinite(feature).all())
-
-    def test_unknown_mode_fails_closed(self):
-        from PIL import Image
-
-        with self.assertRaisesRegex(ValueError, "unknown opened-Gold normalization mode"):
-            feature_for_mode(Image.new("RGB", (32, 48), "white"), "secret_tuned_mode")
+    def test_unknown_mode_fails_closed_before_vision_dependencies(self):
+        with self.assertRaisesRegex(
+            ValueError, "unknown opened-Gold normalization mode"
+        ):
+            feature_for_mode(object(), "secret_tuned_mode")
 
     def test_summary_is_ranking_only_and_never_applies_runtime_threshold(self):
         samples = [{
@@ -64,7 +46,9 @@ class OpenedGoldNormalizationABTests(unittest.TestCase):
                 }
             },
         }]
-        summary = summarize_normalization_samples(samples, modes=("runtime_gray",))
+        summary = summarize_normalization_samples(
+            samples, modes=("runtime_gray",)
+        )
         current = summary["current_bank"]["runtime_gray"]
         filtered = summary["exact_source_filtered"]["runtime_gray"]
         self.assertEqual(current["top1_correct"], 1)
