@@ -1,0 +1,48 @@
+{
+  "schema_version": "reviewed_tile_asset_sync_staging_v0_1",
+  "status": "TILE_ONLY_ASSETS_GENERATED_LOCALLY_NOT_IN_FINAL_LABELS_OR_RUNTIME",
+  "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+  "source_session": "session_real_20261003_e5b8d8e1",
+  "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+  "items": [
+    {
+      "id": "tile_ce429e84358b6752",
+      "tile_id": "M2",
+      "source_frame": 1176,
+      "bbox": [1930, 1114, 122, 163],
+      "asset_sha256": "9932b42f16c7fe3bb02b4d27220dd0a33e0d27fd434645f4ba666b52ae129b7b",
+      "image": "templates/hand/tile_ce429e84358b6752_M2.png"
+    },
+    {
+      "id": "tile_fa85af277fcee746",
+      "tile_id": "M6",
+      "source_frame": 1176,
+      "bbox": [2181, 1114, 122, 163],
+      "asset_sha256": "c469af14a04666d49b1e05366e8951367d637e79f25806114f332aa5da9edfe8",
+      "image": "templates/hand/tile_fa85af277fcee746_M6.png"
+    },
+    {
+      "id": "tile_141fe3d052998e55",
+      "tile_id": "M6",
+      "source_frame": 178,
+      "bbox": [1928, 1091, 125, 194],
+      "asset_sha256": "f7f964975cef903522870d5a7a4e6670fd228d64b2238fee35479a42fab92bd4",
+      "image": "templates/hand/tile_141fe3d052998e55_M6.png"
+    }
+  ],
+  "lineage_registry_already_present": true,
+  "counts_as_independent_original_match_groups": 1,
+  "source_session_is_independence_evidence": false,
+  "adjacent_or_same_match_frames_are_independent_sources": false,
+  "labels_jsonl_updated": false,
+  "binary_assets_committed": false,
+  "runtime_changed": false,
+  "runtime_identity_threshold": 0.82,
+  "current_agent": "MeldAwareShantenAgent V0.10",
+  "executor_enabled": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "formal_promotion_evidence": false,
+  "next_step": "Use an append-safe workflow to persist the deterministic tile-only PNGs and merge exactly these reviewed rows into final labels.jsonl, then run source-grouped diagnostics. Do not use the 2026-10-03 match as its own holdout."
+}
