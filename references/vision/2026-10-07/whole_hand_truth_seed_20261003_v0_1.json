@@ -2,100 +2,15 @@
   "schema_version": "vision_whole_hand_truth_seed_v0_1",
   "status": "DEVELOPMENT_TRUTH_SEED_NOT_PROMOTION_HOLDOUT",
   "purpose": "Seed reviewed whole-hand truth from a new real match before detector/classifier scoring. Adjacent frames remain one original-match source and must never be treated as independent test sources.",
-  "source": {
-    "filename": "ScreenRecording_10-03-2026 22-36-10_1.mov",
-    "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
-    "duration_seconds": 47.401667,
-    "encoded_resolution": [1290, 2796],
-    "display_resolution": [2796, 1290],
-    "private_raw_video": true,
-    "raw_frames_committed": false
-  },
-  "source_grouping": {
-    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
-    "split_policy": "all samples from this original match stay together",
-    "source_session_is_independence_signal": false,
-    "adjacent_frames_may_train_but_never_form_independent_holdout_sources": true
-  },
-  "review": {
-    "method": "direct high-resolution video-frame visual review",
-    "tile_order": "left_to_right_display_order",
-    "confidence_threshold": 0.82,
-    "threshold_is_not_a_tuning_variable": true,
-    "machine_detector_scoring": "NOT_RUN_IN_THIS_SEED",
-    "machine_classifier_scoring": "NOT_RUN_IN_THIS_SEED"
-  },
+  "source": {"filename": "ScreenRecording_10-03-2026 22-36-10_1.mov", "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14", "duration_seconds": 47.401667, "encoded_resolution": [1290, 2796], "display_resolution": [2796, 1290], "private_raw_video": true, "raw_frames_committed": false},
+  "source_grouping": {"original_match_group": "reviewed_match_2026_10_03_recent_real_game", "split_policy": "all samples from this original match stay together", "source_session_is_independence_signal": false, "adjacent_frames_may_train_but_never_form_independent_holdout_sources": true},
+  "review": {"method": "direct high-resolution video-frame visual review", "tile_order": "left_to_right_display_order", "confidence_threshold": 0.82, "threshold_is_not_a_tuning_variable": true, "machine_detector_scoring": "NOT_RUN_IN_THIS_SEED", "machine_classifier_scoring": "NOT_RUN_IN_THIS_SEED", "truth_correction_2026_10_08": "Direct source-frame re-review corrected t30 M5->M6 and t40/t46 S7->S5. See references/vision/2026-10-08/whole_hand_truth_correction_20261003_v0_1.json."},
   "samples": [
-    {
-      "sample_id": "20261003-seg-shae5b8-t03.0",
-      "timestamp_seconds": 3.0,
-      "scene_tags": ["no_own_meld", "stable_concealed_hand"],
-      "truth": {
-        "own_melds": [],
-        "concealed_hand": [
-          "P1", "P2", "P2", "P3", "P4", "P4", "P6", "S1",
-          "S5", "S7", "M1", "M2", "M3", "M6", "M8", "SOUTH"
-        ],
-        "draw_visual": null,
-        "gold_skinned_draw": false
-      }
-    },
-    {
-      "sample_id": "20261003-seg-shae5b8-t10.0",
-      "timestamp_seconds": 10.0,
-      "scene_tags": ["no_own_meld", "separate_draw_visual"],
-      "truth": {
-        "own_melds": [],
-        "concealed_hand": [
-          "P1", "P1", "P2", "P2", "P3", "P4", "P4", "P6",
-          "S1", "S5", "S7", "M1", "M2", "M3", "M6", "M8"
-        ],
-        "draw_visual": "S4",
-        "gold_skinned_draw": false
-      }
-    },
-    {
-      "sample_id": "20261003-seg-shae5b8-t30.0",
-      "timestamp_seconds": 30.0,
-      "scene_tags": ["one_own_peng", "lifted_discard_candidate"],
-      "truth": {
-        "own_melds": [["P1", "P1", "P1"]],
-        "concealed_hand": [
-          "P2", "P2", "P3", "P4", "P4", "P6", "P6", "S4",
-          "S5", "M1", "M2", "M3", "M5"
-        ],
-        "draw_visual": null,
-        "gold_skinned_draw": false
-      }
-    },
-    {
-      "sample_id": "20261003-seg-shae5b8-t40.0",
-      "timestamp_seconds": 40.0,
-      "scene_tags": ["one_own_peng", "separate_draw_visual", "ting_prompt_overlay"],
-      "truth": {
-        "own_melds": [["P1", "P1", "P1"]],
-        "concealed_hand": [
-          "P2", "P2", "P3", "P4", "P4", "P6", "P6", "S3",
-          "S4", "S7", "M1", "M2", "M3"
-        ],
-        "draw_visual": "S4",
-        "gold_skinned_draw": false
-      }
-    },
-    {
-      "sample_id": "20261003-seg-shae5b8-t46.0",
-      "timestamp_seconds": 46.0,
-      "scene_tags": ["one_own_peng", "separate_draw_visual", "yellow_gold_skin"],
-      "truth": {
-        "own_melds": [["P1", "P1", "P1"]],
-        "concealed_hand": [
-          "P2", "P2", "P3", "P4", "P4", "P6", "P6", "S3",
-          "S4", "S7", "M1", "M2", "M3"
-        ],
-        "draw_visual": "P9",
-        "gold_skinned_draw": true
-      }
-    }
+    {"sample_id": "20261003-seg-shae5b8-t03.0", "timestamp_seconds": 3.0, "scene_tags": ["no_own_meld", "stable_concealed_hand"], "truth": {"own_melds": [], "concealed_hand": ["P1", "P2", "P2", "P3", "P4", "P4", "P6", "S1", "S5", "S7", "M1", "M2", "M3", "M6", "M8", "SOUTH"], "draw_visual": null, "gold_skinned_draw": false}},
+    {"sample_id": "20261003-seg-shae5b8-t10.0", "timestamp_seconds": 10.0, "scene_tags": ["no_own_meld", "separate_draw_visual"], "truth": {"own_melds": [], "concealed_hand": ["P1", "P1", "P2", "P2", "P3", "P4", "P4", "P6", "S1", "S5", "S7", "M1", "M2", "M3", "M6", "M8"], "draw_visual": "S4", "gold_skinned_draw": false}},
+    {"sample_id": "20261003-seg-shae5b8-t30.0", "timestamp_seconds": 30.0, "scene_tags": ["one_own_peng", "lifted_discard_candidate"], "truth": {"own_melds": [["P1", "P1", "P1"]], "concealed_hand": ["P2", "P2", "P3", "P4", "P4", "P6", "P6", "S4", "S5", "M1", "M2", "M3", "M6"], "draw_visual": null, "gold_skinned_draw": false}},
+    {"sample_id": "20261003-seg-shae5b8-t40.0", "timestamp_seconds": 40.0, "scene_tags": ["one_own_peng", "separate_draw_visual", "ting_prompt_overlay"], "truth": {"own_melds": [["P1", "P1", "P1"]], "concealed_hand": ["P2", "P2", "P3", "P4", "P4", "P6", "P6", "S3", "S4", "S5", "M1", "M2", "M3"], "draw_visual": "S4", "gold_skinned_draw": false}},
+    {"sample_id": "20261003-seg-shae5b8-t46.0", "timestamp_seconds": 46.0, "scene_tags": ["one_own_peng", "separate_draw_visual", "yellow_gold_skin"], "truth": {"own_melds": [["P1", "P1", "P1"]], "concealed_hand": ["P2", "P2", "P3", "P4", "P4", "P6", "P6", "S3", "S4", "S5", "M1", "M2", "M3"], "draw_visual": "P9", "gold_skinned_draw": true}}
   ],
   "next_step": "Run the frozen detector/template path on these exact timestamps, attach detector boxes/crop refs/predictions, then score with whole_hand_eval.py. Keep this source in one split. A future neural candidate must run on the exact same matched crops.",
   "safe_for_runtime_change": false,

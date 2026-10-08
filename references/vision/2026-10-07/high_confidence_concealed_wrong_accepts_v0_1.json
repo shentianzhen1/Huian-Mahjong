@@ -1,54 +1,18 @@
 {
   "schema_version": "concealed_high_confidence_wrong_accepts_v0_1",
-  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION_EVIDENCE",
-  "source": {
-    "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
-    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
-    "private_pixels_committed": false
-  },
+  "status": "CORRECTED_DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION_EVIDENCE",
+  "source": {"sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14", "original_match_group": "reviewed_match_2026_10_03_recent_real_game", "private_pixels_committed": false},
   "frozen_runtime_threshold": 0.82,
-  "baseline": {
-    "ordinary_tiles": 43,
-    "accepted": 31,
-    "accepted_correct": 29,
-    "wrong_accepted": 2,
-    "whole_hands_advice_eligible": 0
-  },
-  "wrong_accepts": [
-    {
-      "sample_id": "real_20261003_t20_normal_16",
-      "truth_tile": "M7",
-      "predicted_tile": "M6",
-      "baseline_confidence": 0.9200868606567383,
-      "central7_predicted_tile": "M6",
-      "central7_confidence": 0.8735002279281616,
-      "baseline_accepted_at_0_82": true,
-      "central7_accepted_at_0_82": true
-    },
-    {
-      "sample_id": "real_20261003_t30_post_peng_13",
-      "truth_tile": "M5",
-      "predicted_tile": "M6",
-      "baseline_confidence": 0.9267216920852661,
-      "central7_predicted_tile": "M6",
-      "central7_confidence": 0.8657265305519104,
-      "baseline_accepted_at_0_82": true,
-      "central7_accepted_at_0_82": true
-    }
+  "baseline": {"ordinary_tiles": 43, "accepted": 31, "accepted_correct": 31, "wrong_accepted": 0, "whole_hands_advice_eligible": 0},
+  "wrong_accepts": [],
+  "invalidated_previous_wrong_accepts": [
+    {"sample_id": "real_20261003_t20_normal_16", "previous_truth_tile": "M7", "corrected_truth_tile": "M6", "predicted_tile": "M6", "baseline_confidence": 0.9200868606567383, "central7_confidence": 0.8735002279281616, "correction_basis": "direct source-frame and detector-crop visual review; tile face is 六萬"},
+    {"sample_id": "real_20261003_t30_post_peng_13", "previous_truth_tile": "M5", "corrected_truth_tile": "M6", "predicted_tile": "M6", "baseline_confidence": 0.9267216920852661, "central7_confidence": 0.8657265305519104, "correction_basis": "direct source-frame and detector-crop visual review; tile face is 六萬"}
   ],
-  "observed_pattern": "Both current high-confidence ordinary errors collapse neighboring Wan identities M5/M7 into M6. Central edge trim lowers confidence but does not cross the frozen 0.82 reject gate.",
-  "classifier_risk": {
-    "current_class_score": "maximum NCC over every template in the candidate class",
-    "risk": "one unusually similar exemplar can dominate a class score even when other reviewed original matches do not agree",
-    "m6_ordinary_source_note": "M6 has two ordinary source sessions but only one reviewed independent original-match group. The ordinary sources are reviewed 1560c1... from reviewed_match_2026_09_19_eight_hand and unresolved 781bfe...; a separate fba5f67d... M6 asset is gold_skin_only and is not ordinary concealed support.",
-    "ordinary_m6_template_count": 2,
-    "ordinary_m6_distinct_source_session_count": 2,
-    "ordinary_m6_reviewed_original_match_group_count": 1,
-    "ordinary_m6_unresolved_source_sha_count": 1,
-    "source_session_is_independent_match_evidence": false,
-    "lineage_audit_ref": "references/vision/2026-10-07/m6_concealed_template_lineage_audit_v0_1.json"
-  },
-  "next_step": "Run the v0.2 template_source_consensus_probe on the two pinned private crops. Record the exact winning M6 exemplar plus per-original-match maxima. Do not treat the unresolved 781b... source as independent-match support until exact-SHA recovery and human original-match review are complete.",
+  "observed_pattern": "After truth correction there are no high-confidence wrong accepts in the 43 ordinary tiles. The remaining raw Top-1 confusions are S4->S6 x4 and M2->M3 x3, and all seven remain below the frozen 0.82 acceptance gate.",
+  "classifier_risk": {"current_class_score": "maximum NCC over every template in the candidate class", "risk": "a single exemplar can still dominate a class score, so unresolved lineage remains a governance risk even though the two former M6 wrong-accept examples were actually correct M6 matches", "m6_ordinary_source_note": "M6 has two ordinary source sessions but only one committed reviewed independent original-match group. The unresolved 781bfe... source must not count as promotion evidence; however, the two previously cited 10/3 matches are not evidence that it causes wrong accepts.", "ordinary_m6_template_count": 2, "ordinary_m6_distinct_source_session_count": 2, "ordinary_m6_reviewed_original_match_group_count": 1, "ordinary_m6_unresolved_source_sha_count": 1, "source_session_is_independent_match_evidence": false, "lineage_audit_ref": "references/vision/2026-10-07/m6_concealed_template_lineage_audit_v0_1.json"},
+  "next_step": "Focus ordinary identity development on the still-real S4/S6 and M2/M3 confusions and on source-qualified coverage. Do not quarantine 781b... based on the invalidated M5/M7 examples; its original-match lineage remains UNKNOWN for promotion accounting.",
+  "truth_correction_ref": "references/vision/2026-10-08/whole_hand_truth_correction_20261003_v0_1.json",
   "safe_for_runtime_change": false,
   "safe_for_hint_promotion": false,
   "safe_for_executor": false

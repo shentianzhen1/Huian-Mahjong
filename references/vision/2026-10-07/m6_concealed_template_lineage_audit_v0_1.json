@@ -4,77 +4,21 @@
   "development_only": true,
   "scope": "Approved ordinary concealed identity templates for tile M6 in dataset/tiles_runtime_v0_2/labels.jsonl, excluding Gold-skin-only identity assets. Pending reviewed intake sources are reported separately and are not counted as committed templates.",
   "ordinary_m6_templates": [
-    {
-      "template_id": "tile_d5f8cdd914564156",
-      "image": "templates/draw/tile_d5f8cdd914564156_M6.png",
-      "region": "draw_visual",
-      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
-      "source_session": "session_781bfe34c40993ef",
-      "source_frame": 300,
-      "original_match_group": null,
-      "lineage_qualified": false
-    },
-    {
-      "template_id": "tile_9069d8fece505abc",
-      "image": "templates/hand/tile_9069d8fece505abc_M6.png",
-      "region": "hand_region",
-      "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
-      "source_session": "session_eight_hand_match_a",
-      "source_frame": 0,
-      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
-      "lineage_qualified": true,
-      "lineage_evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
-    }
+    {"template_id": "tile_d5f8cdd914564156", "image": "templates/draw/tile_d5f8cdd914564156_M6.png", "region": "draw_visual", "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82", "source_session": "session_781bfe34c40993ef", "source_frame": 300, "original_match_group": null, "lineage_qualified": false},
+    {"template_id": "tile_9069d8fece505abc", "image": "templates/hand/tile_9069d8fece505abc_M6.png", "region": "hand_region", "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3", "source_session": "session_eight_hand_match_a", "source_frame": 0, "original_match_group": "reviewed_match_2026_09_19_eight_hand", "lineage_qualified": true, "lineage_evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"}
   ],
-  "pending_reviewed_ordinary_m6_sources": [
-    {
-      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
-      "source_session": "session_real_20261003_e5b8d8e1",
-      "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
-      "source_frame": 178,
-      "timestamp_seconds": 3.0,
-      "bbox": [1928, 1091, 125, 194],
-      "region": "hand_region",
-      "runtime_candidate": "M6",
-      "runtime_confidence": 0.918908,
-      "review_authority": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json",
-      "intake_path": "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json",
-      "status": "REVIEWED_SOURCE_PENDING_TILE_ONLY_ASSET_SYNC",
-      "counts_in_committed_template_totals": false,
-      "role_scope": "ordinary concealed development source; not an opened-Gold Runtime acceptance change"
-    }
-  ],
-  "same_match_corroboration": {
-    "source_frame": 590,
-    "timestamp_seconds": 10.0,
-    "bbox": [2054, 1084, 125, 202],
-    "runtime_candidate": "M6",
-    "runtime_confidence": 0.905541,
-    "counts_as_additional_original_match": false
-  },
-  "excluded_gold_skin_only_m6_templates": [
-    {
-      "template_id": "tile_2e4c09fcd9e3ed8f",
-      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
-      "source_session": "session_fba5f67d244fb5bd",
-      "gold_skin_only": true,
-      "reason": "Gold-skin identity asset is not ordinary concealed-class support."
-    }
-  ],
+  "pending_reviewed_ordinary_m6_sources": [{"source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14", "source_session": "session_real_20261003_e5b8d8e1", "original_match_group": "reviewed_match_2026_10_03_recent_real_game", "source_frame": 178, "timestamp_seconds": 3.0, "bbox": [1928, 1091, 125, 194], "region": "hand_region", "runtime_candidate": "M6", "runtime_confidence": 0.918908, "review_authority": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json", "intake_path": "references/vision/2026-10-07/whole_hand_intake_queue_20261003.json", "status": "REVIEWED_SOURCE_PENDING_TILE_ONLY_ASSET_SYNC", "counts_in_committed_template_totals": false, "role_scope": "ordinary concealed development source; not an opened-Gold Runtime acceptance change"}],
+  "same_match_corroboration": {"source_frame": 590, "timestamp_seconds": 10.0, "bbox": [2054, 1084, 125, 202], "runtime_candidate": "M6", "runtime_confidence": 0.905541, "counts_as_additional_original_match": false},
+  "excluded_gold_skin_only_m6_templates": [{"template_id": "tile_2e4c09fcd9e3ed8f", "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3", "source_session": "session_fba5f67d244fb5bd", "gold_skin_only": true, "reason": "Gold-skin identity asset is not ordinary concealed-class support."}],
   "ordinary_template_count": 2,
   "ordinary_distinct_source_session_count": 2,
   "ordinary_reviewed_original_match_group_count": 1,
   "ordinary_unresolved_source_sha_count": 1,
-  "ordinary_unresolved_source_shas": [
-    "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82"
-  ],
+  "ordinary_unresolved_source_shas": ["781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82"],
   "post_pending_asset_sync_reviewed_original_match_group_count": 2,
-  "finding": "The committed ordinary M6 bank still has only one reviewed independent original-match group. The reviewed 2026-10-03 source can become a second reviewed ordinary M6 match group after its tile-only asset and label are synced. The unresolved 781b... source remains UNKNOWN and must not be counted. This pending source does not by itself solve explicit opened-Gold identity: temporary Gold-domain projection remains below M7 and far below the frozen 0.82 Runtime threshold.",
-  "relation_to_wrong_accepts": {
-    "observed_errors": ["M7->M6", "M5->M6"],
-    "frozen_threshold": 0.82,
-    "note": "The additional reviewed M6 source is useful for future source-qualified classifier work, but no Runtime template or threshold change is justified until an unchanged candidate passes a new original-match holdout without increasing wrong accepts."
-  },
+  "finding": "The committed ordinary M6 bank still has only one reviewed independent original-match group. The reviewed 2026-10-03 source can become a second reviewed ordinary M6 match group after its tile-only asset and label are synced. The unresolved 781b... source remains UNKNOWN and must not be counted as independent promotion evidence. Direct re-review also shows the two former M7/M5->M6 wrong-accept examples were actually M6, so they do not justify quarantining the unresolved template.",
+  "relation_to_wrong_accepts": {"previously_reported_errors": ["M7->M6", "M5->M6"], "status": "INVALIDATED_BY_TRUTH_CORRECTION", "corrected_truth": ["M6->M6", "M6->M6"], "frozen_threshold": 0.82, "note": "Keep the 781b lineage gap open, but do not cite these two corrected examples as classifier errors. Runtime/template/threshold changes still require a new source-disjoint holdout."},
+  "truth_correction_ref": "references/vision/2026-10-08/whole_hand_truth_correction_20261003_v0_1.json",
   "source_session_is_independent_match_evidence": false,
   "adjacent_frames_are_independent_match_evidence": false,
   "match_group_inference_allowed": false,
