@@ -1,5 +1,6 @@
 import unittest
 
+from workspace.hint_alpha import analyze_snapshot_shanten
 from workspace.vision.current_state_snapshot import (
     SnapshotCapability,
     SnapshotStatus,
@@ -142,6 +143,23 @@ class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
         self.assertEqual(len(snapshot.melds[0]), 1)
         self.assertIn("meld_identity_unknown:0", result.issues)
         self.assertFalse(result.allows(SnapshotCapability.VISIBLE_REMAINDERS))
+
+    def test_runtime_unknown_meld_count_drives_structural_post_draw_advice(self):
+        snapshot = current_snapshot_from_runtime(
+            report(HAND[:-2], melds=("UNKNOWN", "UNKNOWN", "UNKNOWN")),
+            timestamp_seconds=2.0,
+        )
+        hint = analyze_snapshot_shanten(snapshot)
+        self.assertTrue(hint.allowed)
+        self.assertEqual(hint.status, "PARTIAL")
+        self.assertEqual(hint.phase, "POST_DRAW")
+        self.assertTrue(hint.best_discards)
+        self.assertTrue(
+            all(item.total_live_copies is None for item in hint.best_discards)
+        )
+        self.assertIn("meld_identity_unknown:0", hint.issues)
+        self.assertFalse(hint.visible_remainders_used)
+        self.assertFalse(hint.safe_for_executor)
 
     def test_complete_same_source_public_state_enables_danger(self):
         snapshot = current_snapshot_from_runtime(
