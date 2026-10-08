@@ -107,7 +107,10 @@ def main():
                stride=a.stride,threshold=a.threshold)
     a.output.parent.mkdir(parents=True,exist_ok=True)
     a.output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    print(json.dumps(report,ensure_ascii=False,indent=2))
+    print(
+        f"wrote {a.output}; identity_delta_gate_eligible="
+        f"{bool(report['identity_delta_gate_eligible'])}"
+    )
 
 
 if __name__=="__main__": main()

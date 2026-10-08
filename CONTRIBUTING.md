@@ -58,6 +58,10 @@ Core:
 python -B -m unittest discover -s tests -v
 ```
 
+That command does not collect function-style pytest tests under `tests/`.
+The full suite is `python -B -m pytest -q tests` (install pytest first; Vision
+extras are required for the tests that otherwise skip).
+
 Vision:
 
 ```bash
