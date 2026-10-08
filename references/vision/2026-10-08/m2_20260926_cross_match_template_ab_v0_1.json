@@ -1,0 +1,109 @@
+{
+  "schema_version": "m2_20260926_cross_match_template_ab_v0_1",
+  "status": "DEVELOPMENT_CROSS_ORIGINAL_MATCH_AB_NOT_RUNTIME_PROMOTION",
+  "purpose": "Freeze the reviewed September-26 high-resolution M2 support result against the held-out October-3 M2/M3 confusion family while preserving original-match provenance and the Runtime 0.82 boundary.",
+  "support_source": {
+    "filename": "ScreenRecording_09-26-2026 22-26-47_1.mp4",
+    "source_sha256": "05ef070ea185e7c224126eadd527e77075f8b85e86ed49326d981ead81fb5738",
+    "duration_seconds_approx": 217.098,
+    "frame_count": 12880,
+    "frame_index": 148,
+    "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "legacy_match_group_alias": "reviewed_match_2026_09_26_hands_2_to_4",
+    "same_original_match_byte_variants": [
+      {
+        "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+        "evidence_path": "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json"
+      },
+      {
+        "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+        "evidence_path": "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json"
+      }
+    ],
+    "same_match_variants_count_as_independent_support": false,
+    "reviewed_m2_slots": [
+      {
+        "slot": 6,
+        "bbox": [1050, 1113, 123, 164],
+        "tile_id": "M2",
+        "asset_sha256": null
+      },
+      {
+        "slot": 7,
+        "bbox": [1176, 1114, 123, 163],
+        "tile_id": "M2",
+        "asset_sha256": null
+      }
+    ],
+    "tile_only_asset_hash_status": "PENDING_PRIVATE_REGENERATION",
+    "binary_assets_committed": false,
+    "final_labels_updated": false,
+    "runtime_template_bank_updated": false
+  },
+  "held_out_query_match": {
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+    "whole_original_match_held_out_from_support": true,
+    "queries": [
+      {
+        "timestamp_seconds": 3.0,
+        "slot": 11,
+        "truth": "M2",
+        "baseline_winner": "M3",
+        "candidate_winner": "M2",
+        "candidate_score_approx": 0.955
+      },
+      {
+        "timestamp_seconds": 10.0,
+        "slot": 12,
+        "truth": "M2",
+        "baseline_winner": "M3",
+        "candidate_winner": "M2",
+        "candidate_score_approx": 0.959
+      },
+      {
+        "timestamp_seconds": 30.0,
+        "slot": 10,
+        "truth": "M2",
+        "baseline_winner": "M3",
+        "candidate_winner": "M2",
+        "candidate_score_approx": 0.942
+      }
+    ]
+  },
+  "ab_summary": {
+    "query_count": 3,
+    "baseline_correct_top1": 0,
+    "candidate_correct_top1": 3,
+    "baseline_m3_winner_score_range_approx": [0.702, 0.713],
+    "baseline_true_m2_score_range_approx": [0.127, 0.135],
+    "candidate_m2_score_range_observed_approx": [0.929, 0.960],
+    "runtime_identity_threshold": 0.82,
+    "threshold_changed": false,
+    "all_three_candidate_m2_scores_above_runtime_threshold": true,
+    "interpretation": "The reviewed Sep-26 high-resolution M2 appearance transfers strongly to the held-out Oct-3 high-resolution match. This does not establish broad M2 generalization across older low-resolution render domains."
+  },
+  "side_effect_audit": {
+    "new_raw_m3_to_m2_flip_count": 1,
+    "highest_new_flip_score_approx": 0.721,
+    "highest_new_flip_below_runtime_threshold": true,
+    "wrong_accepted_delta_at_0_82": 0,
+    "interpretation": "One inspected development M3 raw ranking moves toward M2, but remains below 0.82 and therefore does not create a new accepted wrong identity under the frozen gate."
+  },
+  "provenance_policy": {
+    "source_session_is_independence_evidence": false,
+    "adjacent_frames_are_independent_sources": false,
+    "same_match_video_chunks_are_independent_sources": false,
+    "same_match_reencodes_are_independent_sources": false,
+    "canonical_original_match_group_required": true
+  },
+  "runtime_changed": false,
+  "runtime_identity_threshold": 0.82,
+  "current_agent": "MeldAwareShantenAgent V0.10",
+  "hint_alpha": "internal_read_only",
+  "executor_enabled": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false,
+  "next_step": "Regenerate the two tile-only crops on the private exact-source machine, pin their asset SHA256 values, then use append-safe reviewed intake and rerun source-grouped whole-hand diagnostics. Do not lower 0.82 or count any Sep-26 chunk/re-encode as another independent original match."
+}
