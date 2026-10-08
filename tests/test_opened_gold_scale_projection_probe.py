@@ -1,7 +1,5 @@
+import importlib.util
 import unittest
-
-import numpy as np
-from PIL import Image, ImageDraw
 
 from workspace.vision.concealed_template_match_lineage import ConcealedTemplateSource
 from workspace.vision.tiles_runtime_v0_2.opened_gold_identity_probe import (
@@ -12,16 +10,27 @@ from workspace.vision.tiles_runtime_v0_2.opened_gold_scale_projection_probe impo
 )
 
 
+_VISION_DEPS_AVAILABLE = (
+    importlib.util.find_spec("numpy") is not None
+    and importlib.util.find_spec("PIL") is not None
+)
+
+
 class OpenedGoldScaleProjectionProbeTests(unittest.TestCase):
     @staticmethod
     def _tile_image():
+        from PIL import Image, ImageDraw
+
         image = Image.new("RGB", (40, 64), "white")
         draw = ImageDraw.Draw(image)
         draw.rectangle((10, 12, 29, 50), outline="black", width=3)
         draw.ellipse((15, 20, 25, 30), fill="black")
         return image
 
+    @unittest.skipUnless(_VISION_DEPS_AVAILABLE, "Vision dependencies not installed")
     def test_projection_variants_are_finite_and_fixed_feature_shape(self):
+        import numpy as np
+
         features = _projected_gold_features(self._tile_image(), (90, 124))
         self.assertEqual(
             set(features),
@@ -35,6 +44,7 @@ class OpenedGoldScaleProjectionProbeTests(unittest.TestCase):
             self.assertEqual(feature.shape, (72, 48))
             self.assertTrue(np.isfinite(feature).all())
 
+    @unittest.skipUnless(_VISION_DEPS_AVAILABLE, "Vision dependencies not installed")
     def test_invalid_target_face_size_fails_closed(self):
         with self.assertRaisesRegex(ValueError, "too small"):
             _projected_gold_features(self._tile_image(), (4, 10))
