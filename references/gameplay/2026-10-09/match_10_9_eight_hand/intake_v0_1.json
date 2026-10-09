@@ -1,0 +1,19 @@
+{
+  "schema_version": "huian_match_intake_v0_1",
+  "match_id": "match_10_9_eight_hand",
+  "observed_on": "2026-10-09",
+  "source_folder": "Google Drive Huian/10-9",
+  "independent_holdout": false,
+  "revealed_development_only": true,
+  "ledger_status": "UNKNOWN",
+  "clips": [
+    {"index": 1, "name": "ScreenRecording_10-09-2026 00-22-19_1.mp4", "size_bytes": 91154896, "duration_seconds": 88.464, "sha256": "bf1d63981d0c0964f15bfb5a985bc3622c8aa681b32b7d2e34e736c27d495d98", "drive_file_id": "1d4sK3IJuRpkGPufw83dX0H2pVCybAJ4f", "settlement": "UNKNOWN"},
+    {"index": 2, "name": "ScreenRecording_10-09-2026 00-23-54_1.mp4", "size_bytes": 106766671, "duration_seconds": 107.622, "sha256": "6a49300e91e723fe040ab79d28fc0146142e289c68b9112fa4f18ceefbe0ca13", "drive_file_id": "1vds_APxX-Awd73kIwUY0gY1MfNUsqHf4", "settlement": "UNKNOWN"},
+    {"index": 3, "name": "ScreenRecording_10-09-2026 00-25-49_1.mp4", "size_bytes": 114232414, "duration_seconds": 121.384, "sha256": "a6fc251ab015618e1c1c6e14365c547df9fc842ba171f62d8bee960d910ca94f", "drive_file_id": "1fizGPjosPdLV2YVjIM6xV3PqktxJ54oV", "settlement": "UNKNOWN"},
+    {"index": 4, "name": "ScreenRecording_10-09-2026 00-27-59_1.mp4", "size_bytes": 140225813, "duration_seconds": null, "sha256": "HASH_UNKNOWN", "drive_file_id": "1-Kj8N8d9xDUMVI4WL8LY9OTc6xfyao6G", "settlement": "UNKNOWN"},
+    {"index": 5, "name": "ScreenRecording_10-09-2026 00-30-28_1.mp4", "size_bytes": 114399127, "duration_seconds": 134.796, "sha256": "5e7cad8513ae955737029b1574e776a7f10b2268887e56dde0202b7648592eea", "drive_file_id": "1ayNPOzX7mV6umICFvhldgeaXV6pTvwnZ", "settlement": "UNKNOWN"},
+    {"index": 6, "name": "ScreenRecording_10-09-2026 00-32-55_1.mp4", "size_bytes": 47520308, "duration_seconds": 58.391, "sha256": "860a2e97f5412d0d98dfe847877fbffffcfb75c708e7bf81ae45bacc531a2235", "drive_file_id": "1GFkOoE4OX_N7NDIw8pjTZgVCTc8BRW9O", "settlement": "UNKNOWN"},
+    {"index": 7, "name": "ScreenRecording_10-09-2026 00-33-57_1.mp4", "size_bytes": 253691798, "duration_seconds": null, "sha256": "HASH_UNKNOWN", "drive_file_id": "1JuWWiry6EqyT1ewq29yGfuWiGaqRbC5T", "settlement": "UNKNOWN"},
+    {"index": 8, "name": "ScreenRecording_10-09-2026 00-38-28_1.mp4", "size_bytes": 87922379, "duration_seconds": 97.96, "sha256": "f5947501f8e7043a11f76245f56c786e8fed6758a6d3359afb71bf09f99e573b", "drive_file_id": "1nncZsOQNOlJKJyQnz9vA71xC-JUsM7U3", "settlement": "UNKNOWN"}
+  ]
+}
