@@ -19,6 +19,7 @@ from huian.rules.engine import HuianRules
 from workspace.ai import AgentDecision, MatchObservationContext, PlayerObservation
 
 from .core import RandomAgent, Simulator, SimulatorConfig, make_wall
+from .tianting_routing import snapshot_tianting
 from .staged_opening import (
     OPEN_GOLD_RANDOM_EVIDENCE_ID,
     simulator_random_gold_candidate,
@@ -109,6 +110,7 @@ def run_target_hand(
             "simulator_sampling_status": "SIMULATOR_CONVENTION_ONLY",
             "gold_random_seed": selector_seed,
             "current_dealer_base": current_dealer_base,
+            "tianting": snapshot_tianting(getattr(game.state, "first_round", None)),
             "legacy_profile": asdict(profile),
             **opening_selection,
         }

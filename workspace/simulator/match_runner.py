@@ -47,6 +47,7 @@ class MatchHandResult:
     unresolved: tuple[str, ...] = ()
     evidence: dict | None = None
     win_source: str | None = None
+    tianting: dict | None = None
 
     def __post_init__(self):
         if self.status not in ("SETTLED", "STOPPED_UNKNOWN"):
@@ -70,12 +71,15 @@ class MatchHandResult:
                 raise ValueError("unknown hand cannot mutate scores or declare a winner")
 
     @classmethod
-    def settled(cls, rewards, *, winner, terminal_reason=None, win_source=None):
+    def settled(cls, rewards, *, winner, terminal_reason=None, win_source=None,
+                tianting=None):
         if win_source is not None and not isinstance(win_source, str):
             raise ValueError("win_source must be a string or None")
+        if tianting is not None and not isinstance(tianting, dict):
+            raise ValueError("tianting must be a dict or None")
         return cls(
             "SETTLED", tuple(rewards), winner, terminal_reason, (), None,
-            win_source
+            win_source, tianting
         )
 
     @classmethod
@@ -257,11 +261,13 @@ def run_real_ordinary_match(seed=0, *, agent_factories=None, max_steps=1000,
                 winner=result.winner,
                 terminal_reason=result.terminal_reason,
                 win_source=result.win_source,
+                tianting=(result.config or {}).get("tianting"),
             )
         if result.status == "STOPPED_UNKNOWN":
             evidence = deepcopy(result.unknown_evidence)
             if evidence is None:
                 evidence = {}
+            evidence["tianting"] = (result.config or {}).get("tianting")
             evidence["match_context"] = {
                 "hand_index": context.hand_index,
                 "dealer": context.dealer,
