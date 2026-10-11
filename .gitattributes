@@ -1,0 +1,10 @@
+# Keep line-ending normalization away from SHA-locked binary assets.
+#
+# Netpbm P2/P5 files are plain pixel dumps, not line-oriented text. Git's
+# text heuristic can still classify them as text, so a Windows checkout with
+# core.autocrlf=true rewrites every LF as CRLF and silently breaks the
+# recorded SHA-256 in the matching query packet.
+*.pgm -text
+*.ppm -text
+*.pbm -text
+*.pnm -text
