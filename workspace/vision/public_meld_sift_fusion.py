@@ -44,6 +44,20 @@ from workspace.vision.public_meld_synthetic_transfer import (
     _top1,
 )
 from workspace.vision.public_tile_detector import PublicGeometryCandidate
+from workspace.vision.template_bank_cache import load_or_build
+
+
+def load_or_build_hand_template_bank(dataset_root: Path):
+    """Build the balanced hand-template SIFT bank, reusing a disk cache.
+
+    The bank is a pure function of the dataset contents. Recomputing it costs
+    roughly eight seconds, which the Vision test suite paid on every run, so it
+    is cached against a content signature of the dataset root. A changed
+    template changes the signature and the bank is rebuilt, so the cache cannot
+    serve a stale bank. Behaviour is identical to calling
+    `_build_hand_template_bank` directly.
+    """
+    return load_or_build(dataset_root, _build_hand_template_bank)
 
 
 @dataclass(frozen=True)
@@ -188,7 +202,7 @@ def evaluate_public_meld_sift_fusion(
     calibration = json.loads((root / calibration_path).read_text(encoding="utf-8"))
     samples = _regular_player_meld_samples(calibration)
     real_bank = _build_real_template_bank(root, samples)
-    synthetic_bank = _build_hand_template_bank(dataset)
+    synthetic_bank = load_or_build_hand_template_bank(dataset)
     if not real_bank:
         raise ValueError("real public-meld development bank is empty")
     if not synthetic_bank:
