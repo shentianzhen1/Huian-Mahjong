@@ -37,13 +37,18 @@ PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
 
 
 def validate(adapter, state):
-    # Legacy validation disallows flowers in hands. Allow only the explicit,
-    # blocked replacement phase, without losing physical accounting below.
-    from copy import deepcopy
-    normal = deepcopy(state)
+    # Legacy validation disallows flowers in hands, so the flower-replacement
+    # phase and the 16-tile wall draw are re-checked against a flower-stripped
+    # view.  That view is only needed on those two paths: copying the whole
+    # state on every call dominated paired-match evaluation, and
+    # `_validate_legacy_state` never mutates the state it is given.
     if state.phase == "NEED_FLOWER_REPLACE" or state.terminal_reason == "WALL_16":
+        from copy import deepcopy
+        normal = deepcopy(state)
         normal.hands = [[t for t in hand if t not in env.FLOWERS] for hand in state.hands]
-    adapter._validate_legacy_state(normal)
+        adapter._validate_legacy_state(normal)
+    else:
+        adapter._validate_legacy_state(state)
     if state.phase not in PHASES:
         raise ValueError("Invalid Huian phase")
     if type(state.terminal) is not bool or state.terminal != (state.phase == "TERMINAL"):
