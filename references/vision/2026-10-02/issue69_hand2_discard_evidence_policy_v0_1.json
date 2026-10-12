@@ -1,0 +1,41 @@
+{
+  "schema_version": "issue69_hand2_discard_evidence_policy_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4"
+  },
+  "observation": "Hand2 0-20s dense review shows short discard transition frames followed by longer-lived stable river state.",
+  "discard_ground_truth_contract": {
+    "channels": [
+      {
+        "name": "discard_transition",
+        "meaning": "short-lived tile movement/display around the discard",
+        "can_confirm_identity_alone": false
+      },
+      {
+        "name": "stable_river_growth",
+        "meaning": "new long-lived public river tile after transition",
+        "can_confirm_discard_existence": true
+      }
+    ],
+    "preferred_confirmation": "transition_plus_stable_river_growth",
+    "actor_requires_spatial_river_assignment": true,
+    "claimed_discard_exception": "a tile immediately consumed by CHI/PENG/MING_GANG may not persist as an ordinary river tile",
+    "unknown_policy": "if transition/river ownership or tile identity conflicts, keep DISCARD or tile identity UNKNOWN"
+  },
+  "review_window": {
+    "seconds": [
+      0,
+      20
+    ],
+    "status": "DENSE_REVIEW_IN_PROGRESS",
+    "sampling_seconds": 0.25
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

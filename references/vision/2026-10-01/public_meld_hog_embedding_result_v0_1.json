@@ -1,0 +1,138 @@
+{
+  "schema_version": "public_meld_hog_embedding_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "pr": 117,
+  "head": "6c7cdde463cb7fb033ff39bccc9465a4a5d2bc13",
+  "status": "development_ab_negative",
+  "batch": {
+    "reviewed_player_meld_groups": 7,
+    "reviewed_player_meld_faces": 21,
+    "prototype_classes": 30,
+    "opponent_top_group_identity_ground_truth": 0
+  },
+  "raw_hand_hog": {
+    "face_top1_correct": 6,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.285714,
+    "group_top1_correct": 1,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.142857
+  },
+  "synthetic_meld_hog": {
+    "face_top1_correct": 9,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.428571,
+    "group_top1_correct": 1,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.142857
+  },
+  "comparison_to_prior_synthetic_sift": {
+    "sift_face_top1_correct": 10,
+    "sift_face_top1_total": 21,
+    "sift_group_top1_correct": 3,
+    "sift_group_top1_total": 7,
+    "conclusion": "global HOG class prototypes do not beat synthetic SIFT on this reviewed batch"
+  },
+  "group_outcomes": [
+    {
+      "expected": [
+        "P1",
+        "P1",
+        "P1"
+      ],
+      "synthetic_correct": true
+    },
+    {
+      "expected": [
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "synthetic_correct": false,
+      "predicted": [
+        "P1",
+        "P1",
+        "P1"
+      ]
+    },
+    {
+      "expected": [
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "synthetic_correct": false,
+      "predicted": [
+        "M5",
+        "M5",
+        "M5"
+      ]
+    },
+    {
+      "expected": [
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "synthetic_correct": false,
+      "predicted": [
+        "P6",
+        "P6",
+        "P6"
+      ]
+    },
+    {
+      "expected": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "synthetic_correct": false,
+      "predicted": [
+        "P6",
+        "P6",
+        "P6"
+      ]
+    },
+    {
+      "expected": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "synthetic_correct": false,
+      "predicted": [
+        "S6",
+        "S6",
+        "S6"
+      ]
+    },
+    {
+      "expected": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "synthetic_correct": false,
+      "predicted": [
+        "S6",
+        "S6",
+        "S6"
+      ]
+    }
+  ],
+  "interpretation": [
+    "Synthetic domain rendering improves HOG over raw hand-domain HOG, but not enough.",
+    "The prototype representation collapses nearby sequence tiles toward dominant per-suit classes and loses group diversity.",
+    "Do not promote HOG prototypes to Runtime or tune them further on this same batch.",
+    "One fixed linear SVM test on the same HOG embeddings is allowed as a final cheap learned-boundary check before considering a compact CNN."
+  ],
+  "evidence_role": "development_selection_only",
+  "blind_validation": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

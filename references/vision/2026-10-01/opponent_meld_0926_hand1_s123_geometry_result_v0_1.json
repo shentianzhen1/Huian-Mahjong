@@ -1,0 +1,177 @@
+{
+  "schema_version": "opponent_meld_geometry_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_0926_hand1_s123",
+  "match_group": "reviewed_match_2026_09_26_first_hand",
+  "expected_tiles": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "incoming_tile": "S2",
+  "public_strip_path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s123_5frame_strip.webp",
+  "public_strip_sha256": "4a3c2b5f125b668ec5ff7ecc1fddf0d41cff241e7968482e11fe34c9e75bc5de",
+  "public_strip_size_bytes": 3982,
+  "frame_count": 5,
+  "frame_crop_size": [
+    71,
+    33
+  ],
+  "frames": [
+    {
+      "frame_index": 1,
+      "analysis": {
+        "rotation_degrees": 0,
+        "stack_state": "FLAT",
+        "height_score": 1.136364,
+        "top_to_mid_span_ratio": 0.996374,
+        "normalized_size": [
+          253,
+          96
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          25
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ]
+      },
+      "classifier_ready_face_count": 3
+    },
+    {
+      "frame_index": 2,
+      "analysis": {
+        "rotation_degrees": 0,
+        "stack_state": "FLAT",
+        "height_score": 1.136364,
+        "top_to_mid_span_ratio": 0.996374,
+        "normalized_size": [
+          253,
+          96
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          25
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ]
+      },
+      "classifier_ready_face_count": 3
+    },
+    {
+      "frame_index": 3,
+      "analysis": {
+        "rotation_degrees": 0,
+        "stack_state": "FLAT",
+        "height_score": 1.136364,
+        "top_to_mid_span_ratio": 0.996374,
+        "normalized_size": [
+          253,
+          96
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          25
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ]
+      },
+      "classifier_ready_face_count": 3
+    },
+    {
+      "frame_index": 4,
+      "analysis": {
+        "rotation_degrees": 0,
+        "stack_state": "FLAT",
+        "height_score": 1.136364,
+        "top_to_mid_span_ratio": 0.996374,
+        "normalized_size": [
+          253,
+          96
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          25
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ]
+      },
+      "classifier_ready_face_count": 3
+    },
+    {
+      "frame_index": 5,
+      "analysis": {
+        "rotation_degrees": 0,
+        "stack_state": "FLAT",
+        "height_score": 1.136364,
+        "top_to_mid_span_ratio": 0.996374,
+        "normalized_size": [
+          253,
+          96
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          25
+        ],
+        "geometry_only": true,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "issues": [
+          "geometry_normalized",
+          "flat_three_face_geometry"
+        ]
+      },
+      "classifier_ready_face_count": 3
+    }
+  ],
+  "summary": {
+    "flat_count": 5,
+    "stacked_count": 0,
+    "unknown_count": 0,
+    "classifier_ready_frame_count": 5,
+    "classifier_ready_face_count": 15
+  },
+  "privacy": {
+    "raw_video_committed": false,
+    "full_frame_committed": false,
+    "derived_tile_only_crop_committed": true
+  },
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

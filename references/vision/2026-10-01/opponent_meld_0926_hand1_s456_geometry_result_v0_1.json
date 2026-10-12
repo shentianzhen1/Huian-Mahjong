@@ -1,0 +1,191 @@
+{
+  "schema_version": "opponent_meld_geometry_measurement_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_0926_hand1_s456",
+  "source_name_public_alias": "2026-09-26 first-hand recording",
+  "match_group": "reviewed_match_2026_09_26_first_hand",
+  "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+  "source_verification": "SHA256_EXACT_VERIFIED_FROM_CONNECTED_DRIVE_RAW_BYTES_2026_10_01",
+  "source_frame_size_px": [
+    1046,
+    480
+  ],
+  "event_truth": {
+    "event": "CHI",
+    "actor": "opponent",
+    "expected_tiles": [
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "incoming_tile": "S5",
+    "truth_role": "human_confirmed_only"
+  },
+  "measurement_method": "public_meld_geometry_normalization on five settled privacy-safe top_group crops from exact-SHA source",
+  "frame_mapping_note": "source frame estimates use the verified source FPS 59.15134447182431 and frozen sample times; they are provenance aids, not runtime inputs",
+  "stable_samples": [
+    {
+      "source_frame_estimate": 4904,
+      "source_time_seconds_estimate": 82.9,
+      "group_bbox_px": [
+        621,
+        12,
+        71,
+        33
+      ],
+      "rotation_degrees": 1.302,
+      "tight_bbox_in_group_px": [
+        3,
+        2,
+        68,
+        28
+      ],
+      "stack_state": "FLAT",
+      "height_score": 1.235294,
+      "top_to_mid_span_ratio": 0.878935,
+      "normalized_size_px": [
+        233,
+        96
+      ],
+      "crop_png_sha256": "5c8eaad40c88e7c023d0677cf64286bd9fbaf3dc53e3856735ae190c4e85803d"
+    },
+    {
+      "source_frame_estimate": 4908,
+      "source_time_seconds_estimate": 82.98,
+      "group_bbox_px": [
+        621,
+        12,
+        71,
+        33
+      ],
+      "rotation_degrees": 0,
+      "tight_bbox_in_group_px": [
+        3,
+        3,
+        68,
+        26
+      ],
+      "stack_state": "FLAT",
+      "height_score": 1.147059,
+      "top_to_mid_span_ratio": 0.984842,
+      "normalized_size_px": [
+        251,
+        96
+      ],
+      "crop_png_sha256": "3cc5d1007ee853b686c42ec739babf9cf99880d0aee625667482227a96ddf1fe"
+    },
+    {
+      "source_frame_estimate": 4913,
+      "source_time_seconds_estimate": 83.06,
+      "group_bbox_px": [
+        621,
+        12,
+        71,
+        33
+      ],
+      "rotation_degrees": 0,
+      "tight_bbox_in_group_px": [
+        3,
+        3,
+        68,
+        26
+      ],
+      "stack_state": "FLAT",
+      "height_score": 1.147059,
+      "top_to_mid_span_ratio": 0.986711,
+      "normalized_size_px": [
+        251,
+        96
+      ],
+      "crop_png_sha256": "9f1801b55613ffa747d21da167f7fec66787828d6afc1b765985464b94de137c"
+    },
+    {
+      "source_frame_estimate": 4918,
+      "source_time_seconds_estimate": 83.14,
+      "group_bbox_px": [
+        621,
+        12,
+        71,
+        33
+      ],
+      "rotation_degrees": 0,
+      "tight_bbox_in_group_px": [
+        3,
+        3,
+        68,
+        26
+      ],
+      "stack_state": "FLAT",
+      "height_score": 1.147059,
+      "top_to_mid_span_ratio": 0.986711,
+      "normalized_size_px": [
+        251,
+        96
+      ],
+      "crop_png_sha256": "3c5ac6addb478de3d4fecae8951a34fa015397423f4031079dfb6cda14485a76"
+    },
+    {
+      "source_frame_estimate": 4923,
+      "source_time_seconds_estimate": 83.22,
+      "group_bbox_px": [
+        621,
+        12,
+        71,
+        33
+      ],
+      "rotation_degrees": 0,
+      "tight_bbox_in_group_px": [
+        3,
+        3,
+        68,
+        26
+      ],
+      "stack_state": "FLAT",
+      "height_score": 1.147059,
+      "top_to_mid_span_ratio": 0.986711,
+      "normalized_size_px": [
+        251,
+        96
+      ],
+      "crop_png_sha256": "3c5ac6addb478de3d4fecae8951a34fa015397423f4031079dfb6cda14485a76"
+    }
+  ],
+  "aggregate": {
+    "stable_sample_count": 5,
+    "all_flat": true,
+    "all_classifier_ready_three_face_geometry": true,
+    "detected_group_size_px": [
+      71,
+      33
+    ]
+  },
+  "privacy": {
+    "raw_video_committed": false,
+    "full_frame_committed": false,
+    "derived_crop_pixels_committed": true,
+    "measurement_crop_scope": "public_privacy_bounded_tile_only_5frame_strip",
+    "player_or_room_metadata_published": false
+  },
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "public_evaluation_asset": {
+    "path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s456_5frame_strip.webp",
+    "sha256": "e49a817e836a890166cbb95b18dbeb0a6c66f242c7c3f7bf1f2849d71e7ef7dc",
+    "layout": "vertical_strip_5x_71x33",
+    "frame_count": 5,
+    "frame_size_px": [
+      71,
+      33
+    ],
+    "content_scope": "opponent_exposed_meld_tiles_only",
+    "player_or_room_metadata": false,
+    "encoding": "webp_lossless",
+    "file_size_bytes": 9214
+  }
+}

@@ -1,0 +1,684 @@
+{
+  "schema_version": "detected_meld_body_boundary_audit_dev_v0_1",
+  "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+  "rows": [
+    {
+      "frame": 4794,
+      "candidates": [
+        {
+          "detector_bbox": [
+            99,
+            429,
+            140,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.301471,
+            "top_to_mid_span_ratio": 0.986979,
+            "normalized_size": [
+              221,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              136,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            101,
+            442,
+            237,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            -147,
+            1,
+            -146,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            99,
+            146,
+            192,
+            239
+          ],
+          "tight_body_equal_thirds_x": [
+            101,
+            146,
+            192,
+            237
+          ]
+        },
+        {
+          "detector_bbox": [
+            246,
+            429,
+            137,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.311111,
+            "top_to_mid_span_ratio": 0.987273,
+            "normalized_size": [
+              220,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              135,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            248,
+            442,
+            383,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            0,
+            1,
+            0,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            246,
+            292,
+            337,
+            383
+          ],
+          "tight_body_equal_thirds_x": [
+            248,
+            293,
+            338,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 4797,
+      "candidates": [
+        {
+          "detector_bbox": [
+            99,
+            429,
+            140,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.301471,
+            "top_to_mid_span_ratio": 0.986979,
+            "normalized_size": [
+              221,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              136,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            101,
+            442,
+            237,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            -147,
+            1,
+            -146,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            99,
+            146,
+            192,
+            239
+          ],
+          "tight_body_equal_thirds_x": [
+            101,
+            146,
+            192,
+            237
+          ]
+        },
+        {
+          "detector_bbox": [
+            246,
+            429,
+            137,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.311111,
+            "top_to_mid_span_ratio": 0.987273,
+            "normalized_size": [
+              220,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              135,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            248,
+            442,
+            383,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            0,
+            1,
+            0,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            246,
+            292,
+            337,
+            383
+          ],
+          "tight_body_equal_thirds_x": [
+            248,
+            293,
+            338,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 4800,
+      "candidates": [
+        {
+          "detector_bbox": [
+            99,
+            429,
+            140,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.301471,
+            "top_to_mid_span_ratio": 0.986594,
+            "normalized_size": [
+              221,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              136,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            101,
+            442,
+            237,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            -147,
+            1,
+            -146,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            99,
+            146,
+            192,
+            239
+          ],
+          "tight_body_equal_thirds_x": [
+            101,
+            146,
+            192,
+            237
+          ]
+        },
+        {
+          "detector_bbox": [
+            246,
+            429,
+            137,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.311111,
+            "top_to_mid_span_ratio": 0.986845,
+            "normalized_size": [
+              220,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              135,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            248,
+            442,
+            383,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            0,
+            1,
+            0,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            246,
+            292,
+            337,
+            383
+          ],
+          "tight_body_equal_thirds_x": [
+            248,
+            293,
+            338,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 4803,
+      "candidates": [
+        {
+          "detector_bbox": [
+            99,
+            429,
+            140,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.301471,
+            "top_to_mid_span_ratio": 0.986594,
+            "normalized_size": [
+              221,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              136,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            101,
+            442,
+            237,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            -147,
+            1,
+            -146,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            99,
+            146,
+            192,
+            239
+          ],
+          "tight_body_equal_thirds_x": [
+            101,
+            146,
+            192,
+            237
+          ]
+        },
+        {
+          "detector_bbox": [
+            246,
+            429,
+            137,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.311111,
+            "top_to_mid_span_ratio": 0.986845,
+            "normalized_size": [
+              220,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              135,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            248,
+            442,
+            383,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            0,
+            1,
+            0,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            246,
+            292,
+            337,
+            383
+          ],
+          "tight_body_equal_thirds_x": [
+            248,
+            293,
+            338,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 4806,
+      "candidates": [
+        {
+          "detector_bbox": [
+            99,
+            429,
+            140,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.301471,
+            "top_to_mid_span_ratio": 0.986594,
+            "normalized_size": [
+              221,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              136,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            101,
+            442,
+            237,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            -147,
+            1,
+            -146,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            99,
+            146,
+            192,
+            239
+          ],
+          "tight_body_equal_thirds_x": [
+            101,
+            146,
+            192,
+            237
+          ]
+        },
+        {
+          "detector_bbox": [
+            246,
+            429,
+            137,
+            78
+          ],
+          "analysis": {
+            "schema_version": "public_meld_geometry_normalization_v0_1",
+            "rotation_degrees": 0.0,
+            "stack_state": "FLAT",
+            "height_score": 1.311111,
+            "top_to_mid_span_ratio": 0.986845,
+            "normalized_size": [
+              220,
+              96
+            ],
+            "tight_bbox_in_group": [
+              2,
+              13,
+              135,
+              59
+            ],
+            "issues": [
+              "geometry_normalized",
+              "flat_three_face_geometry"
+            ],
+            "geometry_only": true,
+            "tile_identity": "UNKNOWN",
+            "action_kind": "UNKNOWN",
+            "safe_for_hint": false,
+            "safe_for_executor": false
+          },
+          "tight_body_xyxy": [
+            248,
+            442,
+            383,
+            501
+          ],
+          "manual_comparison_xyxy": [
+            248,
+            441,
+            383,
+            503
+          ],
+          "edge_delta_left_top_right_bottom": [
+            0,
+            1,
+            0,
+            -2
+          ],
+          "raw_detector_equal_thirds_x": [
+            246,
+            292,
+            337,
+            383
+          ],
+          "tight_body_equal_thirds_x": [
+            248,
+            293,
+            338,
+            383
+          ]
+        }
+      ]
+    }
+  ],
+  "prior_identity_result_user_reported_not_rerun": {
+    "correct_faces": 10,
+    "faces": 15,
+    "correct_groups": 0,
+    "groups": 5,
+    "S9_top1": "S7"
+  },
+  "development_only": true,
+  "manual_boxes_used_as_detector_input": false,
+  "identity_accuracy_measured_this_run": false,
+  "automatic_repair_verified": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

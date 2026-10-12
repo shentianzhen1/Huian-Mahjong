@@ -1,0 +1,207 @@
+{
+  "schema_version": "issue69_stacked_reviewed_sift_pipeline_probe_dev_v0_1",
+  "date": "2026-10-03",
+  "crop_route": "new manually reviewed source-pixel crops; original frozen splitter offsets unavailable",
+  "automatic_splitter_validated": false,
+  "reproduces_historical_7_of_9_experiment": false,
+  "bank_scope": "tracked public_meld templates only; no private template ZIP",
+  "minimum_other_original_match_groups": 2,
+  "eligible_class_count": 2,
+  "round6_B_class_eligible": false,
+  "query_original_match_excluded": true,
+  "same_match_aliases_canonicalized": true,
+  "independent_event_count": 2,
+  "independent_original_match_count": 1,
+  "hand1_identity_observations": 9,
+  "hand1_P6_top1_count": 9,
+  "hand1_all_three_agree_frames": 3,
+  "round6_visual_identity_basis": "direct inspection of outlined face against approved B concealed template; prior owner truth remains UNKNOWN",
+  "round6_agree_but_incompatible_with_B_visual_review_frames": [
+    3354
+  ],
+  "rows": [
+    {
+      "event": "hand1_clip",
+      "frame_index": 222,
+      "expected_visual_review_tile": "P6",
+      "face_top1": {
+        "top": "P6",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": true,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "hand1_clip",
+      "frame_index": 240,
+      "expected_visual_review_tile": "P6",
+      "face_top1": {
+        "top": "P6",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": true,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "hand1_clip",
+      "frame_index": 258,
+      "expected_visual_review_tile": "P6",
+      "face_top1": {
+        "top": "P6",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": true,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "round6_original",
+      "frame_index": 3351,
+      "expected_visual_review_tile": "B",
+      "face_top1": {
+        "top": "P6",
+        "lower_left": "P6",
+        "lower_right": "S4"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "S4",
+      "visible_top1_agreement": false,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "round6_original",
+      "frame_index": 3354,
+      "expected_visual_review_tile": "B",
+      "face_top1": {
+        "top": "P6",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": true,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "round6_original",
+      "frame_index": 3357,
+      "expected_visual_review_tile": "B",
+      "face_top1": {
+        "top": "S4",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": false,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "round6_original",
+      "frame_index": 3360,
+      "expected_visual_review_tile": "B",
+      "face_top1": {
+        "top": "S4",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": false,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "event": "round6_original",
+      "frame_index": 3363,
+      "expected_visual_review_tile": "B",
+      "face_top1": {
+        "top": "S4",
+        "lower_left": "P6",
+        "lower_right": "P6"
+      },
+      "eligible_classes": [
+        "P6",
+        "S4"
+      ],
+      "group_top": "P6",
+      "visible_top1_agreement": false,
+      "physical_tile_ids": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ]
+    }
+  ],
+  "development_only": true,
+  "blind_validation": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

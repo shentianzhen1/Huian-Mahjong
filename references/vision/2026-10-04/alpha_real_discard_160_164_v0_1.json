@@ -1,0 +1,1267 @@
+{
+  "schema_version": "hint_alpha_replay_smoke_v0_1",
+  "development_only": true,
+  "original_match_group": "reviewed_match_2026_09_26_first_hand",
+  "sample_config": {"start_seconds": 160, "duration_seconds": 4, "stride_frames": 18, "input_resolution": [2796, 1290], "resize": null},
+  "evidence_scope": "same_source_native_automatic_runtime_to_structural_discard_smoke_only",
+  "human_tile_identity_accuracy_measured": false,
+  "discard_strategy_quality_measured": false,
+  "private_pixels_committed": false,
+  "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+  "session": "session_fba5f67d244fb5bd",
+  "session_binding": "explicit_original_session",
+  "original_match_count": 1,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "identity_threshold": 0.82,
+  "clock": "offline_source_time_not_live_latency_gate",
+  "windows_capture_validated": false,
+  "accepted_windows": 8,
+  "blocked_windows": 4,
+  "discard_windows": 2,
+  "advice_runs": [
+    {
+      "display_allowed": true,
+      "windows": 4,
+      "first_frame": 9500,
+      "start_seconds": 160.61166666666668,
+      "last_frame": 9554,
+      "end_seconds": 161.51166666666668
+    },
+    {
+      "display_allowed": false,
+      "windows": 2,
+      "first_frame": 9572,
+      "start_seconds": 161.83666666666667,
+      "last_frame": 9590,
+      "end_seconds": 162.13666666666668
+    },
+    {
+      "display_allowed": true,
+      "windows": 2,
+      "first_frame": 9608,
+      "start_seconds": 162.43666666666667,
+      "last_frame": 9626,
+      "end_seconds": 162.75333333333333
+    },
+    {
+      "display_allowed": false,
+      "windows": 2,
+      "first_frame": 9644,
+      "start_seconds": 163.06166666666667,
+      "last_frame": 9662,
+      "end_seconds": 163.38666666666668
+    },
+    {
+      "display_allowed": true,
+      "windows": 2,
+      "first_frame": 9680,
+      "start_seconds": 163.68666666666667,
+      "last_frame": 9698,
+      "end_seconds": 163.98666666666668
+    }
+  ],
+  "recovered_advice_runs": 2,
+  "rejection_issue_windows": {
+    "gold_identity_unknown": 4,
+    "gold_untrusted": 4,
+    "hand_identity_unknown": 4,
+    "hand_untrusted": 4,
+    "meld_untrusted:0": 4,
+    "meld_untrusted:1": 4,
+    "opponent_meld_missing": 4,
+    "opponent_river_missing": 4,
+    "player_meld_count_untrusted": 4,
+    "player_river_missing": 4,
+    "river_untrusted:0": 4,
+    "river_untrusted:1": 4,
+    "runtime_gold_not_fully_trusted": 4,
+    "runtime_hand_not_fully_trusted": 4
+  },
+  "rows": [
+    {
+      "frames": [
+        9464,
+        9482,
+        9500
+      ],
+      "source_seconds": [
+        160.01166666666668,
+        160.31166666666667,
+        160.61166666666668
+      ],
+      "pixel_sha256": [
+        "78b93bca2b81ce908ba5b320a48fe9d46dda71e5c9c7866f0de603f7c94b1581",
+        "3a0a50739f6b668baaefb60a55f780c5f95125e56dd90ea37644e09d2319455b",
+        "9ef91b10d3027cc82ef299dd7054dfe61cf448389322c41eab513b1f45a58f46"
+      ],
+      "elapsed_ms": 414.126,
+      "snapshot": {
+        "timestamp_seconds": 160.61166666666668,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9482,
+        9500,
+        9518
+      ],
+      "source_seconds": [
+        160.31166666666667,
+        160.61166666666668,
+        160.9116666666667
+      ],
+      "pixel_sha256": [
+        "3a0a50739f6b668baaefb60a55f780c5f95125e56dd90ea37644e09d2319455b",
+        "9ef91b10d3027cc82ef299dd7054dfe61cf448389322c41eab513b1f45a58f46",
+        "f4f89d8f9fdc8a7e55398103b48527e33a1903ed937ae916ada2fb5c1e227529"
+      ],
+      "elapsed_ms": 407.133,
+      "snapshot": {
+        "timestamp_seconds": 160.9116666666667,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9500,
+        9518,
+        9536
+      ],
+      "source_seconds": [
+        160.61166666666668,
+        160.9116666666667,
+        161.21166666666667
+      ],
+      "pixel_sha256": [
+        "9ef91b10d3027cc82ef299dd7054dfe61cf448389322c41eab513b1f45a58f46",
+        "f4f89d8f9fdc8a7e55398103b48527e33a1903ed937ae916ada2fb5c1e227529",
+        "aea6dcbc6502dcd67c0789fe4e892ef8a3c07b496b98a18beaf91575eb5a1d54"
+      ],
+      "elapsed_ms": 402.724,
+      "snapshot": {
+        "timestamp_seconds": 161.21166666666667,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9518,
+        9536,
+        9554
+      ],
+      "source_seconds": [
+        160.9116666666667,
+        161.21166666666667,
+        161.51166666666668
+      ],
+      "pixel_sha256": [
+        "f4f89d8f9fdc8a7e55398103b48527e33a1903ed937ae916ada2fb5c1e227529",
+        "aea6dcbc6502dcd67c0789fe4e892ef8a3c07b496b98a18beaf91575eb5a1d54",
+        "5956504535fdb03396f3093ca071802efb83faf7ae6a3f92c68279f4140f6788"
+      ],
+      "elapsed_ms": 396.554,
+      "snapshot": {
+        "timestamp_seconds": 161.51166666666668,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9536,
+        9554,
+        9572
+      ],
+      "source_seconds": [
+        161.21166666666667,
+        161.51166666666668,
+        161.83666666666667
+      ],
+      "pixel_sha256": [
+        "aea6dcbc6502dcd67c0789fe4e892ef8a3c07b496b98a18beaf91575eb5a1d54",
+        "5956504535fdb03396f3093ca071802efb83faf7ae6a3f92c68279f4140f6788",
+        "72e1761f0447bdaa5b9c61ec855e808e54cf994985ecfcc8a2e2f9768b98bb2e"
+      ],
+      "elapsed_ms": 306.349,
+      "snapshot": {
+        "timestamp_seconds": 161.83666666666667,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9554,
+        9572,
+        9590
+      ],
+      "source_seconds": [
+        161.51166666666668,
+        161.83666666666667,
+        162.13666666666668
+      ],
+      "pixel_sha256": [
+        "5956504535fdb03396f3093ca071802efb83faf7ae6a3f92c68279f4140f6788",
+        "72e1761f0447bdaa5b9c61ec855e808e54cf994985ecfcc8a2e2f9768b98bb2e",
+        "a8a8887583c93d08fc2b055cfa69a85643da69328fab18991f8c6e7bef209709"
+      ],
+      "elapsed_ms": 318.527,
+      "snapshot": {
+        "timestamp_seconds": 162.13666666666668,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9572,
+        9590,
+        9608
+      ],
+      "source_seconds": [
+        161.83666666666667,
+        162.13666666666668,
+        162.43666666666667
+      ],
+      "pixel_sha256": [
+        "72e1761f0447bdaa5b9c61ec855e808e54cf994985ecfcc8a2e2f9768b98bb2e",
+        "a8a8887583c93d08fc2b055cfa69a85643da69328fab18991f8c6e7bef209709",
+        "d7597982474240570bdfa8b261b93c3b452360f97eafdcb4a431e1b40013173a"
+      ],
+      "elapsed_ms": 405.652,
+      "snapshot": {
+        "timestamp_seconds": 162.43666666666667,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9",
+          "M3"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "M3",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P5",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P7",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P9",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9590,
+        9608,
+        9626
+      ],
+      "source_seconds": [
+        162.13666666666668,
+        162.43666666666667,
+        162.75333333333333
+      ],
+      "pixel_sha256": [
+        "a8a8887583c93d08fc2b055cfa69a85643da69328fab18991f8c6e7bef209709",
+        "d7597982474240570bdfa8b261b93c3b452360f97eafdcb4a431e1b40013173a",
+        "1cbaf7a91d39fb424900f84cfd74d33fabb0324b66d7c24f600392e3bc65e3f6"
+      ],
+      "elapsed_ms": 392.36,
+      "snapshot": {
+        "timestamp_seconds": 162.75333333333333,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9",
+          "M3"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "M3",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P5",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P7",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P9",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9608,
+        9626,
+        9644
+      ],
+      "source_seconds": [
+        162.43666666666667,
+        162.75333333333333,
+        163.06166666666667
+      ],
+      "pixel_sha256": [
+        "d7597982474240570bdfa8b261b93c3b452360f97eafdcb4a431e1b40013173a",
+        "1cbaf7a91d39fb424900f84cfd74d33fabb0324b66d7c24f600392e3bc65e3f6",
+        "e631bcf7747ac0d5c15fc7c6cc9254b14ce5cf1418d4d4d0ebde943009fde02d"
+      ],
+      "elapsed_ms": 312.561,
+      "snapshot": {
+        "timestamp_seconds": 163.06166666666667,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9626,
+        9644,
+        9662
+      ],
+      "source_seconds": [
+        162.75333333333333,
+        163.06166666666667,
+        163.38666666666668
+      ],
+      "pixel_sha256": [
+        "1cbaf7a91d39fb424900f84cfd74d33fabb0324b66d7c24f600392e3bc65e3f6",
+        "e631bcf7747ac0d5c15fc7c6cc9254b14ce5cf1418d4d4d0ebde943009fde02d",
+        "790048a5b04e37f8831174c1ea7582babf06df09deeb1ba8460071fdbce4c477"
+      ],
+      "elapsed_ms": 302.089,
+      "snapshot": {
+        "timestamp_seconds": 163.38666666666668,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": false,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9644,
+        9662,
+        9680
+      ],
+      "source_seconds": [
+        163.06166666666667,
+        163.38666666666668,
+        163.68666666666667
+      ],
+      "pixel_sha256": [
+        "e631bcf7747ac0d5c15fc7c6cc9254b14ce5cf1418d4d4d0ebde943009fde02d",
+        "790048a5b04e37f8831174c1ea7582babf06df09deeb1ba8460071fdbce4c477",
+        "28ccc7f7d0239cf6c5c001e8d067b612d1df230829472f5e5f2e423b6d3256cb"
+      ],
+      "elapsed_ms": 417.098,
+      "snapshot": {
+        "timestamp_seconds": 163.68666666666667,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    },
+    {
+      "frames": [
+        9662,
+        9680,
+        9698
+      ],
+      "source_seconds": [
+        163.38666666666668,
+        163.68666666666667,
+        163.98666666666668
+      ],
+      "pixel_sha256": [
+        "790048a5b04e37f8831174c1ea7582babf06df09deeb1ba8460071fdbce4c477",
+        "28ccc7f7d0239cf6c5c001e8d067b612d1df230829472f5e5f2e423b6d3256cb",
+        "175a976b330158dc28aaa2fa72524f356211584f2c2931fec34b1405cd168867"
+      ],
+      "elapsed_ms": 419.041,
+      "snapshot": {
+        "timestamp_seconds": 163.98666666666668,
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P5",
+          "P7",
+          "P7",
+          "P9",
+          "P9"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ]
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "session_fba5f67d244fb5bd",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "display_allowed": true,
+      "sparse_source_burst": false,
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "safe_for_executor": false
+    }
+  ]
+}

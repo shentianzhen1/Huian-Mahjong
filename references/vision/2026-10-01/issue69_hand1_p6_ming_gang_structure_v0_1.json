@@ -1,0 +1,106 @@
+{
+  "schema_version": "issue69_hand1_p6_ming_gang_structure_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "development_only": true,
+  "source_sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+  "source_role": "user_uploaded_derived_clip",
+  "original_match_group": "reviewed_match_2026_09_26_first_hand",
+  "independent_match_group_credit": false,
+  "hand_count": {
+    "before_frames": [
+      352,
+      353,
+      354,
+      355,
+      356,
+      357
+    ],
+    "before_counts": [
+      16,
+      16,
+      16,
+      16,
+      16,
+      16
+    ],
+    "after_frames": [
+      358,
+      359,
+      360,
+      361,
+      362
+    ],
+    "after_counts": [
+      13,
+      13,
+      13,
+      13,
+      13
+    ],
+    "removed_count": 3,
+    "observer": "tiles_runtime_v0_2._bright_boxes + public_hand_upright_run"
+  },
+  "public_meld_geometry": {
+    "onset_frame": 358,
+    "detector": "public_tile_detector_v0_1",
+    "geometry_kind": "bottom_group",
+    "stack_states": [
+      "STACKED",
+      "STACKED",
+      "STACKED",
+      "STACKED",
+      "STACKED"
+    ],
+    "frames": [
+      358,
+      359,
+      360,
+      361,
+      362
+    ],
+    "rotation_degrees": [
+      4.316,
+      4.316,
+      4.316,
+      4.316,
+      4.316
+    ],
+    "height_scores": [
+      1.920863,
+      1.920863,
+      1.920863,
+      1.920863,
+      2.201439
+    ],
+    "top_to_mid_span_ratios": [
+      0.323553,
+      0.350955,
+      0.342569,
+      0.405902,
+      0.253258
+    ],
+    "stable_votes": "5/5"
+  },
+  "replacement_draw": {
+    "first_visible_component_frame": 363,
+    "after_structural_window": true
+  },
+  "structural_state": "NEW_STACKED_FOUR_FACE_MELD_WITH_THREE_CONCEALED_TILES_CONSUMED",
+  "action_candidate": "MING_GANG_STRUCTURE_CANDIDATE_ONLY",
+  "tile_identity": "UNKNOWN",
+  "why_not_full_action": [
+    "generic public detector intentionally keeps public tile identity UNKNOWN",
+    "TemporalActionAssembler requires the claimed discard and meld tile identities before emitting MING_GANG(tile)"
+  ],
+  "human_reviewed_truth": {
+    "claimed_tile": "P6",
+    "action": "MING_GANG",
+    "used_for_runtime_promotion": false
+  },
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

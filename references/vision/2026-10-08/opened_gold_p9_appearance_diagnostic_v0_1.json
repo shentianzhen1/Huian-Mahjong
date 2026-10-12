@@ -1,0 +1,82 @@
+{
+  "schema_version": "opened_gold_appearance_summary_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION",
+  "audit_date": "2026-10-08",
+  "runtime_source_head": "12f47c208b856ae1d49886247d725282ea1f3c05",
+  "execution_scope": "Linux source checkout; not a Windows installer payload or live capture-to-advice test",
+  "source": {
+    "filename": "ScreenRecording_10-03-2026 22-36-10_1.mov",
+    "sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+    "byte_count": 51996977,
+    "sha256_reverified": true,
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+    "reviewed_group_authority": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json",
+    "distinct_query_original_match_count": 1,
+    "adjacent_checkpoints_are_not_independent_sources": true
+  },
+  "expected_opened_tile": "P9",
+  "identity_authority": "direct visible indicator review at 5 seconds and the five actual exported classification crops; not inferred from the hand",
+  "detector_path": "whole_hand_baseline_export: five-frame bursts through frozen Runtime V0.2 read_stable_frames",
+  "feature_path": "unchanged _feature(region=gold_region)",
+  "host_libraries": {"opencv": "5.0.0", "numpy": "2.3.5", "pillow": "12.3.0"},
+  "label_manifest_sha256": {
+    "labels.jsonl": "92c14aa278bfe15967b8f9777f89b629e6052b9ed97105085bb573eb8779fdbb",
+    "labels_reviewed_additions/2026-10-07_s2.jsonl": "42b36a2c7754c5c64205bcf976500d5b3ec8b2a6459524fa1b89dd600828a794",
+    "labels_reviewed_additions/2026-10-08_s2_hard_example.jsonl": "377b39bb3ba991cc8a7369359f613c9bcf9685ede823eee08732703cb178bcf9"
+  },
+  "pixel_bbox_all_checkpoints": [278, 122, 88, 118],
+  "classification_crop_bbox_all_checkpoints": [271, 105, 102, 141],
+  "runtime_threshold": 0.82,
+  "runtime_geometry_confidence": 0.9,
+  "geometry_confidence_is_not_identity_confidence": true,
+  "all_checkpoint_runtime_identity_reason": "below_confidence_threshold",
+  "runtime_indicator_metrics": {
+    "checkpoint_count": 5,
+    "explicit_indicator_count": 5,
+    "raw_top1_correct": 5,
+    "accepted_correct": 0,
+    "wrong_accepted": 0,
+    "rejected": 5,
+    "accepted_identity_all_checkpoints": "UNKNOWN"
+  },
+  "current_bank_winning_P9_template": {
+    "image": "templates/hand/tile_5114bf5f0d361c0f_P9.png",
+    "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+    "original_match_lineage": "UNKNOWN",
+    "exact_query_sha_exclusion_changes_result": false,
+    "independent_source_support_claim_allowed": false
+  },
+  "reviewed_match_disjoint_bank": {
+    "registry": "references/vision/2026-10-01/concealed_template_match_lineage.development.json",
+    "registry_sha256": "50b9756d384dad6b9938783038ed7c41b61934c7d5a1d34b8ff9592126b140f0",
+    "evidence_paths_verified": true,
+    "input_template_count": 147,
+    "qualified_template_count": 67,
+    "excluded_missing_lineage_count": 80,
+    "excluded_same_match_count": 0,
+    "qualified_match_group_count": 4,
+    "winning_P9_template": "templates/hand/tile_06bfee325cdf5903_P9.png",
+    "winning_source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+    "winning_original_match_group": "reviewed_match_concealed_recovery_a",
+    "scores_are_runtime_acceptance": false,
+    "formal_promotion_evidence": false
+  },
+  "checkpoints": [
+    {"seconds": 3.0, "runtime_candidate": "P9", "runtime_identity_confidence": 0.209487, "accepted_identity": "UNKNOWN", "match_disjoint_candidate": "P9", "match_disjoint_score": 0.1919945776462555},
+    {"seconds": 10.0, "runtime_candidate": "P9", "runtime_identity_confidence": 0.209378, "accepted_identity": "UNKNOWN", "match_disjoint_candidate": "P9", "match_disjoint_score": 0.19199500977993011},
+    {"seconds": 30.0, "runtime_candidate": "P9", "runtime_identity_confidence": 0.208327, "accepted_identity": "UNKNOWN", "match_disjoint_candidate": "P9", "match_disjoint_score": 0.1908208131790161},
+    {"seconds": 40.0, "runtime_candidate": "P9", "runtime_identity_confidence": 0.209378, "accepted_identity": "UNKNOWN", "match_disjoint_candidate": "P9", "match_disjoint_score": 0.19199500977993011},
+    {"seconds": 46.0, "runtime_candidate": "P9", "runtime_identity_confidence": 0.209347, "accepted_identity": "UNKNOWN", "match_disjoint_candidate": "P9", "match_disjoint_score": 0.1919623464345932}
+  ],
+  "finding": "Opened-indicator low-confidence rejection occurs for P9 in a second reviewed original match, not only M6 in September 26. Correct Top1 is insufficient at 0.82. A framed-indicator appearance mismatch is a hypothesis, not proof that normalization alone will solve it.",
+  "next_step": "Test a class-agnostic opened-indicator normalization candidate offline across directly reviewed indicator identities and source-qualified banks; never promote from these revealed development checkpoints or substitute geometry confidence for identity confidence.",
+  "new_templates_admitted": 0,
+  "runtime_changed": false,
+  "threshold_changed": false,
+  "whole_hand_metrics_remeasured": false,
+  "advice_pipeline_measured": false,
+  "capture_to_advice_latency_measured": false,
+  "raw_or_derived_pixels_committed": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

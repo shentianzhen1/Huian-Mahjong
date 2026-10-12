@@ -1,0 +1,45 @@
+{
+  "schema_version": "issue69_hand1_ting_prompt_pending_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "source": {
+    "expected_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "original_match_group": "reviewed_match_2026_09_26_first_hand"
+  },
+  "status": "PENDING_EXACT_SOURCE_UI_REVIEW",
+  "sequence_slot": {
+    "after": "OPPONENT_S123_CHI_AND_DISCARD",
+    "before": "PLAYER_S2_DISCARD",
+    "expected_states": [
+      "OPPONENT_DISCARD",
+      "PLAYER_DRAW",
+      "TING_PROMPT_VISIBLE",
+      "PLAYER_DISCARD"
+    ]
+  },
+  "human_reviewed_truth": {
+    "opponent_discard": "S5",
+    "player_draw": "P5",
+    "ting_prompt_visible_before_discard": true,
+    "player_discard": "S2",
+    "used_for_runtime_promotion": false
+  },
+  "machine_interpretation": {
+    "opponent_discard_identity": "UNKNOWN",
+    "player_draw_identity": "UNKNOWN",
+    "ting_prompt_observed": false,
+    "structural_tenpai_inferred_from_prompt": false,
+    "rules_engine_tenpai_confirmed": false,
+    "player_discard_identity": "UNKNOWN"
+  },
+  "promotion_requirements": [
+    "Exact full-source frame window must be verified against expected SHA256.",
+    "TING_PROMPT must be independently observed in the UI region.",
+    "UI prompt evidence must not be replaced by rules-engine inference.",
+    "Rules-engine tenpai, if later checked, must be recorded as a separate corroboration channel."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

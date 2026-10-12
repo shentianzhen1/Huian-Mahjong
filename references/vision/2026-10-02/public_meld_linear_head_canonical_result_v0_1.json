@@ -1,0 +1,268 @@
+{
+  "schema_version": "public_meld_linear_head_development_v0_1",
+  "model": "mobilenet_v3_small_imagenet1k_v1",
+  "backbone_frozen": true,
+  "trained_component": "linear_head_only",
+  "seed": 69,
+  "epochs": 200,
+  "learning_rate": 0.01,
+  "weight_decay": 0.01,
+  "classes": [
+    "M4",
+    "M5",
+    "M6",
+    "P6",
+    "P7",
+    "P8",
+    "S4"
+  ],
+  "original_training_faces": 15,
+  "augmented_training_faces": 90,
+  "training_augmentation": {
+    "sizes": [
+      null,
+      [
+        24,
+        27
+      ],
+      [
+        32,
+        36
+      ]
+    ],
+    "blur_sigma": [
+      0,
+      0.5
+    ]
+  },
+  "query_original_match_excluded_from_training": true,
+  "query_group_count": 1,
+  "query_pixels_used_in_training": false,
+  "previously_inspected_development_queries": true,
+  "rows": [
+    {
+      "query_id": "hand1_P6",
+      "expected_tile": "P6",
+      "expected_class_eligible": true,
+      "top1_tile": "P8",
+      "top1_correct": false,
+      "untrained_embedding_top1": "P8",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "P8",
+          "logit": 1.097842
+        },
+        {
+          "tile_id": "P7",
+          "logit": 0.369635
+        },
+        {
+          "tile_id": "P6",
+          "logit": 0.337995
+        },
+        {
+          "tile_id": "M4",
+          "logit": -0.09954
+        },
+        {
+          "tile_id": "S4",
+          "logit": -0.424812
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.55106
+        },
+        {
+          "tile_id": "M5",
+          "logit": -0.733371
+        }
+      ]
+    },
+    {
+      "query_id": "hand1_S4",
+      "expected_tile": "S4",
+      "expected_class_eligible": true,
+      "top1_tile": "S4",
+      "top1_correct": true,
+      "untrained_embedding_top1": "S4",
+      "untrained_embedding_correct": true,
+      "ranked_logits": [
+        {
+          "tile_id": "S4",
+          "logit": 1.880906
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.093204
+        },
+        {
+          "tile_id": "P8",
+          "logit": -0.07652
+        },
+        {
+          "tile_id": "M5",
+          "logit": -0.131619
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.250125
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.747041
+        },
+        {
+          "tile_id": "P7",
+          "logit": -0.789882
+        }
+      ]
+    },
+    {
+      "query_id": "round8_P9",
+      "expected_tile": "P9",
+      "expected_class_eligible": false,
+      "top1_tile": "M5",
+      "top1_correct": false,
+      "untrained_embedding_top1": "M4",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "M5",
+          "logit": 0.298354
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.102015
+        },
+        {
+          "tile_id": "P7",
+          "logit": 0.060842
+        },
+        {
+          "tile_id": "S4",
+          "logit": 0.022317
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.087296
+        },
+        {
+          "tile_id": "P8",
+          "logit": -0.18537
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.211695
+        }
+      ]
+    },
+    {
+      "query_id": "round8_P8",
+      "expected_tile": "P8",
+      "expected_class_eligible": true,
+      "top1_tile": "P8",
+      "top1_correct": true,
+      "untrained_embedding_top1": "M4",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "P8",
+          "logit": 0.713949
+        },
+        {
+          "tile_id": "S4",
+          "logit": 0.13796
+        },
+        {
+          "tile_id": "M5",
+          "logit": 0.040876
+        },
+        {
+          "tile_id": "M4",
+          "logit": -0.043476
+        },
+        {
+          "tile_id": "M6",
+          "logit": -0.194831
+        },
+        {
+          "tile_id": "P7",
+          "logit": -0.288862
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.371884
+        }
+      ]
+    },
+    {
+      "query_id": "round8_P7",
+      "expected_tile": "P7",
+      "expected_class_eligible": true,
+      "top1_tile": "M5",
+      "top1_correct": false,
+      "untrained_embedding_top1": "M4",
+      "untrained_embedding_correct": false,
+      "ranked_logits": [
+        {
+          "tile_id": "M5",
+          "logit": 0.533327
+        },
+        {
+          "tile_id": "M4",
+          "logit": 0.251273
+        },
+        {
+          "tile_id": "M6",
+          "logit": 0.183655
+        },
+        {
+          "tile_id": "P7",
+          "logit": 0.118886
+        },
+        {
+          "tile_id": "S4",
+          "logit": -0.156041
+        },
+        {
+          "tile_id": "P6",
+          "logit": -0.21198
+        },
+        {
+          "tile_id": "P8",
+          "logit": -0.722557
+        }
+      ]
+    }
+  ],
+  "correct": 2,
+  "query_count": 5,
+  "torch_version": "2.14.1+cpu",
+  "torchvision_version": "0.29.1+cpu",
+  "scores_are_calibrated_probabilities": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "untrained_embedding_correct": 1,
+  "canvas_policy": "canonical",
+  "pretrained_weight_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+  "query_file_sha256": {
+    "first_hand_174s_p6.jpg": "612cce1ba08ef4678cf3df918e5fe2d041f47aa88f23165706628e3fa93171dc",
+    "first_hand_174s_s4.jpg": "300d85889e5e0c8cfe5c25c7b3b99fae342ce07771b477be8fe5f09591db855c",
+    "round8_new_meld_normalized.png": "2e6eb31e0abc30a3fb88c72cb02b9023ef4ee31c4f6a668001a4f0866905c161"
+  },
+  "truth_evidence_path": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+  "comparison": {
+    "native_canvas_trained_head_correct": "3/5",
+    "canonical_canvas_trained_head_correct": "2/5",
+    "native_canvas_untrained_embedding_correct": "2/5",
+    "canonical_canvas_untrained_embedding_correct": "1/5",
+    "canonical_policy_promoted": false,
+    "small_development_packet_only": true,
+    "next_gate": "Freeze candidate choices and enlarge reviewed original-match-separated evaluation; no more selection on these five queries."
+  }
+}

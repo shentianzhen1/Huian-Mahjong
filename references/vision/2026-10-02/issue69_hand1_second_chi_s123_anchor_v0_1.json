@@ -1,0 +1,72 @@
+{
+  "schema_version": "issue69_hand1_second_chi_anchor_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "source_role": "exact_full_source_recording"
+  },
+  "chain_context": {
+    "preceding_human_reviewed_truth": [
+      "PLAYER_DRAWS_M6_GOLD",
+      "PLAYER_DISCARDS_P8",
+      "OPPONENT_DISCARDS_S3",
+      "PLAYER_CHI_S345",
+      "PLAYER_DISCARDS_S2"
+    ],
+    "preceding_machine_status": "PENDING_SOURCE_REVIEW",
+    "anchor": "OPPONENT_NEW_S123_MELD"
+  },
+  "opponent_s123_anchor": {
+    "review_id": "opp_meld_0926_hand1_s123",
+    "actor": "opponent",
+    "event": "CHI",
+    "candidate_window_seconds": [
+      125,
+      126.5
+    ],
+    "expected_tiles": [
+      "S1",
+      "S2",
+      "S3"
+    ],
+    "incoming_tile": "S2",
+    "crop_status": "CLASSIFIER_READY",
+    "geometry_flat_frames": "5/5",
+    "classifier_ready_frames": "5/5",
+    "classifier_ready_faces": 15,
+    "public_strip_path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_0926_hand1_s123_5frame_strip.webp",
+    "public_strip_sha256": "4a3c2b5f125b668ec5ff7ecc1fddf0d41cff241e7968482e11fe34c9e75bc5de",
+    "identity_runtime_status": "UNKNOWN",
+    "missing_cross_match_reference": [
+      "S1"
+    ]
+  },
+  "machine_interpretation": {
+    "opponent_new_meld_structure_observed": true,
+    "opponent_new_meld_geometry": "FLAT",
+    "opponent_new_meld_identity": "UNKNOWN",
+    "opponent_action_kind": "UNKNOWN",
+    "incoming_claimed_tile_identity": "UNKNOWN"
+  },
+  "human_reviewed_truth": {
+    "player_discard": "S2",
+    "opponent_action": "CHI",
+    "opponent_meld": [
+      "S1",
+      "S2",
+      "S3"
+    ]
+  },
+  "caveats": [
+    "S123 is classifier-ready structurally but remains identity UNKNOWN because cross-match real-public S1 coverage is missing.",
+    "The preceding S345 chain is not machine-promoted by this anchor.",
+    "This evidence is non-blocking for Issue #69."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

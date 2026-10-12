@@ -1,0 +1,34 @@
+{
+  "schema_version": "issue69_round8_temporal_semantics_regression_v0_1",
+  "parent_commit": "3c311c576f943ad909fe2668c5ba6e70eed2162e",
+  "scope": "Offline candidate-to-observation bridge only",
+  "fixed_behaviors": [
+    "Only river candidate kind DISCARD can become a DISCARD observation.",
+    "River removal and other river geometry candidates retain evidence references in excluded_context without action conversion.",
+    "Structured meld tiles are consumed; partial identity remains empty observation.tiles with original partial candidates preserved in details.",
+    "Conflicting structured and legacy meld identities reject reconstruction."
+  ],
+  "tests": {
+    "new_regressions": 4,
+    "pre_fix_failures": 4,
+    "post_fix_passed": 4,
+    "related_local_tests_passed": 60,
+    "full_repository_test_run_local": false
+  },
+  "round8_context_check": {
+    "river_removal_frame": 3521,
+    "meld_confirmation_frame": 3534,
+    "hand_fact_supplied": false,
+    "meld_identity_complete": false,
+    "result_actions": [
+      "UNKNOWN_ACTION"
+    ],
+    "discard_action_generated": false,
+    "claim_action_generated": false,
+    "missing_evidence": "Independent trusted DISCARD + complete meld identities + qualified semantic HAND_DELTA"
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

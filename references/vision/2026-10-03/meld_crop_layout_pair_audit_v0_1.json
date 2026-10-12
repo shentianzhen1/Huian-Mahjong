@@ -1,0 +1,1647 @@
+{
+  "schema_version": "meld_crop_layout_pair_audit_dev_v0_1",
+  "pairs": [
+    {
+      "query_id": "public_meld_p6",
+      "reference_id": "eight_hand_h7_p456_p6_2",
+      "query": {
+        "tile_id": "P6",
+        "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+        "match_group": "reviewed_recording_b389",
+        "pixel_bbox": [
+          234,
+          411,
+          44,
+          64
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "reference": {
+        "tile_id": "P6",
+        "source_sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757",
+        "match_group": "reviewed_match_2026_09_19_eight_hand",
+        "pixel_bbox": [
+          84,
+          0,
+          42,
+          62
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "audit": {
+        "ratio_match_count": 27,
+        "fallback_used": false,
+        "unique_reference_matches": 22,
+        "same_cell_matches": 5,
+        "median_absolute_coordinate_delta": [
+          0.21198988167238442,
+          0.008646212598328984
+        ],
+        "matches": [
+          {
+            "query_index": 92,
+            "reference_index": 0,
+            "query_xy": [
+              0.27396678924560547,
+              0.5644440253575643
+            ],
+            "reference_xy": [
+              0.06982623963128953,
+              0.5677242894326487
+            ],
+            "distance": 166.7333221435547,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 27,
+            "reference_index": 13,
+            "query_xy": [
+              0.7210993333296343,
+              0.11974594990412395
+            ],
+            "reference_xy": [
+              0.5743536570715526,
+              0.1390105729461998
+            ],
+            "distance": 115.88356018066406,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 14,
+            "reference_index": 19,
+            "query_xy": [
+              0.7576736681389086,
+              0.5675230026245117
+            ],
+            "reference_xy": [
+              0.5435516115218874,
+              0.5723524196173555
+            ],
+            "distance": 132.9736785888672,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 44,
+            "reference_index": 21,
+            "query_xy": [
+              0.38082093903512665,
+              0.7482570012410482
+            ],
+            "reference_xy": [
+              0.13916300213526164,
+              0.7463725100281418
+            ],
+            "distance": 112.00892639160156,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 54,
+            "reference_index": 29,
+            "query_xy": [
+              0.6516520182291666,
+              0.14878331621487936
+            ],
+            "reference_xy": [
+              0.49579611278715585,
+              0.1684796630695302
+            ],
+            "distance": 178.20213317871094,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 9,
+            "reference_index": 36,
+            "query_xy": [
+              0.8171942739775686,
+              0.08240487674872081
+            ],
+            "reference_xy": [
+              0.45577530633835567,
+              0.11708984580091251
+            ],
+            "distance": 281.5883483886719,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 99,
+            "reference_index": 37,
+            "query_xy": [
+              0.5170811161850438,
+              0.27792638540267944
+            ],
+            "reference_xy": [
+              0.45572371709914433,
+              0.41446570939915156
+            ],
+            "distance": 176.66635131835938,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 49,
+            "reference_index": 40,
+            "query_xy": [
+              0.39246891484116064,
+              0.6560556888580322
+            ],
+            "reference_xy": [
+              0.182611208113413,
+              0.6581036557433426
+            ],
+            "distance": 130.4300537109375,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 51,
+            "reference_index": 41,
+            "query_xy": [
+              0.39246891484116064,
+              0.6560556888580322
+            ],
+            "reference_xy": [
+              0.182611208113413,
+              0.6581036557433426
+            ],
+            "distance": 131.8104705810547,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 81,
+            "reference_index": 43,
+            "query_xy": [
+              0.4625283154574307,
+              0.566898783047994
+            ],
+            "reference_xy": [
+              0.43374933515276226,
+              0.5708740808630502
+            ],
+            "distance": 114.5032730102539,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 82,
+            "reference_index": 44,
+            "query_xy": [
+              0.4625283154574307,
+              0.566898783047994
+            ],
+            "reference_xy": [
+              0.43374933515276226,
+              0.5708740808630502
+            ],
+            "distance": 105.9056167602539,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 42,
+            "reference_index": 47,
+            "query_xy": [
+              0.6884150071577593,
+              0.38788902759552
+            ],
+            "reference_xy": [
+              0.21523106287396143,
+              0.399713618780977
+            ],
+            "distance": 85.91856384277344,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 76,
+            "reference_index": 48,
+            "query_xy": [
+              0.5080955967758641,
+              0.17739280064900717
+            ],
+            "reference_xy": [
+              0.21924241383870444,
+              0.6198091814594884
+            ],
+            "distance": 256.2323303222656,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 73,
+            "reference_index": 54,
+            "query_xy": [
+              0.4415974183516069,
+              0.5984172026316324
+            ],
+            "reference_xy": [
+              0.2268998282296317,
+              0.6000054472236223
+            ],
+            "distance": 147.8512725830078,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 70,
+            "reference_index": 60,
+            "query_xy": [
+              0.5525597081039891,
+              0.566624641418457
+            ],
+            "reference_xy": [
+              0.34567333403087797,
+              0.5713937000561786
+            ],
+            "distance": 113.06635284423828,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 21,
+            "reference_index": 66,
+            "query_xy": [
+              0.7472330729166666,
+              0.20366114377975464
+            ],
+            "reference_xy": [
+              0.2940694112626333,
+              0.22241227344800069
+            ],
+            "distance": 199.8849639892578,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 77,
+            "reference_index": 67,
+            "query_xy": [
+              0.49910233237526636,
+              0.5991394917170206
+            ],
+            "reference_xy": [
+              0.2902349139016772,
+              0.6046073257282216
+            ],
+            "distance": 109.84989929199219,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 71,
+            "reference_index": 80,
+            "query_xy": [
+              0.5322070266261245,
+              0.7736877600351969
+            ],
+            "reference_xy": [
+              0.29662332080659415,
+              0.7738305368731099
+            ],
+            "distance": 120.00416564941406,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 4,
+            "reference_index": 81,
+            "query_xy": [
+              0.15794865290323892,
+              0.759907086690267
+            ],
+            "reference_xy": [
+              0.74333741929796,
+              0.37068377258957075
+            ],
+            "distance": 344.35882568359375,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 11,
+            "reference_index": 85,
+            "query_xy": [
+              0.24840490745775629,
+              0.1209299365679423
+            ],
+            "reference_xy": [
+              0.6841923547169518,
+              0.7818862750966061
+            ],
+            "distance": 228.10086059570312,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 85,
+            "reference_index": 87,
+            "query_xy": [
+              0.4868566339666193,
+              0.46636418501536053
+            ],
+            "reference_xy": [
+              0.5890574985080295,
+              0.1847514901109921
+            ],
+            "distance": 261.2757263183594,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 25,
+            "reference_index": 92,
+            "query_xy": [
+              0.7318668365478516,
+              0.5219416618347168
+            ],
+            "reference_xy": [
+              0.1588417234874907,
+              0.6191105176043766
+            ],
+            "distance": 157.65467834472656,
+            "same_3x3_cell": false
+          }
+        ],
+        "query_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.045454545454545456,
+            0.0625,
+            0.9545454545454546,
+            0.859375
+          ],
+          "touches_roi_edges": {
+            "left": false,
+            "right": true,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6875,
+          "mask_pixel_fraction": 0.7439630681818182,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "reference_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.08064516129032258,
+            0.9285714285714286,
+            0.8387096774193549
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6774193548387096,
+          "mask_pixel_fraction": 0.6728110599078341,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "global_alignment_fitted": false,
+        "local_match_position_is_not_verified_glyph_correspondence": true,
+        "identity": "UNKNOWN"
+      }
+    },
+    {
+      "query_id": "eight_hand_h7_p456_p6_2",
+      "reference_id": "public_meld_p6",
+      "query": {
+        "tile_id": "P6",
+        "source_sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757",
+        "match_group": "reviewed_match_2026_09_19_eight_hand",
+        "pixel_bbox": [
+          84,
+          0,
+          42,
+          62
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "reference": {
+        "tile_id": "P6",
+        "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+        "match_group": "reviewed_recording_b389",
+        "pixel_bbox": [
+          234,
+          411,
+          44,
+          64
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "audit": {
+        "ratio_match_count": 43,
+        "fallback_used": false,
+        "unique_reference_matches": 29,
+        "same_cell_matches": 7,
+        "median_absolute_coordinate_delta": [
+          0.2164918423387051,
+          0.0047690586377215904
+        ],
+        "matches": [
+          {
+            "query_index": 81,
+            "reference_index": 4,
+            "query_xy": [
+              0.74333741929796,
+              0.37068377258957075
+            ],
+            "reference_xy": [
+              0.15794865290323892,
+              0.759907086690267
+            ],
+            "distance": 344.35882568359375,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 14,
+            "reference_index": 5,
+            "query_xy": [
+              0.555303240579272,
+              0.42536085395402806
+            ],
+            "reference_xy": [
+              0.8279618349942294,
+              0.16742326815923056
+            ],
+            "distance": 207.43191528320312,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 4,
+            "reference_index": 7,
+            "query_xy": [
+              0.6039435371520028,
+              0.5725461077946489
+            ],
+            "reference_xy": [
+              0.8204353794907079,
+              0.5683616797129313
+            ],
+            "distance": 156.95541381835938,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 82,
+            "reference_index": 8,
+            "query_xy": [
+              0.06982623963128953,
+              0.5677242894326487
+            ],
+            "reference_xy": [
+              0.8204353794907079,
+              0.5683616797129313
+            ],
+            "distance": 187.50999450683594,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 85,
+            "reference_index": 11,
+            "query_xy": [
+              0.6841923547169518,
+              0.7818862750966061
+            ],
+            "reference_xy": [
+              0.24840490745775629,
+              0.1209299365679423
+            ],
+            "distance": 228.10086059570312,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 19,
+            "reference_index": 14,
+            "query_xy": [
+              0.5435516115218874,
+              0.5723524196173555
+            ],
+            "reference_xy": [
+              0.7576736681389086,
+              0.5675230026245117
+            ],
+            "distance": 132.9736785888672,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 26,
+            "reference_index": 15,
+            "query_xy": [
+              0.14862870413159568,
+              0.570128410093246
+            ],
+            "reference_xy": [
+              0.7576736681389086,
+              0.5675230026245117
+            ],
+            "distance": 162.0061798095703,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 92,
+            "reference_index": 25,
+            "query_xy": [
+              0.1588417234874907,
+              0.6191105176043766
+            ],
+            "reference_xy": [
+              0.7318668365478516,
+              0.5219416618347168
+            ],
+            "distance": 157.65467834472656,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 13,
+            "reference_index": 27,
+            "query_xy": [
+              0.5743536570715526,
+              0.1390105729461998
+            ],
+            "reference_xy": [
+              0.7210993333296343,
+              0.11974594990412395
+            ],
+            "distance": 115.88356018066406,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 72,
+            "reference_index": 29,
+            "query_xy": [
+              0.6257942441910033,
+              0.5130056975990214
+            ],
+            "reference_xy": [
+              0.33510771664706146,
+              0.1696057915687561
+            ],
+            "distance": 123.81841278076172,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 35,
+            "reference_index": 37,
+            "query_xy": [
+              0.45810284690251424,
+              0.601115237000168
+            ],
+            "reference_xy": [
+              0.3662390853419448,
+              0.5975926319758097
+            ],
+            "distance": 173.87351989746094,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 47,
+            "reference_index": 42,
+            "query_xy": [
+              0.21523106287396143,
+              0.399713618780977
+            ],
+            "reference_xy": [
+              0.6884150071577593,
+              0.38788902759552
+            ],
+            "distance": 85.91856384277344,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 21,
+            "reference_index": 44,
+            "query_xy": [
+              0.13916300213526164,
+              0.7463725100281418
+            ],
+            "reference_xy": [
+              0.38082093903512665,
+              0.7482570012410482
+            ],
+            "distance": 112.00892639160156,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 40,
+            "reference_index": 49,
+            "query_xy": [
+              0.182611208113413,
+              0.6581036557433426
+            ],
+            "reference_xy": [
+              0.39246891484116064,
+              0.6560556888580322
+            ],
+            "distance": 130.4300537109375,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 69,
+            "reference_index": 59,
+            "query_xy": [
+              0.27592056516617064,
+              0.4266712639921455
+            ],
+            "reference_xy": [
+              0.6265305605801669,
+              0.7084616820017496
+            ],
+            "distance": 189.1137237548828,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 76,
+            "reference_index": 61,
+            "query_xy": [
+              0.4036678435310485,
+              0.5423221383043515
+            ],
+            "reference_xy": [
+              0.6127973036332564,
+              0.5386190414428711
+            ],
+            "distance": 154.7061767578125,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 55,
+            "reference_index": 65,
+            "query_xy": [
+              0.38831544300866505,
+              0.5972527534730973
+            ],
+            "reference_xy": [
+              0.5942713419596354,
+              0.6008321046829224
+            ],
+            "distance": 184.173828125,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 57,
+            "reference_index": 66,
+            "query_xy": [
+              0.3837740156385634,
+              0.41357696697276125
+            ],
+            "reference_xy": [
+              0.5716556780266039,
+              0.4100130796432495
+            ],
+            "distance": 196.1096649169922,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 60,
+            "reference_index": 70,
+            "query_xy": [
+              0.34567333403087797,
+              0.5713937000561786
+            ],
+            "reference_xy": [
+              0.5525597081039891,
+              0.566624641418457
+            ],
+            "distance": 113.06635284423828,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 80,
+            "reference_index": 71,
+            "query_xy": [
+              0.29662332080659415,
+              0.7738305368731099
+            ],
+            "reference_xy": [
+              0.5322070266261245,
+              0.7736877600351969
+            ],
+            "distance": 120.00416564941406,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 54,
+            "reference_index": 73,
+            "query_xy": [
+              0.2268998282296317,
+              0.6000054472236223
+            ],
+            "reference_xy": [
+              0.4415974183516069,
+              0.5984172026316324
+            ],
+            "distance": 147.8512725830078,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 67,
+            "reference_index": 77,
+            "query_xy": [
+              0.2902349139016772,
+              0.6046073257282216
+            ],
+            "reference_xy": [
+              0.49910233237526636,
+              0.5991394917170206
+            ],
+            "distance": 109.84989929199219,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 43,
+            "reference_index": 81,
+            "query_xy": [
+              0.43374933515276226,
+              0.5708740808630502
+            ],
+            "reference_xy": [
+              0.4625283154574307,
+              0.566898783047994
+            ],
+            "distance": 114.5032730102539,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 44,
+            "reference_index": 82,
+            "query_xy": [
+              0.43374933515276226,
+              0.5708740808630502
+            ],
+            "reference_xy": [
+              0.4625283154574307,
+              0.566898783047994
+            ],
+            "distance": 105.9056167602539,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 87,
+            "reference_index": 85,
+            "query_xy": [
+              0.5890574985080295,
+              0.1847514901109921
+            ],
+            "reference_xy": [
+              0.4868566339666193,
+              0.46636418501536053
+            ],
+            "distance": 261.2757263183594,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 22,
+            "reference_index": 89,
+            "query_xy": [
+              0.5346120804075211,
+              0.6425640967584425
+            ],
+            "reference_xy": [
+              0.7580510919744318,
+              0.6399757464726766
+            ],
+            "distance": 187.51266479492188,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 61,
+            "reference_index": 91,
+            "query_xy": [
+              0.32427721174936447,
+              0.6585838153798093
+            ],
+            "reference_xy": [
+              0.5415832635128137,
+              0.6456015110015869
+            ],
+            "distance": 146.5469207763672,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 62,
+            "reference_index": 93,
+            "query_xy": [
+              0.32427721174936447,
+              0.6585838153798093
+            ],
+            "reference_xy": [
+              0.5415832635128137,
+              0.6456015110015869
+            ],
+            "distance": 138.76959228515625,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 37,
+            "reference_index": 99,
+            "query_xy": [
+              0.45572371709914433,
+              0.41446570939915156
+            ],
+            "reference_xy": [
+              0.5170811161850438,
+              0.27792638540267944
+            ],
+            "distance": 176.66635131835938,
+            "same_3x3_cell": false
+          }
+        ],
+        "query_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.08064516129032258,
+            0.9285714285714286,
+            0.8387096774193549
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6774193548387096,
+          "mask_pixel_fraction": 0.6728110599078341,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "reference_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.045454545454545456,
+            0.0625,
+            0.9545454545454546,
+            0.859375
+          ],
+          "touches_roi_edges": {
+            "left": false,
+            "right": true,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6875,
+          "mask_pixel_fraction": 0.7439630681818182,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "global_alignment_fitted": false,
+        "local_match_position_is_not_verified_glyph_correspondence": true,
+        "identity": "UNKNOWN"
+      }
+    },
+    {
+      "query_id": "hand8_s9_frame4800",
+      "reference_id": "public_meld_s9",
+      "query": {
+        "tile_id": "S9",
+        "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "match_group": "reviewed_match_2026_09_26_eight_hand",
+        "pixel_bbox": [
+          336,
+          441,
+          47,
+          62
+        ],
+        "crop_sha256": "a4631b4f285e42e5165f114278b15c10baa2f1f4d0fe6833dccfab0c1e8d430e",
+        "preparation": "direct_assistant_reviewed_manual_rectangle"
+      },
+      "reference": {
+        "tile_id": "S9",
+        "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+        "match_group": "reviewed_recording_66fe",
+        "pixel_bbox": [
+          322,
+          409,
+          43,
+          65
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "audit": {
+        "ratio_match_count": 9,
+        "fallback_used": false,
+        "unique_reference_matches": 7,
+        "same_cell_matches": 2,
+        "median_absolute_coordinate_delta": [
+          0.17744924478280788,
+          0.2664893359364903
+        ],
+        "matches": [
+          {
+            "query_index": 93,
+            "reference_index": 16,
+            "query_xy": [
+              0.28823238399857326,
+              0.17026595659153435
+            ],
+            "reference_xy": [
+              0.4435649842254875,
+              0.4452311197916667
+            ],
+            "distance": 123.21931457519531,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 97,
+            "reference_index": 17,
+            "query_xy": [
+              0.28823238399857326,
+              0.17026595659153435
+            ],
+            "reference_xy": [
+              0.4435649842254875,
+              0.4452311197916667
+            ],
+            "distance": 164.11886596679688,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 35,
+            "reference_index": 24,
+            "query_xy": [
+              0.4775765601624834,
+              0.2559241428170153
+            ],
+            "reference_xy": [
+              0.38322735572046085,
+              0.5224134787535056
+            ],
+            "distance": 156.82154846191406,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 85,
+            "reference_index": 39,
+            "query_xy": [
+              0.40003169174735426,
+              0.5847489962013819
+            ],
+            "reference_xy": [
+              0.20870134811992794,
+              0.2937288920084635
+            ],
+            "distance": 208.6168670654297,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 47,
+            "reference_index": 64,
+            "query_xy": [
+              0.4628342973425033,
+              0.08137992120558216
+            ],
+            "reference_xy": [
+              0.643925570702368,
+              0.1402540060190054
+            ],
+            "distance": 158.4361114501953,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 65,
+            "reference_index": 72,
+            "query_xy": [
+              0.4396902314314606,
+              0.593103511359102
+            ],
+            "reference_xy": [
+              0.6171394762142685,
+              0.5980447231194912
+            ],
+            "distance": 160.14369201660156,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 46,
+            "reference_index": 84,
+            "query_xy": [
+              0.4698759579489417,
+              0.7496173817624328
+            ],
+            "reference_xy": [
+              0.14869821533676267,
+              0.7408077924679487
+            ],
+            "distance": 200.55422973632812,
+            "same_3x3_cell": false
+          }
+        ],
+        "query_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.0,
+            1.0,
+            0.8709677419354839
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.7580645161290323,
+          "mask_pixel_fraction": 0.7113932738503775,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "reference_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.09230769230769231,
+            0.9302325581395349,
+            0.8461538461538461
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6615384615384615,
+          "mask_pixel_fraction": 0.7570661896243291,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "global_alignment_fitted": false,
+        "local_match_position_is_not_verified_glyph_correspondence": true,
+        "identity": "UNKNOWN"
+      }
+    },
+    {
+      "query_id": "hand8_s9_frame4800",
+      "reference_id": "public_meld_s7",
+      "query": {
+        "tile_id": "S9",
+        "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "match_group": "reviewed_match_2026_09_26_eight_hand",
+        "pixel_bbox": [
+          336,
+          441,
+          47,
+          62
+        ],
+        "crop_sha256": "a4631b4f285e42e5165f114278b15c10baa2f1f4d0fe6833dccfab0c1e8d430e",
+        "preparation": "direct_assistant_reviewed_manual_rectangle"
+      },
+      "reference": {
+        "tile_id": "S7",
+        "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+        "match_group": "reviewed_recording_66fe",
+        "pixel_bbox": [
+          236,
+          409,
+          43,
+          65
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "audit": {
+        "ratio_match_count": 12,
+        "fallback_used": false,
+        "unique_reference_matches": 9,
+        "same_cell_matches": 3,
+        "median_absolute_coordinate_delta": [
+          0.11318478591367787,
+          0.2084552338933826
+        ],
+        "matches": [
+          {
+            "query_index": 63,
+            "reference_index": 1,
+            "query_xy": [
+              0.24466778369660072,
+              0.09065862881240025
+            ],
+            "reference_xy": [
+              0.7860758581826853,
+              0.38424647404597356
+            ],
+            "distance": 312.35235595703125,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 37,
+            "reference_index": 4,
+            "query_xy": [
+              0.19288391762591423,
+              0.589570814563382
+            ],
+            "reference_xy": [
+              0.7568536802779796,
+              0.5958702283027845
+            ],
+            "distance": 159.48980712890625,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 46,
+            "reference_index": 27,
+            "query_xy": [
+              0.4698759579489417,
+              0.7496173817624328
+            ],
+            "reference_xy": [
+              0.2869512868482013,
+              0.739882327348758
+            ],
+            "distance": 204.02940368652344,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 22,
+            "reference_index": 29,
+            "query_xy": [
+              0.49827824585826685,
+              0.09189455996277512
+            ],
+            "reference_xy": [
+              0.28933221979658735,
+              0.381614998059395
+            ],
+            "distance": 239.0711212158203,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 4,
+            "reference_index": 48,
+            "query_xy": [
+              0.5451590355406416,
+              0.08434062362999044
+            ],
+            "reference_xy": [
+              0.6219523821690286,
+              0.14832793015700121
+            ],
+            "distance": 167.06585693359375,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 18,
+            "reference_index": 50,
+            "query_xy": [
+              0.5029309320111647,
+              0.5443849871235509
+            ],
+            "reference_xy": [
+              0.6161157179248425,
+              0.33592975323016827
+            ],
+            "distance": 337.62847900390625,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 5,
+            "reference_index": 61,
+            "query_xy": [
+              0.5373169378185949,
+              0.17094393699399887
+            ],
+            "reference_xy": [
+              0.5848248503928961,
+              0.44203843336838944
+            ],
+            "distance": 119.02520751953125,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 54,
+            "reference_index": 67,
+            "query_xy": [
+              0.4401115796244736,
+              0.25881234035697037
+            ],
+            "reference_xy": [
+              0.4814085553782855,
+              0.522542708959335
+            ],
+            "distance": 149.140869140625,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 49,
+            "reference_index": 83,
+            "query_xy": [
+              0.4628342973425033,
+              0.08137992120558216
+            ],
+            "reference_xy": [
+              0.531999573227047,
+              0.15071099110138722
+            ],
+            "distance": 224.02455139160156,
+            "same_3x3_cell": true
+          }
+        ],
+        "query_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.0,
+            1.0,
+            0.8709677419354839
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.7580645161290323,
+          "mask_pixel_fraction": 0.7113932738503775,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "reference_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.09230769230769231,
+            1.0,
+            0.8461538461538461
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": true,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6615384615384615,
+          "mask_pixel_fraction": 0.7946332737030412,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "global_alignment_fitted": false,
+        "local_match_position_is_not_verified_glyph_correspondence": true,
+        "identity": "UNKNOWN"
+      }
+    },
+    {
+      "query_id": "hand8_s9_frame4806",
+      "reference_id": "public_meld_s9",
+      "query": {
+        "tile_id": "S9",
+        "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "match_group": "reviewed_match_2026_09_26_eight_hand",
+        "pixel_bbox": [
+          336,
+          441,
+          47,
+          62
+        ],
+        "crop_sha256": "73a84f058dd9331828ca1deba253fa5592298fb06cc7020e8b26c4d98cd0a606",
+        "preparation": "direct_assistant_reviewed_manual_rectangle"
+      },
+      "reference": {
+        "tile_id": "S9",
+        "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+        "match_group": "reviewed_recording_66fe",
+        "pixel_bbox": [
+          322,
+          409,
+          43,
+          65
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "audit": {
+        "ratio_match_count": 8,
+        "fallback_used": false,
+        "unique_reference_matches": 5,
+        "same_cell_matches": 2,
+        "median_absolute_coordinate_delta": [
+          0.17750678989687874,
+          0.2665047587985535
+        ],
+        "matches": [
+          {
+            "query_index": 93,
+            "reference_index": 17,
+            "query_xy": [
+              0.28823441309286346,
+              0.17026439789802797
+            ],
+            "reference_xy": [
+              0.4435649842254875,
+              0.4452311197916667
+            ],
+            "distance": 162.2528839111328,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 23,
+            "reference_index": 24,
+            "query_xy": [
+              0.47758651625180076,
+              0.2559087199549521
+            ],
+            "reference_xy": [
+              0.38322735572046085,
+              0.5224134787535056
+            ],
+            "distance": 157.4484100341797,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 51,
+            "reference_index": 39,
+            "query_xy": [
+              0.40004105263567985,
+              0.5847384134928385
+            ],
+            "reference_xy": [
+              0.20870134811992794,
+              0.2937288920084635
+            ],
+            "distance": 208.6623992919922,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 29,
+            "reference_index": 64,
+            "query_xy": [
+              0.46281617076684395,
+              0.08137870603992094
+            ],
+            "reference_xy": [
+              0.643925570702368,
+              0.1402540060190054
+            ],
+            "distance": 158.71673583984375,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 40,
+            "reference_index": 72,
+            "query_xy": [
+              0.4396326863173897,
+              0.5931162680349042
+            ],
+            "reference_xy": [
+              0.6171394762142685,
+              0.5980447231194912
+            ],
+            "distance": 163.22683715820312,
+            "same_3x3_cell": true
+          }
+        ],
+        "query_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.0,
+            1.0,
+            0.8709677419354839
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.7580645161290323,
+          "mask_pixel_fraction": 0.7113932738503775,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "reference_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.09230769230769231,
+            0.9302325581395349,
+            0.8461538461538461
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6615384615384615,
+          "mask_pixel_fraction": 0.7570661896243291,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "global_alignment_fitted": false,
+        "local_match_position_is_not_verified_glyph_correspondence": true,
+        "identity": "UNKNOWN"
+      }
+    },
+    {
+      "query_id": "hand8_s9_frame4806",
+      "reference_id": "public_meld_s7",
+      "query": {
+        "tile_id": "S9",
+        "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "match_group": "reviewed_match_2026_09_26_eight_hand",
+        "pixel_bbox": [
+          336,
+          441,
+          47,
+          62
+        ],
+        "crop_sha256": "73a84f058dd9331828ca1deba253fa5592298fb06cc7020e8b26c4d98cd0a606",
+        "preparation": "direct_assistant_reviewed_manual_rectangle"
+      },
+      "reference": {
+        "tile_id": "S7",
+        "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+        "match_group": "reviewed_recording_66fe",
+        "pixel_bbox": [
+          236,
+          409,
+          43,
+          65
+        ],
+        "preparation": "direct_public_manifest_rectangle_without_face_rectification"
+      },
+      "audit": {
+        "ratio_match_count": 12,
+        "fallback_used": false,
+        "unique_reference_matches": 9,
+        "same_cell_matches": 3,
+        "median_absolute_coordinate_delta": [
+          0.07676640025621273,
+          0.2084149539717176
+        ],
+        "matches": [
+          {
+            "query_index": 62,
+            "reference_index": 1,
+            "query_xy": [
+              0.7340628982435727,
+              0.09083439201437017
+            ],
+            "reference_xy": [
+              0.7860758581826853,
+              0.38424647404597356
+            ],
+            "distance": 325.5825500488281,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 40,
+            "reference_index": 4,
+            "query_xy": [
+              0.4396326863173897,
+              0.5931162680349042
+            ],
+            "reference_xy": [
+              0.7568536802779796,
+              0.5958702283027845
+            ],
+            "distance": 165.11207580566406,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 13,
+            "reference_index": 29,
+            "query_xy": [
+              0.4982963724339262,
+              0.09192564154183992
+            ],
+            "reference_xy": [
+              0.28933221979658735,
+              0.381614998059395
+            ],
+            "distance": 245.0693817138672,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 4,
+            "reference_index": 48,
+            "query_xy": [
+              0.5451859819128159,
+              0.08428720248642788
+            ],
+            "reference_xy": [
+              0.6219523821690286,
+              0.14832793015700121
+            ],
+            "distance": 171.08477783203125,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 99,
+            "reference_index": 49,
+            "query_xy": [
+              0.2562172531236148,
+              0.5432580107001848
+            ],
+            "reference_xy": [
+              0.6161157179248425,
+              0.33592975323016827
+            ],
+            "distance": 344.33270263671875,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 80,
+            "reference_index": 50,
+            "query_xy": [
+              0.5029923459316822,
+              0.5443447072018859
+            ],
+            "reference_xy": [
+              0.6161157179248425,
+              0.33592975323016827
+            ],
+            "distance": 332.9534606933594,
+            "same_3x3_cell": true
+          },
+          {
+            "query_index": 69,
+            "reference_index": 61,
+            "query_xy": [
+              0.5372375596499612,
+              0.1712674992058867
+            ],
+            "reference_xy": [
+              0.5848248503928961,
+              0.44203843336838944
+            ],
+            "distance": 119.88744354248047,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 38,
+            "reference_index": 67,
+            "query_xy": [
+              0.4401232942621759,
+              0.258792487523889
+            ],
+            "reference_xy": [
+              0.4814085553782855,
+              0.522542708959335
+            ],
+            "distance": 148.73130798339844,
+            "same_3x3_cell": false
+          },
+          {
+            "query_index": 30,
+            "reference_index": 83,
+            "query_xy": [
+              0.46281617076684395,
+              0.08137870603992094
+            ],
+            "reference_xy": [
+              0.531999573227047,
+              0.15071099110138722
+            ],
+            "distance": 222.72853088378906,
+            "same_3x3_cell": true
+          }
+        ],
+        "query_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.0,
+            1.0,
+            0.8709677419354839
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.7580645161290323,
+          "mask_pixel_fraction": 0.7113932738503775,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "reference_bright_region": {
+          "region_found": true,
+          "normalized_bbox": [
+            0.0,
+            0.09230769230769231,
+            1.0,
+            0.8461538461538461
+          ],
+          "touches_roi_edges": {
+            "left": true,
+            "right": true,
+            "top": false,
+            "bottom": false
+          },
+          "roi_aspect_ratio": 0.6615384615384615,
+          "mask_pixel_fraction": 0.7946332737030412,
+          "precise_face_polygon_verified": false,
+          "glyph_clipping_measured": false
+        },
+        "global_alignment_fitted": false,
+        "local_match_position_is_not_verified_glyph_correspondence": true,
+        "identity": "UNKNOWN"
+      }
+    }
+  ],
+  "opencv_version": "5.0.0",
+  "input_sha256": {
+    "references/vision/2026-09-22/public_identity_labels_v0_1.json": "b82e53adcc4c16428544876dbd69908b15b78c72984f2e14531f5ef758d67d79",
+    "references/vision/2026-09-24/public_identity_source_groups.development.json": "5eaa25861b77925739dec39c18da0dfef9450cf9729e9a2a8d4f5ddde9924248",
+    "references/vision/2026-10-03/hand8_s789_intake_v0_1.json": "78fe4422206c12e0239dfe73453ad2dca976a59ef2dfdb5c73dca420f5a3270b"
+  },
+  "visual_review": "assistant: target glyphs readable; no apparent wrong-tile ROI; exact face corners not verified",
+  "pipeline_observation": "SIFT templates and these probes use direct rectangles; ordinary FLAT query evaluator separately deskews/scales groups before splitting. These representations are not certified equivalent.",
+  "conclusion": "Do not attribute all grid regressions to crop offsets. Repeated local patterns create ambiguous correspondences, and fixed ROI cells are not geometric verification.",
+  "crop_pixels_changed": false,
+  "rescore_performed": false,
+  "global_transform_applied": false,
+  "blind_validation": false,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

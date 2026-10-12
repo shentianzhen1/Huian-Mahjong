@@ -1,0 +1,91 @@
+{
+  "schema_version": "concealed_phase5b_local_recovery_hints_v0_1",
+  "audit_date": "2026-10-07",
+  "development_only": true,
+  "purpose": "Narrow exact-SHA recovery of unresolved concealed Runtime V0.2 sources without inferring original match groups.",
+  "historical_evidence": {
+    "phase5b_generator": "workspace/vision/tiles_runtime_v0_2/phase5b_holdout.py",
+    "historical_commit": "ca1d70802f041ab3453fc70f43b85b3b39c226ed",
+    "historical_default_source_root": "data/capture_validation",
+    "holdout_plan": "dataset/tiles_runtime_v0_2/validation/holdout/phase5b_geometry_holdout_plan_v0_2.json",
+    "privacy_policy": "tracked holdout metadata stores anonymous content-derived source ids, not local filenames or paths"
+  },
+  "priority_local_scan_roots": [
+    "data/capture_validation",
+    "data/issue69_private",
+    "references"
+  ],
+  "phase5b_anonymous_sources": [
+    {
+      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+      "source_session": "session_781bfe34c40993ef",
+      "frame_size": [1108, 690],
+      "holdout_samples": [
+        {"holdout_id": "0007", "frame": 0},
+        {"holdout_id": "0008", "frame": 300},
+        {"holdout_id": "0009", "frame": 840}
+      ],
+      "strict_missing_class_unblocked_if_lineage_reviewed": ["S9"]
+    },
+    {
+      "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "source_session": "session_5e02f7d0458be0a9",
+      "frame_size": [1108, 690],
+      "holdout_samples": [
+        {"holdout_id": "0013", "frame": 0},
+        {"holdout_id": "0014", "frame": 60},
+        {"holdout_id": "0015", "frame": 180}
+      ],
+      "strict_missing_class_unblocked_if_lineage_reviewed": ["P2", "SOUTH"]
+    },
+    {
+      "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "source_session": "session_0e565528164aa77f",
+      "frame_size": [1108, 690],
+      "holdout_samples": [
+        {"holdout_id": "0016", "frame": 0},
+        {"holdout_id": "0017", "frame": 60},
+        {"holdout_id": "0018", "frame": 120}
+      ],
+      "strict_missing_class_unblocked_if_lineage_reviewed": ["W"]
+    },
+    {
+      "source_sha256": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "source_session": "session_94960e642f407502",
+      "frame_size": [1108, 690],
+      "holdout_samples": [
+        {"holdout_id": "0019", "frame": 0},
+        {"holdout_id": "0020", "frame": 240},
+        {"holdout_id": "0021", "frame": 300}
+      ],
+      "strict_missing_class_unblocked_if_lineage_reviewed": []
+    },
+    {
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "source_session": "session_59460988023cc9f1",
+      "frame_size": [1108, 690],
+      "holdout_samples": [
+        {"holdout_id": "0022", "frame": 0},
+        {"holdout_id": "0023", "frame": 60},
+        {"holdout_id": "0024", "frame": 90}
+      ],
+      "strict_missing_class_unblocked_if_lineage_reviewed": ["M9"]
+    }
+  ],
+  "older_static_source": {
+    "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+    "source_session": "session_7f4c1b2e",
+    "known_profile": "1046-wide historical concealed/static source",
+    "source_frame": null,
+    "priority_scan_note": "scan arbitrary file suffixes, including images and derivatives; do not assume video",
+    "strict_missing_class_unblocked_if_lineage_reviewed": ["S3"]
+  },
+  "recovery_command": "python -m workspace.vision.concealed_template_local_sha_scan --output data/concealed_lineage_sha_scan.local.json",
+  "recovery_rule": "Only an exact SHA-256 hit is a source-file hit. Even after a hit, original_match_group remains UNKNOWN until a human reviews which original recorded match produced that exact source.",
+  "match_group_inference_allowed": false,
+  "safe_to_auto_bind_match_group": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
