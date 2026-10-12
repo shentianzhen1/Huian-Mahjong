@@ -1,0 +1,51 @@
+{
+  "schema_version": "issue69_round8_p1_peng_cross_source_pre_score_pin_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "purpose": "Freeze a nonblind cross-source regression query and visual truth before running the reference-completeness weighted candidate.",
+  "source": {
+    "private_filename": "ScreenRecording_09-26-2026 22-34-04_1(1).mp4",
+    "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "raw_pixels_committed": false
+  },
+  "query": {
+    "hand": 8,
+    "frames": [3534,3535,3536,3537,3538],
+    "actor": "opponent",
+    "structure": "FLAT_THREE_FACE_MELD",
+    "target_group": "rightmost exposed group",
+    "faces_per_frame": 3,
+    "reviewed_truth_left_to_right": ["P1","P1","P1"],
+    "reviewed_face_count": 15,
+    "label_authority": "assistant_direct_visual_review_of_original_video",
+    "truth_frozen_before_weighted_candidate_scoring": true,
+    "old_machine_prediction_not_used_as_truth": true
+  },
+  "candidate": {
+    "name": "spatial_window_affine_reference_complete",
+    "frozen_from_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+    "formula": "existing_spatial_window_affine_score * reference_keypoints_supported_by_query_fraction",
+    "reference_support_radius_normalized": 0.08,
+    "parameter_changes_allowed": false,
+    "truth_class_restriction_allowed": false
+  },
+  "reference_exclusion": {
+    "exclude_entire_query_original_match": true,
+    "excluded_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "same_match_aliases_must_also_be_excluded": true,
+    "minimum_other_original_match_groups_for_formal_class_eligibility": 2
+  },
+  "evidence_boundary": {
+    "blind_holdout": false,
+    "nonblind_cross_source_regression": true,
+    "reason": "the 2026-09-26 match has already been heavily inspected during Issue #69 development",
+    "first_weighted_machine_result_must_be_retained": true,
+    "formal_promotion_evidence": false
+  },
+  "runtime_threshold": 0.82,
+  "runtime_integration": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

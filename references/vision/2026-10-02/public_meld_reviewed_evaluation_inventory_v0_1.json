@@ -1,0 +1,331 @@
+{
+  "schema_version": "public_meld_reviewed_evaluation_inventory_v0_1",
+  "loaded_reviewed_face_rows": 36,
+  "query_group_references": 12,
+  "leave_one_original_match_out_supported_rows": 0,
+  "rows": [
+    {
+      "query_id": "public_meld_p1_a",
+      "tile_id": "P1",
+      "match_group": "reviewed_recording_66fe",
+      "sample_id": "66fe_player_peng_p1_040s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_p1_b",
+      "tile_id": "P1",
+      "match_group": "reviewed_recording_66fe",
+      "sample_id": "66fe_player_peng_p1_040s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_p1_c",
+      "tile_id": "P1",
+      "match_group": "reviewed_recording_66fe",
+      "sample_id": "66fe_player_peng_p1_040s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_s7",
+      "tile_id": "S7",
+      "match_group": "reviewed_recording_66fe",
+      "sample_id": "66fe_player_chi_s789_082s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_s8",
+      "tile_id": "S8",
+      "match_group": "reviewed_recording_66fe",
+      "sample_id": "66fe_player_chi_s789_082s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_s9",
+      "tile_id": "S9",
+      "match_group": "reviewed_recording_66fe",
+      "sample_id": "66fe_player_chi_s789_082s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_m4",
+      "tile_id": "M4",
+      "match_group": "reviewed_recording_b389",
+      "sample_id": "b389_player_chi_m456_035s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_m5",
+      "tile_id": "M5",
+      "match_group": "reviewed_recording_b389",
+      "sample_id": "b389_player_chi_m456_035s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_m6",
+      "tile_id": "M6",
+      "match_group": "reviewed_recording_b389",
+      "sample_id": "b389_player_chi_m456_035s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_p6",
+      "tile_id": "P6",
+      "match_group": "reviewed_recording_b389",
+      "sample_id": "b389_player_chi_p678_057s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_p7",
+      "tile_id": "P7",
+      "match_group": "reviewed_recording_b389",
+      "sample_id": "b389_player_chi_p678_057s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "public_meld_p8",
+      "tile_id": "P8",
+      "match_group": "reviewed_recording_b389",
+      "sample_id": "b389_player_chi_p678_057s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "eight_hand_h7_p456_p4_0",
+      "tile_id": "P4",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "eight_hand_hand7_player_chi_p456_060s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "eight_hand_h7_p456_p5_1",
+      "tile_id": "P5",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "eight_hand_hand7_player_chi_p456_060s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "eight_hand_h7_p456_p6_2",
+      "tile_id": "P6",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "eight_hand_hand7_player_chi_p456_060s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "eight_hand_h4_s456_s4_0",
+      "tile_id": "S4",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "eight_hand_hand4_player_chi_s456_064s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "eight_hand_h4_s456_s5_1",
+      "tile_id": "S5",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "eight_hand_hand4_player_chi_s456_064s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "eight_hand_h4_s456_s6_2",
+      "tile_id": "S6",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "eight_hand_hand4_player_chi_s456_064s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "special14_s234_s2_0",
+      "tile_id": "S2",
+      "match_group": "reviewed_recording_14",
+      "sample_id": "special14_player_chi_s234_088s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "special14_s234_s3_1",
+      "tile_id": "S3",
+      "match_group": "reviewed_recording_14",
+      "sample_id": "special14_player_chi_s234_088s",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "special14_s234_s4_2",
+      "tile_id": "S4",
+      "match_group": "reviewed_recording_14",
+      "sample_id": "special14_player_chi_s234_088s",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G02_face_1",
+      "tile_id": "M3",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G02",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G02_face_2",
+      "tile_id": "M4",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G02",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G02_face_3",
+      "tile_id": "M5",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G02",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G03_face_1",
+      "tile_id": "M1",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G03",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G03_face_2",
+      "tile_id": "M2",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G03",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G03_face_3",
+      "tile_id": "M3",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G03",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G07_face_1",
+      "tile_id": "P3",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G07",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G07_face_2",
+      "tile_id": "P4",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G07",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G07_face_3",
+      "tile_id": "P5",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G07",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G08_face_1",
+      "tile_id": "M5",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G08",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G08_face_2",
+      "tile_id": "M6",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G08",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G08_face_3",
+      "tile_id": "M7",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G08",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G09_face_1",
+      "tile_id": "P7",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G09",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G09_face_2",
+      "tile_id": "P8",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G09",
+      "other_match_group_count": 1,
+      "query_class_supported_by_two_other_matches": false
+    },
+    {
+      "query_id": "G09_face_3",
+      "tile_id": "P9",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "sample_id": "G09",
+      "other_match_group_count": 0,
+      "query_class_supported_by_two_other_matches": false
+    }
+  ],
+  "counts_include_duplicate_same_tile_same_group_faces": true,
+  "group_reference_count_not_independent_match_count": true,
+  "independent_original_match_count": 4,
+  "candidate_configuration_frozen": {
+    "model": "mobilenet_v3_small_imagenet1k_v1",
+    "backbone_frozen": true,
+    "head": "linear",
+    "canvas_policy": "native",
+    "seed": 69,
+    "epochs": 200,
+    "learning_rate": 0.01,
+    "weight_decay": 0.01,
+    "minimum_other_matches": 2,
+    "training_sizes": [
+      null,
+      [
+        24,
+        27
+      ],
+      [
+        32,
+        36
+      ]
+    ],
+    "blur_sigma": [
+      0.0,
+      0.5
+    ]
+  },
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

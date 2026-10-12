@@ -1,0 +1,12 @@
+{
+  "schema_version": "concealed_template_lineage_recovery_queue_v0_1",
+  "development_only": true,
+  "match_group_inference_allowed": false,
+  "items": [],
+  "unresolved_source_count": 0,
+  "unresolved_label_count": 0,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

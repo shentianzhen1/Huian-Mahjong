@@ -1,0 +1,795 @@
+{
+  "schema_version": "outer_body_probe_development_result_v0_1",
+  "s789_source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+  "independent14_source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+  "dependency_versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3"
+  },
+  "input_sha256": {
+    "references/vision/2026-10-03/hand8_s789_harvest_spec_v0_1.json": "52c65b0bf15345499245d06c43ce363c94a867a43692b5f71180f2a0e6cc9af8",
+    "private_template_zip": "e1dcede193c7e7d3f0c241ee9110bb0c8decd9048be372e5e1e25dbf0623d83c"
+  },
+  "s789_summary": {
+    "detector_seam2": {
+      "correct_faces": 10,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "body_context_no_seam": {
+      "correct_faces": 10,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 0,
+      "groups": 5
+    },
+    "body_context_seam2": {
+      "correct_faces": 15,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 5,
+      "groups": 5
+    },
+    "outer_body_seam2": {
+      "correct_faces": 14,
+      "faces": 15,
+      "scorable_faces": 15,
+      "scorable_groups": 5,
+      "exact_groups_correct": 4,
+      "groups": 5
+    }
+  },
+  "s789_repeat_equal": true,
+  "s789_outer_body_rows": [
+    {
+      "frame": 4794,
+      "outer_group_xyxy": [
+        248,
+        442,
+        384,
+        509
+      ],
+      "face_xyxy": [
+        [
+          248,
+          442,
+          295,
+          509
+        ],
+        [
+          291,
+          442,
+          341,
+          509
+        ],
+        [
+          337,
+          442,
+          384,
+          509
+        ]
+      ],
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4797,
+      "outer_group_xyxy": [
+        248,
+        442,
+        384,
+        509
+      ],
+      "face_xyxy": [
+        [
+          248,
+          442,
+          295,
+          509
+        ],
+        [
+          291,
+          442,
+          341,
+          509
+        ],
+        [
+          337,
+          442,
+          384,
+          509
+        ]
+      ],
+      "top1": [
+        "S7",
+        "S8",
+        "S7"
+      ]
+    },
+    {
+      "frame": 4800,
+      "outer_group_xyxy": [
+        248,
+        442,
+        384,
+        509
+      ],
+      "face_xyxy": [
+        [
+          248,
+          442,
+          295,
+          509
+        ],
+        [
+          291,
+          442,
+          341,
+          509
+        ],
+        [
+          337,
+          442,
+          384,
+          509
+        ]
+      ],
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4803,
+      "outer_group_xyxy": [
+        248,
+        442,
+        384,
+        509
+      ],
+      "face_xyxy": [
+        [
+          248,
+          442,
+          295,
+          509
+        ],
+        [
+          291,
+          442,
+          341,
+          509
+        ],
+        [
+          337,
+          442,
+          384,
+          509
+        ]
+      ],
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    },
+    {
+      "frame": 4806,
+      "outer_group_xyxy": [
+        248,
+        442,
+        384,
+        509
+      ],
+      "face_xyxy": [
+        [
+          248,
+          442,
+          295,
+          509
+        ],
+        [
+          291,
+          442,
+          341,
+          509
+        ],
+        [
+          337,
+          442,
+          384,
+          509
+        ]
+      ],
+      "top1": [
+        "S7",
+        "S8",
+        "S9"
+      ]
+    }
+  ],
+  "independent14_rows": [
+    {
+      "frame": 2549,
+      "template_match_score": 0.99555,
+      "reviewed_crop_xyxy": [
+        95,
+        410,
+        229,
+        475
+      ],
+      "detector_bbox": [
+        97,
+        403,
+        130,
+        73
+      ],
+      "modes": {
+        "detector_raw": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              140,
+              476
+            ],
+            [
+              140,
+              403,
+              184,
+              476
+            ],
+            [
+              184,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ]
+        },
+        "detector_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              142,
+              476
+            ],
+            [
+              138,
+              403,
+              186,
+              476
+            ],
+            [
+              182,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ]
+        },
+        "body_context_no_seam": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.837063,
+            0.798974
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              141,
+              471
+            ],
+            [
+              141,
+              414,
+              183,
+              471
+            ],
+            [
+              183,
+              414,
+              225,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            225,
+            471
+          ]
+        },
+        "body_context_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.876923,
+            0.798974
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              143,
+              471
+            ],
+            [
+              139,
+              414,
+              185,
+              471
+            ],
+            [
+              181,
+              414,
+              225,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            225,
+            471
+          ]
+        },
+        "outer_body_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.875897,
+            0.917133,
+            0.917607
+          ],
+          "face_boxes": [
+            [
+              98,
+              414,
+              145,
+              476
+            ],
+            [
+              141,
+              414,
+              189,
+              476
+            ],
+            [
+              185,
+              414,
+              232,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ]
+        }
+      }
+    },
+    {
+      "frame": 2552,
+      "template_match_score": 0.998594,
+      "reviewed_crop_xyxy": [
+        95,
+        410,
+        229,
+        475
+      ],
+      "detector_bbox": [
+        97,
+        403,
+        130,
+        73
+      ],
+      "modes": {
+        "detector_raw": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              140,
+              476
+            ],
+            [
+              140,
+              403,
+              184,
+              476
+            ],
+            [
+              184,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ]
+        },
+        "detector_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              142,
+              476
+            ],
+            [
+              138,
+              403,
+              186,
+              476
+            ],
+            [
+              182,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ]
+        },
+        "body_context_no_seam": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.837063,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              142,
+              471
+            ],
+            [
+              142,
+              414,
+              184,
+              471
+            ],
+            [
+              184,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ]
+        },
+        "body_context_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.876923,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              144,
+              471
+            ],
+            [
+              140,
+              414,
+              186,
+              471
+            ],
+            [
+              182,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ]
+        },
+        "outer_body_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.875897,
+            0.917133,
+            0.917607
+          ],
+          "face_boxes": [
+            [
+              98,
+              414,
+              145,
+              476
+            ],
+            [
+              141,
+              414,
+              189,
+              476
+            ],
+            [
+              185,
+              414,
+              232,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ]
+        }
+      }
+    },
+    {
+      "frame": 2555,
+      "template_match_score": 0.998266,
+      "reviewed_crop_xyxy": [
+        95,
+        410,
+        229,
+        475
+      ],
+      "detector_bbox": [
+        97,
+        403,
+        130,
+        73
+      ],
+      "modes": {
+        "detector_raw": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              140,
+              476
+            ],
+            [
+              140,
+              403,
+              184,
+              476
+            ],
+            [
+              184,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ]
+        },
+        "detector_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.955556,
+            1.0,
+            0.955556
+          ],
+          "face_boxes": [
+            [
+              97,
+              403,
+              142,
+              476
+            ],
+            [
+              138,
+              403,
+              186,
+              476
+            ],
+            [
+              182,
+              403,
+              227,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            97,
+            403,
+            227,
+            476
+          ]
+        },
+        "body_context_no_seam": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.837063,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              142,
+              471
+            ],
+            [
+              142,
+              414,
+              184,
+              471
+            ],
+            [
+              184,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ]
+        },
+        "body_context_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.798974,
+            0.876923,
+            0.837949
+          ],
+          "face_boxes": [
+            [
+              99,
+              414,
+              144,
+              471
+            ],
+            [
+              140,
+              414,
+              186,
+              471
+            ],
+            [
+              182,
+              414,
+              227,
+              471
+            ]
+          ],
+          "raw_group_xyxy": [
+            99,
+            414,
+            227,
+            471
+          ]
+        },
+        "outer_body_seam2": {
+          "abstained": false,
+          "face_rect_coverage": [
+            0.875897,
+            0.917133,
+            0.917607
+          ],
+          "face_boxes": [
+            [
+              98,
+              414,
+              145,
+              476
+            ],
+            [
+              141,
+              414,
+              189,
+              476
+            ],
+            [
+              185,
+              414,
+              232,
+              476
+            ]
+          ],
+          "raw_group_xyxy": [
+            98,
+            414,
+            232,
+            476
+          ]
+        }
+      }
+    }
+  ],
+  "geometry_is_foreground_envelope_not_pixel_ground_truth": true,
+  "identity_accuracy_measured_on_independent14": false,
+  "decision": "reject_direct_outer_body_equal_thirds_for_identity; investigate_face_plane_and_seams",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

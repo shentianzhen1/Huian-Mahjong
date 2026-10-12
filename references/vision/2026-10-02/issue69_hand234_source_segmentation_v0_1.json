@@ -1,0 +1,70 @@
+{
+  "schema_version": "issue69_hand234_source_segmentation_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "source": {
+    "file_name": "ScreenRecording_09-26-2026 22-26-47_1.mp4",
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "fps": 29.997696737044144,
+    "frame_count": 6512,
+    "duration_seconds": 217.08333333333334,
+    "resolution": [
+      1108,
+      512
+    ],
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4"
+  },
+  "segments": [
+    {
+      "hand_number": 2,
+      "source_start_seconds": 0,
+      "boundary_status": "HAND_START_POST_OPENING_ANIMATION",
+      "terminal_window_seconds": [
+        79,
+        82
+      ],
+      "terminal_observation": "HU_THEN_SETTLEMENT_VISIBLE",
+      "next_hand_start_seconds": 83,
+      "machine_tile_identity_complete": false,
+      "source_start_semantics": "ACTUAL_HAND_PLAY_START",
+      "missing_before_source": [
+        "OPENING_ANIMATION",
+        "DEAL_ANIMATION",
+        "GOLD_FLIP_ANIMATION"
+      ]
+    },
+    {
+      "hand_number": 3,
+      "source_start_seconds": 83,
+      "boundary_status": "HAND_START_VISIBLE",
+      "terminal_window_seconds": [
+        129,
+        133
+      ],
+      "terminal_observation": "YOUJIN_PHASE_THEN_SETTLEMENT_VISIBLE",
+      "next_hand_start_seconds": 135,
+      "machine_tile_identity_complete": false
+    },
+    {
+      "hand_number": 4,
+      "source_start_seconds": 135,
+      "boundary_status": "HAND_START_VISIBLE",
+      "terminal_window_seconds": [
+        214,
+        216
+      ],
+      "terminal_observation": "SELF_DRAW_BANNER_VISIBLE",
+      "machine_tile_identity_complete": false
+    }
+  ],
+  "evidence_boundaries": {
+    "source_locked": true,
+    "coarse_temporal_segmentation": true,
+    "action_identity_complete": false,
+    "tile_identity_complete": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}

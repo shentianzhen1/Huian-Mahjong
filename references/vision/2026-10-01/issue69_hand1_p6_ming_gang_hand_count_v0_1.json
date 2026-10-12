@@ -1,0 +1,95 @@
+{
+  "schema_version": "issue69_hand1_p6_ming_gang_hand_count_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "development_only": true,
+  "source": {
+    "role": "user_uploaded_derived_clip",
+    "sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+    "bytes": 7270507,
+    "fps": 30,
+    "resolution": [
+      1108,
+      512
+    ],
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "independent_match_group_credit": false
+  },
+  "observer": {
+    "candidate_boxes": "tiles_runtime_v0_2.dynamic_geometry._bright_boxes",
+    "semantic_counter": "public_hand_upright_run",
+    "identity_used": false,
+    "hand_shadow_used": false
+  },
+  "before_plateau": {
+    "frames": [
+      352,
+      353,
+      354,
+      355,
+      356,
+      357
+    ],
+    "seconds": [
+      11.7333333333,
+      11.9
+    ],
+    "counts": [
+      16,
+      16,
+      16,
+      16,
+      16,
+      16
+    ],
+    "stable_votes": "6/6"
+  },
+  "after_plateau": {
+    "frames": [
+      358,
+      359,
+      360,
+      361,
+      362
+    ],
+    "seconds": [
+      11.9333333333,
+      12.0666666667
+    ],
+    "counts": [
+      13,
+      13,
+      13,
+      13,
+      13
+    ],
+    "stable_votes": "5/5"
+  },
+  "replacement_draw_boundary": {
+    "first_extra_right_draw_component_frame": 363,
+    "seconds": 12.1,
+    "note": "after plateau ends before the replacement-draw component first appears"
+  },
+  "claim_count_review": {
+    "before_frame": 357,
+    "after_frame": 362,
+    "before_count": 16,
+    "after_count": 13,
+    "removed_count": 3,
+    "new_meld_face_count": 4,
+    "new_meld_first_visible_frame": 358,
+    "pre_sample_brackets_onset": true,
+    "post_sample_before_followup_discard": true,
+    "independent_public_meld_onset_verified": "HUMAN_REVIEWED_SEPARATE_PUBLIC_MELD_REGION",
+    "draw_event_in_samples": false,
+    "discard_event_in_samples": false,
+    "hand_resort_or_occlusion_in_samples": false,
+    "geometry_baseline_reset_in_samples": false,
+    "expected_gate_status": "NEW_MELD_HAND_COUNT_DELTA_CORROBORATED_OWNER_ACTION_PENDING"
+  },
+  "interpretation": "Stable semantic concealed-hand count changes 16->13 across the new four-face public meld onset, before the replacement draw first appears. This independently corroborates consumption of three concealed tiles; it does not by itself name the action or claimed tile.",
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

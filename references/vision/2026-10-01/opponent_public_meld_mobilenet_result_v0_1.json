@@ -1,0 +1,220 @@
+{
+  "schema_version": "opponent_public_meld_mobilenet_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "review_id": "opp_meld_14_m123",
+  "source_branch_commit": "281ddc868c3ddd95564ab814f8922c2336fd7470",
+  "workflow_run_id": 36830474571,
+  "workflow_artifact_id": 11146239013,
+  "evidence_role": "development_measurement_only",
+  "blind_validation": false,
+  "expected_tiles": [
+    "M1",
+    "M2",
+    "M3"
+  ],
+  "query": {
+    "stable_frame_count": 5,
+    "prepared_face_observation_count": 15,
+    "public_strip_path": "references/vision/2026-10-01/opponent_meld_crops/opp_meld_14_m123_5frame_strip.webp",
+    "public_strip_sha256": "d6122210ebb2f5c230ecb08ac35c205824495695341a938831ded2f156fe81f9",
+    "measured_source_face_size_px": [
+      22,
+      29
+    ]
+  },
+  "model": {
+    "name": "mobilenet_v3_small_imagenet1k_v1",
+    "weights": "MobileNet_V3_Small_Weights.IMAGENET1K_V1",
+    "fine_tuned": false,
+    "prototype_class_count": 30,
+    "torch_version": "2.14.1+cpu",
+    "torchvision_version": "0.29.1+cpu"
+  },
+  "synthetic_bank": {
+    "balanced_hand_label_count": 68,
+    "used_hand_label_count": 68,
+    "excluded_same_match_hand_label_count": 0,
+    "missing_original_match_lineage_hand_label_count": 68,
+    "synthetic_variant_count": 680,
+    "synthetic_class_count": 30
+  },
+  "frame_metrics": {
+    "frame_count": 5,
+    "raw_unordered_top1_exact_count": 0,
+    "unordered_top3_expected_coverage_count": 0,
+    "legal_group_top1_correct_count": 0
+  },
+  "frame_legal_group_ranking": [
+    {
+      "source_frame_estimate": 1726,
+      "top_tiles": [
+        "M6",
+        "M6",
+        "M6"
+      ],
+      "top_score": 0.84203108,
+      "runner_up_tiles": [
+        "M2",
+        "M2",
+        "M2"
+      ],
+      "margin": 0.00699892
+    },
+    {
+      "source_frame_estimate": 1728,
+      "top_tiles": [
+        "M6",
+        "M6",
+        "M6"
+      ],
+      "top_score": 0.84387316,
+      "runner_up_tiles": [
+        "M2",
+        "M2",
+        "M2"
+      ],
+      "margin": 0.00697362
+    },
+    {
+      "source_frame_estimate": 1730,
+      "top_tiles": [
+        "M6",
+        "M6",
+        "M6"
+      ],
+      "top_score": 0.84573609,
+      "runner_up_tiles": [
+        "M2",
+        "M2",
+        "M2"
+      ],
+      "margin": 0.00810593
+    },
+    {
+      "source_frame_estimate": 1732,
+      "top_tiles": [
+        "M6",
+        "M6",
+        "M6"
+      ],
+      "top_score": 0.84850351,
+      "runner_up_tiles": [
+        "M2",
+        "M2",
+        "M2"
+      ],
+      "margin": 0.00832901
+    },
+    {
+      "source_frame_estimate": 1734,
+      "top_tiles": [
+        "M6",
+        "M6",
+        "M6"
+      ],
+      "top_score": 0.84895563,
+      "runner_up_tiles": [
+        "M2",
+        "M2",
+        "M2"
+      ],
+      "margin": 0.00906682
+    }
+  ],
+  "multi_frame": {
+    "face_top1": [
+      {
+        "tile": "M6",
+        "score": 0.85404323
+      },
+      {
+        "tile": "M6",
+        "score": 0.84796803
+      },
+      {
+        "tile": "M6",
+        "score": 0.83544842
+      }
+    ],
+    "face_top3": [
+      [
+        {
+          "tile": "M6",
+          "score": 0.85404323
+        },
+        {
+          "tile": "M2",
+          "score": 0.84912724
+        },
+        {
+          "tile": "M3",
+          "score": 0.81637419
+        }
+      ],
+      [
+        {
+          "tile": "M6",
+          "score": 0.84796803
+        },
+        {
+          "tile": "M2",
+          "score": 0.83539525
+        },
+        {
+          "tile": "M1",
+          "score": 0.83498746
+        }
+      ],
+      [
+        {
+          "tile": "M6",
+          "score": 0.83544842
+        },
+        {
+          "tile": "M4",
+          "score": 0.83310589
+        },
+        {
+          "tile": "M5",
+          "score": 0.83164228
+        }
+      ]
+    ],
+    "raw_unordered_top1_exact": false,
+    "unordered_top3_expected_coverage": false,
+    "legal_group_top_tiles": [
+      "M6",
+      "M6",
+      "M6"
+    ],
+    "legal_group_top_score": 0.84581989,
+    "legal_group_runner_up_tiles": [
+      "M2",
+      "M2",
+      "M2"
+    ],
+    "legal_group_runner_up_score": 0.83792503,
+    "legal_group_margin": 0.00789486,
+    "legal_group_correct": false
+  },
+  "interpretation": [
+    "five stable frames agree on the same wrong ranking, so this batch does not look like temporal jitter",
+    "synthetic concealed-hand prototypes degraded to 22x29 source resolution do not transfer reliably to this real opponent top_group",
+    "all 68 selected hand labels lack original-match lineage in this evaluator, so same-match leakage cannot be ruled out or excluded reliably",
+    "one opponent match group is insufficient for any formal accuracy or threshold claim"
+  ],
+  "next_gate": [
+    "repair original-match lineage for the selected concealed-hand template bank",
+    "measure the two queued opponent CHI groups from the independent 2026-09-26 first-hand match",
+    "only after those controls, decide whether small opponent-domain fine-tuning is justified"
+  ],
+  "mobilenet_acceptance_threshold": null,
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

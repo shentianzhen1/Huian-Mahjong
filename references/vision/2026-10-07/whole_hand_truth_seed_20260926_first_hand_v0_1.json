@@ -1,0 +1,111 @@
+{
+  "schema_version": "vision_whole_hand_truth_seed_v0_1",
+  "status": "INDEPENDENT_ORIGINAL_MATCH_VALIDATION_CANDIDATE_EXACT_SOURCE_FILTER_REQUIRED",
+  "purpose": "Add a second real-match whole-hand batch, independent of the 2026-10-03 development diagnostic. This source already contributed limited reviewed assets elsewhere, so exact-source label exclusion is required before treating classifier results as direct-template-leakage-free. Exact-SHA exclusion alone still does not establish formal original-match-disjoint promotion evidence.",
+  "source": {
+    "filename": "ScreenRecording_09-26-2026 22-23-34_1.mp4",
+    "sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "duration_seconds": 184.713674,
+    "encoded_resolution": [1290, 2796],
+    "display_resolution": [2796, 1290],
+    "private_raw_video": true,
+    "raw_frames_committed": false
+  },
+  "source_grouping": {
+    "original_match_group": "reviewed_match_2026_09_26_first_hand",
+    "split_policy": "all checkpoints from this hand stay together",
+    "source_session_is_independence_signal": false,
+    "adjacent_frames_may_train_but_never_form_independent_holdout_sources": true
+  },
+  "review": {
+    "method": "direct high-resolution review of exact raw-video frames, cross-checked against the already reviewed action chain",
+    "tile_order": "left_to_right_display_order",
+    "confidence_threshold": 0.82,
+    "threshold_is_not_a_tuning_variable": true,
+    "machine_detector_scoring": "NOT_RUN_IN_THIS_SEED",
+    "machine_classifier_scoring": "NOT_RUN_IN_THIS_SEED",
+    "required_scoring_path": "run ordinary frozen Runtime baseline and a second exact-source-filtered baseline on identical checkpoints/crops"
+  },
+  "samples": [
+    {
+      "sample_id": "20260926-hand1-shafba5-t40.0",
+      "timestamp_seconds": 40.0,
+      "scene_tags": ["no_own_meld", "stable_concealed_hand", "yellow_gold_skin_in_concealed_hand"],
+      "truth": {
+        "own_melds": [],
+        "concealed_hand": [
+          "M6", "P3", "P4", "P5", "P6", "P6", "P6", "P7",
+          "P7", "P8", "P9", "P9", "S2", "S2", "S5", "S5"
+        ],
+        "gold_skinned_concealed_slots": [0],
+        "draw_visual": null,
+        "gold_skinned_draw": false
+      },
+      "review_note": "The three concealed P6 tiles are visible before the later opponent P6 daiminkan response, providing an internal action-chain cross-check."
+    },
+    {
+      "sample_id": "20260926-hand1-shafba5-t52.0",
+      "timestamp_seconds": 52.0,
+      "scene_tags": ["one_own_daiminkan", "stable_concealed_hand", "yellow_gold_skin_in_concealed_hand"],
+      "truth": {
+        "own_melds": [["P6", "P6", "P6", "P6"]],
+        "concealed_hand": [
+          "M6", "P3", "P4", "P5", "P7", "P7", "P8",
+          "P9", "P9", "S2", "S2", "S5", "S5"
+        ],
+        "gold_skinned_concealed_slots": [0],
+        "draw_visual": null,
+        "gold_skinned_draw": false
+      },
+      "review_note": "The P6 triplet from the 40s concealed hand has moved into the visible four-tile daiminkan after the opponent P6 response."
+    },
+    {
+      "sample_id": "20260926-hand1-shafba5-t110.0",
+      "timestamp_seconds": 110.0,
+      "scene_tags": ["one_own_daiminkan", "one_own_chi", "separate_draw_visual", "ting_prompt_overlay", "two_yellow_gold_tiles_in_concealed_hand"],
+      "truth": {
+        "own_melds": [
+          ["P6", "P6", "P6", "P6"],
+          ["S3", "S4", "S5"]
+        ],
+        "concealed_hand": [
+          "M6", "M6", "P3", "P4", "P5", "P7", "P7", "P9", "P9", "S2"
+        ],
+        "gold_skinned_concealed_slots": [0, 1],
+        "draw_visual": "S2",
+        "gold_skinned_draw": false
+      },
+      "review_note": "The second exposed group matches the reviewed 3S-4S-5S chi chain; the right-separated draw tile is S2."
+    },
+    {
+      "sample_id": "20260926-hand1-shafba5-t175.0",
+      "timestamp_seconds": 175.0,
+      "scene_tags": ["one_own_daiminkan", "one_own_chi", "separate_draw_visual", "youjin_prompt_overlay", "two_yellow_gold_tiles_in_concealed_hand"],
+      "truth": {
+        "own_melds": [
+          ["P6", "P6", "P6", "P6"],
+          ["S3", "S4", "S5"]
+        ],
+        "concealed_hand": [
+          "M6", "M6", "P3", "P4", "P5", "P7", "P7", "P8", "P9", "P9"
+        ],
+        "gold_skinned_concealed_slots": [0, 1],
+        "draw_visual": "P4",
+        "gold_skinned_draw": false
+      },
+      "review_note": "Cross-checks the reviewed terminal chain: opponent M3 is in the action area, self has drawn P4, and the YOUJIN/PASS response window is visible."
+    }
+  ],
+  "evaluation_policy": {
+    "ordinary_runtime_baseline_allowed": true,
+    "ordinary_runtime_baseline_interpretation": "product-realistic current-template behavior only; not source-disjoint generalization evidence",
+    "exact_source_filtered_baseline_required": true,
+    "exact_source_filtered_tool": "workspace.vision.tiles_runtime_v0_2.whole_hand_exact_source_holdout_export",
+    "formal_original_match_disjoint_promotion_evidence": false,
+    "reason": "The same source SHA already contributes limited reviewed evidence elsewhere in the repository; direct source labels must be filtered, and exact-SHA filtering still does not prove every same-match derivative has been removed."
+  },
+  "next_step": "On the private-source machine, run the frozen baseline exporter and the exact-source-filtered wrapper on these same four timestamps. Review every crop, preserve count mismatches as manual_alignment_required, then score exact whole hand, wrong accepted hands, reject rate and latency without changing 0.82.",
+  "safe_for_runtime_change": false,
+  "safe_for_hint_promotion": false,
+  "safe_for_executor": false
+}

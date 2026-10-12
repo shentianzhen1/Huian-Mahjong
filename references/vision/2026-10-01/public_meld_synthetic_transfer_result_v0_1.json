@@ -1,0 +1,94 @@
+{
+  "schema_version": "public_meld_synthetic_transfer_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "pr": 117,
+  "head_before_result_commit": "ec6449dd708d64c396264bfd70c897934cea7304",
+  "status": "development_ab_positive_but_insufficient",
+  "question": "Does rendering reviewed concealed-hand tile crops into a player-side meld visual domain improve SIFT transfer on reviewed regular exposed melds?",
+  "dataset": {
+    "reviewed_player_meld_groups": 7,
+    "reviewed_player_meld_faces": 21,
+    "selected_hand_templates": 68,
+    "selected_hand_classes": 30,
+    "opponent_top_group_identity_ground_truth_in_batch": 0
+  },
+  "baseline": {
+    "method": "raw_hand_template_sift_plus_legal_group_decoder",
+    "face_top1_correct": 8,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.380952,
+    "group_top1_correct": 1,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.142857
+  },
+  "synthetic": {
+    "method": "synthetic_self_meld_template_sift_plus_legal_group_decoder",
+    "canonical_size": [56, 96],
+    "tilt_fractions": [-0.05, -0.025, 0.0, 0.025, 0.05],
+    "blur_sigmas": [0.0, 0.55],
+    "top_taper_fraction": 0.035,
+    "face_top1_correct": 10,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.47619,
+    "group_top1_correct": 3,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.428571
+  },
+  "delta": {
+    "face_accuracy_percentage_points": 9.5238,
+    "group_accuracy_percentage_points": 28.5714
+  },
+  "group_outcomes": [
+    {
+      "expected": ["P1", "P1", "P1"],
+      "baseline_correct": true,
+      "synthetic_correct": true
+    },
+    {
+      "expected": ["S7", "S8", "S9"],
+      "baseline_correct": false,
+      "synthetic_correct": false
+    },
+    {
+      "expected": ["M4", "M5", "M6"],
+      "baseline_correct": false,
+      "synthetic_correct": false
+    },
+    {
+      "expected": ["P6", "P7", "P8"],
+      "baseline_correct": false,
+      "synthetic_correct": true
+    },
+    {
+      "expected": ["P4", "P5", "P6"],
+      "baseline_correct": false,
+      "synthetic_correct": true
+    },
+    {
+      "expected": ["S4", "S5", "S6"],
+      "baseline_correct": false,
+      "synthetic_correct": false
+    },
+    {
+      "expected": ["S2", "S3", "S4"],
+      "baseline_correct": false,
+      "synthetic_correct": false
+    }
+  ],
+  "interpretation": [
+    "The hand-to-meld domain transform shows a real positive signal on this small development batch.",
+    "The gain is strongest on the reviewed P-suit sequences after Mahjong-valid group decoding.",
+    "Simple perspective/blur synthesis plus SIFT is still not accurate enough to replace the real public_meld SIFT path.",
+    "The S/M failures repeatedly collapse toward a wrong triplet class, so the remaining bottleneck is identity representation/calibration rather than meld geometry alone.",
+    "Opponent top_group identity accuracy was not measured because this batch contains no reviewed opponent exposed-meld identity ground truth."
+  ],
+  "next_small_batch": "Fuse real public_meld SIFT scores with synthetic hand-to-meld SIFT scores before introducing a learned classifier. Keep the legal three-tile group decoder and measure whether the synthetic branch adds value to the existing real-meld SIFT path.",
+  "evidence_role": "development_selection_only",
+  "blind_validation": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

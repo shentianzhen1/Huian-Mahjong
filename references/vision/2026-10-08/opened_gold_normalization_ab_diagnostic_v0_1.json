@@ -1,0 +1,152 @@
+{
+  "schema_version": "opened_gold_normalization_ab_diagnostic_v0_1",
+  "status": "DEVELOPMENT_NEGATIVE_RESULT_NOT_PROMOTION",
+  "audit_date": "2026-10-08",
+  "branch_head_before_evidence_commit": "699d093c23cce13d7bb6c0601a7275b37cae8113",
+  "scope": "Offline A/B of fixed class-agnostic opened-Gold normalization candidates on actual detector classification crops from two reviewed original matches.",
+  "constraints": {
+    "runtime_identity_threshold": 0.82,
+    "runtime_identity_threshold_changed": false,
+    "runtime_changed": false,
+    "hint_alpha_changed": false,
+    "executor_changed": false,
+    "ai_version_changed": false,
+    "scores_are_runtime_acceptance": false,
+    "source_session_is_independence_signal": false,
+    "adjacent_or_same_match_checkpoints_are_independent_sources": false,
+    "formal_promotion_evidence": false
+  },
+  "execution": {
+    "runtime_payload_origin": "Byte-verified Windows test-installer payload from workflow run 37718510230 / artifact 11525096200, previously verified as 3641 files and 147 approved labels.",
+    "runtime_payload_zip_sha256": "26f27ab73339a42bf58d05ff1f8d24bf4dd0cde2c32ac2dd02cdc1d8a999a948",
+    "runtime_code_note": "The commits after the verified payload only add offline opened-Gold diagnostics/tests; Runtime Vision behavior is unchanged.",
+    "candidate_definition": "workspace/vision/tiles_runtime_v0_2/opened_gold_normalization_ab.py at 699d093c23cce13d7bb6c0601a7275b37cae8113",
+    "lineage_registry": "references/vision/2026-10-01/concealed_template_match_lineage.development.json",
+    "template_count": 147,
+    "host_libraries": {
+      "opencv": "4.13.0",
+      "numpy": "2.3.5",
+      "pillow": "12.3.0"
+    },
+    "baseline_reproduction": {
+      "p9_existing_match_disjoint_checkpoint_scores_max_abs_delta": 0.0,
+      "m6_runtime_candidate_and_confidence_reproduced": true
+    }
+  },
+  "query_sources": [
+    {
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "expected_opened_tile": "M6",
+      "identity_authority": "references/vision/2026-10-08/opened_gold_m6_appearance_diagnostic_v0_1.json direct visible indicator review",
+      "checkpoint_seconds": [40.0, 52.0, 110.0, 175.0],
+      "checkpoint_count": 4,
+      "independent_original_match_count": 1,
+      "runtime_identity_confidence_range": [0.312962, 0.314586],
+      "runtime_accepted_identity": "UNKNOWN",
+      "reviewed_match_disjoint_bank": {
+        "qualified_template_count": 66,
+        "excluded_missing_lineage_count": 80,
+        "excluded_same_original_match_count": 1
+      }
+    },
+    {
+      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+      "expected_opened_tile": "P9",
+      "identity_authority": "references/vision/2026-10-08/opened_gold_p9_appearance_diagnostic_v0_1.json direct visible indicator review",
+      "checkpoint_seconds": [3.0, 10.0, 30.0, 40.0, 46.0],
+      "checkpoint_count": 5,
+      "independent_original_match_count": 1,
+      "runtime_identity_confidence_range": [0.208327, 0.209487],
+      "runtime_accepted_identity": "UNKNOWN",
+      "reviewed_match_disjoint_bank": {
+        "qualified_template_count": 67,
+        "excluded_missing_lineage_count": 80,
+        "excluded_same_original_match_count": 0
+      }
+    }
+  ],
+  "reviewed_match_disjoint_results": {
+    "runtime_gray": {
+      "m6_20260926": {
+        "top1_tile": "M7",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [8, 8],
+        "expected_class_score_mean": 0.15749629214406013,
+        "top1_score_mean": 0.3125277981162071
+      },
+      "p9_20261003": {
+        "top1_tile": "P9",
+        "top1_correct_checkpoints": 5,
+        "expected_class_rank_range": [1, 1],
+        "expected_class_score_mean": 0.191753551363945,
+        "top1_score_mean": 0.191753551363945
+      }
+    },
+    "face_only_gray": {
+      "m6_20260926": {
+        "top1_tile": "M7",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [9, 9],
+        "expected_class_score_mean": 0.16441652178764343
+      },
+      "p9_20261003": {
+        "top1_tile": "P1",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [2, 2],
+        "expected_class_score_mean": 0.20865079760551453
+      }
+    },
+    "face_only_edges": {
+      "m6_20260926": {
+        "top1_tile": "M8",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [23, 24],
+        "expected_class_score_mean": 0.1585073173046112
+      },
+      "p9_20261003": {
+        "top1_tile": "R",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [5, 5],
+        "expected_class_score_mean": 0.22953841388225554
+      }
+    },
+    "inner_08_gray": {
+      "m6_20260926": {
+        "top1_tile": "S2",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [14, 14],
+        "expected_class_score_mean": 0.10677127726376057
+      },
+      "p9_20261003": {
+        "top1_tile": "M1",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [5, 5],
+        "expected_class_score_mean": 0.10973817706108094
+      }
+    },
+    "inner_08_edges": {
+      "m6_20260926": {
+        "top1_tile": "S4",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [14, 16],
+        "expected_class_score_mean": 0.19110220298171043
+      },
+      "p9_20261003": {
+        "top1_tile": "S8",
+        "top1_correct_checkpoints": 0,
+        "expected_class_rank_range": [2, 2],
+        "expected_class_score_mean": 0.2328095942735672
+      }
+    }
+  },
+  "finding": "No fixed class-agnostic crop/gray/edge normalization candidate improves opened-Gold identity across both reviewed original matches. Every candidate leaves M6 wrong under the reviewed original-match-disjoint bank and also destroys the existing P9 Top-1 result. Higher expected-class correlation alone is misleading when class rank degrades.",
+  "decision": "Reject all four candidate normalizations for Runtime/Hint integration. Keep production runtime_gray and the 0.82 threshold unchanged.",
+  "next_step": "Audit explicit gold_region reference coverage and evaluate a dedicated opened-Gold identity bank/classifier using directly reviewed indicator crops grouped by original_match_group. Do not train and evaluate on different frames from the same match, and do not promote until an unseen original-match holdout exists.",
+  "raw_or_derived_pixels_committed": false,
+  "new_templates_admitted": 0,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "issue69_hand1_repeated_tile_sequence_pending_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "status": "PENDING_EXACT_SOURCE_REVIEW",
+  "source": {
+    "expected_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+    "original_match_group": "reviewed_match_2026_09_26_first_hand"
+  },
+  "sequence": [
+    {
+      "sequence_id": "h1_seq7_01",
+      "actor": "player",
+      "event": "DRAW_DISCARD",
+      "machine_tile": "UNKNOWN",
+      "human_reviewed_tile": "P1"
+    },
+    {
+      "sequence_id": "h1_seq7_02",
+      "actor": "opponent",
+      "event": "DISCARD",
+      "machine_tile": "UNKNOWN",
+      "human_reviewed_tile": "M2"
+    },
+    {
+      "sequence_id": "h1_seq7_03",
+      "actor": "player",
+      "event": "DISCARD",
+      "machine_tile": "UNKNOWN",
+      "human_reviewed_tile": "F",
+      "occurrence_index": 1
+    },
+    {
+      "sequence_id": "h1_seq7_04",
+      "actor": "opponent",
+      "event": "DISCARD",
+      "machine_tile": "UNKNOWN",
+      "human_reviewed_tile": "E"
+    },
+    {
+      "sequence_id": "h1_seq7_05",
+      "actor": "player",
+      "event": "DISCARD",
+      "machine_tile": "UNKNOWN",
+      "human_reviewed_tile": "F",
+      "occurrence_index": 2
+    }
+  ],
+  "reviewed_time_anchor": {
+    "first_green_dragon": "before opponent E discard",
+    "second_green_dragon_seconds_range": [
+      145,
+      150
+    ],
+    "note": "User review placed the second green-dragon event around 2:25-2:30."
+  },
+  "replay_invariant": {
+    "preserve_repeated_same_tile_events": true,
+    "dedupe_key_must_include_temporal_identity": true,
+    "forbidden_dedupe_key": [
+      "actor",
+      "tile"
+    ],
+    "expected_green_dragon_occurrences": 2
+  },
+  "machine_interpretation": {
+    "event_order_confirmed": false,
+    "tile_identities_confirmed": false,
+    "repeated_green_dragon_count_confirmed": false
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

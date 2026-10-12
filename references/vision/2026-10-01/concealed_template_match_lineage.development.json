@@ -1,0 +1,92 @@
+{
+  "schema_version": "concealed_template_match_lineage_development_v0_1",
+  "development_only": true,
+  "excluded_from_formal_promotion": true,
+  "sources": [
+    {
+      "source_sha256": "c395a1f552e63b4e28d4bd2a343ba3d1853bc42f3ef7cdd5cba641ac830011ba",
+      "match_group": "reviewed_recording_66fe",
+      "evidence_path": "references/vision/2026-09-24/public_identity_source_groups.development.json"
+    },
+    {
+      "source_sha256": "0b9561b6e5ce79c394656913cb13a3943f73bbeb3e366800c6f0e56344f3491d",
+      "match_group": "reviewed_recording_b389",
+      "evidence_path": "references/vision/2026-09-24/public_identity_source_groups.development.json"
+    },
+    {
+      "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "cf1451e8cc18561d8c3d0250826f79eebcf71904aaf337c74edc41ba46c0f636",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "4333a11966bd364f3388b2bf3677900eed50faf6b0d6739cf9399e901de196fc",
+      "match_group": "reviewed_match_2026_09_19_eight_hand",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "f24898ecee56803c09bead267150a590143c043941d3287f436ed6e89930f51d",
+      "match_group": "reviewed_recording_14",
+      "evidence_path": "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json"
+    },
+    {
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "match_group": "reviewed_match_2026_09_26_first_hand",
+      "evidence_path": "references/vision/2026-09-24/public_identity_source_groups.development.json"
+    },
+    {
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "match_group": "reviewed_match_concealed_recovery_b",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json"
+    },
+    {
+      "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+      "match_group": "reviewed_match_2026_10_03_recent_real_game",
+      "evidence_path": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json"
+    }
+  ]
+}
