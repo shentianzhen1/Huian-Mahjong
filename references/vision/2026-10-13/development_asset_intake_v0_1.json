@@ -1,0 +1,515 @@
+{
+  "schema_version": "huian_development_asset_intake_evidence_v0_1",
+  "date": "2026-10-13",
+  "execution_issue": 69,
+  "scope": "private development intake only",
+  "counts": {
+    "package_standard_classes": 34,
+    "package_flower_classes": 8,
+    "real_crops": 79,
+    "verified_source_files": 6
+  },
+  "source_records": [
+    {
+      "source_sha256": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "kind": "video",
+      "original_match_group": "user_confirmed_match_2026_09_13_capture_set",
+      "match_group_authority": "direct_user_confirmation",
+      "independent_from_other_registered_matches": "UNKNOWN"
+    },
+    {
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "kind": "video",
+      "original_match_group": "user_confirmed_match_2026_09_13_capture_set",
+      "match_group_authority": "direct_user_confirmation",
+      "independent_from_other_registered_matches": "UNKNOWN"
+    },
+    {
+      "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+      "kind": "video",
+      "original_match_group": "user_confirmed_match_2026_09_13_capture_set",
+      "match_group_authority": "direct_user_confirmation",
+      "independent_from_other_registered_matches": "UNKNOWN"
+    },
+    {
+      "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+      "kind": "video",
+      "original_match_group": "user_confirmed_match_2026_09_13_capture_set",
+      "match_group_authority": "direct_user_confirmation",
+      "independent_from_other_registered_matches": "UNKNOWN"
+    },
+    {
+      "source_sha256": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "kind": "video",
+      "original_match_group": "user_confirmed_match_2026_09_13_capture_set",
+      "match_group_authority": "direct_user_confirmation",
+      "independent_from_other_registered_matches": "UNKNOWN"
+    },
+    {
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "kind": "image",
+      "original_match_group": "reviewed_recording_b389",
+      "match_group_authority": "existing_source_record",
+      "independent_from_other_registered_matches": "UNKNOWN"
+    }
+  ],
+  "source_group_coverage": {
+    "regions": {
+      "draw_visual": {
+        "M3": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M5": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M6": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P2": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P7": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S6": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        }
+      },
+      "hand_region": {
+        "E": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M5": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M9": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P1": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 2,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P3": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P4": {
+          "reviewed_crop_count": 7,
+          "stored_session_count": 4,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P5": {
+          "reviewed_crop_count": 9,
+          "stored_session_count": 5,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P6": {
+          "reviewed_crop_count": 11,
+          "stored_session_count": 5,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P7": {
+          "reviewed_crop_count": 7,
+          "stored_session_count": 3,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P8": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P9": {
+          "reviewed_crop_count": 6,
+          "stored_session_count": 2,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "R": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S1": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S2": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S3": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S4": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S5": {
+          "reviewed_crop_count": 5,
+          "stored_session_count": 4,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S6": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 2,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S7": {
+          "reviewed_crop_count": 4,
+          "stored_session_count": 3,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S8": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S9": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "SOUTH": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "W": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        }
+      }
+    },
+    "package_labels_excluded_from_real_support": 0,
+    "runtime_admission": false
+  },
+  "source_pixel_recovery": {
+    "reviewed_crops": 79,
+    "pixel_exact": 79,
+    "five_user_confirmed_same_match_video_crops": 68,
+    "existing_parent_screenshot_crops": 11,
+    "pixel_recovery_performed_upstream": true,
+    "intake_rechecks_file_identity_only": true
+  },
+  "package_trial": {
+    "baseline_commit": "96ee733c8daa13bf5166719c1a3f398f680828c1",
+    "revealed_development_labels": 137,
+    "baseline_correct": 93,
+    "merged_candidate_correct": 99,
+    "paired_improvements": 6,
+    "paired_regressions": 0,
+    "baseline_threshold_pass": 50,
+    "merged_threshold_pass": 50,
+    "baseline_real_support_gate_accepts": 42,
+    "merged_real_support_gate_accepts": 42,
+    "confidence_threshold": 0.82,
+    "runtime_adopted": false
+  },
+  "privacy": {
+    "private_pixels_committed": false,
+    "absolute_paths_committed": false,
+    "raw_packages_committed": false
+  },
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "validation": {
+    "focused_intake_tests": {
+      "run": 15,
+      "passed": 15
+    },
+    "vision_v0_1": {
+      "run": 50,
+      "passed": 50
+    },
+    "runtime_vision_v0_2": {
+      "run": 75,
+      "passed": 75
+    },
+    "core_suite_windows": {
+      "run": 613,
+      "failures": 1,
+      "failure": "test_unknown_rule_ids_and_settlement_candidate_are_preserved",
+      "cause": "main records evidence paths with platform separators",
+      "existing_fix_pr": 133,
+      "new_module_tests_passed": true
+    },
+    "private_packet_cli": {
+      "success": true,
+      "package_standard_classes": 34,
+      "package_flower_classes": 8,
+      "real_crops": 79,
+      "verified_source_files": 6
+    }
+  }
+}
