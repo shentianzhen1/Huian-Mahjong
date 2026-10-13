@@ -1,6 +1,6 @@
 # PROJECT_STATUS — Current Snapshot
 
-**Snapshot date:** 2026-10-07
+**Snapshot date:** 2026-10-13
 **Execution truth:** GitHub Issues
 **Rule truth:** RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md
 **History:** CHANGELOG.md
@@ -19,12 +19,23 @@ coverage is 34/34, but only 22 classes have two stored source sessions; that
 inventory is not independent-match accuracy. Full meld identity is not yet a
 qualified live Runtime input. V0.10 unchanged; Executor OFF.
 
+The [2026-10-13 reproduction](docs/vision/concealed_43of43_candidate_reproduction_20261013.md)
+reproduced the development-only support + primary-first UNKNOWN tight-fallback
+candidate: 43/43 ordinary tiles, 3/3 complete hand samples, zero wrong accepts.
+The unchanged packaged Runtime remains 25/43 accepted and 0/3 complete hands on
+that same diagnostic. Neither result is independent live accuracy. Candidate
+fallback is not wired into Runtime; fresh original-match validation is pending.
+The promotion-report input validation fix rejects malformed booleans, counts
+and rates without changing the frozen thresholds. See the
+[ordered audit follow-up](docs/ordered_audit_optimization_20261013.md).
+
 ## Branch and release scope
 
 - The [player-confirmed contract](references/rules/2026-10-06/player_confirmed_special_rules.md) in Draft PR #126 now has Sanjindao/Eight-Flower settlement APIs plus staged pre-Gold Eight-Flower choice, explicit candidate-flower consumption, forced no-Gold eighth-flower terminal and automatic dealer Tianhu `base×2`. Snapshot: `huian-target-2026-10-06-opening-r1`. This is a scripted-wall API with unknown hidden location; live still reads visible Gold/flowers. Non-Tianhu staged openings stop safely pending first-round Qiangjin/Tianting. In-play re-prompts, full simulator/live routing and complete installer behavior remain pending.
 
-- Integration work lives on `integration/issue69-replay-stack-20260926` in
-  Draft PR #117. It is unmerged; these draft features are not a main release.
+- Active Alpha work lives on `codex/hint-alpha-local-test-sync-20261004` in
+  Draft PR #126. Draft PR #117 is the earlier integration branch; neither is
+  merged, and these draft features are not a main release.
 - Draft package identity is `0.2.1`; CurrentAgent remains MeldAwareShantenAgent
   V0.10. RuleSnapshot is versioned independently from package and Agent.
 - Issue #4 closed through PR #125 on main: only added kongs can be robbed;

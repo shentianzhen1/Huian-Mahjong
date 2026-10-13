@@ -2,6 +2,14 @@
 
 ## Status
 
+**Historical availability audit, superseded for reproduction status on 2026-10-13.**
+The [candidate reproduction](concealed_43of43_candidate_reproduction_20261013.md)
+records recovery of the required private inputs and an end-to-end 43/43 rerun.
+Its corrected ordinary checkpoints are 20/30/40 seconds (16+13+14 tiles).
+The findings below describe the earlier session only; they are not current
+input availability or a replacement for the corrected reproduction record.
+The candidate remains development-only and fresh holdout validation is pending.
+
 **BLOCKED: this session cannot reproduce the reported 43/43 result.** This is an input-availability finding, not a failed recognition run. No synthetic replacement result has been generated, and no Runtime code was changed.
 
 Audited branch: `codex/hint-alpha-local-test-sync-20261004`

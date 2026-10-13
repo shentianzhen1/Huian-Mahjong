@@ -2,6 +2,12 @@
 
 ## Scope and source of truth
 
+**Historical sync note.** The reported development result was subsequently
+[reproduced end-to-end on 2026-10-13](concealed_43of43_candidate_reproduction_20261013.md).
+The reproducibility gap below is resolved by that later record; independent
+validation and Runtime wiring remain pending. Use the later record for current
+reproduction status, without upgrading development evidence to blind evidence.
+
 This note records the current development evidence boundary for concealed-tile recognition. It does not promote any candidate to Runtime. PR #126 remains Draft and must not be merged without explicit approval.
 
 - Branch checked: `codex/hint-alpha-local-test-sync-20261004`
