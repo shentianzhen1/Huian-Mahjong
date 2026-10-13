@@ -78,6 +78,10 @@ class SourceCoverageTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             source_group_coverage([], [item, {**item, "original_match_group": "other"}])
 
+    def test_conflicting_group_claims_rejected_even_without_crop_support(self):
+        with self.assertRaisesRegex(ValueError, "conflicting independence"):
+            source_group_coverage([label(source(1))], [source(1), source(2, distinct="CONFIRMED_DISTINCT")])
+
 
 class IntakeTests(unittest.TestCase):
     def setUp(self):
@@ -104,6 +108,40 @@ class IntakeTests(unittest.TestCase):
             "current_asset_sha256": h, "declared_asset_sha256": h,
             "source_label_manifest": str(self.file), "source_label_manifest_sha256": h,
         }]
+        self.label = {"id": self.crop[0]["id"], "image": "templates/example.png",
+                      "tile_id": "M2", "region": "hand_region", "sha256": h,
+                      "source_session": "a", "source_frame": 5, "approved": True,
+                      "bbox": [0, 0, 20, 30], "asset_sha256": h}
+        self.crop[0].update(template_image=self.label["image"], crop_bbox=self.label["bbox"])
+        self.write_labels([self.label])
+
+    def write_labels(self, labels):
+        path = self.root / "labels.jsonl"
+        path.write_text("".join(json.dumps(x) + "\n" for x in labels), encoding="utf-8")
+        self.crop[0].update(source_label_manifest=str(path), source_label_manifest_sha256=digest(path.read_bytes()))
+
+    def test_recovery_metadata_cannot_substitute_reviewed_label(self):
+        for field, value in {"tile_id": "M3", "region": "gold_region", "source_frame": 6,
+                             "source_session": "other", "template_image": "other.png",
+                             "crop_bbox": [1, 0, 20, 30]}.items():
+            with self.subTest(field=field):
+                changed = deepcopy(self.crop)
+                changed[0][field] = value
+                with self.assertRaisesRegex(ValueError, "crop/reviewed label"):
+                    build_intake(self.package, changed, self.sources)
+
+    def test_missing_unapproved_or_duplicate_reviewed_label_rejected(self):
+        for labels in ([], [{**self.label, "approved": False}], [self.label, self.label]):
+            self.write_labels(labels)
+            with self.assertRaises(ValueError):
+                build_intake(self.package, self.crop, self.sources)
+
+    def test_reviewed_asset_hash_and_bbox_are_checked(self):
+        for change in ({"asset_sha256": "0" * 64}, {"bbox": [0, 0, 0, 30]}):
+            self.write_labels([{**self.label, **change}])
+            self.crop[0]["crop_bbox"] = change.get("bbox", self.label["bbox"])
+            with self.assertRaises(ValueError):
+                build_intake(self.package, self.crop, self.sources)
 
     def test_client_suit_order_and_flower_boundary(self):
         self.assertEqual([client_tile_to_project(i) for i in (0, 9, 18, 27, 33, 34, 41)],

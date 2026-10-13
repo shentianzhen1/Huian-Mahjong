@@ -77,14 +77,19 @@ def source_group_coverage(rows: list[dict], sources: list[dict]) -> dict:
     This output is diagnostic; it does not grant a Runtime capability.
     """
     index = {}
+    group_claims = defaultdict(set)
     for source in sources:
         digest = _digest(source.get("source_sha256"))
         if digest in index:
             raise ValueError("duplicate source SHA")
         if source.get("kind") not in {"video", "image", "package"}:
             raise ValueError("unknown source kind")
-        _group(source.get("original_match_group"))
+        group = _group(source.get("original_match_group"))
+        if group is not None and source["kind"] != "package":
+            group_claims[group].add(source.get("independent_from_other_registered_matches", "UNKNOWN"))
         index[digest] = source
+    if any(len(claims) > 1 for claims in group_claims.values()):
+        raise ValueError("conflicting independence claims for one match group")
     buckets = defaultdict(lambda: {
         "labels": 0, "sessions": set(), "groups": set(), "qualified": set(),
         "unknown": set(), "provisional": set(),
@@ -185,6 +190,7 @@ def build_intake(package_rows: list[dict], crop_rows: list[dict], sources: list[
             ),
         })
     real_assets = []
+    label_indexes = {}
     seen_assets = set()
     for row in crop_rows:
         if row.get("status") != "PIXEL_EXACT_FROM_SHA_VERIFIED_SOURCE" or row.get("pixel_exact") is not True:
@@ -209,6 +215,38 @@ def build_intake(package_rows: list[dict], crop_rows: list[dict], sources: list[
         if identifier in seen_assets:
             raise ValueError("duplicate crop ID")
         seen_assets.add(identifier)
+        if label_manifest_hash not in label_indexes:
+            labels = {}
+            for line in Path(row["source_label_manifest"]).read_text(encoding="utf-8-sig").splitlines():
+                if not line.strip():
+                    continue
+                reviewed = json.loads(line)
+                key = reviewed.get("id") or reviewed.get("image")
+                if not isinstance(key, str) or not key:
+                    raise ValueError("reviewed label requires an ID or image")
+                if key in labels:
+                    raise ValueError("ambiguous duplicate reviewed label ID")
+                labels[key] = reviewed
+            label_indexes[label_manifest_hash] = labels
+        reviewed = label_indexes[label_manifest_hash].get(identifier)
+        if reviewed is None or reviewed.get("approved") is False or reviewed.get("status") in {"rejected", "pending"} or not (reviewed.get("approved") is True or reviewed.get("status") == "approved"):
+            raise ValueError("crop must reference an approved reviewed label")
+        expected = {
+            "tile_id": reviewed.get("tile_id"), "region": reviewed.get("region"),
+            "source_sha256": reviewed.get("sha256", reviewed.get("source_sha256")),
+            "source_session": reviewed.get("source_session"),
+            "source_frame": reviewed.get("source_frame"),
+            "template_image": reviewed.get("image"),
+            "crop_bbox": reviewed.get("crop_bbox", reviewed.get("bbox")),
+        }
+        for field, value in expected.items():
+            if row.get(field) != value:
+                raise ValueError(f"crop/reviewed label {field} mismatch")
+        bbox = expected["crop_bbox"]
+        if not isinstance(bbox, list) or len(bbox) != 4 or any(type(v) is not int for v in bbox) or min(bbox[:2]) < 0 or min(bbox[2:]) <= 0:
+            raise ValueError("reviewed crop bbox must be nonnegative with positive dimensions")
+        if reviewed.get("asset_sha256") is not None and _digest(reviewed["asset_sha256"]) != asset_hash:
+            raise ValueError("crop/reviewed label asset SHA mismatch")
         real_assets.append({
             "id_sha256": hashlib.sha256(identifier.encode()).hexdigest(),
             "tile_id": row["tile_id"], "region": row["region"],
