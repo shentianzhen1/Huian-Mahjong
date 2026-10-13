@@ -8,6 +8,8 @@ Before touching code:
 
 Use the smallest relevant local tests first. Core regression:
   python -B -m unittest discover -s tests -v
+The full suite, including function-style pytest tests that unittest discover misses, is:
+  python -B -m pytest -q tests
 Run the corresponding GitHub Actions gate (core, Vision, or Evidence Contracts) before claiming a change is complete.
 
 Never invent Huian Mahjong rules, silently upgrade machine observation to CONFIRMED evidence, reuse revealed Vision development sessions as independent promotion data, or use UNKNOWN special settlement as official AI reward. Do not start a new Agent line until the shared scoring blockers in the current Issues are closed. Hint Alpha is read-only until independently validated; Executor remains off until a separate post-action safety gate passes.

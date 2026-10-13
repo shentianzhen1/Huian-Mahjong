@@ -23,8 +23,9 @@ qualified live Runtime input. V0.10 unchanged; Executor OFF.
 
 - The [player-confirmed contract](references/rules/2026-10-06/player_confirmed_special_rules.md) in Draft PR #126 now has Sanjindao/Eight-Flower settlement APIs plus staged pre-Gold Eight-Flower choice, explicit candidate-flower consumption, forced no-Gold eighth-flower terminal and automatic dealer Tianhu `base×2`. Snapshot: `huian-target-2026-10-06-opening-r1`. This is a scripted-wall API with unknown hidden location; live still reads visible Gold/flowers. Non-Tianhu staged openings stop safely pending first-round Qiangjin/Tianting. In-play re-prompts, full simulator/live routing and complete installer behavior remain pending.
 
-- Integration work lives on `integration/issue69-replay-stack-20260926` in
-  Draft PR #117. It is unmerged; these draft features are not a main release.
+- Integration work from `integration/issue69-replay-stack-20260926` (Draft PR
+  #117) is contained in Draft PR #126. Both remain unmerged; these draft
+  features are not a main release.
 - Draft package identity is `0.2.1`; CurrentAgent remains MeldAwareShantenAgent
   V0.10. RuleSnapshot is versioned independently from package and Agent.
 - Issue #4 closed through PR #125 on main: only added kongs can be robbed;
@@ -78,7 +79,10 @@ recognized identities or strategic ranking are human-confirmed.
 
 Core regression, Rules/Environment coverage floor 85%, Vision Regression,
 Evidence Contracts, fatal-error lint and installed wheel boundary checks.
-CodeQL analysis succeeded at the shared replay boundary head; GitHub secret
+The CodeQL analyze job succeeds, but the alert check fails on
+py/clear-text-logging-sensitive-data because two development scripts print a
+full JSON report. This change prints only the output path and a gate boolean,
+so that alert should clear on the next run; it has not been re-run yet. GitHub secret
 scanning/push-protection settings still require verification. Stop/recording
 failures are visible and completion-write failures
 remain retryable. Package-local test modules are excluded from runtime wheels.

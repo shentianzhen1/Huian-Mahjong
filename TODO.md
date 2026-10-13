@@ -19,7 +19,7 @@
 
 - **#6 AI EV / 8局上下文** — `CurrentAgent = MeldAwareShantenAgent V0.10` 固定为当前前沿；本轮不并行开新 Agent 版本，特殊规则 UNKNOWN 不作为正式 EV 真值。
 - **#7 Vision 独立验证** — 旧8局已完成64时点同批状态栏审计并保留 false-valid 错误；新批次先用 `independent_batch_lock.py` 锁 SHA/session/帧位，再人工 truth，最后只跑已冻结 `promotion_gate.py`。
-- **#69 Public Match Reconstruction V0.1** — 当前集成工作在 Draft PR #117。优先完成只读 Alpha 的当前状态、恢复与 Windows 实机验收；公开动作回放继续作证据与回归。Hand 2 正式河牌回放的 7 个 `UNKNOWN` 动作不由密集诊断候选回填。不要求人工逐张抄录八局，也不把同源候选当准确率。
+- **#69 Public Match Reconstruction V0.1** — Draft PR #117 的提交已包含在仍未合并的 Draft PR #126 中。优先完成只读 Alpha 的当前状态、恢复与 Windows 实机验收；公开动作回放继续作证据与回归。Hand 2 正式河牌回放的 7 个 `UNKNOWN` 动作不由密集诊断候选回填。不要求人工逐张抄录八局，也不把同源候选当准确率。
 
 ## Product
 
