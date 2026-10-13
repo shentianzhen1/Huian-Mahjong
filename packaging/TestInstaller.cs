@@ -4,14 +4,61 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
+[ComImport, Guid("00021401-0000-0000-C000-000000000046")]
+class ShellLink { }
+
+// Native Unicode shortcut interface. WScript.Shell.Save converts Chinese link
+// names through the system ANSI code page on English Windows installations.
+[ComImport, Guid("000214F9-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IShellLinkW {
+    [PreserveSig] int GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder path, int size, IntPtr data, uint flags);
+    void GetIDList(out IntPtr id); void SetIDList(IntPtr id);
+    void GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder text, int size);
+    void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string text);
+    void GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder path, int size);
+    void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string path);
+    void GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder text, int size);
+    void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string text);
+    void GetHotkey(out short key); void SetHotkey(short key);
+    void GetShowCmd(out int command); void SetShowCmd(int command);
+    void GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder path, int size, out int index);
+    void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string path, int index);
+    void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string path, uint reserved);
+    void Resolve(IntPtr window, uint flags);
+    void SetPath([MarshalAs(UnmanagedType.LPWStr)] string path);
+}
+
 class TestInstaller {
     const string Layout = "shared-data-current-v1";
     const string ShortcutName = "惠安麻将测试版-向听辅助.lnk";
+
+    static string ShortcutTarget(string path) {
+        IShellLinkW link = (IShellLinkW)new ShellLink();
+        try {
+            ((IPersistFile)link).Load(path, 0);
+            StringBuilder target = new StringBuilder(32768);
+            Marshal.ThrowExceptionForHR(link.GetPath(target, target.Capacity, IntPtr.Zero, 4));
+            return target.ToString();
+        } finally { Marshal.FinalReleaseComObject(link); }
+    }
+    static void SaveShortcut(string path, string target) {
+        IShellLinkW link = (IShellLinkW)new ShellLink();
+        try {
+            link.SetPath(Path.Combine(target, "runtime", "pythonw.exe"));
+            link.SetArguments("-B \"" + Path.Combine(target, "launch.py") + "\"");
+            link.SetWorkingDirectory(target);
+            link.SetDescription("惠安麻将 Hint Alpha 内部只读测试版");
+            ((IPersistFile)link).Save(path, true);
+        } finally { Marshal.FinalReleaseComObject(link); }
+    }
 
     static string Inside(string root, string relative) {
         string path = Path.GetFullPath(Path.Combine(root, relative));
@@ -110,9 +157,8 @@ class TestInstaller {
             string data = Path.Combine(root, "data");
             if (Directory.Exists(data)) PlainTree(data);
             Directory.CreateDirectory(desktop);
-            Type shellType = Type.GetTypeFromProgID("WScript.Shell"); dynamic shell = Activator.CreateInstance(shellType);
             string shortcutPath = Path.Combine(desktop, ShortcutName);
-            if (File.Exists(shortcutPath) && !Targets((string)shell.CreateShortcut(shortcutPath).TargetPath, old))
+            if (File.Exists(shortcutPath) && !Targets(ShortcutTarget(shortcutPath), old))
                 throw new IOException("桌面同名快捷方式不属于本程序，请先重命名。");
             string stage = Path.Combine(root, ".staging-" + Guid.NewGuid().ToString("N"));
             string backup = Path.Combine(root, ".previous-" + Guid.NewGuid().ToString("N"));
@@ -127,10 +173,7 @@ class TestInstaller {
                 if (Directory.Exists(current)) Directory.Move(current, backup);
                 try { Directory.Move(stage, current); swapped = true; }
                 catch { if (Directory.Exists(backup)) Directory.Move(backup, current); throw; }
-                dynamic shortcut = shell.CreateShortcut(shortcutTemp);
-                shortcut.TargetPath = Path.Combine(current, "runtime", "pythonw.exe");
-                shortcut.Arguments = "-B \"" + Path.Combine(current, "launch.py") + "\"";
-                shortcut.WorkingDirectory = current; shortcut.Description = "惠安麻将 Hint Alpha 内部只读测试版"; shortcut.Save();
+                SaveShortcut(shortcutTemp, current);
                 if (File.Exists(shortcutPath)) File.Replace(shortcutTemp, shortcutPath, null);
                 else File.Move(shortcutTemp, shortcutPath);
                 committed = true;
@@ -141,7 +184,7 @@ class TestInstaller {
                 }
                 foreach (string link in Directory.GetFiles(desktop, "惠安麻将测试版-*.lnk")) {
                     if (link == shortcutPath) continue;
-                    try { if (Targets((string)shell.CreateShortcut(link).TargetPath, old)) File.Delete(link); }
+                    try { if (Targets(ShortcutTarget(link), old)) File.Delete(link); }
                     catch { retained.Add(link); }
                 }
                 return retained;

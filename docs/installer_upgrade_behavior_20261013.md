@@ -2,6 +2,8 @@
 
 Issue #45 packaging fix: previous installers created a fresh timestamped program
 directory and an additional timestamped desktop shortcut on each installation.
+Native Unicode shell-link APIs replace WScript shortcut saves, which failed
+with Chinese link names on the English Windows CI runner.
 
 New installations use `%LOCALAPPDATA%\HuianMahjongTest\current` and update the
 single desktop entry `惠安麻将测试版-向听辅助.lnk`. Records live outside the

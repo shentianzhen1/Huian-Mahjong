@@ -40,7 +40,19 @@ def broken_installer(directory, version):
 
 
 def main():
-    import win32com.client
+    import pythoncom
+    from win32com.shell import shell
+
+    def shortcut(path, target=None):
+        link = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None,
+            pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+        persist = link.QueryInterface(pythoncom.IID_IPersistFile)
+        if target is not None:
+            link.SetPath(str(target))
+            persist.Save(str(path), 1)
+        else:
+            persist.Load(str(path))
+            return Path(link.GetPath(shell.SLGP_RAWPATH)[0])
 
     installer = Path(sys.argv[1]).resolve()
     version = json.loads((ROOT / 'dist/BUILD_INFO.json').read_text(encoding='utf-8'))['project_version']
@@ -61,11 +73,8 @@ def main():
         unrelated = root / 'personal'
         unrelated.mkdir()
         (unrelated / 'keep.txt').write_text('keep')
-        shell = win32com.client.Dispatch('WScript.Shell')
         old_link = desktop / '惠安麻将测试版-20261001000000.lnk'
-        link = shell.CreateShortcut(str(old_link))
-        link.TargetPath = str(legacy / 'runtime/pythonw.exe')
-        link.Save()
+        shortcut(old_link, legacy / 'runtime/pythonw.exe')
         archive = root / 'data/legacy' / legacy.name / 'hint_alpha/session.json'
         archive.parent.mkdir(parents=True)
         archive.write_bytes(b'conflicting old evidence')
@@ -80,7 +89,7 @@ def main():
         assert (root / 'data/legacy' / legacy.name / 'hint_alpha/session.json').read_bytes() == evidence
         assert (unrelated / 'keep.txt').read_text() == 'keep'
         assert len(list(desktop.glob('惠安麻将测试版-*.lnk'))) == 1
-        assert Path(shell.CreateShortcut(str(canonical)).TargetPath) == current / 'runtime/pythonw.exe'
+        assert shortcut(canonical) == current / 'runtime/pythonw.exe'
         active_data = root / 'data/hint_alpha/keep.json'
         active_data.parent.mkdir(parents=True, exist_ok=True)
         active_data.write_bytes(b'live-evidence')
