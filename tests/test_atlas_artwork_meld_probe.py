@@ -6,9 +6,10 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
-from workspace.vision.atlas_artwork_meld_probe import artwork_cells, load_candidates
+from workspace.vision.atlas_artwork_meld_probe import artwork_cells, load_candidates, probe
 
 
 @unittest.skipUnless(importlib.util.find_spec('PIL'), 'Pillow required for packet image contracts')
@@ -65,3 +66,44 @@ class UploadedArtworkPacketTests(unittest.TestCase):
             altered=copy.deepcopy(manifest);altered['groups'].append(copy.deepcopy(altered['groups'][0]))
             write(altered)
             with self.assertRaises(ValueError): load_candidates(packet,root)
+
+
+@unittest.skipUnless(importlib.util.find_spec('PIL') and importlib.util.find_spec('cv2'),
+                     'Pillow and OpenCV required for symmetric probe')
+class SymmetricNormalizationTests(unittest.TestCase):
+    def test_query_artwork_and_real_references_share_transform(self):
+        from PIL import Image
+        module = 'workspace.vision.atlas_artwork_meld_probe'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'templates').mkdir()
+            image = Image.new('RGB', (24,40), 'white')
+            image.save(root/'templates/p1.png')
+            (root/'packet.zip').write_bytes(b'private packet placeholder')
+            (root/'lineage.json').write_text('{}')
+            queries = [{'image':image.copy(), 'match_group':'query', 'source_sha256':'a'*64,
+                        'group_id':'g', 'tile_id':'P1', 'crop_sha256':'b'*64}]
+            labels = [{'image':'templates/p1.png','tile_id':'P1','region':'hand_region',
+                       'sha256':'c'*64,'bbox':[0,0,24,40]}]
+            seen = []
+            def transform(value):
+                seen.append(value.size)
+                return value.resize((56,96))
+            def descriptors(value):
+                self.assertEqual(value.size,(56,96))
+                return None
+            with patch(module+'.artwork_cells',return_value={'P1':image.copy()}), \
+                 patch(module+'.load_candidates',return_value=(queries,{'prior_label_evidence_sha256':'d'*64})), \
+                 patch(module+'.load_concealed_template_lineage',return_value={}), \
+                 patch(module+'.verify_lineage_evidence_paths',return_value=[]), \
+                 patch(module+'.qualify_concealed_template_labels',return_value=(labels,{})), \
+                 patch('workspace.vision.tiles_v0_1.labels.approved_labels',return_value=labels), \
+                 patch('workspace.vision.public_meld_synthetic_transfer._canonical_face',side_effect=transform), \
+                 patch('workspace.vision.public_meld_synthetic_transfer.render_self_meld_variants',side_effect=lambda value:(value,)), \
+                 patch('workspace.vision.public_meld_identity_sift._sift_descriptors',side_effect=descriptors):
+                report=probe('sheet','e'*64,root/'packet.zip',root,root/'lineage.json',root,
+                             normalization='canonical')
+            self.assertEqual(seen,[(24,40)]*3)
+            self.assertEqual(report['normalization_scope'],'query_and_all_references')
+            self.assertFalse(report['safe_for_runtime'])
+            self.assertEqual(report['rows'][0]['runtime_tile_id'],'UNKNOWN')

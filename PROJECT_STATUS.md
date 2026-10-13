@@ -45,6 +45,10 @@ crops from five groups within one original match. Artwork NCC recovered 8/15
 identities versus real-hand NCC's 0/15, but fused SIFT did not exceed real-hand
 SIFT's 8/15. This is development crop scoring, not live acceptance or a new
 independent whole-hand evaluation. Runtime remains unchanged.
+One fixed symmetric normalization follow-up improves rendered artwork SIFT
+from 7/15 to 11/15 faces, with four gains and zero losses on the same revealed
+crops; exact groups remain 2/5. Real-hand and fused paths show regressions, so
+this is a separate development candidate and not a global Runtime transform.
 
 ## Branch and release scope
 

@@ -79,3 +79,39 @@ holdout status until exact-source grouping and reviewed truth are established.
 No Rules, Agent V0.10, Runtime, Hint or Executor behavior changes. The next
 experiment should test region/domain normalization or a trained artwork-to-real
 transfer candidate on development data, then freeze it before fresh evaluation.
+
+## Follow-up: one fixed symmetric normalization
+
+The same private inputs were evaluated with `--normalization canonical`. This
+applies the existing `_canonical_face` bright-body crop and 56x96 resize to
+every query, artwork reference and real reference before the same six paths.
+The renderer still runs its existing internal canonicalization. No crop ratios,
+SIFT parameters, class overrides or score thresholds were searched. Raw mode
+was rerun after this change; all original rows and metrics remained identical.
+
+| Variant | Raw faces / groups | Symmetric faces / groups | Face gains / losses |
+| --- | ---: | ---: | ---: |
+| Real hand NCC | 0/15 · 0/5 | 0/15 · 0/5 | 0 / 0 |
+| Artwork NCC | 8/15 · 2/5 | 9/15 · 2/5 | 1 / 0 |
+| Real hand SIFT | 8/15 · 1/5 | 8/15 · 0/5 | 2 / 2 |
+| Artwork SIFT | 7/15 · 1/5 | 10/15 · 2/5 | 4 / 1 |
+| Rendered artwork SIFT | 7/15 · 2/5 | 11/15 · 2/5 | 4 / 0 |
+| Fused SIFT | 8/15 · 1/5 | 10/15 · 1/5 | 3 / 1 |
+
+The rendered artwork path gains P7, M1, P3 and P5 on these revealed development
+crops without losing previously correct faces. Its remaining errors are P8→P7,
+P9→P8, M2→M3 and P4→P8. It does not improve exact-group count, and real-hand
+SIFT loses its formerly complete group. Therefore the transform must not be
+applied globally to Runtime or used to select a confidence threshold.
+
+The machine-readable paired report is
+`references/vision/2026-10-13/uploaded_artwork_symmetric_normalization_v0_1.json`;
+it binds the original report SHA and repeats all input/template hashes. Local
+image/intake/lineage suites: 38 tests passed, including a synthetic integration
+check that query, artwork and real reference images share the transform.
+
+This ends the small static development comparison. The next acceptance work is
+to freeze a candidate and establish reviewed, source-disjoint whole-hand and
+actual detector-path meld evidence, preserving the new recordings until their
+original-match grouping and truth are locked. No generalization gain, live
+acceptance gain or Runtime promotion is established by 11/15 on these crops.

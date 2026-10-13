@@ -98,15 +98,23 @@ def _rank_sift(image, bank):
     return {'tile': ranked[0][0] if ranked else None, 'score': ranked[0][1] if ranked else None}
 
 
-def probe(sheet, sheet_sha, packet, dataset, lineage, repository):
+def probe(sheet, sheet_sha, packet, dataset, lineage, repository, *, normalization='raw'):
     from PIL import Image
     from .tiles_v0_1.labels import approved_labels
     from .tiles_v0_1.template_classifier import TemplateTileClassifier, _feature
     from .public_meld_identity_sift import _sift_descriptors
-    from .public_meld_synthetic_transfer import render_self_meld_variants
+    from .public_meld_synthetic_transfer import render_self_meld_variants, _canonical_face
+
+    if normalization not in {'raw', 'canonical'}:
+        raise ValueError('normalization must be raw or canonical')
+    # Existing, fixed transform; apply equally to query and every reference.
+    transform = _canonical_face if normalization == 'canonical' else lambda image: image
 
     cells = artwork_cells(sheet, sheet_sha)
     queries, manifest = load_candidates(packet, repository)
+    cells = {tile: transform(image) for tile, image in cells.items()}
+    for query in queries:
+        query['image'] = transform(query['image'])
     groups = {row['match_group'] for row in queries}
     if len(groups) != 1:
         raise ValueError('this narrow probe expects one original query match')
@@ -121,7 +129,7 @@ def probe(sheet, sheet_sha, packet, dataset, lineage, repository):
     art_features = {tile: [_feature(image, region='hand_region')] for tile, image in cells.items() if tile in STANDARD_TILES}
     art = TemplateTileClassifier(art_features)
     real_sift, art_sift, rendered_sift = defaultdict(list), defaultdict(list), defaultdict(list)
-    real_hashes = {}
+    real_hashes, real_features = {}, defaultdict(list)
     for row in training:
         root = Path(dataset).resolve()
         path = (root / row['image']).resolve()
@@ -135,8 +143,11 @@ def probe(sheet, sheet_sha, packet, dataset, lineage, repository):
             crop = source.convert('RGB')
             if Path(row['image']).parts[0] != 'templates':
                 x,y,w,h = row['bbox']; crop = crop.crop((x,y,x+w,y+h))
+        crop = transform(crop)
         real_sift[row['tile_id']].append(_sift_descriptors(crop))
-    real = TemplateTileClassifier.from_labels(dataset, training) if training else None
+        real_features[row['tile_id']].append(_feature(crop, region='hand_region'))
+    real = (TemplateTileClassifier(real_features) if normalization == 'canonical'
+            else TemplateTileClassifier.from_labels(dataset, training)) if training else None
     for tile, image in cells.items():
         if tile not in STANDARD_TILES:
             continue
@@ -167,6 +178,9 @@ def probe(sheet, sheet_sha, packet, dataset, lineage, repository):
         'query_geometry':'existing reviewed crops; not automatic detector-path acceptance',
         'independent_holdout':False,'original_video_pixel_audit_repeated_here':False,
         'variants_predeclared':list(variants),'scores_calibrated_as_runtime_confidence':False,
+        'normalization':normalization,
+        'normalization_scope':'query_and_all_references' if normalization == 'canonical' else 'none',
+        'normalization_parameters':'existing _canonical_face / 56x96 / unchanged' if normalization == 'canonical' else None,
         'metrics':metrics,'rows':rows,'environment':{'opencv':cv2.__version__,'numpy':numpy.__version__,'pillow':PIL.__version__},
         'runtime_changed':False,'formal_promotion_evidence':False,'safe_for_runtime':False,'safe_for_hint':False,'safe_for_executor':False}
 
@@ -175,8 +189,10 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for option in ('sheet','sheet-sha256','packet','dataset','lineage','repository-root','output'):
         parser.add_argument('--'+option,required=True)
+    parser.add_argument('--normalization',choices=('raw','canonical'),default='raw')
     args=parser.parse_args()
-    result=probe(args.sheet,args.sheet_sha256,args.packet,args.dataset,args.lineage,args.repository_root)
+    result=probe(args.sheet,args.sheet_sha256,args.packet,args.dataset,args.lineage,args.repository_root,
+                 normalization=args.normalization)
     with Path(args.output).open('x',encoding='utf-8') as stream:
         json.dump(result,stream,ensure_ascii=False,indent=2,allow_nan=False);stream.write('\n')
     print(json.dumps(result['metrics']))
