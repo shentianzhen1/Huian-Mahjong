@@ -49,6 +49,11 @@ One fixed symmetric normalization follow-up improves rendered artwork SIFT
 from 7/15 to 11/15 faces, with four gains and zero losses on the same revealed
 crops; exact groups remain 2/5. Real-hand and fused paths show regressions, so
 this is a separate development candidate and not a global Runtime transform.
+New MOV intake found an offline frame-provenance defect: random frame seeking
+does not match sequential decoded ordinals on a VFR recording. The baseline
+exporter now supports exact ordinal selection and reviewed RGB-hash checks
+before inference. Initial new-recording truth/exports require re-review and
+have no valid accuracy summary; see [frame identity audit](docs/vision/new_recording_frame_identity_20261013.md).
 
 ## Branch and release scope
 

@@ -55,7 +55,7 @@ def _load_truth_seed(path: Path) -> dict:
     return payload
 
 
-def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Any], dict]:
+def _read_burst(video_path: Path, seconds: float, *, source_frame: int | None = None) -> tuple[list[int], list[Any], dict]:
     import cv2
     from PIL import Image
 
@@ -68,7 +68,13 @@ def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Any],
         capture.release()
         raise ValueError("Video metadata does not expose usable fps/frame_count")
 
-    centre = int(round(float(seconds) * fps))
+    if source_frame is not None and (
+        isinstance(source_frame, bool) or not isinstance(source_frame, int)
+        or not 0 <= source_frame < frame_count
+    ):
+        capture.release()
+        raise ValueError('source_frame must be an in-range integer')
+    centre = source_frame if source_frame is not None else int(round(float(seconds) * fps))
     half = BURST_SIZE // 2
     start = max(0, min(frame_count - BURST_SIZE, centre - half))
     frame_ids = list(range(start, min(frame_count, start + BURST_SIZE)))
@@ -76,7 +82,12 @@ def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Any],
         capture.release()
         raise ValueError("Could not form a five-frame burst at requested timestamp")
 
-    capture.set(cv2.CAP_PROP_POS_FRAMES, frame_ids[0])
+    # OpenCV random seeks can return a different decoded ordinal on VFR MOVs.
+    # Walk from the beginning so reported frame IDs identify actual pixels.
+    for frame_id in range(frame_ids[0]):
+        if not capture.grab():
+            capture.release()
+            raise ValueError(f'Could not advance to frame {frame_id}')
     images: list[Any] = []
     decoded_ids: list[int] = []
     for frame_id in frame_ids:
@@ -86,14 +97,27 @@ def _read_burst(video_path: Path, seconds: float) -> tuple[list[int], list[Any],
             raise ValueError(f"Could not decode frame {frame_id}")
         decoded_ids.append(frame_id)
         images.append(Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
-    width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width, height = images[0].size
     capture.release()
     return decoded_ids, images, {
         "fps": fps,
         "frame_count": frame_count,
         "decoded_size": [width, height],
+        "frame_access": "sequential_decoded_ordinal",
+        "centre_selection": "explicit_source_frame" if source_frame is not None else "seconds_times_average_fps",
     }
+
+
+def _verify_reviewed_frame(sample: dict, frame_ids: list[int], images: list[Any]) -> None:
+    expected = sample.get('reviewed_frame_rgb_sha256')
+    if expected is None:
+        return
+    source_frame = sample.get('source_frame')
+    if isinstance(source_frame, bool) or not isinstance(source_frame, int) or source_frame not in frame_ids:
+        raise ValueError('reviewed RGB hash requires an explicit source_frame in the burst')
+    actual = hashlib.sha256(images[frame_ids.index(source_frame)].convert('RGB').tobytes()).hexdigest()
+    if actual != expected:
+        raise ValueError('decoded frame does not match manually reviewed RGB hash')
 
 
 def _component_sort_key(component: dict) -> tuple[int, int, int]:
@@ -253,7 +277,10 @@ def export_baseline(
     for sample in seed["samples"]:
         sample_id = str(sample["sample_id"])
         seconds = float(sample["timestamp_seconds"])
-        frame_ids, images, metadata = _read_burst(video_path, seconds)
+        frame_ids, images, metadata = _read_burst(
+            video_path, seconds, source_frame=sample.get('source_frame')
+        )
+        _verify_reviewed_frame(sample, frame_ids, images)
         video_metadata = metadata
         runtime_report = read_stable_frames(
             images,
