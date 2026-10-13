@@ -34,6 +34,10 @@ branch. Its private source evidence covers 34+8 client artwork classes and 79
 recovered concealed crops; all 79 link to existing current-bank source records.
 Artwork is not Runtime training/support admission and no new accuracy was
 measured here. See [client intake alignment](docs/vision/client_artwork_integration_20261013.md).
+The [private whole-hand artwork A/B](docs/vision/client_artwork_whole_hand_ab.md)
+now verifies a manual truth lock and compares baseline/merged/primary-first
+classifiers on identical crops without counting artwork as real support. Actual
+private image-based evaluation remains pending; no accuracy gain is claimed.
 
 ## Branch and release scope
 
