@@ -35,4 +35,3 @@ class InstallerDependencyLockTests(unittest.TestCase):
         # distributions in the Linux test environment.
         expected = {'pip': importlib.metadata.version('pip')}
         self.assertEqual(builder.installed_dependencies(sys.executable, expected), expected)
-

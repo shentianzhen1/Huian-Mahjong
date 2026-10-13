@@ -54,8 +54,10 @@ Fourteen installer/dependency/payload/entrypoint tests passed, including
 version drift, missing pins, malformed/duplicate constraints, dependency lookup
 through a selected interpreter, and lock tampering despite re-inventory.
 Packaging modules compile and diff whitespace checks pass.
-Windows construction and installed UI verification require the new CI run;
-the earlier all-green d492833 run establishes the version source only.
+Windows run `38365050572` at `44227501b373d4cb04f094e3090486f36a2e91c0`
+passed pinned installation, EXE construction, extraction/hash verification,
+spawn, Tk and installed live UI smoke. Artifact `11796625819` was produced.
+The earlier all-green d492833 run establishes the version source.
 
 Real mirrored-game identity accuracy, exact-hand coverage, end-to-end latency
 and capture recovery still need a reviewed Windows session. Successful
