@@ -1,0 +1,454 @@
+{
+  "schema_version": "current_bank_client_intake_reconciliation_development_v0_1",
+  "execution_issue": 69,
+  "date": "2026-10-13",
+  "runtime_base_commit": "751211141226a6105df35225fc065fc083c90921",
+  "imported_tool_commit": "5add15835ca8cf3247199e8de4ad0d90e159f3ee",
+  "source_pr": 138,
+  "inputs_sha256": {
+    "references/vision/2026-10-13/development_asset_intake_v0_1.json": "825b6e9e174ceceb22fe2bf3f04234fd2beed25c16f0aa817daac6a5509f5923",
+    "dataset/tiles_runtime_v0_2/labels.jsonl": "92c14aa278bfe15967b8f9777f89b629e6052b9ed97105085bb573eb8779fdbb",
+    "dataset/tiles_runtime_v0_2/labels_reviewed_additions/2026-10-07_s2.jsonl": "42b36a2c7754c5c64205bcf976500d5b3ec8b2a6459524fa1b89dd600828a794",
+    "dataset/tiles_runtime_v0_2/labels_reviewed_additions/2026-10-08_s2_hard_example.jsonl": "377b39bb3ba991cc8a7369359f613c9bcf9685ede823eee08732703cb178bcf9"
+  },
+  "current_approved_label_count": 147,
+  "upstream_recovered_concealed_crop_count": 79,
+  "current_labels_linked_to_six_recovered_source_shas": 80,
+  "current_concealed_labels_linked": 79,
+  "linked_concealed_by_class": {
+    "E": 1,
+    "M3": 2,
+    "M5": 3,
+    "M6": 1,
+    "M9": 2,
+    "P1": 2,
+    "P2": 1,
+    "P3": 1,
+    "P4": 7,
+    "P5": 9,
+    "P6": 11,
+    "P7": 8,
+    "P8": 1,
+    "P9": 6,
+    "R": 1,
+    "S1": 1,
+    "S2": 2,
+    "S3": 1,
+    "S4": 1,
+    "S5": 5,
+    "S6": 4,
+    "S7": 4,
+    "S8": 1,
+    "S9": 1,
+    "SOUTH": 2,
+    "W": 1
+  },
+  "extra_linked_gold_region_count": 1,
+  "upstream_pixel_audit_repeated_here": false,
+  "private_package_pixels_added": false,
+  "runtime_labels_changed": false,
+  "source_coverage": {
+    "regions": {
+      "draw_visual": {
+        "M3": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M5": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M6": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P2": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P7": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S6": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        }
+      },
+      "hand_region": {
+        "E": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M5": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "M9": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P1": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 2,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P3": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P4": {
+          "reviewed_crop_count": 7,
+          "stored_session_count": 4,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P5": {
+          "reviewed_crop_count": 9,
+          "stored_session_count": 5,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P6": {
+          "reviewed_crop_count": 11,
+          "stored_session_count": 5,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P7": {
+          "reviewed_crop_count": 7,
+          "stored_session_count": 3,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P8": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "P9": {
+          "reviewed_crop_count": 6,
+          "stored_session_count": 2,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "R": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S1": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S2": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S3": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S4": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S5": {
+          "reviewed_crop_count": 5,
+          "stored_session_count": 4,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S6": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 2,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S7": {
+          "reviewed_crop_count": 4,
+          "stored_session_count": 3,
+          "named_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389",
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S8": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "reviewed_recording_b389"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "S9": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "SOUTH": {
+          "reviewed_crop_count": 2,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        },
+        "W": {
+          "reviewed_crop_count": 1,
+          "stored_session_count": 1,
+          "named_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "qualified_distinct_match_group_count": 0,
+          "provisional_match_groups": [
+            "user_confirmed_match_2026_09_13_capture_set"
+          ],
+          "unknown_source_sha256s": [],
+          "two_match_support_demonstrated": false
+        }
+      }
+    },
+    "package_labels_excluded_from_real_support": 0,
+    "runtime_admission": false
+  },
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "interpretation": "79 current concealed labels link to the six recovered exact source SHA records. An additional existing Gold-region label makes 80 total linked labels; it was not added to the upstream concealed packet. All match groups remain provisional for cross-registry independence. Source linkage and upstream claims do not constitute a new pixel audit or refreshed classifier measurement."
+}

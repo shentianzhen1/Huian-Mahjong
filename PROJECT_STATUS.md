@@ -29,6 +29,12 @@ The promotion-report input validation fix rejects malformed booleans, counts
 and rates without changing the frozen thresholds. See the
 [ordered audit follow-up](docs/ordered_audit_optimization_20261013.md).
 
+Draft PR #138's verified development intake tool is now available on this Alpha
+branch. Its private source evidence covers 34+8 client artwork classes and 79
+recovered concealed crops; all 79 link to existing current-bank source records.
+Artwork is not Runtime training/support admission and no new accuracy was
+measured here. See [client intake alignment](docs/vision/client_artwork_integration_20261013.md).
+
 ## Branch and release scope
 
 - The [player-confirmed contract](references/rules/2026-10-06/player_confirmed_special_rules.md) in Draft PR #126 now has Sanjindao/Eight-Flower settlement APIs plus staged pre-Gold Eight-Flower choice, explicit candidate-flower consumption, forced no-Gold eighth-flower terminal and automatic dealer Tianhu `base×2`. Snapshot: `huian-target-2026-10-06-opening-r1`. This is a scripted-wall API with unknown hidden location; live still reads visible Gold/flowers. Non-Tianhu staged openings stop safely pending first-round Qiangjin/Tianting. In-play re-prompts, full simulator/live routing and complete installer behavior remain pending.
