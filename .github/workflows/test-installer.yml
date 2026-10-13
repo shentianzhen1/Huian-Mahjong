@@ -9,6 +9,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v7
         with:
           python-version: '3.14.7'
@@ -18,6 +20,15 @@ jobs:
           .build-hint/Scripts/python.exe -m pip install -c packaging/constraints-windows-py314.txt '.[hint-alpha]'
       - name: Build offline installer
         run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
+      - name: Verify installer source commit
+        shell: pwsh
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $manifest = Get-Content dist/BUILD_INFO.json -Raw | ConvertFrom-Json
+          if ($manifest.commit -ne $env:EXPECTED_SOURCE_SHA) {
+            throw "Installer commit mismatch: expected $env:EXPECTED_SOURCE_SHA, got $($manifest.commit)"
+          }
       - name: Extract EXE; verify payload hashes, Windows spawn and live UI smoke
         shell: pwsh
         run: |
