@@ -89,7 +89,8 @@ def main():
         assert (root / 'data/legacy' / legacy.name / 'hint_alpha/session.json').read_bytes() == evidence
         assert (unrelated / 'keep.txt').read_text() == 'keep'
         assert len(list(desktop.glob('惠安麻将测试版-*.lnk'))) == 1
-        assert shortcut(canonical) == current / 'runtime/pythonw.exe'
+        actual_target = shortcut(canonical)
+        assert actual_target.resolve() == (current / 'runtime/pythonw.exe').resolve(), (actual_target, current)
         active_data = root / 'data/hint_alpha/keep.json'
         active_data.parent.mkdir(parents=True, exist_ok=True)
         active_data.write_bytes(b'live-evidence')

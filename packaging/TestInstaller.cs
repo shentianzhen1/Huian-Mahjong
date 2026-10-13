@@ -40,6 +40,19 @@ class TestInstaller {
     const string Layout = "shared-data-current-v1";
     const string ShortcutName = "惠安麻将测试版-向听辅助.lnk";
 
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, EntryPoint = "GetLongPathNameW")]
+    static extern uint GetLongPathName(string path, StringBuilder output, uint size);
+    static string CanonicalPath(string path) {
+        string full = Path.GetFullPath(path);
+        StringBuilder output = new StringBuilder(32768);
+        uint length = GetLongPathName(full, output, (uint)output.Capacity);
+        if (length > 0 && length < output.Capacity) return output.ToString();
+        // Old shortcut targets may no longer exist, while their parent does.
+        string parent = Path.GetDirectoryName(full);
+        length = GetLongPathName(parent, output, (uint)output.Capacity);
+        return length > 0 && length < output.Capacity ? Path.Combine(output.ToString(), Path.GetFileName(full)) : full;
+    }
+
     static string ShortcutTarget(string path) {
         IShellLinkW link = (IShellLinkW)new ShellLink();
         try {
@@ -134,12 +147,14 @@ class TestInstaller {
     }
     static bool Targets(string executable, List<string> installs) {
         if (String.IsNullOrEmpty(executable)) return false;
+        string path = CanonicalPath(executable);
         foreach (string install in installs)
-            if (Path.GetFullPath(executable).StartsWith(install + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return true;
+            if (path.StartsWith(CanonicalPath(install) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
     static List<string> Upgrade(string root, string desktop) {
         Directory.CreateDirectory(root);
+        root = CanonicalPath(root);
         if ((File.GetAttributes(root) & FileAttributes.ReparsePoint) != 0) throw new IOException("安装根目录不能是链接。");
         using (FileStream installLock = new FileStream(Path.Combine(root, ".install.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)) {
             string current = Path.Combine(root, "current");
@@ -178,14 +193,15 @@ class TestInstaller {
                 else File.Move(shortcutTemp, shortcutPath);
                 committed = true;
                 if (Directory.Exists(backup)) old.Add(backup);
-                foreach (string directory in old) {
-                    if (directory == current) continue;
-                    try { Directory.Delete(directory, true); } catch { retained.Add(directory); }
-                }
+                // Resolve old shortcut aliases while their parent folders still exist.
                 foreach (string link in Directory.GetFiles(desktop, "惠安麻将测试版-*.lnk")) {
                     if (link == shortcutPath) continue;
                     try { if (Targets(ShortcutTarget(link), old)) File.Delete(link); }
                     catch { retained.Add(link); }
+                }
+                foreach (string directory in old) {
+                    if (directory == current) continue;
+                    try { Directory.Delete(directory, true); } catch { retained.Add(directory); }
                 }
                 return retained;
             } finally {
