@@ -48,6 +48,13 @@ No new original match was established from this listing. The label "10/9 batch"
 in chat must not be interpreted as a new recording date or a new source group.
 No candidate evaluation was run on these files in this follow-up.
 
+Later inventory correction: the Drive root contains an actual separate `10-9`
+folder with eight files labeled as Oct-9 recordings, plus a `10-13` folder with
+two files labeled as Oct-12 recordings. The earlier listing covered only the
+"最近真实对局" folder and was not a complete Drive inventory. Recording names
+and separate folders still do not independently prove original-match grouping.
+The Oct-12 files have not been opened or used for tuning in this follow-up.
+
 Before one-pass evaluation, retain a private lock manifest containing:
 1. query source SHA-256, reviewed original-match group and all derivative SHAs;
 2. reviewed whole-hand truth/frame selection and truth-manifest SHA-256;

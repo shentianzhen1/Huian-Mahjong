@@ -95,3 +95,9 @@ The private 42-class artwork packet was not available in this GitHub checkout,
 recent Library uploads or the connected Drive search. No new real A/B accuracy
 is reported in this implementation. Existing 93/137 -> 99/137 and 43/43 remain
 their original development results; this tool does not refresh either number.
+
+A later Drive inventory found a newly uploaded labeled contact sheet and the
+15-face redecoded meld packet. They were evaluated in the
+[separate meld-domain probe](uploaded_artwork_meld_probe_20261013.md).
+This does not supply the original package map or a new reviewed whole-hand
+lock and must not be substituted for the whole-hand A/B above.

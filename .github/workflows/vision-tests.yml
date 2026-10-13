@@ -97,7 +97,7 @@ jobs:
         run: python -B -m unittest discover -s tests -p "test_public_*.py" -v
       - name: Run client artwork A/B image and review-lock contracts
         if: needs.scope.outputs.run_vision == 'true'
-        run: python -B -m unittest tests.test_client_artwork_ab -v
+        run: python -B -m unittest tests.test_client_artwork_ab tests.test_atlas_artwork_meld_probe -v
       - name: Run Runtime Vision V0.2 tests
         if: needs.scope.outputs.run_vision == 'true'
         run: python -B -m unittest discover -s workspace/vision/tiles_runtime_v0_2 -p "test_*.py" -t . -v

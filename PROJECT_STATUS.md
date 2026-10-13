@@ -39,6 +39,13 @@ now verifies a manual truth lock and compares baseline/merged/primary-first
 classifiers on identical crops without counting artwork as real support. Actual
 private image-based evaluation remains pending; no accuracy gain is claimed.
 
+A separate [uploaded contact-sheet meld probe](docs/vision/uploaded_artwork_meld_probe_20261013.md)
+now compares six predeclared variants on 15 recovered, manually reviewed meld
+crops from five groups within one original match. Artwork NCC recovered 8/15
+identities versus real-hand NCC's 0/15, but fused SIFT did not exceed real-hand
+SIFT's 8/15. This is development crop scoring, not live acceptance or a new
+independent whole-hand evaluation. Runtime remains unchanged.
+
 ## Branch and release scope
 
 - The [player-confirmed contract](references/rules/2026-10-06/player_confirmed_special_rules.md) in Draft PR #126 now has Sanjindao/Eight-Flower settlement APIs plus staged pre-Gold Eight-Flower choice, explicit candidate-flower consumption, forced no-Gold eighth-flower terminal and automatic dealer Tianhu `base×2`. Snapshot: `huian-target-2026-10-06-opening-r1`. This is a scripted-wall API with unknown hidden location; live still reads visible Gold/flowers. Non-Tianhu staged openings stop safely pending first-round Qiangjin/Tianting. In-play re-prompts, full simulator/live routing and complete installer behavior remain pending.
