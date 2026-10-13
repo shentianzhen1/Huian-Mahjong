@@ -33,6 +33,12 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           & "$payload/runtime/python.exe" -B packaging/smoke_test_installed.py $payload
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify repeated upgrade, legacy data and failed-install preservation
+        shell: pwsh
+        run: |
+          $installer = (Get-ChildItem dist/*_Setup.exe | Select-Object -First 1).FullName
+          .build-hint/Scripts/python.exe -B packaging/test_upgrade_windows.py $installer
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v4
         with:
           name: HuianMahjong-Windows-test-installer

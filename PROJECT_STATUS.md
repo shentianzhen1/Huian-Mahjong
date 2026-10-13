@@ -101,5 +101,11 @@ CI applies to all PRs instead of only #126. See the
 [dependency contract](docs/installer_reproducibility_20261013.md); actual mirrored
 capture acceptance remains separate.
 
+The installer now upgrades a fixed `current` directory and fixed desktop entry,
+preserving shared evidence outside the replaceable program and archiving legacy
+data before removing identified old versions. See the
+[upgrade behavior](docs/installer_upgrade_behavior_20261013.md); actual Windows
+EXE upgrade verification is part of the installer workflow.
+
 Preserve 144 tiles, no fifth copies, at most three playable Gold copies,
 zero-sum two-player settlement, reproducible seeds and explicit UNKNOWN.

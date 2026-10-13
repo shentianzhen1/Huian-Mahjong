@@ -131,12 +131,14 @@ def main():
         shutil.copy2(ROOT / evidence / name, site / evidence / name)
     shutil.copy2(ROOT / 'packaging' / 'launch.py', PAYLOAD / 'launch.py')
     shutil.copy2(DEPENDENCY_LOCK, PAYLOAD / 'DEPENDENCIES.txt')
+    (PAYLOAD / 'INSTALL_LAYOUT').write_text('shared-data-current-v1\n', encoding='ascii')
     for name, args in [('START_HINT_ALPHA.bat', ''), ('CHECK_HINT_ALPHA.bat', '--check')]:
         (PAYLOAD / name).write_text('@echo off\ncd /d "%~dp0"\nset PYTHONUTF8=1\n'
             + '"runtime\\python.exe" -B launch.py ' + args
             + '\nif errorlevel 1 pause\n', encoding='utf-8')
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     manifest = {'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
+                'installation_layout': 'shared-data-current-v1',
                 'python_version': '.'.join(map(str, sys.version_info[:3])),
                 'dependency_versions': actual_versions,
                 'dependency_lock_sha256': hashlib.sha256(DEPENDENCY_LOCK.read_bytes()).hexdigest(),
@@ -153,8 +155,9 @@ def main():
         '启动后可点人工录牌。实时识别未正式晋级，界面标为实验；识别不足时BLOCKED。\n'
         '完整V0.10合法动作建议尚未接入。Executor关闭。\n'
         'PublicState OCR需另有Tesseract；缺失时明确显示不可用，采集仍可运行。\n'
-        '证据保存在安装目录data/hint_alpha。CHECK_HINT_ALPHA.bat可自检。\n'
-        '请保留数据；卸载可删除快捷方式及对应安装目录。\n', encoding='utf-8')
+        '升级使用固定current目录及同一个桌面入口；请先关闭旧程序。\n'
+        '证据保存在current旁的data/hint_alpha，旧版本数据在data/legacy。\n'
+        'CHECK_HINT_ALPHA.bat可自检。请保留data；新版本自检失败时保留旧版。\n', encoding='utf-8')
     manifest['payload_sha256'] = {
         path.relative_to(PAYLOAD).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in sorted(PAYLOAD.rglob('*')) if path.is_file()
@@ -174,6 +177,7 @@ def main():
     subprocess.run([str(compiler), '/nologo', '/target:winexe', '/platform:x64',
         '/reference:System.IO.Compression.dll', '/reference:System.IO.Compression.FileSystem.dll',
         '/reference:System.Windows.Forms.dll', '/out:' + str(exe),
+        '/reference:System.Web.Extensions.dll',
         '/resource:' + str(archive) + ',payload.zip', str(installer_source)], check=True)
     shutil.copy2(PAYLOAD / 'BUILD_INFO.json', DIST / 'BUILD_INFO.json')
     digest = hashlib.sha256(exe.read_bytes()).hexdigest()

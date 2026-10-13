@@ -7,6 +7,12 @@ def spawn_probe(output):
     output.put("spawn-ok")
 
 
+def installed_data_root(root):
+    layout = root / "INSTALL_LAYOUT"
+    shared = layout.is_file() and layout.read_text().strip() == "shared-data-current-v1"
+    return (root.parent if shared else root) / "data" / "hint_alpha"
+
+
 def main():
     import os
     import sys
@@ -31,7 +37,7 @@ def main():
             output.join_thread()
         return
     from workspace.hint_alpha import app as shell_app, doctor, live_app
-    shell_app.OUTPUT = root / "data" / "hint_alpha"
+    shell_app.OUTPUT = installed_data_root(root)
     doctor.DEFAULT_OUTPUT = shell_app.OUTPUT
     if "--check" in sys.argv:
         sys.argv = [sys.argv[0], "--require-live"]
