@@ -93,8 +93,10 @@ without deleting history. Active branch is PR #126; PR #117 is earlier work.
 Review the large Draft PR by Rules, current-state/Hint, Vision experiments,
 installer and evidence/documentation boundaries. Subsequent independently
 reviewable changes should stay small; do not rewrite history or merge the PR
-as cleanup. UI extraction, release dependency locking and general installer CI
-scope remain later engineering work, not accomplished by this note.
+as cleanup. Windows runtime dependency version locking and general installer CI
+scope are now implemented in the
+[installer dependency contract](installer_reproducibility_20261013.md).
+UI extraction remains later engineering work.
 
 Frozen: Runtime identity 0.82; CurrentAgent V0.10; Hint internal/read-only;
 UNKNOWN remains UNKNOWN; Executor OFF; PR #126 Draft/unmerged.

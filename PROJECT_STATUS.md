@@ -94,5 +94,12 @@ scanning/push-protection settings still require verification. Stop/recording
 failures are visible and completion-write failures
 remain retryable. Package-local test modules are excluded from runtime wheels.
 
+The Windows test installer pins Python 3.14.7 and the runtime dependency versions
+from the successful d492833 installer job. Build preflight and installed smoke
+check these versions; the payload retains a hashed constraints file. Installer
+CI applies to all PRs instead of only #126. See the
+[dependency contract](docs/installer_reproducibility_20261013.md); actual mirrored
+capture acceptance remains separate.
+
 Preserve 144 tiles, no fifth copies, at most three playable Gold copies,
 zero-sum two-player settlement, reproducible seeds and explicit UNKNOWN.

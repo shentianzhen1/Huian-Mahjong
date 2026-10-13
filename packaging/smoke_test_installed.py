@@ -1,5 +1,6 @@
 """Run against an extracted installer using its bundled Python, without capture."""
 import hashlib
+import importlib.metadata
 import json
 from pathlib import Path
 import sys
@@ -7,6 +8,9 @@ import sys
 root = Path(sys.argv[1]).resolve()
 site = root / 'runtime/Lib/site-packages'
 manifest = json.loads((root / 'BUILD_INFO.json').read_text(encoding='utf-8'))
+assert '.'.join(map(str, sys.version_info[:3])) == manifest['python_version']
+for name, version in manifest['dependency_versions'].items():
+    assert importlib.metadata.version(name) == version, name
 for relative, expected in manifest['source_sha256'].items():
     assert hashlib.sha256((site / relative).read_bytes()).hexdigest() == expected, relative
 dataset = site / 'dataset/tiles_runtime_v0_2'

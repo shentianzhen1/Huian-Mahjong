@@ -6,17 +6,16 @@ permissions:
   contents: read
 jobs:
   installer:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 126
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.14'
+          python-version: '3.14.7'
       - name: Install package dependencies
         run: |
           python -m venv .build-hint
-          .build-hint/Scripts/python.exe -m pip install '.[hint-alpha]'
+          .build-hint/Scripts/python.exe -m pip install -c packaging/constraints-windows-py314.txt '.[hint-alpha]'
       - name: Build offline installer
         run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
       - name: Extract EXE; verify payload hashes, Windows spawn and live UI smoke

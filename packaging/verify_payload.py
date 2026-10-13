@@ -7,6 +7,10 @@ import sys
 
 def verify(root):
     manifest = json.loads((root / 'BUILD_INFO.json').read_text(encoding='utf-8'))
+    if 'dependency_lock_sha256' in manifest:
+        lock = root / 'DEPENDENCIES.txt'
+        if not lock.is_file() or hashlib.sha256(lock.read_bytes()).hexdigest() != manifest['dependency_lock_sha256']:
+            raise SystemExit('Dependency lock mismatch')
     for relative, digest in manifest['payload_sha256'].items():
         path = root / relative
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:

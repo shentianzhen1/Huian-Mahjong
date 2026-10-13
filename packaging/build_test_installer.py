@@ -3,6 +3,7 @@ import hashlib
 from datetime import datetime
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -17,9 +18,54 @@ BUILD = ROOT / 'build' / ('hint-installer-' + BUILD_ID)
 PAYLOAD = BUILD / 'payload'
 RUNTIME = PAYLOAD / 'runtime'
 DIST = ROOT / 'dist'
+DEPENDENCY_LOCK = ROOT / 'packaging' / 'constraints-windows-py314.txt'
+
+
+def read_dependency_lock(path):
+    """Read exact runtime pins; malformed/duplicate constraints fail the build."""
+    pins = {}
+    for line in path.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        match = re.fullmatch(r'([A-Za-z0-9][A-Za-z0-9._-]*)==([A-Za-z0-9][A-Za-z0-9.+!-]*)', line)
+        if not match:
+            raise ValueError(f'Invalid exact dependency pin: {line}')
+        name = re.sub(r'[-_.]+', '-', match[1]).lower()
+        if name in pins:
+            raise ValueError(f'Duplicate dependency pin: {name}')
+        pins[name] = match[2]
+    if not pins:
+        raise ValueError('Dependency lock is empty')
+    return pins
+
+
+def verify_dependency_versions(expected, actual):
+    """Reject a stale or unconstrained build environment before copying it."""
+    for name, version in expected.items():
+        if actual.get(name) != version:
+            raise ValueError(f'Dependency version mismatch: {name}: expected {version}, got {actual.get(name)}')
+
+
+def installed_dependencies(python, expected):
+    script = (
+        'import importlib.metadata, json, sys; '
+        'print(json.dumps({name: importlib.metadata.version(name) '
+        'for name in json.loads(sys.argv[1])}))'
+    )
+    return json.loads(subprocess.check_output(
+        [str(python), '-c', script, json.dumps(list(expected))], text=True,
+    ))
 
 
 def main():
+    if sys.version_info[:3] != (3, 14, 7):
+        raise SystemExit('Windows test installer requires the pinned Python 3.14.7 runtime.')
+    dependency_versions = read_dependency_lock(DEPENDENCY_LOCK)
+    actual_versions = installed_dependencies(
+        ROOT / '.build-hint/Scripts/python.exe', dependency_versions,
+    )
+    verify_dependency_versions(dependency_versions, actual_versions)
     if PAYLOAD.exists():
         raise SystemExit('Build payload already exists; use a new build directory.')
     RUNTIME.mkdir(parents=True)
@@ -84,12 +130,16 @@ def main():
                  'pinghu_16_settlement.jpg', 'zimo_38_kong_settlement.jpg'):
         shutil.copy2(ROOT / evidence / name, site / evidence / name)
     shutil.copy2(ROOT / 'packaging' / 'launch.py', PAYLOAD / 'launch.py')
+    shutil.copy2(DEPENDENCY_LOCK, PAYLOAD / 'DEPENDENCIES.txt')
     for name, args in [('START_HINT_ALPHA.bat', ''), ('CHECK_HINT_ALPHA.bat', '--check')]:
         (PAYLOAD / name).write_text('@echo off\ncd /d "%~dp0"\nset PYTHONUTF8=1\n'
             + '"runtime\\python.exe" -B launch.py ' + args
             + '\nif errorlevel 1 pause\n', encoding='utf-8')
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     manifest = {'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
+                'python_version': '.'.join(map(str, sys.version_info[:3])),
+                'dependency_versions': actual_versions,
+                'dependency_lock_sha256': hashlib.sha256(DEPENDENCY_LOCK.read_bytes()).hexdigest(),
                 'source_sha256': source_hashes, 'template_sha256': template_hashes,
                 'label_sha256': {path.relative_to(dataset).as_posix():
                     hashlib.sha256(path.read_bytes()).hexdigest() for path in label_paths},

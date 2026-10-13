@@ -59,3 +59,20 @@ class PayloadIntegrityTests(unittest.TestCase):
         self.refresh_payload()
         with self.assertRaisesRegex(SystemExit, 'absent from build-source inventory'):
             module.verify(self.root)
+
+    def test_changed_dependency_lock_fails_after_payload_reinventory(self):
+        lock = self.root / 'DEPENDENCIES.txt'
+        lock.write_text('numpy==2.5.4\n')
+        self.manifest['dependency_lock_sha256'] = self.digest(lock)
+        self.refresh_payload()
+        module.verify(self.root)
+        lock.write_text('numpy==2.5.3\n')
+        self.refresh_payload()
+        with self.assertRaisesRegex(SystemExit, 'Dependency lock mismatch'):
+            module.verify(self.root)
+
+    def test_missing_dependency_lock_fails(self):
+        self.manifest['dependency_lock_sha256'] = '0' * 64
+        self.refresh_payload()
+        with self.assertRaisesRegex(SystemExit, 'Dependency lock mismatch'):
+            module.verify(self.root)
