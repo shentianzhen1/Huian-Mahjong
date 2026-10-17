@@ -1,0 +1,186 @@
+{
+  "schema_version": "issue69_round8_occupancy_transition_review_v0_1",
+  "parent_commit": "43d2e65e6571d6ee236ecc59b8f5be33dd48e34a",
+  "hand": 8,
+  "frame_windows": [
+    [
+      3330,
+      3555
+    ],
+    [
+      5010,
+      5340
+    ]
+  ],
+  "source_sha_verified": true,
+  "profiles": "Private exact-source two-row 24-cell profiles; original first-row profiles extended after source inspection. No coordinates or raw pixels exported. Fresh-checkout replay requires private reviewed profiles.",
+  "audit": {
+    "player:3330": {
+      "schema_version": "public_dense_river_occupancy_sequence_dev_v0_1",
+      "status": "OCCUPANCY_TRANSITIONS_DIAGNOSTIC_ONLY",
+      "transitions": [
+        {
+          "baseline_confirmation_frame": 3332,
+          "first_stable_after_frame": 3356,
+          "confirmation_frame": 3358,
+          "before_count": 3,
+          "after_count": 4,
+          "change": "OCCUPANCY_INCREASE",
+          "reused_cell": true,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        },
+        {
+          "baseline_confirmation_frame": 3358,
+          "first_stable_after_frame": 3378,
+          "confirmation_frame": 3380,
+          "before_count": 4,
+          "after_count": 3,
+          "change": "OCCUPANCY_DECREASE",
+          "reused_cell": false,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        },
+        {
+          "baseline_confirmation_frame": 3462,
+          "first_stable_after_frame": 3501,
+          "confirmation_frame": 3503,
+          "before_count": 3,
+          "after_count": 4,
+          "change": "OCCUPANCY_INCREASE",
+          "reused_cell": true,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        },
+        {
+          "baseline_confirmation_frame": 3503,
+          "first_stable_after_frame": 3521,
+          "confirmation_frame": 3523,
+          "before_count": 4,
+          "after_count": 3,
+          "change": "OCCUPANCY_DECREASE",
+          "reused_cell": false,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        }
+      ],
+      "ambiguous_changes": 0,
+      "actual_actions_emitted": 0,
+      "tile_identity": "UNKNOWN",
+      "actual_action_kind": "UNKNOWN",
+      "formal_accuracy_eligible": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    },
+    "opponent:3330": {
+      "schema_version": "public_dense_river_occupancy_sequence_dev_v0_1",
+      "status": "OCCUPANCY_TRANSITIONS_DIAGNOSTIC_ONLY",
+      "transitions": [],
+      "ambiguous_changes": 0,
+      "actual_actions_emitted": 0,
+      "tile_identity": "UNKNOWN",
+      "actual_action_kind": "UNKNOWN",
+      "formal_accuracy_eligible": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    },
+    "player:5010": {
+      "schema_version": "public_dense_river_occupancy_sequence_dev_v0_1",
+      "status": "OCCUPANCY_TRANSITIONS_DIAGNOSTIC_ONLY",
+      "transitions": [
+        {
+          "baseline_confirmation_frame": 5038,
+          "first_stable_after_frame": 5046,
+          "confirmation_frame": 5048,
+          "before_count": 12,
+          "after_count": 13,
+          "change": "OCCUPANCY_INCREASE",
+          "reused_cell": false,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        },
+        {
+          "baseline_confirmation_frame": 5189,
+          "first_stable_after_frame": 5191,
+          "confirmation_frame": 5193,
+          "before_count": 13,
+          "after_count": 14,
+          "change": "OCCUPANCY_INCREASE",
+          "reused_cell": false,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        },
+        {
+          "baseline_confirmation_frame": 5304,
+          "first_stable_after_frame": 5310,
+          "confirmation_frame": 5312,
+          "before_count": 14,
+          "after_count": 15,
+          "change": "OCCUPANCY_INCREASE",
+          "reused_cell": true,
+          "intervening_unknown_mask": true,
+          "evidence_grade": "UNKNOWN"
+        }
+      ],
+      "ambiguous_changes": 0,
+      "actual_actions_emitted": 0,
+      "tile_identity": "UNKNOWN",
+      "actual_action_kind": "UNKNOWN",
+      "formal_accuracy_eligible": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    },
+    "opponent:5010": {
+      "schema_version": "public_dense_river_occupancy_sequence_dev_v0_1",
+      "status": "OCCUPANCY_TRANSITIONS_DIAGNOSTIC_ONLY",
+      "transitions": [],
+      "ambiguous_changes": 0,
+      "actual_actions_emitted": 0,
+      "tile_identity": "UNKNOWN",
+      "actual_action_kind": "UNKNOWN",
+      "formal_accuracy_eligible": false,
+      "safe_for_runtime": false,
+      "safe_for_hint": false,
+      "safe_for_executor": false
+    }
+  },
+  "checkpoint_comparison": [
+    {
+      "reviewed_event": "SELF DISCARD P7 then OPPONENT CHI",
+      "occupancy_increase_frame": 3501,
+      "occupancy_decrease_frame": 3521,
+      "increase_seconds": 116.7,
+      "decrease_seconds": 117.366667,
+      "identity_recovered": false,
+      "action_reconstructed": false
+    },
+    {
+      "reviewed_event": "SELF terminal DISCARD P4",
+      "occupancy_increase_frame": 5310,
+      "increase_seconds": 177,
+      "counts": [
+        14,
+        15
+      ],
+      "identity_recovered": false,
+      "action_reconstructed": false
+    }
+  ],
+  "interpretation": "Old globally suppressed reused-cell prefix growth cannot represent discard-claim-reuse episodes. New opt-in occupancy audit records unit decrease and reused-cell increase without producing actions or altering prior suppression gates. Multi-row ordering is supplied by reviewed private profiles.",
+  "remaining_gaps": [
+    "Opponent second-row masks remain ambiguous; no opponent occupancy transitions accepted.",
+    "Intervening UNKNOWN masks make all listed count changes diagnostic only.",
+    "Exact terminal discard timing/identity and HU require independent evidence; occupancy match alone is insufficient."
+  ],
+  "local_tests": {
+    "passed": 51,
+    "scope": "Materialized related tests only, including original dense-slot controls and new occupancy controls"
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

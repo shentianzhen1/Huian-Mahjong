@@ -3,6 +3,7 @@ from collections import Counter
 from dataclasses import dataclass
 from huian._legacy import env
 from .config import UnknownRuleError
+from .opening_phases import PRE_GOLD_PHASES, validate_pre_gold, opening_eight_flower_actions
 from .context import (DrawSource, HuContext, WinSource, YoujinStage,
                       youjin_progression_rule)
 from .engine import nonnegative_int
@@ -33,7 +34,7 @@ PHASES = {"READY", "NEED_DRAW", "AFTER_DRAW", "AFTER_DISCARD", "AFTER_CHI",
           "YOUJIN_RESPONSE_DRAW", "YOUJIN_RESPONSE_AFTER_DRAW",
           "YOUJIN_STAGE_SUCCESS", "YOUJIN_KONG_CHOICE",
           "YOUJIN_KONG_AFTER_DRAW", "YOUJIN_UPGRADE_CHOICE",
-          "YOUJIN_SETTLEMENT_READY"}
+          "YOUJIN_SETTLEMENT_READY", "OPENING_POST_GOLD_PENDING"} | PRE_GOLD_PHASES
 
 
 def validate(adapter, state):
@@ -54,6 +55,7 @@ def validate(adapter, state):
         "OBSERVED_PINGHU", "OBSERVED_ZIMO", "AUTO_PINGHU", "AUTO_ZIMO",
         "SIMULATION_PINGHU", "SIMULATION_ZIMO", "PROJECT_EIGHT_FLOWER_YOU",
         "AUTO_YOUJIN", "AUTO_DOUBLE_YOU", "AUTO_TRIPLE_YOU",
+        "AUTO_SANJINDAO", "AUTO_EIGHT_FLOWER_YOU", "AUTO_TIANHU",
         "OBSERVED_SPECIAL"
     )
     if state.terminal_reason not in (None, "WALL_16") and not scored_reason:
@@ -88,6 +90,9 @@ def validate(adapter, state):
         if (len(state.wall) != 144 or state.gold_tile is not None
                 or state.pending_discard is not None or state.pending_hu is not None):
             raise ValueError("READY must be an undealt 144-tile wall")
+        return
+    if validate_pre_gold(state):
+        _validate_pending_hu(state)
         return
     if state.gold_tile is None:
         raise ValueError("An imported active scenario must specify its gold tile")
@@ -125,7 +130,7 @@ def validate(adapter, state):
             expected = 16 - 3 * len(state.melds[p])
             if p == state.current_player and state.phase in (
                 "AFTER_DRAW", "AFTER_CHI", "AFTER_PENG", "NEED_FLOWER_REPLACE",
-                "OPENING_QIANGJIN_CHECK", "YOUJIN_RESPONSE_AFTER_DRAW",
+                "OPENING_QIANGJIN_CHECK", "OPENING_POST_GOLD_PENDING", "YOUJIN_RESPONSE_AFTER_DRAW",
                 "YOUJIN_KONG_CHOICE", "YOUJIN_KONG_AFTER_DRAW",
                 "YOUJIN_UPGRADE_CHOICE"
             ):
@@ -187,6 +192,14 @@ def report(adapter, state):
     validate(adapter, state)
     if state.terminal:
         return ActionReport(())
+    if state.phase == "OPENING_EIGHT_FLOWER_CHOICE":
+        return ActionReport(opening_eight_flower_actions(state))
+    if state.phase == "OPENING_GOLD_PENDING":
+        return ActionReport((), ("opening_candidate_location",))
+    if state.phase == "OPENING_EIGHT_FLOWER_DECLARED":
+        return ActionReport((), ("eight_flower_settlement_pending",))
+    if state.phase == "OPENING_POST_GOLD_PENDING":
+        return ActionReport((), ("qiangjin_first_round_migration", "tianting_state_migration"))
     if state.phase == "READY":
         return ActionReport((), ("deal_replacement_order", "open_gold_procedure", "tianhu"))
     if state.phase == "OPENING_QIANGJIN_CHECK":
@@ -196,14 +209,12 @@ def report(adapter, state):
     if state.phase == "QIANGJIN_DECLARED":
         return ActionReport((), ("qiangjin_settlement",))
     if state.phase == "SANJINDAO_DECLARED":
-        return ActionReport((), ("sanjindao_settlement",))
+        return ActionReport((), ("sanjindao_settlement_pending",))
     if state.phase == "EIGHT_FLOWER_YOU_DECLARED":
         return ActionReport((), ("eight_flower_settlement_pending",))
     if state.phase == "NEED_FLOWER_REPLACE":
         return ActionReport((), ("deal_replacement_order",))
     if state.phase == "HU_DECLARED":
-        if state.pending_hu["source"] == WinSource.KONG_TAIL_DRAW.value:
-            return ActionReport((), ("GANG_HU_SCORING_UNKNOWN",))
         return ActionReport((), ("win_declaration_and_settlement",))
     if state.phase == "YOUJIN_RESPONSE_DRAW":
         p = state.current_player

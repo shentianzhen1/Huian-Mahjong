@@ -1,0 +1,336 @@
+{
+  "schema_version": "issue69_hand1_machine_timeline_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 1,
+  "total_hands": 8,
+  "source_policy": "exact_source_scoped_fail_closed",
+  "events": [
+    {
+      "order": 1,
+      "kind": "MING_GANG",
+      "actor": "player",
+      "tile": "P6",
+      "evidence_level": "development_candidate_with_direct_claimed_display",
+      "source_sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-01/issue69_hand1_development_action_ledger_v0_1.json",
+        "references/vision/2026-10-02/issue69_hand1_claimed_discard_p6_display_v0_1.json"
+      ]
+    },
+    {
+      "order": 2,
+      "kind": "RESPONSE_DRAW_DISCARD_SEQUENCE",
+      "actor": "player",
+      "tile": null,
+      "response_choice": "UNKNOWN",
+      "draw_tile": "UNKNOWN",
+      "discard_tile": "UNKNOWN",
+      "evidence_level": "source_locked_event_order",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "frames": {
+        "response_visible": 4022,
+        "response_cleared": 4028,
+        "draw_region_visible": 4034,
+        "discard_transition": 4271,
+        "discard_display_stable": 4277
+      },
+      "human_reviewed_truth": {
+        "opponent_response_tile": "P8",
+        "response_choice": "PASS",
+        "draw_tile": "S9",
+        "discard_tile": "S9"
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_pass_draw_s9_window_v0_1.json"
+      ]
+    },
+    {
+      "order": 3,
+      "kind": "CROSS_ACTOR_CLAIM_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "source_locked_order_plus_existing_s456_development_evidence",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine_sequence": [
+        "OPPONENT_DISCARD_DISPLAY_VISIBLE",
+        "PLAYER_DRAW_REGION_VISIBLE",
+        "PLAYER_CLAIMED_DISCARD_TRANSITION",
+        "OPPONENT_CHI_ANIMATION_VISIBLE",
+        "OPPONENT_NEW_MELD_VISIBLE"
+      ],
+      "machine_identity": {
+        "opponent_discard": "UNKNOWN",
+        "player_draw": "UNKNOWN",
+        "claimed_discard": "UNKNOWN",
+        "opponent_meld": "S456_DEVELOPMENT_ONLY"
+      },
+      "human_reviewed_truth": {
+        "opponent_discard": "M9",
+        "player_draw": "S4",
+        "player_discard": "S5",
+        "opponent_action": "CHI",
+        "opponent_meld": [
+          "S4",
+          "S5",
+          "S6"
+        ]
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_m9_draw_s4_discard_s5_chi_s456_chain_v0_1.json"
+      ]
+    },
+    {
+      "order": 4,
+      "kind": "POST_CLAIM_TURN_SEQUENCE_TO_DRAW",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "source_locked_event_order",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "first_opponent_discard": "UNKNOWN",
+        "player_draw": "UNKNOWN",
+        "player_discard": "UNKNOWN",
+        "second_opponent_discard": "UNKNOWN",
+        "final_player_draw": "UNKNOWN",
+        "final_player_draw_is_gold": false
+      },
+      "human_reviewed_truth": {
+        "first_opponent_discard": "M8",
+        "player_draw": "N",
+        "player_discard": "N",
+        "second_opponent_discard": "M8",
+        "final_player_draw": "M6_GOLD"
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_post_s456_to_gold_draw_window_v0_1.json"
+      ]
+    },
+    {
+      "order": 5,
+      "kind": "CHAIN_TO_SECOND_OPPONENT_MELD",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "partial_source_anchor_existing_s123_geometry",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "preceding_chain_status": "PENDING_SOURCE_REVIEW",
+        "opponent_new_meld_observed": true,
+        "opponent_new_meld_geometry": "FLAT",
+        "opponent_new_meld_identity": "UNKNOWN",
+        "opponent_action_kind": "UNKNOWN",
+        "claimed_tile": "UNKNOWN"
+      },
+      "human_reviewed_truth": {
+        "player_draw": "M6_GOLD",
+        "player_discard": "P8",
+        "opponent_discard": "S3",
+        "player_action": "CHI",
+        "player_meld": [
+          "S3",
+          "S4",
+          "S5"
+        ],
+        "player_next_discard": "S2",
+        "opponent_action": "CHI",
+        "opponent_meld": [
+          "S1",
+          "S2",
+          "S3"
+        ]
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_second_chi_s123_anchor_v0_1.json",
+        "references/vision/2026-10-01/opponent_meld_0926_hand1_s123_geometry_result_v0_1.json"
+      ]
+    },
+    {
+      "order": 6,
+      "kind": "TING_PROMPT_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "pending_exact_source_ui_review",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "opponent_discard": "UNKNOWN",
+        "player_draw": "UNKNOWN",
+        "ting_prompt_observed": false,
+        "rules_engine_tenpai_confirmed": false,
+        "player_discard": "UNKNOWN"
+      },
+      "human_reviewed_truth": {
+        "opponent_discard": "S5",
+        "player_draw": "P5",
+        "ting_prompt_visible_before_discard": true,
+        "player_discard": "S2"
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_ting_prompt_pending_v0_1.json"
+      ]
+    },
+    {
+      "order": 7,
+      "kind": "REPEATED_TILE_TURN_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "pending_exact_source_review",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "event_order_confirmed": false,
+        "tile_identities_confirmed": false,
+        "repeated_same_tile_count_confirmed": false
+      },
+      "human_reviewed_truth": {
+        "sequence": [
+          {
+            "id": "h1_seq7_01",
+            "actor": "player",
+            "event": "DRAW_DISCARD",
+            "tile": "P1"
+          },
+          {
+            "id": "h1_seq7_02",
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "M2"
+          },
+          {
+            "id": "h1_seq7_03",
+            "actor": "player",
+            "event": "DISCARD",
+            "tile": "F",
+            "occurrence": 1
+          },
+          {
+            "id": "h1_seq7_04",
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "E"
+          },
+          {
+            "id": "h1_seq7_05",
+            "actor": "player",
+            "event": "DISCARD",
+            "tile": "F",
+            "occurrence": 2
+          }
+        ]
+      },
+      "replay_invariant": "DO_NOT_DEDUPE_REPEATED_TILE_EVENTS_BY_ACTOR_AND_TILE",
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_repeated_green_dragon_pending_v0_1.json"
+      ]
+    },
+    {
+      "order": 8,
+      "kind": "PRE_YOUJIN_ORDINARY_TURN_SEQUENCE",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "human_reviewed_pending_machine_identity",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "event_order_confirmed": false,
+        "tile_identities_confirmed": false
+      },
+      "human_reviewed_truth": {
+        "sequence": [
+          {
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "M2"
+          },
+          {
+            "actor": "player",
+            "event": "DRAW_DISCARD",
+            "tile": "S8"
+          },
+          {
+            "actor": "opponent",
+            "event": "DISCARD",
+            "tile": "S8"
+          },
+          {
+            "actor": "player",
+            "event": "DRAW_DISCARD",
+            "tile": "M3"
+          },
+          {
+            "actor": "player",
+            "event": "DRAW_INTO_HAND",
+            "tile": "P8"
+          }
+        ]
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_youjin_terminal_chain_v0_1.json"
+      ]
+    },
+    {
+      "order": 9,
+      "kind": "YOUJIN_TERMINAL_STATE_CHAIN",
+      "actor": "mixed",
+      "tile": null,
+      "evidence_level": "reviewed_real_match_rule_anchor",
+      "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "machine": {
+        "full_frame_identity_complete": false,
+        "runtime_action_ready": false
+      },
+      "reviewed_rule_chain": [
+        "PLAYER_DISCARD_P5_ENTER_YOUJIN",
+        "OPPONENT_RESPONSE_DRAW",
+        "OPPONENT_MANDATORY_DISCARD_M3",
+        "PLAYER_CONTINUATION_DRAW_P4",
+        "PLAYER_DECLARE_YOUJIN",
+        "SETTLEMENT_PLUS_68"
+      ],
+      "settlement": {
+        "base": 10,
+        "gold_fan": 2,
+        "flower_fan": 3,
+        "kong_fan": 2,
+        "multiplier": 4,
+        "net_score": 68
+      },
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand1_youjin_terminal_chain_v0_1.json",
+        "RULE_EVIDENCE_MATRIX.md"
+      ]
+    }
+  ],
+  "machine_closed_event_count": 0,
+  "development_candidate_event_count": 9,
+  "caveats": [
+    "The P6 MING_GANG event is development evidence and remains non-runtime.",
+    "The second event machine-confirms only temporal order; PASS and S9 identities remain human-reviewed truth until independent identity evidence closes them.",
+    "Derived clips and the exact full source belong to the same original match group and do not add independent-match credit.",
+    "The third event preserves claimed S5 as UNKNOWN at machine level because it is consumed quickly by the opponent chi; S456 uses the existing development-only meld evidence.",
+    "The fourth event source-locks the post-S456 turn order through the next player draw; M8/N/M8/M6-gold identities remain human-reviewed truth here.",
+    "The fifth event is intentionally partial: the S123 structural anchor is machine-reviewed, while the preceding M6-gold/P8/S3/S345/S2 chain remains pending exact-source review.",
+    "The sixth event reserves the reviewed S5→P5→TING prompt→S2 sequence, but the TING UI remains pending exact-source observation and is not a rules-engine tenpai claim.",
+    "The seventh event preserves two separately reviewed player F discards as distinct temporal occurrences; exact-source machine verification is still pending.",
+    "The terminal Youjin chain is a reviewed real-match rule anchor, not a claim that every tile identity is machine-recognized frame-by-frame."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

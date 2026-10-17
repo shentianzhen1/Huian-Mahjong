@@ -1,0 +1,61 @@
+{
+  "schema_version": "opponent_s456_reference_complete_cross_seat_result_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "candidate_commit": "69893a5c0ca18ccb3128b70ce9695fa48512f047",
+  "score_policy": "spatial_window_affine_reference_complete",
+  "query": {
+    "review_id": "opp_meld_0926_hand1_s456",
+    "match_group": "reviewed_match_2026_09_26_first_hand",
+    "stable_frame_count": 5,
+    "human_truth_scope": "group_identity_only_no_left_to_right_truth_assumed",
+    "expected_unordered_tiles": ["S4", "S5", "S6"],
+    "previously_inspected": true
+  },
+  "reference_policy": {
+    "scope": "repository_reviewed_public_meld_only_source_disjoint",
+    "minimum_other_original_match_groups": 2,
+    "eligible_classes": ["P6", "S4"],
+    "truth_class_eligibility": {
+      "S4": true,
+      "S5": false,
+      "S6": false
+    },
+    "formal_group_scorable": false
+  },
+  "first_ci_diagnostic": {
+    "workflow_run_id": 37127960204,
+    "step": "Stress frozen completeness scorer on opponent S456",
+    "step_conclusion": "success",
+    "top1_by_frame": [
+      ["S4", null, null],
+      [null, null, null],
+      [null, "S4", "S4"],
+      [null, "S4", "S4"],
+      [null, "S4", "S4"]
+    ],
+    "frames_with_any_s4_top1": 4,
+    "frames_with_exactly_one_s4_top1": 1,
+    "formal_correct": 0,
+    "formal_wrong": 0,
+    "formal_unknown": 15,
+    "formal_exact_groups": 0,
+    "formal_group_count": 5,
+    "formal_abstention_reason": "S5_and_S6_each_lack_two_other_original_match_groups"
+  },
+  "interpretation": {
+    "positive": "The frozen completeness scorer finds source-disjoint S4 evidence in 4/5 opponent frames without parameter retuning.",
+    "negative": "Only 1/5 frames contains exactly one S4 winner; three frames produce S4 in two face slots, so cross-seat face localization/identity remains ambiguous.",
+    "conclusion": "Useful cross-seat signal, but not sufficient for group identity or Runtime promotion. More independent S5/S6 public-meld reference coverage is the next data bottleneck."
+  },
+  "ci_note": "The containing Vision workflow was later cancelled only because a newer PR revision superseded it during the subsequent Torch installation; this probe step itself completed successfully before cancellation.",
+  "nonblind_cross_seat_stress_only": true,
+  "parameter_retuning": false,
+  "runtime_identity_threshold": 0.82,
+  "runtime_integration": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

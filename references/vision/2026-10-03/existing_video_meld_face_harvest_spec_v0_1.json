@@ -1,0 +1,156 @@
+{
+  "schema_version": "existing_video_meld_face_harvest_spec_dev_v0_1",
+  "conservative_original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "excluded_same_match_aliases": [
+    "reviewed_match_2026_09_26_first_hand",
+    "reviewed_match_2026_09_26_eight_hand"
+  ],
+  "review_exposure": "previously_inspected_development",
+  "label_authority": "assistant_visual_review_not_user_confirmation",
+  "sources": [
+    {
+      "filename": "ScreenRecording_09-26-2026 22-26-47_1(1).mp4",
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "source_session": "existing_0926_chunk2",
+      "grouping_basis": "same dated user-provided eight-hand recording; visible room 505120, hand counters 3/8,7/8,8/8 and clocks 22:28,22:35,22:36; conservative same-match exclusion",
+      "groups": [
+        {
+          "group_id": "hand3_north",
+          "hand_index": 3,
+          "reviewed_candidate_tile": "N",
+          "frame_indices": [
+            3594,
+            3597,
+            3600,
+            3603,
+            3606
+          ],
+          "face_bboxes": [
+            [
+              101,
+              441,
+              49,
+              62
+            ],
+            [
+              148,
+              441,
+              47,
+              62
+            ],
+            [
+              193,
+              441,
+              49,
+              62
+            ]
+          ]
+        },
+        {
+          "group_id": "hand3_bamboo1",
+          "hand_index": 3,
+          "reviewed_candidate_tile": "S1",
+          "frame_indices": [
+            3594,
+            3597,
+            3600,
+            3603,
+            3606
+          ],
+          "face_bboxes": [
+            [
+              248,
+              441,
+              47,
+              62
+            ],
+            [
+              293,
+              441,
+              46,
+              62
+            ],
+            [
+              336,
+              441,
+              47,
+              62
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "ScreenRecording_09-26-2026 22-34-04_1(1).mp4",
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "source_session": "existing_0926_chunk4",
+      "grouping_basis": "same dated user-provided eight-hand recording; visible room 505120, hand counters 3/8,7/8,8/8 and clocks 22:28,22:35,22:36; conservative same-match exclusion",
+      "groups": [
+        {
+          "group_id": "hand7_bamboo8",
+          "hand_index": 7,
+          "reviewed_candidate_tile": "S8",
+          "frame_indices": [
+            1794,
+            1797,
+            1800,
+            1803,
+            1806
+          ],
+          "face_bboxes": [
+            [
+              248,
+              441,
+              47,
+              62
+            ],
+            [
+              293,
+              441,
+              46,
+              62
+            ],
+            [
+              336,
+              441,
+              47,
+              62
+            ]
+          ]
+        },
+        {
+          "group_id": "hand8_wan9",
+          "hand_index": 8,
+          "reviewed_candidate_tile": "M9",
+          "frame_indices": [
+            4794,
+            4797,
+            4800,
+            4803,
+            4806
+          ],
+          "face_bboxes": [
+            [
+              101,
+              441,
+              49,
+              62
+            ],
+            [
+              148,
+              441,
+              47,
+              62
+            ],
+            [
+              193,
+              441,
+              49,
+              62
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1071 @@
+{
+  "schema_version": "wan_numeral_upper_half_probe_dev_v0_2",
+  "sample_id": "b389_player_chi_m456_035s",
+  "reverse_direction_face_rows": [
+    {
+      "recovery_id": "G02_hand2_m345",
+      "face_index": 0,
+      "expected_tile": "M3",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "crop_sha256": "90b84a08f00084ff9e0fb2ba3a86225a850314cf0d4b87c4634ec4ba29449b75",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.2019374,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.19440913,
+            "margin": 0.00752827,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.20193739871592645,
+              "M6": 0.19440912629303497,
+              "M4": 0.17870184312967918
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.03241554,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.01310927,
+            "margin": 0.01930627,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.032415539507771936,
+              "M6": 0.013109266603050711,
+              "M4": 0.007455432825581568
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "recovery_id": "G02_hand2_m345",
+      "face_index": 1,
+      "expected_tile": "M4",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "crop_sha256": "7d503624c2748c79eb08966c6e2eb4d3e6af9880c1179393bb8181d6ca1c669f",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M4",
+            "top1_score": 0.32518924,
+            "runner_up_tile": "M5",
+            "runner_up_score": 0.18437786,
+            "margin": 0.14081139,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M4": 0.3251892425287516,
+              "M5": 0.18437785505648713,
+              "M6": 0.14981645441781727
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M4",
+            "top1_score": 0.11425853,
+            "runner_up_tile": "M5",
+            "runner_up_score": 0.01708693,
+            "margin": 0.09717159,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M4": 0.11425852838264956,
+              "M5": 0.017086933906146094,
+              "M6": 0.010638043258280947
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "recovery_id": "G02_hand2_m345",
+      "face_index": 2,
+      "expected_tile": "M5",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "crop_sha256": "88b0af6268101cf2c7f1d66133eea480dd0c28374cefc093fc863fc3bc2243e5",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.34122351,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.16172462,
+            "margin": 0.17949889,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.34122351019113717,
+              "M6": 0.16172461593890367,
+              "M4": 0.1544481057196739
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.16073939,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.02298638,
+            "margin": 0.13775301,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.160739390083605,
+              "M6": 0.022986375775889252,
+              "M4": 0.00793679628388967
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "recovery_id": "G08_hand5_m567",
+      "face_index": 0,
+      "expected_tile": "M5",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "crop_sha256": "32ccc385138789e750b0c2fb389c6adf746e306ff8952053ec114f8bf501515c",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.34249534,
+            "runner_up_tile": "M4",
+            "runner_up_score": 0.20095223,
+            "margin": 0.14154311,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.3424953448166161,
+              "M4": 0.20095223191156678,
+              "M6": 0.20037785516185025
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.09127374,
+            "runner_up_tile": "M4",
+            "runner_up_score": 0.01151532,
+            "margin": 0.07975842,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.09127373822397718,
+              "M4": 0.011515316954499482,
+              "M6": 0.009472316442793664
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "recovery_id": "G08_hand5_m567",
+      "face_index": 1,
+      "expected_tile": "M6",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "crop_sha256": "faa9243c87c8d1ebcdde1b57f84a583dd6f6303b3aac692b56d45d1846e94d36",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.26153378,
+            "runner_up_tile": "M5",
+            "runner_up_score": 0.16303886,
+            "margin": 0.09849492,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M6": 0.26153377583990317,
+              "M5": 0.163038860831816,
+              "M4": 0.14560763992208522
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.08925562,
+            "runner_up_tile": "M5",
+            "runner_up_score": 0.01173294,
+            "margin": 0.07752268,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M6": 0.08925561958885946,
+              "M5": 0.011732940962195687,
+              "M4": 0.009463732874818248
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": true,
+          "top1_correct_when_scorable": true
+        }
+      }
+    },
+    {
+      "recovery_id": "G08_hand5_m567",
+      "face_index": 2,
+      "expected_tile": "M7",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "crop_sha256": "b5f9fcd5caa526ca279933b423b09c5aa0cac9aa0fea481123be0b3768dfd851",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.19906836,
+            "runner_up_tile": "M4",
+            "runner_up_score": 0.1842273,
+            "margin": 0.01484105,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M6": 0.19906835538597842,
+              "M4": 0.18422730284218028,
+              "M5": 0.18167374267416592
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.01985944,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.01708357,
+            "margin": 0.00277587,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.019859444089505275,
+              "M6": 0.01708357157255319,
+              "M4": 0.00971869910372129
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "recovery_id": "G03_hand2_m123",
+      "face_index": 0,
+      "expected_tile": "M1",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "crop_sha256": "bfe38f3911ae0b95aef813def28cc57f81aa2bd9757552be9a64465bd45048fb",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.19397644,
+            "runner_up_tile": "M4",
+            "runner_up_score": 0.18196361,
+            "margin": 0.01201283,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M6": 0.19397644330256644,
+              "M4": 0.18196361178785378,
+              "M5": 0.15595598319098686
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.00895254,
+            "runner_up_tile": "M4",
+            "runner_up_score": 0.00666928,
+            "margin": 0.00228326,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M6": 0.008952539084484852,
+              "M4": 0.006669282370827303,
+              "M5": 0.0030585775280984875
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "recovery_id": "G03_hand2_m123",
+      "face_index": 1,
+      "expected_tile": "M2",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "crop_sha256": "d0b3eea1e755bfb06d5f8dd775b5ba14442631c3561f86dbeb85db828cfb4f57",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.17637764,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.17021555,
+            "margin": 0.00616209,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.17637764215684198,
+              "M6": 0.17021555169046504,
+              "M4": 0.15574761543945026
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.0135902,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.0108315,
+            "margin": 0.0027587,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.013590201362376939,
+              "M6": 0.010831499738616687,
+              "M4": 0.007205706335361331
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    },
+    {
+      "recovery_id": "G03_hand2_m123",
+      "face_index": 2,
+      "expected_tile": "M3",
+      "query_original_match": "reviewed_match_2026_09_19_eight_hand",
+      "query_source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "crop_sha256": "9d0498095c81cffef557680c2e7fb98a2bb768fee935b5e2785f3534a4c508ef",
+      "modes": {
+        "whole_face_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M6",
+            "top1_score": 0.20154517,
+            "runner_up_tile": "M4",
+            "runner_up_score": 0.20125226,
+            "margin": 0.0002929,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M6": 0.2015451672362617,
+              "M4": 0.20125226280946878,
+              "M5": 0.19152318872148047
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        },
+        "upper_half_wan_only": {
+          "ranking": {
+            "schema_version": "public_meld_sift_rank_v0_1",
+            "top1_tile": "M5",
+            "top1_score": 0.02973331,
+            "runner_up_tile": "M6",
+            "runner_up_score": 0.01871324,
+            "margin": 0.01102007,
+            "eligible_class_count": 3,
+            "minimum_other_match_groups": 1,
+            "development_only": true,
+            "source_disjoint_ranking": true,
+            "changes_runtime_behavior": false,
+            "formal_promotion_evidence": false,
+            "safe_for_runtime": false,
+            "safe_for_hint": false,
+            "safe_for_executor": false,
+            "reason": "development_source_disjoint_ranking",
+            "class_scores": {
+              "M5": 0.029733311437489553,
+              "M6": 0.018713238798088103,
+              "M4": 0.012796783933256617
+            },
+            "winner_other_match_groups": 1
+          },
+          "expected_class_scorable": false,
+          "top1_correct_when_scorable": null
+        }
+      }
+    }
+  ],
+  "reverse_direction_summary": {
+    "total_reviewed_faces": 9,
+    "paired_scorable_faces": 4,
+    "query_original_match_count": 1,
+    "paired_scorable_group_count": 2,
+    "correct_by_mode": {
+      "whole_face_wan_only": 4,
+      "upper_half_wan_only": 4
+    },
+    "improved_faces": 0,
+    "regressed_faces": 0,
+    "fully_scorable_private_groups": 0
+  },
+  "reviewed_expected_tiles": [
+    "M4",
+    "M5",
+    "M6"
+  ],
+  "modes": {
+    "whole_face_all_classes": {
+      "face_rankings": [
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.25588975,
+          "runner_up_tile": "M3",
+          "runner_up_score": 0.21915475,
+          "margin": 0.03673501,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.2558897512122121,
+            "M3": 0.21915474541858657,
+            "M5": 0.2146570261386092,
+            "M1": 0.1901849767437001,
+            "M7": 0.17652497494400402,
+            "M2": 0.16240117364518422,
+            "M6": 0.15456367962540396,
+            "S2": 0.04245404463888103,
+            "P4": 0.035549669274943775,
+            "S4": 0.017403765272324522,
+            "P5": 0.016176550940150455,
+            "P9": 0.016109938689608697,
+            "P1": 0.015584617883223462,
+            "S6": 0.01557278556871178,
+            "P3": 0.01555297381421817,
+            "S8": 0.01500272547070868,
+            "S9": 0.014899109187135922,
+            "S3": 0.012640937069811996,
+            "P8": 0.006047362579046593,
+            "P7": 0.003390964623260705,
+            "P6": 0.003327847179017826,
+            "S5": 0.0032189585341007437,
+            "S7": 0.0026976590102370758
+          },
+          "winner_other_match_groups": 1
+        },
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M5",
+          "top1_score": 0.32639179,
+          "runner_up_tile": "M3",
+          "runner_up_score": 0.21703905,
+          "margin": 0.10935274,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M5": 0.3263917872456175,
+            "M3": 0.2170390481268552,
+            "M7": 0.20117325327583643,
+            "M6": 0.1970929068623924,
+            "M4": 0.1965193158137559,
+            "M2": 0.17972702050645878,
+            "M1": 0.16199071253294386,
+            "S3": 0.02123498989238329,
+            "S4": 0.01741833430863177,
+            "P6": 0.01656851761602331,
+            "S9": 0.015657042274625745,
+            "P4": 0.015309478815592787,
+            "P1": 0.012890714768479791,
+            "S8": 0.008818499520250088,
+            "S5": 0.007414402280707068,
+            "P9": 0.007383142167113777,
+            "P8": 0.005958877236817998,
+            "P5": 0.005240658799174558,
+            "S2": 0.0042887127723358134,
+            "P3": 0.004006182882101857,
+            "S6": 0.0034765780829591653,
+            "S7": 0.0029832222879333905,
+            "P7": 0.0028915909309514417
+          },
+          "winner_other_match_groups": 1
+        },
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M3",
+          "top1_score": 0.26391491,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.23718714,
+          "margin": 0.02672777,
+          "eligible_class_count": 23,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M3": 0.26391491024321584,
+            "M5": 0.23718713692217414,
+            "M6": 0.23635538096296216,
+            "M7": 0.21862469599138643,
+            "M1": 0.21690990256158718,
+            "M4": 0.2008288907618361,
+            "M2": 0.19668519734644416,
+            "S9": 0.016622117147211287,
+            "P1": 0.01624314303707396,
+            "S6": 0.01579454657417885,
+            "P7": 0.015734697329786138,
+            "P8": 0.01092713928136377,
+            "S2": 0.007353431245933991,
+            "P4": 0.006759426566786623,
+            "P6": 0.006575915038888717,
+            "S4": 0.006568167867922659,
+            "S5": 0.006018150965908363,
+            "P5": 0.004977911353892992,
+            "S3": 0.0035690537509210454,
+            "P3": 0.003406426094754116,
+            "S8": 0.0032268509290983016,
+            "P9": 0.0030393166138146994,
+            "S7": 0.002564432260539055
+          },
+          "winner_other_match_groups": 1
+        }
+      ],
+      "group_ranking": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M4",
+          "M5",
+          "M3"
+        ],
+        "top_score": 0.28206548,
+        "runner_up_tiles": [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        "runner_up_score": 0.27287897,
+        "margin": 0.00918651,
+        "canonical_candidate_count": 39,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      }
+    },
+    "whole_face_wan_only": {
+      "face_rankings": [
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.25588975,
+          "runner_up_tile": "M3",
+          "runner_up_score": 0.21915475,
+          "margin": 0.03673501,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.2558897512122121,
+            "M3": 0.21915474541858657,
+            "M5": 0.2146570261386092,
+            "M1": 0.1901849767437001,
+            "M7": 0.17652497494400402,
+            "M2": 0.16240117364518422,
+            "M6": 0.15456367962540396
+          },
+          "winner_other_match_groups": 1
+        },
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M5",
+          "top1_score": 0.32639179,
+          "runner_up_tile": "M3",
+          "runner_up_score": 0.21703905,
+          "margin": 0.10935274,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M5": 0.3263917872456175,
+            "M3": 0.2170390481268552,
+            "M7": 0.20117325327583643,
+            "M6": 0.1970929068623924,
+            "M4": 0.1965193158137559,
+            "M2": 0.17972702050645878,
+            "M1": 0.16199071253294386
+          },
+          "winner_other_match_groups": 1
+        },
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M3",
+          "top1_score": 0.26391491,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.23718714,
+          "margin": 0.02672777,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M3": 0.26391491024321584,
+            "M5": 0.23718713692217414,
+            "M6": 0.23635538096296216,
+            "M7": 0.21862469599138643,
+            "M1": 0.21690990256158718,
+            "M4": 0.2008288907618361,
+            "M2": 0.19668519734644416
+          },
+          "winner_other_match_groups": 1
+        }
+      ],
+      "group_ranking": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M4",
+          "M5",
+          "M3"
+        ],
+        "top_score": 0.28206548,
+        "runner_up_tiles": [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        "runner_up_score": 0.27287897,
+        "margin": 0.00918651,
+        "canonical_candidate_count": 12,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      }
+    },
+    "upper_half_wan_only": {
+      "face_rankings": [
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M4",
+          "top1_score": 0.09287523,
+          "runner_up_tile": "M5",
+          "runner_up_score": 0.02378486,
+          "margin": 0.06909037,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M4": 0.09287523241084296,
+            "M5": 0.023784860213106676,
+            "M7": 0.015986483459458627,
+            "M3": 0.01497755900080626,
+            "M1": 0.013601067152479784,
+            "M2": 0.01097914910254227,
+            "M6": 0.006097421416708922
+          },
+          "winner_other_match_groups": 1
+        },
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M5",
+          "top1_score": 0.11852703,
+          "runner_up_tile": "M3",
+          "runner_up_score": 0.04415439,
+          "margin": 0.07437265,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M5": 0.11852703209878256,
+            "M3": 0.04415438687177228,
+            "M6": 0.03738009216193725,
+            "M4": 0.03196570481140757,
+            "M1": 0.02337402928434199,
+            "M7": 0.013352526469544688,
+            "M2": 0.013166935258118961
+          },
+          "winner_other_match_groups": 1
+        },
+        {
+          "schema_version": "public_meld_sift_rank_v0_1",
+          "top1_tile": "M6",
+          "top1_score": 0.06792623,
+          "runner_up_tile": "M3",
+          "runner_up_score": 0.04163096,
+          "margin": 0.02629527,
+          "eligible_class_count": 7,
+          "minimum_other_match_groups": 1,
+          "development_only": true,
+          "source_disjoint_ranking": true,
+          "changes_runtime_behavior": false,
+          "formal_promotion_evidence": false,
+          "safe_for_runtime": false,
+          "safe_for_hint": false,
+          "safe_for_executor": false,
+          "reason": "development_source_disjoint_ranking",
+          "class_scores": {
+            "M6": 0.06792622729022325,
+            "M3": 0.041630957551859506,
+            "M5": 0.02776160711137017,
+            "M1": 0.02397850299626943,
+            "M7": 0.01581168194160969,
+            "M4": 0.011365309699794997,
+            "M2": 0.00594796213819328
+          },
+          "winner_other_match_groups": 1
+        }
+      ],
+      "group_ranking": {
+        "schema_version": "public_meld_group_identity_ranking_v0_1",
+        "top_tiles": [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        "top_score": 0.0931095,
+        "runner_up_tiles": [
+          "M4",
+          "M5",
+          "M3"
+        ],
+        "runner_up_score": 0.08434441,
+        "margin": 0.00876509,
+        "canonical_candidate_count": 12,
+        "development_proposal_tiles": null,
+        "action_kind": "UNKNOWN",
+        "development_only": true,
+        "changes_runtime_behavior": false,
+        "formal_promotion_evidence": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "issues": [
+          "mahjong_valid_group_identity_ranked",
+          "development_margin_gate_not_configured"
+        ]
+      }
+    }
+  },
+  "upper_crop_fraction": 0.5,
+  "crop_ratio_search_performed": false,
+  "private_template_load": {
+    "schema_version": "public_meld_private_sift_load_v0_1",
+    "private_template_count": 15,
+    "recovery_ids": [
+      "G02_hand2_m345",
+      "G03_hand2_m123",
+      "G07_hand5_p345",
+      "G08_hand5_m567",
+      "G09_hand6_p789"
+    ],
+    "tile_ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M3",
+      "M4",
+      "M5",
+      "M5",
+      "M6",
+      "M7",
+      "P3",
+      "P4",
+      "P5",
+      "P7",
+      "P8",
+      "P9"
+    ],
+    "private_pixels_committed_to_repository": false,
+    "source_disjoint_holdout": false,
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  },
+  "within_suit_only": true,
+  "suit_recognition_measured": false,
+  "scorer_parameters_changed": false,
+  "minimum_other_original_matches": 1,
+  "one_match_mode_is_frozen_candidate": false,
+  "query_original_match_excluded": true,
+  "query_exact_sha_excluded": true,
+  "previously_inspected": true,
+  "blind_validation": false,
+  "runtime_threshold_changed": false,
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

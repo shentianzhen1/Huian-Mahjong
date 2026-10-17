@@ -126,5 +126,84 @@ class SourceRiverGeometryTests(unittest.TestCase):
                          [(325, 257, 35, 27)])
 
 
+    def test_detector_reports_three_face_blob_and_qualifier_abstains_by_actor(self):
+        from workspace.vision.public_tile_detector import detect_public_tile_geometry
+        pixels = self.np.empty((480, 1046, 3), dtype=self.np.uint8)
+        pixels[:, :] = (23, 67, 47)
+        pixels[110:140, 606:696] = 237  # 90px / 3 faces, no visible seams
+        pixels[257:284, 325:360] = 237  # independent clear player river tile
+        image = self.Image.fromarray(pixels)
+        detected = detect_public_tile_geometry(image, frame=7, session=SESSION)
+        self.assertTrue(any(box[2] > .085 for box in detected.oversized_bboxes))
+        self.assertTrue(all(row["tile_id"] == "UNKNOWN"
+                            for row in detected.to_dict()["candidates"]))
+        qualified = self.qualify(image, detected, manifest=self.manifest,
+                                 actual_sha256=SHA)
+        self.assertEqual(qualified.actor_trust, {"opponent": False, "player": True})
+        self.assertIn("opponent:oversized_river_component", qualified.issues)
+        self.assertEqual([item.pixel_bbox for item in qualified.filtered_frame.candidates],
+                         [(325, 257, 35, 27)])
+
+    def test_oversized_row_requires_every_join_in_two_bands(self):
+        pixels = self.np.zeros((480, 1046, 3), dtype=self.np.uint8)
+        pixels[110:140, 606:696] = 238
+        for seam in (636, 666):
+            pixels[112:116, seam] = 45
+            pixels[127:130, seam] = 45
+        image = self.Image.fromarray(pixels)
+        oversized = (tuple(round(v / limit, 6) for v, limit in zip(
+            (606, 110, 90, 30), (1046, 480, 1046, 480))),)
+        frame = self.Frame((), (), 7, SESSION, oversized)
+        result = self.qualify(image, frame, manifest=self.manifest, actual_sha256=SHA)
+        self.assertTrue(result.actor_trust["opponent"])
+        self.assertEqual([c.pixel_bbox for c in result.filtered_frame.candidates],
+                         [(606, 110, 30, 30), (636, 110, 30, 30),
+                          (666, 110, 30, 30)])
+        self.assertTrue(all(c.to_dict()["tile_id"] == "UNKNOWN"
+                            for c in result.filtered_frame.candidates))
+
+        # A decorated face can have a vertical glyph in one band. A missing
+        # second-band join invalidates the whole row, including its other tiles.
+        pixels[127:130, 666] = 238
+        missing = self.qualify(self.Image.fromarray(pixels), frame,
+                               manifest=self.manifest, actual_sha256=SHA)
+        self.assertFalse(missing.actor_trust["opponent"])
+        self.assertEqual(missing.filtered_frame.candidates, ())
+        self.assertIn("opponent:oversized_river_component", missing.issues)
+
+    def test_unrelated_oversized_animation_does_not_poison_reviewed_rivers(self):
+        from workspace.vision.public_tile_detector import detect_public_tile_geometry
+        pixels = self.np.empty((480, 1046, 3), dtype=self.np.uint8)
+        pixels[:, :] = (23, 67, 47)
+        pixels[40:70, 606:696] = 237  # outside both source-qualified rivers
+        pixels[110:140, 646:674] = 237
+        pixels[257:284, 325:360] = 237
+        image = self.Image.fromarray(pixels)
+        detected = detect_public_tile_geometry(image, frame=7, session=SESSION)
+        self.assertTrue(detected.oversized_bboxes)
+        qualified = self.qualify(image, detected, manifest=self.manifest,
+                                 actual_sha256=SHA)
+        self.assertTrue(all(qualified.actor_trust.values()))
+        self.assertEqual(len(qualified.filtered_frame.candidates), 2)
+
+    def test_wide_row_joined_to_outside_area_abstains(self):
+        from workspace.vision.public_tile_detector import detect_public_tile_geometry
+        pixels = self.np.empty((480, 1046, 3), dtype=self.np.uint8)
+        pixels[:, :] = (23, 67, 47)
+        pixels[52:140, 523:837] = 237  # 30% width; crosses river's top/right
+        pixels[257:284, 325:360] = 237  # independent player river tile
+        image = self.Image.fromarray(pixels)
+        detected = detect_public_tile_geometry(image, frame=7, session=SESSION)
+        self.assertTrue(any(box[2] > .25 for box in detected.oversized_bboxes))
+        qualified = self.qualify(image, detected, manifest=self.manifest,
+                                 actual_sha256=SHA)
+        self.assertFalse(qualified.actor_trust["opponent"])
+        self.assertTrue(qualified.actor_trust["player"])
+        self.assertIn("opponent:river_occluded_by_oversized_component",
+                      qualified.issues)
+        self.assertEqual([item.pixel_bbox for item in qualified.filtered_frame.candidates],
+                         [(325, 257, 35, 27)])
+
+
 if __name__ == "__main__":
     unittest.main()

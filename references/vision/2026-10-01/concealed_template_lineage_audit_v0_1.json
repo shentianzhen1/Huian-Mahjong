@@ -1,0 +1,81 @@
+{
+  "schema_version": "concealed_template_lineage_audit_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "query_match_group": "reviewed_recording_14",
+  "policy": {
+    "lineage_key": "exact_source_sha256",
+    "source_session_counts_as_independent_match": false,
+    "unknown_lineage_is_template_eligible": false,
+    "same_original_match_is_template_eligible": false
+  },
+  "runtime_dataset": {
+    "approved_non_gold_hand_label_count": 128,
+    "exact_sha_lineage_qualified_label_count": 57,
+    "excluded_missing_original_match_lineage_count": 71,
+    "excluded_same_original_match_count": 0,
+    "qualified_class_count": 25,
+    "qualified_classes": [
+      "B",
+      "E",
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "N",
+      "P1",
+      "P3",
+      "P4",
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9",
+      "R",
+      "S1",
+      "S2",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8"
+    ],
+    "qualified_original_match_groups": [
+      "reviewed_match_2026_09_19_eight_hand",
+      "reviewed_match_concealed_recovery_a",
+      "reviewed_match_concealed_recovery_b"
+    ]
+  },
+  "current_opponent_query": {
+    "review_id": "opp_meld_14_m123",
+    "expected_tiles": [
+      "M1",
+      "M2",
+      "M3"
+    ],
+    "lineage_qualified_expected_classes": [
+      "M1",
+      "M2",
+      "M3"
+    ],
+    "missing_lineage_qualified_expected_classes": [],
+    "status": "READY_DEVELOPMENT_ONLY"
+  },
+  "interpretation": [
+    "Runtime source_session values remain storage/session identifiers and are not used as independent-match evidence.",
+    "Exact-SHA reviewed lineage now covers M1 and M3 through two recovered original match groups; fragments from recovery_a count as one match_group.",
+    "M2 remains lineage-qualified from the existing reviewed 2026-09-19 match evidence.",
+    "The M123 MobileNet query may now be rerun development-only while excluding reviewed_recording_14; this does not promote runtime identity capability."
+  ],
+  "next_gate": [
+    "Rerun the frozen M123 MobileNet development experiment with query match_group reviewed_recording_14 excluded and report face Top1/Top3, legal-group Top1, multi-frame stability, and group margin.",
+    "Do not lower the Runtime 0.82 identity threshold and do not treat the rerun as formal Vision promotion evidence."
+  ],
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

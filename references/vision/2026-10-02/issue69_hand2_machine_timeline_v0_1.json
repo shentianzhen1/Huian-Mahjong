@@ -1,0 +1,144 @@
+{
+  "schema_version": "issue69_hand2_machine_timeline_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "total_hands": 8,
+  "source_policy": "exact_source_scoped_fail_closed",
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4",
+    "segment_start_seconds": 0,
+    "boundary_status": "HAND_START_POST_OPENING_ANIMATION",
+    "source_start_semantics": "ACTUAL_HAND_PLAY_START",
+    "missing_before_source": [
+      "OPENING_ANIMATION",
+      "DEAL_ANIMATION",
+      "GOLD_FLIP_ANIMATION"
+    ]
+  },
+  "events": [
+    {
+      "order": 1,
+      "kind": "SOURCE_SEGMENT_ANCHOR",
+      "actor": "system",
+      "evidence_level": "source_locked_temporal_boundary",
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json"
+      ]
+    },
+    {
+      "order": 2,
+      "kind": "OBSERVED_ACTION_SEQUENCE",
+      "actor": "mixed",
+      "evidence_level": "source_locked_visual_action_banners",
+      "observed_actions": [
+        "PENG",
+        "PENG",
+        "CHI",
+        "CHI"
+      ],
+      "response_windows": [
+        {
+          "window_seconds": [
+            31,
+            32
+          ],
+          "options": [
+            "PENG",
+            "PASS"
+          ],
+          "selected_action": "UNKNOWN"
+        },
+        {
+          "window_seconds": [
+            64,
+            68
+          ],
+          "options": [
+            "PENG",
+            "PASS"
+          ],
+          "selected_action": "UNKNOWN"
+        }
+      ],
+      "tile_identities_confirmed": false,
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand2_action_windows_v0_1.json"
+      ],
+      "human_reviewed_meld_sequence": [
+        {
+          "actor": "opponent",
+          "action": "PENG",
+          "claimed_tile": "S3",
+          "meld": [
+            "S3",
+            "S3",
+            "S3"
+          ]
+        },
+        {
+          "actor": "opponent",
+          "action": "PENG",
+          "claimed_tile": "M9",
+          "meld": [
+            "M9",
+            "M9",
+            "M9"
+          ]
+        },
+        {
+          "actor": "player",
+          "action": "CHI",
+          "claimed_tile": "M6",
+          "meld": [
+            "M4",
+            "M5",
+            "M6"
+          ]
+        },
+        {
+          "actor": "player",
+          "action": "CHI",
+          "claimed_tile": "S3",
+          "meld": [
+            "S3",
+            "S4",
+            "S5"
+          ]
+        }
+      ],
+      "human_reviewed_identity_complete_for_these_melds": true,
+      "machine_identity_complete_for_these_melds": false
+    },
+    {
+      "order": 3,
+      "kind": "HU_TO_SETTLEMENT_TERMINAL",
+      "actor": "mixed",
+      "evidence_level": "source_locked_visual_terminal_anchor",
+      "window_seconds": [
+        78.5,
+        82
+      ],
+      "machine_tile_identity_complete": false,
+      "machine_confirmed": false,
+      "evidence_refs": [
+        "references/vision/2026-10-02/issue69_hand2_action_windows_v0_1.json",
+        "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json"
+      ]
+    }
+  ],
+  "machine_closed_event_count": 0,
+  "development_candidate_event_count": 3,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "caveats": [
+    "Hand 2 source begins at the actual hand-play start after the unrecorded opening/deal/gold-flip animation; do not synthesize missing opening animation or OPEN_GOLD identity.",
+    "Observed PENG/CHI/HU banners establish visual action anchors only; tile identities remain UNKNOWN.",
+    "Response options PENG/PASS do not establish which option was selected."
+  ]
+}

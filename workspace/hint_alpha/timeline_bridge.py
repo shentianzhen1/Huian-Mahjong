@@ -127,10 +127,10 @@ def _screen_evidence(row: dict[str, Any]) -> str | None:
         return None
     frame = payload.get("frame")
     if isinstance(frame, str) and frame:
-        return frame
+        return frame.replace("\\", "/")
     path = payload.get("path")
     if isinstance(path, str) and path:
-        return path
+        return path.replace("\\", "/")
     return None
 
 
