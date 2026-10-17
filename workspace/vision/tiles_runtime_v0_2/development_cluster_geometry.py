@@ -85,6 +85,12 @@ def _split_joined_component(
     if part_count < 2:
         return [box]
     projection = mask[y:y + height, x:x + width].sum(axis=0)
+    # Offline-only probe: the upper rim can expose the inter-tile seam while
+    # the full-height minimum falls inside dark tile artwork. Retain the old
+    # projection when the rim has no distinct valley. No hand count or ID is
+    # used to choose a boundary.
+    rim_height = max(2, int(round(height * 0.15)))
+    rim_projection = mask[y:y + rim_height, x:x + width].sum(axis=0)
     cuts: list[int] = []
     previous = 0
     for part in range(1, part_count):
@@ -95,7 +101,16 @@ def _split_joined_component(
         if start >= end:
             cut = nominal
         else:
-            cut = start + int(np.argmin(projection[start:end + 1]))
+            rim_window = rim_projection[start:end + 1]
+            if float(rim_window.min()) < float(rim_window.max()) * 0.75:
+                # Equal-depth seam pixels are common after video scaling.
+                # np.argmin always takes the leftmost pixel, systematically
+                # borrowing a strip of the preceding face. Resolve equal
+                # minima by the nominal geometric boundary, never identity.
+                minima = np.flatnonzero(rim_window == rim_window.min()) + start
+                cut = int(minima[np.argmin(np.abs(minima - nominal))])
+            else:
+                cut = start + int(np.argmin(projection[start:end + 1]))
         # A valley inside tile artwork can be much closer to an edge than the
         # actual seam.  Reject such an unbalanced split and retain the
         # proportional boundary instead.
