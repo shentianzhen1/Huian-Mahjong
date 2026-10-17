@@ -17,7 +17,9 @@ def verify(root):
             raise SystemExit(f'Payload mismatch: {relative}')
     site = root / 'runtime/Lib/site-packages'
     for relative, digest in manifest['source_sha256'].items():
-        assert hashlib.sha256((site / relative).read_bytes()).hexdigest() == digest, relative
+        path = site / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            raise SystemExit(f'Source mismatch: {relative}')
     dataset = site / 'dataset/tiles_runtime_v0_2'
     for inventory in ('label_sha256', 'template_sha256'):
         for relative, digest in manifest[inventory].items():
@@ -40,13 +42,17 @@ def verify(root):
     for row in labels:
         if row.get('approved') is True or row.get('status') == 'approved':
             template = dataset / row['image']
-            assert template.is_file(), row['image']
+            if not template.is_file():
+                raise SystemExit(f"Missing approved template: {row['image']}")
             if row['image'] not in manifest['template_sha256']:
                 raise SystemExit(f"Template absent from build-source inventory: {row['image']}")
             if row.get('asset_sha256'):
-                assert hashlib.sha256(template.read_bytes()).hexdigest() == row['asset_sha256'], row['image']
-    assert (dataset / 'manifest.json').is_file()
-    assert not manifest['executor_enabled']
+                if hashlib.sha256(template.read_bytes()).hexdigest() != row['asset_sha256']:
+                    raise SystemExit(f"Approved template hash mismatch: {row['image']}")
+    if not (dataset / 'manifest.json').is_file():
+        raise SystemExit('Dataset manifest missing')
+    if manifest.get('executor_enabled') is not False:
+        raise SystemExit('Executor must be explicitly disabled')
     print(f"Verified {len(manifest['payload_sha256'])} payload files; version {manifest['project_version']}; {len(labels)} labels")
 
 

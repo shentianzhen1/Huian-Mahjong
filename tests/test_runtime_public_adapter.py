@@ -5,6 +5,7 @@ import unittest
 from workspace.vision.public_match_reconstruction import ObservationKind
 from workspace.vision.public_observers import MeldSnapshotObserver
 from workspace.vision.runtime_public_adapter import (
+    _component_confidence,
     player_hand_delta_from_runtime,
     player_meld_snapshot_from_runtime,
 )
@@ -61,6 +62,11 @@ def report(
 
 
 class RuntimePublicAdapterMeldTests(unittest.TestCase):
+    def test_invalid_geometry_scores_never_become_certain(self):
+        for value in (float("nan"), float("inf"), -float("inf"), True, False, None):
+            with self.subTest(value=value):
+                self.assertEqual(_component_confidence({"confidence": value}), 0.0)
+
     def test_runtime_meld_components_become_player_meld_snapshot(self):
         source = report(
             [

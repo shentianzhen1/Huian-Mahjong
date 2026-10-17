@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
+import sys
 
 spec = importlib.util.spec_from_file_location('verify_payload', Path(__file__).resolve().parents[1] / 'packaging/verify_payload.py')
 module = importlib.util.module_from_spec(spec)
@@ -41,6 +43,33 @@ class PayloadIntegrityTests(unittest.TestCase):
 
     def test_original_bytes_pass(self):
         module.verify(self.root)
+
+    def test_executor_must_be_false_not_merely_falsy(self):
+        for value in (True, 0, None, "false"):
+            with self.subTest(value=value):
+                self.manifest['executor_enabled'] = value
+                self.refresh_payload()
+                with self.assertRaisesRegex(SystemExit, 'explicitly disabled'):
+                    module.verify(self.root)
+
+    def test_optimized_python_cannot_remove_executor_check(self):
+        self.manifest['executor_enabled'] = True
+        self.refresh_payload()
+        result = subprocess.run([sys.executable, '-O', module.__file__, str(self.root)],
+                                capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Executor must be explicitly disabled', result.stderr)
+
+    def test_optimized_python_cannot_remove_source_hash_check(self):
+        source = self.root / 'runtime/Lib/site-packages/workspace/dummy.py'
+        source.parent.mkdir(parents=True)
+        source.write_text('pass\n')
+        self.manifest['source_sha256'] = {'workspace/dummy.py': '0' * 64}
+        self.refresh_payload()
+        result = subprocess.run([sys.executable, '-O', module.__file__, str(self.root)],
+                                capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Source mismatch', result.stderr)
 
     def test_crlf_conversion_fails_even_with_refreshed_payload_hashes(self):
         self.asset.write_bytes(self.asset.read_bytes().replace(b'\n', b'\r\n'))

@@ -73,6 +73,8 @@ class UploadedArtworkPacketTests(unittest.TestCase):
 class SymmetricNormalizationTests(unittest.TestCase):
     def test_query_artwork_and_real_references_share_transform(self):
         from PIL import Image
+        from workspace.vision import public_meld_synthetic_transfer as transfer
+        from workspace.vision.tiles_v0_1.labels import approved_labels as real_labels
         module = 'workspace.vision.atlas_artwork_meld_probe'
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -98,8 +100,8 @@ class SymmetricNormalizationTests(unittest.TestCase):
                  patch(module+'.verify_lineage_evidence_paths',return_value=[]), \
                  patch(module+'.qualify_concealed_template_labels',return_value=(labels,{})), \
                  patch('workspace.vision.tiles_v0_1.labels.approved_labels',return_value=labels), \
-                 patch('workspace.vision.public_meld_synthetic_transfer._canonical_face',side_effect=transform), \
-                 patch('workspace.vision.public_meld_synthetic_transfer.render_self_meld_variants',side_effect=lambda value:(value,)), \
+                 patch.object(transfer, '_canonical_face',side_effect=transform), \
+                 patch.object(transfer, 'render_self_meld_variants',side_effect=lambda value:(value,)), \
                  patch('workspace.vision.public_meld_identity_sift._sift_descriptors',side_effect=descriptors):
                 report=probe('sheet','e'*64,root/'packet.zip',root,root/'lineage.json',root,
                              normalization='canonical')
@@ -107,3 +109,4 @@ class SymmetricNormalizationTests(unittest.TestCase):
             self.assertEqual(report['normalization_scope'],'query_and_all_references')
             self.assertFalse(report['safe_for_runtime'])
             self.assertEqual(report['rows'][0]['runtime_tile_id'],'UNKNOWN')
+            self.assertIs(transfer.approved_labels, real_labels)

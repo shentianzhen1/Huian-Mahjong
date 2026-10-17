@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections import Counter
 import math
+from numbers import Real
 from dataclasses import dataclass
 from statistics import median
 from typing import Any, Iterable
@@ -30,14 +31,25 @@ def _bbox(item: dict[str, Any]) -> tuple[float, float, float, float]:
 
 def _component_confidence(item: dict[str, Any]) -> float:
     value = item.get("confidence", 0.0)
+    if isinstance(value, bool):
+        return 0.0
     try:
         result = float(value)
     except (TypeError, ValueError):
+        return 0.0
+    if not math.isfinite(result):
         return 0.0
     return max(0.0, min(1.0, result))
 
 
 def _identity(item: dict[str, Any]) -> str | None:
+    # Preserve legacy reports without a numeric score, but never allow an
+    # explicitly invalid/rejected score to be hidden behind an "accepted" flag.
+    if "tile_confidence" in item:
+        score = item["tile_confidence"]
+        if (isinstance(score, bool) or not isinstance(score, Real)
+                or not math.isfinite(score) or not 0.82 <= score <= 1.0):
+            return None
     value = item.get("tile_id")
     if not value or value == "UNKNOWN":
         return None

@@ -13,6 +13,7 @@ from workspace.vision.tiles_runtime_v0_2.opened_gold_scale_projection_probe impo
 _VISION_DEPS_AVAILABLE = (
     importlib.util.find_spec("numpy") is not None
     and importlib.util.find_spec("PIL") is not None
+    and importlib.util.find_spec("cv2") is not None
 )
 
 

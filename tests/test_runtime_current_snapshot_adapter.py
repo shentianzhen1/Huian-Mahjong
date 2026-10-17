@@ -95,6 +95,23 @@ def meld(actor, groups, *, session="runtime-a", epoch=0, trusted=True):
 
 
 class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
+    def test_explicit_invalid_hand_identity_confidence_blocks_shanten(self):
+        for score in (float("nan"), float("inf"), True, None, "0.95", .81, 1.01):
+            with self.subTest(score=score):
+                source = report()
+                source["components"][0]["tile_confidence"] = score
+                snapshot = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
+                self.assertFalse(assess_current_snapshot(snapshot).allows(SnapshotCapability.SHANTEN))
+
+    def test_explicit_invalid_gold_score_cannot_become_persisted_fact(self):
+        for score in (float("nan"), float("inf"), True, .81, 1.01):
+            with self.subTest(score=score):
+                source = report()
+                source["gold_identity_observations"][0]["tile_confidence"] = score
+                snapshot = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
+                self.assertFalse(snapshot.gold_trusted)
+                self.assertIsNone(snapshot.gold_tile)
+
     def test_hand_gold_and_player_meld_count_enable_basic_shanten(self):
         snapshot = current_snapshot_from_runtime(report(), timestamp_seconds=2.0)
         result = assess_current_snapshot(snapshot)

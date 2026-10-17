@@ -11,6 +11,8 @@ import argparse
 from collections import defaultdict
 from functools import lru_cache
 import json
+import math
+from numbers import Real
 from pathlib import Path
 from typing import Iterable
 
@@ -138,6 +140,12 @@ def identity_gate(
     confidence_threshold: float,
 ) -> tuple[str, str]:
     """Return an exact ID or UNKNOWN with an auditable rejection reason."""
+    if (isinstance(confidence_threshold, bool) or not isinstance(confidence_threshold, Real)
+            or not math.isfinite(confidence_threshold) or not 0 <= confidence_threshold <= 1):
+        raise ValueError("confidence_threshold must be a finite probability")
+    if (isinstance(confidence, bool) or not isinstance(confidence, Real)
+            or not math.isfinite(confidence) or not 0 <= confidence <= 1):
+        return "UNKNOWN", "invalid_confidence"
     if confidence < confidence_threshold:
         return "UNKNOWN", "below_confidence_threshold"
     missing = STANDARD_CLASSES - covered_classes
