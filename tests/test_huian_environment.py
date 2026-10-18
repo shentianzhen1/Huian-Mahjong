@@ -962,20 +962,20 @@ class EnvironmentTests(unittest.TestCase):
         )
         self.assertEqual(declare.metadata["fixed_fan"], 16)
         self.assertEqual(declare.metadata["multiplier"], 1)
-        self.assertTrue(declare.metadata["project_rule"])
+        self.assertNotIn("project_rule", declare.metadata)
         instance.step(declare)
         self.assertEqual(instance.state.phase, "EIGHT_FLOWER_YOU_DECLARED")
         terminal, event = instance.finalize_eight_flower_outcome(
             current_dealer_base=5)
         self.assertTrue(terminal.terminal)
         self.assertEqual(terminal.rewards, [21, -21])
-        self.assertEqual(terminal.terminal_reason, "PROJECT_EIGHT_FLOWER_YOU")
+        self.assertEqual(terminal.terminal_reason, "AUTO_EIGHT_FLOWER_YOU")
         metadata = event["action"]["metadata"]
         self.assertEqual(metadata["winner_fan"], 16)
         self.assertEqual(metadata["fixed_fan"], 16)
         self.assertEqual(metadata["multiplier"], 1)
         self.assertEqual(metadata["fan_policy"], "FIXED_SPECIAL_FAN_NO_STACKING")
-        self.assertEqual(metadata["evidence_status"], "WORKING")
+        self.assertEqual(metadata["evidence_status"], "CONFIRMED")
 
     def test_eight_flower_special_rejects_ordinary_or_extra_fan_stacking(self):
         state = scenario("AFTER_DRAW", hand=HAND + ["M9"])

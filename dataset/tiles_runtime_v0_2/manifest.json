@@ -17,10 +17,10 @@
     "roi_profiles/huian_1046x480_v0_2.json",
     "roi_profiles/huian_960x448_v0_2.json"
   ],
-  "approved_label_count": 142,
-  "template_count": 142,
+  "approved_label_count": 145,
+  "template_count": 145,
   "template_regions": {
-    "hand": 126,
+    "hand": 129,
     "draw_visual": 14,
     "gold": 2
   },
@@ -60,5 +60,6 @@
     "artifact_id": 11082051061,
     "result": "success"
   },
-  "tracked_full_validation_report_refresh_pending": true
+  "tracked_full_validation_report_refresh_pending": true,
+  "current_asset_inventory": "runtime_asset_inventory_20261007.json"
 }

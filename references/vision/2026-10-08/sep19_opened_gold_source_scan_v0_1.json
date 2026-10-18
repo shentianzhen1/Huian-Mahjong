@@ -1,0 +1,153 @@
+{
+  "schema_version": "reviewed_opened_gold_source_scan_v0_1",
+  "scope": "Direct review of frame 0 explicit opened indicators in eight reviewed Sep-19 files. Not an exhaustive all-frame search.",
+  "original_match_count": 1,
+  "source_session_is_independence_signal": false,
+  "independent_of_sep26_query_match": true,
+  "checked_sources": [
+    {
+      "file": "3.mp4",
+      "sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          108,
+          46,
+          33,
+          44
+        ]
+      ],
+      "visible_opened_tile_direct_review": "G",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "4.mp4",
+      "sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          92,
+          42,
+          32,
+          42
+        ]
+      ],
+      "visible_opened_tile_direct_review": "M8",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "5.mp4",
+      "sha256": "cf1451e8cc18561d8c3d0250826f79eebcf71904aaf337c74edc41ba46c0f636",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          92,
+          42,
+          32,
+          42
+        ]
+      ],
+      "visible_opened_tile_direct_review": "P5",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "9.mp4",
+      "sha256": "5e6c590f060c085adaed07f01da9dfe2e83f37d99e3817e5ac4f1a8d1118086e",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          108,
+          46,
+          33,
+          44
+        ]
+      ],
+      "visible_opened_tile_direct_review": "M3",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "10.mp4",
+      "sha256": "02f7874493d224b290d7957c62b552e877ec7dacd3a712ee9fbdc3c81225e245",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          92,
+          42,
+          32,
+          42
+        ]
+      ],
+      "visible_opened_tile_direct_review": "P2",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "11.mp4",
+      "sha256": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          108,
+          46,
+          32,
+          44
+        ]
+      ],
+      "visible_opened_tile_direct_review": "M7",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "12.mp4",
+      "sha256": "4043cc011c1b12d1ade88afd98c30e77dca8b364b7d0b8c595b3ca16bcdb7757",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          92,
+          42,
+          32,
+          42
+        ]
+      ],
+      "visible_opened_tile_direct_review": "B",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    },
+    {
+      "file": "13.mp4",
+      "sha256": "4333a11966bd364f3388b2bf3677900eed50faf6b0d6739cf9399e901de196fc",
+      "frame": 0,
+      "gold_bboxes": [
+        [
+          108,
+          46,
+          33,
+          44
+        ]
+      ],
+      "visible_opened_tile_direct_review": "P4",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "source_sha_matches_reviewed_intake": true,
+      "template_admitted": false
+    }
+  ],
+  "M6_visible_in_reviewed_samples": false,
+  "raw_or_derived_pixels_committed": false,
+  "new_template_count": 0,
+  "runtime_changed": false,
+  "next_step": "Search another reviewed original match for a directly visible M6 indicator. Other classes can support future opened-indicator normalization evaluation but must not be counted as M6 appearance support.",
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

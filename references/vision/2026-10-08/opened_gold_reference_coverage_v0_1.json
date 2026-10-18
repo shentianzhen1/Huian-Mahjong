@@ -1,0 +1,76 @@
+{
+  "schema_version": "opened_gold_reference_coverage_v0_1",
+  "status": "DEVELOPMENT_EVIDENCE_AUDIT_NOT_RUNTIME_POLICY",
+  "runtime_changed": false,
+  "hint_changed": false,
+  "executor_changed": false,
+  "runtime_identity_threshold_changed": false,
+  "source_session_is_independence_signal": false,
+  "formal_promotion_evidence": false,
+  "approved_label_count": 147,
+  "projected_gold_identity_bank": {
+    "label_count": 147,
+    "class_count": 34,
+    "classes": ["B", "E", "G", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "N", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "R", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "SOUTH", "W"],
+    "reviewed_lineage_label_count": 67,
+    "unknown_lineage_label_count": 80,
+    "reviewed_original_match_group_count": 4,
+    "reviewed_original_match_groups": ["reviewed_match_2026_09_19_eight_hand", "reviewed_match_2026_09_26_first_hand", "reviewed_match_concealed_recovery_a", "reviewed_match_concealed_recovery_b"],
+    "source_region_counts": {"draw_region": 2, "draw_visual": 12, "gold_region": 2, "hand_region": 131},
+    "construction_note": "Matches the current classifier design: every approved hand/draw/gold reference can be projected through Gold normalization."
+  },
+  "direct_gold_region_references": {
+    "label_count": 2,
+    "class_count": 2,
+    "classes": ["N", "S3"],
+    "reviewed_lineage_label_count": 1,
+    "unknown_lineage_label_count": 1,
+    "reviewed_original_match_group_count": 1,
+    "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_b"],
+    "references": [
+      {"tile_id": "S3", "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226", "source_session": "session_7f4c1b2e", "reviewed_original_match_group": null, "lineage_status": "UNKNOWN", "image": "templates/gold/1046_gold_region_s00_S3.png"},
+      {"tile_id": "N", "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96", "source_session": "session_5d8a0e3c", "reviewed_original_match_group": "reviewed_match_concealed_recovery_b", "lineage_status": "REVIEWED", "image": "templates/gold/960_gold_region_s00_N.png"}
+    ]
+  },
+  "real_gold_skin_evidence": {
+    "label_count": 1,
+    "class_count": 1,
+    "classes": ["M6"],
+    "reviewed_lineage_label_count": 1,
+    "unknown_lineage_label_count": 0,
+    "reviewed_original_match_group_count": 1,
+    "reviewed_original_match_groups": ["reviewed_match_2026_09_26_first_hand"],
+    "references": [
+      {"tile_id": "M6", "region": "hand_region", "source_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3", "source_session": "session_fba5f67d244fb5bd", "reviewed_original_match_group": "reviewed_match_2026_09_26_first_hand", "lineage_status": "REVIEWED", "asset_role": "gold_identity_only", "image": "templates/hand/tile_2e4c09fcd9e3ed8f_M6.png"}
+    ]
+  },
+  "independence_comparison": {
+    "legacy_runtime_definition": "at_least_two_source_session_or_source_id_values",
+    "reviewed_definition": "at_least_two_reviewed_original_match_groups_by_exact_source_sha256",
+    "legacy_cross_session_class_count": 23,
+    "legacy_cross_session_classes": ["E", "M1", "M3", "M5", "M6", "N", "P1", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "R", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"],
+    "reviewed_cross_match_class_count": 10,
+    "reviewed_cross_match_classes": ["M3", "M6", "N", "P3", "P4", "P5", "P8", "S2", "S4", "S6"],
+    "legacy_cross_session_but_not_reviewed_cross_match_class_count": 13,
+    "legacy_cross_session_but_not_reviewed_cross_match_classes": ["E", "M1", "M5", "P1", "P6", "P7", "P9", "R", "S1", "S3", "S5", "S7", "S8"],
+    "legacy_only_details": [
+      {"tile_id": "E", "projected_label_count": 2, "legacy_source_session_count": 2, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 1},
+      {"tile_id": "M1", "projected_label_count": 2, "legacy_source_session_count": 2, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 0},
+      {"tile_id": "M5", "projected_label_count": 4, "legacy_source_session_count": 3, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_b"], "unknown_lineage_label_count": 3},
+      {"tile_id": "P1", "projected_label_count": 3, "legacy_source_session_count": 3, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 2},
+      {"tile_id": "P6", "projected_label_count": 15, "legacy_source_session_count": 7, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 11},
+      {"tile_id": "P7", "projected_label_count": 14, "legacy_source_session_count": 6, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 8},
+      {"tile_id": "P9", "projected_label_count": 13, "legacy_source_session_count": 5, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 6},
+      {"tile_id": "R", "projected_label_count": 2, "legacy_source_session_count": 2, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 1},
+      {"tile_id": "S1", "projected_label_count": 2, "legacy_source_session_count": 2, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 1},
+      {"tile_id": "S3", "projected_label_count": 3, "legacy_source_session_count": 2, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_b"], "unknown_lineage_label_count": 2},
+      {"tile_id": "S5", "projected_label_count": 6, "legacy_source_session_count": 5, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_b"], "unknown_lineage_label_count": 5},
+      {"tile_id": "S7", "projected_label_count": 5, "legacy_source_session_count": 4, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_b"], "unknown_lineage_label_count": 4},
+      {"tile_id": "S8", "projected_label_count": 4, "legacy_source_session_count": 3, "reviewed_original_match_group_count": 1, "reviewed_original_match_groups": ["reviewed_match_concealed_recovery_a"], "unknown_lineage_label_count": 1}
+    ],
+    "reviewed_cross_match_not_legacy_classes": []
+  },
+  "finding": "source_session multiplicity overstates independent opened-Gold identity support whenever multiple storage sessions belong to one reviewed original match or have UNKNOWN lineage.",
+  "safe_for_runtime_policy_change": false,
+  "next_step": "Use reviewed original_match_group lineage for any future opened-Gold promotion audit, and grow a direct reviewed Gold-indicator/Gold-skin bank before changing Runtime identity acceptance."
+}

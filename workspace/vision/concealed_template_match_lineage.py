@@ -15,6 +15,10 @@ from typing import Any, Iterable
 
 _SCHEMA = "concealed_template_match_lineage_development_v0_1"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_MATCH_GROUP_ALIASES = {
+    "reviewed_match_2026_09_26_first_hand": "reviewed_match_2026_09_26_eight_hand",
+    "reviewed_match_2026_09_26_hands_2_to_4": "reviewed_match_2026_09_26_eight_hand",
+}
 
 
 @dataclass(frozen=True)
@@ -22,6 +26,20 @@ class ConcealedTemplateSource:
     source_sha256: str
     match_group: str
     evidence_path: str
+
+
+def canonicalize_match_group(match_group: str) -> str:
+    """Collapse reviewed aliases that are known to belong to one original match."""
+    if not isinstance(match_group, str) or not match_group.strip():
+        raise ValueError("match_group is required")
+    group = match_group.strip()
+    seen: set[str] = set()
+    while group in _MATCH_GROUP_ALIASES:
+        if group in seen:
+            raise ValueError("cyclic concealed-template match-group alias")
+        seen.add(group)
+        group = _MATCH_GROUP_ALIASES[group]
+    return group
 
 
 def load_concealed_template_lineage(
@@ -57,10 +75,11 @@ def load_concealed_template_lineage(
             or Path(evidence).is_absolute()
         ):
             raise ValueError("invalid concealed-template lineage entry")
+        canonical_group = canonicalize_match_group(group)
         old = result.get(sha)
-        if old is not None and old.match_group != group:
+        if old is not None and old.match_group != canonical_group:
             raise ValueError("same source SHA assigned to conflicting match groups")
-        result[sha] = ConcealedTemplateSource(sha, group, evidence)
+        result[sha] = ConcealedTemplateSource(sha, canonical_group, evidence)
 
     if not result:
         raise ValueError("concealed-template lineage registry is empty")
@@ -77,10 +96,12 @@ def qualify_concealed_template_labels(
 
     source_session is deliberately not used as an independence signal. A label
     whose source SHA is absent from the reviewed lineage registry is excluded,
-    even if its session name looks unique.
+    even if its session name looks unique. Reviewed aliases of one original
+    match are collapsed before same-match exclusion.
     """
     if not isinstance(query_match_group, str) or not query_match_group.strip():
         raise ValueError("query_match_group is required")
+    canonical_query_group = canonicalize_match_group(query_match_group)
 
     accepted: list[dict[str, Any]] = []
     missing_lineage = 0
@@ -97,13 +118,14 @@ def qualify_concealed_template_labels(
         if source is None:
             missing_lineage += 1
             continue
-        if source.match_group == query_match_group:
+        source_group = canonicalize_match_group(source.match_group)
+        if source_group == canonical_query_group:
             same_match += 1
             continue
         copied = dict(row)
-        copied["_original_match_group"] = source.match_group
+        copied["_original_match_group"] = source_group
         accepted.append(copied)
-        represented_groups.add(source.match_group)
+        represented_groups.add(source_group)
 
     return accepted, {
         "input_label_count": (

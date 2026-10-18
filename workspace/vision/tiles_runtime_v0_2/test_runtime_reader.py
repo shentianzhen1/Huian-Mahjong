@@ -64,6 +64,21 @@ class RuntimeReaderGateTests(unittest.TestCase):
     def test_high_confidence_cross_session_class_is_accepted(self) -> None:
         self.assertEqual(self.gate("P9", 0.93), ("P9", "accepted"))
 
+    def test_invalid_confidences_are_unknown(self) -> None:
+        for value in (float("nan"), float("inf"), -float("inf"), True, False,
+                      -0.01, 1.01, None, "0.99"):
+            with self.subTest(value=value):
+                self.assertEqual(self.gate("P9", value), ("UNKNOWN", "invalid_confidence"))
+
+    def test_invalid_threshold_is_a_configuration_error(self) -> None:
+        for value in (float("nan"), float("inf"), True, -1, 1.01, "0.82"):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                identity_gate("P9", .99, region="hand_region", covered_classes=self.covered,
+                              cross_session_classes=self.cross_session, confidence_threshold=value)
+
+    def test_threshold_boundary_remains_frozen(self) -> None:
+        self.assertEqual(self.gate("P9", .82), ("P9", "accepted"))
+
     def test_low_confidence_is_unknown(self) -> None:
         self.assertEqual(
             self.gate("P9", 0.81),

@@ -14,6 +14,7 @@ from workspace.vision.current_state_snapshot import (
 
 HAND = ('M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9',
         'P1', 'P2', 'P3', 'S1', 'S2', 'S3', 'E')
+UNRESOLVED_SETTLEMENT = 'settlement.youjin_full'
 
 
 class ManualInputTests(unittest.TestCase):
@@ -88,7 +89,7 @@ class ManualInputTests(unittest.TestCase):
     def test_observed_score_is_not_a_rule_settlement(self):
         row = observed_score_entry(scores_before=(1000, 1000),
                                    scores_after=(1080, 920),
-                                   unresolved_rule_id='settlement.qiangjin_full')
+                                   unresolved_rule_id=UNRESOLVED_SETTLEMENT)
         self.assertEqual(row['status'], 'OBSERVED_ONLY')
         self.assertEqual(row['score_delta'], [80, -80])
         self.assertEqual(row['input_source'], 'USER_ENTERED_UNVERIFIED')
@@ -98,10 +99,11 @@ class ManualInputTests(unittest.TestCase):
 
     def test_invalid_scores_and_missing_unknown_rule_rejected(self):
         for before, after, rule in (
-            ((1000, 1000), (1080, 930), 'settlement.qiangjin_full'),
-            ((1000, 1000), (True, 1999), 'settlement.qiangjin_full'),
-            ((1000, 1000), (-1, 2001), 'settlement.qiangjin_full'),
+            ((1000, 1000), (1080, 930), UNRESOLVED_SETTLEMENT),
+            ((1000, 1000), (True, 1999), UNRESOLVED_SETTLEMENT),
+            ((1000, 1000), (-1, 2001), UNRESOLVED_SETTLEMENT),
             ((1000, 1000), (1080, 920), ''),
+            ((1000, 1000), (1080, 920), 'settlement.qiangjin_full'),
             ((1000, 1000), (1080, 920), 'settlement.gang_hu'),
             ((1000, 1000), (1080, 920), 'settlement.does_not_exist'),
         ):
@@ -113,7 +115,7 @@ class ManualInputTests(unittest.TestCase):
         snapshot, hint = self.snapshot()
         score = observed_score_entry(scores_before=(1000, 1000),
                                      scores_after=(1080, 920),
-                                     unresolved_rule_id='settlement.qiangjin_full')
+                                     unresolved_rule_id=UNRESOLVED_SETTLEMENT)
         with TemporaryDirectory() as folder:
             evidence = EvidenceSession(folder, metadata={'backend': 'MANUAL'})
             evidence.mark('MANUAL_TABLE_SNAPSHOT', {

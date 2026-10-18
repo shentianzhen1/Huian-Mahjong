@@ -1,5 +1,6 @@
 import unittest
 
+from workspace.hint_alpha import analyze_snapshot_shanten
 from workspace.vision.current_state_snapshot import (
     SnapshotCapability,
     SnapshotStatus,
@@ -31,6 +32,16 @@ def component(region, tile, index=0, *, accepted=True):
     }
 
 
+def gold_observation(frame, tile):
+    return {
+        "frame": frame,
+        "candidate_tile_id": tile,
+        "tile_id": tile,
+        "tile_confidence": 0.95,
+        "identity_reason": "accepted",
+    }
+
+
 def report(hand=HAND, *, gold="B", session="runtime-a", epoch=0, melds=()):
     concealed = [component("hand", tile, i) for i, tile in enumerate(hand)]
     meld_components = [
@@ -44,6 +55,9 @@ def report(hand=HAND, *, gold="B", session="runtime-a", epoch=0, melds=()):
         "stream_epoch": epoch,
         "frames": [100, 101, 102],
         "components": [*concealed, *meld_components, *gold_component],
+        "gold_identity_observations": [
+            gold_observation(frame, gold) for frame in (100, 101, 102)
+        ],
         "concealed_tile_count": len(concealed),
         "all_concealed_tile_ids_trusted": all(tile != "UNKNOWN" for tile in hand),
         "geometry_untrusted": False,
@@ -81,6 +95,23 @@ def meld(actor, groups, *, session="runtime-a", epoch=0, trusted=True):
 
 
 class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
+    def test_explicit_invalid_hand_identity_confidence_blocks_shanten(self):
+        for score in (float("nan"), float("inf"), True, None, "0.95", .81, 1.01):
+            with self.subTest(score=score):
+                source = report()
+                source["components"][0]["tile_confidence"] = score
+                snapshot = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
+                self.assertFalse(assess_current_snapshot(snapshot).allows(SnapshotCapability.SHANTEN))
+
+    def test_explicit_invalid_gold_score_cannot_become_persisted_fact(self):
+        for score in (float("nan"), float("inf"), True, .81, 1.01):
+            with self.subTest(score=score):
+                source = report()
+                source["gold_identity_observations"][0]["tile_confidence"] = score
+                snapshot = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
+                self.assertFalse(snapshot.gold_trusted)
+                self.assertIsNone(snapshot.gold_tile)
+
     def test_hand_gold_and_player_meld_count_enable_basic_shanten(self):
         snapshot = current_snapshot_from_runtime(report(), timestamp_seconds=2.0)
         result = assess_current_snapshot(snapshot)
@@ -107,29 +138,17 @@ class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
         self.assertIn("gold_untrusted", gold_result.issues)
         self.assertFalse(gold_result.allows(SnapshotCapability.SHANTEN))
 
-    def test_matching_gold_skin_copies_establish_opened_gold_identity(self):
+    def test_multiframe_gold_consensus_establishes_opened_gold_identity(self):
         source = report(gold="B")
-        source["components"][-1]["region_candidate"] = "hand"
-        source["components"][-1]["gold_skin"] = True
-        source["components"].append(
-            {
-                **source["components"][-1],
-                "region_candidate": "draw_visual",
-                "normalized_bbox": [0.90, 0.80, 0.035, 0.10],
-            }
-        )
-        source["concealed_tile_count"] += 2
-        # The report declares these two gold-skinned copies in addition to the
-        # regular concealed identities used by this synthetic adapter fixture.
-        source["all_concealed_tile_ids_trusted"] = True
         snapshot = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertEqual(snapshot.gold_tile, "B")
         self.assertTrue(snapshot.gold_trusted)
 
-        source["components"][-1]["tile_id"] = "R"
+        source["gold_identity_observations"][1] = gold_observation(101, "R")
         conflict = current_snapshot_from_runtime(source, timestamp_seconds=2.0)
         self.assertIsNone(conflict.gold_tile)
         self.assertFalse(conflict.gold_trusted)
+        self.assertIn("runtime_gold_identity_conflict", conflict.adapter_issues)
 
     def test_unknown_player_meld_identities_still_preserve_meld_count(self):
         snapshot = current_snapshot_from_runtime(
@@ -141,6 +160,23 @@ class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
         self.assertEqual(len(snapshot.melds[0]), 1)
         self.assertIn("meld_identity_unknown:0", result.issues)
         self.assertFalse(result.allows(SnapshotCapability.VISIBLE_REMAINDERS))
+
+    def test_runtime_unknown_meld_count_drives_structural_post_draw_advice(self):
+        snapshot = current_snapshot_from_runtime(
+            report(HAND[:-2], melds=("UNKNOWN", "UNKNOWN", "UNKNOWN")),
+            timestamp_seconds=2.0,
+        )
+        hint = analyze_snapshot_shanten(snapshot)
+        self.assertTrue(hint.allowed)
+        self.assertEqual(hint.status, "PARTIAL")
+        self.assertEqual(hint.phase, "POST_DRAW")
+        self.assertTrue(hint.best_discards)
+        self.assertTrue(
+            all(item.total_live_copies is None for item in hint.best_discards)
+        )
+        self.assertIn("meld_identity_unknown:0", hint.issues)
+        self.assertFalse(hint.visible_remainders_used)
+        self.assertFalse(hint.safe_for_executor)
 
     def test_complete_same_source_public_state_enables_danger(self):
         snapshot = current_snapshot_from_runtime(
@@ -180,6 +216,15 @@ class RuntimeCurrentSnapshotAdapterTests(unittest.TestCase):
         result = assess_current_snapshot(snapshot)
         self.assertEqual(result.status, SnapshotStatus.BLOCKED)
         self.assertIn("physical_copy_overflow:M1", result.issues)
+
+
+class RuntimeHandTrustRegressionTests(unittest.TestCase):
+    def test_declared_trust_cannot_override_rejected_component(self):
+        candidate = report()
+        candidate['components'][0]['identity_reason'] = 'below_confidence_threshold'
+        snapshot = current_snapshot_from_runtime(candidate, timestamp_seconds=1)
+        self.assertFalse(snapshot.hand_trusted)
+        self.assertFalse(assess_current_snapshot(snapshot).allows(SnapshotCapability.SHANTEN))
 
 
 if __name__ == "__main__":

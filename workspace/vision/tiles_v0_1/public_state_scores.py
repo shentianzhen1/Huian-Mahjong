@@ -15,6 +15,7 @@ from dataclasses import dataclass
 import re
 import shutil
 import subprocess
+import sys
 
 import cv2
 import numpy as np
@@ -178,6 +179,7 @@ class TesseractCLIBackend:
                 stderr=subprocess.PIPE,
                 timeout=self.timeout_seconds,
                 check=False,
+                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
             )
         except FileNotFoundError as exc:
             raise OCRUnavailable(

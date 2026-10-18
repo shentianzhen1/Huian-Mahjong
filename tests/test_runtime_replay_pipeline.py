@@ -14,8 +14,14 @@ def trusted_report():
                        identity_reason='accepted') for t in hand]
     components.append(dict(region_candidate='gold', tile_id='B', confidence=.95,
                            identity_reason='accepted'))
+    gold_identity_observations = [
+        dict(frame=frame, candidate_tile_id='B', tile_id='B',
+             tile_confidence=.95, identity_reason='accepted')
+        for frame in (1, 2, 3)
+    ]
     return dict(session='synthetic-contract', stream_epoch=0, frames=[1, 2, 3],
                 geometry_untrusted=False, components=components,
+                gold_identity_observations=gold_identity_observations,
                 concealed_tile_count=16, all_concealed_tile_ids_trusted=True,
                 safe_for_hint=False, safe_for_executor=False)
 

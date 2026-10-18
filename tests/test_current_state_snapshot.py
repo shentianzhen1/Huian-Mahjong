@@ -120,6 +120,20 @@ class CurrentStateSnapshotTests(unittest.TestCase):
         self.assertIn("concealed_hand_count_invalid", bad.issues)
         self.assertEqual(bad.status, SnapshotStatus.BLOCKED)
 
+    def test_malformed_or_contradictory_meld_blocks_advice(self):
+        for meld in (('P6',), ('P6', 'P6'), ('P3', 'P4', 'P6'),
+                     ('P6', 'P6', 'P6', 'P7'), ('B', None, None)):
+            with self.subTest(meld=meld):
+                snapshot = self.snapshot(own_hand=self.snapshot().own_hand[:-3],
+                    melds=((meld,), ()))
+                self.assertFalse(assess_current_snapshot(snapshot).allows(SnapshotCapability.SHANTEN))
+
+    def test_legal_unknown_meld_slot_keeps_structural_shanten(self):
+        snapshot = self.snapshot(own_hand=self.snapshot().own_hand[:-3],
+            melds=(((None, None, None),), ()))
+        self.assertTrue(assess_current_snapshot(snapshot).allows(SnapshotCapability.SHANTEN))
+        self.assertFalse(assess_current_snapshot(snapshot).allows(SnapshotCapability.VISIBLE_REMAINDERS))
+
     def test_blocked_snapshot_cannot_build_analysis_inputs(self):
         with self.assertRaisesRegex(ValueError, "not trusted"):
             advisory_analysis_inputs(self.snapshot(hand_trusted=False))

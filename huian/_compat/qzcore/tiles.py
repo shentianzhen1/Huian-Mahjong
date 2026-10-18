@@ -1,3 +1,4 @@
+
 SUITS = ("M", "P", "S")  # 万 / 饼(筒) / 索(条)
 HONORS = ("E", "SOUTH", "W", "N", "R", "G", "B")
 FLOWERS = ("F1","F2","F3","F4","F5","F6","F7","F8")
@@ -35,19 +36,17 @@ def suit_rank(tile):
 _TILE_INDEX = {tile: index for index, tile in enumerate(BASE_TILES)}
 _BASE_TILE_SET = frozenset(BASE_TILES)
 _FLOWER_SET = frozenset(FLOWERS)
-_ALLOWED_BASE_ONLY = _BASE_TILE_SET
 _ALLOWED_WITH_FLOWERS = _BASE_TILE_SET | _FLOWER_SET
 
 
 def tile_index(tile):
-    # BASE_TILES is a fixed module-level tuple, so a precomputed map replaces a
-    # linear scan.  This sits on the shanten hot path (millions of calls per
-    # paired-match evaluation): the lookup must stay a fast O(1) dict hit while
-    # failing exactly the way tuple.index failed before, for every input type.
-    try:
-        return _TILE_INDEX[tile]
-    except (KeyError, TypeError):
-        raise ValueError("tuple.index(x): x not in tuple") from None
+    # Keep tuple equality/error behavior for subclasses and non-string inputs.
+    if type(tile) is str:
+        try:
+            return _TILE_INDEX[tile]
+        except KeyError:
+            pass
+    return BASE_TILES.index(tile)
 
 def index_tile(i):
     return BASE_TILES[i]
@@ -60,18 +59,18 @@ def full_wall():
     return wall
 
 def validate_tile_multiset(tiles, include_flowers=True):
-    # Membership tests used to scan the BASE_TILES/FLOWERS tuples and rebuild
-    # both sets on every call; this runs on the shanten validation hot path.
-    # The two constants never change, so the lookups are hoisted to build time.
-    # The returned tuples, including the collected list of unknown tiles, are
-    # kept byte-for-byte identical to the original implementation.
-    allowed = _ALLOWED_WITH_FLOWERS if include_flowers else _ALLOWED_BASE_ONLY
+    # Consume iterators once. Unknown tiles take diagnostic priority over
+    # multiplicity errors, matching the existing list-input contract.
+    allowed = _ALLOWED_WITH_FLOWERS if include_flowers else _BASE_TILE_SET
+    bad = []
     counts = {}
     for tile in tiles:
         if tile not in allowed:
-            bad = [t for t in tiles if t not in allowed]
-            return False, f"未知牌编码: {bad}"
-        counts[tile] = counts.get(tile, 0) + 1
+            bad.append(tile)
+        else:
+            counts[tile] = counts.get(tile, 0) + 1
+    if bad:
+        return False, f"未知牌编码: {bad}"
     for tile, count in counts.items():
         if tile in _BASE_TILE_SET and count > 4:
             return False, f"{CN.get(tile, tile)} 出现 {count} 张，超过4张"
