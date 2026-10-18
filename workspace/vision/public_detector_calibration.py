@@ -27,6 +27,7 @@ TARGETS = frozenset({
     "settlement",
 })
 STATUSES = frozenset({"fact_locked_bbox_pending", "bbox_reviewed", "fact_only"})
+CONTEXT_SCOPES = frozenset({"full_frame", "identity_crop"})
 
 
 def _strings(value: Any, name: str) -> tuple[str, ...]:
@@ -73,6 +74,7 @@ class CalibrationSample:
     time_ms: int
     actor: str
     target: str
+    context_scope: str = "full_frame"
     expected_tile: str | None = None
     expected_tiles: tuple[str, ...] = ()
     bbox: tuple[float, float, float, float] | None = None
@@ -100,6 +102,8 @@ class CalibrationSample:
             raise ValueError(f"unsupported target: {self.target}")
         if self.status not in STATUSES:
             raise ValueError(f"unsupported status: {self.status}")
+        if self.context_scope not in CONTEXT_SCOPES:
+            raise ValueError(f"unsupported context_scope: {self.context_scope}")
         if self.expected_tile == "":
             raise ValueError("expected_tile cannot be empty")
         object.__setattr__(
@@ -151,6 +155,7 @@ def sample_from_dict(row: dict[str, Any]) -> CalibrationSample:
         time_ms=row["time_ms"],
         actor=row["actor"],
         target=row["target"],
+        context_scope=row.get("context_scope", "full_frame"),
         expected_tile=row.get("expected_tile"),
         expected_tiles=tuple(row.get("expected_tiles", ())),
         bbox=row.get("bbox"),
@@ -180,13 +185,18 @@ def load_manifest(path: str | Path) -> CalibrationManifest:
 
 def readiness_report(manifest: CalibrationManifest) -> dict[str, Any]:
     by_target = Counter(sample.target for sample in manifest.samples)
+    by_context_scope = Counter(sample.context_scope for sample in manifest.samples)
+    full_frame = tuple(
+        sample for sample in manifest.samples
+        if sample.context_scope == "full_frame"
+    )
     bbox_ready = Counter(
-        sample.target for sample in manifest.samples if sample.bbox is not None
+        sample.target for sample in full_frame if sample.bbox is not None
     )
     sessions_by_target: dict[str, set[str]] = {
         target: set() for target in TARGETS
     }
-    for sample in manifest.samples:
+    for sample in full_frame:
         sessions_by_target[sample.target].add(sample.source_session)
 
     return {
@@ -194,6 +204,7 @@ def readiness_report(manifest: CalibrationManifest) -> dict[str, Any]:
         "samples": len(manifest.samples),
         "source_sessions": len({sample.source_session for sample in manifest.samples}),
         "by_target": dict(sorted(by_target.items())),
+        "by_context_scope": dict(sorted(by_context_scope.items())),
         "bbox_ready_by_target": dict(sorted(bbox_ready.items())),
         "source_sessions_by_target": {
             target: len(sessions)
