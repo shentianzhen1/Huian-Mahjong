@@ -5,12 +5,15 @@ from pathlib import Path
 from .taxonomy import category_for
 
 
+REVIEWED_ADDITIONS_DIR = "labels_reviewed_additions"
+
+
 def append_label(dataset_root, *, image, bbox, tile_id, region, status="approved",
                  source_frame=None, source_session=None, annotator="manual"):
     if region not in ("hand_region", "draw_region", "gold_region"):
         raise ValueError(f"Unknown region: {region}")
     if status not in ("approved", "review", "rejected"):
-        raise ValueError(f"Unknown label status: {status}")
+        raise ValueError(f"Unknown status: {status}")
     if len(bbox) != 4 or any(not isinstance(value, int) for value in bbox):
         raise ValueError("bbox must be four integer values")
     x, y, width, height = bbox
@@ -30,16 +33,35 @@ def append_label(dataset_root, *, image, bbox, tile_id, region, status="approved
     return row
 
 
-def approved_labels(dataset_root):
-    root = Path(dataset_root)
+def _label_paths(root: Path) -> list[Path]:
+    """Return the primary labels file followed by optional reviewed additions."""
     legacy_path = root / "labels" / "tiles.jsonl"
     runtime_path = root / "labels.jsonl"
-    path = runtime_path if runtime_path.exists() else legacy_path
-    if not path.exists():
+    primary = runtime_path if runtime_path.exists() else legacy_path
+
+    paths: list[Path] = []
+    if primary.exists():
+        paths.append(primary)
+
+    additions_dir = root / REVIEWED_ADDITIONS_DIR
+    if additions_dir.is_dir():
+        paths.extend(sorted(path for path in additions_dir.glob("*.jsonl") if path.is_file()))
+    return paths
+
+
+def approved_labels(dataset_root):
+    root = Path(dataset_root)
+    paths = _label_paths(root)
+    if not paths:
         return []
-    with path.open(encoding="utf-8") as stream:
-        rows = (json.loads(line) for line in stream if line.strip())
-        return [
-            row for row in rows
-            if row.get("status") == "approved" or row.get("approved") is True
-        ]
+
+    approved = []
+    for path in paths:
+        with path.open(encoding="utf-8") as stream:
+            for line in stream:
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                if row.get("status") == "approved" or row.get("approved") is True:
+                    approved.append(row)
+    return approved
