@@ -151,9 +151,9 @@
         "S9"
       ],
       "bbox": [
-        0.094646,
+        0.225621,
         0.852083,
-        0.126195,
+        0.123327,
         0.135417
       ],
       "status": "bbox_reviewed",
@@ -161,7 +161,8 @@
       "notes": [
         "player-side exposed Chi reference",
         "normalized bbox pixel-reviewed from locked 1046x480 JPG; development calibration only",
-        "2026-09-22 correction: prior x coordinate incorrectly pointed to a later bottom group; pixel re-review places S789 at the left exposed group"
+        "2026-09-22 correction: prior x coordinate incorrectly pointed to a later bottom group; pixel re-review places S789 at the left exposed group",
+        "2026-10-03 supersedes 2026-09-22 correction: S789 is the second exposed group at x236..365; old x99..231 covered P1. Verified directly against locked source pixels."
       ]
     },
     {

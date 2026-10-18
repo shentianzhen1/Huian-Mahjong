@@ -1,0 +1,106 @@
+{
+  "schema_version": "issue69_round8_opponent_hand_count_development_v0_1",
+  "tested_commit": "101cc8e894c47d1bf8bf4d9446b349d4c3049786",
+  "hand": 8,
+  "frame_range": [
+    3465,
+    3600
+  ],
+  "source_sha_verified": true,
+  "source_resolution_verified": true,
+  "method": "Independent opponent concealed-back ROI and separate isolated-back cell; source-reviewed pixel geometry, with no river/meld identities supplied to count extraction. Green-back occupancy is exploratory same-source calibration only, not a semantic tracker.",
+  "calibration": {
+    "hsv_hue": [
+      35,
+      75
+    ],
+    "minimum_saturation": 80,
+    "minimum_value": 50,
+    "occupied_fraction_minimum": 0.8,
+    "empty_fraction_maximum": 0.1,
+    "partial_fraction_state": "UNKNOWN",
+    "private_slot_coordinates": true,
+    "selected_on_this_source": true,
+    "frozen_runtime_threshold_changed": false
+  },
+  "stable_runs": [
+    {
+      "frames": [
+        3465,
+        3509
+      ],
+      "visible_back_count": 13
+    },
+    {
+      "frames": [
+        3512,
+        3515
+      ],
+      "visible_back_count": 9,
+      "status": "REJECTED_ANIMATION_TRANSIENT"
+    },
+    {
+      "frames": [
+        3517,
+        3520
+      ],
+      "visible_back_count": 11,
+      "status": "TRANSITION_CONTEXT_ONLY"
+    },
+    {
+      "frames": [
+        3523,
+        3558
+      ],
+      "visible_back_count": 11
+    },
+    {
+      "frames": [
+        3559,
+        3600
+      ],
+      "visible_back_count": 10
+    }
+  ],
+  "independent_count_candidate": {
+    "before_count": 13,
+    "after_count": 11,
+    "delta": -2,
+    "post_plateau_contains_separated_back": true,
+    "separated_back_role": "UNKNOWN",
+    "subsequent_plateau": 10
+  },
+  "negative_control": {
+    "initial_hue_maximum": 95,
+    "result": "REJECTED",
+    "reason": "teal table background in the isolated cell falsely classified as an extra green tile (14 instead of reviewed 13); after-state partial fractions were ambiguous"
+  },
+  "strict_gate": {
+    "checker": "review_independent_hand_count",
+    "status": "UNKNOWN",
+    "reason": "untrusted_or_animated_hand_frame",
+    "animation_gap_bridged": false,
+    "separate_draw_region_semantics_verified": false,
+    "hand_delta_fact_emitted": false
+  },
+  "alignment_context": {
+    "player_river_decrease_frame": 3521,
+    "opponent_meld_stable_start_frame": 3532,
+    "opponent_meld_confirmation_frame": 3534,
+    "count_plateau_frame_range": [
+      3523,
+      3558
+    ],
+    "complete_meld_identity": false
+  },
+  "conclusion": "Three independent pixel regions now supply compatible development context for this reviewed claim. Compatibility does not close the semantic count gate or reconstruct CHI. Do not mark the animation/resort interval trusted or infer DRAW from the isolated tile's position.",
+  "remaining_gaps": [
+    "A source-qualified opponent semantic count tracker must distinguish claim consumption, rearrangement and subsequent discard without certifying obscured frames.",
+    "Complete public-meld face identity is still missing.",
+    "The initial selected hue range failed; the revised range is development calibration and needs independent-source validation before reuse."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

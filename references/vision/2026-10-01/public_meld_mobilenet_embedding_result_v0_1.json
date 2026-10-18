@@ -1,0 +1,61 @@
+{
+  "schema_version": "public_meld_mobilenet_embedding_result_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "pr": 117,
+  "evaluated_head": "dfc513c993cfe20539fac3c01f1099dbb104b4e2",
+  "status": "development_ab_positive",
+  "model": {
+    "name": "MobileNetV3-Small",
+    "weights": "ImageNet1K V1",
+    "fine_tuned": false,
+    "role": "frozen learned image embedding"
+  },
+  "evaluation": {
+    "reviewed_player_meld_groups": 7,
+    "reviewed_player_meld_faces": 21,
+    "independent_match_groups": 4,
+    "synthetic_faces": 680,
+    "synthetic_classes": 30,
+    "split": "leave-one-original-match-group-out for real meld queries"
+  },
+  "synthetic_only": {
+    "face_top1_correct": 12,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.571429,
+    "group_top1_correct": 4,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.571429
+  },
+  "real_first": {
+    "face_top1_correct": 10,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.47619,
+    "group_top1_correct": 2,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.285714
+  },
+  "prior_best_small_batch": {
+    "method": "synthetic hand-to-meld SIFT + legal group decoder",
+    "face_top1_correct": 10,
+    "face_top1_total": 21,
+    "face_top1_accuracy": 0.47619,
+    "group_top1_correct": 3,
+    "group_top1_total": 7,
+    "group_top1_accuracy": 0.428571
+  },
+  "interpretation": [
+    "A frozen learned visual embedding improves over the prior hand-crafted SIFT/HOG representations on the same reviewed player-side batch.",
+    "Naively replacing synthetic class prototypes with sparse real exposed-meld prototypes hurts accuracy, so the current real dataset is too sparse for a real-first prototype policy.",
+    "Do not tune MobileNet hyperparameters on these seven groups yet; the next high-value step is adding reviewed opponent top_group identity labels and more real exposed-meld groups.",
+    "The synthetic-only MobileNet result is development evidence, not formal blind validation, because concealed-template original-match lineage is incomplete outside one explicitly mapped source."
+  ],
+  "evidence_role": "development_selection_only",
+  "blind_validation": false,
+  "opponent_top_group_accuracy_measured": false,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

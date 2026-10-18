@@ -1,0 +1,514 @@
+{
+  "schema_version": "new_match_m9_row_peer_geometry_dev_v0_1",
+  "audited_base_sha": "5419685ec813f661153657e578fec7fe0d566d80",
+  "module_sha256": "b7469a583d0cd80eda8d3bce0f7107f3ebd1d93d9e70b67e0ab4adbee8ee1f09",
+  "source_sha256": "3aeb25b0cccddbc2c8e5b25d2b640986f7d3690df33f15d34706355b2b9122cb",
+  "original_match_group": "new_match_20261003_owner_uploaded",
+  "query_hand": 4,
+  "mechanism": "two existing top-group peers define shared body band; brightness connected components in that band must have compatible dimensions and neighbor spacing",
+  "manual_target_bbox_used_to_construct_candidate": false,
+  "original_generic_detector_modified": false,
+  "generic_detector_baseline_three_face_group_count_for_target": 0,
+  "supplemental_group_count": 3,
+  "supplemental_three_face_crop_count": 9,
+  "rows": [
+    {
+      "requested_seek_seconds": 73,
+      "decoded_scaled_frame_png_sha256": "390df07dcf6fc2d7478bfa153cc28ab8425c6198803b302dc10f04e88877b1a0",
+      "candidate": {
+        "pixel_bbox": [
+          479,
+          12,
+          70,
+          31
+        ],
+        "normalized_bbox": [
+          0.457935,
+          0.025,
+          0.066922,
+          0.064583
+        ],
+        "geometry_kind": "top_group",
+        "confidence": 0.86,
+        "fill_ratio": 0.976364,
+        "frame": "requested_73s",
+        "session": null,
+        "tile_id": "UNKNOWN"
+      },
+      "prepared": {
+        "schema_version": "prepared_public_meld_faces_v0_1",
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.272727,
+          "top_to_mid_span_ratio": 0.988636,
+          "normalized_size": [
+            226,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            3,
+            66,
+            28
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "normalized_face_count": 3,
+        "classifier_ready": true,
+        "stacked_structure_detected": false,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "safe_for_runtime_identity": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false
+      },
+      "body_context_seam2": {
+        "detector_bbox": [
+          479,
+          12,
+          70,
+          31
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          28
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          481,
+          14,
+          547,
+          44
+        ],
+        "face_xyxy": [
+          [
+            481,
+            14,
+            505,
+            44
+          ],
+          [
+            501,
+            14,
+            527,
+            44
+          ],
+          [
+            523,
+            14,
+            547,
+            44
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.272727,
+          "top_to_mid_span_ratio": 0.988636,
+          "normalized_size": [
+            226,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            3,
+            66,
+            28
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "face_pins": [
+        {
+          "crop_xyxy": [
+            481,
+            14,
+            505,
+            44
+          ],
+          "png_sha256": "60cc149a54f5e553683bcb514ad9e3832741821db866643983f95ae15c2b998c",
+          "visual_candidate_label": "M9"
+        },
+        {
+          "crop_xyxy": [
+            501,
+            14,
+            527,
+            44
+          ],
+          "png_sha256": "4cd156a30f4d7a870ac5a4e6eff957471eeddb51d6d4cbf3259a400f25dd8574",
+          "visual_candidate_label": "M9"
+        },
+        {
+          "crop_xyxy": [
+            523,
+            14,
+            547,
+            44
+          ],
+          "png_sha256": "94d8007d3a99a239b683f8f8532b33d1849aae2315141e37ef578ad1a4f27833",
+          "visual_candidate_label": "M9"
+        }
+      ]
+    },
+    {
+      "requested_seek_seconds": 74,
+      "decoded_scaled_frame_png_sha256": "0fd46f7a8750773d359c46d28136f1ddbaa7ed6e8bccca7e22455df91bf05589",
+      "candidate": {
+        "pixel_bbox": [
+          479,
+          12,
+          70,
+          31
+        ],
+        "normalized_bbox": [
+          0.457935,
+          0.025,
+          0.066922,
+          0.064583
+        ],
+        "geometry_kind": "top_group",
+        "confidence": 0.86,
+        "fill_ratio": 0.976364,
+        "frame": "requested_74s",
+        "session": null,
+        "tile_id": "UNKNOWN"
+      },
+      "prepared": {
+        "schema_version": "prepared_public_meld_faces_v0_1",
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.136364,
+          "top_to_mid_span_ratio": 0.988636,
+          "normalized_size": [
+            253,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            3,
+            66,
+            25
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "normalized_face_count": 3,
+        "classifier_ready": true,
+        "stacked_structure_detected": false,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "safe_for_runtime_identity": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false
+      },
+      "body_context_seam2": {
+        "detector_bbox": [
+          479,
+          12,
+          70,
+          31
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          25
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          481,
+          14,
+          547,
+          41
+        ],
+        "face_xyxy": [
+          [
+            481,
+            14,
+            505,
+            41
+          ],
+          [
+            501,
+            14,
+            527,
+            41
+          ],
+          [
+            523,
+            14,
+            547,
+            41
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.136364,
+          "top_to_mid_span_ratio": 0.988636,
+          "normalized_size": [
+            253,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            3,
+            66,
+            25
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "face_pins": [
+        {
+          "crop_xyxy": [
+            481,
+            14,
+            505,
+            41
+          ],
+          "png_sha256": "b3a0b333dec02037489337f16e7da6a1c93ad626d44b9b78d5f4163e7e70e5f0",
+          "visual_candidate_label": "M9"
+        },
+        {
+          "crop_xyxy": [
+            501,
+            14,
+            527,
+            41
+          ],
+          "png_sha256": "dbc37bc19a3455caa5085a3eef036cbad0a2d572dfa38617595842d6286b9c9f",
+          "visual_candidate_label": "M9"
+        },
+        {
+          "crop_xyxy": [
+            523,
+            14,
+            547,
+            41
+          ],
+          "png_sha256": "f545f0ce8b8a960ba3e9d29d916cedc71f544b8f4102734307a52527e1626a0e",
+          "visual_candidate_label": "M9"
+        }
+      ]
+    },
+    {
+      "requested_seek_seconds": 75,
+      "decoded_scaled_frame_png_sha256": "2f89542ea38ae39cc2cd980722146ebe81bb68e940445f4d0f17fad04f1681ce",
+      "candidate": {
+        "pixel_bbox": [
+          479,
+          12,
+          70,
+          31
+        ],
+        "normalized_bbox": [
+          0.457935,
+          0.025,
+          0.066922,
+          0.064583
+        ],
+        "geometry_kind": "top_group",
+        "confidence": 0.86,
+        "fill_ratio": 0.976364,
+        "frame": "requested_75s",
+        "session": null,
+        "tile_id": "UNKNOWN"
+      },
+      "prepared": {
+        "schema_version": "prepared_public_meld_faces_v0_1",
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.272727,
+          "top_to_mid_span_ratio": 0.990137,
+          "normalized_size": [
+            226,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            3,
+            66,
+            28
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "normalized_face_count": 3,
+        "classifier_ready": true,
+        "stacked_structure_detected": false,
+        "tile_identity": "UNKNOWN",
+        "action_kind": "UNKNOWN",
+        "safe_for_runtime_identity": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false
+      },
+      "body_context_seam2": {
+        "detector_bbox": [
+          479,
+          12,
+          70,
+          31
+        ],
+        "tight_bbox_in_group": [
+          2,
+          3,
+          66,
+          28
+        ],
+        "vertical_context": 1,
+        "raw_group_xyxy": [
+          481,
+          14,
+          547,
+          44
+        ],
+        "face_xyxy": [
+          [
+            481,
+            14,
+            505,
+            44
+          ],
+          [
+            501,
+            14,
+            527,
+            44
+          ],
+          [
+            523,
+            14,
+            547,
+            44
+          ]
+        ],
+        "geometry": {
+          "schema_version": "public_meld_geometry_normalization_v0_1",
+          "rotation_degrees": 0.0,
+          "stack_state": "FLAT",
+          "height_score": 1.272727,
+          "top_to_mid_span_ratio": 0.990137,
+          "normalized_size": [
+            226,
+            96
+          ],
+          "tight_bbox_in_group": [
+            2,
+            3,
+            66,
+            28
+          ],
+          "issues": [
+            "geometry_normalized",
+            "flat_three_face_geometry"
+          ],
+          "geometry_only": true,
+          "tile_identity": "UNKNOWN",
+          "action_kind": "UNKNOWN",
+          "safe_for_hint": false,
+          "safe_for_executor": false
+        },
+        "outer_body_probe": null
+      },
+      "face_pins": [
+        {
+          "crop_xyxy": [
+            481,
+            14,
+            505,
+            44
+          ],
+          "png_sha256": "2d793d41ec95f3fea3b983fa5e2f48efdc6000d78beb2bbd05e92371e449181f",
+          "visual_candidate_label": "M9"
+        },
+        {
+          "crop_xyxy": [
+            501,
+            14,
+            527,
+            44
+          ],
+          "png_sha256": "2d6c0958b96fe94e346dd6c501b3ecb31b5d661066c05e24880eb7d17162ef4e",
+          "visual_candidate_label": "M9"
+        },
+        {
+          "crop_xyxy": [
+            523,
+            14,
+            547,
+            44
+          ],
+          "png_sha256": "4d6278a7f44fb51f3f7b674f449aa3ef2f8644dcc31c0c8d9111833293e1df25",
+          "visual_candidate_label": "M9"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "three reviewed timestamps from one original match, not independent trials",
+    "crop polygons not pixel-exact ground truth",
+    "requested seek times are not exact action-onset anchors",
+    "requires two existing top-group peers; other layouts abstain",
+    "no identity or action success claimed by this geometry probe"
+  ],
+  "label_authority": "assistant_visual_review_not_owner_confirmation",
+  "development_only": true,
+  "runtime_integration": false,
+  "runtime_identity_threshold": 0.82,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

@@ -1,0 +1,238 @@
+{
+  "schema_version": "issue69_flat_group_identity_gate_probe_dev_v0_2",
+  "bank_scope": "tracked public shadow bank; private SIFT supplements are not this classifier",
+  "group_count": 7,
+  "face_observations": 21,
+  "trusted_groups": 0,
+  "expected_groups_with_complete_class_support": 0,
+  "face_failure_reasons": {
+    "insufficient_cross_match_class_support": 15,
+    "low_score_or_ambiguous_public_face": 6
+  },
+  "rows": [
+    {
+      "sample_id": "66fe_player_peng_p1_040s",
+      "expected_tiles": [
+        "P1",
+        "P1",
+        "P1"
+      ],
+      "query_match_group": "reviewed_recording_66fe",
+      "expected_class_other_original_match_support": {
+        "P1": 0
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "low_score_or_ambiguous_public_face",
+        "low_score_or_ambiguous_public_face",
+        "low_score_or_ambiguous_public_face"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    },
+    {
+      "sample_id": "66fe_player_chi_s789_082s",
+      "expected_tiles": [
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "query_match_group": "reviewed_recording_66fe",
+      "expected_class_other_original_match_support": {
+        "S7": 0,
+        "S8": 0,
+        "S9": 0
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "low_score_or_ambiguous_public_face",
+        "low_score_or_ambiguous_public_face",
+        "low_score_or_ambiguous_public_face"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    },
+    {
+      "sample_id": "b389_player_chi_m456_035s",
+      "expected_tiles": [
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "query_match_group": "reviewed_recording_b389",
+      "expected_class_other_original_match_support": {
+        "M4": 0,
+        "M5": 0,
+        "M6": 0
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    },
+    {
+      "sample_id": "b389_player_chi_p678_057s",
+      "expected_tiles": [
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "query_match_group": "reviewed_recording_b389",
+      "expected_class_other_original_match_support": {
+        "P6": 1,
+        "P7": 0,
+        "P8": 0
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    },
+    {
+      "sample_id": "eight_hand_hand7_player_chi_p456_060s",
+      "expected_tiles": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "expected_class_other_original_match_support": {
+        "P4": 0,
+        "P5": 0,
+        "P6": 1
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    },
+    {
+      "sample_id": "eight_hand_hand4_player_chi_s456_064s",
+      "expected_tiles": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "expected_class_other_original_match_support": {
+        "S4": 1,
+        "S5": 0,
+        "S6": 0
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    },
+    {
+      "sample_id": "special14_player_chi_s234_088s",
+      "expected_tiles": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "query_match_group": "reviewed_recording_14",
+      "expected_class_other_original_match_support": {
+        "S2": 0,
+        "S3": 0,
+        "S4": 1
+      },
+      "expected_group_all_classes_supported": false,
+      "geometry": "FLAT",
+      "split_count": 3,
+      "tile_ids": [
+        null,
+        null,
+        null
+      ],
+      "trusted": false,
+      "face_reasons": [
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support",
+        "insufficient_cross_match_class_support"
+      ],
+      "issues": [
+        "one_or_more_meld_faces_untrusted"
+      ]
+    }
+  ],
+  "query_image_hashes_verified": true,
+  "query_sources_verified": true,
+  "crop_boundary_accuracy_measured": false,
+  "previously_inspected": true,
+  "blind_validation": false,
+  "classifier_or_threshold_changed": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "concealed_template_lineage_review_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "development_only": true,
+  "review_policy": {
+    "exact_sha256_required": true,
+    "content_review_required": true,
+    "filename_date_session_or_directory_inference_forbidden": true,
+    "same_original_match_fragments_share_one_match_group": true,
+    "local_paths_retained": false,
+    "screenshots_retained": false,
+    "player_identifiers_retained": false
+  },
+  "content_review": [
+    {
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "source_sha256": [
+        "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+        "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+        "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a"
+      ],
+      "reviewed_observations": [
+        "The exact-SHA recordings show hands 2/8, 3/8, and 6/8 of one eight-hand room.",
+        "Locally reviewed intervening recording content preserves the anonymous seat layout and score progression across hands 1, 2, 3, 4, 6, and 7.",
+        "The reviewed sequence returns to the invitation screen after hand 7; a later recording then starts a different hand 1/8.",
+        "The three target recordings are therefore fragments of the same original match and count as one match_group."
+      ],
+      "reviewed": true
+    },
+    {
+      "match_group": "reviewed_match_concealed_recovery_b",
+      "source_sha256": [
+        "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96"
+      ],
+      "reviewed_observations": [
+        "The exact-SHA recording is an in-app replay of hand 7/8 and reaches its own terminal room-return screen.",
+        "Its replay progress, terminal state, and embedded match record are distinct from the continuous live-recording sequence assigned to recovery_a.",
+        "It is therefore one separately reviewed original match_group."
+      ],
+      "reviewed": true
+    }
+  ],
+  "bindings": [
+    {
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "match_group": "reviewed_match_concealed_recovery_b",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json",
+      "reviewed": true
+    },
+    {
+      "source_sha256": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json",
+      "reviewed": true
+    },
+    {
+      "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json",
+      "reviewed": true
+    },
+    {
+      "source_sha256": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "match_group": "reviewed_match_concealed_recovery_a",
+      "evidence_path": "references/vision/2026-10-01/concealed_template_lineage_review_v0_1.json",
+      "reviewed": true
+    }
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

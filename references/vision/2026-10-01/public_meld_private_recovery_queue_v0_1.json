@@ -1,0 +1,45 @@
+{
+  "schema_version": "public_meld_private_recovery_queue_v0_1",
+  "match_group": "reviewed_match_2026_09_19_eight_hand",
+  "development_only": true,
+  "raw_media_private": true,
+  "same_match_chunks_are_not_independent": true,
+  "items": [
+    {
+      "recovery_id": "G04_hand3_m456",
+      "hand_number": 3,
+      "source_file_evidence_name": "5.mov",
+      "drive_visible_name": "5.mp4",
+      "source_sha256_from_repository_evidence": "bdec79b6ba7252126524046ee2c48aa086b40b4ae5224c78b902df32873def75",
+      "timestamp_seconds": 170.0,
+      "expected_tiles": ["M4", "M5", "M6"],
+      "human_label_status": "user_confirmed_36_of_36_private_packet",
+      "requires_source_sha_recheck": true,
+      "requires_frame_lineage_verification": true,
+      "template_eligible_after_pixel_and_lineage_review": true,
+      "holdout_eligible": false,
+      "priority_reason": "would add an independent match-group occurrence for M4/M5/M6 relative to the existing b389 M456 public-meld support"
+    },
+    {
+      "recovery_id": "G09_hand6_p789",
+      "hand_number": 6,
+      "source_file_evidence_name": "11.mp4",
+      "drive_visible_name": "11.mp4",
+      "source_sha256_from_repository_evidence": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+      "timestamp_seconds": 60.0,
+      "expected_tiles": ["P7", "P8", "P9"],
+      "human_label_status": "user_confirmed_36_of_36_private_packet",
+      "requires_source_sha_recheck": true,
+      "requires_frame_lineage_verification": true,
+      "template_eligible_after_pixel_and_lineage_review": true,
+      "holdout_eligible": false,
+      "priority_reason": "would add independent match-group occurrences for P7/P8 and introduce reviewed P9 coverage once source/pixels are re-verified"
+    }
+  ],
+  "runtime_policy": {
+    "changes_runtime_behavior": false,
+    "formal_promotion_evidence": false,
+    "safe_for_hint": false,
+    "safe_for_executor": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": "issue69_hand1_p6_ming_gang_mobile_extended_clip_v0_1",
+  "date": "2026-10-01",
+  "development_only": true,
+  "source_role": "user_uploaded_derived_clip",
+  "sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+  "bytes": 7270507,
+  "fps": 30,
+  "frame_count": 490,
+  "duration_seconds": 16.333333333333332,
+  "resolution": [
+    1108,
+    512
+  ],
+  "original_match_group": "reviewed_match_2026_09_26_first_hand",
+  "independent_match_group_credit": false,
+  "measured_windows": {
+    "pre_claim_stable": {
+      "seconds": [
+        9,
+        11
+      ],
+      "frames": [
+        270,
+        330
+      ],
+      "raw_bottom_bright_components": 16,
+      "observation": "16 consecutive upright bright tile components stable across sampled frames",
+      "role": "geometry window only; semantic concealed count must be produced by dynamic_geometry"
+    },
+    "transition": {
+      "seconds": [
+        12,
+        14
+      ],
+      "frames": [
+        360,
+        420
+      ],
+      "role": "claim/meld animation; exclude from stable hand count"
+    },
+    "post_meld_stable": {
+      "seconds": [
+        14.5,
+        15.5
+      ],
+      "frames": [
+        435,
+        465
+      ],
+      "raw_bottom_bright_components": 15,
+      "observation": "left side contains widened/shortened meld-like components while right side remains consecutive upright hand run",
+      "role": "geometry window only; raw component count is not concealed-hand count"
+    }
+  },
+  "policy": [
+    "Do not derive HAND_DELTA from raw bright-component counts.",
+    "Use dynamic_geometry/public_independent_hand_count to separate hand, draw and meld semantics.",
+    "Same original match as all 2026-09-26 first-hand evidence."
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

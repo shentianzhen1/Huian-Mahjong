@@ -1,0 +1,37 @@
+{
+  "schema_version": "issue69_public_meld_identity_reference_gap_v0_1",
+  "date": "2026-10-03",
+  "issue": 69,
+  "trigger": "Round8 opponent P1 PENG frames 3534-3538",
+  "bottleneck": "REFERENCE_CLASS_COVERAGE",
+  "observations": {
+    "geometry_faces_present": "15/15 across five stable FLAT frames",
+    "reviewed_truth": "P1/P1/P1",
+    "other_independent_P1_match_groups": 1,
+    "minimum_required": 2,
+    "existing_reviewed_12_group_36_face_packet_contains_P1": false
+  },
+  "acquisition_contract": {
+    "needed_tile": "P1",
+    "needed_count": "at least one reviewed exposed-meld P1 face",
+    "source_requirement": "different original match from both the 2026-09-26 query and reviewed_recording_66fe",
+    "acceptable_structure": [
+      "FLAT exposed meld",
+      "readable visible face from STACKED exposed meld"
+    ],
+    "unacceptable_sources": [
+      "concealed hand",
+      "discard river",
+      "query frame reused as template",
+      "same original match alias"
+    ],
+    "candidate_formula_must_remain_frozen": true,
+    "no_threshold_change": true
+  },
+  "disposition": "Do not force-rank the Round8 P1 query until the class-support contract is met; keep identity UNKNOWN for promotion purposes.",
+  "runtime_integration": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

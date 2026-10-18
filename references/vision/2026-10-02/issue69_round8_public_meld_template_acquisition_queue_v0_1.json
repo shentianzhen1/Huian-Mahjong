@@ -1,0 +1,206 @@
+{
+  "schema_version": "round8_public_meld_template_acquisition_queue_v0_1",
+  "basis_commit": "e1547aaffe931bfb773969bb20375a1e19170db2",
+  "scope": "actual_loaded_frozen_sift_bank_for_round8_query_not_entire_project",
+  "development_only": true,
+  "counts": {
+    "eligible": 4,
+    "one_group": 14,
+    "zero_groups": 16
+  },
+  "rows": [
+    {
+      "tile_id": "M1",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "M2",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "M3",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "M4",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "M5",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "M6",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "M7",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "M8",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "M9",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "P1",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "P2",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "P3",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "P4",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "P5",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "P6",
+      "loaded_other_match_groups": 2,
+      "additional_independent_groups_needed": 0
+    },
+    {
+      "tile_id": "P7",
+      "loaded_other_match_groups": 2,
+      "additional_independent_groups_needed": 0
+    },
+    {
+      "tile_id": "P8",
+      "loaded_other_match_groups": 2,
+      "additional_independent_groups_needed": 0
+    },
+    {
+      "tile_id": "P9",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S1",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "S2",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S3",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S4",
+      "loaded_other_match_groups": 2,
+      "additional_independent_groups_needed": 0
+    },
+    {
+      "tile_id": "S5",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S6",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S7",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S8",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "S9",
+      "loaded_other_match_groups": 1,
+      "additional_independent_groups_needed": 1
+    },
+    {
+      "tile_id": "E",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "S",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "W",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "N",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "C",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "F",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    },
+    {
+      "tile_id": "B",
+      "loaded_other_match_groups": 0,
+      "additional_independent_groups_needed": 2
+    }
+  ],
+  "priority": [
+    "P9"
+  ],
+  "private_packet_audit": {
+    "pinned_manifest_sha_verified": true,
+    "reviewed_p9_groups": 1,
+    "second_independent_p9_found": false,
+    "private_pixels_committed": false
+  },
+  "acquisition_requirements": [
+    "Reviewed public_meld face pixels, not concealed or enlarged discard references",
+    "Exact original source SHA and reviewed original-match lineage",
+    "Match group independent of target round8 original match and existing same-class template match",
+    "Multiple hands, frames or clips of one original match count once",
+    "Query/template roles recorded before evaluation; acquisition alone is not blind validation"
+  ],
+  "current_query_truth": "UNKNOWN",
+  "candidate_parameters_changed": false,
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

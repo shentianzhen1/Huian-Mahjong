@@ -1,0 +1,239 @@
+{
+  "schema_version": "packaged_whole_hand_and_gold_role_diagnostic_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION_EVIDENCE",
+  "source_video_sha256": "fba5f67d244fb5bdc916f24707de288fef939a9444fa66bec21347e52bd64fc3",
+  "original_match_group": "reviewed_match_2026_09_26_first_hand",
+  "packaged_pr_head": "9ea8d825977526545450e4db12a84ba04393f95f",
+  "installer_artifact_id": 11499719622,
+  "installer_archive_sha256": "94bb30887341bec5abd9c18f2630151ce78c46f1593fdbd4b0757023737bd315",
+  "build_manifest_sha256": "a4b001791e21f79a402110231d1091a154a941486bca51e7bec29a2470c68388",
+  "payload_file_count_verified": 3640,
+  "label_count_verified": 147,
+  "pgm_byte_sha256": "c84dbd46e4ce63e97c4e1dcdf687a2e661f58d43ab2d44a4ab7c3af3c2bfefda",
+  "runtime_threshold": 0.82,
+  "crop_review": {
+    "method": "direct visual review of all 51 exported exact detector-path crops",
+    "reviewed_count": 51,
+    "bad_crop_count": 0
+  },
+  "metrics": {
+    "full": {
+      "checkpoints": [
+        {
+          "timestamp_seconds": 40.0,
+          "truth_count": 16,
+          "detected_count": 16,
+          "raw_top1_correct": 16,
+          "accepted_correct": 16,
+          "wrong_accepted": 0,
+          "rejected": 0,
+          "whole_hand_exact_accepted": true,
+          "rejections": []
+        },
+        {
+          "timestamp_seconds": 52.0,
+          "truth_count": 13,
+          "detected_count": 13,
+          "raw_top1_correct": 13,
+          "accepted_correct": 13,
+          "wrong_accepted": 0,
+          "rejected": 0,
+          "whole_hand_exact_accepted": true,
+          "rejections": []
+        },
+        {
+          "timestamp_seconds": 110.0,
+          "truth_count": 11,
+          "detected_count": 11,
+          "raw_top1_correct": 11,
+          "accepted_correct": 11,
+          "wrong_accepted": 0,
+          "rejected": 0,
+          "whole_hand_exact_accepted": true,
+          "rejections": []
+        },
+        {
+          "timestamp_seconds": 175.0,
+          "truth_count": 11,
+          "detected_count": 11,
+          "raw_top1_correct": 11,
+          "accepted_correct": 11,
+          "wrong_accepted": 0,
+          "rejected": 0,
+          "whole_hand_exact_accepted": true,
+          "rejections": []
+        }
+      ],
+      "accepted_correct": 51,
+      "wrong_accepted": 0,
+      "rejected": 0,
+      "whole_hand_exact_accepted": 4
+    },
+    "filtered": {
+      "checkpoints": [
+        {
+          "timestamp_seconds": 40.0,
+          "truth_count": 16,
+          "detected_count": 16,
+          "raw_top1_correct": 16,
+          "accepted_correct": 15,
+          "wrong_accepted": 0,
+          "rejected": 1,
+          "whole_hand_exact_accepted": false,
+          "rejections": [
+            {
+              "truth_tile": "M6",
+              "confidence": 0.828601,
+              "reason": "class_missing_real_gold_skin_example"
+            }
+          ]
+        },
+        {
+          "timestamp_seconds": 52.0,
+          "truth_count": 13,
+          "detected_count": 13,
+          "raw_top1_correct": 13,
+          "accepted_correct": 12,
+          "wrong_accepted": 0,
+          "rejected": 1,
+          "whole_hand_exact_accepted": false,
+          "rejections": [
+            {
+              "truth_tile": "M6",
+              "confidence": 0.816975,
+              "reason": "below_confidence_threshold"
+            }
+          ]
+        },
+        {
+          "timestamp_seconds": 110.0,
+          "truth_count": 11,
+          "detected_count": 11,
+          "raw_top1_correct": 11,
+          "accepted_correct": 9,
+          "wrong_accepted": 0,
+          "rejected": 2,
+          "whole_hand_exact_accepted": false,
+          "rejections": [
+            {
+              "truth_tile": "M6",
+              "confidence": 0.832078,
+              "reason": "class_missing_real_gold_skin_example"
+            },
+            {
+              "truth_tile": "M6",
+              "confidence": 0.823128,
+              "reason": "class_missing_real_gold_skin_example"
+            }
+          ]
+        },
+        {
+          "timestamp_seconds": 175.0,
+          "truth_count": 11,
+          "detected_count": 11,
+          "raw_top1_correct": 11,
+          "accepted_correct": 9,
+          "wrong_accepted": 0,
+          "rejected": 2,
+          "whole_hand_exact_accepted": false,
+          "rejections": [
+            {
+              "truth_tile": "M6",
+              "confidence": 0.832414,
+              "reason": "class_missing_real_gold_skin_example"
+            },
+            {
+              "truth_tile": "M6",
+              "confidence": 0.822418,
+              "reason": "class_missing_real_gold_skin_example"
+            }
+          ]
+        }
+      ],
+      "accepted_correct": 45,
+      "wrong_accepted": 0,
+      "rejected": 6,
+      "whole_hand_exact_accepted": 0
+    }
+  },
+  "offline_host_timing": {
+    "full": {
+      "vision_burst_ms": [
+        1075.1911340003062,
+        629.0226109999821,
+        640.2539480000087,
+        728.5500460002368
+      ],
+      "total_export_ms": 7127.783477000321,
+      "schema": "vision_runtime_v0_2_whole_hand_baseline_export_v0_1",
+      "vision_burst_p50_ms": 684.4019970001227,
+      "vision_burst_p95_ms": 1023.1949708002957
+    },
+    "filtered": {
+      "vision_burst_ms": [
+        640.957162000177,
+        952.7031650000026,
+        940.0600889998714,
+        666.0281189997477
+      ],
+      "total_export_ms": 6862.898768999912,
+      "schema": "vision_runtime_v0_2_whole_hand_baseline_export_v0_1",
+      "vision_burst_p50_ms": 803.0441039998095,
+      "vision_burst_p95_ms": 950.8067035999829
+    }
+  },
+  "host": {
+    "python": "3.12.14",
+    "opencv": "5.0.0",
+    "numpy": "2.3.5",
+    "note": "Linux host libraries; packaged project source and dataset. Not Windows native execution."
+  },
+  "advice_probe": {
+    "scope": "source-qualified offline sequential RuntimeAdvicePipeline with LiveSnapshotStability, six sparse preroll bursts and paired checkpoint bursts; no UI/capture/public OCR worker",
+    "not_live_ui_acceptance": true,
+    "preroll_seconds": [
+      5,
+      10,
+      15,
+      20,
+      25,
+      30
+    ],
+    "checkpoint_seconds": [
+      40,
+      40.2,
+      52,
+      52.2,
+      110,
+      110.2,
+      175,
+      175.2
+    ],
+    "packaged_display_eligible_checkpoint_bursts": 0,
+    "packaged_observed_blocker": "runtime_gold_component_conflict: opened indicator plus 1-2 playable gold_skin tiles counted as opening indicators",
+    "local_candidate_display_eligible_checkpoint_bursts": 0,
+    "local_candidate_patch": "Opening observation and snapshot count only explicit gold region; yellow public indicator uses existing Gold-skin classifier with unchanged 0.82 and all evidence gates.",
+    "local_candidate_t40_opened_indicator": {
+      "candidate": "M6",
+      "confidence": 0.314586,
+      "accepted": false,
+      "reason": "below_confidence_threshold"
+    },
+    "remaining_blockers": [
+      "opened indicator appearance remains below threshold",
+      "some own exposed groups lack trusted identity/complete structure"
+    ],
+    "capture_to_advice_latency_ms": null
+  },
+  "independence": {
+    "current_bank_is_source_disjoint": false,
+    "exact_source_filter_is_formal_original_match_disjointness": false,
+    "sep19_s2_augmentations_independent_match_count": 1
+  },
+  "raw_or_derived_pixels_committed": false,
+  "runtime_identity_threshold_changed": false,
+  "ai_version_changed": false,
+  "executor_enabled": false,
+  "safe_for_hint_promotion": false,
+  "next_step": "Source-qualified independent opened-Gold appearance/crop diagnosis and own meld-count gate; do not infer opened Gold from playable hand tiles or lower 0.82."
+}

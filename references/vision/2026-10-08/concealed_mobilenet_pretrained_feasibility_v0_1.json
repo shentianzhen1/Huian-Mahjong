@@ -1,0 +1,124 @@
+{
+  "schema_version": "concealed_mobilenet_pretrained_feasibility_v0_1",
+  "status": "DEVELOPMENT_DIAGNOSTIC_NOT_PROMOTION_EVIDENCE",
+  "audit_date": "2026-10-08",
+  "scope": "Corrected 2026-10-03 ordinary concealed-hand identity failures, with emphasis on M2/M3 cross-render behavior. Runtime Vision is unchanged.",
+  "frozen_contract": {
+    "runtime_identity_threshold": 0.82,
+    "runtime_identity_threshold_changed": false,
+    "current_agent": "MeldAwareShantenAgent V0.10",
+    "executor_enabled": false,
+    "hint_alpha_read_only": true,
+    "runtime_changed": false,
+    "classifier_promoted": false
+  },
+  "query_evidence": {
+    "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
+    "original_match_group": "reviewed_match_2026_10_03_recent_real_game",
+    "corrected_ordinary_tile_count": 43,
+    "same_match_development_only": true,
+    "formal_holdout": false,
+    "truth_correction_ref": "references/vision/2026-10-08/whole_hand_truth_correction_20261003_v0_1.json",
+    "template_baseline_raw_top1_correct": 36,
+    "template_baseline_raw_top1_total": 43,
+    "template_threshold_accepted": 31,
+    "template_threshold_correct": 31,
+    "template_threshold_wrong": 0,
+    "remaining_template_raw_confusions": {
+      "S4->S6": 4,
+      "M2->M3": 3
+    }
+  },
+  "official_pretrained_weights": {
+    "model": "MobileNetV3-Small",
+    "torchvision_weights": "IMAGENET1K_V1",
+    "source_url": "https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth",
+    "sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+    "workflow_run_id": 37742044630,
+    "artifact_id": 11533369139,
+    "artifact_name": "dev-mobilenet-v3-small-imagenet1k-v1",
+    "artifact_retention_days": 7,
+    "weights_committed_to_git": false,
+    "weights_packaged_in_installer": false,
+    "existing_runner_cache_compatibility_verified": true,
+    "cache_note": "Placing the pinned .pth file at $TORCH_HOME/hub/checkpoints/mobilenet_v3_small-047dcff4.pth lets the existing concealed_mobilenet_ab.py load official weights without network access."
+  },
+  "training_scope": {
+    "non_gold_concealed_labels_used_for_permissive_probe": 140,
+    "class_count": 34,
+    "query_original_match_excluded_from_committed_training_bank": true,
+    "strict_original_match_lineage_full_34_class_probe_available": false,
+    "strict_blocker": "The reviewed-lineage bank is not 34-class complete; unresolved-lineage sources must not be promoted merely to make the experiment complete.",
+    "source_session_is_independence_signal": false,
+    "permissive_probe_is_formal_evidence": false
+  },
+  "experiments": {
+    "pretrained_prototype_with_existing_appearance_augmentation": {
+      "raw_top1_correct": 34,
+      "raw_top1_total": 43,
+      "m2_query_count": 3,
+      "m2_correct": 0,
+      "m2_truth_ranks": [16, 16, 16],
+      "finding": "ImageNet embedding plus class prototypes does not separate the new-render M2 from neighboring Wan classes."
+    },
+    "frozen_backbone_balanced_linear_head": {
+      "seeds": [0, 1, 2, 3, 4],
+      "raw_top1_correct_each_seed": [38, 38, 38, 38, 38],
+      "raw_top1_total": 43,
+      "s4_query_count": 4,
+      "s4_correct_each_seed": 4,
+      "m2_query_count": 3,
+      "m2_correct_each_seed": 0,
+      "m2_predicted_tile_each_seed": "M3",
+      "m2_truth_ranks_seed0": [12, 13, 8],
+      "finding": "A learned linear Mahjong head improves some boundaries but does not recover M2; the result is stable across five seeds."
+    },
+    "pretrained_last_projection_plus_linear_head": {
+      "seeds": [0, 1, 2],
+      "raw_top1_correct": [34, 35, 35],
+      "raw_top1_total": 43,
+      "m2_correct_each_seed": 0,
+      "finding": "Adapting the final pretrained feature projection does not improve M2 and introduces additional regressions."
+    },
+    "wan_red_glyph_anchor": {
+      "query_wan_tile_count": 11,
+      "gray_correct": 8,
+      "binary_correct": 8,
+      "sobel_correct": 8,
+      "canny_correct": 4,
+      "m2_correct_gray": 0,
+      "m2_correct_binary": 0,
+      "m2_correct_sobel": 0,
+      "finding": "Using the shared red Wan glyph as a geometry anchor is not sufficient; edge-only matching destabilizes other Wan identities."
+    },
+    "reviewed_m2_source_recrop": {
+      "source_sha256": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+      "original_match_group": "reviewed_match_2026_09_19_eight_hand",
+      "stored_bbox": [549, 414, 38, 62],
+      "stored_bbox_observation": "The reviewed exact bbox is visibly tight/off-center relative to the full tile in source frame 0.",
+      "representative_clean_recrop_bbox": [539, 406, 42, 72],
+      "adding_clean_recrop_raw_top1_correct": 36,
+      "adding_clean_recrop_raw_top1_total": 43,
+      "adding_clean_recrop_m2_correct": 0,
+      "combined_with_s6_quarantine_raw_top1_correct": 40,
+      "combined_with_s6_quarantine_raw_top1_total": 43,
+      "combined_remaining_errors": {
+        "M2->M3": 3
+      },
+      "finding": "The stored M2 crop should be treated as a data-quality concern, but recropping it alone does not solve the observed cross-render confusion."
+    }
+  },
+  "decision": {
+    "promote_mobilenet_v3_small": false,
+    "promote_wan_anchor": false,
+    "promote_m2_recrop_as_fix": false,
+    "quarantine_s6_template_separate_candidate": true,
+    "next_priority": "Obtain or recover a genuinely independent M2 source from the newer rendering domain, then re-run source-grouped template and learned-representation A/B. If source-diverse M2 remains confused, evaluate a stronger pretrained visual representation before any Runtime replacement.",
+    "do_not_lower_runtime_threshold": true,
+    "do_not_hardcode_m2_rule": true
+  },
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "formal_promotion_evidence": false
+}

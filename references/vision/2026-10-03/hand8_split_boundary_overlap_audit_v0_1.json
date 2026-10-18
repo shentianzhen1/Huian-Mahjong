@@ -1,0 +1,484 @@
+{
+  "schema_version": "hand8_fixed_manual_vs_equal_split_boundary_audit_dev_v0_1",
+  "frames": [
+    {
+      "frame": 4794,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "group_bbox": [
+        248,
+        441,
+        135,
+        62
+      ],
+      "normalized_group_size": [
+        216,
+        96
+      ],
+      "faces": [
+        {
+          "face_index": 0,
+          "reviewed_tile_candidate": "S7",
+          "manual_roi_mapped_bbox": [
+            0,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            0,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              72,
+              75
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        },
+        {
+          "face_index": 1,
+          "reviewed_tile_candidate": "S8",
+          "manual_roi_mapped_bbox": [
+            72,
+            0,
+            74,
+            96
+          ],
+          "equal_third_bbox": [
+            72,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              144,
+              146
+            ]
+          ],
+          "omitted_normalized_x_pixels": 2
+        },
+        {
+          "face_index": 2,
+          "reviewed_tile_candidate": "S9",
+          "manual_roi_mapped_bbox": [
+            141,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            144,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              141,
+              144
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        }
+      ],
+      "overlap_manual_roi_faces_0_1_x": [
+        72,
+        75
+      ],
+      "overlap_manual_roi_faces_1_2_x": [
+        141,
+        146
+      ]
+    },
+    {
+      "frame": 4797,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "group_bbox": [
+        248,
+        441,
+        135,
+        62
+      ],
+      "normalized_group_size": [
+        216,
+        96
+      ],
+      "faces": [
+        {
+          "face_index": 0,
+          "reviewed_tile_candidate": "S7",
+          "manual_roi_mapped_bbox": [
+            0,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            0,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              72,
+              75
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        },
+        {
+          "face_index": 1,
+          "reviewed_tile_candidate": "S8",
+          "manual_roi_mapped_bbox": [
+            72,
+            0,
+            74,
+            96
+          ],
+          "equal_third_bbox": [
+            72,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              144,
+              146
+            ]
+          ],
+          "omitted_normalized_x_pixels": 2
+        },
+        {
+          "face_index": 2,
+          "reviewed_tile_candidate": "S9",
+          "manual_roi_mapped_bbox": [
+            141,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            144,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              141,
+              144
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        }
+      ],
+      "overlap_manual_roi_faces_0_1_x": [
+        72,
+        75
+      ],
+      "overlap_manual_roi_faces_1_2_x": [
+        141,
+        146
+      ]
+    },
+    {
+      "frame": 4800,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "group_bbox": [
+        248,
+        441,
+        135,
+        62
+      ],
+      "normalized_group_size": [
+        216,
+        96
+      ],
+      "faces": [
+        {
+          "face_index": 0,
+          "reviewed_tile_candidate": "S7",
+          "manual_roi_mapped_bbox": [
+            0,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            0,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              72,
+              75
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        },
+        {
+          "face_index": 1,
+          "reviewed_tile_candidate": "S8",
+          "manual_roi_mapped_bbox": [
+            72,
+            0,
+            74,
+            96
+          ],
+          "equal_third_bbox": [
+            72,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              144,
+              146
+            ]
+          ],
+          "omitted_normalized_x_pixels": 2
+        },
+        {
+          "face_index": 2,
+          "reviewed_tile_candidate": "S9",
+          "manual_roi_mapped_bbox": [
+            141,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            144,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              141,
+              144
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        }
+      ],
+      "overlap_manual_roi_faces_0_1_x": [
+        72,
+        75
+      ],
+      "overlap_manual_roi_faces_1_2_x": [
+        141,
+        146
+      ]
+    },
+    {
+      "frame": 4803,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "group_bbox": [
+        248,
+        441,
+        135,
+        62
+      ],
+      "normalized_group_size": [
+        216,
+        96
+      ],
+      "faces": [
+        {
+          "face_index": 0,
+          "reviewed_tile_candidate": "S7",
+          "manual_roi_mapped_bbox": [
+            0,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            0,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              72,
+              75
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        },
+        {
+          "face_index": 1,
+          "reviewed_tile_candidate": "S8",
+          "manual_roi_mapped_bbox": [
+            72,
+            0,
+            74,
+            96
+          ],
+          "equal_third_bbox": [
+            72,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              144,
+              146
+            ]
+          ],
+          "omitted_normalized_x_pixels": 2
+        },
+        {
+          "face_index": 2,
+          "reviewed_tile_candidate": "S9",
+          "manual_roi_mapped_bbox": [
+            141,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            144,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              141,
+              144
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        }
+      ],
+      "overlap_manual_roi_faces_0_1_x": [
+        72,
+        75
+      ],
+      "overlap_manual_roi_faces_1_2_x": [
+        141,
+        146
+      ]
+    },
+    {
+      "frame": 4806,
+      "source_sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+      "group_bbox": [
+        248,
+        441,
+        135,
+        62
+      ],
+      "normalized_group_size": [
+        216,
+        96
+      ],
+      "faces": [
+        {
+          "face_index": 0,
+          "reviewed_tile_candidate": "S7",
+          "manual_roi_mapped_bbox": [
+            0,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            0,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              72,
+              75
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        },
+        {
+          "face_index": 1,
+          "reviewed_tile_candidate": "S8",
+          "manual_roi_mapped_bbox": [
+            72,
+            0,
+            74,
+            96
+          ],
+          "equal_third_bbox": [
+            72,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              144,
+              146
+            ]
+          ],
+          "omitted_normalized_x_pixels": 2
+        },
+        {
+          "face_index": 2,
+          "reviewed_tile_candidate": "S9",
+          "manual_roi_mapped_bbox": [
+            141,
+            0,
+            75,
+            96
+          ],
+          "equal_third_bbox": [
+            144,
+            0,
+            72,
+            96
+          ],
+          "manual_roi_x_intervals_omitted_by_equal_thirds": [
+            [
+              141,
+              144
+            ]
+          ],
+          "omitted_normalized_x_pixels": 3
+        }
+      ],
+      "overlap_manual_roi_faces_0_1_x": [
+        72,
+        75
+      ],
+      "overlap_manual_roi_faces_1_2_x": [
+        141,
+        146
+      ]
+    }
+  ],
+  "input_sha256": {
+    "references/vision/2026-10-03/hand8_s789_intake_v0_1.json": "78fe4422206c12e0239dfe73453ad2dca976a59ef2dfdb5c73dca420f5a3270b",
+    "references/vision/2026-10-03/sift_group_split_geometry_probe_v0_1.json": "7a52c90a2efcf428f5d4531dcf895a65fd0de83a6f7866737a5d51350de3b8d7"
+  },
+  "mapping": "manual frame-space bbox edges linearly projected through recorded zero-rotation tight group bbox to normalized group pixels",
+  "search_performed": false,
+  "source_pixels_modified": false,
+  "identity_rerank_performed": false,
+  "manual_rois_are_exact_tile_polygons": false,
+  "causal_claim": false,
+  "runtime_integration": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

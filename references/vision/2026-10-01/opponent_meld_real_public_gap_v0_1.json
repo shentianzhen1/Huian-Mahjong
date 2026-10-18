@@ -1,0 +1,37 @@
+{
+  "schema_version": "opponent_meld_real_public_gap_v0_1",
+  "date": "2026-10-01",
+  "issue": 69,
+  "target_review_id": "opp_meld_0926_hand1_s123",
+  "query_match_group": "reviewed_match_2026_09_26_first_hand",
+  "required_tile": "S1",
+  "requirement": "At least one reviewed real public_meld S1 face from a different original match_group.",
+  "current_cross_match_public_meld_face_count": 0,
+  "near_misses": [
+    {
+      "source_session": "66fe863f_youjin100",
+      "tile": "S1",
+      "observation": "S1 discard/hand-delta evidence around 84s",
+      "eligible": false,
+      "reason": "DISCARD_OR_HAND_REFERENCE_NOT_PUBLIC_MELD"
+    }
+  ],
+  "accepted_sources": [
+    "CHI/PENG/KONG exposed-group face where S1 is visibly part of the reviewed public_meld region"
+  ],
+  "rejected_sources": [
+    "discard",
+    "concealed hand",
+    "same query match_group",
+    "synthetic template",
+    "unverified crop"
+  ],
+  "status": "OPEN_DATA_GAP",
+  "identity_runtime_status": "UNKNOWN",
+  "runtime_identity_threshold_unchanged": 0.82,
+  "changes_runtime_behavior": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

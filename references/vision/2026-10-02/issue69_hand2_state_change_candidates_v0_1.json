@@ -1,0 +1,218 @@
+{
+  "schema_version": "issue69_hand2_state_change_candidates_v0_1",
+  "date": "2026-10-02",
+  "issue": 69,
+  "hand_number": 2,
+  "source": {
+    "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_hands_2_to_4"
+  },
+  "discovery": {
+    "method": "quarter_second_frame_difference_candidate_scan",
+    "purpose": "review_queue_only",
+    "not_action_classifier": true
+  },
+  "candidate_windows": [
+    {
+      "id": "h2_review_01",
+      "window_seconds": [
+        0.5,
+        4.5
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_02",
+      "window_seconds": [
+        9.25,
+        10.25
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_03",
+      "window_seconds": [
+        16.75,
+        17.75
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_04",
+      "window_seconds": [
+        21,
+        23
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_05",
+      "window_seconds": [
+        27.75,
+        31
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_06",
+      "window_seconds": [
+        32.75,
+        33.75
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_07",
+      "window_seconds": [
+        35.5,
+        37
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_08",
+      "window_seconds": [
+        41.5,
+        42.5
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_09",
+      "window_seconds": [
+        43.75,
+        44.75
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_10",
+      "window_seconds": [
+        51,
+        53
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_11",
+      "window_seconds": [
+        62.25,
+        63.25
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_12",
+      "window_seconds": [
+        66.75,
+        69
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_13",
+      "window_seconds": [
+        75,
+        77.25
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    },
+    {
+      "id": "h2_review_14",
+      "window_seconds": [
+        78,
+        82
+      ],
+      "status": "PENDING_DENSE_VISUAL_REVIEW",
+      "actor": "UNKNOWN",
+      "action": "UNKNOWN",
+      "tile": "UNKNOWN"
+    }
+  ],
+  "known_action_crossrefs": [
+    {
+      "window_seconds": [
+        21,
+        23
+      ],
+      "action": "PENG"
+    },
+    {
+      "window_seconds": [
+        29,
+        31
+      ],
+      "action": "PENG"
+    },
+    {
+      "window_seconds": [
+        35.5,
+        37
+      ],
+      "action": "CHI"
+    },
+    {
+      "window_seconds": [
+        51,
+        53
+      ],
+      "action": "CHI"
+    },
+    {
+      "window_seconds": [
+        78.5,
+        81
+      ],
+      "action": "HU"
+    }
+  ],
+  "evidence_policy": {
+    "frame_difference_is_only_candidate_discovery": true,
+    "does_not_confirm_action": true,
+    "does_not_confirm_tile_identity": true,
+    "human_review_separate_from_machine_output": true
+  },
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

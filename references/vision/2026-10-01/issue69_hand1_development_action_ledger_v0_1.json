@@ -1,0 +1,98 @@
+{
+  "schema_version": "issue69_hand1_development_action_ledger_v0_1",
+  "issue": 69,
+  "development_only": true,
+  "hand_number": 1,
+  "total_hands": 8,
+  "source": {
+    "sha256": "c4d1b879367aeca88f2ef950316a5737e5f94d934314ca038c543b041bd2360a",
+    "match_group": "reviewed_match_2026_09_26_first_hand",
+    "role": "user_uploaded_derived_clip",
+    "independent_match_group_credit": false
+  },
+  "events": [
+    {
+      "event_id": "hand1_machine_event_001",
+      "clip_timestamp_seconds": 11.9333333333,
+      "original_match_timestamp_reviewed_approx_seconds": 47,
+      "actor": "player",
+      "kind": "MING_GANG",
+      "tile": "P6",
+      "evidence_level": "development_candidate",
+      "candidate_status": "DEVELOPMENT_MING_GANG_CANDIDATE",
+      "machine_confirmed": false,
+      "claimed_discard_directly_observed": false,
+      "runtime_action": false,
+      "evidence": {
+        "hand_count": {
+          "before": 16,
+          "after": 13,
+          "removed_count": 3,
+          "before_frames": [
+            352,
+            353,
+            354,
+            355,
+            356,
+            357
+          ],
+          "after_frames": [
+            358,
+            359,
+            360,
+            361,
+            362
+          ]
+        },
+        "meld_geometry": {
+          "onset_frame": 358,
+          "face_count": 4,
+          "stack_state": "STACKED",
+          "stable_votes": "5/5"
+        },
+        "identity": {
+          "backend": "public_meld_sift_rank_v0_1",
+          "source_disjoint_ranking": true,
+          "top1_tile": "P6",
+          "top1_score": 0.12673655,
+          "runner_up_tile": "S4",
+          "runner_up_score": 0.00354157,
+          "margin": 0.12319498,
+          "winner_other_match_groups": 2,
+          "production_acceptance_threshold": null
+        },
+        "replacement_draw_first_frame": 363,
+        "claimed_discard_display": {
+          "status": "DIRECT_DISPLAY_P6_DEVELOPMENT",
+          "tile_candidate": "P6",
+          "valid_frame_votes": 6,
+          "source_frames": [
+            315,
+            318,
+            321,
+            324,
+            327,
+            330
+          ],
+          "layout": "2_columns_x_3_rows",
+          "color_signature": "top_two_green_lower_four_red",
+          "action_kind_inferred": false
+        }
+      },
+      "claimed_discard_identity_directly_observed": true,
+      "claimed_discard_display_directly_observed": true,
+      "river_growth_directly_observed": false
+    }
+  ],
+  "caveats": [
+    "The P6 meld identity is a source-disjoint development ranking from a match already inspected during candidate selection; it is not blind validation.",
+    "The claimed discard identity is directly visible as P6 in the system response-window display across six stable source frames; this is separate from river-growth detection.",
+    "River growth itself is not yet directly machine-observed for this derived clip.",
+    "Do not promote this event to Runtime/Hint/Executor without the existing runtime evidence gates."
+  ],
+  "formal_promotion_evidence": false,
+  "changes_runtime_behavior": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}
