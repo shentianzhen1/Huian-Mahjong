@@ -1699,13 +1699,13 @@ class HintAlphaApp(tk.Tk):
             if category == "SETTLEMENT_PAGE":
                 self.evidence.mark(
                     "SETTLEMENT_PAGE",
-                    {"frame": str(path.relative_to(self.evidence.path))},
+                    {"frame": path.relative_to(self.evidence.path).as_posix()},
                     source=self.source,
                 )
             else:
                 self.evidence.mark_feedback(
                     category,
-                    payload={"frame": str(path.relative_to(self.evidence.path))},
+                    payload={"frame": path.relative_to(self.evidence.path).as_posix()},
                     source=self.source,
                 )
             self.evidence_status.set(f"已打点并保存：{path.name}")

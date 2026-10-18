@@ -1,2 +1,5 @@
 # Preserve reviewed image assets byte-for-byte across platforms.
 *.pgm -text
+*.ppm -text
+*.pbm -text
+*.pnm -text
