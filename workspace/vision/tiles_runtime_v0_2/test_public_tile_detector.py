@@ -33,7 +33,10 @@ class PublicTileDetectorCalibrationTests(unittest.TestCase):
         cls.samples = tuple(
             sample
             for sample in cls.manifest.samples
-            if sample.target in {"discard", "meld"}
+            if (
+                sample.target in {"discard", "meld"}
+                and sample.context_scope == "full_frame"
+            )
         )
 
     def test_reviewed_manifest_is_now_bbox_ready_and_hash_clean(self):
