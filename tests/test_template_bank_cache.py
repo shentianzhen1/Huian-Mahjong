@@ -12,6 +12,7 @@ from pathlib import Path
 import pickle
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from workspace.vision import template_bank_cache as cache
 
@@ -54,6 +55,84 @@ class HandTemplateBankCacheTests(unittest.TestCase):
         _write(self.root / "templates" / "hand" / "c.png", b"gamma")
         cache.load_or_build(self.root, self._builder, cache_dir=self.cache_dir)
         self.assertEqual(self.builds, 2, "a new template must force a rebuild")
+
+    def test_label_edit_rebuilds_the_actual_cached_bank(self):
+        labels = self.root / "labels.jsonl"
+        _write(labels, b'{"tile_id":"M1"}\n')
+        builds = []
+
+        def read_labels(root):
+            value = (root / "labels.jsonl").read_text(encoding="utf-8")
+            builds.append(value)
+            return value
+
+        cache.load_or_build(self.root, read_labels, cache_dir=self.cache_dir)
+        stat = labels.stat()
+        _write(labels, b'{"tile_id":"M2"}\n')
+        os.utime(labels, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        actual = cache.load_or_build(self.root, read_labels, cache_dir=self.cache_dir)
+        self.assertIn('"M2"', actual)
+        self.assertEqual(len(builds), 2)
+
+    def test_legacy_labels_and_reviewed_additions_affect_signature(self):
+        for relative in ("labels/tiles.jsonl", "labels_reviewed_additions/new.jsonl"):
+            with self.subTest(path=relative):
+                before = cache.dataset_signature(self.root)
+                path = self.root / relative
+                _write(path, b'{"approved":true}\n')
+                after_add = cache.dataset_signature(self.root)
+                self.assertNotEqual(before, after_add)
+                _write(path, b'{"approved":false}\n')
+                self.assertNotEqual(after_add, cache.dataset_signature(self.root))
+                path.unlink()
+                self.assertEqual(before, cache.dataset_signature(self.root))
+
+    def test_same_size_same_mtime_pixel_edit_invalidates(self):
+        cache.load_or_build(self.root, self._builder, cache_dir=self.cache_dir)
+        path = self.root / "templates" / "hand" / "a.png"
+        stat = path.stat()
+        _write(path, b"ALPHA")
+        os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        cache.load_or_build(self.root, self._builder, cache_dir=self.cache_dir)
+        self.assertEqual(self.builds, 2)
+
+    def test_touch_without_byte_changes_keeps_cached_bank(self):
+        first = cache.load_or_build(self.root, self._builder, cache_dir=self.cache_dir)
+        path = self.root / "templates" / "hand" / "a.png"
+        stat = path.stat()
+        os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns + 1_000_000))
+        second = cache.load_or_build(self.root, self._builder, cache_dir=self.cache_dir)
+        self.assertEqual(first, second)
+        self.assertEqual(self.builds, 1)
+
+    def test_netpbm_pixels_are_part_of_signature(self):
+        before = cache.dataset_signature(self.root)
+        _write(self.root / "templates" / "hand" / "c.pgm", b"P2\n1 1\n255\n0\n")
+        self.assertNotEqual(before, cache.dataset_signature(self.root))
+
+    def test_approved_image_with_nonstandard_extension_is_fingerprinted(self):
+        _write(self.root / "labels.jsonl", b'{"approved":true,"region":"hand_region","tile_id":"M1","image":"face.asset"}\n')
+        _write(self.root / "face.asset", b"original pixels")
+        before = cache.dataset_signature(self.root)
+        _write(self.root / "face.asset", b"modified pixels")
+        self.assertNotEqual(before, cache.dataset_signature(self.root))
+
+    def test_inputs_changed_by_builder_are_not_cached(self):
+        target = cache.cache_path(self.root, self.cache_dir)
+
+        def changing_builder(root):
+            _write(root / "templates" / "hand" / "a.png", b"new bytes")
+            return "built while inputs changed"
+
+        value = cache.load_or_build(self.root, changing_builder, cache_dir=self.cache_dir)
+        self.assertEqual(value, "built while inputs changed")
+        self.assertFalse(target.exists())
+
+    def test_failed_cache_replace_removes_temporary_file(self):
+        with patch.object(cache.os, "replace", side_effect=OSError("replace blocked")):
+            value = cache.load_or_build(self.root, self._builder, cache_dir=self.cache_dir)
+        self.assertEqual(value[0], "bank")
+        self.assertEqual(list(self.cache_dir.iterdir()), [])
 
     def test_non_image_files_do_not_affect_the_signature(self):
         before = cache.dataset_signature(self.root)

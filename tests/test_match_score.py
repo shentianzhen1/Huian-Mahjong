@@ -37,6 +37,33 @@ class MatchScoreTests(unittest.TestCase):
         self.assertEqual(state.margin, 220)
         self.assertEqual(sum(state.scores), 2000)
 
+    def test_tied_eighth_hand_is_terminal_tie_without_extra_hand_or_dealer_tiebreak(self):
+        match = MatchProgressState.initial(dealer=1)
+        rewards = (
+            (20, -20),
+            (-20, 20),
+            (15, -15),
+            (-15, 15),
+            (8, -8),
+            (-8, 8),
+            (5, -5),
+            (-5, 5),
+        )
+        winners = (0, 1, 0, 1, 0, 1, 0, 1)
+        for reward, winner in zip(rewards, winners):
+            match = match.apply_settled_hand(reward, winner=winner)
+
+        self.assertTrue(match.complete)
+        self.assertEqual(match.scores, (1000, 1000))
+        self.assertEqual(match.score_state.margin, 0)
+        # Dealer state may have changed during the eight hands, but it cannot
+        # break an equal final score or authorize a ninth hand.
+        self.assertIn(match.dealer, (0, 1))
+        with self.assertRaises(ValueError):
+            _ = match.current_dealer_base
+        with self.assertRaises(ValueError):
+            match.apply_settled_hand((1, -1), winner=0)
+
     def test_same_final_objective_as_accumulated_delta_when_start_equal(self):
         a = score_eight_hand_match(((10, -10),) * 8)
         b = score_eight_hand_match(((5, -5),) * 8)

@@ -6,6 +6,7 @@ __pycache__/
 data/capture_validation/
 data/hint_alpha/
 venv/
+.build-hint/
 .env
 *.log
 .DS_Store

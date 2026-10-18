@@ -34,7 +34,7 @@ from workspace.vision.capture_validator.backend import (
 from workspace.vision.capture_validator.media import FrameHealth
 from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 
-from .runtime_pipeline import evaluate_runtime_report
+from .runtime_pipeline import evaluate_runtime_report, interrupt_runtime_observations
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 from .manual_input import evaluate_manual_input, observed_score_entry
@@ -54,7 +54,7 @@ class HintAlphaApp(tk.Tk):
         self.experimental_runtime_advisory = bool(experimental_runtime_advisory)
         if self.experimental_runtime_advisory:
             self.title("惠安麻将 Hint Alpha V0.1 内测 [UNPROMOTED Runtime]")
-        
+
         self.session = None
         self.target = None
         self.entries = []
@@ -325,39 +325,16 @@ class HintAlphaApp(tk.Tk):
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", lambda _: self.render())
 
-        ttk.Label(sidebar, text="识别诊断", font=("", 12, "bold")).pack(
-            anchor="w", pady=(4, 8)
-        )
-        for variable in (
-            self.capture_status,
-            self.vision_status,
-            self.runtime_status,
-            self.hint_status,
-            self.evidence_status,
-            self.version_status,
-        ):
-            ttk.Label(sidebar, textvariable=variable, wraplength=330).pack(
-                anchor="w", fill="x", pady=4
-            )
-
-        ttk.Separator(sidebar).pack(fill="x", pady=10)
-        ttk.Button(
-            sidebar,
-            text="人工录分（未知规则，仅记录）",
-            command=self.open_manual_score,
-        ).pack(fill="x", pady=3)
-        ttk.Label(sidebar, text="一键证据打点", font=("", 11, "bold")).pack(anchor="w")
-        for text, category in (
-            ("识别错了", "RECOGNITION_ERROR"),
-            ("AI建议错了", "AI_ADVICE_ERROR"),
-            ("发现新规则证据", "RULE_EVIDENCE"),
-            ("保存结算页证据", "SETTLEMENT_PAGE"),
-        ):
-            ttk.Button(
-                sidebar,
-                text=text,
-                command=lambda value=category: self.mark_feedback(value),
-            ).pack(fill="x", pady=3)
+        self.simple_hint = tk.StringVar(value="等待画面")
+        self.assistant_window = None
+        self.diagnostics_window = None
+        for variable in (self.capture_status, self.hint_status):
+            variable.trace_add("write", self._update_simple_hint)
+        ttk.Label(sidebar, text="对局辅助", font=("", 12, "bold")).pack(anchor="w", pady=8)
+        ttk.Label(sidebar, textvariable=self.simple_hint, wraplength=330).pack(fill="x", pady=8)
+        ttk.Button(sidebar, text="打开独立辅助窗口", command=self.open_assistant).pack(fill="x", pady=3)
+        ttk.Button(sidebar, text="查看诊断信息", command=self.open_diagnostics).pack(fill="x", pady=3)
+        self._update_simple_hint()
 
         ttk.Label(
             sidebar,
@@ -622,6 +599,20 @@ class HintAlphaApp(tk.Tk):
         self._refresh_header()
         self._refresh_health()
 
+    @classmethod
+    def _format_own_melds(cls, snapshot):
+        if not snapshot.meld_trusted[0]:
+            return "我的副露：UNKNOWN"
+        groups = snapshot.melds[0]
+        if not groups:
+            return "我的副露：0 组"
+        faces = " / ".join(
+            "牌面未确认" if any(tile is None for tile in group)
+            else cls._display_tiles(group)
+            for group in groups
+        )
+        return f"我的副露：{len(groups)} 组（{faces}）"
+
     def _update_snapshot_view(self, snapshot, result, *, source_label):
         own_hand = tuple(snapshot.own_hand)
         trusted_hand = bool(snapshot.hand_trusted) and bool(own_hand)
@@ -634,14 +625,7 @@ class HintAlphaApp(tk.Tk):
         else:
             self.table_hand_status.set("我的手牌：UNKNOWN")
 
-        own_meld_count = len(snapshot.melds[0]) if snapshot.melds else 0
-        if snapshot.meld_trusted[0]:
-            self.table_meld_status.set(
-                f"我的副露：{own_meld_count} 组"
-                + ("（牌面可能为 UNKNOWN）" if own_meld_count else "")
-            )
-        else:
-            self.table_meld_status.set("我的副露：UNKNOWN")
+        self.table_meld_status.set(self._format_own_melds(snapshot))
 
         if self.ui_gold_ok:
             gold = snapshot.gold_tile
@@ -983,6 +967,48 @@ class HintAlphaApp(tk.Tk):
                 self.video_test_report_status.set(f"报告：{item[1]}")
                 self.video_timeline_heartbeat.set("录像复盘：失败")
                 self._set_video_timeline_lines([f"复盘失败：{item[1]}"])
+
+    def _update_simple_hint(self, *_):
+        text = self.hint_status.get()
+        capture = self.capture_status.get()
+        if "黑屏" in capture:
+            message = "没有获取到游戏画面。\n请保持游戏窗口可见，或切换采集方式。"
+        elif "已停止" in capture:
+            message = "已停止采集"
+        elif "采集错误" in capture or "未收到首帧" in capture:
+            message = "暂时无法获取画面。\n请停止后重新开始，或切换采集方式。"
+        elif "BLOCKED" in text or "等待" in text:
+            message = "还不能给出建议。\n手牌或金牌尚未识别完整；当前向听：未知。\n可用人工录牌查看向听。"
+        else:
+            import re
+            message = re.sub(r"\b(?:[MPS][1-9]|[ESWNRGB])\b",
+                             lambda match: self._tile_label(match.group()), text)
+            message = message.replace("向听提示：", "").replace("Executor OFF", "")
+            message = message.replace("POST_DRAW", "摸牌后").replace("BLOCKED", "暂不可用")
+        self.simple_hint.set(message)
+
+    def open_assistant(self):
+        if self.assistant_window is not None and self.assistant_window.winfo_exists():
+            self.assistant_window.lift()
+            return
+        window = self.assistant_window = tk.Toplevel(self)
+        window.title("惠安麻将 · 对局辅助")
+        window.geometry("460x300")
+        ttk.Label(window, text="实时向听与弃牌辅助", font=("", 16, "bold")).pack(anchor="w", padx=20, pady=20)
+        ttk.Label(window, textvariable=self.simple_hint, font=("", 13), wraplength=415).pack(
+            anchor="w", fill="x", padx=20, pady=10)
+        ttk.Button(window, text="人工录牌", command=self.open_manual_hand).pack(anchor="w", padx=20, pady=15)
+
+    def open_diagnostics(self):
+        if self.diagnostics_window is not None and self.diagnostics_window.winfo_exists():
+            self.diagnostics_window.lift()
+            return
+        window = self.diagnostics_window = tk.Toplevel(self)
+        window.title("诊断信息")
+        window.geometry("650x500")
+        for variable in (self.capture_status, self.vision_status, self.runtime_status,
+                         self.hint_status, self.evidence_status, self.version_status):
+            ttk.Label(window, textvariable=variable, wraplength=610).pack(anchor="w", fill="x", padx=15, pady=10)
 
     def refresh(self):
         try:
@@ -1355,6 +1381,7 @@ class HintAlphaApp(tk.Tk):
 
     def _runtime_worker(self, samples, session_id, generation, captured, output_queue):
         try:
+            started = time.monotonic()
             # Lazy import keeps non-Vision Hint Alpha utilities importable
             # without forcing OpenCV into every core-only process.
             from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
@@ -1371,6 +1398,7 @@ class HintAlphaApp(tk.Tk):
                 confidence_threshold=0.82,
             )
             report["stream_epoch"] = generation
+            report["runtime_elapsed_seconds"] = time.monotonic() - started
             payload = ("ok", session_id, generation, captured, report)
         except Exception as exc:
             payload = ("error", session_id, generation, captured, f"{type(exc).__name__}: {exc}")
@@ -1471,6 +1499,7 @@ class HintAlphaApp(tk.Tk):
             return
         self.live_guard.last_result = captured
         if kind == "error":
+            interrupt_runtime_observations()
             self.runtime_status.set(f"Runtime Vision暂不可用：{value}")
             self.ui_hand_ok = False
             self.ui_gold_ok = False
@@ -1519,6 +1548,8 @@ class HintAlphaApp(tk.Tk):
             tuple((item.discard, item.shanten) for item in result.best_discards),
             snapshot.gold_tile,
             snapshot.own_hand,
+            snapshot.melds,
+            snapshot.meld_trusted,
             result.issues,
         )
         if self.evidence and event_key != self.last_runtime_event_key:
@@ -1530,6 +1561,25 @@ class HintAlphaApp(tk.Tk):
                     "shanten": result.shanten,
                     "hand": list(snapshot.own_hand),
                     "gold_tile": snapshot.gold_tile,
+                    "hand_trusted": snapshot.hand_trusted,
+                    "melds": snapshot.melds,
+                    "meld_trusted": snapshot.meld_trusted,
+                    "opening_fact": asdict(advisory.opening_fact),
+                    "runtime_frames": report.get("frames", []),
+                    "captured_monotonic": captured,
+                    "runtime_elapsed_seconds": report.get("runtime_elapsed_seconds"),
+                    "identity_rejections": {
+                        region: [
+                            item.get("identity_reason", "missing")
+                            for item in report.get("components", ())
+                            if item.get("region_candidate") in regions
+                            and item.get("identity_reason") != "accepted"
+                        ]
+                        for region, regions in (
+                            ("hand", {"hand", "draw_visual"}),
+                            ("meld", {"meld"}),
+                        )
+                    },
                     "best_discards": [
                         {
                             "tile": item.discard,
@@ -1649,13 +1699,13 @@ class HintAlphaApp(tk.Tk):
             if category == "SETTLEMENT_PAGE":
                 self.evidence.mark(
                     "SETTLEMENT_PAGE",
-                    {"frame": str(path.relative_to(self.evidence.path))},
+                    {"frame": path.relative_to(self.evidence.path).as_posix()},
                     source=self.source,
                 )
             else:
                 self.evidence.mark_feedback(
                     category,
-                    payload={"frame": str(path.relative_to(self.evidence.path))},
+                    payload={"frame": path.relative_to(self.evidence.path).as_posix()},
                     source=self.source,
                 )
             self.evidence_status.set(f"已打点并保存：{path.name}")

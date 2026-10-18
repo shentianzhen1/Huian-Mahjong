@@ -109,10 +109,9 @@ def iter_video_samples(
         raise ValueError("Require start>=0, duration>=0 and sample interval>0")
 
     fps = meta["fps"]
-    start_frame = min(
-        meta["frame_count"] - 1,
-        max(0, int(round(start_seconds * fps))),
-    )
+    start_frame = max(0, int(round(start_seconds * fps)))
+    if start_frame >= meta["frame_count"]:
+        raise ValueError("Selected video start is outside the recording")
     if duration_seconds == 0:
         end_frame = meta["frame_count"]
     else:
@@ -126,18 +125,25 @@ def iter_video_samples(
     stride = max(1, int(round(sample_interval_seconds * fps)))
     cap = cv2.VideoCapture(str(path))
     try:
-        cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+        # VFR random seeks can return different pixels for the advertised
+        # ordinal. Decode from the beginning, including when only a later
+        # window is requested, so evidence references identify actual frames.
+        for skipped in range(start_frame):
+            if stop_event is not None and stop_event.is_set():
+                return
+            if not cap.grab():
+                raise ValueError(f"Video decoding stopped at frame {skipped} before selected start")
         index = start_frame
         while index < end_frame:
             if stop_event is not None and stop_event.is_set():
                 return
             ok = cap.grab()
             if not ok:
-                break
+                raise ValueError(f"Video decoding stopped at frame {index} before selected end {end_frame}")
             if (index - start_frame) % stride == 0:
                 ok, frame = cap.retrieve()
                 if not ok:
-                    break
+                    raise ValueError(f"Video frame {index} could not be retrieved")
                 pts = float(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000.0
                 yield (
                     index,

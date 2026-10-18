@@ -1,0 +1,25 @@
+{
+  "schema_version": "vfr_reviewed_frame_identity_audit_v0_1",
+  "source_sha256": "98dfe5a05a7148eaa018e1ba8f0cb44f688bf51f87f93185a26894a89706e3e7",
+  "source_frame": 2774,
+  "legacy_random_seek_rgb_sha256": "adb615fd9b8341410c604441cc7b2777026fa94e2dfa749e7bec938c0a1b09e9",
+  "sequential_ordinal_rgb_sha256": "83aaf397f255457c6fd9e55096172e500c2e0e9db5a50d2ec1d2e3e5c9756c64",
+  "new_reader_matches_sequential": true,
+  "legacy_review_binding_rejected": true,
+  "metadata": {
+    "fps": 58.95786699912164,
+    "frame_count": 3468,
+    "decoded_size": [
+      2796,
+      1290
+    ],
+    "frame_access": "sequential_decoded_ordinal",
+    "centre_selection": "explicit_source_frame"
+  },
+  "prior_candidate_truth_status": "INVALIDATED_REQUIRES_EXACT_FRAME_REREVIEW",
+  "accuracy_metrics_valid": false,
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

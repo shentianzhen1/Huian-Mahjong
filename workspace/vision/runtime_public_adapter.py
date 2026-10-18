@@ -7,6 +7,8 @@ identities with concealed-hand templates, and never changes Rules or Executor.
 from __future__ import annotations
 
 from collections import Counter
+import math
+from numbers import Real
 from dataclasses import dataclass
 from statistics import median
 from typing import Any, Iterable
@@ -29,18 +31,94 @@ def _bbox(item: dict[str, Any]) -> tuple[float, float, float, float]:
 
 def _component_confidence(item: dict[str, Any]) -> float:
     value = item.get("confidence", 0.0)
+    if isinstance(value, bool):
+        return 0.0
     try:
         result = float(value)
     except (TypeError, ValueError):
+        return 0.0
+    if not math.isfinite(result):
         return 0.0
     return max(0.0, min(1.0, result))
 
 
 def _identity(item: dict[str, Any]) -> str | None:
+    # Preserve legacy reports without a numeric score, but never allow an
+    # explicitly invalid/rejected score to be hidden behind an "accepted" flag.
+    if "tile_confidence" in item:
+        score = item["tile_confidence"]
+        if (isinstance(score, bool) or not isinstance(score, Real)
+                or not math.isfinite(score) or not 0.82 <= score <= 1.0):
+            return None
     value = item.get("tile_id")
     if not value or value == "UNKNOWN":
         return None
     return str(value)
+
+
+def _trusted_gold_from_runtime(
+    report: dict[str, Any],
+    gold_components: list[dict[str, Any]],
+    *,
+    geometry_trusted: bool,
+    issues: list[str],
+) -> tuple[str | None, bool]:
+    """Require independent same-identity Gold reads from at least two frames.
+
+    Runtime burst geometry stability is not proof of tile identity stability.
+    Only explicit per-frame Gold classifications emitted by Runtime Vision may
+    promote a Gold tile into the current-table snapshot. Hidden dice, wall
+    positions, random seeds or any other opening inference are intentionally
+    ignored by this adapter.
+    """
+    if not geometry_trusted:
+        return None, False
+    if len(gold_components) != 1:
+        issues.append("runtime_gold_component_conflict")
+        return None, False
+
+    observations = report.get("gold_identity_observations")
+    if not isinstance(observations, list) or not observations:
+        issues.append("runtime_gold_multiframe_evidence_missing")
+        return None, False
+    if not all(isinstance(item, dict) for item in observations):
+        issues.append("runtime_gold_multiframe_evidence_invalid")
+        return None, False
+
+    report_frames = report.get("frames")
+    allowed_frames = set(report_frames) if isinstance(report_frames, (list, tuple)) else set()
+    observed_frames = [item.get("frame") for item in observations]
+    if (
+        any(frame is None for frame in observed_frames)
+        or any(frame not in allowed_frames for frame in observed_frames)
+        or len(set(observed_frames)) < 2
+    ):
+        issues.append("runtime_gold_frame_scope_conflict")
+        return None, False
+
+    identities = [_identity(item) for item in observations]
+    known_identities = {tile_id for tile_id in identities if tile_id is not None}
+    if len(known_identities) > 1:
+        issues.append("runtime_gold_identity_conflict")
+        return None, False
+    if (
+        not identities
+        or any(tile_id is None for tile_id in identities)
+        or any(item.get("identity_reason") != "accepted" for item in observations)
+    ):
+        issues.append("runtime_gold_frame_identity_untrusted")
+        return None, False
+
+    gold_tile = identities[0]
+    if gold_tile is None or any(tile_id != gold_tile for tile_id in identities):
+        issues.append("runtime_gold_identity_conflict")
+        return None, False
+
+    chosen = gold_components[0]
+    if _identity(chosen) != gold_tile or chosen.get("identity_reason") != "accepted":
+        issues.append("runtime_gold_fused_identity_conflict")
+        return None, False
+    return gold_tile, True
 
 
 def _meld_identity(item: dict[str, Any]) -> str | None:
@@ -65,7 +143,7 @@ def _meld_identity(item: dict[str, Any]) -> str | None:
         margin = float(result.get("margin"))
     except (TypeError, ValueError):
         return None
-    if score < 0.93 or margin < 0.075:
+    if not math.isfinite(score) or not math.isfinite(margin) or score < 0.93 or margin < 0.075:
         return None
     return tile_id
 
@@ -176,31 +254,24 @@ def current_snapshot_from_runtime(
         and declared_count == len(concealed)
         and concealed
         and all(tile is not None for tile in own_hand)
+        and all(item.get("identity_reason") == "accepted" for item in concealed)
     )
     if not hand_trusted:
         issues.append("runtime_hand_not_fully_trusted")
 
+    # Opening facts require the explicit visible indicator. A playable tile's
+    # yellow skin is not another indicator and cannot replace a missing one.
     gold_components = [
         item
         for item in components
         if isinstance(item, dict)
-        and (
-            item.get("region_candidate") == "gold"
-            or item.get("gold_skin") is True
-        )
+        and item.get("region_candidate") == "gold"
     ]
-    gold_identities = {_identity(item) for item in gold_components}
-    gold_identities.discard(None)
-    gold_tile = next(iter(gold_identities)) if len(gold_identities) == 1 else None
-    gold_trusted = bool(
-        geometry_trusted
-        and gold_components
-        and gold_tile is not None
-        and all(
-            _identity(item) == gold_tile
-            and item.get("identity_reason") == "accepted"
-            for item in gold_components
-        )
+    gold_tile, gold_trusted = _trusted_gold_from_runtime(
+        report,
+        gold_components,
+        geometry_trusted=geometry_trusted,
+        issues=issues,
     )
     if not gold_trusted:
         issues.append("runtime_gold_not_fully_trusted")
@@ -360,7 +431,7 @@ def player_meld_snapshot_from_runtime(
         item for item in report.get("components", ())
         if item.get("region_candidate") == "meld"
     ]
-    trusted = not bool(report.get("geometry_untrusted"))
+    trusted = not bool(report.get("geometry_untrusted", True))
     if not trusted:
         components = []
 
@@ -375,9 +446,11 @@ def player_meld_snapshot_from_runtime(
     )
 
     groups: list[MeldGroup] = []
+    discarded_cluster = False
     for cluster in clusters:
         if len(cluster) not in {3, 4}:
             if not preserve_count_only_incomplete:
+                discarded_cluster = True
                 # Do not invent a semantic meld from weak geometry alone.
                 continue
             # Concealed count and independently separated meld geometry agree
@@ -410,7 +483,7 @@ def player_meld_snapshot_from_runtime(
         actor="player",
         groups=tuple(groups),
         frame=(report.get("frames") or [None])[-1],
-        trusted=trusted,
+        trusted=trusted and not discarded_cluster,
         evidence_refs=_runtime_refs(report, components),
         source_session=report.get("session") or None,
         stream_epoch=report.get("stream_epoch", 0),

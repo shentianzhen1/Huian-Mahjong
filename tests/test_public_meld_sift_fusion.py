@@ -1,5 +1,10 @@
 import importlib.util
+import json
+from pathlib import Path
+import shutil
+from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
 
 VISION = all(
@@ -10,6 +15,44 @@ VISION = all(
 
 @unittest.skipUnless(VISION, "Pillow/OpenCV/numpy are optional in core-only installs")
 class PublicMeldSiftFusionTests(unittest.TestCase):
+    def test_cached_real_descriptors_follow_label_corrections_and_withdrawal(self):
+        import numpy as np
+        from workspace.vision import public_meld_sift_fusion as fusion
+        from workspace.vision.tiles_v0_1.labels import approved_labels
+
+        source = Path(__file__).resolve().parents[1] / "dataset/tiles_runtime_v0_2"
+        row = next(row for row in approved_labels(source)
+                   if row.get("region") == "hand_region" and row["tile_id"] == "S9"
+                   and not row.get("gold_skin_only"))
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary) / "dataset"
+            root.mkdir()
+            shutil.copyfile(source / row["image"], root / "face.png")
+            label = {**row, "image": "face.png", "status": "approved", "approved": True}
+            labels = root / "labels.jsonl"
+            labels.write_text(json.dumps(label) + "\n", encoding="utf-8")
+            cache_dir = Path(temporary) / "cache"
+            with patch.object(fusion, "_build_hand_template_bank",
+                              wraps=fusion._build_hand_template_bank) as build:
+                cold = fusion.load_or_build_hand_template_bank(root, cache_dir=cache_dir)
+                warm = fusion.load_or_build_hand_template_bank(root, cache_dir=cache_dir)
+                self.assertEqual(len(cold), 1)
+                self.assertEqual(build.call_count, 1)
+                self.assertEqual(warm[0].tile_id, cold[0].tile_id)
+                self.assertTrue(np.array_equal(warm[0].raw_descriptors, cold[0].raw_descriptors))
+                self.assertEqual(len(warm[0].synthetic_descriptors), len(cold[0].synthetic_descriptors))
+                for actual, expected in zip(warm[0].synthetic_descriptors, cold[0].synthetic_descriptors):
+                    self.assertTrue(np.array_equal(actual, expected))
+                label["tile_id"] = "S8"
+                labels.write_text(json.dumps(label) + "\n", encoding="utf-8")
+                corrected = fusion.load_or_build_hand_template_bank(root, cache_dir=cache_dir)
+                self.assertEqual(corrected[0].tile_id, "S8")
+                label.update(approved=False, status="rejected")
+                labels.write_text(json.dumps(label) + "\n", encoding="utf-8")
+                withdrawn = fusion.load_or_build_hand_template_bank(root, cache_dir=cache_dir)
+                self.assertEqual(withdrawn, ())
+                self.assertEqual(build.call_count, 3)
+
     def test_rank_percentile_fusion_is_scale_independent(self):
         from workspace.vision.public_meld_sift_fusion import (
             fuse_rank_percentile_scores,

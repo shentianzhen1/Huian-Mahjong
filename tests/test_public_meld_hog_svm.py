@@ -4,7 +4,7 @@ import unittest
 
 EXPERIMENT = all(
     importlib.util.find_spec(name) is not None
-    for name in ("numpy", "sklearn")
+    for name in ("numpy", "sklearn", "cv2", "PIL")
 )
 
 

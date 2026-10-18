@@ -1,0 +1,8 @@
+# Windows x64 / Python 3.14.7 runtime dependencies.
+# Verified by installer run 38363969758 at d49283323e8a8be479e7dbfcabbbf2a9551b5b8e.
+# Update deliberately, then rerun extracted-payload and installed UI smoke.
+numpy==2.5.4
+opencv-python==5.0.0.93
+Pillow==12.3.0
+pywin32==312
+windows-capture==2.0.1

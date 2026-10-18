@@ -1,71 +1,65 @@
 # PROJECT_STATUS — Current Snapshot
 
-**Snapshot date:** 2026-10-04
-**Execution truth:** GitHub Issues
-**Rule truth:** RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md
-**History:** CHANGELOG.md
+Snapshot date: 2026-10-18. Execution truth: GitHub Issues. Rule truth:
+RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. CHANGELOG.md is history only.
 
-## Branch and release scope
+## Scope and architecture
 
-- Integration work lives on `integration/issue69-replay-stack-20260926` in
-  Draft PR #117. It is unmerged; these draft features are not a main release.
-- Draft package identity is `0.2.1`; CurrentAgent remains MeldAwareShantenAgent
-  V0.10. RuleSnapshot is versioned independently from package and Agent.
-- Issue #4 closed through PR #125 on main: only added kongs can be robbed;
-  the failed kong leaves the original PENG and contributes no kong fan/fee.
-  Rob-Kong uses ordinary Zimo x2 and normal dealer flow. Completed-kong tail Hu
-  also uses ordinary Zimo x2 with additive completed-kong fan.
-- This integration revision synchronizes the rule registry, special-outcome
-  readiness, phase diagnostics and simulator terminal handling with those
-  already-confirmed rules. It does not establish new gameplay evidence.
+Active internal work: Draft PR #126,
+`codex/hint-alpha-local-test-sync-20261004`; package identity 0.2.1, unmerged.
+PR #117 is earlier work. CurrentAgent stays MeldAwareShantenAgent V0.10.
+Rules / Environment / AI / Simulator / Vision / Hint retain their dependency
+boundaries. Executor is OFF; Hint is read-only. No new Agent or broad UI rewrite.
 
-## Internal Alpha
+Issues #69/#45 prioritize trusted complete hand + visible opened Gold + own
+meld count -> ordinary structural shanten/minimum-shanten discard choices.
+Unknown public identities continue blocking remaining-copy/danger features.
+Exhaustive action transcription is not a prerequisite for basic shanten.
 
-Windows capture -> stable Runtime frames -> CurrentTableSnapshot -> independent
-capability gates -> structural shanten / basic discard suggestions -> read-only UI.
-Separate user-entered hand/Gold/own-meld-count input reuses the structural
-capability gate without pretending to be Vision frames. Manual score before/
-after entries for unresolved settlement rules are observed-only, zero-sum and
-never invoke Environment settlement or official reward.
-Use `START_HINT_ALPHA.bat --experimental` for explicit unpromoted internal advice.
-Default mode retains the formal Vision promotion gate. Identity threshold 0.82;
-Executor OFF. Capture/error/black-screen/epoch/freshness failures invalidate advice.
+## Current Vision and candidate boundary
 
-Own meld identity UNKNOWN may still permit structural shanten when hand, Gold
-and own meld count are trusted. Missing public river/meld identities block live
-remaining-copy and danger features. Dark-face fallback remains development-only.
-Manual entries are unverified human assertions and cannot count as Vision
-promotion or source-disjoint evidence.
+The packaged Runtime still uses its reviewed baseline bank and threshold 0.82.
+It does not include private candidate support, primary-first UNKNOWN-only tight
+fallback or the standalone development geometry selector/rim fix.
 
-Native private first-hand 173–176s replay now observes 8 structural advice
-windows, 5 blocked windows and 1 recovery across 13 overlapping bursts. This
-same-source smoke does not validate tile accuracy, strategic discard quality or
-full-match recovery. Windows live capture/freshness/recovery acceptance remains
-pending. Linux CI does not prove Windows usability. See docs/issue69_alpha_build.md.
+Historical inspected Oct-3 diagnostic: Runtime 25/43 accepted, 0/3 complete
+hands; recovered development candidate 43/43, 3/3 complete, zero wrong accepts.
+These are same-match development results, not generalization or live accuracy.
 
-An earlier same-original 160–164s source-locked replay adds two consecutive
-automatic post-draw structural discard windows (M3/P5/P7/P9 tied at minimal
-shanten). It proves the advisory pipeline can emit candidates, not that the
-recognized identities or strategic ranking are human-confirmed.
+The separately restored 19-support candidate and rim tie fix reached 17/17 and
+16/16 at two first-hand checkpoints from the inspected Oct-12 match. The third
+checkpoint was not rerun after the query copy truncated. Opened Gold M4 remains
+UNKNOWN, so no advisory readiness is claimed. See
+[private desktop restoration](docs/vision/private_candidate_desktop_restore_20261017.md).
+Private pixels stay outside GitHub; source sessions and clips are not independent
+original matches. Issue #7's frozen independent promotion gate remains unmet.
 
-## Remaining priorities
+Actual detector-path meld identity and Windows capture-to-advice p50/p95,
+accepted/blocked/wrong windows, acquisition, changed-state suppression and
+disconnect/new-hand recovery remain acceptance gaps. Green CI does not fill them.
 
-- #69: current-state advisory usability; offline public replay remains evidence
-  and regression support, not an exhaustive eight-hand transcription prerequisite.
-- #7: untouched source-disjoint evaluation against the frozen promotion gate;
-  same-original-match clips and green CI do not establish generalization.
-- #1/#2/#5/#9: unresolved special-result/low-frequency evidence as tracked by Issues.
-- #6: preserve V0.10 and paired evaluation baselines; no new Agent in this work.
-- #45: internal/read-only Alpha, evidence audit and Windows acceptance.
+## Rules and ordinary simulation
 
-## Engineering checks
+Ordinary settlement/dealer/full-match regression, completed-Kong-tail Zimo x2
+and added-Kong-only Rob-Kong ordinary x2 are established; do not reopen them as
+unknown scoring gaps. Confirmed special-rule facts have staged APIs and fixtures,
+but full opening/Qiangjin/Tianting/in-play re-prompt/simulator/live routing remains
+separate migration work. Current staged opening snapshot:
+`huian-target-2026-10-06-opening-r1`. Hidden opening position remains UNKNOWN;
+live Vision reads visible Gold/flowers. Follow rule evidence and per-rule revisions.
 
-Core regression, Rules/Environment coverage floor 85%, Vision Regression,
-Evidence Contracts, fatal-error lint and installed wheel boundary checks.
-CodeQL analysis succeeded at the shared replay boundary head; GitHub secret
-scanning/push-protection settings still require verification. Stop/recording
-failures are visible and completion-write failures
-remain retryable. Package-local test modules are excluded from runtime wheels.
+## Engineering / audit
 
-Preserve 144 tiles, no fifth copies, at most three playable Gold copies,
-zero-sum two-player settlement, reproducible seeds and explicit UNKNOWN.
+Windows test builds pin Python/dependencies, verify payload inventory, use one
+`current` installation and preserve evidence outside replaced code. Actual
+mirrored-game usability is not implied by installer smoke.
+
+The [2026-10-18 audit](docs/project_audit_20261018.md) records invalid-confidence
+rejection, sequential replay/truncation handling, test isolation and documentation
+repairs. Valid-score threshold 0.82, V0.10 and promotion rules remain unchanged.
+Read CI on the exact final HEAD; never reuse a predecessor's green status.
+
+Execution owners remain Issues #69/#45/#7 (Vision/advisory), #1/#2/#5/#9
+(confirmed-rule migration) and #6 (strategy baseline preservation). This page is
+a snapshot, not a second backlog. Preserve 144 tiles, no fifth copies, at most
+three playable Gold copies, zero-sum settlement and explicit UNKNOWN.

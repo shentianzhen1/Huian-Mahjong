@@ -284,6 +284,27 @@ def _recover_gap_meld_faces(
     return recovered
 
 
+def _upper_gold_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
+    """Target-room upper-left indicator candidates, never concealed tiles.
+
+    This explicit normalized UI region complements the legacy lower display.
+    Multiple candidates abstain rather than choosing the largest decoration.
+    """
+    height, width = frame.shape[:2]
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, (15, 30, 100), (45, 255, 255))
+    count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    candidates = []
+    for x, y, w, h, area in stats[1:count]:
+        if not (0.03 * height <= y <= 0.40 * height and x + w <= 0.20 * width):
+            continue
+        if not (0.02 * width <= w <= 0.07 * width and 0.065 * height <= h <= 0.18 * height):
+            continue
+        if not (1.1 <= h / w <= 2.0 and area >= w * h * 0.45):
+            continue
+        candidates.append((int(x), int(y), int(w), int(h)))
+    return sorted(candidates)
+
 def _gold_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
     height, width = frame.shape[:2]
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -348,6 +369,7 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
     bright_mask = (value > 150).astype(np.uint8) * 255
     all_boxes = _bright_boxes(array)
     yellow_boxes = _gold_boxes(array)
+    upper_gold = _upper_gold_boxes(array)
     preliminary_widths = [box[2] for box in all_boxes]
     preliminary_width = median(preliminary_widths) if preliminary_widths else 0.0
     preliminary_clusters = (
@@ -355,10 +377,8 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
         if preliminary_width else []
     )
     preliminary_hand = max(preliminary_clusters, key=len, default=[])
-    # One yellow tile can be the separate opened-Gold display and geometry
-    # alone cannot safely reclassify it as concealed.  Multiple yellow tile
-    # faces provide the independent layout evidence needed to retain those
-    # overlapping the hand/draw geometry as gold-skinned playable copies.
+    # An upper indicator establishes the opened-Gold role independently.
+    # Keep lower yellow playable tiles; legacy layouts require multiple faces.
     concealed_gold = (
         [
             yellow
@@ -366,11 +386,13 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
             if any(_overlaps(box, yellow) for box in preliminary_hand)
             or _gold_is_draw_visual(yellow, all_boxes)
         ]
-        if len(yellow_boxes) >= 2
+        if upper_gold or len(yellow_boxes) >= 2
         else []
     )
     public_gold = [yellow for yellow in yellow_boxes if yellow not in concealed_gold]
-    gold = max(public_gold, key=lambda box: box[2] * box[3], default=None)
+    gold = (upper_gold[0] if len(upper_gold) == 1 else None) if upper_gold else max(
+        public_gold, key=lambda box: box[2] * box[3], default=None
+    )
     boxes = [box for box in all_boxes if gold is None or not _overlaps(box, gold)]
     widths = [box[2] for box in boxes]
     typical_width = median(widths) if widths else 0.0
@@ -471,6 +493,9 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
                 0.90,
                 frame,
                 session,
+                # The explicit indicator was detected by its yellow skin.
+                # Appearance is distinct from its opened-Gold region role.
+                gold_skin=True,
             )
         )
     components.sort(key=lambda item: item.pixel_bbox[0])
