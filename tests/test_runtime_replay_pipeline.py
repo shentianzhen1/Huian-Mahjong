@@ -158,3 +158,58 @@ class ReplayPipelineTests(unittest.TestCase):
         self.assertEqual(set(result['timings_ms']), {'runtime', 'snapshot_advice', 'pixel_hashing'})
         self.assertTrue(all(value >= 0 for value in result['timings_ms'].values()))
         self.assertAlmostEqual(sum(result['timings_ms'].values()), result['elapsed_ms'], places=2)
+
+    @staticmethod
+    def _dense_replay_burst(number, *, pipeline=None, unknown=False):
+        from workspace.hint_alpha.replay_smoke import evaluate_burst
+
+        class Pixels:
+            def tobytes(self):
+                return b'synthetic-dense-replay-contract'
+
+        ids = list(range(number * 3 + 1, number * 3 + 4))
+
+        def reader(images, root, **options):
+            report = trusted_report()
+            report['session'] = options['session']
+            report['frames'] = options['frame_ids']
+            for component in report['components']:
+                component['frame'] = ids[-1]
+            report['gold_identity_observations'] = [
+                dict(frame=frame, candidate_tile_id='B', tile_id='B',
+                     tile_confidence=.95, identity_reason='accepted')
+                for frame in ids
+            ]
+            if unknown:
+                report['components'][0].update(tile_id='UNKNOWN',
+                                                identity_reason='below_confidence_threshold')
+                report['all_concealed_tile_ids_trusted'] = False
+            return report
+
+        return evaluate_burst([(index, index / 10, Pixels()) for index in ids],
+                              session='synthetic-replay-contract', dataset_root='unused',
+                              reader=reader, pipeline=pipeline)
+
+    def test_stateless_replay_keeps_legacy_decision_and_identity_diagnostics(self):
+        result = self._dense_replay_burst(0)
+        self.assertTrue(result['display_allowed'])
+        self.assertEqual(result['advice_mode'], 'stateless')
+        observations = result['identity_observations']
+        self.assertEqual(observations['components'][0]['tile_id'], 'M1')
+        self.assertEqual([row['frame'] for row in observations['gold_frames']], [1, 2, 3])
+        self.assertFalse(result['safe_for_executor'])
+
+    def test_stateful_replay_requires_fresh_confirmation_after_unknown(self):
+        from workspace.hint_alpha.runtime_pipeline import RuntimeAdvicePipeline
+        from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability
+        pipeline = RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability())
+        results = [self._dense_replay_burst(index, pipeline=pipeline, unknown=index == 2)
+                   for index in range(5)]
+        self.assertEqual([row['display_allowed'] for row in results],
+                         [False, True, False, False, True])
+        self.assertIn('live_hand_meld_waiting_confirmation', results[0]['hint']['issues'])
+        self.assertIn('live_hand_meld_waiting_confirmation', results[3]['hint']['issues'])
+        self.assertEqual(results[2]['identity_observations']['components'][0]['identity_reason'],
+                         'below_confidence_threshold')
+        self.assertTrue(all(row['advice_mode'] == 'stateful' for row in results))
+        self.assertTrue(all(not row['safe_for_executor'] for row in results))

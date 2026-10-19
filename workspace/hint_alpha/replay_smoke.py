@@ -51,7 +51,8 @@ def summarize_windows(rows):
             'rejection_issue_windows': dict(sorted(rejection_issues.items()))}
 
 
-def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None):
+def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
+                   pipeline=None):
     """Samples are unique (frame index, source seconds, RGB image) captures."""
     ids = [item[0] for item in samples]
     times = [item[1] for item in samples]
@@ -73,7 +74,10 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None):
     if times[-1] - times[0] > 0.8:
         report = {**report, 'geometry_untrusted': True,
                   'geometry_issues': ['sparse_source_burst']}
-    advisory = evaluate_runtime_report(report, captured=times[-1], experimental=True)
+    if pipeline is None:
+        advisory = evaluate_runtime_report(report, captured=times[-1], experimental=True)
+    else:
+        advisory = pipeline.evaluate(report, captured=times[-1], experimental=True)
     advisory_finished = time.perf_counter()
     pixel_hashes = [hashlib.sha256(item[2].tobytes()).hexdigest() for item in samples]
     hashing_finished = time.perf_counter()
@@ -93,6 +97,13 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None):
                 'current_session_excluded_from_templates',
             )
         },
+        # Preserve raw candidates and exact gate reasons. An UNKNOWN snapshot
+        # alone cannot distinguish a wrong candidate from a rejected one.
+        'identity_observations': {
+            'components': report.get('components', []),
+            'gold_frames': report.get('gold_identity_observations', []),
+        },
+        'advice_mode': 'stateful' if pipeline is not None else 'stateless',
         'snapshot': asdict(advisory.snapshot), 'hint': asdict(advisory.hint),
         'display_allowed': advisory.display_allowed,
         'sparse_source_burst': times[-1] - times[0] > 0.8,
@@ -157,6 +168,8 @@ def main():
                         help='Require accepted -> blocked -> accepted advice in this replay')
     parser.add_argument('--require-discard', action='store_true',
                         help='Require an accepted post-draw structural discard candidate')
+    parser.add_argument('--stateful-advice', action='store_true',
+                        help='Replay one hand with Gold memory and distinct-frame identity confirmation; not Windows live acceptance')
     args = parser.parse_args()
     if args.source_session and not args.video:
         parser.error('--source-session is only valid with --video')
@@ -176,10 +189,16 @@ def main():
         samples = manifest_samples(args.frame_manifest)
     window = deque(maxlen=3)
     rows = []
+    pipeline = None
+    if args.stateful_advice:
+        from .runtime_pipeline import RuntimeAdvicePipeline
+        from .live_snapshot_stability import LiveSnapshotStability
+        pipeline = RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability())
     for sample in samples:
         window.append(sample)
         if len(window) == 3:
-            rows.append(evaluate_burst(tuple(window), session=session, dataset_root=args.dataset))
+            rows.append(evaluate_burst(tuple(window), session=session,
+                                       dataset_root=args.dataset, pipeline=pipeline))
     if not rows:
         raise ValueError('Source contains fewer than three decoded samples')
     result = {
@@ -191,6 +210,9 @@ def main():
         'original_match_count': 1, 'formal_promotion_evidence': False,
         'safe_for_executor': False, 'identity_threshold': 0.82,
         'clock': 'offline_source_time_not_live_latency_gate',
+        'advice_mode': 'stateful' if pipeline is not None else 'stateless',
+        'hand_scope': ('single_hand_no_automatic_hand_boundary_reset' if pipeline is not None
+                       else 'independent_windows'),
         'windows_capture_validated': False,
         'accepted_windows': sum(row['display_allowed'] for row in rows),
         'blocked_windows': sum(not row['display_allowed'] for row in rows),

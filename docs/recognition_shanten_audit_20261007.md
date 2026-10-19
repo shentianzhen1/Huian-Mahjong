@@ -1,5 +1,86 @@
 # Current hand / meld / shanten audit — 2026-10-07
 
+## 2026-10-19: measured continuous-replay failure baseline
+
+This section supersedes older progress claims for the two exact uploaded clips
+below. It records a reproduced failure, not a recognition improvement. Runtime,
+classifier, templates and threshold 0.82 were unchanged. The measured reader/data
+snapshot is PR #126 head `f20bfb3dd654c0267173911e2d1c4f9f71d0258f`.
+
+Two existing uploaded videos were decoded sequentially in full, at 1108x512 and
+30 fps. Every sixth frame formed overlapping three-frame bursts (0.2-second
+sampling; 0.4-second burst span). The same Runtime report was evaluated both
+statelessly and with `RuntimeAdvicePipeline` plus `LiveSnapshotStability`.
+
+| Exact source | Duration | Windows | Geometry stable | All concealed IDs trusted | Stateless / stateful advice |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `f39bb98a…` | 9.1 s | 44 | 37 | 3 | 0 / 0 |
+| `de1d21b2…` | 94.9 s | 473 | 241 | 0 | 0 / 0 |
+
+All 517 windows were blocked by unknown/untrusted opened Gold. On stable geometry
+windows, every per-frame Gold observation was below 0.82: scores ranged from
+0.350–0.379 in the short clip and 0.338–0.368 in the longer one. In the longer
+clip, concealed candidates P2 and M8 also encountered stored-session support
+gates. Decision counts repeat tiles across overlapping windows; they are not
+unique-tile counts or measured error rates. Geometric rejection has not been
+reviewed against continuous animation truth and must not be called detector
+error/recall. Adding state memory alone did not resolve these two failures.
+
+A directly reviewed short-clip frame 120 (4.0 s) contains sixteen concealed
+tiles and opened Gold M6. All sixteen raw candidates agree with that frame,
+but M6 at 0.817985 and one S2 at 0.812364 remain rejected. Opened Gold's M6
+candidate scores only 0.368945. The manually specified hand yields structural
+shanten 0; that calculator reference is not automatic advice acceptance.
+This is one revealed, assistant-reviewed frame, not a full-video accuracy set.
+
+The short clip hash matches the existing 2026-10-01 mobile-clip record and belongs
+to the already reviewed Sep-26 first-hand development match. Its zero-advice
+Gold/S2 blocker was already recorded on 2026-10-06. It is not the 184-second,
+2796x1290 `fba5…` original that shares its filename: original timestamps/truth
+must not be reused on this derivative. The longer clip's original match group
+remains UNKNOWN. Neither is claimed as a new independent holdout.
+
+Metadata, exact hashes, frame/threshold definitions and per-source rejection
+counts: [failure baseline](../references/vision/2026-10-19/continuous_replay_failure_baseline_v0_1.json).
+Raw videos, frames and complete diagnostic traces remain private; no pixels
+were added to the repository. Linux reader p50/p95 timings in the metadata are
+not Windows capture-to-advice latency.
+
+### Reproduce and inspect
+
+Run from the pinned development checkout with Vision dependencies. Use the exact
+private input bytes matching the chosen metadata entry:
+
+```sh
+python -m workspace.hint_alpha.replay_smoke \
+  --video /private/source.mp4 --source-sha256 EXACT_SOURCE_SHA256 \
+  --start 0 --duration EXACT_SOURCE_DURATION --stride 6 \
+  --output /private/stateless.json --require-accepted
+```
+
+Zero accepted windows intentionally fails `--require-accepted` after retaining
+the report. Reports now preserve `identity_observations` (raw components and
+per-frame Gold decisions), so wrong candidates and correct-but-rejected
+candidates can be distinguished. Add `--stateful-advice` to reproduce the
+existing Gold-memory/distinct-frame confirmation boundary on **one hand**.
+That optional mode has no automatic hand-boundary reset and is not a live
+capture acceptance mode; default replay remains stateless. Neither mode enables
+Hint or Executor. The short clip's updated CLI was checked against the original
+stateless decisions, while the longer comparison used the same reader and
+pipeline functions through a source-locked sequential evaluation harness.
+
+### Immediate recognition work
+
+Prioritize opened-Gold crop/appearance qualification, then the dominant concealed
+identity/support failures on fixed frames. Do not lower 0.82, fill UNKNOWN from
+the top candidate, tune to reproduce old PNG hashes, or claim a fix from CI.
+Review stable/animation truth before changing geometry. Test candidates on the
+same locked development frames and retain a separate untouched original-match
+batch for the formal gate. Existing source recovery remains relevant; adding
+more diagnostic tools or moving PR files is not an accuracy result.
+
+The historical sections below retain their original dates and source scopes.
+
 User's near-term objective: stable current-hand and exposed-meld observations,
 then ordinary structural shanten and minimum-shanten discard suggestions.
 Execution truth remains Issues #69/#45/#7. Audited draft base: PR #126

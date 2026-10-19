@@ -1,0 +1,234 @@
+{
+  "schema_version": "continuous_replay_failure_baseline_v0_1",
+  "measured_on": "2026-10-19",
+  "source_head": "f20bfb3dd654c0267173911e2d1c4f9f71d0258f",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "threshold": 0.82,
+  "executor_enabled": false,
+  "method": {
+    "frame_access": "sequential_decoded_ordinal",
+    "sample_stride_frames": 6,
+    "frame_burst_size": 3,
+    "source_interval_seconds": 0.2,
+    "advisory_comparison": [
+      "stateless",
+      "stateful_gold_memory_and_distinct_frame_identity_confirmation"
+    ],
+    "note": "Overlapping windows are not independent samples; this is a rejection baseline, not a fully annotated accuracy evaluation."
+  },
+  "environment": {
+    "python": "3.12.14",
+    "opencv": "5.0.0",
+    "numpy": "2.3.5",
+    "pillow": "12.3.0",
+    "platform": "Linux offline host, not Windows live capture"
+  },
+  "sources": [
+    {
+      "clip": "clip_0926",
+      "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+      "source_head": "f20bfb3dd654c0267173911e2d1c4f9f71d0258f",
+      "decoded_frames": 273,
+      "reported_frames": 273,
+      "fps": 30,
+      "duration_seconds": 9.1,
+      "size": [
+        1108,
+        512
+      ],
+      "sample_stride_frames": 6,
+      "windows": 44,
+      "geometry_stable_windows": 37,
+      "all_concealed_trusted_windows": 3,
+      "stateless_advice_windows": 0,
+      "stateful_advice_windows": 0,
+      "stateless_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 41,
+        "gold_untrusted": 44,
+        "gold_identity_unknown": 44,
+        "river_untrusted:1": 44,
+        "runtime_gold_not_fully_trusted": 44,
+        "player_river_missing": 44,
+        "opponent_river_missing": 44,
+        "river_untrusted:0": 44,
+        "opponent_meld_missing": 44,
+        "hand_untrusted": 41,
+        "hand_identity_unknown": 41,
+        "meld_untrusted:1": 44,
+        "runtime_gold_frame_identity_untrusted": 37,
+        "player_meld_count_untrusted": 7,
+        "meld_untrusted:0": 7,
+        "meld_identity_unknown:0": 8
+      },
+      "stateful_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 41,
+        "gold_untrusted": 44,
+        "gold_identity_unknown": 44,
+        "river_untrusted:1": 44,
+        "runtime_gold_not_fully_trusted": 44,
+        "player_river_missing": 44,
+        "opponent_river_missing": 44,
+        "river_untrusted:0": 44,
+        "opponent_meld_missing": 44,
+        "hand_untrusted": 41,
+        "hand_identity_unknown": 41,
+        "meld_untrusted:1": 44,
+        "runtime_gold_frame_identity_untrusted": 37,
+        "player_meld_count_untrusted": 7,
+        "meld_untrusted:0": 7,
+        "meld_identity_unknown:0": 8
+      },
+      "concealed_identity_reasons": {
+        "below_confidence_threshold": 52,
+        "accepted": 520
+      },
+      "gold_frame_identity_reasons": {
+        "below_confidence_threshold": 111
+      },
+      "runtime_ms_p50": 300.65822300002765,
+      "runtime_ms_p95": 380.61803800007965,
+      "measurement_scope": "offline_host_runtime_only_not_capture_to_advice",
+      "independent_holdout": false,
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "template_match_exclusion_verified": false,
+      "truth_review": "not_a_fully_reviewed_continuous_truth_set",
+      "wrong_acceptance_accuracy_measured": false,
+      "threshold": 0.82,
+      "executor_enabled": false,
+      "lineage_reference": "references/vision/2026-10-01/issue69_hand1_p6_ming_gang_mobile_clip_v0_1.json"
+    },
+    {
+      "clip": "clip_1012",
+      "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+      "source_head": "f20bfb3dd654c0267173911e2d1c4f9f71d0258f",
+      "decoded_frames": 2847,
+      "reported_frames": 2847,
+      "fps": 30,
+      "duration_seconds": 94.9,
+      "size": [
+        1108,
+        512
+      ],
+      "sample_stride_frames": 6,
+      "windows": 473,
+      "geometry_stable_windows": 241,
+      "all_concealed_trusted_windows": 0,
+      "stateless_advice_windows": 0,
+      "stateful_advice_windows": 0,
+      "stateless_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 473,
+        "player_meld_count_untrusted": 232,
+        "gold_untrusted": 473,
+        "gold_identity_unknown": 473,
+        "river_untrusted:1": 473,
+        "runtime_gold_not_fully_trusted": 473,
+        "player_river_missing": 473,
+        "opponent_river_missing": 473,
+        "river_untrusted:0": 473,
+        "opponent_meld_missing": 473,
+        "hand_untrusted": 473,
+        "hand_identity_unknown": 473,
+        "meld_untrusted:1": 473,
+        "meld_untrusted:0": 232,
+        "runtime_gold_frame_identity_untrusted": 241,
+        "meld_identity_unknown:0": 87
+      },
+      "stateful_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 473,
+        "player_meld_count_untrusted": 232,
+        "gold_untrusted": 473,
+        "gold_identity_unknown": 473,
+        "river_untrusted:1": 473,
+        "runtime_gold_not_fully_trusted": 473,
+        "player_river_missing": 473,
+        "opponent_river_missing": 473,
+        "river_untrusted:0": 473,
+        "opponent_meld_missing": 473,
+        "hand_untrusted": 473,
+        "hand_identity_unknown": 473,
+        "meld_untrusted:1": 473,
+        "meld_untrusted:0": 232,
+        "runtime_gold_frame_identity_untrusted": 241,
+        "meld_identity_unknown:0": 87
+      },
+      "concealed_identity_reasons": {
+        "accepted": 1296,
+        "class_not_cross_session_validated_in_region": 421,
+        "below_confidence_threshold": 1870
+      },
+      "gold_frame_identity_reasons": {
+        "below_confidence_threshold": 723
+      },
+      "runtime_ms_p50": 207.0743429999311,
+      "runtime_ms_p95": 322.0129520000228,
+      "measurement_scope": "offline_host_runtime_only_not_capture_to_advice",
+      "independent_holdout": false,
+      "original_match_group": "UNKNOWN",
+      "template_match_exclusion_verified": false,
+      "truth_review": "not_a_fully_reviewed_continuous_truth_set",
+      "wrong_acceptance_accuracy_measured": false,
+      "threshold": 0.82,
+      "executor_enabled": false,
+      "lineage_reference": null
+    }
+  ],
+  "reviewed_anchor": {
+    "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+    "frame_index": 120,
+    "source_seconds": 4,
+    "rgb_sha256": "96bdf235d0e3613f19faec541e8411dff9df830f6318a507575313a7f51553c5",
+    "evidence_grade": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "annotation_after_model_output": true,
+    "truth": {
+      "concealed_hand": [
+        "M6",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P6",
+        "P6",
+        "P7",
+        "P7",
+        "P8",
+        "P9",
+        "P9",
+        "S2",
+        "S2",
+        "S5",
+        "S5"
+      ],
+      "opened_gold": "M6",
+      "own_melds": []
+    },
+    "raw_candidate_matches": 16,
+    "raw_candidate_total": 16,
+    "runtime_accepted_hand_tiles": 14,
+    "rejected_hand_tiles": [
+      {
+        "tile": "M6",
+        "score": 0.817985
+      },
+      {
+        "tile": "S2",
+        "score": 0.812364
+      }
+    ],
+    "opened_gold_candidate": "M6",
+    "opened_gold_score": 0.368945,
+    "reference_structural_shanten": 0,
+    "reference_is_automatic_pipeline_acceptance": false
+  },
+  "history": {
+    "same_short_clip_previously_measured": "docs/packaging/2026-10-06_gold_role_fix.json",
+    "interpretation": "The short-clip failure reproduces an existing unresolved blocker; this run is not a new recognition improvement."
+  },
+  "limits": [
+    "No full continuous truth set or wrong-acceptance accuracy was measured.",
+    "The 9.1-second derived clip is not the 184-second fba5... original with the same filename; original timestamps/truth were not transferred.",
+    "The second uploaded clip has no verified original-match registry mapping.",
+    "Current-template product behavior is measured; same-match template exclusion and independent holdout status are not claimed.",
+    "Runtime timing excludes Windows capture, UI scheduling and end-to-end latency."
+  ]
+}
