@@ -505,6 +505,606 @@
     "safe_for_runtime": false,
     "next_decision": "Do not promote these crop/feature variants. Further model work requires source-qualified opened-Gold class coverage and separate calibration plus independent whole-hand validation."
   },
+  "learned_classifier_countercheck": {
+    "date": "2026-10-19",
+    "source_head": "49c2c0f8a37a38e52d1b638f1711a5b9924af848",
+    "configuration": {
+      "feature": "unchanged Gold grayscale followed by NumPy 48x72 HOG; 16x16 block, 8x8 stride/cell, 9 unsigned orientation bins with bilinear orientation voting and hard spatial cells; L2-Hys blocks then whole vector L2",
+      "augmentation": "nine fixed crop-preserving variants: original, brightness .72/1.18/.5, existing bottom shadow, existing yellow tone formula, blur .5, 36x48 and 24x32 bicubic down-up sampling",
+      "model": "LinearSVC C=1 and RBF SVC C=1 gamma=scale; balanced; no probability calibration; no parameter sweep"
+    },
+    "anchor_summary_correct_out_of_six": {
+      "True": {
+        "linear": 3,
+        "rbf": 0
+      },
+      "False": {
+        "linear": 6,
+        "rbf": 3
+      }
+    },
+    "training_scopes": {
+      "True": {
+        "training_labels": 65,
+        "augmented_rows": 585,
+        "classes": 29,
+        "training_original_crop_correct": {
+          "linear": 65,
+          "rbf": 65
+        }
+      },
+      "False": {
+        "training_labels": 144,
+        "augmented_rows": 1296,
+        "classes": 34,
+        "training_original_crop_correct": {
+          "linear": 144,
+          "rbf": 144
+        }
+      }
+    },
+    "source_exclusion": "Known Sep26 original match fully excluded. Oct12 group UNKNOWN; training-lineage restriction cannot establish independence for that query. Permissive includes unknown-lineage ordinary sources and is development-only.",
+    "ordinary_cross_match_scorable": 16,
+    "ordinary_cross_match_correct": {
+      "linear": 6,
+      "rbf": 6
+    },
+    "ordinary_cross_match_total": 36,
+    "anchors": [
+      {
+        "clip": "0926",
+        "frame_index": 60,
+        "truth": "M6",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M8",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 60,
+        "truth": "M6",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M6",
+          "rbf": "M6"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 120,
+        "truth": "M6",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M8",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 120,
+        "truth": "M6",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M6",
+          "rbf": "M6"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 180,
+        "truth": "M6",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M8",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 180,
+        "truth": "M6",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M6",
+          "rbf": "M6"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 612,
+        "truth": "M4",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 612,
+        "truth": "M4",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 1812,
+        "truth": "M4",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 1812,
+        "truth": "M4",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M5"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 2718,
+        "truth": "M4",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 2718,
+        "truth": "M4",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M5"
+        }
+      }
+    ],
+    "formal_promotion_evidence": false,
+    "runtime_changed": false,
+    "decision": "Do not promote either fixed HOG/SVM candidate. Scores are uncalibrated and source-qualified coverage/generalization remain inadequate."
+  },
+  "recovered_opened_gold_development_intake": {
+    "schema_version": "recovered_opened_gold_development_packet_v0_1",
+    "date": "2026-10-19",
+    "source_head": "49c2c0f8a37a38e52d1b638f1711a5b9924af848",
+    "classes": [
+      "M1",
+      "M6",
+      "P5",
+      "P6",
+      "S8",
+      "SOUTH"
+    ],
+    "source_original_match_groups": 1,
+    "approved": false,
+    "template_eligible": false,
+    "formal_promotion_evidence": false,
+    "same_match_duplicates_not_independent": true,
+    "runtime_changed": false,
+    "raw_pixels_committed_to_git": false,
+    "source_time_note": "Sequential decoded ordinals and RGB hashes are authoritative; frame/fps seconds are descriptive, not an exact VFR PTS mapping.",
+    "review_note": "These are newly extracted assistant-reviewed opened indicators. Existing source lineage evidence does not confer user confirmation of these Gold labels.",
+    "private_packet_filename": "huian_opened_gold_recovered_private_20261019.zip",
+    "private_packet_sha256": "3c507e06395a3993f609ea09c730741eaa26cd5c17c93497629c047d0e97dfa9",
+    "new_real_gold_skin_development_classes_beyond_current_bank": [
+      "M1",
+      "P5",
+      "P6",
+      "S8",
+      "SOUTH"
+    ],
+    "sources": [
+      {
+        "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+        "bytes": 95922257,
+        "frames": 6512,
+        "fps": 29.997696737044144,
+        "duration_seconds": 217.08333333333334,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1628,
+            "source_seconds": 54.270833333333336,
+            "rgb_sha256": "3470132cdf1540c2e94f2c8648b7e50c2f6bfd669f45bb02ebdd0a8877cde9a3",
+            "reviewed_opened_gold": "S8",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+            "runtime": {
+              "candidate_tile_id": "S8",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.388259,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 3256,
+            "source_seconds": 108.54166666666667,
+            "rgb_sha256": "ae59773b1347512f27d6e6a090d2d1799799b5f48f51073dc8652277005c5994",
+            "reviewed_opened_gold": "SOUTH",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+            "runtime": {
+              "candidate_tile_id": "SOUTH",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.339454,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 4884,
+            "source_seconds": 162.8125,
+            "rgb_sha256": "f5de77a4b5d44ac52c393366ffad504f0ac7820a67c7f2f4d9b5e2fbd9eba1d3",
+            "reviewed_opened_gold": "M6",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+            "runtime": {
+              "candidate_tile_id": "M6",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.366967,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          }
+        ]
+      },
+      {
+        "sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+        "bytes": 91535473,
+        "frames": 6194,
+        "fps": 30,
+        "duration_seconds": 206.46666666666667,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-03/bottom_s234_reference_pin_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1548,
+            "source_seconds": 51.6,
+            "rgb_sha256": "f19fae8182d6b77b505b4f86eededcc5f331e064aa002e9a9d040c77fa9c503b",
+            "reviewed_opened_gold": "S8",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "78c7628233a24b106e0d3bd5d24a98aaeb578580efc467fc3687003b2ef7c47c",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "S8",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.384214,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 3097,
+            "source_seconds": 103.23333333333333,
+            "rgb_sha256": "016216cab634a81390e543afca83a3f155878b85dd85369262f85a481732863a",
+            "reviewed_opened_gold": "M1",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+            "runtime": {
+              "candidate_tile_id": "M1",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.463979,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 4645,
+            "source_seconds": 154.83333333333334,
+            "rgb_sha256": "cce946700a3a7e04eb6f90b6e4a860b4df591bcf798c01d0ea0122b8de0c0e4f",
+            "reviewed_opened_gold": "M1",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": true,
+            "crop_rgb_sha256": "2b63296321ea11b5456063953cff8cc32410651c824a66f77b8d161993613cfd",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "M1",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.459871,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          }
+        ]
+      },
+      {
+        "sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+        "bytes": 82929640,
+        "frames": 5658,
+        "fps": 30,
+        "duration_seconds": 188.6,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1414,
+            "source_seconds": 47.13333333333333,
+            "rgb_sha256": "bc3a056c819f7f4cc08841d29114a40402223a004e7f76b66fbdf93d36d099c8",
+            "reviewed_opened_gold": "P6",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+            "runtime": {
+              "candidate_tile_id": "P7",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.350768,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 2829,
+            "source_seconds": 94.3,
+            "rgb_sha256": "acfad6ec303e6db12f09b5a8ec987b4c113b02522f14e9eeb52c691c85cee729",
+            "reviewed_opened_gold": null,
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "SETTLEMENT_SCREEN_NO_OPENED_INDICATOR_QUERY",
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 4243,
+            "source_seconds": 141.43333333333334,
+            "rgb_sha256": "8945f5171343048656c204130d6b611fd71e75ea85a0256236bd31064047d980",
+            "reviewed_opened_gold": "P5",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+            "runtime": {
+              "candidate_tile_id": "P5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.457052,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          }
+        ]
+      },
+      {
+        "sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "bytes": 82742742,
+        "frames": 5658,
+        "fps": 30,
+        "duration_seconds": 188.6,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1414,
+            "source_seconds": 47.13333333333333,
+            "rgb_sha256": "184a62dd0a2c07a996acb31aca5e46262faf1a36a35e748554d7a34e342e4d52",
+            "reviewed_opened_gold": "P6",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "28509a8a06f3017fb74515dd544c532ed81e3f2804936ab8610287fe22914b99",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "P7",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.351367,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 2829,
+            "source_seconds": 94.3,
+            "rgb_sha256": "be80ccf94ffbf2d594de890ebfd8ab24befebc762ebc87251bf83262a172bbe2",
+            "reviewed_opened_gold": null,
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "SETTLEMENT_SCREEN_NO_OPENED_INDICATOR_QUERY",
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 4243,
+            "source_seconds": 141.43333333333334,
+            "rgb_sha256": "ad45f4ce47536bca7e6add91b2d3aefb93ae68dc604eb5dd08d1d04858a03b80",
+            "reviewed_opened_gold": "P5",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "61983b7e783388ab963c77435828b7a5837edd88593ff69ea89c5e99f4b6fbd7",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "P5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.457092,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          }
+        ]
+      }
+    ]
+  },
   "limits": [
     "No full continuous truth set or wrong-acceptance accuracy was measured.",
     "The 9.1-second derived clip is not the 184-second fba5... original with the same filename; original timestamps/truth were not transferred.",

@@ -114,6 +114,62 @@ needs source-qualified opened-indicator coverage, calibrated scores, and a
 separate whole-hand evaluation. The 517-window zero-advice baseline is unchanged.
 Raw pixels and private harness outputs remain outside the repository.
 
+### Learned classifier and recovered Gold development material (2026-10-19)
+
+Current approved bank coverage was reproduced: 147 projected references across
+34 classes, but only two direct `gold_region` classes (N/S3) and one real
+yellow-skin class (M6). Ordinary class coverage is not opened-Gold coverage.
+Only 10 projected classes have two reviewed original-match groups; the legacy
+session-based count is 23. No labels or Runtime coverage policy changed.
+
+Ran fixed learned HOG + LinearSVC/RBF-SVC candidates on the same six revealed
+Gold anchors. HOG uses the unchanged Gold-gray feature, unsigned 9-bin cells,
+16x16 blocks with 8x8 stride/cells, block L2-Hys and vector L2. Both models use
+C=1, balanced classes; RBF gamma is `scale`. Nine deterministic crop-preserving
+appearance variants cover brightness, bottom shadow, yellow tone, blur and
+downsample/upscale. The initial attempt to reuse MobileNet's square canvas was
+discarded as incompatible with this HOG input; the reported run keeps actual
+crop geometry. No hyperparameter sweep or probability calibration was performed.
+
+| Training scope | Linear Gold anchor Top-1 | RBF Gold anchor Top-1 |
+| --- | ---: | ---: |
+| Reviewed lineage only: 65 ordinary labels / 585 augmented rows / 29 classes | 3/6 | 0/6 |
+| Permissive development: 144 ordinary labels / 1296 augmented rows / 34 classes | 6/6 | 3/6 |
+
+The known Sep-26 query match is excluded in both scopes; unresolved sources enter
+only the permissive scope. Oct-12's query match remains UNKNOWN, so even the
+reviewed-training-only result is not an independent evaluation for that clip.
+Both models classify all their unaugmented training crops correctly as a fit
+sanity check. In the separate ordinary-tile leave-one-match-out countercheck,
+both achieve 6/16 scorable queries, while 20 more lack true-class references.
+Neither learned candidate qualifies for Runtime. This is not a complete learned
+model search or evidence against stronger pretrained representations. This host
+currently has no torch/torchvision/pretrained weights; the prior MobileNet
+experiment remains historical evidence, not a newly rerun model.
+
+Four existing uploaded videos were recovered, SHA-verified and sequentially
+decoded: `55328a7b…` (217.083 s), `4ffc9187…` (206.467 s), `7a8edc73…`
+(188.6 s), `3c15ab16…` (188.6 s). Existing exact-SHA source records assign
+all four to the same Sep-26 original match; the last two cover the same events
+and do not increase independence. Twelve fixed quarter/middle/three-quarter
+anchors were reviewed: ten show opened indicators and two show settlement.
+
+Selected one private crop per class for **M1, M6, P5, P6, S8, SOUTH**. This
+recovers five real yellow-skin development classes beyond the current approved
+M6-only bank. Each binds source SHA, sequential ordinal, exact RGB hash,
+detected classification bbox and crop hash. These new labels are assistant
+visual reviews, not user-confirmed Gold labels; they remain unapproved staging
+material, with no template admission. The private six-crop packet is retained
+separately; no pixels were added to Git. Source time uses frame/fps only as a
+description; RGB hashes/decoded ordinals are authoritative for these VFR inputs.
+
+Current raw candidates match 8/10 visible indicator anchors, but all ten are
+below threshold; P6 becomes P7 in both encodings of the same event. These are
+selected revealed checkpoints, not continuous accuracy. The new samples can
+support a development training comparison, but require source-diverse Gold
+queries and calibration before any promotion. They do not resolve the pending
+Gold E source gap or the 517-window zero-advice product baseline.
+
 ### Immediate recognition work
 
 Prioritize opened-Gold crop/appearance qualification, then the dominant concealed
