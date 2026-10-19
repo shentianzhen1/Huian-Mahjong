@@ -224,6 +224,287 @@
     "same_short_clip_previously_measured": "docs/packaging/2026-10-06_gold_role_fix.json",
     "interpretation": "The short-clip failure reproduces an existing unresolved blocker; this run is not a new recognition improvement."
   },
+  "opened_gold_crop_appearance_countercheck": {
+    "measured_on": "2026-10-19",
+    "source_head": "32cd2dd7be3de24b6c489856a3a54d2c9b4ed87d",
+    "status": "REVEALED_DEVELOPMENT_NO_RUNTIME_FIX",
+    "annotation_after_model_output": true,
+    "source_filter": "exact_source_sha_only_not_original_match_disjoint",
+    "query_bank_scope": "all_current_approved_readable_labels",
+    "direct_crop_review": "Six indicator faces visibly contained in both crop types; no obvious tile truncation. This does not establish full-video geometry accuracy.",
+    "normalization_variants": [
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "runtime_gray",
+        "top1_matches": 4,
+        "total": 6,
+        "top_score_range": [
+          0.3403765559196472,
+          0.36894491314888
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "face_only_gray",
+        "top1_matches": 6,
+        "total": 6,
+        "top_score_range": [
+          0.31251779198646545,
+          0.34524470567703247
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "face_only_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.32276883721351624,
+          0.3277694284915924
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "inner_08_gray",
+        "top1_matches": 4,
+        "total": 6,
+        "top_score_range": [
+          0.395484060049057,
+          0.4295620322227478
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "inner_08_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.26933956146240234,
+          0.2987179458141327
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "runtime_gray",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.3631662130355835,
+          0.41254138946533203
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "face_only_gray",
+        "top1_matches": 3,
+        "total": 6,
+        "top_score_range": [
+          0.42409253120422363,
+          0.43741583824157715
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "face_only_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.30568456649780273,
+          0.31790730357170105
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "inner_08_gray",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.41161632537841797,
+          0.463089257478714
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "inner_08_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.2592313289642334,
+          0.29239729046821594
+        ]
+      }
+    ],
+    "anchors": [
+      {
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "frame_index": 60,
+        "rgb_sha256": "fa07bde20084915c2ce8a2ba8858cb06d6651395419a76ff55849cf07ba1c128",
+        "reviewed_opened_gold": "M6",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M6",
+        "runtime_score": 0.36739,
+        "projection_candidate": "M6",
+        "role_invariant_candidate": "M6",
+        "wan_upper_half_candidate": "M6"
+      },
+      {
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "frame_index": 120,
+        "rgb_sha256": "96bdf235d0e3613f19faec541e8411dff9df830f6318a507575313a7f51553c5",
+        "reviewed_opened_gold": "M6",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M6",
+        "runtime_score": 0.368945,
+        "projection_candidate": "M6",
+        "role_invariant_candidate": "M6",
+        "wan_upper_half_candidate": "M6"
+      },
+      {
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "frame_index": 180,
+        "rgb_sha256": "0e56818e15e442731702c1677d3219dd4cae9b6bf2b0c63d7fa1e267a20445c0",
+        "reviewed_opened_gold": "M6",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M6",
+        "runtime_score": 0.367324,
+        "projection_candidate": "M6",
+        "role_invariant_candidate": "M6",
+        "wan_upper_half_candidate": "M6"
+      },
+      {
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "frame_index": 612,
+        "rgb_sha256": "4ba94faa32b26e23bcd75a30516df65b236c2d53b627f2dd669f830101ef1f24",
+        "reviewed_opened_gold": "M4",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M4",
+        "runtime_score": 0.346056,
+        "projection_candidate": "M1",
+        "role_invariant_candidate": "M1",
+        "wan_upper_half_candidate": "M4"
+      },
+      {
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "frame_index": 1812,
+        "rgb_sha256": "baf57520de513e2b48385e65146379d3d6c5b87c69304a3d5248274209d69b2d",
+        "reviewed_opened_gold": "M4",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M1",
+        "runtime_score": 0.340377,
+        "projection_candidate": "M1",
+        "role_invariant_candidate": "M1",
+        "wan_upper_half_candidate": "M4"
+      },
+      {
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "frame_index": 2718,
+        "rgb_sha256": "4e172965d83cc7e732282f098e3093c59ed40b89a9aa9a7e41223b74f23b6883",
+        "reviewed_opened_gold": "M4",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M1",
+        "runtime_score": 0.343158,
+        "projection_candidate": "M1",
+        "role_invariant_candidate": "M1",
+        "wan_upper_half_candidate": "M4"
+      }
+    ],
+    "existing_query_size_projection": {
+      "top1_matches": 3,
+      "total": 6
+    },
+    "existing_role_invariant": {
+      "top1_matches": 3,
+      "total": 6
+    },
+    "wan_upper_half_candidate": {
+      "definition": "Use existing _appearance_maps, choose coarse family with existing full-face scores; for M family compare [:, :48, :] with existing _full_face_score(max_shift=4), choose highest class maximum. No parameter sweep.",
+      "anchor_top1_matches": 6,
+      "anchor_total": 6,
+      "scores_are_runtime_confidence": false,
+      "cross_match_countercheck": {
+        "total": 36,
+        "scorable": 16,
+        "baseline_correct": 7,
+        "candidate_correct": 7,
+        "gains": [],
+        "regressions": [],
+        "formal_promotion_evidence": false,
+        "runtime_changed": false
+      },
+      "countercheck_query_scope": "ordinary concealed representatives; not opened-Gold queries. Of 36 queries, 20 lack an eligible reference for their true class; this is inadequate Gold generalization evidence."
+    },
+    "runtime_changed": false,
+    "threshold_changed": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "next_decision": "Do not promote these crop/feature variants. Further model work requires source-qualified opened-Gold class coverage and separate calibration plus independent whole-hand validation."
+  },
   "limits": [
     "No full continuous truth set or wrong-acceptance accuracy was measured.",
     "The 9.1-second derived clip is not the 184-second fba5... original with the same filename; original timestamps/truth were not transferred.",

@@ -69,6 +69,51 @@ Hint or Executor. The short clip's updated CLI was checked against the original
 stateless decisions, while the longer comparison used the same reader and
 pipeline functions through a source-locked sequential evaluation harness.
 
+### Opened-Gold crop/appearance countercheck (2026-10-19)
+
+Six directly reviewed revealed-development anchors use sequential ordinals
+60/120/180 from `f39bb98a…` (M6) and 612/1812/2718 from `de1d21b2…` (M4).
+Exact RGB hashes are recorded in the baseline metadata. The visible tile face
+is contained in both the detector box `[110,48,36,48]` and the expanded
+classification box `[107,41,42,57]`; there is no obvious truncation on these
+six anchors. This does not establish geometry correctness across either video.
+
+Reused the five fixed `opened_gold_normalization_ab.NORMALIZATION_MODES` on
+both crop types, using symmetric query/reference features and all approved
+readable current labels after exact-query-SHA exclusion. Original-match
+disjointness is not established, especially for the UNKNOWN-group M4 clip.
+
+| Candidate | M6 + M4 anchor Top-1 matches | Interpretation |
+| --- | ---: | --- |
+| Expanded crop, current gray feature | 4/6 | Current low-score ranking |
+| Expanded crop, face-only gray | 6/6 | Top score only 0.313–0.345; no calibrated acceptance |
+| Expanded crop, inner-8% gray | 4/6 | Top score only 0.395–0.430 |
+| Tight detector crop, current gray | 0/6 | Directly tightening the crop regresses all six |
+| Existing query-size projection | 3/6 | M6 correct; M4 becomes M1 |
+| Existing role-invariant feature | 3/6 | M6 correct; M4 becomes M1 |
+| Experimental Wan upper-half feature | 6/6 | Local ranking success; no generalization or calibration claim |
+
+The last experiment tests a specific explanation: the common lower Wan glyph
+can dominate its distinguishing numeral. It retains the existing full-face
+coarse-family choice, then, for family M only, ranks class maxima using
+`_full_face_score(query_maps[:, :48, :], reference_maps[:, :48, :])` from the
+existing 64x96 `_appearance_maps`; the default max shift remains 4. No sweep or
+per-identity constants were selected. This new score is not Runtime confidence.
+
+Counterchecked that fixed feature on the existing deterministic ordinary-tile
+leave-one-original-match-out representatives, excluding unreviewed lineage and
+the whole query match. Both the original role-invariant feature and the new
+candidate score **7/16 scorable queries**, with zero gains and zero regressions.
+Another 20 of 36 representatives lack a disjoint true-class reference. These
+ordinary-tile queries cannot establish opened-Gold generalization; in particular,
+the six-anchor result does not supply missing cross-match M4/M6 coverage.
+
+Decision: none of these experiments qualifies a Runtime change. Simple crop
+tightening is contradicted by this countercheck. Further identity-model work
+needs source-qualified opened-indicator coverage, calibrated scores, and a
+separate whole-hand evaluation. The 517-window zero-advice baseline is unchanged.
+Raw pixels and private harness outputs remain outside the repository.
+
 ### Immediate recognition work
 
 Prioritize opened-Gold crop/appearance qualification, then the dominant concealed
