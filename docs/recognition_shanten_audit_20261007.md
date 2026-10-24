@@ -1,5 +1,80 @@
 # Current hand / meld / shanten audit — 2026-10-07
 
+## 2026-10-24: sampled truth and blocker attribution
+
+Replayed both exact private sources on parent `1fdc7aa` with the unchanged
+classifier, templates and 0.82 threshold. Automatic advice remains **0/517**.
+Added an offline snapshot-intervention runner; it is not imported by Runtime,
+Hint UI, or Executor. `replay_smoke` only adds an explicit geometry trust flag.
+
+Reviewed every sampled image used in the comparison, including whole-hand
+composition before the P6 kong, the M3 replacement draw, and after M3 discard.
+Truth pins sequential frame ordinals and RGB hashes. Labels are assistant-reviewed
+revealed development annotations, not player-confirmed or independent holdout truth.
+
+| Same reviewed windows | Machine | Correct Gold only | Correct hand only | Correct Gold + hand |
+| --- | ---: | ---: | ---: | ---: |
+| Short clip, 37 stable windows | 0 | 3 | 0 | 37 |
+| Longer clip, 2 reviewed bursts | 0 | 0 | 0 | 2 |
+
+Counts mean **snapshot shanten calculation allowed under manual substitution**,
+not automatically correct/accepted hands. Geometry, source scope, own meld output,
+and physical checks are retained. This is stateless attribution and does not
+prove multiframe live confirmation, change recovery, or correctness on unsampled
+frames. Public river and exact meld identities remain incomplete. Calculator
+outputs are not independent validation of shanten or special Hu rules.
+
+The short comparison covers frames 0..180, 198..228, and 240..270 at stride 6.
+Seven windows touching unannotated moving tiles (186/192/234) are excluded.
+All 37 eligible complete raw candidate hands match sampled truth, while 34 are
+rejected. Repeated rejection decisions: S2 35, M6 15, M3 2, all below threshold.
+These are overlapping observations, not unique errors or independent matches.
+
+The longer comparison contains only bursts 1800/1806/1812 and
+2706/2712/2718. Both have a true S6 represented by raw S4 and true G by raw S8.
+The two P2 candidates in each burst are correct and above 0.82 but rejected by
+`class_not_cross_session_validated_in_region`. Thus there are **three distinct
+failure types**: correct ranking with low scores, wrong ranking, and insufficient
+source support. The other 471 windows have no complete sampled truth; these two
+bursts do not establish a whole-video error rate. Its original match remains UNKNOWN.
+The 600/606/612 anchor contains a moving S6 discard and is not labeled as a
+constant complete-hand burst.
+
+### Execution priorities from this attribution
+
+1. Freeze these source/hash-bound development comparisons. Gold alone recovers
+   only 3/39 reviewed windows, so hand work must proceed alongside Gold.
+2. Restore qualified P2 support and its original-match lineage; a confidence or
+   model change cannot replace missing provenance.
+3. Evaluate Gold appearance and concealed S6/G confusions on the identical crops
+   with source-separated classifier training. S2/M6/M3 score calibration is a
+   separate question; do not lower 0.82 or treat neural logits as Runtime confidence.
+4. Compare complete correct trusted hands and wrong accepts on a separate match
+   before Runtime wiring. These revealed windows are development regression only.
+5. After identity improves, rerun sequential stateful change/recovery checks.
+   The current intervention does not clear live release or Executor gates.
+
+Reproduce (first generate fresh replay with the existing source-locked command):
+
+```sh
+python -m workspace.hint_alpha.replay_blocker_attribution \
+  --replay /private/short_baseline.json \
+  --truth references/vision/2026-10-24/short_clip_reviewed_sample_truth_v0_1.json \
+  --output /private/short_attribution.json
+```
+
+Use the corresponding `long_clip_reviewed_sample_truth_v0_1.json` for the
+94.9-second source. The runner rejects mismatched source/RGB hashes, missing
+geometry flags, stateful replays and source-session conflicts; it excludes
+incomplete truth or a changed hand within a burst. Machine adapter messages are
+retained separately from current gate issues, so intervention results do not
+present old rejection logs as still-active gates.
+
+Exact results and exclusions are under `blocker_attribution_20261024` in the
+[existing evidence record](../references/vision/2026-10-19/continuous_replay_failure_baseline_v0_1.json).
+Private video, full-frame pixels and complete replay traces are not committed.
+
+
 ## 2026-10-19: measured continuous-replay failure baseline
 
 This section supersedes older progress claims for the two exact uploaded clips

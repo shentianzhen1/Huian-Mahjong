@@ -108,6 +108,7 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
         'display_allowed': advisory.display_allowed,
         'sparse_source_burst': times[-1] - times[0] > 0.8,
         'geometry_issues': report.get('geometry_issues', []),
+        'geometry_untrusted': report.get('geometry_untrusted', True),
         'safe_for_executor': False,
     }
 

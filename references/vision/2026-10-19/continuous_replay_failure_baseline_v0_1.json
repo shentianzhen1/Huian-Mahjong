@@ -1111,5 +1111,339 @@
     "The second uploaded clip has no verified original-match registry mapping.",
     "Current-template product behavior is measured; same-match template exclusion and independent holdout status are not claimed.",
     "Runtime timing excludes Windows capture, UI scheduling and end-to-end latency."
-  ]
+  ],
+  "blocker_attribution_20261024": {
+    "source_head": "1fdc7aa60309122e94bfac2f219f0a8b409aef1c",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "automatic_acceptance_claim": false,
+    "scope": "Stateless snapshot interventions; not classifier repair, calibration, continuous truth or live validation.",
+    "truth_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "annotation_after_model_output": true,
+    "threshold": 0.82,
+    "executor_enabled": false,
+    "sources": [
+      {
+        "clip": "short",
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "truth_reference": "references/vision/2026-10-24/short_clip_reviewed_sample_truth_v0_1.json",
+        "replay_windows": 44,
+        "automatic_advice_windows": 0,
+        "comparable_windows": 37,
+        "excluded_windows": 7,
+        "calculation_allowed_windows": {
+          "machine": 0,
+          "gold_only": 3,
+          "hand_only": 0,
+          "gold_and_hand": 37
+        },
+        "raw_candidate_exact_hands": 37,
+        "rejected_candidate_decisions": {
+          "M6|below_confidence_threshold": 15,
+          "S2|below_confidence_threshold": 35,
+          "M3|below_confidence_threshold": 2
+        },
+        "gold_and_hand_shanten_distribution": {
+          "0": 37
+        },
+        "details": []
+      },
+      {
+        "clip": "long",
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "truth_reference": "references/vision/2026-10-24/long_clip_reviewed_sample_truth_v0_1.json",
+        "replay_windows": 473,
+        "automatic_advice_windows": 0,
+        "comparable_windows": 2,
+        "excluded_windows": 471,
+        "calculation_allowed_windows": {
+          "machine": 0,
+          "gold_only": 0,
+          "hand_only": 0,
+          "gold_and_hand": 2
+        },
+        "raw_candidate_exact_hands": 0,
+        "rejected_candidate_decisions": {
+          "P2|class_not_cross_session_validated_in_region": 4,
+          "S3|below_confidence_threshold": 2,
+          "S4|below_confidence_threshold": 2,
+          "S8|below_confidence_threshold": 2,
+          "S9|below_confidence_threshold": 6,
+          "S2|below_confidence_threshold": 1,
+          "S7|below_confidence_threshold": 1
+        },
+        "gold_and_hand_shanten_distribution": {
+          "2": 2
+        },
+        "details": [
+          {
+            "frames": [
+              1800,
+              1806,
+              1812
+            ],
+            "geometry_untrusted": false,
+            "machine_hand_exact": false,
+            "original_adapter_issues": [
+              "runtime_hand_not_fully_trusted",
+              "runtime_gold_frame_identity_untrusted",
+              "runtime_gold_not_fully_trusted",
+              "player_river_missing",
+              "opponent_river_missing",
+              "opponent_meld_missing"
+            ],
+            "candidate_diagnostic": {
+              "whole_hand_exact": false,
+              "missing_true_tiles": {
+                "S6": 1,
+                "G": 1
+              },
+              "extra_candidate_tiles": {
+                "S4": 1,
+                "S8": 1
+              },
+              "rejected_candidates": [
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.882461
+                },
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.862129
+                },
+                {
+                  "candidate_tile_id": "S3",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.611701
+                },
+                {
+                  "candidate_tile_id": "S4",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.585948
+                },
+                {
+                  "candidate_tile_id": "S8",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.817704
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.788883
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.784202
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.766816
+                }
+              ]
+            },
+            "decisions": {
+              "machine": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "hand_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_and_hand": {
+                "calculation_allowed": true,
+                "shanten": 2,
+                "phase": "PRE_DRAW",
+                "gate_issues": [
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              }
+            }
+          },
+          {
+            "frames": [
+              2706,
+              2712,
+              2718
+            ],
+            "geometry_untrusted": false,
+            "machine_hand_exact": false,
+            "original_adapter_issues": [
+              "runtime_hand_not_fully_trusted",
+              "runtime_gold_frame_identity_untrusted",
+              "runtime_gold_not_fully_trusted",
+              "player_river_missing",
+              "opponent_river_missing",
+              "opponent_meld_missing"
+            ],
+            "candidate_diagnostic": {
+              "whole_hand_exact": false,
+              "missing_true_tiles": {
+                "S6": 1,
+                "G": 1
+              },
+              "extra_candidate_tiles": {
+                "S4": 1,
+                "S8": 1
+              },
+              "rejected_candidates": [
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.885312
+                },
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.84791
+                },
+                {
+                  "candidate_tile_id": "S2",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.819726
+                },
+                {
+                  "candidate_tile_id": "S3",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.589543
+                },
+                {
+                  "candidate_tile_id": "S4",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.604685
+                },
+                {
+                  "candidate_tile_id": "S7",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.743066
+                },
+                {
+                  "candidate_tile_id": "S8",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.808063
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.791571
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.761247
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.763814
+                }
+              ]
+            },
+            "decisions": {
+              "machine": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "hand_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_and_hand": {
+                "calculation_allowed": true,
+                "shanten": 2,
+                "phase": "PRE_DRAW",
+                "gate_issues": [
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "limits": [
+      "Short 37 overlapping windows are one known development match, not 37 independent hands.",
+      "Long two windows do not represent all 473 windows; original match lineage remains UNKNOWN.",
+      "Source and RGB hashes bind sampled-frame truth; no unsampled-frame truth is inferred.",
+      "Manual substitutions are never counted as automatic recognition or promotion.",
+      "Snapshot interventions preserve machine geometry/melds/source/physical checks; no stateful confirmation/recovery claim.",
+      "Shanten numbers are calculator outputs on substituted inputs, not independent rule validation."
+    ]
+  }
 }
