@@ -202,3 +202,10 @@ The audit also reports `multi_session_covered`. That field means only
 "present under at least two stored logical `source_session` values"; it must
 not be described as independent original-match evidence unless provenance
 separately proves that relationship.
+
+## Bundled reference pack versioning
+
+The shipped reference pack has its own version, separate from the application version.
+Any asset or recognition-manifest change must publish a new version; published versions
+must not be overwritten. See [素材包版本规则](../../docs/reference_pack_versioning.md)
+for naming, synchronized metadata, and release history.
