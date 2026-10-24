@@ -63,3 +63,13 @@ class GoldClassifierRuntimeCropTests(unittest.TestCase):
         with patch.object(classifier, '_rank', return_value=[('M3',36),('M1',35)]), \
                 patch.object(classifier, '_rank_numerals', return_value=[('M1',2),('M3',2)]):
             self.assertEqual(classifier.classify(Image.new('RGB', (42,57))).tile_id, 'M3')
+
+    def test_blank_opening_card_does_not_choose_a_tied_tile(self):
+        from unittest.mock import patch
+        from workspace.vision.tiles_v0_1.gold_classifier import GoldTileClassifier
+        classifier = GoldTileClassifier({'S4':[np.ones((2,128), np.float32)]})
+        for scores in ([('S4',2),('P4',2)], [('S4',0),('P4',0)]):
+            with self.subTest(scores=scores), patch.object(classifier, '_rank', return_value=scores):
+                result = classifier.classify(Image.new('RGB', (42,57), 'yellow'))
+                self.assertEqual(result.tile_id, 'UNKNOWN')
+                self.assertEqual(result.method, 'sift_no_unique_match')

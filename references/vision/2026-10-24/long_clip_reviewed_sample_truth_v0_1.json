@@ -3,7 +3,7 @@
   "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
   "annotation_after_model_output": true,
   "formal_promotion_evidence": false,
-  "original_match_group": "UNKNOWN",
+  "original_match_group": "reviewed_match_2026_10_12_room324504",
   "review_scope": "Two sampled stable bursts only, 1800/1806/1812 and 2706/2712/2718. First 600/606/612 anchor contains moving S6 discard and is not given complete-hand truth.",
   "frames": [
     {
@@ -140,5 +140,6 @@
         "9": "G -> S8"
       }
     }
-  }
+  },
+  "source_group_evidence_reference": "references/vision/2026-10-19/continuous_replay_failure_baseline_v0_1.json#gold_temporal_shadow_20261024"
 }

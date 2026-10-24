@@ -1,5 +1,77 @@
 # Current hand / meld / shanten audit — 2026-10-07
 
+## 2026-10-24: Gold candidate in sequential video, including opening/settlement
+
+Moved the repaired candidate from twelve chosen crops to the actual sequential
+frame detector. The shadow runner verifies the video SHA and every baseline
+sample's RGB hash, detects the explicit Gold component on each frame, computes
+its detector classification crop, and applies SIFT. It never supplies a manual
+tile ID to the model, changes whole-hand geometry, or opens trusted advice.
+
+Reviewed every sampled Gold crop in chronological contact sheets. Independently
+reviewed the opening and settlement full frames, including readable Gold faces
+that the detector missed. This is assistant-reviewed revealed development truth
+at 5 fps, not a full-frame-rate or independent holdout claim.
+
+| Exact replay | Sampled frames | Readable Gold frames | Correct candidate | Wrong identity | Readable missed |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `f39bb98a…`, short | 46 | 46 | 46 | 0 | 0 |
+| `de1d21b2…`, long | 475 | 462 | 460 | 0 | 2 |
+
+The longer source has 13 sampled frames without a readable opened identity:
+0..54 (opening/not-yet-revealed/blank flip) and 2832..2844 (settlement), stride 6.
+All now produce no known candidate. Readable M4 is missed at frames 60 and 66:
+the tile is still white during the flip and the yellow-skin detector has not
+recognized its Gold role. Do not hide these misses or spend the next cycle
+optimizing this short transition before scoring/advice integration.
+
+Found and fixed one false candidate: blank yellow frame 54 had equal two-match
+scores for several classes and arbitrarily became S4. A zero/tied final match
+now returns UNKNOWN. This is not a new score threshold; it prevents a sort-order
+tie from being presented as an observed tile identity. Numeral ties still fall
+back to the full-face score when that score has a unique winner.
+
+Three-distinct-frame candidate agreement is **44/44** short and **458/473** long.
+Only 37 and 241 of those respectively also have trusted whole-hand geometry;
+Gold can remain visible while a hand is moving. The shadow candidate does not
+clear that separate geometry fact. First agreement is at source times 0.4s and
+2.8s. In the long source the face first becomes readable at 2.0s, so sampled
+candidate acquisition is 0.8s; this is not Windows processing/capture latency.
+
+### Source qualification from directly visible settlement evidence
+
+The long source's frame 2832 explicitly displays:
+`房号324504 第1/8局 2026-10-12 21:31:14`.
+The exact video SHA and full-frame RGB hash are recorded in the evidence.
+Its original-match group is now `reviewed_match_2026_10_12_room324504`, superseding
+UNKNOWN for this source. The development lineage registry and sampled-hand truth
+are updated. This does not retrospectively make earlier tuning a holdout test.
+Both the known Sep26 and Oct12 groups are excluded in the final long shadow run;
+80 unrelated/unknown-lineage stored labels remain in the development training bank.
+
+Reproduce without rerunning the full suite or all Runtime classifications:
+
+```sh
+python -m workspace.vision.tiles_runtime_v0_2.opened_gold_temporal_probe \
+  --video /private/long.mp4 --replay /private/long_baseline.json \
+  --exclude-match reviewed_match_2026_09_26_eight_hand \
+  --exclude-match reviewed_match_2026_10_12_room324504 \
+  --output /private/long_gold_shadow.json
+```
+
+Use the short video/baseline pair for the 46-frame short run. No fixed ROI or
+old identity is carried across a missing observation. Private traces are
+reproducible from the original videos; compact truth ranges, trace/crop digests,
+misses and the opening regression are under `gold_temporal_shadow_20261024` in
+the existing evidence record. No private pixels are added to Git.
+
+**Still not delivered:** Runtime trusted Gold/advice scoring. SIFT match counts
+are not 0.82 confidence and the existing advice path continues using NCC.
+No trusted advice improvement is claimed: baseline remains 0/517. The next task
+is Gold-domain score calibration and the correct-candidate hand/support rejection,
+not another generic tool migration or a perfect opening-animation detector.
+
+
 ## 2026-10-24: repair the existing Gold SIFT path
 
 Found and reproduced a concrete loader defect: `GoldTileClassifier._crop_label`

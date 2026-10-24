@@ -164,13 +164,15 @@
       "runtime_ms_p95": 322.0129520000228,
       "measurement_scope": "offline_host_runtime_only_not_capture_to_advice",
       "independent_holdout": false,
-      "original_match_group": "UNKNOWN",
+      "original_match_group": "reviewed_match_2026_10_12_room324504",
       "template_match_exclusion_verified": false,
       "truth_review": "not_a_fully_reviewed_continuous_truth_set",
       "wrong_acceptance_accuracy_measured": false,
       "threshold": 0.82,
       "executor_enabled": false,
-      "lineage_reference": null
+      "lineage_reference": "references/vision/2026-10-01/concealed_template_match_lineage.development.json",
+      "original_match_group_at_baseline_measurement": "UNKNOWN",
+      "source_group_review": "gold_temporal_shadow_20261024.sources[1].source_group_evidence"
     }
   ],
   "reviewed_anchor": {
@@ -1109,7 +1111,7 @@
   "limits": [
     "No full continuous truth set or wrong-acceptance accuracy was measured.",
     "The 9.1-second derived clip is not the 184-second fba5... original with the same filename; original timestamps/truth were not transferred.",
-    "The second uploaded clip has no verified original-match registry mapping.",
+    "The second clip original match was UNKNOWN at baseline measurement; direct room/date settlement evidence now resolves it to reviewed_match_2026_10_12_room324504. It remains revealed development.",
     "Current-template product behavior is measured; same-match template exclusion and independent holdout status are not claimed.",
     "Runtime timing excludes Windows capture, UI scheduling and end-to-end latency."
   ],
@@ -2262,6 +2264,282 @@
       "Ordinary cross-match stress uses existing approved-label truth and has 20 queries without a disjoint true-class reference; it is not a Gold-domain accuracy estimate.",
       "16 scorable stress queries: NCC 8 correct, full SIFT 6, numeral SIFT 6; no full-SIFT-to-numeral-SIFT regression in that small stress set.",
       "Runtime still uses the unchanged TemplateTileClassifier. This GoldTileClassifier is an isolated experimental path; no UI/Hint advice acceptance improvement is claimed."
+    ]
+  },
+  "gold_temporal_shadow_20261024": {
+    "parent_head": "8f79330b8f172cd95c588e76606549591474a4ce",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "truth_review": "Inspected every detected Gold crop in ordered contact sheets, plus full-frame/Gold-region opening 0..78 and settlement 2826/2832/2844. Truth is scoring-only, not read by classifier.",
+    "runtime_changed": false,
+    "threshold_changed": false,
+    "executor_enabled": false,
+    "baseline_trusted_advice_unchanged": "0/517",
+    "candidate_frames": 506,
+    "reviewed_visible_gold_frames": 508,
+    "readable_gold_misses": 2,
+    "wrong_identity_frames": 0,
+    "reviewed_no_identity_frames": 13,
+    "no_identity_false_candidates": 0,
+    "sources": [
+      {
+        "schema_version": "opened_gold_temporal_shadow_v0_1",
+        "development_only": true,
+        "formal_promotion_evidence": false,
+        "runtime_changed": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "candidate_counts_are_runtime_confidence": false,
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "fps": 30.0,
+        "sampled_frames": 46,
+        "detected_gold_crops": 46,
+        "frame_status_counts": {
+          "candidate": 46
+        },
+        "candidate_counts": {
+          "M6": 46
+        },
+        "windows": 44,
+        "candidate_agreement_windows": 44,
+        "whole_geometry_trusted_agreement_windows": 37,
+        "first_candidate_agreement_source_seconds": 0.4,
+        "excluded_known_matches": [
+          "reviewed_match_2026_09_26_eight_hand"
+        ],
+        "unresolved_lineage_training_labels": 80,
+        "elapsed_seconds": 1.648,
+        "reviewed_visible_gold_frames": 46,
+        "correct_visible_gold_candidates": 46,
+        "readable_gold_missed_frames": [],
+        "wrong_identity_frames": [],
+        "reviewed_no_identity_frames": 0,
+        "no_identity_false_candidate_frames": [],
+        "reviewed_truth_ranges": [
+          {
+            "first_sample_frame": 0,
+            "last_sample_frame": 270,
+            "stride": 6,
+            "gold": "M6"
+          }
+        ],
+        "observations_sha256": "fdbadb130f46cf469c7dc6fa72e6878e309e8a16b788581091296d7acaa725f8",
+        "crop_sequence_sha256": "9623fa4c1e221b82b220d83a7f6928b01c7f3afb8922e870c15641c1988461ea",
+        "exception_observations": [],
+        "first_visible_gold_source_seconds": 0,
+        "candidate_agreement_acquisition_seconds": 0.4
+      },
+      {
+        "schema_version": "opened_gold_temporal_shadow_v0_1",
+        "development_only": true,
+        "formal_promotion_evidence": false,
+        "runtime_changed": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "candidate_counts_are_runtime_confidence": false,
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "fps": 30.0,
+        "sampled_frames": 475,
+        "detected_gold_crops": 461,
+        "frame_status_counts": {
+          "gold_component_count_not_one": 14,
+          "no_unique_identity": 1,
+          "candidate": 460
+        },
+        "candidate_counts": {
+          "UNKNOWN": 15,
+          "M4": 460
+        },
+        "windows": 473,
+        "candidate_agreement_windows": 458,
+        "whole_geometry_trusted_agreement_windows": 241,
+        "first_candidate_agreement_source_seconds": 2.8,
+        "excluded_known_matches": [
+          "reviewed_match_2026_09_26_eight_hand",
+          "reviewed_match_2026_10_12_room324504"
+        ],
+        "unresolved_lineage_training_labels": 80,
+        "elapsed_seconds": 14.053,
+        "reviewed_visible_gold_frames": 462,
+        "correct_visible_gold_candidates": 460,
+        "readable_gold_missed_frames": [
+          60,
+          66
+        ],
+        "wrong_identity_frames": [],
+        "reviewed_no_identity_frames": 13,
+        "no_identity_false_candidate_frames": [],
+        "reviewed_truth_ranges": [
+          {
+            "first_sample_frame": 0,
+            "last_sample_frame": 54,
+            "stride": 6,
+            "gold": null,
+            "scene": "not_opened_or_blank_opening_animation"
+          },
+          {
+            "first_sample_frame": 60,
+            "last_sample_frame": 2826,
+            "stride": 6,
+            "gold": "M4"
+          },
+          {
+            "first_sample_frame": 2832,
+            "last_sample_frame": 2844,
+            "stride": 6,
+            "gold": null,
+            "scene": "settlement"
+          }
+        ],
+        "observations_sha256": "2dd04a2d5899a2816190ecf092df09163423454b8a8a749facc64b71ccf9759c",
+        "crop_sequence_sha256": "41d32fac5054cc31483e7c2b21f40e3e6516bd948427ed8c38562cc3af2c643e",
+        "exception_observations": [
+          {
+            "frame": 0,
+            "full_frame_rgb_sha256": "9d080e395b0f3e59da566a64658fd4c550aa063c1be378a48b9f7faea6d5e1e8",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 6,
+            "full_frame_rgb_sha256": "acd0a7fbab69ee9bdd5ce9891ec3c0b68d918b168265969ae0dc85cc6fda91ca",
+            "frame_geometry_untrusted": false,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 12,
+            "full_frame_rgb_sha256": "09c3d90c943bda88d171b818e5daaf09e4fce9ffbf78c3c5181d734db9436eb8",
+            "frame_geometry_untrusted": false,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 18,
+            "full_frame_rgb_sha256": "3496179d706d746e885813341b1e26162ff7ce5d1c052bf1b52f2f9985f01641",
+            "frame_geometry_untrusted": false,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 24,
+            "full_frame_rgb_sha256": "92c7893459df7d2c7db7c83dc10f7fe05d487576ba1363c5950dc6d8fb7ebc6a",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 30,
+            "full_frame_rgb_sha256": "b687dacf02cbb46dfb9cbe185f53db2a1e09e15f59490dbf9f3d9c6f75015277",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 36,
+            "full_frame_rgb_sha256": "1937ba9b2edcb78fc99d4ff6a39a4aa1c7d053d20392bacbd2202d8f842b1c43",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 42,
+            "full_frame_rgb_sha256": "5b4860740ccb103529e3bd0f9efccfd1600e607336f466d143e05c8973b31e43",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 48,
+            "full_frame_rgb_sha256": "6a85a70bc4b983aa12e26613ea8face68fb7e068e5d87d8ad455a4f22812ef20",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 54,
+            "full_frame_rgb_sha256": "b805b36909df7f06adea34cd510efc4b5a1ba4660c898df9a8ebdc727baccc55",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "no_unique_identity",
+            "crop_bbox": [
+              107,
+              41,
+              42,
+              57
+            ],
+            "crop_rgb_sha256": "0e5de18561b83635a8e43f97592a2db3273ef285e0fb5fdefc8f90dbe738cf86",
+            "method": "sift_no_unique_match",
+            "evidence_count": 2,
+            "second": 2
+          },
+          {
+            "frame": 60,
+            "full_frame_rgb_sha256": "58de83460d1f9f1f003440b42aaa1eae316a533f5d12cfa6a364755e3667a6d3",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 66,
+            "full_frame_rgb_sha256": "e69be325ccd432bad5fde9e995854c0e8c79ebd6c639f6bf54391ba6c7eaf203",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 2832,
+            "full_frame_rgb_sha256": "1f5dafac776c6343501df34f9f6634b2dcfb583165c819c24188bb824ea96dca",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 2838,
+            "full_frame_rgb_sha256": "f207b17050b905bfed526f3d52172756a29e2761f95ff30281d9de904fa40627",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 2844,
+            "full_frame_rgb_sha256": "1717d16b0123781c5324a6b16f1c953082f8331105c737279682e8504e00a66f",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          }
+        ],
+        "first_visible_gold_source_seconds": 2.0,
+        "candidate_agreement_acquisition_seconds": 0.8,
+        "source_group_evidence": {
+          "source_frame": 2832,
+          "full_frame_rgb_sha256": "1f5dafac776c6343501df34f9f6634b2dcfb583165c819c24188bb824ea96dca",
+          "direct_visual_text": "\u623f\u53f7324504 \u7b2c1/8\u5c40 2026-10-12 21:31:14",
+          "review_authority": "ASSISTANT_DIRECT_ENLARGED_FRAME_REVIEW",
+          "original_match_group": "reviewed_match_2026_10_12_room324504",
+          "revealed_development_not_holdout": true
+        }
+      }
+    ],
+    "blank_opening_regression": {
+      "source_frame": 54,
+      "prior_candidate": "S4",
+      "prior_best_matches": 2,
+      "prior_second_matches": 2,
+      "new_candidate": "UNKNOWN",
+      "reason": "No unique descriptor winner; no arbitrary identity selected"
+    },
+    "limits": [
+      "Sampled 5fps, not every encoded frame. Overlapping three-frame windows are not independent evidence.",
+      "Whole-hand truth remains limited to previously reviewed states; this is Gold-only review.",
+      "Candidate classification continues while whole-hand geometry is bad, but does not clear that flag or enable Hint.",
+      "SIFT evidence counts are not Runtime confidence; no scores rescaled to cross 0.82.",
+      "Long clip source is now directly date/room-qualified, but both clips are revealed development and training includes 80 unresolved-lineage labels.",
+      "Acquisition times use source video clock and are not Windows capture/compute latency."
     ]
   }
 }

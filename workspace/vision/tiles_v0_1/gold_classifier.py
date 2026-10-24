@@ -192,6 +192,15 @@ class GoldTileClassifier:
                 second = numerals[1][1] if len(numerals) > 1 else 0
                 method = "sift_wan_numeral"
 
+        # No winning match is not an identity. In an opening animation a
+        # blank yellow card produced equal two-match scores for several tiles.
+        if best <= 0 or best == second:
+            return GoldClassification(
+                tile_id="UNKNOWN", category="unknown", is_gold=True,
+                method="sift_no_unique_match", evidence_count=best,
+                second_best_evidence_count=second,
+            )
+
         # Badge suppression can hide real pips (e.g. P7 counted as five).
         # Preserve the descriptor identity; expose this count only as evidence.
         if tile_id.startswith("P"):

@@ -61,7 +61,11 @@ class ConcealedTemplateMatchLineageTests(unittest.TestCase):
         cls.audit = json.loads(AUDIT.read_text(encoding="utf-8"))
 
     def test_registry_is_exact_sha_and_evidence_paths_exist(self):
-        self.assertEqual(len(self.registry), 17)
+        self.assertEqual(len(self.registry), 18)
+        self.assertEqual(
+            self.registry['de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c'].match_group,
+            'reviewed_match_2026_10_12_room324504',
+        )
         self.assertEqual(verify_lineage_evidence_paths(self.registry, ROOT), [])
 
         old_match_shas = {
