@@ -173,6 +173,8 @@ def main():
                         help='Replay one hand with Gold memory and distinct-frame identity confirmation; not Windows live acceptance')
     parser.add_argument('--experimental-gold-model', type=Path,
                         help='Opt-in development scoring for explicit opened Gold only; keeps ordinary and playable Gold-hand classification unchanged')
+    parser.add_argument('--experimental-hand-packet', type=Path,
+                        help='Private reviewed hand references plus shift3 NCC; offline development only')
     args = parser.parse_args()
     if args.source_session and not args.video:
         parser.error('--source-session is only valid with --video')
@@ -193,13 +195,18 @@ def main():
     window = deque(maxlen=3)
     rows = []
     reader = None
-    if args.experimental_gold_model:
+    if args.experimental_gold_model or args.experimental_hand_packet:
         from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
             read_stable_frames, prepare_runtime_resources,
         )
         from workspace.vision.tiles_runtime_v0_2.gold_score_calibration import experimental_resources
-        model = json.loads(args.experimental_gold_model.read_text())
-        resources = experimental_resources(prepare_runtime_resources(args.dataset,session),args.dataset,model)
+        resources = dict(prepare_runtime_resources(args.dataset,session))
+        if args.experimental_hand_packet:
+            from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
+            resources = with_private_hand_packet(resources,args.experimental_hand_packet)
+        if args.experimental_gold_model:
+            model = json.loads(args.experimental_gold_model.read_text())
+            resources = experimental_resources(resources,args.dataset,model)
         geometry_cache = {}
         def reader(images,dataset_root,**kwargs):
             return read_stable_frames(images,dataset_root,resources=resources,
@@ -218,7 +225,10 @@ def main():
         raise ValueError('Source contains fewer than three decoded samples')
     result = {
         'schema_version': 'hint_alpha_replay_smoke_v0_1',
-        'classifier_mode': 'experimental_opened_gold_score' if args.experimental_gold_model else 'baseline',
+        'classifier_mode': ('experimental_hand_translation_and_gold' if args.experimental_hand_packet and args.experimental_gold_model
+                            else 'experimental_hand_translation' if args.experimental_hand_packet
+                            else 'experimental_opened_gold_score' if args.experimental_gold_model else 'baseline'),
+        'experimental_hand_packet_sha256': sha256(args.experimental_hand_packet) if args.experimental_hand_packet else None,
         'experimental_gold_model_sha256': sha256(args.experimental_gold_model) if args.experimental_gold_model else None,
         'source_sha256': digest, 'session': session,
         'session_binding': ('explicit_original_session' if args.source_session else

@@ -57,14 +57,17 @@ def classify_frame(image, frame, session, classifier):
 def probe_video(video_path, replay_path, dataset_root, *, lineage_path, exclude_matches):
     import cv2
     from PIL import Image
-    from workspace.hint_alpha.replay_smoke import sha256
     from workspace.vision.concealed_template_match_lineage import (
         canonicalize_match_group, load_concealed_template_lineage,
     )
     from workspace.vision.tiles_v0_1.gold_classifier import GoldTileClassifier
     from workspace.vision.tiles_v0_1.labels import approved_labels
     replay = json.loads(Path(replay_path).read_text())
-    if sha256(video_path) != replay['source_sha256']:
+    digest = hashlib.sha256()
+    with Path(video_path).open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    if digest.hexdigest() != replay['source_sha256']:
         raise ValueError('Video/replay source mismatch')
     lineage = load_concealed_template_lineage(lineage_path)
     excluded = {canonicalize_match_group(g) for g in exclude_matches}
