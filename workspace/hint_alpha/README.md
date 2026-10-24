@@ -155,3 +155,9 @@ python -m workspace.hint_alpha.timeline_bridge ^
 `data/hint_alpha/<session_id>/timeline_drafts/hand_03_timeline.draft.md`
 
 如一个 Hint Alpha 会话覆盖多局，可以人工指定 `--start-seq` / `--end-seq` 选择该局事件范围。所有自动转换事件固定为 `evidence_level=unknown`，需人工对照录像/截图后才能形成正式证据。
+
+### 本局金牌手动选择（实时内测）
+
+使用支持的 `workspace.hint_alpha.live_app` 入口，开始采集后，点顶部“手动选金牌”，从中文牌名中选择开出的金牌，再点“使用本局金牌”。只需要选择金牌，手牌和副露继续自动识别；不必进入“人工录牌”。本局后续提示使用这项人工输入，不再等待自动金牌识别、金牌多帧投票或金牌模板来源资格。界面标明“手动”，证据记录标明 `MANUAL_USER_SELECTED`，不冒充视觉识别结果。
+
+连续确认新局号、停止或重启采集会清空选择。若局号暂时无法识别，换局时点“下一局 / 清除金牌”，再选择新金牌。首次读到当前局号不会清掉本局刚选的金牌。重新选择会立即撤下旧向听提示，等待当前手牌重新确认。手动选择仅替代金牌输入，不补全未知手牌、不改变副露和实物张数检查，不启用Executor。

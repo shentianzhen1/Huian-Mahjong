@@ -87,6 +87,7 @@ class HintAlphaApp(tk.Tk):
         self.manual_active = False
         self.manual_tiles = []
         self.manual_revision = 0
+        self.manual_gold_status = tk.StringVar(value="本局金牌：自动识别；可手动选择")
 
         # Presentation-only live view state.  These fields summarize facts that
         # existing PublicState / Runtime Vision have already accepted; they do
@@ -186,6 +187,11 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(top, text="录像复盘", command=self.open_video_test).grid(
             row=0, column=8, padx=4
         )
+        gold_controls = ttk.Frame(top)
+        gold_controls.grid(row=1, column=0, columnspan=9, sticky="w", pady=(6, 0))
+        ttk.Label(gold_controls, textvariable=self.manual_gold_status).pack(side="left")
+        ttk.Button(gold_controls, text="手动选金牌", command=self.open_manual_gold).pack(side="left", padx=8)
+        ttk.Button(gold_controls, text="下一局 / 清除金牌", command=self.clear_manual_gold).pack(side="left")
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -1091,6 +1097,58 @@ class HintAlphaApp(tk.Tk):
     @staticmethod
     def _tile_label(tile):
         return env.CN[tile]
+
+    def _refresh_manual_gold(self):
+        status = self.__dict__.get('manual_gold_status')
+        if status is None:
+            return
+        pipeline = self.__dict__.get('runtime_advice_pipeline')
+        selected = pipeline.manual_gold if pipeline is not None else None
+        status.set(f"本局金牌：{self._display_tile(selected.tile_id)}（手动）" if selected
+                   else "本局金牌：自动识别；可手动选择")
+
+    def _select_manual_gold(self, tile_id):
+        pipeline = self.__dict__.get('runtime_advice_pipeline')
+        if pipeline is None or not self.evidence or not (self.session or self.live_guard.active):
+            raise ValueError('请先开始内测，再选择本局金牌')
+        pipeline.select_manual_gold(tile_id, source_session=self.evidence.session_id,
+                                    stream_epoch=self.live_guard.generation)
+        self._refresh_manual_gold()
+        self.ui_gold_tile, self.ui_gold_ok = tile_id, True
+        self.hint_status.set('向听提示：已手动选金牌，等待当前手牌确认')
+        self._refresh_health()
+        self.evidence.mark('MANUAL_GOLD_SELECTED', {'gold_tile': tile_id,
+            'source_kind': 'MANUAL_USER_SELECTED', 'stream_epoch': self.live_guard.generation})
+
+    def clear_manual_gold(self):
+        pipeline = self.__dict__.get('runtime_advice_pipeline')
+        if pipeline is not None:
+            pipeline.reset()
+        self._refresh_manual_gold()
+        self.ui_gold_tile, self.ui_gold_ok = None, False
+        self.hint_status.set('向听提示：金牌已清除；新一局请重新选择金牌')
+        self._refresh_health()
+        if self.evidence:
+            self.evidence.mark('MANUAL_GOLD_CLEARED')
+
+    def open_manual_gold(self):
+        window = tk.Toplevel(self)
+        window.title('选择本局金牌')
+        ttk.Label(window, text='只设置本局金牌，手牌和副露继续自动识别。\n换局自动清除；局号未识别时请点“下一局 / 清除金牌”。').pack(padx=16, pady=12)
+        choices = {self._display_tile(tile): tile for tile in env.BASE_TILES}
+        pipeline = self.__dict__.get('runtime_advice_pipeline')
+        selected = pipeline.manual_gold if pipeline is not None else None
+        value = tk.StringVar(value=self._display_tile(selected.tile_id) if selected else '')
+        ttk.Combobox(window, state='readonly', textvariable=value,
+                     values=list(choices), width=12).pack(padx=16, pady=8)
+        def submit():
+            try:
+                self._select_manual_gold(choices.get(value.get()))
+            except ValueError as exc:
+                messagebox.showerror('金牌未设置', str(exc), parent=window)
+                return
+            window.destroy()
+        ttk.Button(window, text='使用本局金牌', command=submit).pack(pady=12)
 
     def _start_manual_session(self):
         if self.manual_active and self.evidence is not None:

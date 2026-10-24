@@ -1,7 +1,7 @@
 """Shared read-only Runtime -> snapshot -> structural advisory boundary."""
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from numbers import Integral
 
 from workspace.vision.live_opening_fact import (
@@ -12,6 +12,8 @@ from workspace.vision.live_opening_fact import (
 from workspace.vision.runtime_public_adapter import current_snapshot_from_runtime
 from .current_snapshot_advisor import analyze_snapshot_shanten
 from .live_snapshot_stability import LiveSnapshotStability
+from huian._legacy import env
+from workspace.vision.live_opening_fact import LiveOpeningFactStatus
 
 
 _ACTIVE_OPENING_TRACKER: ContextVar[LiveOpeningTracker | None] = ContextVar(
@@ -21,6 +23,28 @@ _ACTIVE_OPENING_TRACKER: ContextVar[LiveOpeningTracker | None] = ContextVar(
 _ACTIVE_STABILITY_TRACKER: ContextVar[LiveSnapshotStability | None] = ContextVar(
     "hint_alpha_active_stability_tracker", default=None,
 )
+_ACTIVE_MANUAL_GOLD = ContextVar('hint_alpha_manual_gold', default=None)
+
+
+@dataclass(frozen=True)
+class ManualGoldSelection:
+    tile_id: str
+    source_session: str
+    stream_epoch: int
+
+    def applies_to(self, snapshot):
+        return (snapshot.source_session, snapshot.stream_epoch) == (self.source_session, self.stream_epoch)
+
+    def apply(self, snapshot):
+        # The human supplies only Gold. Current hand/meld/public trust is intact.
+        snapshot = replace(snapshot, gold_tile=self.tile_id, gold_trusted=True,
+            adapter_issues=tuple(i for i in snapshot.adapter_issues
+                                if not str(i).startswith(('runtime_gold_', 'live_gold_'))))
+        fact = LiveOpeningFact(timestamp_seconds=snapshot.timestamp_seconds,
+            source_session=snapshot.source_session, stream_epoch=snapshot.stream_epoch,
+            status=LiveOpeningFactStatus.TRUSTED, gold_tile=self.tile_id,
+            gold_trusted=True, source_kind='MANUAL_USER_SELECTED', state_tracker_ready=True)
+        return snapshot, fact
 
 
 def interrupt_runtime_observations():
@@ -87,6 +111,7 @@ def evaluate_runtime_report(
     experimental=False,
     opening_tracker: LiveOpeningTracker | None = None,
     stability_tracker: LiveSnapshotStability | None = None,
+    manual_gold: ManualGoldSelection | None = None,
 ):
     """Evaluate one Runtime burst without enabling any action path.
 
@@ -100,7 +125,10 @@ def evaluate_runtime_report(
         tracker = _ACTIVE_OPENING_TRACKER.get()
 
     snapshot = current_snapshot_from_runtime(report, timestamp_seconds=captured)
-    if tracker is None:
+    manual_gold = manual_gold or _ACTIVE_MANUAL_GOLD.get()
+    if manual_gold is not None and manual_gold.applies_to(snapshot):
+        snapshot, opening_fact = manual_gold.apply(snapshot)
+    elif tracker is None:
         opening_fact = live_opening_fact_from_snapshot(snapshot)
     else:
         snapshot, opening_fact = tracker.update(snapshot)
@@ -125,10 +153,22 @@ class RuntimeAdvicePipeline:
 
     opening_tracker: LiveOpeningTracker = field(default_factory=LiveOpeningTracker)
     stability_tracker: LiveSnapshotStability | None = None
+    manual_gold: ManualGoldSelection | None = None
 
-    def reset(self) -> None:
+    def select_manual_gold(self, tile_id, *, source_session, stream_epoch):
+        if tile_id not in env.BASE_TILES:
+            raise ValueError('请选择34种普通牌中的金牌')
+        if (not isinstance(source_session, str) or not source_session
+                or isinstance(stream_epoch, bool) or not isinstance(stream_epoch, int) or stream_epoch < 0):
+            raise ValueError('手动金牌需要当前采集会话')
+        self.reset()
+        self.manual_gold = ManualGoldSelection(tile_id, source_session, stream_epoch)
+
+    def reset(self, *, preserve_manual_gold=False) -> None:
         """Forget all persisted opening facts at a trusted boundary."""
         self.opening_tracker.reset()
+        if not preserve_manual_gold:
+            self.manual_gold = None
         if self.stability_tracker is not None:
             self.stability_tracker.reset()
 
@@ -137,9 +177,11 @@ class RuntimeAdvicePipeline:
         """Bind this pipeline only for the current synchronous UI evaluation."""
         token = _ACTIVE_OPENING_TRACKER.set(self.opening_tracker)
         stability_token = _ACTIVE_STABILITY_TRACKER.set(self.stability_tracker)
+        manual_token = _ACTIVE_MANUAL_GOLD.set(self.manual_gold)
         try:
             yield self
         finally:
+            _ACTIVE_MANUAL_GOLD.reset(manual_token)
             _ACTIVE_STABILITY_TRACKER.reset(stability_token)
             _ACTIVE_OPENING_TRACKER.reset(token)
 
@@ -150,4 +192,5 @@ class RuntimeAdvicePipeline:
             experimental=experimental,
             opening_tracker=self.opening_tracker,
             stability_tracker=self.stability_tracker,
+            manual_gold=self.manual_gold,
         )

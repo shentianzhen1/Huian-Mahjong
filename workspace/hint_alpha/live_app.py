@@ -42,6 +42,7 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         pipeline = getattr(self, "runtime_advice_pipeline", None)
         if pipeline is not None:
             pipeline.reset()
+        self._refresh_manual_gold()
         self._gold_hand_number = None
         return super()._invalidate_advice(reason)
 
@@ -54,8 +55,13 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         # trusted Gold boundary independent so that display cannot authorize
         # a later reset (e.g. 3 -> 2 -> 3 or 3 -> 5 -> 6).
         if confirmed_public_hand_boundary(self._gold_hand_number, observation):
-            self.runtime_advice_pipeline.reset()
+            # Initial OCR establishes this same hand; keep its user selection.
+            if self._gold_hand_number is None:
+                self.runtime_advice_pipeline.reset(preserve_manual_gold=True)
+            else:
+                self.runtime_advice_pipeline.reset()
             self._gold_hand_number = observation.hand_number
+            self._refresh_manual_gold()
         return super()._update_public_view(observation)
 
     def _consume_runtime_result(self):
