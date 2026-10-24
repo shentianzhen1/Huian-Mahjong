@@ -51,6 +51,12 @@ def verify(root):
                     raise SystemExit(f"Approved template hash mismatch: {row['image']}")
     if not (dataset / 'manifest.json').is_file():
         raise SystemExit('Dataset manifest missing')
+    if 'reference_pack_version' in manifest:
+        import runpy
+        resolver = runpy.run_path(str(site / 'workspace/hint_alpha/bundled_references.py'))['resolve_bundled_references']
+        _, version, count = resolver(site)
+        if version != manifest['reference_pack_version'] or count != manifest['reference_pack_count']:
+            raise SystemExit('Reference pack version/count mismatch')
     if manifest.get('executor_enabled') is not False:
         raise SystemExit('Executor must be explicitly disabled')
     print(f"Verified {len(manifest['payload_sha256'])} payload files; version {manifest['project_version']}; {len(labels)} labels")

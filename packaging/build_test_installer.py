@@ -122,6 +122,9 @@ def main():
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(template, destination)
             template_hashes[relative.as_posix()] = hashlib.sha256(template.read_bytes()).hexdigest()
+    from workspace.hint_alpha.bundled_references import copy_bundled_references
+    reference_version, reference_count = copy_bundled_references(ROOT, site)
+
     # Phase detector requires these six already-reviewed UI templates.
     evidence = Path('references/capture_review/2026-09-13')
     (site / evidence).mkdir(parents=True)
@@ -137,7 +140,8 @@ def main():
             + '"runtime\\python.exe" -B launch.py ' + args
             + '\nif errorlevel 1 pause\n', encoding='utf-8')
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-    manifest = {'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
+    manifest = {'reference_pack_version': reference_version, 'reference_pack_count': reference_count,
+                'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
                 'installation_layout': 'shared-data-current-v1',
                 'python_version': '.'.join(map(str, sys.version_info[:3])),
                 'dependency_versions': actual_versions,

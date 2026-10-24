@@ -90,6 +90,13 @@ class HintAlphaApp(tk.Tk):
         self.manual_gold_status = tk.StringVar(value="本局金牌：自动识别；可手动选择")
         self.single_source_hand_trial = tk.BooleanVar(value=False)
         self.experimental_hand_packet = None
+        try:
+            from .bundled_references import resolve_bundled_references
+            self.experimental_hand_packet, reference_version, reference_count = resolve_bundled_references(PROJECT_ROOT)
+            reference_message = f'内置素材 {reference_version} · {reference_count}张 · 校验通过'
+        except (OSError, ValueError, KeyError) as exc:
+            reference_message = f'内置素材不可用：{exc}；请修复安装或手动加载'
+        self.reference_pack_status = tk.StringVar(value=reference_message)
         self.experimental_edge_seams = False
 
         # Presentation-only live view state.  These fields summarize facts that
@@ -198,6 +205,8 @@ class HintAlphaApp(tk.Tk):
         ttk.Checkbutton(gold_controls, text="试用识别（手牌来源未验证）",
                         variable=self.single_source_hand_trial, command=self._toggle_hand_source_trial).pack(side="left", padx=8)
         ttk.Button(gold_controls, text="加载参考样本", command=self.open_hand_reference_packet).pack(side="left")
+
+        ttk.Label(top, textvariable=self.reference_pack_status).grid(row=2, column=0, columnspan=9, sticky='w', pady=(4, 0))
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -1127,6 +1136,7 @@ class HintAlphaApp(tk.Tk):
             messagebox.showerror('样本未加载', str(exc), parent=self)
             return
         self.experimental_hand_packet = Path(path)
+        self.reference_pack_status.set('素材：手动加载 ' + Path(path).name)
         self._toggle_hand_source_trial()
         self.runtime_status.set('已加载参考样本；用于内部试用，不代表识别已通过验收')
         if self.evidence:

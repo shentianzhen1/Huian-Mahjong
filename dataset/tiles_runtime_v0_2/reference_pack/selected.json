@@ -1,0 +1,168 @@
+{
+  "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+  "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT_NOT_APPROVED_TEMPLATES",
+  "rows": [
+    {
+      "frame": 150,
+      "slot": 2,
+      "bbox": [
+        217,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        217,
+        442,
+        48,
+        65
+      ],
+      "crop": "150_2.png",
+      "rgb_sha256": "f340e2dbf847b1c4e903b63051967c17dcf6973ff5a3a3699d68809212b066d6",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "S3"
+    },
+    {
+      "frame": 150,
+      "slot": 4,
+      "bbox": [
+        316,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        317,
+        442,
+        48,
+        65
+      ],
+      "crop": "150_4.png",
+      "rgb_sha256": "52771d36b0073419884b47d8735cab39e64288f3ef7826255f3e4b9bcc7f2cf0",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "S7"
+    },
+    {
+      "frame": 4350,
+      "slot": 4,
+      "bbox": [
+        316,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        317,
+        442,
+        48,
+        65
+      ],
+      "crop": "4350_4.png",
+      "rgb_sha256": "bbaa8f0f7047b393d5730723c0759c1c29e74bb0ebd0f8b3a4e1c89032c0c0cd",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "S2"
+    },
+    {
+      "frame": 4350,
+      "slot": 6,
+      "bbox": [
+        416,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        416,
+        442,
+        49,
+        65
+      ],
+      "crop": "4350_6.png",
+      "rgb_sha256": "b6384ad6ef708d9df57526d9fd3f1f0dac8c1c02eb3f2bb51627dcf216c35afb",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "S8"
+    },
+    {
+      "frame": 4350,
+      "slot": 8,
+      "bbox": [
+        515,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        516,
+        442,
+        48,
+        65
+      ],
+      "crop": "4350_8.png",
+      "rgb_sha256": "5f116db8da7d1042156137a2e92c955a9e74c73a9ba3b874246539ea07cf1808",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "S9"
+    },
+    {
+      "frame": 150,
+      "slot": 6,
+      "bbox": [
+        416,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        416,
+        442,
+        49,
+        65
+      ],
+      "crop": "150_6.png",
+      "rgb_sha256": "57497e8bd9aeb6227dc695b4d8c481d14015b95fc305ee889692a0eb061d23f3",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "M2"
+    },
+    {
+      "frame": 150,
+      "slot": 3,
+      "bbox": [
+        266,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        267,
+        442,
+        48,
+        65
+      ],
+      "crop": "150_3.png",
+      "rgb_sha256": "f654dfb42b9d0319eb8ec863e8be8cf32e138d38925b5e41cddb09a9c029d4e3",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "S4"
+    },
+    {
+      "frame": 4350,
+      "slot": 13,
+      "bbox": [
+        764,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        765,
+        442,
+        48,
+        65
+      ],
+      "crop": "4350_13.png",
+      "rgb_sha256": "5138cfd3f567ec2d5773e2ea3174379810ca8d5e4ef6182f457641a1581a2f75",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "M9"
+    }
+  ],
+  "revision_note": "Add reviewed M9 from existing Sep26 frame4350 slot13; retain previous seven references."
+}
