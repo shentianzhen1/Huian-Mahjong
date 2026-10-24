@@ -18,8 +18,8 @@
         "P6",
         "S2",
         "S3",
-        "S6",
-        "G",
+        "S4",
+        "S8",
         "S9",
         "S9",
         "S9"
@@ -38,8 +38,8 @@
         "P6",
         "S2",
         "S3",
-        "S6",
-        "G",
+        "S4",
+        "S8",
         "S9",
         "S9",
         "S9"
@@ -58,8 +58,8 @@
         "P6",
         "S2",
         "S3",
-        "S6",
-        "G",
+        "S4",
+        "S8",
         "S9",
         "S9",
         "S9"
@@ -77,9 +77,9 @@
         "P4",
         "S2",
         "S3",
-        "S6",
+        "S4",
         "S7",
-        "G",
+        "S8",
         "S9",
         "S9",
         "S9"
@@ -97,9 +97,9 @@
         "P4",
         "S2",
         "S3",
-        "S6",
+        "S4",
         "S7",
-        "G",
+        "S8",
         "S9",
         "S9",
         "S9"
@@ -117,14 +117,28 @@
         "P4",
         "S2",
         "S3",
-        "S6",
+        "S4",
         "S7",
-        "G",
+        "S8",
         "S9",
         "S9",
         "S9"
       ],
       "gold_tile": "M4"
     }
-  ]
+  ],
+  "truth_correction": {
+    "supersedes_commit": "cbb01601df101a2213d06b0ca71a69acb18454e4",
+    "reason": "Assistant misread S4/S8 as S6/G. Direct enlarged full-frame and detector-crop review confirms four separate green sticks and paired interwoven eight-bamboo glyphs. Pixel hashes unchanged.",
+    "corrected_slots": {
+      "1800/1806/1812": {
+        "8": "S6 -> S4",
+        "9": "G -> S8"
+      },
+      "2706/2712/2718": {
+        "7": "S6 -> S4",
+        "9": "G -> S8"
+      }
+    }
+  }
 }

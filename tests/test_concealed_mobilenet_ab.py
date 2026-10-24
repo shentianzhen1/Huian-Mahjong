@@ -124,7 +124,7 @@ class ConcealedMobileNetABTests(unittest.TestCase):
         source = Image.new("RGB", (40, 100), (200, 200, 200))
         variants = _appearance_variants(source)
 
-        self.assertEqual(APPEARANCE_AUGMENTATION_VERSION, "v0_2_real_bottom_shadow")
+        self.assertEqual(APPEARANCE_AUGMENTATION_VERSION, "v0_3_gold_face_white_canvas")
         self.assertEqual(len(variants), 9)
         self.assertTrue(all(image.size == (224, 224) for image in variants))
         # Index 7 is the new shadow variant; its lower tile band must be darker
@@ -136,3 +136,15 @@ class ConcealedMobileNetABTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GoldCanvasAugmentationTests(unittest.TestCase):
+    @unittest.skipUnless(Image is not None and np is not None, "Vision deps unavailable")
+    def test_gold_tints_face_while_retaining_inference_canvas_padding(self):
+        source = Image.new("RGB", (40, 70), (240, 240, 240))
+        augmented = np.asarray(_appearance_variants(source)[-1])
+        self.assertEqual(tuple(augmented[0, 0]), (255, 255, 255))
+        self.assertEqual(tuple(augmented[-1, -1]), (255, 255, 255))
+        centre = augmented[112, 112]
+        self.assertGreater(int(centre[0]), int(centre[2]))
+        self.assertEqual(source.getpixel((20, 35)), (240, 240, 240))

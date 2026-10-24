@@ -43,7 +43,7 @@ STANDARD_CLASSES = frozenset(
     + [f"S{i}" for i in range(1, 10)]
     + ["E", "SOUTH", "W", "N", "R", "G", "B"]
 )
-APPEARANCE_AUGMENTATION_VERSION = "v0_2_real_bottom_shadow"
+APPEARANCE_AUGMENTATION_VERSION = "v0_3_gold_face_white_canvas"
 # The revealed 2026-10-03 pair measured its strongest horizontal shadow in the
 # bottom 82%-100% of the normalized tile face. Ordinary samples were about >=-35
 # bottom-minus-middle luminance while the shadow state was <=-67. Keep this as a
@@ -233,12 +233,15 @@ def _appearance_variants(image: Any) -> list[Any]:
     rows.append(ImageEnhance.Brightness(base).enhance(0.50))
     rows.append(_square_tile_canvas(_bottom_shadow_variant(image)))
 
-    array = np.asarray(base).astype(np.float32)
+    # Tint the captured tile before adding the white model-input canvas.
+    # Real opened-Gold queries retain white padding from _square_tile_canvas;
+    # tinting that padding teaches a background cue absent at inference.
+    array = np.asarray(image.convert("RGB")).astype(np.float32)
     luminance = array.mean(axis=2, keepdims=True) / 255.0
     alpha = np.clip((luminance - 0.45) * 0.55, 0.0, 0.40)
     yellow = np.asarray([255.0, 211.0, 54.0], dtype=np.float32).reshape(1, 1, 3)
     gold = array * (1.0 - alpha) + yellow * alpha
-    rows.append(Image.fromarray(np.clip(gold, 0, 255).astype(np.uint8)))
+    rows.append(_square_tile_canvas(Image.fromarray(np.clip(gold, 0, 255).astype(np.uint8))))
     return rows
 
 

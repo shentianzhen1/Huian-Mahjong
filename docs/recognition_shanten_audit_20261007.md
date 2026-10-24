@@ -1,5 +1,82 @@
 # Current hand / meld / shanten audit — 2026-10-07
 
+## 2026-10-24: actual pretrained training and truth corrections
+
+**This section corrects the previous S6/G and P6 diagnoses.** Enlarged original
+frames and actual detector crops show **S4/S8**, not S6/G, in the two long-clip
+bursts. The stored raw candidates were correct. The six-class Gold packet's
+P6 label was also wrong: its face has three green and four red dots, hence P7.
+Both error claims are withdrawn. Sample frame/RGB hashes and crop pixels are
+unchanged; corrected truth and a corrected private packet version are retained.
+The sampled five hands now have **69/69 correct raw template candidates**, while
+trusted advisory acceptance remains **0/517** across the full two replay traces.
+Raw candidate correctness is not accepted-hand correctness or full-video accuracy.
+
+Installed CPU torch/torchvision and loaded the real ImageNet MobileNetV3-Small
+weights. Actually extracted pretrained features, trained a balanced LinearSVC,
+and trained the last five feature blocks plus a new 34-class head for ten fixed
+epochs. Missing original-match lineage and missing strict-policy classes are
+reported; they do not prevent exploratory training. Exact query sources and
+known query matches are excluded; unresolved training lineage remains a caveat.
+No query image enters training or epoch selection.
+
+Direct crop review also found ten ambiguous/incomplete/adjacent-content bamboo
+training crops. One controlled experiment excludes these from learned training
+only; production template labels and Runtime are unchanged. No substitute tile
+identity is invented for these poor crops.
+
+| Fixed five-state/eleven-Gold development comparison | Hand raw matches | Whole-hand raw exact | Gold raw matches |
+| --- | ---: | ---: | ---: |
+| Existing product template candidates | 69/69 | 5/5 | 9/11 |
+| Frozen MobileNet + linear head, all crops | 58/69 | 0/5 | 2/11 |
+| Supervised tail, all crops | 64/69 | 2/5 | 9/11 |
+| Supervised tail, ten poor crops removed | 69/69 | 5/5 | 5/11 |
+| Same cleaned bank, corrected Gold canvas augmentation | 66/69 | 2/5 | 5/11 |
+
+The unfiltered tail correctly ranks all five replay Gold anchors, including M4,
+but fails M1 and SOUTH in the restored six-class packet. The apparent 5/5 success
+therefore does not establish an overall Gold improvement. Training-crop cleanup
+improves the neural hand candidate in this revealed comparison but regresses Gold.
+No learned candidate replaces the product classifier.
+
+Fixed one real augmentation mismatch: yellow skin is now applied to the captured
+tile **before** `_square_tile_canvas`, preserving white padding exactly as query
+preprocessing does. Old code yellowed that padding too. The targeted regression
+checks white corners, tinted face and unmodified source pixels. This input fix
+is retained as `v0_3_gold_face_white_canvas`, with the measured regression reported
+rather than described as an accuracy improvement. Runtime does not use it.
+
+### Reproduce only this experiment
+
+```sh
+python -m workspace.vision.tiles_runtime_v0_2.sampled_replay_classifier_ab \
+  --replay /private/short_baseline.json \
+  --truth references/vision/2026-10-24/short_clip_reviewed_sample_truth_v0_1.json \
+  --video /private/short.mp4 --frames 120,216,252 \
+  --replay /private/long_baseline.json \
+  --truth references/vision/2026-10-24/long_clip_reviewed_sample_truth_v0_1.json \
+  --video /private/long.mp4 --frames 1812,2718 \
+  --exclude-match reviewed_match_2026_09_26_eight_hand \
+  --gold-packet /private/corrected_gold_packet \
+  --crop-review references/vision/2026-10-24/sampled_classifier_crop_review_v0_1.json \
+  --finetune --output /private/result.json
+```
+
+Omit `--crop-review` for the full training bank. Historic old-canvas rows use the
+parent augmentation version recorded in the evidence; current code reproduces
+the corrected-canvas condition. The script imports torch/sklearn lazily; core
+Runtime dependencies do not change. Related unit tests only were run this turn;
+no full local suite. Existing automatic CI is not an accuracy result.
+
+Detailed fixed configurations, missing-class policies, training losses, Gold
+predictions, and limitations:
+[sampled pretrained training](../references/vision/2026-10-24/sampled_pretrained_classifier_training_v0_1.json).
+Next work should measure calibration/support rejection on correct candidates and
+Gold-region model training with real skin examples. Do not repeat the withdrawn
+S6/G confusion diagnosis or require complete lineage before exploratory training.
+Threshold 0.82, AI V0.10, Hint read-only and Executor OFF are unchanged.
+
+
 ## 2026-10-24: sampled truth and blocker attribution
 
 Replayed both exact private sources on parent `1fdc7aa` with the unchanged
@@ -31,13 +108,14 @@ rejected. Repeated rejection decisions: S2 35, M6 15, M3 2, all below threshold.
 These are overlapping observations, not unique errors or independent matches.
 
 The longer comparison contains only bursts 1800/1806/1812 and
-2706/2712/2718. Both have a true S6 represented by raw S4 and true G by raw S8.
+2706/2712/2718. **Correction:** both show S4 and S8; the earlier assistant S6/G truth was wrong.
+The machine candidates S4/S8 were correct, so the previous confusion claim is withdrawn.
 The two P2 candidates in each burst are correct and above 0.82 but rejected by
-`class_not_cross_session_validated_in_region`. Thus there are **three distinct
-failure types**: correct ranking with low scores, wrong ranking, and insufficient
-source support. The other 471 windows have no complete sampled truth; these two
+`class_not_cross_session_validated_in_region`. These two reviewed bursts establish **correct ranking with low scores and
+insufficient source support**; they do not establish the previously claimed
+S6/G ranking failures. The other 471 windows have no complete sampled truth; these two
 bursts do not establish a whole-video error rate. Its original match remains UNKNOWN.
-The 600/606/612 anchor contains a moving S6 discard and is not labeled as a
+The 600/606/612 anchor contains a moving discard and is not labeled as a
 constant complete-hand burst.
 
 ### Execution priorities from this attribution
@@ -46,7 +124,7 @@ constant complete-hand burst.
    only 3/39 reviewed windows, so hand work must proceed alongside Gold.
 2. Restore qualified P2 support and its original-match lineage; a confidence or
    model change cannot replace missing provenance.
-3. Evaluate Gold appearance and concealed S6/G confusions on the identical crops
+3. Evaluate Gold appearance and score/support rejection on the identical crops
    with source-separated classifier training. S2/M6/M3 score calibration is a
    separate question; do not lower 0.82 or treat neural logits as Runtime confidence.
 4. Compare complete correct trusted hands and wrong accepts on a separate match
@@ -229,7 +307,7 @@ all four to the same Sep-26 original match; the last two cover the same events
 and do not increase independence. Twelve fixed quarter/middle/three-quarter
 anchors were reviewed: ten show opened indicators and two show settlement.
 
-Selected one private crop per class for **M1, M6, P5, P6, S8, SOUTH**. This
+Selected one private crop per class for **M1, M6, P5, P7, S8, SOUTH** (P6 was an assistant label error, corrected to P7 on 2026-10-24). This
 recovers five real yellow-skin development classes beyond the current approved
 M6-only bank. Each binds source SHA, sequential ordinal, exact RGB hash,
 detected classification bbox and crop hash. These new labels are assistant
@@ -238,8 +316,9 @@ material, with no template admission. The private six-crop packet is retained
 separately; no pixels were added to Git. Source time uses frame/fps only as a
 description; RGB hashes/decoded ordinals are authoritative for these VFR inputs.
 
-Current raw candidates match 8/10 visible indicator anchors, but all ten are
-below threshold; P6 becomes P7 in both encodings of the same event. These are
+After the P7 truth correction, current raw candidates match **10/10** selected
+visible indicator anchors, but all ten remain below threshold. The earlier
+P6->P7 error claim is withdrawn; both encodings depict seven dots. These are
 selected revealed checkpoints, not continuous accuracy. The new samples can
 support a development training comparison, but require source-diverse Gold
 queries and calibration before any promotion. They do not resolve the pending

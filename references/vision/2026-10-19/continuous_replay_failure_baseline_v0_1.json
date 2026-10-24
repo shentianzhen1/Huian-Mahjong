@@ -696,7 +696,7 @@
       "M1",
       "M6",
       "P5",
-      "P6",
+      "P7",
       "S8",
       "SOUTH"
     ],
@@ -710,7 +710,7 @@
     "source_time_note": "Sequential decoded ordinals and RGB hashes are authoritative; frame/fps seconds are descriptive, not an exact VFR PTS mapping.",
     "review_note": "These are newly extracted assistant-reviewed opened indicators. Existing source lineage evidence does not confer user confirmation of these Gold labels.",
     "private_packet_filename": "huian_opened_gold_recovered_private_20261019.zip",
-    "private_packet_sha256": "3c507e06395a3993f609ea09c730741eaa26cd5c17c93497629c047d0e97dfa9",
+    "private_packet_sha256": "4af91267ecbcc127294782fe94a3ea04d33d86094af88e02bc72e1a6d9c97edf",
     "new_real_gold_skin_development_classes_beyond_current_bank": [
       "M1",
       "P5",
@@ -948,7 +948,7 @@
             "frame_index": 1414,
             "source_seconds": 47.13333333333333,
             "rgb_sha256": "bc3a056c819f7f4cc08841d29114a40402223a004e7f76b66fbdf93d36d099c8",
-            "reviewed_opened_gold": "P6",
+            "reviewed_opened_gold": "P7",
             "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
             "approved": false,
             "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
@@ -1033,7 +1033,7 @@
             "frame_index": 1414,
             "source_seconds": 47.13333333333333,
             "rgb_sha256": "184a62dd0a2c07a996acb31aca5e46262faf1a36a35e748554d7a34e342e4d52",
-            "reviewed_opened_gold": "P6",
+            "reviewed_opened_gold": "P7",
             "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
             "approved": false,
             "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
@@ -1103,7 +1103,8 @@
           }
         ]
       }
-    ]
+    ],
+    "truth_correction_reference": "truth_corrections_20261024"
   },
   "limits": [
     "No full continuous truth set or wrong-acceptance accuracy was measured.",
@@ -1162,7 +1163,7 @@
           "hand_only": 0,
           "gold_and_hand": 2
         },
-        "raw_candidate_exact_hands": 0,
+        "raw_candidate_exact_hands": 2,
         "rejected_candidate_decisions": {
           "P2|class_not_cross_session_validated_in_region": 4,
           "S3|below_confidence_threshold": 2,
@@ -1173,7 +1174,8 @@
           "S7|below_confidence_threshold": 1
         },
         "gold_and_hand_shanten_distribution": {
-          "2": 2
+          "1": 1,
+          "0": 1
         },
         "details": [
           {
@@ -1193,15 +1195,9 @@
               "opponent_meld_missing"
             ],
             "candidate_diagnostic": {
-              "whole_hand_exact": false,
-              "missing_true_tiles": {
-                "S6": 1,
-                "G": 1
-              },
-              "extra_candidate_tiles": {
-                "S4": 1,
-                "S8": 1
-              },
+              "whole_hand_exact": true,
+              "missing_true_tiles": {},
+              "extra_candidate_tiles": {},
               "rejected_candidates": [
                 {
                   "candidate_tile_id": "P2",
@@ -1289,7 +1285,7 @@
               },
               "gold_and_hand": {
                 "calculation_allowed": true,
-                "shanten": 2,
+                "shanten": 1,
                 "phase": "PRE_DRAW",
                 "gate_issues": [
                   "river_untrusted:0",
@@ -1317,15 +1313,9 @@
               "opponent_meld_missing"
             ],
             "candidate_diagnostic": {
-              "whole_hand_exact": false,
-              "missing_true_tiles": {
-                "S6": 1,
-                "G": 1
-              },
-              "extra_candidate_tiles": {
-                "S4": 1,
-                "S8": 1
-              },
+              "whole_hand_exact": true,
+              "missing_true_tiles": {},
+              "extra_candidate_tiles": {},
               "rejected_candidates": [
                 {
                   "candidate_tile_id": "P2",
@@ -1423,7 +1413,7 @@
               },
               "gold_and_hand": {
                 "calculation_allowed": true,
-                "shanten": 2,
+                "shanten": 0,
                 "phase": "PRE_DRAW",
                 "gate_issues": [
                   "river_untrusted:0",
@@ -1445,5 +1435,12 @@
       "Snapshot interventions preserve machine geometry/melds/source/physical checks; no stateful confirmation/recovery claim.",
       "Shanten numbers are calculator outputs on substituted inputs, not independent rule validation."
     ]
+  },
+  "truth_corrections_20261024": {
+    "supersedes_commit": "cbb01601df101a2213d06b0ca71a69acb18454e4",
+    "long_clip": "Previous S6/G labels were assistant errors. Enlarged full-frame and crop review shows S4/S8; all six sampled frame labels corrected, pixels unchanged. Withdraw S6->S4 and G->S8 error claims.",
+    "gold_packet": "Previous P6 anchor is P7 (3 green + 4 red dots). Withdraw P6->P7 error claim. Corrected private packet version preserves pixel bytes.",
+    "corrected_packet_sha256": "4af91267ecbcc127294782fe94a3ea04d33d86094af88e02bc72e1a6d9c97edf",
+    "original_packet_sha256": "3c507e06395a3993f609ea09c730741eaa26cd5c17c93497629c047d0e97dfa9"
   }
 }
