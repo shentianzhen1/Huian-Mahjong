@@ -1,5 +1,91 @@
 # Current hand / meld / shanten audit — 2026-10-07
 
+## 2026-10-24: Gold scoring reaches one correct structural-advice window
+
+**The opt-in experimental backend now produces 1/517 accepted windows, up from
+0/517 for the unchanged default backend. This is still far below usability.**
+Short source: 1/44; long source: 0/473. This is actual sequential Runtime ->
+opening memory -> hand confirmation -> structural shanten, not a manual Gold
+substitution or a candidate-identity-only count.
+
+The accepted short-source burst is **246/252/258**, ending at 8.6 seconds.
+Its thirteen current concealed tiles exactly match sampled truth, Gold is M6,
+there is one own kong group, and structural shanten is 0 (PRE_DRAW). No discard
+or danger advice is emitted. The Gold was recognized earlier and retained by
+the existing opening tracker; the current hand still had to pass two distinct
+classified observations. Neither memory nor hand confirmation was bypassed.
+The two following windows stop advice again when the hand loses confidence or
+is waiting for confirmation. Executor remains off.
+
+### Scoring experiment
+
+Used 134 existing ordinary-crop queries with their whole reviewed source group
+excluded from the template bank for each prediction. Unresolved sources use
+exact SHA groups for exploration only. Of these, 128 yield known candidates,
+96 are correct, across 9 groups (6 unresolved). Gold test source groups Sep26
+and Oct12 are excluded. Ten previously reviewed poor crops are excluded from
+this experimental SIFT reference bank, while the ordinary Runtime bank is kept
+unchanged.
+
+A count-only scoring trial was insufficient and, when incorrectly applied to
+hand tiles, could score S9->S7 errors over 0.82. The final adapter is therefore
+**opened-indicator only**. Ordinary hand/draw and playable yellow-Gold hand tiles
+continue through their existing classifier. Verified identical hand/draw
+components in all **517** baseline/experimental windows.
+
+Added geometric evidence without changing the identity candidate: unique
+reference correspondences, RANSAC inlier count/fraction and spatial coverage.
+Repeated query points matching one reference point do not count as independent
+support. A fixed logistic model (C=1, seed=0) fits correctness with one unit of
+weight per source-group/tile class. Positive/negative outcomes are not forcibly
+balanced; the observed weighted positive prior is about 0.6723. These fitted
+scores are a development estimate, not established Gold-domain calibration.
+
+On twelve revealed Gold queries, raw candidates remain 12/12; **6** scores pass
+0.82 and none of those six is wrong. Twelve artificial true-class-removal stress
+queries produce zero passing wrong candidates. This stress is not a measured
+real confusion rate, and the small revealed set is not formal promotion.
+The final model artifact and exact feature order are versioned alongside code.
+
+### Why the long clip still stops
+
+All 723 per-frame Gold decisions within its geometry-stable bursts clear the
+new scoring threshold, then fail the existing per-class stored-source support
+check. Its hand/draw predictions also remain incomplete in all 473 windows;
+not one window has every hand score at least 0.82. Thus removing Gold source
+bookkeeping alone would still not make this source usable. Prioritize hand crop /
+identity quality and assess source-policy simplification with measured impact.
+
+No default Runtime model, threshold, source support requirement, UI, AI V0.10,
+or Executor setting changed. `classify_opened_gold` is an optional classifier
+method used only for `region_candidate == gold`; default Template behavior is
+unchanged. The new backend requires an explicit offline flag.
+
+```sh
+python -m workspace.hint_alpha.replay_smoke \
+  --video /private/short.mp4 \
+  --source-sha256 f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357 \
+  --duration 9.1 --stride 6 --stateful-advice \
+  --experimental-gold-model references/vision/2026-10-24/gold_sift_score_model.development.json \
+  --require-accepted --output /private/short_scored_stateful.json
+```
+
+Refit only this scoring experiment with `python -m
+workspace.vision.tiles_runtime_v0_2.gold_score_calibration --queries
+/private/sift_queries/manifest.json --exclude-match
+reviewed_match_2026_09_26_eight_hand --exclude-match
+reviewed_match_2026_10_12_room324504 --model-output /private/model.json
+--report-output /private/check.json`. The fitting code lazily imports sklearn;
+the saved model's inference needs only existing Vision dependencies and math.
+
+Validation: 23 directly related pytest tests plus 3 canonical-module Gold reader
+unittests pass; no local full suite. The Vision reader unittest is invoked by
+its `workspace.vision...` module name so its existing canonical mock paths patch
+the correct module. Evidence is under `gold_scored_advice_experiment_20261024`
+in the existing failure-baseline record. Default 0/517 and experimental 1/517
+must remain separate in progress summaries.
+
+
 ## 2026-10-24: Gold candidate in sequential video, including opening/settlement
 
 Moved the repaired candidate from twelve chosen crops to the actual sequential

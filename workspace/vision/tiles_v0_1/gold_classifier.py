@@ -33,7 +33,7 @@ def _crop_label(root, label):
         return image.crop((x, y, x + width, y + height))
 
 
-def _sift_descriptor(image):
+def _sift_features(image):
     rgb = np.asarray(image.convert("RGB"))
     enlarged = cv2.resize(
         rgb, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC
@@ -44,8 +44,13 @@ def _sift_descriptor(image):
     # The top-right 金 badge is an overlay rather than part of the base tile face.
     mask[: int(height * 0.35), int(width * 0.65):] = 0
     detector = cv2.SIFT_create(nfeatures=100)
-    _, descriptor = detector.detectAndCompute(gray, mask)
-    return descriptor
+    keypoints, descriptor = detector.detectAndCompute(gray, mask)
+    points = np.asarray([point.pt for point in keypoints], dtype=np.float32).reshape(-1, 2)
+    return points, descriptor, (height, width)
+
+
+def _sift_descriptor(image):
+    return _sift_features(image)[1]
 
 
 def _good_sift_matches(sample, template):
@@ -65,8 +70,12 @@ def _good_sift_matches(sample, template):
 
 
 def _wan_numeral_descriptor(image):
+    return _wan_numeral_features(image)[1]
+
+
+def _wan_numeral_features(image):
     face = _normalize_gold_face(image)
-    return _sift_descriptor(face.crop((0, 0, face.width, max(12, face.height // 2))))
+    return _sift_features(face.crop((0, 0, face.width, max(12, face.height // 2))))
 
 
 def count_tong_pips(image):
@@ -122,7 +131,7 @@ class GoldClassification:
 class GoldTileClassifier:
     """Classify the underlying tile identity of a gold-skinned tile."""
 
-    def __init__(self, descriptors, numeral_descriptors=None):
+    def __init__(self, descriptors, numeral_descriptors=None, *, full_details=None, numeral_details=None):
         self.descriptors = {
             tile_id: tuple(values)
             for tile_id, values in descriptors.items()
@@ -134,6 +143,8 @@ class GoldTileClassifier:
             tile: tuple(values) for tile, values in (numeral_descriptors or {}).items()
             if values
         }
+        self.full_details = full_details or {}
+        self.numeral_details = numeral_details or {}
 
     @classmethod
     def from_dataset(cls, dataset_root):
@@ -144,17 +155,23 @@ class GoldTileClassifier:
         root = Path(dataset_root)
         descriptors = defaultdict(list)
         numerals = defaultdict(list)
+        full_details, numeral_details = defaultdict(list), defaultdict(list)
         for label in labels:
             if label["region"] == "gold_region":
                 continue
-            descriptor = _sift_descriptor(_crop_label(root, label))
+            crop = _crop_label(root, label)
+            details = _sift_features(crop)
+            descriptor = details[1]
             if descriptor is not None:
                 descriptors[label["tile_id"]].append(descriptor)
+                full_details[label["tile_id"]].append(details)
             if label["tile_id"].startswith("M") and not label.get("gold_skin_only"):
-                numeral = _wan_numeral_descriptor(_crop_label(root, label))
+                details = _wan_numeral_features(crop)
+                numeral = details[1]
                 if numeral is not None:
                     numerals[label["tile_id"]].append(numeral)
-        return cls(descriptors, numerals)
+                    numeral_details[label["tile_id"]].append(details)
+        return cls(descriptors, numerals, full_details=full_details, numeral_details=numeral_details)
 
     def _rank(self, image):
         sample = _sift_descriptor(image)

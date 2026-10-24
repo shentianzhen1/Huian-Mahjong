@@ -2541,5 +2541,809 @@
       "Long clip source is now directly date/room-qualified, but both clips are revealed development and training includes 80 unresolved-lineage labels.",
       "Acquisition times use source video clock and are not Windows capture/compute latency."
     ]
+  },
+  "gold_scored_advice_experiment_20261024": {
+    "parent_head": "ce53ba12675345348fa35a3cfa6dfc4062f496d8",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "default_runtime_changed": false,
+    "experimental_only": true,
+    "identity_threshold": 0.82,
+    "executor_enabled": false,
+    "model_reference": "references/vision/2026-10-24/gold_sift_score_model.development.json",
+    "model_sha256": "240e02904830bc4b80af49e2596d8d8c2638bee9c7d13841d1869a55b4188a41",
+    "training": {
+      "queries": 134,
+      "known_candidates": 128,
+      "correct_candidates": 96,
+      "groups": 9,
+      "unresolved_query_groups": 6,
+      "weighted_positive_prior": 0.6722972972972975,
+      "fit_method": "source/class-weighted logistic C=1 seed=0; no outcome class balancing",
+      "trace_sha256": "d2130743fa6bc828de5bd8d3cd4032d5bd5ca602ca1176b8becb3352265db7d6"
+    },
+    "gold_query_check": {
+      "development_only": true,
+      "formal_promotion_evidence": false,
+      "runtime_changed": false,
+      "real_queries": 12,
+      "real_passes": 6,
+      "real_wrong_passes": 0,
+      "class_removed_wrong_passes": 0,
+      "rows": [
+        {
+          "query": "short_baseline:60",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.8869154240045418,
+          "passes_082": true,
+          "features": [
+            2.5649493574615367,
+            1.791759469228055,
+            0.5833333333333334,
+            1,
+            2.4849066497880004,
+            0.9166666666666666,
+            2.4849066497880004,
+            1.0,
+            0.08066033318467686
+          ],
+          "geometry": {
+            "unique_matches": 11,
+            "unique_ratio": 0.9166666666666666,
+            "inliers": 11,
+            "inlier_ratio": 1.0,
+            "inlier_coverage": 0.08066033318467686
+          }
+        },
+        {
+          "query": "short_baseline:60",
+          "truth": "M6",
+          "candidate": "M8",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.7790209262618181,
+          "passes_082": false,
+          "features": [
+            3.58351893845611,
+            3.5263605246161616,
+            0.05714285714285714,
+            0,
+            3.58351893845611,
+            1.0,
+            3.1354942159291497,
+            0.6285714285714286,
+            0.10540921021311002
+          ],
+          "geometry": {
+            "unique_matches": 35,
+            "unique_ratio": 1.0,
+            "inliers": 22,
+            "inlier_ratio": 0.6285714285714286,
+            "inlier_coverage": 0.10540921021311002
+          }
+        },
+        {
+          "query": "short_baseline:120",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.7554741656964956,
+          "passes_082": false,
+          "features": [
+            2.302585092994046,
+            1.791759469228055,
+            0.4444444444444444,
+            1,
+            2.302585092994046,
+            1.0,
+            2.1972245773362196,
+            0.8888888888888888,
+            0.05020804211211466
+          ],
+          "geometry": {
+            "unique_matches": 9,
+            "unique_ratio": 1.0,
+            "inliers": 8,
+            "inlier_ratio": 0.8888888888888888,
+            "inlier_coverage": 0.05020804211211466
+          }
+        },
+        {
+          "query": "short_baseline:120",
+          "truth": "M6",
+          "candidate": "M7",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.059518735076035896,
+          "passes_082": false,
+          "features": [
+            1.791759469228055,
+            1.6094379124341003,
+            0.2,
+            1,
+            1.3862943611198906,
+            0.6,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "short_baseline:180",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.7540082066473669,
+          "passes_082": false,
+          "features": [
+            2.302585092994046,
+            1.791759469228055,
+            0.4444444444444444,
+            1,
+            2.302585092994046,
+            1.0,
+            2.1972245773362196,
+            0.8888888888888888,
+            0.049195026909401605
+          ],
+          "geometry": {
+            "unique_matches": 9,
+            "unique_ratio": 1.0,
+            "inliers": 8,
+            "inlier_ratio": 0.8888888888888888,
+            "inlier_coverage": 0.049195026909401605
+          }
+        },
+        {
+          "query": "short_baseline:180",
+          "truth": "M6",
+          "candidate": "M7",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.059518735076035896,
+          "passes_082": false,
+          "features": [
+            1.791759469228055,
+            1.6094379124341003,
+            0.2,
+            1,
+            1.3862943611198906,
+            0.6,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "candidate": "M4",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9233982230826081,
+          "passes_082": true,
+          "features": [
+            2.70805020110221,
+            1.0986122886681096,
+            0.8571428571428571,
+            1,
+            2.5649493574615367,
+            0.8571428571428571,
+            2.302585092994046,
+            0.75,
+            0.09078407375838884
+          ],
+          "geometry": {
+            "unique_matches": 12,
+            "unique_ratio": 0.8571428571428571,
+            "inliers": 9,
+            "inlier_ratio": 0.75,
+            "inlier_coverage": 0.09078407375838884
+          }
+        },
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "candidate": "M8",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.7454893129069159,
+          "passes_082": false,
+          "features": [
+            3.4657359027997265,
+            3.4011973816621555,
+            0.06451612903225806,
+            0,
+            3.4339872044851463,
+            0.967741935483871,
+            2.995732273553991,
+            0.6333333333333333,
+            0.11685264712441122
+          ],
+          "geometry": {
+            "unique_matches": 30,
+            "unique_ratio": 0.967741935483871,
+            "inliers": 19,
+            "inlier_ratio": 0.6333333333333333,
+            "inlier_coverage": 0.11685264712441122
+          }
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "candidate": "M4",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9301846151884796,
+          "passes_082": true,
+          "features": [
+            2.70805020110221,
+            1.0986122886681096,
+            0.8571428571428571,
+            1,
+            2.5649493574615367,
+            0.8571428571428571,
+            2.3978952727983707,
+            0.8333333333333334,
+            0.09166307929190924
+          ],
+          "geometry": {
+            "unique_matches": 12,
+            "unique_ratio": 0.8571428571428571,
+            "inliers": 10,
+            "inlier_ratio": 0.8333333333333334,
+            "inlier_coverage": 0.09166307929190924
+          }
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "candidate": "M8",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.6817794252998348,
+          "passes_082": false,
+          "features": [
+            3.4965075614664802,
+            3.4339872044851463,
+            0.0625,
+            0,
+            3.4965075614664802,
+            1.0,
+            3.091042453358316,
+            0.65625,
+            0.05686394811690537
+          ],
+          "geometry": {
+            "unique_matches": 32,
+            "unique_ratio": 1.0,
+            "inliers": 21,
+            "inlier_ratio": 0.65625,
+            "inlier_coverage": 0.05686394811690537
+          }
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "candidate": "M4",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9297817241506738,
+          "passes_082": true,
+          "features": [
+            2.70805020110221,
+            1.0986122886681096,
+            0.8571428571428571,
+            1,
+            2.5649493574615367,
+            0.8571428571428571,
+            2.3978952727983707,
+            0.8333333333333334,
+            0.09087162292911498
+          ],
+          "geometry": {
+            "unique_matches": 12,
+            "unique_ratio": 0.8571428571428571,
+            "inliers": 10,
+            "inlier_ratio": 0.8333333333333334,
+            "inlier_coverage": 0.09087162292911498
+          }
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "candidate": "UNKNOWN",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.0,
+          "passes_082": false,
+          "features": [
+            3.4011973816621555,
+            3.4011973816621555,
+            0.0,
+            0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 0,
+            "unique_ratio": 0.0,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_S8_source1_frame1628.png",
+          "truth": "S8",
+          "candidate": "S8",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9354536907446022,
+          "passes_082": true,
+          "features": [
+            3.6635616461296463,
+            2.0794415416798357,
+            0.8157894736842105,
+            0,
+            3.4339872044851463,
+            0.7894736842105263,
+            3.2188758248682006,
+            0.8,
+            0.11918542377117353
+          ],
+          "geometry": {
+            "unique_matches": 30,
+            "unique_ratio": 0.7894736842105263,
+            "inliers": 24,
+            "inlier_ratio": 0.8,
+            "inlier_coverage": 0.11918542377117353
+          }
+        },
+        {
+          "query": "gold_S8_source1_frame1628.png",
+          "truth": "S8",
+          "candidate": "P4",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.019358877017901094,
+          "passes_082": false,
+          "features": [
+            2.0794415416798357,
+            1.6094379124341003,
+            0.42857142857142855,
+            0,
+            1.3862943611198906,
+            0.42857142857142855,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.42857142857142855,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_SOUTH_source1_frame3256.png",
+          "truth": "SOUTH",
+          "candidate": "SOUTH",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9602621851587506,
+          "passes_082": true,
+          "features": [
+            3.8918202981106265,
+            2.772588722239781,
+            0.6875,
+            0,
+            3.7612001156935624,
+            0.875,
+            3.6635616461296463,
+            0.9047619047619048,
+            0.11529493194987525
+          ],
+          "geometry": {
+            "unique_matches": 42,
+            "unique_ratio": 0.875,
+            "inliers": 38,
+            "inlier_ratio": 0.9047619047619048,
+            "inlier_coverage": 0.11529493194987525
+          }
+        },
+        {
+          "query": "gold_SOUTH_source1_frame3256.png",
+          "truth": "SOUTH",
+          "candidate": "E",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.26092677180839413,
+          "passes_082": false,
+          "features": [
+            2.772588722239781,
+            2.3978952727983707,
+            0.3333333333333333,
+            0,
+            2.1972245773362196,
+            0.5333333333333333,
+            1.791759469228055,
+            0.625,
+            0.08735557348763456
+          ],
+          "geometry": {
+            "unique_matches": 8,
+            "unique_ratio": 0.5333333333333333,
+            "inliers": 5,
+            "inlier_ratio": 0.625,
+            "inlier_coverage": 0.08735557348763456
+          }
+        },
+        {
+          "query": "gold_M6_source1_frame4884.png",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.7659565754927036,
+          "passes_082": false,
+          "features": [
+            2.3978952727983707,
+            1.791759469228055,
+            0.5,
+            1,
+            2.302585092994046,
+            0.9,
+            2.1972245773362196,
+            0.8888888888888888,
+            0.04912317185549741
+          ],
+          "geometry": {
+            "unique_matches": 9,
+            "unique_ratio": 0.9,
+            "inliers": 8,
+            "inlier_ratio": 0.8888888888888888,
+            "inlier_coverage": 0.04912317185549741
+          }
+        },
+        {
+          "query": "gold_M6_source1_frame4884.png",
+          "truth": "M6",
+          "candidate": "M7",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.059518735076035896,
+          "passes_082": false,
+          "features": [
+            1.791759469228055,
+            1.6094379124341003,
+            0.2,
+            1,
+            1.3862943611198906,
+            0.6,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_M1_source2_frame3097.png",
+          "truth": "M1",
+          "candidate": "M1",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.10720529143681203,
+          "passes_082": false,
+          "features": [
+            1.6094379124341003,
+            1.0986122886681096,
+            0.5,
+            1,
+            1.3862943611198906,
+            0.75,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.75,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_M1_source2_frame3097.png",
+          "truth": "M1",
+          "candidate": "M3",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.745828602821157,
+          "passes_082": false,
+          "features": [
+            3.6109179126442243,
+            3.5553480614894135,
+            0.05555555555555555,
+            0,
+            3.6109179126442243,
+            1.0,
+            3.295836866004329,
+            0.7222222222222222,
+            0.06075807926520937
+          ],
+          "geometry": {
+            "unique_matches": 36,
+            "unique_ratio": 1.0,
+            "inliers": 26,
+            "inlier_ratio": 0.7222222222222222,
+            "inlier_coverage": 0.06075807926520937
+          }
+        },
+        {
+          "query": "gold_P7_source3_frame1414.png",
+          "truth": "P7",
+          "candidate": "P7",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.33513997701081966,
+          "passes_082": false,
+          "features": [
+            3.044522437723423,
+            2.9444389791664403,
+            0.1,
+            0,
+            2.833213344056216,
+            0.8,
+            2.1972245773362196,
+            0.5,
+            0.057516711111494534
+          ],
+          "geometry": {
+            "unique_matches": 16,
+            "unique_ratio": 0.8,
+            "inliers": 8,
+            "inlier_ratio": 0.5,
+            "inlier_coverage": 0.057516711111494534
+          }
+        },
+        {
+          "query": "gold_P7_source3_frame1414.png",
+          "truth": "P7",
+          "candidate": "P6",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.196397625093705,
+          "passes_082": false,
+          "features": [
+            2.9444389791664403,
+            2.70805020110221,
+            0.2222222222222222,
+            0,
+            2.1972245773362196,
+            0.4444444444444444,
+            1.791759469228055,
+            0.625,
+            0.0652816923879811
+          ],
+          "geometry": {
+            "unique_matches": 8,
+            "unique_ratio": 0.4444444444444444,
+            "inliers": 5,
+            "inlier_ratio": 0.625,
+            "inlier_coverage": 0.0652816923879811
+          }
+        },
+        {
+          "query": "gold_P5_source3_frame4243.png",
+          "truth": "P5",
+          "candidate": "P5",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.19914258800893705,
+          "passes_082": false,
+          "features": [
+            3.332204510175204,
+            3.091042453358316,
+            0.2222222222222222,
+            0,
+            2.3978952727983707,
+            0.37037037037037035,
+            1.791759469228055,
+            0.5,
+            0.03298757678068914
+          ],
+          "geometry": {
+            "unique_matches": 10,
+            "unique_ratio": 0.37037037037037035,
+            "inliers": 5,
+            "inlier_ratio": 0.5,
+            "inlier_coverage": 0.03298757678068914
+          }
+        },
+        {
+          "query": "gold_P5_source3_frame4243.png",
+          "truth": "P5",
+          "candidate": "P4",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.01675676189827337,
+          "passes_082": false,
+          "features": [
+            3.091042453358316,
+            2.9444389791664403,
+            0.14285714285714285,
+            0,
+            1.3862943611198906,
+            0.14285714285714285,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.14285714285714285,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        }
+      ],
+      "training_trace_sha256": "d2130743fa6bc828de5bd8d3cd4032d5bd5ca602ca1176b8becb3352265db7d6"
+    },
+    "baseline": {
+      "short_accepted_windows": 0,
+      "long_accepted_windows": 0,
+      "total_windows": 517
+    },
+    "experiment": {
+      "short_accepted_windows": 1,
+      "short_windows": 44,
+      "long_accepted_windows": 0,
+      "long_windows": 473,
+      "total_accepted_windows": 1,
+      "short_discard_windows": 0,
+      "hand_draw_predictions_unchanged_windows": 517
+    },
+    "reviewed_accepted_window": {
+      "frames": [
+        246,
+        252,
+        258
+      ],
+      "pixel_sha256": [
+        "7be748be3947a0c089197c18ca0ad0d05f351b15ef18215c08e2018635a31e2c",
+        "409a72753d9d457d3019be6c3730fbddd946954c58d7550883142e0ad9bc183b",
+        "7e98237537cf896dea9c7e8fe3cd384a4924da5f0f9335674288b74fd00b7838"
+      ],
+      "source_seconds": [
+        8.200000000000001,
+        8.4,
+        8.600000000000001
+      ],
+      "snapshot": {
+        "timestamp_seconds": 8.600000000000001,
+        "source_session": "private-replay-f39bb98a0fe715e4",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P7",
+          "P7",
+          "P8",
+          "P9",
+          "P9",
+          "S2",
+          "S2",
+          "S5",
+          "S5"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "live_gold_carried_forward"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "live_gold_carried_forward"
+        ],
+        "source_session": "private-replay-f39bb98a0fe715e4",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "hand_exact_against_sampled_truth": true,
+      "gold_exact": true,
+      "own_meld_count_reviewed": 1,
+      "reference_structural_shanten": 0
+    },
+    "scores_do_not_apply_to_playable_gold_hand": true,
+    "baseline_hand_scores_retained": true,
+    "limits": [
+      "Experimental backend only, not a promoted Runtime or user-ready recognition rate. One accepted window out of 517 is far below usability.",
+      "Model fits correctness scores from ordinary crop source-group-out predictions; Gold-domain calibration remains unestablished. Twelve Gold checks are revealed development and all raw Gold candidates are correct.",
+      "Artificial class-removal stress is not a measured real confusion rate. Zero passes in 12 does not prove general error rejection.",
+      "Six unresolved original-match groups use exact source SHA for splitting; they are not claimed independent.",
+      "All 517 hand/draw component predictions exactly match baseline. The new classifier method is used only when region_candidate=gold; yellow playable hand/draw remains NCC.",
+      "The successful state is PRE_DRAW shanten=0, not a discard recommendation or complete action reconstruction.",
+      "Existing Gold memory and two distinct-frame hand confirmation produce the accepted window at frame258; neither was bypassed.",
+      "Long source still has hand rejection and Gold class/source/appearance support refusals; scores alone do not unlock it."
+    ]
   }
 }

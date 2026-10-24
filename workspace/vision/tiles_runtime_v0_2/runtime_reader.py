@@ -217,7 +217,10 @@ def _classify_runtime_component(
     x, y, width, height = crop_bbox
     crop = image.crop((x, y, x + width, y + height))
     try:
-        if gold_skin:
+        if (gold_skin and component.region_candidate == "gold"
+                and hasattr(classifier, "classify_opened_gold")):
+            prediction = classifier.classify_opened_gold(crop)
+        elif gold_skin:
             prediction = classifier.classify_gold_skin(crop)
         elif component.region_candidate in {"hand", "draw_visual"}:
             prediction = classifier.classify(
