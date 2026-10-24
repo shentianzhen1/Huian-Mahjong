@@ -46,3 +46,20 @@ class BundledReferenceTests(unittest.TestCase):
    (root/'BUILD_INFO.json').write_text(json.dumps(build));verify(root)
    build['reference_pack_count']=7;(root/'BUILD_INFO.json').write_text(json.dumps(build))
    with self.assertRaises(SystemExit):verify(root)
+
+ def test_windows_autocrlf_checkout_preserves_all_bundle_bytes(self):
+  import subprocess,shutil
+  if not shutil.which('git'):self.skipTest('git unavailable')
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp)
+   subprocess.run(['git','init','-q',str(root)],check=True)
+   subprocess.run(['git','-C',str(root),'config','core.autocrlf','true'],check=True)
+   shutil.copy2(ROOT/'.gitattributes',root/'.gitattributes')
+   copy_bundled_references(ROOT,root)
+   subprocess.run(['git','-C',str(root),'add','.gitattributes','dataset'],check=True,capture_output=True)
+   folder=root/'dataset/tiles_runtime_v0_2/reference_pack'
+   before={p.name:p.read_bytes() for p in folder.iterdir()}
+   for path in folder.iterdir():path.unlink()
+   subprocess.run(['git','-C',str(root),'checkout-index','-a','-f'],check=True,capture_output=True)
+   self.assertEqual(before,{p.name:p.read_bytes() for p in folder.iterdir()})
+   self.assertEqual(resolve_bundled_references(root)[2],8)
