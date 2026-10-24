@@ -1,5 +1,71 @@
 # Current hand / meld / shanten audit — 2026-10-07
 
+## 2026-10-24: repair the existing Gold SIFT path
+
+Found and reproduced a concrete loader defect: `GoldTileClassifier._crop_label`
+re-cropped tile-only `templates/...` assets using their original-frame bbox.
+The first real Runtime asset became an all-black 40x69 image, and constructing
+this classifier raised `No reviewed non-gold templates are available`.
+The loader now follows the existing Runtime convention: use tile-only pixels
+as-is, while full-frame source files still use bbox cropping. All **34 classes**
+now load. This is a repair to an experimental classifier, not the current
+Runtime's NCC classifier.
+
+Also fixed a harmful secondary decision: the P7 query's descriptor first choice
+was P7, but Hough counted five pips after badge masking and forcibly changed it
+to P5. Counts now remain diagnostics and do not replace descriptor identity.
+For Wan faces, normalized upper-half numeral descriptors distinguish the digit
+from the common lower Wan glyph; empty/tied numeral evidence leaves the whole
+face candidate unchanged. Evidence counts describe the descriptor actually used.
+
+| Same twelve reviewed opened-Gold queries | Raw identity correct |
+| --- | ---: |
+| Existing product NCC candidates | 10/12 |
+| Whole-face SIFT after fixing loader | 11/12 |
+| SIFT + Wan numeral comparison, no pip override | 12/12 |
+| Candidate after excluding known Sep26 training match | 12/12 |
+
+The twelve queries are M6/M4 replay frames 60/120/180 and 612/1812/2718,
+plus the corrected six-crop Gold packet. These are seven identities with repeated
+M6/M4 observations, **not** twelve independent matches. The filtered development
+bank retains 80 labels of unresolved lineage; it is not an independent holdout.
+The ordinary source-disjoint stress check (existing deterministic representatives)
+has 36 queries: 16 with another-match true-class support and 20 without. NCC
+scores 8/16 raw correct, full-face SIFT 6/16, and the numeral candidate 6/16.
+There are no full-SIFT-to-numeral-SIFT regressions in these 16, but this does not
+prove Gold generalization or make the candidate a general tile classifier.
+
+Rejected a tempting shortcut: simply adding six real-Gold references to the
+NCC bank raises M6 to about 0.99, but also makes three M4 queries become M6 at
+0.8256..0.8276. The matching gold UI frame can create false high scores.
+This bank was not admitted and no threshold was lowered.
+
+Reproduce the actual Gold crop comparison using a private manifest with
+`queries: [{query, crop, crop_rgb_sha256, source_sha256, truth}]`:
+
+```sh
+python -m workspace.vision.tiles_v0_1.gold_classifier \
+  --queries /private/sift_queries/manifest.json \
+  --dataset dataset/tiles_runtime_v0_2 \
+  --lineage references/vision/2026-10-01/concealed_template_match_lineage.development.json \
+  --exclude-match reviewed_match_2026_09_26_eight_hand \
+  --output /private/gold_sift_results.json
+```
+
+Each crop is the previously recorded `[107,41,42,57]` detector classification
+crop from its source frame, or an unchanged corrected-packet crop. Manifest
+RGB hashes must match; truth is used for scoring only. Raw crop pixels remain
+private. Full per-query hashes/results and the broader stress check are under
+`gold_sift_restoration_20261024` in the existing failure-baseline record.
+
+**Boundary:** no Hint/UI or Runtime wiring changed. SIFT match counts are not
+Runtime confidence, and mapping them to 0.82 without validation would hide a
+threshold change. Automatic trusted advice therefore remains 0/517. Next work
+is a frozen Gold-domain comparison on additional matches and proper scoring
+calibration, rather than treating high NCC frame similarity as correctness.
+This turn runs only the directly related Gold crop/selection/pip tests.
+
+
 ## 2026-10-24: actual pretrained training and truth corrections
 
 **This section corrects the previous S6/G and P6 diagnoses.** Enlarged original
