@@ -69,7 +69,7 @@ def _overlaps(first: tuple[int, int, int, int], second: tuple[int, int, int, int
 
 
 def _split_joined_component(
-    box: tuple[int, int, int, int], mask: np.ndarray, typical_width: float
+    box: tuple[int, int, int, int], mask: np.ndarray, typical_width: float, *, edge_seams=False
 ) -> list[tuple[int, int, int, int]]:
     """Split a connected bright component only when its width supports it.
 
@@ -83,7 +83,11 @@ def _split_joined_component(
     part_count = max(2, min(3, int(round(width / typical_width))))
     if part_count < 2:
         return [box]
-    projection = mask[y:y + height, x:x + width].sum(axis=0)
+    face = mask[y:y + height, x:x + width]
+    if edge_seams:
+        band = max(1, int(round(height * 0.10)))
+        face = np.concatenate((face[:band], face[-band:]), axis=0)
+    projection = face.sum(axis=0)
     cuts: list[int] = []
     previous = 0
     for part in range(1, part_count):
@@ -94,7 +98,12 @@ def _split_joined_component(
         if start >= end:
             cut = nominal
         else:
-            cut = start + int(np.argmin(projection[start:end + 1]))
+            values = projection[start:end + 1]
+            if edge_seams:
+                minima = np.flatnonzero(values == values.min()) + start
+                cut = int(min(minima, key=lambda c: abs(int(c) - nominal)))
+            else:
+                cut = start + int(np.argmin(values))
         # A valley inside tile artwork can be much closer to an edge than the
         # actual seam.  Reject such an unbalanced split and retain the
         # proportional boundary instead.
@@ -111,7 +120,7 @@ def _split_joined_component(
     ]
 
 
-def _bright_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
+def _bright_boxes(frame: np.ndarray, *, edge_seams=False) -> list[tuple[int, int, int, int]]:
     height, width = frame.shape[:2]
     # HSV value preserves bright tile faces carrying saturated red/green art.
     # A grayscale threshold underweights those colours and can merge or lose
@@ -142,7 +151,7 @@ def _bright_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
         # consulted.
         height_matches_tiles = typical_height and abs(box[3] - typical_height) <= typical_height * 0.25
         if typical_width and height_matches_tiles and box[2] > typical_width * 1.55:
-            boxes.extend(_split_joined_component(box, mask, typical_width))
+            boxes.extend(_split_joined_component(box, mask, typical_width, edge_seams=edge_seams))
         elif box[2] <= width * 0.075:
             boxes.append(box)
         else:
@@ -361,13 +370,13 @@ def _gold_is_draw_visual(
 
 
 def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = None,
-                            session: str | None = None) -> GeometryFrame:
+                            session: str | None = None, edge_seams=False) -> GeometryFrame:
     """Observe hand/draw_visual/gold/meld candidates without a fixed layout or count."""
     array = cv2.cvtColor(np.asarray(image.convert("RGB")), cv2.COLOR_RGB2BGR)
     height, width = array.shape[:2]
     value = cv2.cvtColor(array, cv2.COLOR_BGR2HSV)[:, :, 2]
     bright_mask = (value > 150).astype(np.uint8) * 255
-    all_boxes = _bright_boxes(array)
+    all_boxes = _bright_boxes(array, edge_seams=edge_seams)
     yellow_boxes = _gold_boxes(array)
     upper_gold = _upper_gold_boxes(array)
     preliminary_widths = [box[2] for box in all_boxes]

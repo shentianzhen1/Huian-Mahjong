@@ -90,6 +90,7 @@ class HintAlphaApp(tk.Tk):
         self.manual_gold_status = tk.StringVar(value="本局金牌：自动识别；可手动选择")
         self.single_source_hand_trial = tk.BooleanVar(value=False)
         self.experimental_hand_packet = None
+        self.experimental_edge_seams = False
 
         # Presentation-only live view state.  These fields summarize facts that
         # existing PublicState / Runtime Vision have already accepted; they do
@@ -194,7 +195,7 @@ class HintAlphaApp(tk.Tk):
         ttk.Label(gold_controls, textvariable=self.manual_gold_status).pack(side="left")
         ttk.Button(gold_controls, text="手动选金牌", command=self.open_manual_gold).pack(side="left", padx=8)
         ttk.Button(gold_controls, text="下一局 / 清除金牌", command=self.clear_manual_gold).pack(side="left")
-        ttk.Checkbutton(gold_controls, text="试用高分手牌（来源未验证）",
+        ttk.Checkbutton(gold_controls, text="试用识别（手牌来源未验证）",
                         variable=self.single_source_hand_trial, command=self._toggle_hand_source_trial).pack(side="left", padx=8)
         ttk.Button(gold_controls, text="加载参考样本", command=self.open_hand_reference_packet).pack(side="left")
 
@@ -1104,6 +1105,7 @@ class HintAlphaApp(tk.Tk):
         return env.CN[tile]
 
     def _toggle_hand_source_trial(self):
+        self.experimental_edge_seams = self.single_source_hand_trial.get()
         pipeline = self.__dict__.get('runtime_advice_pipeline')
         if pipeline is not None:
             pipeline.allow_unvalidated_hand_sources = self.single_source_hand_trial.get()
@@ -1482,11 +1484,18 @@ class HintAlphaApp(tk.Tk):
             images = tuple(image for _, image in samples)
             reader_kwargs = {}
             packet = self.__dict__.get('experimental_hand_packet')
-            if packet:
+            edge_seams = self.__dict__.get('experimental_edge_seams', False)
+            if packet or edge_seams:
                 from workspace.vision.tiles_runtime_v0_2.runtime_reader import prepare_runtime_resources
                 from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
-                reader_kwargs['resources'] = with_private_hand_packet(
-                    prepare_runtime_resources(PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2', session_id), packet)
+                resources = dict(prepare_runtime_resources(PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2', session_id))
+                if packet:
+                    resources = with_private_hand_packet(resources, packet)
+                if edge_seams:
+                    from functools import partial
+                    from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry
+                    resources['geometry_detector'] = partial(detect_dynamic_geometry, edge_seams=True)
+                reader_kwargs['resources'] = resources
             report = read_stable_frames(
                 images,
                 PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
@@ -1495,6 +1504,7 @@ class HintAlphaApp(tk.Tk):
                 confidence_threshold=0.82,
                 **reader_kwargs,
             )
+            report["experimental_edge_seams"] = edge_seams
             report["stream_epoch"] = generation
             report["runtime_elapsed_seconds"] = time.monotonic() - started
             payload = ("ok", session_id, generation, captured, report)

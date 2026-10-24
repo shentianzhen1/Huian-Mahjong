@@ -175,6 +175,7 @@ def main():
                         help='Replay one hand with Gold memory and distinct-frame identity confirmation; not Windows live acceptance')
     parser.add_argument('--experimental-gold-model', type=Path,
                         help='Opt-in development scoring for explicit opened Gold only; keeps ordinary and playable Gold-hand classification unchanged')
+    parser.add_argument('--experimental-edge-seams', action='store_true', help='Use tile edge bands instead of glyph valleys for joined-face splits')
     parser.add_argument('--manual-gold', help='Explicit user-selected opening Gold for this one-hand replay')
     parser.add_argument('--allow-single-source-hand', action='store_true', help='Internal structural trial of high-score hands without two-session support')
     parser.add_argument('--experimental-hand-packet', type=Path,
@@ -199,7 +200,7 @@ def main():
     window = deque(maxlen=3)
     rows = []
     reader = None
-    if args.experimental_gold_model or args.experimental_hand_packet:
+    if args.experimental_gold_model or args.experimental_hand_packet or args.experimental_edge_seams:
         from workspace.vision.tiles_runtime_v0_2.runtime_reader import (
             read_stable_frames, prepare_runtime_resources,
         )
@@ -211,6 +212,10 @@ def main():
         if args.experimental_gold_model:
             model = json.loads(args.experimental_gold_model.read_text())
             resources = experimental_resources(resources,args.dataset,model)
+        if args.experimental_edge_seams:
+            from functools import partial
+            from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry
+            resources['geometry_detector'] = partial(detect_dynamic_geometry, edge_seams=True)
         geometry_cache = {}
         def reader(images,dataset_root,**kwargs):
             return read_stable_frames(images,dataset_root,resources=resources,
@@ -232,6 +237,7 @@ def main():
         raise ValueError('Source contains fewer than three decoded samples')
     result = {
         'schema_version': 'hint_alpha_replay_smoke_v0_1',
+        'experimental_edge_seams': args.experimental_edge_seams,
         'manual_gold_tile': args.manual_gold,
         'single_source_hand_trial': args.allow_single_source_hand,
         'classifier_mode': ('experimental_hand_translation_and_gold' if args.experimental_hand_packet and args.experimental_gold_model

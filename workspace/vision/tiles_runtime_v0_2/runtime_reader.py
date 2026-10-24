@@ -374,7 +374,7 @@ def read_stable_frames(
         cache_key = (session, frame_id)
         geometry = geometry_cache.get(cache_key) if geometry_cache is not None else None
         if geometry is None:
-            geometry = detect_dynamic_geometry(image, frame=frame_id, session=session)
+            geometry = resources.get('geometry_detector', detect_dynamic_geometry)(image, frame=frame_id, session=session)
             if geometry_cache is not None:
                 geometry_cache[cache_key] = geometry
                 while len(geometry_cache) > 12:
