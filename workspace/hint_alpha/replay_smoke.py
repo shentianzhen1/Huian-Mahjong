@@ -106,6 +106,8 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
         'advice_mode': 'stateful' if pipeline is not None else 'stateless',
         'snapshot': asdict(advisory.snapshot), 'hint': asdict(advisory.hint),
         'display_allowed': advisory.display_allowed,
+        'hand_source_trial': advisory.hand_source_trial,
+        'opening_fact': asdict(advisory.opening_fact),
         'sparse_source_burst': times[-1] - times[0] > 0.8,
         'geometry_issues': report.get('geometry_issues', []),
         'geometry_untrusted': report.get('geometry_untrusted', True),
@@ -173,6 +175,8 @@ def main():
                         help='Replay one hand with Gold memory and distinct-frame identity confirmation; not Windows live acceptance')
     parser.add_argument('--experimental-gold-model', type=Path,
                         help='Opt-in development scoring for explicit opened Gold only; keeps ordinary and playable Gold-hand classification unchanged')
+    parser.add_argument('--manual-gold', help='Explicit user-selected opening Gold for this one-hand replay')
+    parser.add_argument('--allow-single-source-hand', action='store_true', help='Internal structural trial of high-score hands without two-session support')
     parser.add_argument('--experimental-hand-packet', type=Path,
                         help='Private reviewed hand references plus shift3 NCC; offline development only')
     args = parser.parse_args()
@@ -212,10 +216,13 @@ def main():
             return read_stable_frames(images,dataset_root,resources=resources,
                                       geometry_cache=geometry_cache,**kwargs)
     pipeline = None
-    if args.stateful_advice:
+    if args.stateful_advice or args.manual_gold or args.allow_single_source_hand:
         from .runtime_pipeline import RuntimeAdvicePipeline
         from .live_snapshot_stability import LiveSnapshotStability
-        pipeline = RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability())
+        pipeline = RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability(),
+                                         allow_unvalidated_hand_sources=args.allow_single_source_hand)
+        if args.manual_gold:
+            pipeline.select_manual_gold(args.manual_gold,source_session=session,stream_epoch=0)
     for sample in samples:
         window.append(sample)
         if len(window) == 3:
@@ -225,6 +232,8 @@ def main():
         raise ValueError('Source contains fewer than three decoded samples')
     result = {
         'schema_version': 'hint_alpha_replay_smoke_v0_1',
+        'manual_gold_tile': args.manual_gold,
+        'single_source_hand_trial': args.allow_single_source_hand,
         'classifier_mode': ('experimental_hand_translation_and_gold' if args.experimental_hand_packet and args.experimental_gold_model
                             else 'experimental_hand_translation' if args.experimental_hand_packet
                             else 'experimental_opened_gold_score' if args.experimental_gold_model else 'baseline'),

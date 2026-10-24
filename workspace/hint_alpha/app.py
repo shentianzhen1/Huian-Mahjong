@@ -88,6 +88,8 @@ class HintAlphaApp(tk.Tk):
         self.manual_tiles = []
         self.manual_revision = 0
         self.manual_gold_status = tk.StringVar(value="本局金牌：自动识别；可手动选择")
+        self.single_source_hand_trial = tk.BooleanVar(value=False)
+        self.experimental_hand_packet = None
 
         # Presentation-only live view state.  These fields summarize facts that
         # existing PublicState / Runtime Vision have already accepted; they do
@@ -192,6 +194,9 @@ class HintAlphaApp(tk.Tk):
         ttk.Label(gold_controls, textvariable=self.manual_gold_status).pack(side="left")
         ttk.Button(gold_controls, text="手动选金牌", command=self.open_manual_gold).pack(side="left", padx=8)
         ttk.Button(gold_controls, text="下一局 / 清除金牌", command=self.clear_manual_gold).pack(side="left")
+        ttk.Checkbutton(gold_controls, text="试用高分手牌（来源未验证）",
+                        variable=self.single_source_hand_trial, command=self._toggle_hand_source_trial).pack(side="left", padx=8)
+        ttk.Button(gold_controls, text="加载参考样本", command=self.open_hand_reference_packet).pack(side="left")
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -1098,6 +1103,33 @@ class HintAlphaApp(tk.Tk):
     def _tile_label(tile):
         return env.CN[tile]
 
+    def _toggle_hand_source_trial(self):
+        pipeline = self.__dict__.get('runtime_advice_pipeline')
+        if pipeline is not None:
+            pipeline.allow_unvalidated_hand_sources = self.single_source_hand_trial.get()
+            if pipeline.stability_tracker is not None:
+                pipeline.stability_tracker.reset()
+        self.hint_status.set('向听提示：模式已切换，等待当前手牌重新确认')
+        if self.evidence:
+            self.evidence.mark('HAND_SOURCE_TRIAL_MODE', {'enabled': self.single_source_hand_trial.get()})
+
+    def open_hand_reference_packet(self):
+        path = filedialog.askopenfilename(title='选择样本包解压后的 selected.json',
+                                         filetypes=[('参考样本清单', '*.json')])
+        if not path:
+            return
+        try:
+            from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
+            with_private_hand_packet({'classifier': None}, path)
+        except (OSError, ValueError, KeyError) as exc:
+            messagebox.showerror('样本未加载', str(exc), parent=self)
+            return
+        self.experimental_hand_packet = Path(path)
+        self._toggle_hand_source_trial()
+        self.runtime_status.set('已加载参考样本；用于内部试用，不代表识别已通过验收')
+        if self.evidence:
+            self.evidence.mark('PRIVATE_HAND_REFERENCE_LOADED', {'manifest': str(path)})
+
     def _refresh_manual_gold(self):
         status = self.__dict__.get('manual_gold_status')
         if status is None:
@@ -1448,12 +1480,20 @@ class HintAlphaApp(tk.Tk):
 
             frame_ids = tuple(sequence for sequence, _ in samples)
             images = tuple(image for _, image in samples)
+            reader_kwargs = {}
+            packet = self.__dict__.get('experimental_hand_packet')
+            if packet:
+                from workspace.vision.tiles_runtime_v0_2.runtime_reader import prepare_runtime_resources
+                from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
+                reader_kwargs['resources'] = with_private_hand_packet(
+                    prepare_runtime_resources(PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2', session_id), packet)
             report = read_stable_frames(
                 images,
                 PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
                 frame_ids=frame_ids,
                 session=session_id,
                 confidence_threshold=0.82,
+                **reader_kwargs,
             )
             report["stream_epoch"] = generation
             report["runtime_elapsed_seconds"] = time.monotonic() - started
@@ -1542,6 +1582,8 @@ class HintAlphaApp(tk.Tk):
                 "仅可用开发开关做内部验证）"
             )
         prefix = "实验 " if experimental and not promoted else ""
+        if getattr(advisory, 'hand_source_trial', False):
+            prefix = "试用（手牌来源未验证） "
         return prefix + HintAlphaApp._format_shanten_hint(advisory.hint)
 
     def _consume_runtime_result(self):
@@ -1571,9 +1613,11 @@ class HintAlphaApp(tk.Tk):
             return
 
         report = value
+        trial_var = self.__dict__.get('single_source_hand_trial')
+        experimental = self.experimental_runtime_advisory or bool(trial_var and trial_var.get())
         advisory = evaluate_runtime_report(
             report, captured=captured,
-            experimental=self.experimental_runtime_advisory,
+            experimental=experimental,
         )
         snapshot, result = advisory.snapshot, advisory.hint
         issues = ",".join(result.issues[:4]) or "none"
@@ -1594,7 +1638,7 @@ class HintAlphaApp(tk.Tk):
         runtime_promoted_for_hint = report.get("safe_for_hint") is True
         display_allowed = advisory.display_allowed
         self.hint_status.set(self._format_runtime_advice(
-            advisory, experimental=self.experimental_runtime_advisory,
+            advisory, experimental=experimental,
             promoted=runtime_promoted_for_hint,
         ))
 
@@ -1623,6 +1667,7 @@ class HintAlphaApp(tk.Tk):
                     "melds": snapshot.melds,
                     "meld_trusted": snapshot.meld_trusted,
                     "opening_fact": asdict(advisory.opening_fact),
+                    "hand_source_trial": advisory.hand_source_trial,
                     "runtime_frames": report.get("frames", []),
                     "captured_monotonic": captured,
                     "runtime_elapsed_seconds": report.get("runtime_elapsed_seconds"),

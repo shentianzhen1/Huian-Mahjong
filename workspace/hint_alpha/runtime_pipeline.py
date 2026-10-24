@@ -24,6 +24,7 @@ _ACTIVE_STABILITY_TRACKER: ContextVar[LiveSnapshotStability | None] = ContextVar
     "hint_alpha_active_stability_tracker", default=None,
 )
 _ACTIVE_MANUAL_GOLD = ContextVar('hint_alpha_manual_gold', default=None)
+_ACTIVE_HAND_SOURCE_TRIAL = ContextVar('hint_alpha_hand_source_trial', default=False)
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,7 @@ class RuntimeAdvice:
     display_allowed: bool
     opening_fact: LiveOpeningFact
     safe_for_executor: bool = False
+    hand_source_trial: bool = False
 
 
 def evaluate_runtime_report(
@@ -112,6 +114,7 @@ def evaluate_runtime_report(
     opening_tracker: LiveOpeningTracker | None = None,
     stability_tracker: LiveSnapshotStability | None = None,
     manual_gold: ManualGoldSelection | None = None,
+    allow_unvalidated_hand_sources=None,
 ):
     """Evaluate one Runtime burst without enabling any action path.
 
@@ -124,7 +127,17 @@ def evaluate_runtime_report(
     if tracker is None:
         tracker = _ACTIVE_OPENING_TRACKER.get()
 
-    snapshot = current_snapshot_from_runtime(report, timestamp_seconds=captured)
+    trial = (_ACTIVE_HAND_SOURCE_TRIAL.get() if allow_unvalidated_hand_sources is None
+             else allow_unvalidated_hand_sources)
+    trial_tiles = ()
+    adapter_report = report
+    if trial and experimental:
+        from .hand_source_trial import trial_hand_report
+        adapter_report, trial_tiles = trial_hand_report(report)
+    snapshot = current_snapshot_from_runtime(adapter_report, timestamp_seconds=captured)
+    if trial_tiles:
+        snapshot = replace(snapshot, river_trusted=(False, False),
+            adapter_issues=(*snapshot.adapter_issues, 'experimental_hand_sources_unvalidated'))
     manual_gold = manual_gold or _ACTIVE_MANUAL_GOLD.get()
     if manual_gold is not None and manual_gold.applies_to(snapshot):
         snapshot, opening_fact = manual_gold.apply(snapshot)
@@ -144,6 +157,7 @@ def evaluate_runtime_report(
         ),
         opening_fact=opening_fact,
         safe_for_executor=False,
+        hand_source_trial=bool(trial_tiles),
     )
 
 
@@ -154,6 +168,7 @@ class RuntimeAdvicePipeline:
     opening_tracker: LiveOpeningTracker = field(default_factory=LiveOpeningTracker)
     stability_tracker: LiveSnapshotStability | None = None
     manual_gold: ManualGoldSelection | None = None
+    allow_unvalidated_hand_sources: bool = False
 
     def select_manual_gold(self, tile_id, *, source_session, stream_epoch):
         if tile_id not in env.BASE_TILES:
@@ -178,9 +193,11 @@ class RuntimeAdvicePipeline:
         token = _ACTIVE_OPENING_TRACKER.set(self.opening_tracker)
         stability_token = _ACTIVE_STABILITY_TRACKER.set(self.stability_tracker)
         manual_token = _ACTIVE_MANUAL_GOLD.set(self.manual_gold)
+        trial_token = _ACTIVE_HAND_SOURCE_TRIAL.set(self.allow_unvalidated_hand_sources)
         try:
             yield self
         finally:
+            _ACTIVE_HAND_SOURCE_TRIAL.reset(trial_token)
             _ACTIVE_MANUAL_GOLD.reset(manual_token)
             _ACTIVE_STABILITY_TRACKER.reset(stability_token)
             _ACTIVE_OPENING_TRACKER.reset(token)
@@ -193,4 +210,5 @@ class RuntimeAdvicePipeline:
             opening_tracker=self.opening_tracker,
             stability_tracker=self.stability_tracker,
             manual_gold=self.manual_gold,
+            allow_unvalidated_hand_sources=self.allow_unvalidated_hand_sources,
         )
