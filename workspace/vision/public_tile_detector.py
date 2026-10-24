@@ -52,12 +52,16 @@ class PublicGeometryFrame:
     issues: tuple[str, ...]
     frame: str | int | None
     session: str | None
+    # Non-candidate detector components remain visible to source-qualified
+    # reviewers: an unresolved 3+ face blob must not look like an empty river.
+    oversized_bboxes: tuple[tuple[float, float, float, float], ...] = ()
 
     def to_dict(self) -> dict:
         return {
             "schema_version": "public_tile_detector_v0_1",
             "candidates": [candidate.to_dict() for candidate in self.candidates],
             "issues": list(self.issues),
+            "oversized_bboxes": [list(box) for box in self.oversized_bboxes],
             "frame": self.frame,
             "session": self.session,
             "safe_for_hint": False,
@@ -152,6 +156,27 @@ def _expand_bottom_group(
     return left, top, right - left, bottom - top
 
 
+def _expand_top_group(
+    bbox: tuple[int, int, int, int],
+    frame_width: int,
+    frame_height: int,
+) -> tuple[int, int, int, int]:
+    """Restore borders around a compact opponent-side exposed row.
+
+    Opponent melds are rendered smaller than player-side melds, so padding is
+    intentionally lighter. This remains geometry-only; screen-side/actor
+    semantics are supplied by a separate channel/profile layer.
+    """
+    x, y, width, height = bbox
+    pad_x = max(1, int(round(frame_width * 0.0015)))
+    pad_y = max(2, int(round(frame_height * 0.006)))
+    left = max(0, x - pad_x)
+    top = max(0, y - pad_y)
+    right = min(frame_width, x + width + pad_x)
+    bottom = min(frame_height, y + height + pad_y)
+    return left, top, right - left, bottom - top
+
+
 def _upper_protrusions(
     mask: np.ndarray,
     bbox: tuple[int, int, int, int],
@@ -220,6 +245,87 @@ def _upper_protrusions(
         fill_ratio = float(local.mean()) if local.size else 0.0
         results.append((*candidate_bbox, fill_ratio))
     return results
+
+
+def _bottom_group_cluster_bboxes(
+    components: list[tuple[int, int, int, int]],
+    frame_width: int,
+    frame_height: int,
+) -> tuple[tuple[int, int, int, int], ...]:
+    """Rejoin split bright components that belong to one lower exposed meld.
+
+    At higher capture resolutions, shadows/gaps can split one visual meld into
+    two connected components even though the same UI at 960/1046 widths formed
+    one wide component. Grouping is deliberately restricted to the reviewed
+    lower-left exposed zone and requires strong vertical overlap plus x
+    adjacency/overlap. Separate melds remain separate when the inter-group gap
+    exceeds the scale-relative adjacency limit.
+    """
+    if not components:
+        return ()
+
+    gap_limit = max(2, int(round(frame_width * 0.008)))
+
+    def related(
+        first: tuple[int, int, int, int],
+        second: tuple[int, int, int, int],
+    ) -> bool:
+        ax, ay, aw, ah = first
+        bx, by, bw, bh = second
+        a_right = ax + aw
+        b_right = bx + bw
+        horizontal_gap = max(0, bx - a_right, ax - b_right)
+        vertical_overlap = max(
+            0,
+            min(ay + ah, by + bh) - max(ay, by),
+        )
+        overlap_ratio = vertical_overlap / min(ah, bh)
+        return horizontal_gap <= gap_limit and overlap_ratio >= 0.55
+
+    remaining = set(range(len(components)))
+    clusters: list[list[tuple[int, int, int, int]]] = []
+    while remaining:
+        seed = remaining.pop()
+        indexes = [seed]
+        stack = [seed]
+        while stack:
+            current = stack.pop()
+            linked = [
+                other
+                for other in tuple(remaining)
+                if related(components[current], components[other])
+            ]
+            for other in linked:
+                remaining.remove(other)
+                indexes.append(other)
+                stack.append(other)
+        clusters.append([components[index] for index in indexes])
+
+    results: list[tuple[int, int, int, int]] = []
+    for cluster in clusters:
+        # Single wide components are already handled by the legacy detector
+        # path. This helper exists only for resolution-induced fragmentation.
+        if len(cluster) < 2:
+            continue
+        left = min(box[0] for box in cluster)
+        top = min(box[1] for box in cluster)
+        right = max(box[0] + box[2] for box in cluster)
+        bottom = max(box[1] + box[3] for box in cluster)
+        width = right - left
+        height = bottom - top
+        if width <= 0 or height <= 0:
+            continue
+        normalized_width = width / frame_width
+        normalized_height = height / frame_height
+        aspect = width / height
+        if not (
+            0.05 <= normalized_width <= 0.18
+            and 0.07 <= normalized_height <= 0.22
+            and 1.50 <= aspect <= 4.50
+        ):
+            continue
+        results.append((left, top, width, height))
+    return tuple(results)
 
 
 def _dedupe(
@@ -292,7 +398,9 @@ def detect_public_tile_geometry(
 
     count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
     candidates: list[PublicGeometryCandidate] = []
+    lower_meld_components: list[tuple[int, int, int, int]] = []
     oversized_seen = 0
+    oversized_bboxes: list[tuple[float, float, float, float]] = []
 
     for x, y, box_width, box_height, area in stats[1:count]:
         x, y, box_width, box_height, area = map(
@@ -305,7 +413,7 @@ def detect_public_tile_geometry(
         normalized_height = box_height / height
         fill_ratio = area / (box_width * box_height)
 
-        if not (0.012 <= normalized_width <= 0.25):
+        if not (0.012 <= normalized_width <= 0.50):
             continue
         if not (0.04 <= normalized_height <= 0.26):
             continue
@@ -313,6 +421,67 @@ def detect_public_tile_geometry(
             continue
 
         raw_bbox = (x, y, box_width, box_height)
+
+        # Preserve lower-left bright components before the single-face width
+        # gate. On high-resolution captures one meld can fragment into two
+        # overlapping/adjacent components even though the lower-resolution UI
+        # produced one wide component.
+        if (
+            y > height * 0.72
+            and x < width * 0.45
+            and normalized_width <= 0.18
+            and normalized_height <= 0.22
+        ):
+            lower_meld_components.append(raw_bbox)
+
+        # Dense public rows can touch an animation or an adjacent meld and
+        # exceed the candidate intake limit. Preserve their bounds for a
+        # source-qualified observer to reject its river snapshot. Never turn
+        # such a component into a tile candidate in the generic detector.
+        if normalized_width > 0.25:
+            oversized_seen += 1
+            oversized_bboxes.append(_normalized(raw_bbox, width, height))
+            continue
+
+        # Opponent-side exposed groups are rendered much smaller than the
+        # player-side row. Their total width can therefore fall inside the old
+        # single-face width gate. Use a row-like aspect signature before that
+        # gate so a compact 3-face upper row is not collapsed to one tile.
+        component_aspect = box_width / box_height
+        component_center_x = (x + box_width / 2.0) / width
+        if (
+            y < height * 0.18
+            and component_center_x >= 0.54
+            and 1.75 <= component_aspect <= 4.50
+            # This path exists specifically for compact upper rows that would
+            # otherwise fall through the legacy single-face width gate.
+            and normalized_width <= 0.085
+            and normalized_height <= 0.12
+        ):
+            # Keep the raw multi-face blob visible to source-qualified river
+            # safety checks even when it is also useful as top-group geometry.
+            # This prevents an unrelated upper animation/group from silently
+            # weakening the existing oversized-river fail-closed contract.
+            oversized_seen += 1
+            oversized_bboxes.append(_normalized(raw_bbox, width, height))
+            group_bbox = _expand_top_group(raw_bbox, width, height)
+            local = mask[
+                group_bbox[1] : group_bbox[1] + group_bbox[3],
+                group_bbox[0] : group_bbox[0] + group_bbox[2],
+            ]
+            group_fill = float(local.mean()) if local.size else 0.0
+            candidates.append(
+                PublicGeometryCandidate(
+                    group_bbox,
+                    _normalized(group_bbox, width, height),
+                    "top_group",
+                    round(min(0.86, 0.58 + group_fill * 0.36), 6),
+                    round(group_fill, 6),
+                    frame,
+                    session,
+                )
+            )
+            continue
 
         if normalized_width <= 0.085:
             confidence = min(0.82, 0.48 + fill_ratio * 0.40)
@@ -330,6 +499,7 @@ def detect_public_tile_geometry(
             continue
 
         oversized_seen += 1
+        oversized_bboxes.append(_normalized(raw_bbox, width, height))
 
         # A compact bottom-row wide component can represent a visible public
         # meld group.  This is still only a geometry candidate.
@@ -376,6 +546,29 @@ def detect_public_tile_geometry(
                 )
             )
 
+    for raw_group_bbox in _bottom_group_cluster_bboxes(
+        lower_meld_components,
+        width,
+        height,
+    ):
+        group_bbox = _expand_bottom_group(raw_group_bbox, width, height)
+        local = mask[
+            group_bbox[1] : group_bbox[1] + group_bbox[3],
+            group_bbox[0] : group_bbox[0] + group_bbox[2],
+        ]
+        group_fill = float(local.mean()) if local.size else 0.0
+        candidates.append(
+            PublicGeometryCandidate(
+                group_bbox,
+                _normalized(group_bbox, width, height),
+                "bottom_group",
+                round(min(0.86, 0.58 + group_fill * 0.36), 6),
+                round(group_fill, 6),
+                frame,
+                session,
+            )
+        )
+
     deduped = _dedupe(candidates)
     issues = ["candidate_intake_only"]
     if oversized_seen:
@@ -388,4 +581,5 @@ def detect_public_tile_geometry(
         issues=tuple(issues),
         frame=frame,
         session=session,
+        oversized_bboxes=tuple(oversized_bboxes),
     )

@@ -85,10 +85,7 @@ state, event = game.finalize_observed_outcome(
 # state.rewards == [-16, 16]
 ```
 
-抢金终局、三金倒真实终局、游金链未知状态转换、抢杠胡/杠胡等仍会安全阻断，直到有单独证据与对应插件实现。已确认的三金倒重复提示窗口和游金4/8/16计分事实不再视为UNKNOWN。
-抢杠声明停止并报告 `ROB_KONG_SCORING_UNKNOWN`；杠后尾摸胡报告
-`GANG_HU_SCORING_UNKNOWN`；补杠尾摸不胡报告 `ADD_KONG_SCORING_UNKNOWN`。
-这些分支保留事件和胡声明，既不使用普通simulation-only奖励，也不走普通已观察结算。
+抢金、三金倒等未确认结算仍安全阻断。已确认的杠尾摸胡和抢杠胡均走普通 ZIMO×2；完成杠正常加番，被抢补杠不成立、不计杠番/杠费且保留原碰。观测入口核对声明来源，自动入口自行聚合番数；两者保留不同证据契约，不互相伪装。
 
 `RulesConfig(enable_added_kong=True)`默认开启补杠候选，False可禁用候选。PASS事件
 记录原碰索引及第4张牌；回放先规范化该审计metadata，再授权与执行，防止重复搬牌。

@@ -24,6 +24,7 @@ class GeometryComponent:
     confidence: float
     frame: str | int | None
     session: str | None
+    gold_skin: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -33,6 +34,7 @@ class GeometryComponent:
             "confidence": self.confidence,
             "frame": self.frame,
             "session": self.session,
+            "gold_skin": self.gold_skin,
         }
 
 
@@ -67,7 +69,7 @@ def _overlaps(first: tuple[int, int, int, int], second: tuple[int, int, int, int
 
 
 def _split_joined_component(
-    box: tuple[int, int, int, int], mask: np.ndarray, typical_width: float
+    box: tuple[int, int, int, int], mask: np.ndarray, typical_width: float, *, edge_seams=False
 ) -> list[tuple[int, int, int, int]]:
     """Split a connected bright component only when its width supports it.
 
@@ -81,7 +83,11 @@ def _split_joined_component(
     part_count = max(2, min(3, int(round(width / typical_width))))
     if part_count < 2:
         return [box]
-    projection = mask[y:y + height, x:x + width].sum(axis=0)
+    face = mask[y:y + height, x:x + width]
+    if edge_seams:
+        band = max(1, int(round(height * 0.10)))
+        face = np.concatenate((face[:band], face[-band:]), axis=0)
+    projection = face.sum(axis=0)
     cuts: list[int] = []
     previous = 0
     for part in range(1, part_count):
@@ -92,7 +98,12 @@ def _split_joined_component(
         if start >= end:
             cut = nominal
         else:
-            cut = start + int(np.argmin(projection[start:end + 1]))
+            values = projection[start:end + 1]
+            if edge_seams:
+                minima = np.flatnonzero(values == values.min()) + start
+                cut = int(min(minima, key=lambda c: abs(int(c) - nominal)))
+            else:
+                cut = start + int(np.argmin(values))
         # A valley inside tile artwork can be much closer to an edge than the
         # actual seam.  Reject such an unbalanced split and retain the
         # proportional boundary instead.
@@ -109,7 +120,7 @@ def _split_joined_component(
     ]
 
 
-def _bright_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
+def _bright_boxes(frame: np.ndarray, *, edge_seams=False) -> list[tuple[int, int, int, int]]:
     height, width = frame.shape[:2]
     # HSV value preserves bright tile faces carrying saturated red/green art.
     # A grayscale threshold underweights those colours and can merge or lose
@@ -140,7 +151,7 @@ def _bright_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
         # consulted.
         height_matches_tiles = typical_height and abs(box[3] - typical_height) <= typical_height * 0.25
         if typical_width and height_matches_tiles and box[2] > typical_width * 1.55:
-            boxes.extend(_split_joined_component(box, mask, typical_width))
+            boxes.extend(_split_joined_component(box, mask, typical_width, edge_seams=edge_seams))
         elif box[2] <= width * 0.075:
             boxes.append(box)
         else:
@@ -282,7 +293,28 @@ def _recover_gap_meld_faces(
     return recovered
 
 
-def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
+def _upper_gold_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
+    """Target-room upper-left indicator candidates, never concealed tiles.
+
+    This explicit normalized UI region complements the legacy lower display.
+    Multiple candidates abstain rather than choosing the largest decoration.
+    """
+    height, width = frame.shape[:2]
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, (15, 30, 100), (45, 255, 255))
+    count, _, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    candidates = []
+    for x, y, w, h, area in stats[1:count]:
+        if not (0.03 * height <= y <= 0.40 * height and x + w <= 0.20 * width):
+            continue
+        if not (0.02 * width <= w <= 0.07 * width and 0.065 * height <= h <= 0.18 * height):
+            continue
+        if not (1.1 <= h / w <= 2.0 and area >= w * h * 0.45):
+            continue
+        candidates.append((int(x), int(y), int(w), int(h)))
+    return sorted(candidates)
+
+def _gold_boxes(frame: np.ndarray) -> list[tuple[int, int, int, int]]:
     height, width = frame.shape[:2]
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     yellow = cv2.inRange(hsv, (15, 70, 100), (45, 255, 255))
@@ -296,7 +328,12 @@ def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
         if not height * 0.08 <= box_height <= height * 0.18:
             continue
         candidates.append((int(x), int(y), int(box_width), int(box_height)))
-    return max(candidates, key=lambda box: box[2] * box[3], default=None)
+    return sorted(candidates)
+
+
+def _gold_box(frame: np.ndarray) -> tuple[int, int, int, int] | None:
+    """Compatibility helper returning the largest yellow tile candidate."""
+    return max(_gold_boxes(frame), key=lambda box: box[2] * box[3], default=None)
 
 
 def _gold_is_draw_visual(
@@ -333,16 +370,38 @@ def _gold_is_draw_visual(
 
 
 def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = None,
-                            session: str | None = None) -> GeometryFrame:
+                            session: str | None = None, edge_seams=False) -> GeometryFrame:
     """Observe hand/draw_visual/gold/meld candidates without a fixed layout or count."""
     array = cv2.cvtColor(np.asarray(image.convert("RGB")), cv2.COLOR_RGB2BGR)
     height, width = array.shape[:2]
     value = cv2.cvtColor(array, cv2.COLOR_BGR2HSV)[:, :, 2]
     bright_mask = (value > 150).astype(np.uint8) * 255
-    gold = _gold_box(array)
-    all_boxes = _bright_boxes(array)
-    if _gold_is_draw_visual(gold, all_boxes):
-        gold = None
+    all_boxes = _bright_boxes(array, edge_seams=edge_seams)
+    yellow_boxes = _gold_boxes(array)
+    upper_gold = _upper_gold_boxes(array)
+    preliminary_widths = [box[2] for box in all_boxes]
+    preliminary_width = median(preliminary_widths) if preliminary_widths else 0.0
+    preliminary_clusters = (
+        _clusters(all_boxes, preliminary_width, gap_limit=0.32)
+        if preliminary_width else []
+    )
+    preliminary_hand = max(preliminary_clusters, key=len, default=[])
+    # An upper indicator establishes the opened-Gold role independently.
+    # Keep lower yellow playable tiles; legacy layouts require multiple faces.
+    concealed_gold = (
+        [
+            yellow
+            for yellow in yellow_boxes
+            if any(_overlaps(box, yellow) for box in preliminary_hand)
+            or _gold_is_draw_visual(yellow, all_boxes)
+        ]
+        if upper_gold or len(yellow_boxes) >= 2
+        else []
+    )
+    public_gold = [yellow for yellow in yellow_boxes if yellow not in concealed_gold]
+    gold = (upper_gold[0] if len(upper_gold) == 1 else None) if upper_gold else max(
+        public_gold, key=lambda box: box[2] * box[3], default=None
+    )
     boxes = [box for box in all_boxes if gold is None or not _overlaps(box, gold)]
     widths = [box[2] for box in boxes]
     typical_width = median(widths) if widths else 0.0
@@ -423,9 +482,31 @@ def detect_dynamic_geometry(image: Image.Image, *, frame: str | int | None = Non
             region, confidence = "meld", 0.76 if not untrusted else 0.55
         else:
             region, confidence = "unknown", 0.45
-        components.append(GeometryComponent(box, _normalized(box, width, height), region, confidence, frame, session))
+        components.append(
+            GeometryComponent(
+                box,
+                _normalized(box, width, height),
+                region,
+                confidence,
+                frame,
+                session,
+                gold_skin=any(_overlaps(box, yellow) for yellow in concealed_gold),
+            )
+        )
     if gold is not None:
-        components.append(GeometryComponent(gold, _normalized(gold, width, height), "gold", 0.90, frame, session))
+        components.append(
+            GeometryComponent(
+                gold,
+                _normalized(gold, width, height),
+                "gold",
+                0.90,
+                frame,
+                session,
+                # The explicit indicator was detected by its yellow skin.
+                # Appearance is distinct from its opened-Gold region role.
+                gold_skin=True,
+            )
+        )
     components.sort(key=lambda item: item.pixel_bbox[0])
     return GeometryFrame(tuple(components), untrusted, tuple(issues), frame, session)
 

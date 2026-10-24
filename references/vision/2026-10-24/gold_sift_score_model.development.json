@@ -1,0 +1,79 @@
+{
+  "schema_version": "gold_sift_score_model_development_v0_1",
+  "development_only": true,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "scope": "opened_gold_only_not_hand",
+  "feature_names": [
+    "log_best",
+    "log_second",
+    "relative_margin",
+    "numeral_method",
+    "log_unique_matches",
+    "unique_ratio",
+    "log_inliers",
+    "inlier_ratio",
+    "inlier_coverage"
+  ],
+  "coef": [
+    0.49873011331859013,
+    0.09941499345858491,
+    0.5283633846967652,
+    0.6434778330382668,
+    0.6358687115437287,
+    0.2618136297491816,
+    0.5579268357264713,
+    0.1726978452597402,
+    0.9227765823917944
+  ],
+  "intercept": 1.5929445494900365,
+  "mean": [
+    3.341562177666651,
+    2.7667131278273702,
+    0.3946575557589879,
+    0.1891891891891891,
+    2.996116861239101,
+    0.7459985879087635,
+    2.5791742556664663,
+    0.6631568764131721,
+    0.165478717280817
+  ],
+  "scale": [
+    0.8043699084941346,
+    0.805757496456221,
+    0.24489936162491674,
+    0.39165883097809284,
+    0.9163674159461629,
+    0.23194220534784443,
+    1.2033581346903361,
+    0.29354372731513,
+    0.11803542098380874
+  ],
+  "lineage_path": "references/vision/2026-10-01/concealed_template_match_lineage.development.json",
+  "excluded_images": [
+    "templates/hand/1046_hand_region_s04_S3.png",
+    "templates/hand/1046_hand_region_s05_S4.png",
+    "templates/hand/960_hand_region_s03_S4.png",
+    "templates/hand/1046_hand_region_s06_S5.png",
+    "templates/hand/960_hand_region_s04_S5.png",
+    "templates/hand/1046_hand_region_s07_S6.png",
+    "templates/hand/960_hand_region_s05_S6.png",
+    "templates/hand/1046_hand_region_s08_S7.png",
+    "templates/hand/960_hand_region_s06_S7.png",
+    "templates/hand/1046_hand_region_s09_S8.png"
+  ],
+  "excluded_groups": [
+    "reviewed_match_2026_09_26_eight_hand",
+    "reviewed_match_2026_10_12_room324504"
+  ],
+  "fit_method": "source/class-weighted logistic C=1 seed=0; no outcome class balancing",
+  "training_queries": 134,
+  "training_known": 128,
+  "training_correct": 96,
+  "training_groups": 9,
+  "unresolved_query_groups": 6,
+  "weighted_positive_prior": 0.6722972972972975,
+  "training_trace_sha256": "d2130743fa6bc828de5bd8d3cd4032d5bd5ca602ca1176b8becb3352265db7d6",
+  "confidence_domain_validation": "NOT_ESTABLISHED; revealed Gold checks only"
+}

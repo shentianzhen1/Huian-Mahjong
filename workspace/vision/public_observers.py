@@ -44,9 +44,11 @@ def _validate_confidence(confidence: float) -> float:
 
 def _merge_refs(items: Iterable[Sequence[str]]) -> tuple[str, ...]:
     refs: list[str] = []
+    seen: set[str] = set()
     for group in items:
         for ref in group:
-            if ref and ref not in refs:
+            if ref and ref not in seen:
+                seen.add(ref)
                 refs.append(ref)
     return tuple(refs)
 
@@ -470,6 +472,45 @@ class DiscardRiverObserver:
         # A claimed discard may disappear from the river. The visual change is
         # real, but it is not sufficient by itself to classify CHI/PENG/KONG.
         if (
+            len(stable_snapshot.tiles) == len(previous.tiles) - 1
+            and len(unmatched_previous) == 1
+            and len(unmatched_current) == 0
+            and len(matches) == len(stable_snapshot.tiles)
+        ):
+            removed_tile = previous.tiles[unmatched_previous[0]]
+            refs = _merge_refs([
+                previous.evidence_refs,
+                stable_snapshot.evidence_refs,
+                removed_tile.evidence_refs,
+            ])
+            observation = RawObservation(
+                timestamp_seconds=stable_snapshot.timestamp_seconds,
+                actor=stable_snapshot.actor,
+                kind=ObservationKind.RIVER_REMOVAL,
+                tile=removed_tile.tile_id,
+                confidence=removed_tile.confidence,
+                evidence_refs=refs,
+                details={
+                    "frame": stable_snapshot.frame,
+                    "previous_river_count": len(previous.tiles),
+                    "current_river_count": len(stable_snapshot.tiles),
+                    "removed_tile_bbox": list(removed_tile.normalized_bbox),
+                    "tile_identity_observed": removed_tile.tile_id is not None,
+                    "observer": "discard_river_v0_1",
+                    "source_session": stable_snapshot.source_session,
+                    "stream_epoch": stable_snapshot.stream_epoch,
+                },
+            )
+            self._accepted = stable_snapshot
+            return ObserverOutput(
+                observation=observation,
+                stable=True,
+                trusted=True,
+                issues=("river_tile_removed_or_claimed",),
+                baseline_rebased=True,
+            )
+
+        if (
             len(stable_snapshot.tiles) < len(previous.tiles)
             and len(unmatched_current) == 0
         ):
@@ -477,8 +518,8 @@ class DiscardRiverObserver:
             return ObserverOutput(
                 observation=None,
                 stable=True,
-                trusted=True,
-                issues=("river_tile_removed_or_claimed",),
+                trusted=False,
+                issues=("river_multi_tile_removal_ambiguous",),
                 baseline_rebased=True,
             )
 
@@ -500,7 +541,12 @@ class DiscardRiverObserver:
 
 
 class MeldSnapshotObserver:
-    """Turn stable exposed-meld snapshot changes into MELD_DELTA observations."""
+    """Turn stable exposed-meld snapshot changes into MELD_DELTA observations.
+
+    Missing, conflicting, or shrinking old groups do not replace the accepted
+    baseline. They remain untrusted observations until recovery or an explicit
+    source/session epoch reset; retained history is not a trusted current view.
+    """
 
     def __init__(self, settle_frames: int = 3):
         if settle_frames < 2:
@@ -587,6 +633,19 @@ class MeldSnapshotObserver:
             new = stable_snapshot.groups[new_index]
             if len(old.tiles) != len(new.tiles):
                 changed_pairs.append((old, new))
+
+        if unmatched_previous or any(
+            len(new.tiles) < len(old.tiles) for old, new in changed_pairs
+        ):
+            # A settled detection failure must not erase old exposed groups or
+            # turn their later recovery into a new-meld event. Fail closed on
+            # the current observation while keeping the prior baseline.
+            return ObserverOutput(
+                observation=None,
+                stable=True,
+                trusted=False,
+                issues=("meld_transition_ambiguous",),
+            )
 
         if (
             not unmatched_previous

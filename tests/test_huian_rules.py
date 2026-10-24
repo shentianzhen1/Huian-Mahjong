@@ -190,7 +190,7 @@ class HuianRulesTests(unittest.TestCase):
         self.assertIs(YoujinStage.SANJIN_YOU, YoujinStage.TRIPLE_YOU)
         self.assertEqual(YoujinStage.SANJIN_YOU.value, "TRIPLE_YOU")
         self.assertNotIn("sanjinyou_relation", UNKNOWN_RULES)
-        self.assertIn("sanjindao_settlement", UNKNOWN_RULES)
+        self.assertNotIn("sanjindao_settlement", UNKNOWN_RULES)
         self.assertNotIn("sanjinyou_multiplier", UNKNOWN_RULES)
         self.assertNotIn("gang_hu_scoring", UNKNOWN_RULES)
         self.assertNotIn("GANG_HU_SCORING_UNKNOWN", UNKNOWN_RULES)

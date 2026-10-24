@@ -116,13 +116,27 @@ class Simulator:
             end_event["action"]["metadata"].get("special")
             if end_event is not None else None
         )
+        terminal_event = events[-1] if state.terminal and events else None
+        terminal_metadata = (
+            terminal_event["action"].get("metadata", {})
+            if terminal_event is not None else {}
+        )
+        direct_source = terminal_metadata.get("win_source")
+        direct_special = terminal_metadata.get("special")
+        settled_winners = [
+            seat for seat, reward in enumerate(state.rewards) if reward > 0
+        ] if state.terminal else []
         winner = (
             declaration["winner"] if declaration is not None
-            else end_event["action"]["player"] if special is not None else None
+            else end_event["action"]["player"] if special is not None
+            else settled_winners[0] if len(settled_winners) == 1 else None
         )
         win_source = (
             declaration["source"] if declaration is not None
-            else special.lower() if isinstance(special, str) else None
+            else special.lower() if isinstance(special, str)
+            else direct_source if isinstance(direct_source, str)
+            else direct_special.lower() if isinstance(direct_special, str)
+            else None
         )
         return SimulationResult(
             seed=seed, status=status, events=tuple(events),
@@ -135,8 +149,24 @@ class Simulator:
         )
 
     def run(self, seed=None, agent=None, max_steps=100):
-        """Keep historical safe stop unless normal mode is explicitly configured."""
-        if self.config is not None and self.config.normal_hand_mode:
+        """Run target-room rules by default; keep explicit legacy profiles stable.
+
+        ``Simulator()`` is now the target-room entrypoint and uses the confirmed
+        staged opening with system-random/nonflower Gold semantics.  Passing an
+        explicit ``SimulatorConfig(normal_hand_mode=True)`` retains the historical
+        ordinary-hand benchmark, including its simulation-only dice convention.
+        """
+        if self.config is None:
+            # Lazy import avoids a module cycle: target_hand uses Simulator for
+            # shared result/config types but the default dispatch lives here.
+            from .target_hand import run_target_hand
+            return run_target_hand(
+                seed=seed,
+                agent=agent,
+                max_steps=max_steps,
+                simulator=self,
+            )
+        if self.config.normal_hand_mode:
             return self.run_normal_hand(seed=seed, agent=agent, max_steps=max_steps)
         game = self.environment_factory(max_steps=max_steps)
         game.reset(wall=make_wall(seed))
@@ -277,9 +307,6 @@ class Simulator:
                 if game.is_terminal():
                     return finish("COMPLETED")
                 state = game.state
-                if state.phase == "ROB_KONG_HU_DECLARED":
-                    return finish("STOPPED_UNKNOWN", ("ROB_KONG_SCORING_UNKNOWN",),
-                                  "unresolved_rule")
                 if (profile.enable_youjin
                         and state.phase == "YOUJIN_SETTLEMENT_READY"):
                     game.finalize_youjin_outcome(
@@ -289,7 +316,7 @@ class Simulator:
                     state, enable_youjin=profile.enable_youjin)
                 if unknown:
                     return finish("STOPPED_UNKNOWN", unknown, "special_rule_encountered")
-                if state.phase == "HU_DECLARED":
+                if state.phase in ("HU_DECLARED", "ROB_KONG_HU_DECLARED"):
                     # Settlement is part of the declaring action, even on last step.
                     if profile.enable_real_scoring:
                         game.finalize_ordinary_outcome(

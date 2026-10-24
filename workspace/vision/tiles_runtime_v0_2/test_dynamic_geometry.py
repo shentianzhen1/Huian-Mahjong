@@ -12,6 +12,46 @@ from .dynamic_geometry import (
 )
 
 
+class UpperGoldRoleTests(unittest.TestCase):
+    def frame(self, indicators=1, yellow_indices=(0,), draw_gold=False):
+        image = Image.new('RGB', (1000, 480), (0, 55, 55))
+        draw = ImageDraw.Draw(image)
+        for index in range(indicators):
+            x = 40 + index * 60
+            draw.rectangle((x, 50, x + 32, 94), fill=(230, 210, 130))
+        for index in range(16):
+            x = 180 + index * 45
+            draw.rectangle((x, 400, x + 40, 470), fill=(230, 200, 50) if index in yellow_indices else 'white')
+        if draw_gold:
+            draw.rectangle((920, 400, 960, 470), fill=(230, 200, 50))
+        return image
+
+    def test_upper_indicator_keeps_one_or_multiple_yellow_tiles_in_hand(self):
+        for indices in [(0,), (0, 4)]:
+            for size in [(1000, 480), (1500, 720)]:
+                with self.subTest(indices=indices, size=size):
+                    result = detect_dynamic_geometry(self.frame(yellow_indices=indices).resize(size))
+                    self.assertFalse(result.geometry_untrusted)
+                    self.assertEqual(sum(c.region_candidate == 'hand' for c in result.components), 16)
+                    gold = [c for c in result.components if c.region_candidate == 'gold']
+                    self.assertEqual(len(gold), 1)
+                    self.assertLess(gold[0].normalized_bbox[1], 0.4)
+                    self.assertEqual(sum(c.gold_skin for c in result.components if c.region_candidate == "hand"), len(indices))
+
+    def test_yellow_draw_remains_a_playable_copy(self):
+        result = detect_dynamic_geometry(self.frame(draw_gold=True))
+        draws = [c for c in result.components if c.region_candidate == 'draw_visual']
+        self.assertEqual(len(draws), 1)
+        self.assertTrue(draws[0].gold_skin)
+        self.assertEqual(sum(c.region_candidate == 'hand' for c in result.components), 16)
+
+    def test_multiple_upper_candidates_do_not_choose_a_public_identity(self):
+        result = detect_dynamic_geometry(self.frame(indicators=2))
+        self.assertFalse(any(c.region_candidate == 'gold' for c in result.components))
+        self.assertIn('gold_unreadable', result.issues)
+        self.assertEqual(sum(c.region_candidate == 'hand' for c in result.components), 16)
+
+
 def synthetic_frame(draw_present: bool = False) -> Image.Image:
     image = Image.new("RGB", (1000, 480), (0, 55, 55))
     draw = ImageDraw.Draw(image)
@@ -54,6 +94,17 @@ def joined_right_edge_frame() -> Image.Image:
     return image
 
 
+def gold_inside_hand_and_draw_frame() -> Image.Image:
+    image = Image.new("RGB", (1000, 480), (0, 55, 55))
+    draw = ImageDraw.Draw(image)
+    for index in range(16):
+        x = 100 + index * 45
+        colour = (230, 200, 50) if index == 0 else "white"
+        draw.rectangle((x, 400, x + 40, 470), fill=colour)
+    draw.rectangle((880, 400, 920, 470), fill=(230, 200, 50))
+    return image
+
+
 class DynamicGeometryTests(unittest.TestCase):
     def test_detects_dynamic_sixteen_hand_slots_and_gold(self) -> None:
         result = detect_dynamic_geometry(synthetic_frame(), frame=1, session="s")
@@ -66,6 +117,25 @@ class DynamicGeometryTests(unittest.TestCase):
         result = detect_dynamic_geometry(synthetic_frame(draw_present=True))
         self.assertEqual(sum(item.region_candidate == "hand" for item in result.components), 16)
         self.assertEqual(sum(item.region_candidate == "draw_visual" for item in result.components), 1)
+
+    def test_gold_skin_does_not_remove_concealed_or_draw_tiles(self) -> None:
+        result = detect_dynamic_geometry(gold_inside_hand_and_draw_frame())
+        self.assertFalse(result.geometry_untrusted)
+        self.assertEqual(
+            sum(item.region_candidate == "hand" for item in result.components),
+            16,
+        )
+        self.assertEqual(
+            sum(item.region_candidate == "draw_visual" for item in result.components),
+            1,
+        )
+        self.assertEqual(
+            sum(item.gold_skin for item in result.components),
+            2,
+        )
+        self.assertFalse(
+            any(item.region_candidate == "gold" for item in result.components)
+        )
 
     def test_requires_three_matching_trusted_frames(self) -> None:
         frames = [detect_dynamic_geometry(synthetic_frame(), frame=index) for index in range(3)]

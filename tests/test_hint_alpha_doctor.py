@@ -1,12 +1,16 @@
 from pathlib import Path
+import sys
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
 from huian.rules import DEFAULT_RULE_SNAPSHOT
 from huian.version import PROJECT_VERSION
 from workspace.ai import CURRENT_AGENT_NAME, CURRENT_AGENT_VERSION
-from workspace.hint_alpha.doctor import collect_doctor_report
+from workspace.hint_alpha.doctor import (
+    DoctorCheck, _runtime_geometry_schema_check, collect_doctor_report,
+)
 
 
 ALL_MODULES = {
@@ -31,6 +35,13 @@ class HintAlphaDoctorTests(unittest.TestCase):
             patch("workspace.hint_alpha.doctor.platform.system", return_value=system),
             patch("workspace.hint_alpha.doctor.shutil.which", return_value=tesseract),
             patch("workspace.hint_alpha.doctor.metadata.version", return_value=installed),
+            patch(
+                "workspace.hint_alpha.doctor._runtime_geometry_schema_check",
+                return_value=DoctorCheck(
+                    "runtime.geometry_component_schema", "PASS",
+                    "fixture geometry schema", "runtime_vision",
+                ),
+            ),
         ):
             return collect_doctor_report(root)
 
@@ -112,6 +123,28 @@ class HintAlphaDoctorTests(unittest.TestCase):
                 if item.check_id == "evidence.write"
             )
             self.assertEqual(check.status, "PASS")
+
+    def test_geometry_schema_checks_actual_class_contract(self):
+        module_name = "workspace.vision.tiles_runtime_v0_2.dynamic_geometry"
+        for component, expected in (
+            (type("CompleteGeometry", (), {"gold_skin": None}), "PASS"),
+            (type("OldGeometry", (), {}), "FAIL"),
+        ):
+            with self.subTest(expected=expected), patch.dict(
+                sys.modules, {module_name: SimpleNamespace(GeometryComponent=component)},
+            ):
+                check = _runtime_geometry_schema_check()
+                self.assertEqual(check.status, expected)
+                self.assertEqual(check.capability, "runtime_vision")
+
+    def test_unavailable_geometry_import_fails_diagnostic(self):
+        with patch.dict(
+            sys.modules,
+            {"workspace.vision.tiles_runtime_v0_2.dynamic_geometry": None},
+        ):
+            check = _runtime_geometry_schema_check()
+        self.assertEqual(check.status, "FAIL")
+        self.assertIn("cannot import Runtime geometry", check.detail)
 
 
 if __name__ == "__main__":
