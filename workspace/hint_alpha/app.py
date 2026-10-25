@@ -1497,10 +1497,10 @@ class HintAlphaApp(tk.Tk):
             edge_seams = self.__dict__.get('experimental_edge_seams', False)
             if packet or edge_seams:
                 from workspace.vision.tiles_runtime_v0_2.runtime_reader import prepare_runtime_resources
-                from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
+                from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import cached_private_hand_packet
                 resources = dict(prepare_runtime_resources(PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2', session_id))
                 if packet:
-                    resources = with_private_hand_packet(resources, packet)
+                    resources = cached_private_hand_packet(resources, packet)
                 if edge_seams:
                     from functools import partial
                     from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry

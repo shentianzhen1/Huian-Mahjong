@@ -84,3 +84,28 @@ def with_private_hand_packet(resources, manifest_path):
     result = dict(resources)
     result['classifier'] = TranslatedHandClassifier(resources['classifier'], features, neutral_features, inner_features)
     return result
+
+
+# Small process-local cache: retain classifier objects so identity keys cannot
+# be recycled. The worker is single-flight; raw asset bytes are checked on hits.
+_PACKET_CLASSIFIERS = {}
+
+
+def cached_private_hand_packet(resources, manifest_path):
+    path = Path(manifest_path).resolve()
+    manifest_bytes = path.read_bytes()
+    manifest = json.loads(manifest_bytes)
+    digest = hashlib.sha256(manifest_bytes)
+    for row in manifest['rows']:
+        digest.update(hashlib.sha256((path.parent / row['crop']).read_bytes()).digest())
+    labels_digest = hashlib.sha256(json.dumps(
+        resources.get('training_labels', ()), sort_keys=True).encode()).hexdigest()
+    key = (id(resources['classifier']), str(path), str(resources.get('root')),
+           labels_digest, digest.hexdigest())
+    classifier = _PACKET_CLASSIFIERS.get(key)
+    if classifier is None:
+        classifier = with_private_hand_packet(resources, path)['classifier']
+        _PACKET_CLASSIFIERS[key] = classifier
+        while len(_PACKET_CLASSIFIERS) > 2:
+            del _PACKET_CLASSIFIERS[next(iter(_PACKET_CLASSIFIERS))]
+    return {**resources, 'classifier': classifier}
