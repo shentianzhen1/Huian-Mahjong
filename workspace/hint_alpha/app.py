@@ -1506,22 +1506,30 @@ class HintAlphaApp(tk.Tk):
                     from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry
                     resources['geometry_detector'] = partial(detect_dynamic_geometry, edge_seams=True)
                 reader_kwargs['resources'] = resources
-            report = read_stable_frames(
-                images,
-                PROJECT_ROOT / "dataset" / "tiles_runtime_v0_2",
-                frame_ids=frame_ids,
-                session=session_id,
-                confidence_threshold=0.82,
-                **reader_kwargs,
-            )
-            if not report['geometry_untrusted'] and all(len(sample) == 3 for sample in samples):
-                prior = read_stable_frames(
+            # Geometry is shared read-only by both identity reads.
+            from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry
+            detector = reader_kwargs.get('resources', {}).get('geometry_detector', detect_dynamic_geometry)
+            for frame_id, image in zip(frame_ids, images):
+                reader_kwargs['geometry_cache'][(session_id, frame_id)] = detector(
+                    image, frame=frame_id, session=session_id)
+            def read_identity(identity_frame_id=None):
+                return read_stable_frames(
                     images, PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2',
                     frame_ids=frame_ids, session=session_id, confidence_threshold=0.82,
-                    identity_frame_id=frame_ids[-2], **reader_kwargs)
-                prior['stream_epoch'] = generation
-                report['prior_identity_report'] = prior
-                report['prior_identity_captured'] = samples[-2][1]
+                    identity_frame_id=identity_frame_id, **reader_kwargs)
+            if all(len(sample) == 3 for sample in samples):
+                from concurrent.futures import ThreadPoolExecutor
+                with ThreadPoolExecutor(max_workers=2) as executor:
+                    current_future = executor.submit(read_identity)
+                    prior_future = executor.submit(read_identity, frame_ids[-2])
+                    report = current_future.result()
+                    prior = prior_future.result()
+                if not report['geometry_untrusted']:
+                    prior['stream_epoch'] = generation
+                    report['prior_identity_report'] = prior
+                    report['prior_identity_captured'] = samples[-2][1]
+            else:
+                report = read_identity()
             report["experimental_edge_seams"] = edge_seams
             report["stream_epoch"] = generation
             report["runtime_elapsed_seconds"] = time.monotonic() - started
