@@ -10,6 +10,27 @@ import json
 from pathlib import Path
 
 
+def _packet_training_review(resources, manifest, path):
+    """A manual trial packet may explicitly request verified training cleanup."""
+    if 'experimental_training_review' not in manifest:
+        return None
+    entry = manifest['experimental_training_review']
+    if not isinstance(entry, dict):
+        raise ValueError('Invalid experimental training review declaration')
+    name, digest = entry.get('file'), entry.get('sha256')
+    if (not isinstance(name, str) or not name or Path(name).name != name
+            or not isinstance(digest, str) or len(digest) != 64):
+        raise ValueError('Invalid experimental training review file/hash')
+    review_path = path.parent / name
+    if not review_path.resolve().is_relative_to(path.parent.resolve()):
+        raise ValueError('Training review must remain inside the packet')
+    if hashlib.sha256(review_path.read_bytes()).hexdigest() != digest:
+        raise ValueError('Experimental training review hash mismatch')
+    from .experimental_training_review import validate_reviewed_training_exclusions
+    validate_reviewed_training_exclusions(resources, review_path)
+    return review_path
+
+
 class TranslatedHandClassifier:
     def __init__(self, ordinary, extra_features, neutral_features=(), inner_features=()):
         self.ordinary = ordinary
@@ -58,6 +79,10 @@ def with_private_hand_packet(resources, manifest_path):
     from workspace.vision.tiles_v0_1.template_classifier import _feature
     path = Path(manifest_path)
     manifest = json.loads(path.read_text())
+    review_path = _packet_training_review(resources, manifest, path)
+    if review_path is not None:
+        from .experimental_training_review import with_reviewed_training_exclusions
+        resources = with_reviewed_training_exclusions(resources, review_path)
     from .neutral_face_feature_probe import neutral
     neutral_features = []
     inner_features = []
@@ -80,6 +105,10 @@ def with_private_hand_packet(resources, manifest_path):
         if hashlib.sha256(image.tobytes()).hexdigest() != row['rgb_sha256']:
             raise ValueError('Private hand reference RGB mismatch')
         role = row.get('role', 'hand')
+        if role == 'hand_reviewed_training':
+            if review_path is None:
+                raise ValueError('Reviewed hand role requires a verified training review')
+            role = 'hand'
         if role == 'opened_gold':
             opened_gold_features.append((row['truth'], _feature(image, region='gold_region')))
             continue
@@ -111,16 +140,27 @@ def cached_private_hand_packet(resources, manifest_path):
     manifest_bytes = path.read_bytes()
     manifest = json.loads(manifest_bytes)
     digest = hashlib.sha256(manifest_bytes)
+    review_path = _packet_training_review(resources, manifest, path)
+    if review_path is not None:
+        digest.update(review_path.read_bytes())
     for row in manifest['rows']:
         digest.update(hashlib.sha256((path.parent / row['crop']).read_bytes()).digest())
     labels_digest = hashlib.sha256(json.dumps(
         resources.get('training_labels', ()), sort_keys=True).encode()).hexdigest()
     key = (id(resources['classifier']), str(path), str(resources.get('root')),
            labels_digest, digest.hexdigest())
-    classifier = _PACKET_CLASSIFIERS.get(key)
-    if classifier is None:
-        classifier = with_private_hand_packet(resources, path)['classifier']
-        _PACKET_CLASSIFIERS[key] = classifier
+    cached = _PACKET_CLASSIFIERS.get(key)
+    if cached is None:
+        adapted = with_private_hand_packet(resources, path)
+        updates = {'classifier': adapted['classifier']}
+        if review_path is not None:
+            # Keep classifier and its narrower coverage facts inseparable.
+            for field in ('labels', 'training_labels', 'covered', 'covered_by_region',
+                          'cross_session', 'gold_skin_covered', 'experimental_training_review'):
+                updates[field] = adapted[field]
+        _PACKET_CLASSIFIERS[key] = (resources['classifier'], updates)
         while len(_PACKET_CLASSIFIERS) > 2:
             del _PACKET_CLASSIFIERS[next(iter(_PACKET_CLASSIFIERS))]
-    return {**resources, 'classifier': classifier}
+    else:
+        updates = cached[1]
+    return {**resources, **updates}

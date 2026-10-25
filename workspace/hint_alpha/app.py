@@ -1132,16 +1132,25 @@ class HintAlphaApp(tk.Tk):
             return
         try:
             from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
-            with_private_hand_packet({'classifier': None}, path)
-        except (OSError, ValueError, KeyError) as exc:
+            from workspace.vision.tiles_runtime_v0_2.runtime_reader import prepare_runtime_resources
+            resources = prepare_runtime_resources(PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2',
+                self.evidence.session_id if self.evidence else None)
+            adapted = with_private_hand_packet(resources, path)
+            import json
+            manifest = json.loads(Path(path).read_text(encoding='utf-8'))
+        except (OSError, ValueError, KeyError, TypeError) as exc:
             messagebox.showerror('样本未加载', str(exc), parent=self)
             return
         self.experimental_hand_packet = Path(path)
-        self.reference_pack_status.set('素材：手动加载 ' + Path(path).name)
+        version = manifest.get('version') or manifest.get('packet_version') or Path(path).name
+        reviewed = adapted.get('experimental_training_review', {})
+        self.reference_pack_status.set(f"素材：{version}，{len(manifest['rows'])}张，已校验")
         self._toggle_hand_source_trial()
         self.runtime_status.set('已加载参考样本；用于内部试用，不代表识别已通过验收')
         if self.evidence:
-            self.evidence.mark('PRIVATE_HAND_REFERENCE_LOADED', {'manifest': str(path)})
+            self.evidence.mark('PRIVATE_HAND_REFERENCE_LOADED', {'manifest': str(path),
+                'version': version, 'count': len(manifest['rows']),
+                'training_review_sha256': reviewed.get('registry_sha256')})
 
     def _refresh_manual_gold(self):
         status = self.__dict__.get('manual_gold_status')

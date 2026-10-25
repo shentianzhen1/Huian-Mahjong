@@ -95,3 +95,93 @@ class ExperimentalTrainingReviewTests(unittest.TestCase):
         self.resources['training_labels'] = [self.label]
         with self.assertRaisesRegex(ValueError, 'No approved tile labels'):
             self.apply()
+
+    def packet(self):
+        self.path.write_text(json.dumps(self.review))
+        manifest = self.root / 'selected.json'
+        manifest.write_text(json.dumps(dict(version='trial-test-1',
+            rows=[dict(crop='templates/good.png', truth='P2',
+                rgb_sha256=hashlib.sha256(Image.open(self.root / 'templates/good.png')
+                                         .convert('RGB').tobytes()).hexdigest())],
+            experimental_training_review=dict(file=self.path.name,
+                sha256=hashlib.sha256(self.path.read_bytes()).hexdigest()))))
+        return manifest
+
+    def test_packet_cache_keeps_clean_classifier_and_coverage_together(self):
+        from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import cached_private_hand_packet
+        manifest = self.packet()
+        first = cached_private_hand_packet(self.resources, manifest)
+        second = cached_private_hand_packet(self.resources, manifest)
+        self.assertIs(first['classifier'], second['classifier'])
+        self.assertEqual(second['covered'], {'P2'})
+        self.assertEqual(second['training_labels'], [self.good])
+        self.assertEqual(second['experimental_training_review']['removed_training_labels'], 1)
+        self.assertEqual(self.resources['training_labels'], [self.label, self.good])
+
+    def test_packet_cache_rechecks_review_and_excluded_pixels_on_hit(self):
+        from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import cached_private_hand_packet
+        manifest = self.packet()
+        cached_private_hand_packet(self.resources, manifest)
+        self.path.write_text(self.path.read_text() + ' ')
+        with self.assertRaisesRegex(ValueError, 'review hash'):
+            cached_private_hand_packet(self.resources, manifest)
+        manifest = self.packet()
+        cached_private_hand_packet(self.resources, manifest)
+        Image.new('RGB', (48, 72), 'black').save(self.image)
+        with self.assertRaisesRegex(ValueError, 'crop byte hash'):
+            cached_private_hand_packet(self.resources, manifest)
+
+    def test_packet_review_cannot_escape_package(self):
+        from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import cached_private_hand_packet
+        manifest = self.packet()
+        data = json.loads(manifest.read_text())
+        data['experimental_training_review']['file'] = '../review.json'
+        manifest.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, 'review file/hash'):
+            cached_private_hand_packet(self.resources, manifest)
+
+    def test_reviewed_hand_role_requires_review_and_preserves_plain_hand_features(self):
+        import numpy as np
+        from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
+        manifest = self.packet()
+        plain = with_private_hand_packet(self.resources, manifest)
+        data = json.loads(manifest.read_text())
+        data['rows'][0]['role'] = 'hand_reviewed_training'
+        manifest.write_text(json.dumps(data))
+        reviewed = with_private_hand_packet(self.resources, manifest)
+        self.assertEqual(plain['covered'], reviewed['covered'])
+        self.assertEqual(plain['training_labels'], reviewed['training_labels'])
+        self.assertTrue(np.array_equal(plain['classifier'].extra_features[0][1],
+                                       reviewed['classifier'].extra_features[0][1]))
+        del data['experimental_training_review']
+        manifest.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, 'requires a verified training review'):
+            with_private_hand_packet(self.resources, manifest)
+
+    def test_manual_ui_load_validates_before_replacing_current_packet(self):
+        import ast
+        from types import SimpleNamespace
+        from unittest.mock import Mock, patch
+        source = ast.parse(Path('workspace/hint_alpha/app.py').read_text())
+        app_class = next(n for n in source.body if isinstance(n, ast.ClassDef)
+                         and n.name == 'HintAlphaApp')
+        method = next(n for n in app_class.body if isinstance(n, ast.FunctionDef)
+                      and n.name == 'open_hand_reference_packet')
+        manifest = self.packet()
+        dialogs, messages = Mock(), Mock()
+        dialogs.askopenfilename.return_value = str(manifest)
+        namespace = dict(Path=Path, PROJECT_ROOT=self.root, filedialog=dialogs, messagebox=messages)
+        exec(compile(ast.Module(body=[method], type_ignores=[]), '<actual-ui-load>', 'exec'), namespace)
+        app = SimpleNamespace(evidence=None, experimental_hand_packet=Path('old.json'),
+            reference_pack_status=Mock(), runtime_status=Mock(), _toggle_hand_source_trial=Mock())
+        with patch('workspace.vision.tiles_runtime_v0_2.runtime_reader.prepare_runtime_resources',
+                   return_value=self.resources):
+            self.path.write_text('tampered')
+            namespace['open_hand_reference_packet'](app)
+            self.assertEqual(app.experimental_hand_packet, Path('old.json'))
+            app._toggle_hand_source_trial.assert_not_called()
+            self.packet()
+            namespace['open_hand_reference_packet'](app)
+        self.assertEqual(app.experimental_hand_packet, manifest)
+        self.assertIn('trial-test-1', app.reference_pack_status.set.call_args.args[0])
+        app._toggle_hand_source_trial.assert_called_once()

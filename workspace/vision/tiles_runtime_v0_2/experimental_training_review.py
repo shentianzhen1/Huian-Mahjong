@@ -1,4 +1,4 @@
-"""Explicit offline training exclusions; never a default Runtime policy.
+"""Explicit development training exclusions; never a default Runtime policy.
 
 Build a new resource dictionary from a byte-verified review registry. Both the
 classifier and its coverage facts use the same remaining labels. Approved
@@ -11,10 +11,8 @@ import json
 from pathlib import Path
 
 
-def with_reviewed_training_exclusions(resources, registry_path):
-    from .runtime_reader import _coverage, _gold_skin_covered_classes
-    from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
-
+def validate_reviewed_training_exclusions(resources, registry_path):
+    """Validate review dependencies without building a classifier (cache-safe)."""
     path = Path(registry_path)
     raw = path.read_bytes()
     review = json.loads(raw)
@@ -50,6 +48,16 @@ def with_reviewed_training_exclusions(resources, registry_path):
                 or hashlib.sha256(target.read_bytes()).hexdigest() != digest):
             raise ValueError('Reviewed crop byte hash mismatch')
         excluded.add(name)
+    return excluded, hashlib.sha256(raw).hexdigest()
+
+
+def with_reviewed_training_exclusions(resources, registry_path):
+    from .runtime_reader import _coverage, _gold_skin_covered_classes
+    from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
+
+    excluded, registry_digest = validate_reviewed_training_exclusions(resources, registry_path)
+    labels = resources['labels']
+    root = Path(resources['root']).resolve()
     training = [row for row in resources['training_labels'] if row['image'] not in excluded]
     remaining = [row for row in labels if row['image'] not in excluded]
     covered, regions, cross_session = _coverage(training)
@@ -63,7 +71,7 @@ def with_reviewed_training_exclusions(resources, registry_path):
         'gold_skin_covered': _gold_skin_covered_classes(remaining),
         'classifier': TemplateTileClassifier.from_labels(root, training),
         'experimental_training_review': {
-            'registry_sha256': hashlib.sha256(raw).hexdigest(),
+            'registry_sha256': registry_digest,
             'excluded_images': sorted(excluded),
             'removed_training_labels': len(resources['training_labels']) - len(training),
             'development_only': True,
