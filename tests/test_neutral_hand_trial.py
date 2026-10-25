@@ -2,13 +2,18 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock
 
-import numpy as np
-from PIL import Image
-from workspace.vision.tiles_v0_1.template_classifier import Classification
-from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import TranslatedHandClassifier
-from workspace.vision.tiles_runtime_v0_2.neutral_face_feature_probe import neutral
+try:
+    import numpy as np
+    from PIL import Image
+    from workspace.vision.tiles_v0_1.template_classifier import Classification
+    from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import TranslatedHandClassifier
+    from workspace.vision.tiles_runtime_v0_2.neutral_face_feature_probe import neutral
+except ImportError:
+    np = None
 
 
+
+@unittest.skipUnless(np is not None, 'Vision dependencies unavailable')
 class NeutralHandTrialTests(unittest.TestCase):
     def test_only_matching_low_score_ordinary_prediction_is_recovered(self):
         pixels = np.full((80, 50, 3), 230, np.uint8)

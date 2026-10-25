@@ -1,10 +1,15 @@
 import unittest
 
-import numpy as np
+try:
+    import numpy as np
+    
+    from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import _meld_like_group
+except ImportError:
+    np = None
 
-from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import _meld_like_group
 
 
+@unittest.skipUnless(np is not None, 'Vision dependencies unavailable')
 class MovingDrawGeometryTests(unittest.TestCase):
     def test_isolated_short_face_is_not_meld_evidence(self):
         mask = np.zeros((512, 1108), dtype=np.uint8)
