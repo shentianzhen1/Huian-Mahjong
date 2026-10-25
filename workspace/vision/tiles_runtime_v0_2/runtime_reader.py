@@ -236,6 +236,10 @@ def _classify_runtime_component(
         item["identity_reason"] = "no_templates_for_region"
         return item
 
+    if (component.region_candidate == 'gold' and gold_skin
+            and hasattr(classifier, 'opened_gold_reference_supported')):
+        item['opened_gold_reference_supported'] = classifier.opened_gold_reference_supported(crop, prediction)
+
     gate_region = (
         GOLD_IDENTITY_GATE_REGION
         if gold_skin
@@ -336,6 +340,7 @@ def _gold_identity_observations(
             "tile_id": classified.get("tile_id", "UNKNOWN"),
             "tile_confidence": classified.get("tile_confidence", 0.0),
             "identity_reason": classified.get("identity_reason", "region_not_classified"),
+            "opened_gold_reference_supported": classified.get("opened_gold_reference_supported", False),
         })
     return observations
 

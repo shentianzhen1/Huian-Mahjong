@@ -202,7 +202,7 @@ class HintAlphaApp(tk.Tk):
         ttk.Label(gold_controls, textvariable=self.manual_gold_status).pack(side="left")
         ttk.Button(gold_controls, text="手动选金牌", command=self.open_manual_gold).pack(side="left", padx=8)
         ttk.Button(gold_controls, text="下一局 / 清除金牌", command=self.clear_manual_gold).pack(side="left")
-        ttk.Checkbutton(gold_controls, text="试用识别（手牌来源未验证）",
+        ttk.Checkbutton(gold_controls, text="试用识别（牌面来源未验证）",
                         variable=self.single_source_hand_trial, command=self._toggle_hand_source_trial).pack(side="left", padx=8)
         ttk.Button(gold_controls, text="加载参考样本", command=self.open_hand_reference_packet).pack(side="left")
 
@@ -1118,6 +1118,7 @@ class HintAlphaApp(tk.Tk):
         pipeline = self.__dict__.get('runtime_advice_pipeline')
         if pipeline is not None:
             pipeline.allow_unvalidated_hand_sources = self.single_source_hand_trial.get()
+            pipeline.opening_tracker.reset()
             if pipeline.stability_tracker is not None:
                 pipeline.stability_tracker.reset()
         self.hint_status.set('向听提示：模式已切换，等待当前手牌重新确认')
@@ -1618,8 +1619,8 @@ class HintAlphaApp(tk.Tk):
                 "仅可用开发开关做内部验证）"
             )
         prefix = "实验 " if experimental and not promoted else ""
-        if getattr(advisory, 'hand_source_trial', False):
-            prefix = "试用（手牌来源未验证） "
+        if getattr(advisory, 'hand_source_trial', False) or getattr(advisory, 'gold_source_trial', False):
+            prefix = "试用（牌面来源未验证） "
         return prefix + HintAlphaApp._format_shanten_hint(advisory.hint)
 
     def _consume_runtime_result(self):
@@ -1712,6 +1713,7 @@ class HintAlphaApp(tk.Tk):
                     "meld_trusted": snapshot.meld_trusted,
                     "opening_fact": asdict(advisory.opening_fact),
                     "hand_source_trial": advisory.hand_source_trial,
+                    "gold_source_trial": advisory.gold_source_trial,
                     "runtime_frames": report.get("frames", []),
                     "captured_monotonic": captured,
                     "runtime_elapsed_seconds": report.get("runtime_elapsed_seconds"),

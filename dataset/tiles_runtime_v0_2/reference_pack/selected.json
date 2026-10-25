@@ -202,7 +202,39 @@
       "rgb_sha256": "720381d771cd7fbf300f6f8077f82be788a536d75dd7a11e063193d8a168bfe1",
       "full_frame_rgb_sha256": "0e6663b73edb607d1a6e81d9a59e9e75a15cf572418a45b3d8ce89b2fa3638a6",
       "truth": "B"
+    },
+    {
+      "role": "opened_gold",
+      "truth": "M6",
+      "crop": "opened_gold_M6.png",
+      "frame": 4884,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
+    },
+    {
+      "role": "opened_gold",
+      "truth": "M4",
+      "crop": "opened_gold_M4.png",
+      "frame": 90,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+      "original_match_group": "reviewed_match_2026_10_12_room324504",
+      "rgb_sha256": "069c9f1316478f871e47ae6c167f5e2e335de9377290fef719712558c3de8397",
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
     }
   ],
-  "revision_note": "2026.10.25.3: add assistant-reviewed source frame 0 W/B tile-only references; same Sep26 original match, development evidence only."
+  "revision_note": "2026.10.25.4: 10 ordinary hand references plus 2 explicit opened-Gold references; no Gold-skin references in ordinary hand banks."
 }

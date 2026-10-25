@@ -104,6 +104,7 @@ class RuntimeAdvice:
     opening_fact: LiveOpeningFact
     safe_for_executor: bool = False
     hand_source_trial: bool = False
+    gold_source_trial: bool = False
 
 
 def evaluate_runtime_report(
@@ -130,21 +131,43 @@ def evaluate_runtime_report(
     trial = (_ACTIVE_HAND_SOURCE_TRIAL.get() if allow_unvalidated_hand_sources is None
              else allow_unvalidated_hand_sources)
     trial_tiles = ()
+    trial_gold = ()
     adapter_report = report
     if trial and experimental:
         from .hand_source_trial import trial_hand_report
         adapter_report, trial_tiles = trial_hand_report(report)
+        from .gold_source_trial import trial_opened_gold_report
+        adapter_report, trial_gold = trial_opened_gold_report(adapter_report)
     snapshot = current_snapshot_from_runtime(adapter_report, timestamp_seconds=captured)
     if trial_tiles:
         snapshot = replace(snapshot, river_trusted=(False, False),
             adapter_issues=(*snapshot.adapter_issues, 'experimental_hand_sources_unvalidated'))
     manual_gold = manual_gold or _ACTIVE_MANUAL_GOLD.get()
+    gold_trial_active = bool(trial_gold)
     if manual_gold is not None and manual_gold.applies_to(snapshot):
         snapshot, opening_fact = manual_gold.apply(snapshot)
+        gold_trial_active = False
     elif tracker is None:
         opening_fact = live_opening_fact_from_snapshot(snapshot)
     else:
+        scope = (snapshot.source_session, snapshot.stream_epoch)
+        inherited_trial = getattr(tracker, '_experimental_reference_scope', None) == scope
+        if inherited_trial and not (trial and experimental):
+            tracker.reset()
+        strict_gold_observed = snapshot.gold_trusted and not trial_gold
         snapshot, opening_fact = tracker.update(snapshot)
+        if trial_gold and snapshot.gold_trusted:
+            tracker._experimental_reference_scope = scope
+        elif strict_gold_observed or not snapshot.gold_trusted:
+            tracker._experimental_reference_scope = None
+        gold_trial_active = bool(trial and experimental and snapshot.gold_trusted
+            and getattr(tracker, '_experimental_reference_scope', None) == scope)
+    if gold_trial_active:
+        snapshot = replace(snapshot, river_trusted=(False, False),
+            adapter_issues=(*snapshot.adapter_issues, 'experimental_gold_sources_unvalidated'))
+        opening_fact = replace(opening_fact, source_kind='EXPERIMENTAL_REFERENCE_GOLD',
+            state_tracker_ready=False, safe_for_environment_state=False, safe_for_executor=False,
+            issues=(*opening_fact.issues, 'experimental_gold_sources_unvalidated'))
     stability_tracker = stability_tracker or _ACTIVE_STABILITY_TRACKER.get()
     if stability_tracker is not None:
         snapshot = stability_tracker.update(snapshot, report)
@@ -158,6 +181,7 @@ def evaluate_runtime_report(
         opening_fact=opening_fact,
         safe_for_executor=False,
         hand_source_trial=bool(trial_tiles),
+        gold_source_trial=gold_trial_active,
     )
 
 

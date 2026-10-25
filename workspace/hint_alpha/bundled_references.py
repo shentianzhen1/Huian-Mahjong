@@ -3,7 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 
-REFERENCE_VERSION = '2026.10.25.3'
+REFERENCE_VERSION = '2026.10.25.4'
 
 
 def resolve_bundled_references(project_root):

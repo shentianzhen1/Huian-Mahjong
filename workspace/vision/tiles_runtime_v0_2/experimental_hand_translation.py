@@ -73,11 +73,18 @@ def with_private_hand_packet(resources, manifest_path):
         neutral_features.append((label['tile_id'], neutral(crop)))
         inner_features.append((label['tile_id'], neutral(crop, trim_edges=True)))
     features = []
+    opened_gold_features = []
     for row in manifest['rows']:
         with Image.open(path.parent / row['crop']) as source:
             image = source.convert('RGB')
         if hashlib.sha256(image.tobytes()).hexdigest() != row['rgb_sha256']:
             raise ValueError('Private hand reference RGB mismatch')
+        role = row.get('role', 'hand')
+        if role == 'opened_gold':
+            opened_gold_features.append((row['truth'], _feature(image, region='gold_region')))
+            continue
+        if role != 'hand':
+            raise ValueError('Unknown reference role')
         features.append((row['truth'], _feature(image, region='concealed_identity')))
         neutral_features.append((row['truth'], neutral(image)))
         inner_features.append((row['truth'], neutral(image, trim_edges=True)))
@@ -87,6 +94,9 @@ def with_private_hand_packet(resources, manifest_path):
     if isinstance(ordinary, TemplateTileClassifier):
         from .batched_ordinary_classifier import BatchedOrdinaryClassifier
         ordinary = BatchedOrdinaryClassifier(ordinary)
+    if opened_gold_features:
+        from .opened_gold_references import OpenedGoldReferenceClassifier
+        ordinary = OpenedGoldReferenceClassifier(ordinary, opened_gold_features)
     result['classifier'] = TranslatedHandClassifier(ordinary, features, neutral_features, inner_features)
     return result
 
