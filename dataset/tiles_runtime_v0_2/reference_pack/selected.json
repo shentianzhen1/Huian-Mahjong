@@ -234,7 +234,23 @@
       "original_match_group": "reviewed_match_2026_10_12_room324504",
       "rgb_sha256": "069c9f1316478f871e47ae6c167f5e2e335de9377290fef719712558c3de8397",
       "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
+    },
+    {
+      "role": "opened_gold",
+      "truth": "M1",
+      "crop": "opened_gold_M1.png",
+      "frame": 3097,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
     }
   ],
-  "revision_note": "2026.10.25.4: 10 ordinary hand references plus 2 explicit opened-Gold references; no Gold-skin references in ordinary hand banks."
+  "revision_note": "2026.10.25.5: add actual M1 opened-Gold competing-class reference; 10 hand plus 3 opened-Gold references."
 }

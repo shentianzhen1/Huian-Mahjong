@@ -50,7 +50,7 @@ assert reference_version == manifest['reference_pack_version']
 assert '校验通过' in window.reference_pack_status.get()
 reference_resources = with_private_hand_packet(prepare_runtime_resources(dataset, 'installed-assets-smoke'), reference_path)
 assert len(reference_resources['classifier'].extra_features) == 10
-assert reference_resources['classifier'].opened_gold_reference_count == 2
+assert reference_resources['classifier'].opened_gold_reference_count == 3
 assert len(reference_resources['classifier'].extra_features) + reference_resources['classifier'].opened_gold_reference_count == reference_count
 from workspace.vision.capture_validator.auto_recorder import TemplatePhaseDetector
 phase_detector = TemplatePhaseDetector.from_project_evidence(site)

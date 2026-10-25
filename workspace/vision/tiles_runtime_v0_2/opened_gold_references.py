@@ -22,10 +22,19 @@ class OpenedGoldReferenceClassifier:
         original = self.ordinary.classify_gold_skin(image)
         if original.confidence >= .82:
             return original
-        tile, score = max(self._scores(image), key=lambda item: item[1])
+        scores = self._scores(image)
+        tile, score = max(scores, key=lambda item: item[1])
         # A lone same-skin nearest reference can confuse absent classes.
-        # Require agreement with the independent original full-bank ranking.
+        # Prefer agreement with the original full-bank ranking.
         if tile == original.tile_id and .82 <= score <= 1.:
+            return Classification(tile, score)
+        # Resolve an old-template disagreement only when its competing class
+        # has an actual opened-Gold reference and is rejected by that bank.
+        # Missing-class nearest matches and multiple passing classes abstain.
+        represented = {name for name, _ in scores}
+        passing = {name for name, value in scores if .82 <= value <= 1.}
+        if (original.tile_id in represented and passing == {tile}
+                and all(value < .82 for name, value in scores if name == original.tile_id)):
             return Classification(tile, score)
         return original
 

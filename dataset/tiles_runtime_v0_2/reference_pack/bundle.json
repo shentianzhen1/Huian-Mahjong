@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.25.4",
+  "version": "2026.10.25.5",
   "development_only": true,
   "formal_promotion_evidence": false,
   "files": {
@@ -13,8 +13,9 @@
     "4350_8.png": "45ec14678485cc6c318c6fa10a398813525557590cf21d0451241d29cc1eb765",
     "B_source0.png": "d9ab1ad1de78232530669413cf91a05836bd40987828f0c8a0f168ded64b4970",
     "W_source0.png": "c04740e6e3e6d3d7e6664a3387372076c97df1ec7ac2dbc46e953ad19d2fa7a4",
+    "opened_gold_M1.png": "27b8fb92cc4719a20797a48ec5abf060fcc2350c1b9265bac6e11fccdd80d845",
     "opened_gold_M4.png": "38dda86ef48a948f3e43e80176db66793dad3e1f2fc437b908c33ebb723e90a3",
     "opened_gold_M6.png": "cdb0277bfd87e2141dfd63d2b76c6f3faa9a7257759a010f6671d57c76b73aec",
-    "selected.json": "04b78cdd4433dc51f867f6f54e0ae829a2ec1bdd3710def9c7b0a6dcfe5c0ad8"
+    "selected.json": "103a6fe23b13daaf4a589785e382ca32c24a2c732a39536e0e13853852e4d99d"
   }
 }

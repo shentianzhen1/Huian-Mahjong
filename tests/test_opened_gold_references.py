@@ -36,5 +36,15 @@ class OpenedGoldReferenceTests(unittest.TestCase):
         root=Path(__file__).resolve().parents[1]/'dataset/tiles_runtime_v0_2'
         resources=with_private_hand_packet(prepare_runtime_resources(root),root/'reference_pack/selected.json')
         self.assertEqual(len(resources['classifier'].extra_features),10)
-        self.assertEqual(resources['classifier'].opened_gold_reference_count,2)
+        self.assertEqual(resources['classifier'].opened_gold_reference_count,3)
         self.assertNotIn('M4',resources['gold_skin_covered'])  # strict qualification unchanged
+
+    def test_represented_competing_class_can_be_rejected_without_guessing_missing_classes(self):
+        ordinary=SimpleNamespace(classify_gold_skin=Mock(return_value=Classification('M1',.37)))
+        classifier=OpenedGoldReferenceClassifier(ordinary,[])
+        classifier._scores=Mock(return_value=[('M4',.98),('M1',.72),('M6',.76)])
+        self.assertEqual(classifier.classify_opened_gold(None),Classification('M4',.98))
+        for scores in [ [('M4',.98),('M6',.76)], [('M4',.98),('M1',.83)], [('M4',.98),('M1',.72),('M6',.84)], [('M4',.81),('M1',.72)]]:
+            with self.subTest(scores=scores):
+                classifier._scores.return_value=scores
+                self.assertEqual(classifier.classify_opened_gold(None),Classification('M1',.37))
