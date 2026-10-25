@@ -7,8 +7,12 @@ import cv2
 import numpy as np
 from workspace.vision.tiles_v0_1.template_classifier import _feature
 
-def neutral(im):
- rgb=np.asarray(im.convert('RGB'));hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV);mask=((hsv[:,:,1]<80)&(hsv[:,:,2]>150)).astype(np.uint8)*255
+def neutral(im, trim_edges=False):
+ rgb=np.asarray(im.convert('RGB'))
+ if trim_edges:
+  margin=max(1,round(rgb.shape[1]*.04))
+  if rgb.shape[1] > 2*margin:rgb=rgb[:,margin:-margin]
+ hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV);mask=((hsv[:,:,1]<80)&(hsv[:,:,2]>150)).astype(np.uint8)*255
  mask=cv2.morphologyEx(mask,cv2.MORPH_CLOSE,np.ones((3,3),np.uint8));n,_,stats,_=cv2.connectedComponentsWithStats(mask,8)
  if n<=1:return _feature(im).astype(np.float32)
  x,y,w,h,area=stats[1:][np.argmax(stats[1:,4])]

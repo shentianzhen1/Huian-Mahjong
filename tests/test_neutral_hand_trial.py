@@ -26,3 +26,17 @@ class NeutralHandTrialTests(unittest.TestCase):
         ordinary.classify.return_value = confident
         self.assertIs(adapter.classify(image, 'concealed_identity'), confident)
         self.assertIs(adapter.classify(image, 'gold_region'), confident)
+
+    def test_inner_fallback_preserves_first_recovery_and_requires_agreement(self):
+        pixels = np.full((80, 50, 3), 230, np.uint8)
+        pixels[15:35, 10:20] = (10, 70, 10)
+        pixels[45:65, 28:40] = (10, 70, 10)
+        image = Image.fromarray(pixels)
+        ordinary = SimpleNamespace(classify=Mock(return_value=Classification('P2', .6)),
+                                   regional_templates={'concealed_identity': {}})
+        adapter = TranslatedHandClassifier(ordinary, [], [], [('P2', neutral(image, trim_edges=True))])
+        self.assertGreater(adapter.classify(image, 'concealed_identity').confidence, .99)
+        adapter.inner_features = [('M3', neutral(image, trim_edges=True))]
+        self.assertEqual(adapter.classify(image, 'concealed_identity').confidence, .6)
+        adapter.neutral_features = [('P2', neutral(image))]
+        self.assertGreater(adapter.classify(image, 'concealed_identity').confidence, .99)

@@ -11,10 +11,11 @@ from pathlib import Path
 
 
 class TranslatedHandClassifier:
-    def __init__(self, ordinary, extra_features, neutral_features=()):
+    def __init__(self, ordinary, extra_features, neutral_features=(), inner_features=()):
         self.ordinary = ordinary
         self.extra_features = extra_features
         self.neutral_features = neutral_features
+        self.inner_features = inner_features
 
     def __getattr__(self, name):
         return getattr(self.ordinary, name)
@@ -38,13 +39,15 @@ class TranslatedHandClassifier:
             score = float(cv2.matchTemplate(padded, reference, cv2.TM_CCOEFF_NORMED).max())
             if np.isfinite(score) and score > best.confidence:
                 best = Classification(tile, score)
-        if best.confidence < 0.82 and self.neutral_features:
+        for trim_edges, features in ((False, self.neutral_features), (True, self.inner_features)):
+            if best.confidence >= 0.82 or not features:
+                continue
             from .neutral_face_feature_probe import neutral
-            candidate_query = neutral(image)
+            candidate_query = neutral(image, trim_edges=trim_edges)
             padded_neutral = cv2.copyMakeBorder(candidate_query, 3, 3, 3, 3, cv2.BORDER_REPLICATE)
             tile, score = max(
                 ((tile, float(cv2.matchTemplate(padded_neutral, ref, cv2.TM_CCOEFF_NORMED).max()))
-                 for tile, ref in self.neutral_features), key=lambda item: item[1])
+                 for tile, ref in features), key=lambda item: item[1])
             if tile == best.tile_id and np.isfinite(score) and score > best.confidence:
                 best = Classification(tile, score)
         return best
@@ -57,6 +60,7 @@ def with_private_hand_packet(resources, manifest_path):
     manifest = json.loads(path.read_text())
     from .neutral_face_feature_probe import neutral
     neutral_features = []
+    inner_features = []
     # Use exactly the already session-filtered training labels, never all labels.
     for label in resources.get('training_labels', ()):
         if label.get('gold_skin_only') or label['region'] not in {'hand_region', 'draw_region', 'draw_visual'}:
@@ -67,6 +71,7 @@ def with_private_hand_packet(resources, manifest_path):
                 x, y, width, height = label['bbox']
                 crop = crop.crop((x, y, x + width, y + height))
         neutral_features.append((label['tile_id'], neutral(crop)))
+        inner_features.append((label['tile_id'], neutral(crop, trim_edges=True)))
     features = []
     for row in manifest['rows']:
         with Image.open(path.parent / row['crop']) as source:
@@ -75,6 +80,7 @@ def with_private_hand_packet(resources, manifest_path):
             raise ValueError('Private hand reference RGB mismatch')
         features.append((row['truth'], _feature(image, region='concealed_identity')))
         neutral_features.append((row['truth'], neutral(image)))
+        inner_features.append((row['truth'], neutral(image, trim_edges=True)))
     result = dict(resources)
-    result['classifier'] = TranslatedHandClassifier(resources['classifier'], features, neutral_features)
+    result['classifier'] = TranslatedHandClassifier(resources['classifier'], features, neutral_features, inner_features)
     return result
