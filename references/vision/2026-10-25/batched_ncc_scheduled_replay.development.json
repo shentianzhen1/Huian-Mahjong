@@ -1,0 +1,37 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "windows_capture_validated": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "change": "Explicit hand trial only: normalize same original feature vectors and batch equal-size NCC with float64 einsum. Constant-template semantics retained. Fall back to original OpenCV if best within1e-5 of.82 or top distinct classes within1e-5.",
+  "feature_comparison": {
+    "queries": 215,
+    "same_top_classes": 215,
+    "same_point82_decisions": 215,
+    "max_score_error": 0.0000010359689249228587,
+    "median_opencv_ms": 9.32765,
+    "median_batch_ms": 0.261
+  },
+  "schedule": {
+    "protocol": "Same10Hz capture/100msUI/.4s single-flight host-timed drop simulation",
+    "processed_bursts": 226,
+    "visible_draw_episodes": 15,
+    "produced_advice_episodes": 14,
+    "timely_advice_episodes": 13,
+    "previous_parallel_timely": 11,
+    "worker_ms": {
+      "median": 263.56,
+      "p95": 450.47
+    },
+    "timely_source_to_completion_seconds": {
+      "median": 0.6,
+      "p95": 1
+    }
+  },
+  "tests": "15 focused tests,3 subtests; includes threshold fallback, ties and constant features",
+  "limits": [
+    "One revealed match; no independent accuracy claim.",
+    "Timing-dependent simulation, not Windows end-to-end latency.",
+    "Same pixel features, not a new calibrated confidence scheme."
+  ]
+}

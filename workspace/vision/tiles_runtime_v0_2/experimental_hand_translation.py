@@ -82,7 +82,12 @@ def with_private_hand_packet(resources, manifest_path):
         neutral_features.append((row['truth'], neutral(image)))
         inner_features.append((row['truth'], neutral(image, trim_edges=True)))
     result = dict(resources)
-    result['classifier'] = TranslatedHandClassifier(resources['classifier'], features, neutral_features, inner_features)
+    ordinary = resources['classifier']
+    from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
+    if isinstance(ordinary, TemplateTileClassifier):
+        from .batched_ordinary_classifier import BatchedOrdinaryClassifier
+        ordinary = BatchedOrdinaryClassifier(ordinary)
+    result['classifier'] = TranslatedHandClassifier(ordinary, features, neutral_features, inner_features)
     return result
 
 
