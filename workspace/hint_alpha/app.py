@@ -1490,9 +1490,9 @@ class HintAlphaApp(tk.Tk):
                 read_stable_frames,
             )
 
-            frame_ids = tuple(sequence for sequence, _ in samples)
-            images = tuple(image for _, image in samples)
-            reader_kwargs = {}
+            frame_ids = tuple(sample[0] for sample in samples)
+            images = tuple(sample[-1] for sample in samples)
+            reader_kwargs = {'geometry_cache': {}}
             packet = self.__dict__.get('experimental_hand_packet')
             edge_seams = self.__dict__.get('experimental_edge_seams', False)
             if packet or edge_seams:
@@ -1514,6 +1514,14 @@ class HintAlphaApp(tk.Tk):
                 confidence_threshold=0.82,
                 **reader_kwargs,
             )
+            if not report['geometry_untrusted'] and all(len(sample) == 3 for sample in samples):
+                prior = read_stable_frames(
+                    images, PROJECT_ROOT / 'dataset' / 'tiles_runtime_v0_2',
+                    frame_ids=frame_ids, session=session_id, confidence_threshold=0.82,
+                    identity_frame_id=frame_ids[-2], **reader_kwargs)
+                prior['stream_epoch'] = generation
+                report['prior_identity_report'] = prior
+                report['prior_identity_captured'] = samples[-2][1]
             report["experimental_edge_seams"] = edge_seams
             report["stream_epoch"] = generation
             report["runtime_elapsed_seconds"] = time.monotonic() - started
@@ -1537,8 +1545,8 @@ class HintAlphaApp(tk.Tk):
         self.runtime_busy = True
         self.last_runtime_started = now
         samples = tuple(
-            (sequence, image.copy())
-            for sequence, image in self.runtime_frames
+            (sequence, frame_captured, image.copy())
+            for sequence, frame_captured, image in self.runtime_frames
         )
         threading.Thread(
             target=self._runtime_worker,
@@ -1617,6 +1625,7 @@ class HintAlphaApp(tk.Tk):
             generation, captured, time.monotonic()
         ):
             return
+        previous_result = self.live_guard.last_result
         self.live_guard.last_result = captured
         if kind == "error":
             interrupt_runtime_observations()
@@ -1635,6 +1644,13 @@ class HintAlphaApp(tk.Tk):
         report = value
         trial_var = self.__dict__.get('single_source_hand_trial')
         experimental = self.experimental_runtime_advisory or bool(trial_var and trial_var.get())
+        from .live_guard import eligible_prior_identity
+        prior = eligible_prior_identity(report, captured=captured,
+            previous_captured=previous_result, now=time.monotonic(),
+            max_age=self.live_guard.max_age)
+        if prior is not None:
+            evaluate_runtime_report(prior, captured=report['prior_identity_captured'],
+                                    experimental=experimental)
         advisory = evaluate_runtime_report(
             report, captured=captured,
             experimental=experimental,
@@ -1782,7 +1798,7 @@ class HintAlphaApp(tk.Tk):
             self._invalidate_advice("采集序列重置")
             self.live_guard.observe(sequence, captured)
         self.public_frames.append(self.frame.copy())
-        self.runtime_frames.append((sequence, self.frame.copy()))
+        self.runtime_frames.append((sequence, captured, self.frame.copy()))
         self._ensure_auto_recorder()
         if self.auto_recorder:
             path = self.auto_recorder.process(

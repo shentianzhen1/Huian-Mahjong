@@ -16,7 +16,7 @@ class RuntimeScheduleLatencyTests(unittest.TestCase):
         exec(compile(ast.Module(body=[method], type_ignores=[]), '<scheduler>', 'exec'), namespace)
         schedule = namespace['_schedule_runtime_read']
         state = SimpleNamespace(demo=False, runtime_busy=False,
-            runtime_frames=[(i, Mock()) for i in range(3)], last_runtime_started=0.,
+            runtime_frames=[(i, i/10, Mock()) for i in range(3)], last_runtime_started=0.,
             evidence=SimpleNamespace(session_id='session'), _runtime_worker=Mock(),
             live_guard=SimpleNamespace(generation=1, last_frame=.4), runtime_result_queue=Mock())
         schedule(state, .39)
@@ -24,7 +24,7 @@ class RuntimeScheduleLatencyTests(unittest.TestCase):
         schedule(state, .4)
         thread.assert_called_once()
         thread.return_value.start.assert_called_once()
-        self.assertEqual([i for i, _ in thread.call_args.kwargs['args'][0]], [0, 1, 2])
+        self.assertEqual([sample[0] for sample in thread.call_args.kwargs['args'][0]], [0, 1, 2])
         schedule(state, 1.)
         thread.assert_called_once()  # still busy: do not accumulate jobs
         state.runtime_busy = False
