@@ -1530,7 +1530,7 @@ class HintAlphaApp(tk.Tk):
             self.demo
             or self.runtime_busy
             or len(self.runtime_frames) < 3
-            or now - self.last_runtime_started < 0.8
+            or now - self.last_runtime_started < 0.4
             or self.evidence is None
         ):
             return
