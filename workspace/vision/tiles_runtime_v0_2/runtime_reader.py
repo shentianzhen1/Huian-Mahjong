@@ -23,7 +23,7 @@ from workspace.vision.tiles_v0_1.labels import approved_labels
 from workspace.vision.tiles_v0_1.taxonomy import HONORS, SUITED, category_for
 from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
 
-from .dynamic_geometry import detect_dynamic_geometry, fuse_dynamic_geometry
+from .dynamic_geometry import detect_dynamic_geometry, fuse_dynamic_geometry, select_identity_geometry
 from .tile_crop import classification_crop_bbox
 
 
@@ -349,6 +349,7 @@ def read_stable_frames(
     confidence_threshold: float = 0.82,
     resources=None,
     geometry_cache=None,
+    identity_frame_id=None,
 ) -> dict:
     """Read one 3--5 frame burst and return conservative tile observations."""
     images = [image.convert("RGB") for image in images]
@@ -381,6 +382,7 @@ def read_stable_frames(
                     geometry_cache.pop(next(iter(geometry_cache)))
         geometry_frames.append(geometry)
     fused = fuse_dynamic_geometry(geometry_frames, minimum_frames=3)
+    fused = select_identity_geometry(fused, geometry_frames, identity_frame_id)
     missing = sorted(STANDARD_CLASSES - covered)
     base = {
         "schema_version": "vision_runtime_v0_2_smoke",

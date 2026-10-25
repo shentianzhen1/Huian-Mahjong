@@ -528,3 +528,24 @@ def fuse_dynamic_geometry(frames: Iterable[GeometryFrame], minimum_frames: int =
     chosen = next(frame for frame in reversed(trusted)
                   if tuple(sorted(Counter(component.region_candidate for component in frame.components).items())) == winner)
     return GeometryFrame(chosen.components, False, (f"stable_votes={votes}",), chosen.frame, chosen.session)
+
+
+def select_identity_geometry(fused, frames, identity_frame_id=None):
+    """Select real pixels within an already stable burst, without extra votes."""
+    from dataclasses import replace
+    if identity_frame_id is None or fused.geometry_untrusted:
+        return fused
+    frames = list(frames)
+    ids = [frame.frame for frame in frames]
+    if isinstance(identity_frame_id, bool) or len(set(ids)) != len(ids):
+        raise ValueError('Identity selection requires distinct real frame IDs')
+    candidates = [frame for frame in frames if frame.frame == identity_frame_id]
+    if len(candidates) != 1:
+        raise ValueError('Identity frame is outside this burst')
+    chosen = candidates[0]
+    signature = lambda frame: Counter(c.region_candidate for c in frame.components)
+    if (chosen.geometry_untrusted or chosen.session != fused.session
+            or signature(chosen) != signature(fused)
+            or any(c.frame != chosen.frame or c.session != chosen.session for c in chosen.components)):
+        raise ValueError('Identity frame must match the trusted burst geometry')
+    return replace(fused, components=chosen.components, frame=chosen.frame)
