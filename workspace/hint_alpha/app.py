@@ -1114,6 +1114,13 @@ class HintAlphaApp(tk.Tk):
         return env.CN[tile]
 
     def _toggle_hand_source_trial(self):
+        # In-flight reads and buffered frames belong to the previous policy.
+        # Fence them by capture time without changing the capture epoch or
+        # invalidating the user's manually selected Gold.
+        self.runtime_observation_not_before = time.monotonic()
+        frames = self.__dict__.get('runtime_frames')
+        if frames is not None:
+            frames.clear()
         self.experimental_edge_seams = self.single_source_hand_trial.get()
         pipeline = self.__dict__.get('runtime_advice_pipeline')
         if pipeline is not None:
@@ -1552,12 +1559,14 @@ class HintAlphaApp(tk.Tk):
             pass
 
     def _schedule_runtime_read(self, now):
+        not_before = self.__dict__.get('runtime_observation_not_before', float('-inf'))
         if (
             self.demo
             or self.runtime_busy
             or len(self.runtime_frames) < 3
             or now - self.last_runtime_started < 0.4
             or self.evidence is None
+            or any(sample[1] <= not_before for sample in self.runtime_frames)
         ):
             return
         self.runtime_busy = True
@@ -1641,7 +1650,7 @@ class HintAlphaApp(tk.Tk):
         current_session = self.evidence.session_id if self.evidence else None
         if source_session != current_session or not self.live_guard.accepts(
             generation, captured, time.monotonic()
-        ):
+        ) or captured <= self.__dict__.get('runtime_observation_not_before', float('-inf')):
             return
         previous_result = self.live_guard.last_result
         self.live_guard.last_result = captured
