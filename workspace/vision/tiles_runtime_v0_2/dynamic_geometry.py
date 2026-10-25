@@ -214,7 +214,9 @@ def _meld_like_group(
     A candidate must be a small separated group and must visibly differ from
     the dominant hand in at least one of orientation, baseline, or aspect.
     """
-    if not group or not hand:
+    # A lone moving face can be a discarded draw. Without a multi-face
+    # structure it is UNKNOWN, not evidence of an exposed meld.
+    if len(group) < 2 or not hand:
         return False
     hand_baseline = median(item[1] + item[3] for item in hand)
     hand_aspect = median(item[3] / item[2] for item in hand)
