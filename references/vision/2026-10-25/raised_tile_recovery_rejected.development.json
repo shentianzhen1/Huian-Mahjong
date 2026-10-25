@@ -1,0 +1,566 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "threshold": 0.82,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "reference_version": "2026.10.25.5",
+  "query_truth_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT_NOT_USER_APPROVED",
+  "crop_probe": [
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "runtime",
+      "bbox": [
+        863,
+        415,
+        53,
+        96
+      ],
+      "prediction": "E",
+      "score": 0.40060320496559143,
+      "rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_0.8",
+      "bbox": [
+        863,
+        426,
+        49,
+        39
+      ],
+      "prediction": "W",
+      "score": 0.5342369675636292,
+      "rgb_sha256": "88a634ff25877db955c323979e83c3a6bca6911b7e0b961011a3dd0945bbb278"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_0.9",
+      "bbox": [
+        863,
+        426,
+        49,
+        44
+      ],
+      "prediction": "W",
+      "score": 0.602587878704071,
+      "rgb_sha256": "2fb64f614da988e367db573dbf97619e784bb8c25797cd8fcc31cabc5af0c70e"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_1.0",
+      "bbox": [
+        863,
+        426,
+        49,
+        49
+      ],
+      "prediction": "W",
+      "score": 0.6173650622367859,
+      "rgb_sha256": "307d7a9ce07c20814200ee9aadd19e8fdf4826fd691ac8dac061b393c329de8b"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_1.1",
+      "bbox": [
+        863,
+        426,
+        49,
+        54
+      ],
+      "prediction": "E",
+      "score": 0.5041676163673401,
+      "rgb_sha256": "53b79e2d1ca00b8c934ccecfc07db800e1ff4640db66fb5564cc09f28c85249f"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_1.2",
+      "bbox": [
+        863,
+        426,
+        49,
+        59
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "49ae35890e284b8b1aae6f4fbe0dfbcd58c4fac0f0d14f840c2eab02d5fb257e"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_1.3",
+      "bbox": [
+        863,
+        426,
+        49,
+        64
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "57268f699996da2c595e9c549263ef013fe29ddf261b7325634315cee2c7cb13"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "height_1.4",
+      "bbox": [
+        863,
+        426,
+        49,
+        69
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "5bc50dacc554ef4bd0912c1dea3ae5e12f92a58c312e185b8dd9f6a886e6e15e"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "detector",
+      "bbox": [
+        863,
+        426,
+        49,
+        81
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "db65f23c05ead100dd3d9d7d87adf2906327cd5ec4049362bdf3899f22e1508e"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "extend_top8",
+      "bbox": [
+        863,
+        418,
+        49,
+        89
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "1551b175cfa131b1a60f35097a12e04fc9e705e0ba5dc1868d2cfe69571c6dc1"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "extend_bottom8",
+      "bbox": [
+        863,
+        426,
+        49,
+        89
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "9a3d3abca00a6fa69dbdf6bd9e5855ca7b8cd56cd86498274a40c704b956f584"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "extend_vertical8",
+      "bbox": [
+        863,
+        418,
+        49,
+        97
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "b487ae3369957dffdd624af8a100167c834b836845b5478d9a24aaeca4bddebd"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "bottom440_507",
+      "bbox": [
+        863,
+        440,
+        49,
+        67
+      ],
+      "prediction": "P2",
+      "score": 0.35908323526382446,
+      "rgb_sha256": "0b8f84160799f91c0fbc79085c7851ddef605a64aaebfcfab34641b269ead8d5"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "raised426_493",
+      "bbox": [
+        863,
+        426,
+        49,
+        67
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "1e82b9235625c698ddeb57636f7da2e2d148592f2efc140d4d709e9d1ebd53e6"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "top_trim8",
+      "bbox": [
+        863,
+        434,
+        49,
+        73
+      ],
+      "prediction": "P2",
+      "score": 0.3737003207206726,
+      "rgb_sha256": "50cd981b55ed2e864ba23fc962a439bf480ea1bc5fb8bd925c9351a3858824ec"
+    },
+    {
+      "frame": 228,
+      "truth": "W",
+      "variant": "bottom_trim8",
+      "bbox": [
+        863,
+        426,
+        49,
+        73
+      ],
+      "prediction": "E",
+      "score": 0.5029334425926208,
+      "rgb_sha256": "f61b08efd991bf8a3f4d894ad0a6b9f855d20190fe2017b4c8d8678c9368e248"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "runtime",
+      "bbox": [
+        864,
+        418,
+        52,
+        66
+      ],
+      "prediction": "S2",
+      "score": 0.5560552477836609,
+      "rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_0.8",
+      "bbox": [
+        865,
+        426,
+        47,
+        38
+      ],
+      "prediction": "S2",
+      "score": 0.6786186099052429,
+      "rgb_sha256": "a0f6b1dfbaea9e425de487bd9ace4943f728e514339bdb5c7d504d0f12e6164b"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_0.9",
+      "bbox": [
+        865,
+        426,
+        47,
+        42
+      ],
+      "prediction": "S2",
+      "score": 0.6442165970802307,
+      "rgb_sha256": "7c2c6bd6785171107613310cd35858a0961c786af3f48e057ffc701be31a2dbd"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_1.0",
+      "bbox": [
+        865,
+        426,
+        47,
+        47
+      ],
+      "prediction": "M3",
+      "score": 0.7353627681732178,
+      "rgb_sha256": "efc6aa566a4209faac8b46a2e6fdec7587771f3087634a746ed0e78f9d1f8268"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_1.1",
+      "bbox": [
+        865,
+        426,
+        47,
+        52
+      ],
+      "prediction": "M3",
+      "score": 0.6913293600082397,
+      "rgb_sha256": "6fa3d43089e452b03ba2364ee8a319336e9ee2711c338eeea57ae9874b2726ec"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_1.2",
+      "bbox": [
+        865,
+        426,
+        47,
+        56
+      ],
+      "prediction": "M1",
+      "score": 0.6073731184005737,
+      "rgb_sha256": "641260aab1bd2044fcedb88f5b6f37cd3473d4a2e303255f80b18082795d58dc"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_1.3",
+      "bbox": [
+        865,
+        426,
+        47,
+        61
+      ],
+      "prediction": "S2",
+      "score": 0.541182279586792,
+      "rgb_sha256": "aeb00fbc905adf9994263a6cf75fbf4c42c7167fd359b606ce4eb6be97b97f17"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "height_1.4",
+      "bbox": [
+        865,
+        426,
+        47,
+        66
+      ],
+      "prediction": "S2",
+      "score": 0.5295946002006531,
+      "rgb_sha256": "3f8167ec56b7f63d3acf808aac0f5e864985fb896a6861c7d583f5799602b762"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "detector",
+      "bbox": [
+        865,
+        426,
+        47,
+        55
+      ],
+      "prediction": "M1",
+      "score": 0.632850706577301,
+      "rgb_sha256": "ccd2f899de36377e39d6836e6a4af464b896d50b80ffd294bdc3db18d50dbe6d"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "extend_top8",
+      "bbox": [
+        865,
+        418,
+        47,
+        63
+      ],
+      "prediction": "M1",
+      "score": 0.632850706577301,
+      "rgb_sha256": "5a3022afdafc44cdf965075c282ae4249c6c9ac171600c4d0fc7d66506272dab"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "extend_bottom8",
+      "bbox": [
+        865,
+        426,
+        47,
+        63
+      ],
+      "prediction": "S2",
+      "score": 0.5279285311698914,
+      "rgb_sha256": "ea8793692dea3e29c7bdd7aed1b26dc8e3714948510cff09d45b4acc004aa99a"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "extend_vertical8",
+      "bbox": [
+        865,
+        418,
+        47,
+        71
+      ],
+      "prediction": "S2",
+      "score": 0.5279285311698914,
+      "rgb_sha256": "9e196e286fb9a6d981a7f5854ce71c5bd07b32edb3590010a759807092cf6f61"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "bottom440_507",
+      "bbox": [
+        865,
+        440,
+        47,
+        67
+      ],
+      "prediction": "S2",
+      "score": 0.5280963182449341,
+      "rgb_sha256": "b024d66bace735f1db46f0395433f4a6e971fcd121b87047a0079e2181ceadd1"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "raised426_493",
+      "bbox": [
+        865,
+        426,
+        47,
+        67
+      ],
+      "prediction": "S2",
+      "score": 0.5295946002006531,
+      "rgb_sha256": "795ba766391c2954fb82a7c5df284026dd8e2a299e46ae76ed9274536b1c76b1"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "top_trim8",
+      "bbox": [
+        865,
+        434,
+        47,
+        47
+      ],
+      "prediction": "P5",
+      "score": 0.4777132272720337,
+      "rgb_sha256": "1d906bad10d2a511d9b76e0ce9ec8c450e9ad0ba79c21757e8f01355662b60c8"
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "variant": "bottom_trim8",
+      "bbox": [
+        865,
+        426,
+        47,
+        47
+      ],
+      "prediction": "M3",
+      "score": 0.7353627681732178,
+      "rgb_sha256": "efc6aa566a4209faac8b46a2e6fdec7587771f3087634a746ed0e78f9d1f8268"
+    }
+  ],
+  "glyph_probe": [
+    {
+      "frame": 228,
+      "truth": "W",
+      "top5": [
+        [
+          "W",
+          0.8604870438575745
+        ],
+        [
+          "SOUTH",
+          0.5296823978424072
+        ],
+        [
+          "M3",
+          0.24370524287223816
+        ],
+        [
+          "M4",
+          0.2212076187133789
+        ],
+        [
+          "M8",
+          0.20904137194156647
+        ]
+      ]
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "top5": [
+        [
+          "M3",
+          0.39947524666786194
+        ],
+        [
+          "M7",
+          0.3019239604473114
+        ],
+        [
+          "M4",
+          0.20705167949199677
+        ],
+        [
+          "E",
+          0.19872549176216125
+        ],
+        [
+          "SOUTH",
+          0.18557047843933105
+        ]
+      ]
+    }
+  ],
+  "glyph_definition": "Both query/reference: crop top5%,bottom13%,sides10%; gray<100; keep internal connected ink components area>=3 and<50% mask; tight ink bbox resize40x56; NCC. No candidate wired into Runtime.",
+  "glyph_session_stress": {
+    "protocol": "Leave one stored source_session out; core approved non-Gold concealed labels only; NOT original-match-disjoint qualification",
+    "queries": 144,
+    "truth_supported": 112,
+    "top1_correct": 82,
+    "score_ge_point82": 44,
+    "wrong_score_ge_point82": [
+      {
+        "image": "templates/hand/1046_hand_region_s04_S3.png",
+        "truth": "S3",
+        "query_session": "session_7f4c1b2e",
+        "top1": [
+          "S7",
+          0.8452136516571045
+        ],
+        "truth_supported": true
+      },
+      {
+        "image": "templates/hand/1046_hand_region_s06_S5.png",
+        "truth": "S5",
+        "query_session": "session_7f4c1b2e",
+        "top1": [
+          "S7",
+          0.8534845113754272
+        ],
+        "truth_supported": true
+      },
+      {
+        "image": "templates/hand/960_hand_region_s06_S7.png",
+        "truth": "S7",
+        "query_session": "session_5d8a0e3c",
+        "top1": [
+          "S5",
+          0.8534845113754272
+        ],
+        "truth_supported": true
+      }
+    ]
+  },
+  "decisions": [
+    "Reject crop-only recovery: no queried variant reaches.82 for its true class.",
+    "Reject global glyph replacement/fallback: three wrong top1 scores exceed.82.",
+    "W single-anchor glyph success does not qualify an honor-only acceptance path.",
+    "Keep W/M3 UNKNOWN and original live behavior; next needs source-qualified raised/animated appearance coverage and independent whole-hand evaluation, not more threshold or crop tuning."
+  ],
+  "limits": [
+    "Geometry detector boxes differ from classification_crop_bbox; only runtime rows reproduce current worker scores.",
+    "Fixed height and trim variants are deliberately revealed diagnostic probes, not a new geometry policy.",
+    "Stored sessions are not independent original matches; control training excludes same session but no original-match-disjoint claim.",
+    "Glyph scores are not calibrated Runtime confidences.",
+    "No advice acceptance gain measured or claimed."
+  ]
+}
