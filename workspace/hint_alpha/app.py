@@ -1560,11 +1560,13 @@ class HintAlphaApp(tk.Tk):
 
     def _schedule_runtime_read(self, now):
         not_before = self.__dict__.get('runtime_observation_not_before', float('-inf'))
+        trial = self.__dict__.get('single_source_hand_trial')
+        interval = 0.3 if trial is not None and trial.get() else 0.4
         if (
             self.demo
             or self.runtime_busy
             or len(self.runtime_frames) < 3
-            or now - self.last_runtime_started < 0.4
+            or now - self.last_runtime_started < interval
             or self.evidence is None
             or any(sample[1] <= not_before for sample in self.runtime_frames)
         ):
