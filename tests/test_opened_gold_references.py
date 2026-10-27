@@ -35,7 +35,7 @@ class OpenedGoldReferenceTests(unittest.TestCase):
         from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
         root=Path(__file__).resolve().parents[1]/'dataset/tiles_runtime_v0_2'
         resources=with_private_hand_packet(prepare_runtime_resources(root),root/'reference_pack/selected.json')
-        self.assertEqual(len(resources['classifier'].extra_features),10)
+        self.assertEqual(len(resources['classifier'].extra_features),16)
         self.assertEqual(resources['classifier'].opened_gold_reference_count,3)
         self.assertNotIn('M4',resources['gold_skin_covered'])  # strict qualification unchanged
 

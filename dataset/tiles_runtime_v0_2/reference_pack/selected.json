@@ -21,7 +21,9 @@
       "crop": "150_2.png",
       "rgb_sha256": "f340e2dbf847b1c4e903b63051967c17dcf6973ff5a3a3699d68809212b066d6",
       "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
-      "truth": "S3"
+      "truth": "S3",
+      "source_crop_name": "150_2.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 150,
@@ -41,7 +43,9 @@
       "crop": "150_4.png",
       "rgb_sha256": "52771d36b0073419884b47d8735cab39e64288f3ef7826255f3e4b9bcc7f2cf0",
       "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
-      "truth": "S7"
+      "truth": "S7",
+      "source_crop_name": "150_4.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 4350,
@@ -61,7 +65,9 @@
       "crop": "4350_4.png",
       "rgb_sha256": "bbaa8f0f7047b393d5730723c0759c1c29e74bb0ebd0f8b3a4e1c89032c0c0cd",
       "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
-      "truth": "S2"
+      "truth": "S2",
+      "source_crop_name": "4350_4.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 4350,
@@ -81,7 +87,9 @@
       "crop": "4350_6.png",
       "rgb_sha256": "b6384ad6ef708d9df57526d9fd3f1f0dac8c1c02eb3f2bb51627dcf216c35afb",
       "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
-      "truth": "S8"
+      "truth": "S8",
+      "source_crop_name": "4350_6.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 4350,
@@ -101,7 +109,9 @@
       "crop": "4350_8.png",
       "rgb_sha256": "5f116db8da7d1042156137a2e92c955a9e74c73a9ba3b874246539ea07cf1808",
       "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
-      "truth": "S9"
+      "truth": "S9",
+      "source_crop_name": "4350_8.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 150,
@@ -121,7 +131,9 @@
       "crop": "150_6.png",
       "rgb_sha256": "57497e8bd9aeb6227dc695b4d8c481d14015b95fc305ee889692a0eb061d23f3",
       "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
-      "truth": "M2"
+      "truth": "M2",
+      "source_crop_name": "150_6.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 150,
@@ -141,7 +153,9 @@
       "crop": "150_3.png",
       "rgb_sha256": "f654dfb42b9d0319eb8ec863e8be8cf32e138d38925b5e41cddb09a9c029d4e3",
       "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
-      "truth": "S4"
+      "truth": "S4",
+      "source_crop_name": "150_3.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 4350,
@@ -161,7 +175,9 @@
       "crop": "4350_13.png",
       "rgb_sha256": "5138cfd3f567ec2d5773e2ea3174379810ca8d5e4ef6182f457641a1581a2f75",
       "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
-      "truth": "M9"
+      "truth": "M9",
+      "source_crop_name": "4350_13.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 0,
@@ -181,7 +197,9 @@
       "crop": "W_source0.png",
       "rgb_sha256": "269a80da91a837957333851e9f8b80f499c4eddd53965d6390b09a09da41f226",
       "full_frame_rgb_sha256": "0e6663b73edb607d1a6e81d9a59e9e75a15cf572418a45b3d8ce89b2fa3638a6",
-      "truth": "W"
+      "truth": "W",
+      "source_crop_name": "W_source0.png",
+      "role": "hand_reviewed_training"
     },
     {
       "frame": 0,
@@ -201,7 +219,9 @@
       "crop": "B_source0.png",
       "rgb_sha256": "720381d771cd7fbf300f6f8077f82be788a536d75dd7a11e063193d8a168bfe1",
       "full_frame_rgb_sha256": "0e6663b73edb607d1a6e81d9a59e9e75a15cf572418a45b3d8ce89b2fa3638a6",
-      "truth": "B"
+      "truth": "B",
+      "source_crop_name": "B_source0.png",
+      "role": "hand_reviewed_training"
     },
     {
       "role": "opened_gold",
@@ -217,7 +237,8 @@
       "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
       "original_match_group": "reviewed_match_2026_09_26_eight_hand",
       "rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
-      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "source_crop_name": "opened_gold_M6.png"
     },
     {
       "role": "opened_gold",
@@ -233,7 +254,8 @@
       "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
       "original_match_group": "reviewed_match_2026_10_12_room324504",
       "rgb_sha256": "069c9f1316478f871e47ae6c167f5e2e335de9377290fef719712558c3de8397",
-      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "source_crop_name": "opened_gold_M4.png"
     },
     {
       "role": "opened_gold",
@@ -249,8 +271,163 @@
       "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
       "original_match_group": "reviewed_match_2026_09_26_eight_hand",
       "rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
-      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "source_crop_name": "opened_gold_M1.png"
+    },
+    {
+      "frame": 3180,
+      "bbox": [
+        863,
+        415,
+        53,
+        96
+      ],
+      "detected_bbox": [
+        863,
+        426,
+        49,
+        81
+      ],
+      "crop": "tile_13_W.png",
+      "rgb_sha256": "886b5b2dec9f7114d700348cf5a7c44be9e0e381cdfd37cc0f1d25d7b562099d",
+      "frame_rgb_sha256": "f4d290831832f2437008061e4eb8f143ca8fff702f7008b5f83a77f8042740e9",
+      "truth": "W",
+      "review_status": "REVIEWED_RAISED_HAND_DEVELOPMENT_CANDIDATE",
+      "png_sha256": "df3a35fc996a0cf1f8faca750334e76d8af176d87bb366777825184e8f709eca",
+      "approved_template": false,
+      "source_crop_name": "frame3180_x863.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4860,
+      "bbox": [
+        764,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        764,
+        429,
+        49,
+        78
+      ],
+      "crop": "tile_14_M3.png",
+      "rgb_sha256": "796e72ebc12a669969c5cfb35b78a98f17e53040fbe038290c5288599fe63d91",
+      "frame_rgb_sha256": "8a53ce87181f457af38b8bb4fabca346c739d272272024dbf2bcc1bd696ad59b",
+      "truth": "M3",
+      "review_status": "REVIEWED_RAISED_HAND_DEVELOPMENT_CANDIDATE",
+      "png_sha256": "5ed8eeb3a8a9944474f2d73834f61e5043b20079ab505badc5e36d8524700965",
+      "approved_template": false,
+      "source_crop_name": "frame4860_x764.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4857,
+      "bbox": [
+        763,
+        431,
+        50,
+        79
+      ],
+      "detected_bbox": [
+        763,
+        440,
+        50,
+        67
+      ],
+      "crop": "tile_15_M3.png",
+      "rgb_sha256": "90ae0bf2041e322e544c166d65c0d46eb5428c80598aa963103fd37dcd978cee",
+      "frame_rgb_sha256": "d5773d183c7204cc8d3993a18971413b0a1e2d8d74855e1826748b5b4c01ec41",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4857_x763.png"
+    },
+    {
+      "frame": 4861,
+      "bbox": [
+        764,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        764,
+        429,
+        49,
+        78
+      ],
+      "crop": "tile_16_M3.png",
+      "rgb_sha256": "2582afa5f35fbb913e1323464854e89babae8468c1ae24bd1edaeacabb6035bb",
+      "frame_rgb_sha256": "225cce167844e4b42a5eb18e931a8d64d112aacadf992bb9ecda4f48672416df",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4861_x764.png"
+    },
+    {
+      "frame": 4865,
+      "bbox": [
+        764,
+        415,
+        49,
+        96
+      ],
+      "detected_bbox": [
+        764,
+        426,
+        48,
+        81
+      ],
+      "crop": "tile_17_M3.png",
+      "rgb_sha256": "f441b0c23a91194898b5f5f01b04cd283b0871125ae3b4def5445a3c67673cbf",
+      "frame_rgb_sha256": "eb454b02c2a4d344fe2ac666f002a2d2427f2c704b12edc4fb15e5da72aade53",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4865_x764.png"
+    },
+    {
+      "frame": 4867,
+      "bbox": [
+        764,
+        415,
+        49,
+        96
+      ],
+      "detected_bbox": [
+        764,
+        426,
+        48,
+        81
+      ],
+      "crop": "tile_18_M3.png",
+      "rgb_sha256": "4caef8f70371cbd5f8baa6e90049225549d2067a11885e08a13e7016575cb521",
+      "frame_rgb_sha256": "7d4c4ee9666385c0220f75177fdb48db9efa02ee581b3f5da7a1024944a84ff0",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4867_x764.png"
     }
   ],
-  "revision_note": "2026.10.25.5: add actual M1 opened-Gold competing-class reference; 10 hand plus 3 opened-Gold references."
+  "revision_note": "19 reviewed development references and training review; not formal promotion.",
+  "version": "2026.10.25.6",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "approved_templates": false,
+  "experimental_training_review": {
+    "file": "training_review.json",
+    "sha256": "f5ecb3dfeb9796784026589a9c4ed7c5d79d49ba474af34715a8894fe48af530"
+  },
+  "base_installed_bundle_version": "2026.10.25.5",
+  "role": "BUNDLED_READ_ONLY_SHANTEN_TRIAL_NOT_FORMAL_PROMOTION"
 }

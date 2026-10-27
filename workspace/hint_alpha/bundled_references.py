@@ -3,7 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 
-REFERENCE_VERSION = '2026.10.25.5'
+REFERENCE_VERSION = '2026.10.25.6'
 
 
 def resolve_bundled_references(project_root):
@@ -20,6 +20,9 @@ def resolve_bundled_references(project_root):
         if hashlib.sha256((folder / name).read_bytes()).hexdigest() != digest:
             raise ValueError('素材文件校验失败：' + name)
     manifest = json.loads((folder / 'selected.json').read_text(encoding='utf-8'))
+    review = manifest.get('experimental_training_review', {})
+    if manifest.get('version') != REFERENCE_VERSION or review.get('file') not in files or files[review['file']] != review.get('sha256'):
+        raise ValueError('素材版本或审核清单不匹配')
     if not manifest['rows'] or any(row['crop'] not in files for row in manifest['rows']):
         raise ValueError('牌面图片未登记')
     return folder / 'selected.json', metadata['version'], len(manifest['rows'])

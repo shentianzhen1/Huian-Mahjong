@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class BundledReferenceTests(unittest.TestCase):
  def test_shipped_packet_is_complete_and_copies_to_installed_layout(self):
   source,version,count=resolve_bundled_references(ROOT)
-  self.assertEqual((version,count),(REFERENCE_VERSION,13))
+  self.assertEqual((version,count),(REFERENCE_VERSION,19))
   with tempfile.TemporaryDirectory() as tmp:
    self.assertEqual(copy_bundled_references(ROOT,tmp),(version,count))
    copied,_,_=resolve_bundled_references(tmp)
@@ -62,4 +62,4 @@ class BundledReferenceTests(unittest.TestCase):
    for path in folder.iterdir():path.unlink()
    subprocess.run(['git','-C',str(root),'checkout-index','-a','-f'],check=True,capture_output=True)
    self.assertEqual(before,{p.name:p.read_bytes() for p in folder.iterdir()})
-   self.assertEqual(resolve_bundled_references(root)[2],13)
+   self.assertEqual(resolve_bundled_references(root)[2],19)

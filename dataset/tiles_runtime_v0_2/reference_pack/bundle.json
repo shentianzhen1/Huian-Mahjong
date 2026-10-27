@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.25.5",
+  "version": "2026.10.25.6",
   "development_only": true,
   "formal_promotion_evidence": false,
   "files": {
@@ -16,6 +16,13 @@
     "opened_gold_M1.png": "27b8fb92cc4719a20797a48ec5abf060fcc2350c1b9265bac6e11fccdd80d845",
     "opened_gold_M4.png": "38dda86ef48a948f3e43e80176db66793dad3e1f2fc437b908c33ebb723e90a3",
     "opened_gold_M6.png": "cdb0277bfd87e2141dfd63d2b76c6f3faa9a7257759a010f6671d57c76b73aec",
-    "selected.json": "103a6fe23b13daaf4a589785e382ca32c24a2c732a39536e0e13853852e4d99d"
+    "selected.json": "d0aee639452d8c2b04f4bb64062cd4fc8e6662b1c1777581e9b1e87bd7f3ca7d",
+    "tile_13_W.png": "df3a35fc996a0cf1f8faca750334e76d8af176d87bb366777825184e8f709eca",
+    "tile_14_M3.png": "5ed8eeb3a8a9944474f2d73834f61e5043b20079ab505badc5e36d8524700965",
+    "tile_15_M3.png": "fadf93e669de149f0e9dfb2f31379a904b27a6ff117ba0f7d9b93a0910c02c3e",
+    "tile_16_M3.png": "12fad34d8ff330f9a3c88aa3e86bfdbab403c71980760f99ba382127a602f8f7",
+    "tile_17_M3.png": "9fd9be5521880389b79cd7b4a56e232f80357cc2aa87e011f06291a55158b979",
+    "tile_18_M3.png": "b62113fa0ad1ef3c34636b18ca2fb460b6c3a66173b95c1e6a3d43fd9ab87f55",
+    "training_review.json": "f5ecb3dfeb9796784026589a9c4ed7c5d79d49ba474af34715a8894fe48af530"
   }
 }
