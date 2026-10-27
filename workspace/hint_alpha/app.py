@@ -1005,7 +1005,7 @@ class HintAlphaApp(tk.Tk):
         elif "采集错误" in capture or "未收到首帧" in capture:
             message = "暂时无法获取画面。\n请停止后重新开始，或切换采集方式。"
         elif "BLOCKED" in text or "等待" in text:
-            message = "还不能给出建议。\n" + self.blocked_detail.get()
+            message = "还不能给出建议，当前向听：未知。\n" + self.blocked_detail.get()
         else:
             import re
             message = re.sub(r"\b(?:[MPS][1-9]|[ESWNRGB])\b",
