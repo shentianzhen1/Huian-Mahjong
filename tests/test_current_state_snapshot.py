@@ -61,6 +61,30 @@ class CurrentStateSnapshotTests(unittest.TestCase):
         self.assertIn("river_untrusted:0", result.issues)
         self.assertIsNone(advisory_analysis_inputs(snapshot, result).visible_tiles)
 
+    def test_untrusted_public_noise_does_not_block_player_shanten(self):
+        hand = ("M1", "M1", "M1", "M1", *self.snapshot().own_hand[4:])
+        snapshot = self.snapshot(own_hand=hand, rivers=(("M1",), ("INVALID",)),
+            river_trusted=(False, False), melds=((), (("B", "P1"),)),
+            meld_trusted=(True, False))
+        result = assess_current_snapshot(snapshot)
+        self.assertTrue(result.allows(SnapshotCapability.SHANTEN))
+        self.assertFalse(result.allows(SnapshotCapability.VISIBLE_REMAINDERS))
+        self.assertFalse(result.allows(SnapshotCapability.DANGER_HINT))
+        self.assertIsNone(advisory_analysis_inputs(snapshot, result).visible_tiles)
+        self.assertIn('river_untrusted:0', result.issues)
+        self.assertIn('meld_untrusted:1', result.issues)
+
+    def test_trusted_public_contradictions_still_block(self):
+        hand = ("M1", "M1", "M1", "M1", *self.snapshot().own_hand[4:])
+        result = assess_current_snapshot(self.snapshot(own_hand=hand,
+            rivers=(("M1",), ()), river_trusted=(True, True)))
+        self.assertFalse(result.allows(SnapshotCapability.SHANTEN))
+        self.assertIn('physical_copy_overflow:M1', result.issues)
+        result = assess_current_snapshot(self.snapshot(melds=((), (("B", "P1"),)),
+            meld_trusted=(True, True)))
+        self.assertFalse(result.allows(SnapshotCapability.SHANTEN))
+        self.assertIn('meld_shape_invalid:1:0', result.issues)
+
     def test_unknown_hand_or_gold_blocks_shanten(self):
         unknown_hand = self.snapshot(
             own_hand=(*self.snapshot().own_hand[:-1], None),

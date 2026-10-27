@@ -112,11 +112,13 @@ def _known_tiles(snapshot: CurrentTableSnapshot) -> tuple[str, ...]:
     for tile in snapshot.own_hand:
         if tile is not None:
             tiles.append(tile)
-    for river in snapshot.rivers:
-        tiles.extend(tile for tile in river if tile is not None)
-    for actor_melds in snapshot.melds:
-        for meld in actor_melds:
-            tiles.extend(tile for tile in meld if tile is not None)
+    for seat, river in enumerate(snapshot.rivers):
+        if snapshot.river_trusted[seat]:
+            tiles.extend(tile for tile in river if tile is not None)
+    for seat, actor_melds in enumerate(snapshot.melds):
+        if seat == 0 or snapshot.meld_trusted[seat]:
+            for meld in actor_melds:
+                tiles.extend(tile for tile in meld if tile is not None)
     return tuple(tiles)
 
 
@@ -184,6 +186,10 @@ def assess_current_snapshot(
 
     open_melds = len(snapshot.melds[0])
     for seat, groups in enumerate(snapshot.melds):
+        # Untrusted opponent data cannot invalidate the player-only structure.
+        # Its trust failure still blocks public-count and danger capabilities.
+        if seat == 1 and not snapshot.meld_trusted[seat]:
+            continue
         if len(groups) > 5:
             global_issues.append(f"meld_count_invalid:{seat}")
         for index, group in enumerate(groups):
