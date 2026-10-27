@@ -33,6 +33,7 @@ class TrialReferenceSwitchFenceTests(unittest.TestCase):
             runtime_frames=deque([(1, 19.5, object()), (2, 19.7, object())]),
             single_source_hand_trial=Mock(get=Mock(return_value=True)),
             evidence=SimpleNamespace(session_id='s', mark=Mock()), hint_status=Mock(),
+            blocked_detail=Mock(), hint_latency=Mock(),
             experimental_runtime_advisory=False,
             runtime_busy=True, runtime_result_queue=queue.Queue(),
             live_guard=LiveAdviceGuard(active=True, generation=4))

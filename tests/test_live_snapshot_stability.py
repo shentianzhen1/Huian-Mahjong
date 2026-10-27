@@ -154,6 +154,8 @@ class LiveSnapshotStabilityTests(unittest.TestCase):
         app.live_guard = LiveAdviceGuard()
         app.evidence = SimpleNamespace(session_id='runtime-live', mark=Mock())
         app.runtime_result_queue = queue.Queue()
+        app.blocked_detail = Mock()
+        app.hint_latency = Mock()
         app.runtime_status = app.hint_status = Mock()
         app.experimental_runtime_advisory = True
         app._update_snapshot_view = Mock()
@@ -169,6 +171,11 @@ class LiveSnapshotStabilityTests(unittest.TestCase):
             self.assertEqual(payload['runtime_frames'][-1], frame)
             self.assertIn('melds', payload)
             self.assertFalse(payload['safe_for_executor'])
+            if allowed:
+                self.assertIn('0 毫秒', app.hint_latency.set.call_args.args[0])
+            else:
+                self.assertIn('暂无', app.hint_latency.set.call_args.args[0])
+                self.assertIn('正在确认', app.blocked_detail.set.call_args.args[0])
 
     @unittest.skipIf(LiveHintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
     def test_meld_display_distinguishes_count_from_identity(self):
@@ -186,6 +193,8 @@ class LiveSnapshotStabilityTests(unittest.TestCase):
         app.live_guard = LiveAdviceGuard()
         app.evidence = SimpleNamespace(session_id='runtime-live', mark=Mock())
         app.runtime_result_queue = queue.Queue()
+        app.blocked_detail = Mock()
+        app.hint_latency = Mock()
         app.runtime_status = app.hint_status = app.turn_status = Mock()
         app.experimental_runtime_advisory = True
         app._update_snapshot_view = app._refresh_health = Mock()
@@ -219,6 +228,8 @@ class LiveSnapshotStabilityTests(unittest.TestCase):
         app.live_guard.observe(6, 1.8)
         app.evidence = SimpleNamespace(session_id='runtime-live', mark=Mock())
         app.runtime_result_queue = queue.Queue()
+        app.blocked_detail = Mock()
+        app.hint_latency = Mock()
         app.runtime_status = app.hint_status = Mock()
         for session, generation, captured in (
             ('old-session', 0, 1.4), ('runtime-live', -1, 1.4),

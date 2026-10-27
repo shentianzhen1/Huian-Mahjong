@@ -40,6 +40,8 @@ assert not unknown.display_allowed and not unknown.safe_for_executor
 app.OUTPUT = root / 'data/hint_alpha'
 window = live_app.LiveHintAlphaApp(demo=True, experimental_runtime_advisory=True)
 assert window.runtime_advice_pipeline is not None
+assert '暂无' in window.hint_latency.get()
+assert '等待' in window.blocked_detail.get()
 from workspace.hint_alpha.bundled_references import resolve_bundled_references
 from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import with_private_hand_packet
 from workspace.vision.tiles_runtime_v0_2.runtime_reader import prepare_runtime_resources

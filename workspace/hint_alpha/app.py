@@ -38,6 +38,7 @@ from .runtime_pipeline import evaluate_runtime_report, interrupt_runtime_observa
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 from .manual_input import evaluate_manual_input, observed_score_entry
+from .user_guidance import blocked_guidance, capture_to_hint_text
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -97,6 +98,9 @@ class HintAlphaApp(tk.Tk):
         except (OSError, ValueError, KeyError) as exc:
             reference_message = f'内置素材不可用：{exc}；请修复安装或手动加载'
         self.reference_pack_status = tk.StringVar(value=reference_message)
+        self.blocked_detail = tk.StringVar(value="等待采集画面。")
+        self.hint_latency = tk.StringVar(value="本次提示耗时：暂无")
+        self.simple_hint = tk.StringVar(value="等待画面")
         self.experimental_edge_seams = False
 
         # Presentation-only live view state.  These fields summarize facts that
@@ -207,6 +211,7 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(gold_controls, text="加载参考样本", command=self.open_hand_reference_packet).pack(side="left")
 
         ttk.Label(top, textvariable=self.reference_pack_status).grid(row=2, column=0, columnspan=9, sticky='w', pady=(4, 0))
+        ttk.Label(top, text='使用步骤：① 打开手机投屏并选择窗口  ② 勾选试用识别  ③ 点击开始内测  ④ 金牌未确认时手动选择').grid(row=3, column=0, columnspan=9, sticky='w')
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -306,11 +311,12 @@ class HintAlphaApp(tk.Tk):
         )
         ttk.Label(
             advice,
-            textvariable=self.hint_status,
+            textvariable=self.simple_hint,
             wraplength=1180,
             justify="left",
             font=("", 13),
         ).pack(anchor="w", fill="x", pady=6)
+        ttk.Label(advice, textvariable=self.hint_latency).pack(anchor="w")
         ttk.Separator(advice).pack(fill="x", pady=10)
         ttk.Label(
             advice,
@@ -346,13 +352,13 @@ class HintAlphaApp(tk.Tk):
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", lambda _: self.render())
 
-        self.simple_hint = tk.StringVar(value="等待画面")
         self.assistant_window = None
         self.diagnostics_window = None
         for variable in (self.capture_status, self.hint_status):
             variable.trace_add("write", self._update_simple_hint)
         ttk.Label(sidebar, text="对局辅助", font=("", 12, "bold")).pack(anchor="w", pady=8)
         ttk.Label(sidebar, textvariable=self.simple_hint, wraplength=330).pack(fill="x", pady=8)
+        ttk.Label(sidebar, textvariable=self.hint_latency, wraplength=330).pack(fill="x")
         ttk.Button(sidebar, text="打开独立辅助窗口", command=self.open_assistant).pack(fill="x", pady=3)
         ttk.Button(sidebar, text="查看诊断信息", command=self.open_diagnostics).pack(fill="x", pady=3)
         self._update_simple_hint()
@@ -999,7 +1005,7 @@ class HintAlphaApp(tk.Tk):
         elif "采集错误" in capture or "未收到首帧" in capture:
             message = "暂时无法获取画面。\n请停止后重新开始，或切换采集方式。"
         elif "BLOCKED" in text or "等待" in text:
-            message = "还不能给出建议。\n手牌或金牌尚未识别完整；当前向听：未知。\n可用人工录牌查看向听。"
+            message = "还不能给出建议。\n" + self.blocked_detail.get()
         else:
             import re
             message = re.sub(r"\b(?:[MPS][1-9]|[ESWNRGB])\b",
@@ -1016,6 +1022,7 @@ class HintAlphaApp(tk.Tk):
         window.title("惠安麻将 · 对局辅助")
         window.geometry("460x300")
         ttk.Label(window, text="实时向听与弃牌辅助", font=("", 16, "bold")).pack(anchor="w", padx=20, pady=20)
+        ttk.Label(window, textvariable=self.hint_latency).pack(anchor="w", padx=20)
         ttk.Label(window, textvariable=self.simple_hint, font=("", 13), wraplength=415).pack(
             anchor="w", fill="x", padx=20, pady=10)
         ttk.Button(window, text="人工录牌", command=self.open_manual_hand).pack(anchor="w", padx=20, pady=15)
@@ -1101,6 +1108,8 @@ class HintAlphaApp(tk.Tk):
             self.runtime_result_queue = queue.Queue(maxsize=1)
             self.last_runtime_event_key = None
             self.runtime_status.set("Runtime Vision：等待稳定3帧")
+            self.blocked_detail.set("等待采集画面和当前手牌确认。")
+            self.hint_latency.set("本次提示耗时：暂无")
             self.hint_status.set("向听提示：等待可信手牌/金牌；Executor OFF")
             self._start_evidence()
             self._begin_live_view(f"实时采集开始 · {self.backend_name}")
@@ -1128,6 +1137,8 @@ class HintAlphaApp(tk.Tk):
             pipeline.opening_tracker.reset()
             if pipeline.stability_tracker is not None:
                 pipeline.stability_tracker.reset()
+        self.blocked_detail.set("模式已切换，等待当前手牌重新确认。")
+        self.hint_latency.set("本次提示耗时：暂无")
         self.hint_status.set('向听提示：模式已切换，等待当前手牌重新确认')
         if self.evidence:
             self.evidence.mark('HAND_SOURCE_TRIAL_MODE', {'enabled': self.single_source_hand_trial.get()})
@@ -1424,6 +1435,10 @@ class HintAlphaApp(tk.Tk):
         self.ui_gold_ok = False
         if hasattr(self, "turn_status"):
             self.turn_status.set(f"当前状态：UNKNOWN（{reason}）")
+        if hasattr(self, "blocked_detail"):
+            self.blocked_detail.set(reason)
+        if hasattr(self, "hint_latency"):
+            self.hint_latency.set("本次提示耗时：暂无")
         self.hint_status.set(f"向听提示：BLOCKED（{reason}）；Executor OFF")
         refresh_health = getattr(self, "_refresh_health", None)
         if callable(refresh_health):
@@ -1663,6 +1678,8 @@ class HintAlphaApp(tk.Tk):
             self.ui_gold_ok = False
             self.turn_status.set("当前状态：UNKNOWN（Runtime Vision错误）")
             self._refresh_health()
+            self.blocked_detail.set("识别出现错误，请停止后重新开始并查看诊断信息。")
+            self.hint_latency.set("本次提示耗时：暂无")
             self.hint_status.set("向听提示：BLOCKED（Runtime Vision错误）")
             event_key = ("error", value)
             if self.evidence and event_key != self.last_runtime_event_key:
@@ -1702,6 +1719,10 @@ class HintAlphaApp(tk.Tk):
         self._update_snapshot_view(snapshot, result, source_label="runtime")
         runtime_promoted_for_hint = report.get("safe_for_hint") is True
         display_allowed = advisory.display_allowed
+        self.blocked_detail.set(blocked_guidance(result.issues,
+            geometry_untrusted=bool(report.get("geometry_untrusted")),
+            promotion_blocked=result.allowed and not display_allowed))
+        self.hint_latency.set(capture_to_hint_text(captured, time.monotonic(), displayed=display_allowed))
         self.hint_status.set(self._format_runtime_advice(
             advisory, experimental=experimental,
             promoted=runtime_promoted_for_hint,
