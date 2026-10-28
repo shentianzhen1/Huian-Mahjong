@@ -8,6 +8,7 @@ import sys
 root = Path(sys.argv[1]).resolve()
 site = root / 'runtime/Lib/site-packages'
 manifest = json.loads((root / 'BUILD_INFO.json').read_text(encoding='utf-8'))
+assert hashlib.sha256((root / 'TEST_RELEASE_NOTES.txt').read_bytes()).hexdigest() == manifest['testing_release_notes_sha256']
 assert '.'.join(map(str, sys.version_info[:3])) == manifest['python_version']
 for name, version in manifest['dependency_versions'].items():
     assert importlib.metadata.version(name) == version, name

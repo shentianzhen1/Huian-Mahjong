@@ -162,6 +162,11 @@ def main():
         '升级使用固定current目录及同一个桌面入口；请先关闭旧程序。\n'
         '证据保存在current旁的data/hint_alpha，旧版本数据在data/legacy。\n'
         'CHECK_HINT_ALPHA.bat可自检。请保留data；新版本自检失败时保留旧版。\n', encoding='utf-8')
+    release_request = ROOT / 'packaging/installer-release-request.txt'
+    if release_request.is_file():
+        shutil.copy2(release_request, PAYLOAD / 'TEST_RELEASE_NOTES.txt')
+        shutil.copy2(release_request, DIST / 'TEST_RELEASE_NOTES.txt')
+        manifest['testing_release_notes_sha256'] = hashlib.sha256(release_request.read_bytes()).hexdigest()
     manifest['payload_sha256'] = {
         path.relative_to(PAYLOAD).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in sorted(PAYLOAD.rglob('*')) if path.is_file()

@@ -36,7 +36,10 @@ The installer workflow is no longer tied to PR number 126. As of 2026-10-29,
 ordinary PR updates skip the installer job and produce no EXE artifact. Source
 and Vision workflows continue independently. For a substantial testing release,
 explicitly run `Windows test installer` using `workflow_dispatch` on the desired
-branch. That run exercises the unchanged build/extraction/spawn/Tk/live UI and
+branch, or deliberately update `packaging/installer-release-request.txt` in the
+HEAD commit. Only a request-file change in that commit triggers a PR build;
+subsequent ordinary commits skip it. Request text ships as TEST_RELEASE_NOTES.txt
+and its hash is recorded and checked in the installed payload. That run exercises the unchanged build/extraction/spawn/Tk/live UI and
 upgrade checks. A skipped PR installer job is not installation validation;
 small source changes remain newer than the last distributed installer until the
 next intentional build.

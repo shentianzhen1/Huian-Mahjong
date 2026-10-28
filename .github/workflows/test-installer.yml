@@ -5,9 +5,30 @@ on:
 permissions:
   contents: read
 jobs:
+  release_request:
+    runs-on: ubuntu-latest
+    outputs:
+      requested: ${{ steps.request.outputs.requested }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - id: request
+        env:
+          MANUAL_BUILD: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          python - <<'PYTHON'
+          import os, subprocess
+          changed = subprocess.check_output(['git', 'diff-tree', '--root', '--no-commit-id', '--name-only', '-r', 'HEAD'], text=True).splitlines()
+          requested = os.environ['MANUAL_BUILD'] == 'true' or 'packaging/installer-release-request.txt' in changed
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('requested=' + str(requested).lower() + '\n')
+          PYTHON
   installer:
-    # Build only for an intentional testing release, never for ordinary PR updates.
-    if: github.event_name == 'workflow_dispatch'
+    # A request must be changed in the HEAD commit; its mere existence is insufficient.
+    needs: release_request
+    if: needs.release_request.outputs.requested == 'true'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
