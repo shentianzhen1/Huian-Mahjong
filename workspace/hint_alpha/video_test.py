@@ -458,6 +458,16 @@ def run_video_test(
 
     runtime_resources = None
     geometry_cache = {}
+    replay_advice_kwargs = {}
+    if reference_packet is not None:
+        from .runtime_pipeline import RuntimeAdvicePipeline
+        from .live_snapshot_stability import LiveSnapshotStability
+        replay_advice_kwargs['pipeline'] = RuntimeAdvicePipeline(
+            stability_tracker=LiveSnapshotStability(),
+            allow_unvalidated_hand_sources=True,
+        )
+        source['advice_policy'] = 'reference_trial_stateful_two_identity_confirmation'
+
 
     def replay_runtime_reader(
         images,
@@ -515,6 +525,7 @@ def run_video_test(
             session=session,
             dataset_root=dataset_root,
             reader=replay_runtime_reader,
+            **replay_advice_kwargs,
         )
         runtime_rows.append(runtime)
 

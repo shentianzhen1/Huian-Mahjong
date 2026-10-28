@@ -1,0 +1,26 @@
+import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
+from types import SimpleNamespace
+from workspace.hint_alpha.video_test import run_video_test
+from tests.test_live_snapshot_stability import burst
+
+class VideoReferencePolicyTests(unittest.TestCase):
+    def test_trial_pipeline_is_shared_and_confirms_current_hand(self):
+        seen=[]
+        def evaluate(samples, **kwargs):
+            pipeline=kwargs['pipeline'];seen.append(pipeline)
+            result=pipeline.evaluate(burst(samples[-1][0]),captured=samples[-1][1],experimental=True)
+            self.assertEqual(result.display_allowed,len(seen)>1)
+            self.assertFalse(result.safe_for_executor)
+            return dict(display_allowed=result.display_allowed,frames=[x[0] for x in samples],
+                source_seconds=[x[1] for x in samples],snapshot={'hand_trusted':False,'own_hand':[],'gold_trusted':False,'gold_tile':None},
+                hint={'phase':None,'best_discards':[],'issues':[]})
+        reader=SimpleNamespace(read_window=lambda *a,**k: (_ for _ in ()).throw(RuntimeError('no OCR')))
+        with TemporaryDirectory() as tmp, patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':1,'width':1108,'height':512}), patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,i*.2,object()) for i in range(1,5)])), patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate):
+            video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
+            run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader,sample_interval_seconds=.2)
+        self.assertEqual(len(seen),2)
+        self.assertIs(seen[0],seen[1])
+        self.assertTrue(seen[0].allow_unvalidated_hand_sources)
