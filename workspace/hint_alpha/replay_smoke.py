@@ -52,7 +52,7 @@ def summarize_windows(rows):
 
 
 def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
-                   pipeline=None):
+                   pipeline=None, confirm_with_prior=False, previous_captured=None):
     """Samples are unique (frame index, source seconds, RGB image) captures."""
     ids = [item[0] for item in samples]
     times = [item[1] for item in samples]
@@ -68,8 +68,20 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
     started = time.perf_counter()
     report = reader([item[2] for item in samples], dataset_root,
                     frame_ids=ids, session=session, confidence_threshold=0.82)
-    runtime_finished = time.perf_counter()
     report['stream_epoch'] = epoch
+    if confirm_with_prior and pipeline is not None and times[-1] - times[0] <= 0.8:
+        from .live_guard import eligible_prior_identity
+        prior = reader([item[2] for item in samples], dataset_root,
+            frame_ids=ids, session=session, confidence_threshold=0.82,
+            identity_frame_id=ids[-2])
+        prior['stream_epoch'] = epoch
+        report['prior_identity_report'] = prior
+        report['prior_identity_captured'] = times[-2]
+        eligible = eligible_prior_identity(report, captured=times[-1],
+            previous_captured=previous_captured, now=times[-1], max_age=2.0)
+        if eligible is not None:
+            pipeline.evaluate(eligible, captured=times[-2], experimental=True)
+    runtime_finished = time.perf_counter()
     # Sparse screenshots may diagnose pixels, but do not establish live stability.
     if times[-1] - times[0] > 0.8:
         report = {**report, 'geometry_untrusted': True,

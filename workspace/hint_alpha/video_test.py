@@ -466,7 +466,10 @@ def run_video_test(
             stability_tracker=LiveSnapshotStability(),
             allow_unvalidated_hand_sources=True,
         )
-        source['advice_policy'] = 'reference_trial_stateful_two_identity_confirmation'
+        source['advice_policy'] = 'reference_trial_stateful_within_burst_identity_confirmation'
+        replay_advice_kwargs['confirm_with_prior'] = True
+        source['runtime_window_stride'] = 2
+        source['runtime_launch_interval_seconds'] = 2 * sample_interval_seconds
 
 
     def replay_runtime_reader(
@@ -476,6 +479,7 @@ def run_video_test(
         frame_ids=None,
         session=None,
         confidence_threshold=0.82,
+        identity_frame_id=None,
     ):
         # Load optional Vision dependencies only when the reader is invoked.
         # Mocked replay orchestration must remain usable in core-only installs.
@@ -499,9 +503,12 @@ def run_video_test(
             confidence_threshold=confidence_threshold,
             resources=runtime_resources,
             geometry_cache=geometry_cache,
+            identity_frame_id=identity_frame_id,
         )
 
     window = deque(maxlen=3)
+    previous_captured = None
+    candidate_windows = 0
     runtime_rows = []
     public_rows = []
     previous_public = None
@@ -519,14 +526,18 @@ def run_video_test(
         window.append(sample)
         if len(window) < 3:
             continue
+        candidate_windows += 1
+        if reference_packet is not None and candidate_windows % 2 == 0:
+            continue
         burst = tuple(window)
         runtime = evaluate_burst(
             burst,
             session=session,
             dataset_root=dataset_root,
             reader=replay_runtime_reader,
-            **replay_advice_kwargs,
+            **({**replay_advice_kwargs, "previous_captured": previous_captured} if reference_packet is not None else {}),
         )
+        previous_captured = burst[-1][1]
         runtime_rows.append(runtime)
 
         current_seconds = burst[-1][1]

@@ -18,9 +18,31 @@ class VideoReferencePolicyTests(unittest.TestCase):
                 source_seconds=[x[1] for x in samples],snapshot={'hand_trusted':False,'own_hand':[],'gold_trusted':False,'gold_tile':None},
                 hint={'phase':None,'best_discards':[],'issues':[]})
         reader=SimpleNamespace(read_window=lambda *a,**k: (_ for _ in ()).throw(RuntimeError('no OCR')))
-        with TemporaryDirectory() as tmp, patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':1,'width':1108,'height':512}), patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,i*.2,object()) for i in range(1,5)])), patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate):
+        with TemporaryDirectory() as tmp, patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':1,'width':1108,'height':512}), patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,i*.2,object()) for i in range(1,7)])), patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate):
             video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
             run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader,sample_interval_seconds=.2)
         self.assertEqual(len(seen),2)
         self.assertIs(seen[0],seen[1])
         self.assertTrue(seen[0].allow_unvalidated_hand_sources)
+
+    def test_within_burst_confirms_two_frames_but_not_unknown_current(self):
+        from copy import deepcopy
+        from PIL import Image
+        from workspace.hint_alpha.replay_smoke import evaluate_burst
+        from workspace.hint_alpha.runtime_pipeline import RuntimeAdvicePipeline
+        from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability
+        for unknown in (False, True):
+            def reader(images, root, *, identity_frame_id=None, **kwargs):
+                report=deepcopy(burst(3))
+                if identity_frame_id is not None:
+                    for item in report['components']:
+                        item['frame']=identity_frame_id
+                elif unknown:
+                    report['components'][0]['tile_id']='UNKNOWN'
+                    report['components'][0]['identity_reason']='score_below_threshold'
+                return report
+            pipeline=RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability())
+            samples=[(i,i*.2,Image.new('RGB',(2,2))) for i in (1,2,3)]
+            result=evaluate_burst(samples,session='runtime-live',dataset_root='unused',reader=reader,pipeline=pipeline,confirm_with_prior=True)
+            self.assertEqual(result['display_allowed'],not unknown)
+            self.assertFalse(result['safe_for_executor'])
