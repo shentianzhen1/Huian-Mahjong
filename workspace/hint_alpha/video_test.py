@@ -425,6 +425,7 @@ def run_video_test(
     public_reader=None,
     stop_event=None,
     on_window=None,
+    reference_packet=None,
 ):
     """Run original video pixels through Runtime Vision and PublicState OCR."""
     run_started = time.perf_counter()
@@ -476,6 +477,10 @@ def run_video_test(
         nonlocal runtime_resources
         if runtime_resources is None:
             runtime_resources = prepare_runtime_resources(dataset_root, session)
+            if reference_packet is not None:
+                from .replay_references import apply_replay_references
+                runtime_resources, source['reference_packet'] = apply_replay_references(
+                    runtime_resources, reference_packet)
         return read_stable_frames(
             images,
             root,

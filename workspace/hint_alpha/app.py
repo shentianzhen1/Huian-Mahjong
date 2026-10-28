@@ -818,6 +818,8 @@ class HintAlphaApp(tk.Tk):
         output_queue,
         timeline_queue,
     ):
+        reference_packet = (self.__dict__.get('experimental_hand_packet')
+            if self.__dict__.get('experimental_edge_seams', False) else None)
         try:
             from .video_test import probe_video, run_video_test
 
@@ -867,6 +869,7 @@ class HintAlphaApp(tk.Tk):
                 output_path=report_path,
                 stop_event=stop_event,
                 on_window=on_window,
+                reference_packet=reference_packet,
             )
             emit(("done", result))
         except Exception as exc:
