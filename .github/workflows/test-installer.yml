@@ -6,6 +6,8 @@ permissions:
   contents: read
 jobs:
   installer:
+    # Build only for an intentional testing release, never for ordinary PR updates.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7

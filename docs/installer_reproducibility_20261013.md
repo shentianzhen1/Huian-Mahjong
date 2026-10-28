@@ -32,8 +32,14 @@ metadata against the build record before exercising the live entry point.
 Old manifests without the new lock hash remain readable by the integrity
 verifier; all newly built payloads include it.
 
-The installer workflow is no longer tied to PR number 126. Every PR and manual
-dispatch can exercise the same Windows build/extraction/spawn/Tk/live UI path.
+The installer workflow is no longer tied to PR number 126. As of 2026-10-29,
+ordinary PR updates skip the installer job and produce no EXE artifact. Source
+and Vision workflows continue independently. For a substantial testing release,
+explicitly run `Windows test installer` using `workflow_dispatch` on the desired
+branch. That run exercises the unchanged build/extraction/spawn/Tk/live UI and
+upgrade checks. A skipped PR installer job is not installation validation;
+small source changes remain newer than the last distributed installer until the
+next intentional build.
 
 ## Updating the contract
 
