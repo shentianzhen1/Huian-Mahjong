@@ -542,6 +542,15 @@ def run_video_test(
             **({**replay_advice_kwargs, "previous_captured": previous_captured} if reference_packet is not None else {}),
         )
         previous_captured = burst[-1][1]
+        if reference_packet is not None:
+            from .theoretical_discards import explain_theoretical_discards
+            try:
+                details = explain_theoretical_discards(runtime)
+                if details is not None:
+                    runtime['theoretical_discard_details'] = details
+            except (ValueError, KeyError, TypeError) as exc:
+                # Auxiliary explanations must not replace the accepted hint.
+                runtime['theoretical_discard_error'] = f'{type(exc).__name__}: {exc}'
         runtime_rows.append(runtime)
 
         current_seconds = burst[-1][1]
