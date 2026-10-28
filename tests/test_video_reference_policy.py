@@ -27,7 +27,6 @@ class VideoReferencePolicyTests(unittest.TestCase):
 
     def test_within_burst_confirms_two_frames_but_not_unknown_current(self):
         from copy import deepcopy
-        from PIL import Image
         from workspace.hint_alpha.replay_smoke import evaluate_burst
         from workspace.hint_alpha.runtime_pipeline import RuntimeAdvicePipeline
         from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability
@@ -42,7 +41,7 @@ class VideoReferencePolicyTests(unittest.TestCase):
                     report['components'][0]['identity_reason']='score_below_threshold'
                 return report
             pipeline=RuntimeAdvicePipeline(stability_tracker=LiveSnapshotStability())
-            samples=[(i,i*.2,Image.new('RGB',(2,2))) for i in (1,2,3)]
+            samples=[(i,i*.2,SimpleNamespace(tobytes=lambda: b'pixels')) for i in (1,2,3)]
             result=evaluate_burst(samples,session='runtime-live',dataset_root='unused',reader=reader,pipeline=pipeline,confirm_with_prior=True)
             self.assertEqual(result['display_allowed'],not unknown)
             self.assertFalse(result['safe_for_executor'])
