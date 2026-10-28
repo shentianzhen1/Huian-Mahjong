@@ -1,0 +1,46 @@
+{
+  "total": 134,
+  "baseline": {
+    "top1_correct": 111,
+    "scores_ge_point82": 96,
+    "wrong_scores_ge_point82": 0
+  },
+  "candidate": {
+    "top1_correct": 112,
+    "scores_ge_point82": 97,
+    "wrong_scores_ge_point82": 0
+  },
+  "changed": [
+    {
+      "image": "templates/hand/tile_2579bb0ed3b71b04_M9.png",
+      "truth": "M9",
+      "source_sha256": "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+      "baseline": [
+        "M5",
+        0.7214124798774719
+      ],
+      "candidate": [
+        "M9",
+        0.8200703263282776
+      ]
+    }
+  ],
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "protocol": "134 cleaned crops; exclude query exact source SHA from training labels and packet rows. Same original match may span multiple source files: this is not independent-match validation. Candidate >=0.82 figures are raw score diagnostics, not calibrated Runtime acceptance.",
+  "clip": {
+    "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+    "range_seconds": [
+      0,
+      30
+    ],
+    "windows": 74,
+    "displayed_advice": 0,
+    "trusted_hand_windows": 1,
+    "reviewed_frame": 672,
+    "reviewed_frame_hand_matches": true,
+    "gold_confirmed_windows": 0,
+    "limits": "Only the recovered frame672 hand was manually reviewed. Other73 windows still have unknown concealed identities. OCR excluded. First30s, not complete recording. Baseline before conflict correction also had1 hand-trusted window, but its M5 was wrong; current conflict fix instead rejects that tile."
+  }
+}
