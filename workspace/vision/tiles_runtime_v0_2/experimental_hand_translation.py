@@ -60,8 +60,12 @@ class TranslatedHandClassifier:
             score = float(cv2.matchTemplate(padded, reference, cv2.TM_CCOEFF_NORMED).max())
             if np.isfinite(score) and score > best.confidence:
                 best = Classification(tile, score)
+        if best.confidence >= 0.82:
+            return best
+        translated = best
+        neutral_winners = []
         for trim_edges, features in ((False, self.neutral_features), (True, self.inner_features)):
-            if best.confidence >= 0.82 or not features:
+            if not features:
                 continue
             from .neutral_face_feature_probe import neutral
             candidate_query = neutral(image, trim_edges=trim_edges)
@@ -69,8 +73,12 @@ class TranslatedHandClassifier:
             tile, score = max(
                 ((tile, float(cv2.matchTemplate(padded_neutral, ref, cv2.TM_CCOEFF_NORMED).max()))
                  for tile, ref in features), key=lambda item: item[1])
+            if np.isfinite(score) and score >= 0.82:
+                neutral_winners.append(tile)
             if tile == best.tile_id and np.isfinite(score) and score > best.confidence:
                 best = Classification(tile, score)
+        if len(set(neutral_winners)) > 1:
+            return translated
         return best
 
 

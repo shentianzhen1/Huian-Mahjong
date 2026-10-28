@@ -102,6 +102,8 @@ class HandSourceTrialUITests(unittest.TestCase):
         app.single_source_hand_trial = Mock(get=Mock(return_value=True))
         app.evidence = Mock()
         app.hint_status = Mock()
+        app.blocked_detail = Mock()
+        app.hint_latency = Mock()
         app._toggle_hand_source_trial()
         self.assertTrue(app.runtime_advice_pipeline.allow_unvalidated_hand_sources)
         self.assertEqual(app.runtime_advice_pipeline.manual_gold.tile_id,'M4')
