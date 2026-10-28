@@ -18,9 +18,10 @@ class VideoReferencePolicyTests(unittest.TestCase):
                 source_seconds=[x[1] for x in samples],snapshot={'hand_trusted':False,'own_hand':[],'gold_trusted':False,'gold_tile':None},
                 hint={'phase':None,'best_discards':[],'issues':[]})
         reader=SimpleNamespace(read_window=lambda *a,**k: (_ for _ in ()).throw(RuntimeError('no OCR')))
-        with TemporaryDirectory() as tmp, patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':1,'width':1108,'height':512}), patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,i*.2,object()) for i in range(1,7)])), patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate):
+        with TemporaryDirectory() as tmp, patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':1,'width':1108,'height':512}), patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,i*.2,object()) for i in range(1,7)])) as sampler, patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate):
             video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
-            run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader,sample_interval_seconds=.2)
+            run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader)
+            self.assertEqual(sampler.call_args.kwargs['sample_interval_seconds'], .2)
         self.assertEqual(len(seen),2)
         self.assertIs(seen[0],seen[1])
         self.assertTrue(seen[0].allow_unvalidated_hand_sources)

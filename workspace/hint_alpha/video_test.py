@@ -433,6 +433,10 @@ def run_video_test(
     source = probe_video(path)
     if sample_interval_seconds is None:
         sample_interval_seconds = automatic_sample_interval(source)
+        # Reference trials classify two identities every other sampled window.
+        # Keep enough source samples to retain short visible draw opportunities.
+        if reference_packet is not None:
+            sample_interval_seconds = min(sample_interval_seconds, 0.2)
     digest = sha256(path)
     session = source_session or "local-video-" + digest[:16]
     source.update(
