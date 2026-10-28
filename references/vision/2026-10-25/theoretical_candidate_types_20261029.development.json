@@ -1,0 +1,1066 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "scope": "Theoretical effective TYPE counts only. Exclude own concealed copies and the proposed discard, reserve opened Gold. Unknown public rivers and meld identities are not estimated. Counts are not remaining copies, probabilities, EV, safety or a recommended strategy. No runtime change. Same revealed match.",
+  "rows": [
+    {
+      "episode": 0,
+      "frame": 84,
+      "candidates": [
+        {
+          "discard": "M2",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M1",
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "M3",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M2",
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4",
+            "S9"
+          ]
+        },
+        {
+          "discard": "P1",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M1",
+            "M2",
+            "M4",
+            "M7",
+            "P7",
+            "S1",
+            "S4",
+            "S9"
+          ]
+        },
+        {
+          "discard": "P4",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M1",
+            "M2",
+            "M4",
+            "M7",
+            "P7",
+            "S1",
+            "S4",
+            "S9"
+          ]
+        },
+        {
+          "discard": "P8",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M1",
+            "M2",
+            "M4",
+            "M7",
+            "P5",
+            "S1",
+            "S4",
+            "S9"
+          ]
+        },
+        {
+          "discard": "W",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M1",
+            "M2",
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4",
+            "S9"
+          ]
+        },
+        {
+          "discard": "B",
+          "shanten": 3,
+          "theoretical_effective_types": [
+            "M1",
+            "M2",
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4",
+            "S9"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "W",
+        "B"
+      ]
+    },
+    {
+      "episode": 1,
+      "frame": 228,
+      "candidates": [
+        {
+          "discard": "M3",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P1",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P4",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P8",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "W",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M3",
+        "W"
+      ]
+    },
+    {
+      "episode": 3,
+      "frame": 336,
+      "candidates": [
+        {
+          "discard": "M2",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "M3",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "M8",
+            "M9",
+            "P1",
+            "P4",
+            "P5",
+            "P6",
+            "P7",
+            "P8",
+            "S1",
+            "S2",
+            "S3",
+            "S4"
+          ]
+        },
+        {
+          "discard": "M8",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M9",
+            "P1",
+            "P4",
+            "P5",
+            "P7",
+            "P8",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "M9",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M8",
+            "P1",
+            "P4",
+            "P5",
+            "P7",
+            "P8",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P1",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "M8",
+            "M9",
+            "P6",
+            "P7",
+            "P8",
+            "S1",
+            "S2",
+            "S3",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P4",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "M8",
+            "M9",
+            "P6",
+            "P7",
+            "P8",
+            "S1",
+            "S2",
+            "S3",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "P1",
+            "P4",
+            "P8",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P8",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "M8",
+            "M9",
+            "P1",
+            "P4",
+            "P5",
+            "P6",
+            "S1",
+            "S2",
+            "S3",
+            "S4"
+          ]
+        },
+        {
+          "discard": "S2",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "P1",
+            "P4",
+            "P5",
+            "P7",
+            "P8",
+            "S3"
+          ]
+        },
+        {
+          "discard": "S3",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "P1",
+            "P4",
+            "P5",
+            "P7",
+            "P8",
+            "S2"
+          ]
+        },
+        {
+          "discard": "S9",
+          "shanten": 2,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5",
+            "P7",
+            "S1",
+            "S4"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M3",
+        "P8"
+      ]
+    },
+    {
+      "episode": 4,
+      "frame": 516,
+      "candidates": [
+        {
+          "discard": "M2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5"
+          ]
+        },
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "M8",
+            "M9",
+            "P1",
+            "P4",
+            "P5",
+            "P6"
+          ]
+        },
+        {
+          "discard": "M8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M9",
+            "P5"
+          ]
+        },
+        {
+          "discard": "M9",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M8",
+            "P5"
+          ]
+        },
+        {
+          "discard": "P1",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "P6"
+          ]
+        },
+        {
+          "discard": "P4",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "P6"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M7",
+            "P1",
+            "P4"
+          ]
+        },
+        {
+          "discard": "S9",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M7",
+            "P5"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M3"
+      ]
+    },
+    {
+      "episode": 5,
+      "frame": 684,
+      "candidates": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M8",
+            "P5",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "M8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P5",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M8",
+            "P5"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M8"
+      ]
+    },
+    {
+      "episode": 6,
+      "frame": 936,
+      "candidates": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P5",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P3",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M3",
+        "S8"
+      ]
+    },
+    {
+      "episode": 7,
+      "frame": 1200,
+      "candidates": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M9",
+            "P2",
+            "P3",
+            "P5",
+            "P6"
+          ]
+        },
+        {
+          "discard": "M9",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6"
+          ]
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M9",
+            "P5"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "M9",
+            "P3"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M9"
+      ]
+    },
+    {
+      "episode": 8,
+      "frame": 1308,
+      "candidates": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P5",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P3",
+            "S1",
+            "S4"
+          ]
+        },
+        {
+          "discard": "S4",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M1",
+            "M3",
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M3",
+        "S4"
+      ]
+    },
+    {
+      "episode": 9,
+      "frame": 1776,
+      "candidates": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M3",
+            "M4",
+            "P5",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M3",
+            "M4",
+            "P3",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M3",
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M3"
+      ]
+    },
+    {
+      "episode": 10,
+      "frame": 1908,
+      "candidates": [
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P5",
+            "S7",
+            "S8",
+            "SOUTH"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P3",
+            "S7",
+            "S8",
+            "SOUTH"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "SOUTH"
+          ]
+        },
+        {
+          "discard": "SOUTH",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S7",
+            "S8"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "SOUTH"
+      ]
+    },
+    {
+      "episode": 11,
+      "frame": 2004,
+      "candidates": [
+        {
+          "discard": "M6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M6",
+            "P5",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M6",
+            "P3",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "M6",
+            "P2",
+            "P3",
+            "P5",
+            "P6"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "M6"
+      ]
+    },
+    {
+      "episode": 12,
+      "frame": 2220,
+      "candidates": [
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P5",
+            "S7",
+            "S8",
+            "G"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P3",
+            "S7",
+            "S8",
+            "G"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "G"
+          ]
+        },
+        {
+          "discard": "G",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S7",
+            "S8"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "G"
+      ]
+    },
+    {
+      "episode": 13,
+      "frame": 2340,
+      "candidates": [
+        {
+          "discard": "P1",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P5",
+            "P7",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P1",
+            "P4",
+            "P5",
+            "P7",
+            "P8",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P4",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P7",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P3",
+            "P8",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "P8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P2",
+            "P3",
+            "P5",
+            "P6",
+            "S7",
+            "S8"
+          ]
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P6",
+            "P7",
+            "P8"
+          ]
+        },
+        {
+          "discard": "S9",
+          "shanten": 1,
+          "theoretical_effective_types": [
+            "M4",
+            "P3",
+            "P7"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "S8"
+      ]
+    },
+    {
+      "episode": 14,
+      "frame": 2460,
+      "candidates": [
+        {
+          "discard": "P2",
+          "shanten": 0,
+          "theoretical_effective_types": [
+            "M4",
+            "P5"
+          ]
+        },
+        {
+          "discard": "P6",
+          "shanten": 0,
+          "theoretical_effective_types": [
+            "M4",
+            "P3"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "P2",
+        "P6"
+      ]
+    },
+    {
+      "episode": 15,
+      "frame": 2604,
+      "candidates": [
+        {
+          "discard": "S1",
+          "shanten": 0,
+          "theoretical_effective_types": [
+            "M4",
+            "P3"
+          ]
+        },
+        {
+          "discard": "S4",
+          "shanten": 0,
+          "theoretical_effective_types": [
+            "M4",
+            "P3"
+          ]
+        }
+      ],
+      "max_type_candidates": [
+        "S1",
+        "S4"
+      ]
+    }
+  ],
+  "elapsed_seconds": 0.13576689899991834,
+  "episodes_with_narrower_max_type_set": 13,
+  "episodes_with_unique_max_type_candidate": 8
+}
