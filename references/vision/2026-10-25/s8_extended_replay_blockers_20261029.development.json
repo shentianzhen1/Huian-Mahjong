@@ -1,0 +1,527 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "base_commit": "e30c45422f25f0e061dc3d646ff310faeb7a5ddb",
+  "candidate": "Unchanged offline inner + M4 + S8 reference experiment from s8_opened_gold_recovery_20261029.development.json",
+  "remaining_first30_blockers": [
+    {
+      "frames": [
+        0,
+        6,
+        12
+      ],
+      "frame_rgb_sha256": [
+        "0e6663b73edb607d1a6e81d9a59e9e75a15cf572418a45b3d8ce89b2fa3638a6",
+        "d5bb1aeabc5ba11190804f0567a3e7e52d38b5880ae65ec60520fd1e8e96fadd",
+        "843cbbb0791f0cd19ebbd3a9162db5f5b25176fdbe28f7b462faef7f04f919b2"
+      ],
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "classification": "identity_incomplete_during_lifted_tile_or_insertion",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        12,
+        18,
+        24
+      ],
+      "frame_rgb_sha256": [
+        "843cbbb0791f0cd19ebbd3a9162db5f5b25176fdbe28f7b462faef7f04f919b2",
+        "a733b144351ae242858cf39cf0a5faa6f9205f77ad500814d51888dfadf4ec32",
+        "fed62536b2d023210c5224cea42616538074ec94f13e2cea4501a4b7abf02b33"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        24,
+        30,
+        36
+      ],
+      "frame_rgb_sha256": [
+        "fed62536b2d023210c5224cea42616538074ec94f13e2cea4501a4b7abf02b33",
+        "d349b9de2ffc00d3a1ab8f03e9486b1e21871258f6d9a6313ad7d7df3b99cae1",
+        "86c5d388a79f56416db992b0935d63b79edc7522108b43de2b947c6aafbab82b"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        36,
+        42,
+        48
+      ],
+      "frame_rgb_sha256": [
+        "86c5d388a79f56416db992b0935d63b79edc7522108b43de2b947c6aafbab82b",
+        "df4df538c2402db4c2a78eb051d685ad3b9d298ddc01d510109b6867b9111126",
+        "90c8aff7e037a6eb9455dabe7cb6071ca03e5df91a6e3b98afb5c5ced71367e6"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        72,
+        78,
+        84
+      ],
+      "frame_rgb_sha256": [
+        "cfc3c768576f563e2d03df970f36dc9790f751afd46dc40f269b4fe1957f12c9",
+        "e78afb2f7c16c8c7843f71079dee95d486392c00b9f01b74a5a8bd6baac8b297",
+        "af739ce205310f481e56043b4d82c504f94099335eaf487d567013851df1ebcc"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        96,
+        102,
+        108
+      ],
+      "frame_rgb_sha256": [
+        "bfea4f13a2d38f0f3ee735dbdebe8825214406b69f9802986e08f033a016b99b",
+        "6d5323b4631edb8bafa5fd4d8e0402e5f1fb7c71ac3681204b9b71fb13e93357",
+        "fafb78c705cb182a932f054b3d016aa02cea6ac23446d6b22f8a6fcaa4d0ef3b"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        108,
+        114,
+        120
+      ],
+      "frame_rgb_sha256": [
+        "fafb78c705cb182a932f054b3d016aa02cea6ac23446d6b22f8a6fcaa4d0ef3b",
+        "41e0e930d729a6ed06a9579d73a8e1eea942e99a58d05bc021c4ab801a9dd49f",
+        "0c2e256c6a388c731f9406eae8faeb2cae99589171d6ebcf6de1b4434341af61"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        120,
+        126,
+        132
+      ],
+      "frame_rgb_sha256": [
+        "0c2e256c6a388c731f9406eae8faeb2cae99589171d6ebcf6de1b4434341af61",
+        "b355ccf7716b65e1c780ff2187a76dc814da00fb1c7b2c347449149cfdba9644",
+        "86d4865496532d726f8e1f01b504951f1af09495ab6815fda30953114ce07fbb"
+      ],
+      "geometry_issues": [
+        "stable_votes=3"
+      ],
+      "classification": "identity_incomplete_during_lifted_tile_or_insertion",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        132,
+        138,
+        144
+      ],
+      "frame_rgb_sha256": [
+        "86d4865496532d726f8e1f01b504951f1af09495ab6815fda30953114ce07fbb",
+        "25cac92443dee96271f8b749877d5d5b53a26b69b76693d7b25d8ecac9b1d69f",
+        "bea8ba176df02ac23060717e6de0e02b3385e767cdd654113dc39f3483ffa323"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        288,
+        294,
+        300
+      ],
+      "frame_rgb_sha256": [
+        "5c79daee0255a0589cce7efaec4e43af005afcac1c104724b375f33c2af76a28",
+        "fbf8b9fa9166ba3937666f1a428aff908ef4cbac527d28e9da8580f9ca5f021e",
+        "57538ac32bc89e6737f130e7889997351a165d104444a5f37ba36055356337cb"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        504,
+        510,
+        516
+      ],
+      "frame_rgb_sha256": [
+        "c58950b27ef3f228997412bbf2ee9203b86ba24d0500c9016a6fd6a21ac0aee4",
+        "e485a1749ece95b63b1a097b5a358ad5c39a0587fb466902c8060eb9ef06a123",
+        "e017a1387d2a4926b0ae92686f6e1fcbe5549d1e663fc1d60e990396c304360d"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        516,
+        522,
+        528
+      ],
+      "frame_rgb_sha256": [
+        "e017a1387d2a4926b0ae92686f6e1fcbe5549d1e663fc1d60e990396c304360d",
+        "ed190ef840c8dc96317b314f6d044a042cbeee0a6733daea779d3189947122bf",
+        "8e6aede6b001cdbeabd4ec2443373c93005cd3344db0d98fddcc9268776ed03a"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        672,
+        678,
+        684
+      ],
+      "frame_rgb_sha256": [
+        "0233acb8a40e3214d30fa1c928b71379742dc9c703acf3f85cbb6225dfb13623",
+        "3c57b0f17e26965e3a16427cf8bfe55aef7309361092072d6cbcd8e3bf880115",
+        "14e02e16e050477326963f148155638e14b8beb71b97d7d6d925fe6e80e7ff12"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        828,
+        834,
+        840
+      ],
+      "frame_rgb_sha256": [
+        "9612e32d62249b05f07a7c7daf32cea27b130b404f3f1d935e7ce590503d1599",
+        "be06969ee65c6f5c7b4b734f662af451e9b3d1a0b14c33c96935d515ead4b59f",
+        "6f84565df69610c7c462ad47b95ae8c5d127280ba31d6527a7a70e9301e9f088"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        840,
+        846,
+        852
+      ],
+      "frame_rgb_sha256": [
+        "6f84565df69610c7c462ad47b95ae8c5d127280ba31d6527a7a70e9301e9f088",
+        "1a96f794635aeae00456672d5f27413893ba4fa2d6ec7f676e7ba152b0ce7e02",
+        "e7fe748aed1b717b3717acd56b12a8c06e0ae61cc4a9bc7bcea6fe0b9b9b6aa0"
+      ],
+      "geometry_issues": [
+        "no_trusted_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        852,
+        858,
+        864
+      ],
+      "frame_rgb_sha256": [
+        "e7fe748aed1b717b3717acd56b12a8c06e0ae61cc4a9bc7bcea6fe0b9b9b6aa0",
+        "b1f1d940cce8b5dc6bbe4717d999783c342f7f19a102c5bda23eb134bf8dc988",
+        "01f0b4849f631c3d9adfe8096408b644fa7c2e52836b83aceb5b81beb2bac278"
+      ],
+      "geometry_issues": [
+        "no_trusted_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    },
+    {
+      "frames": [
+        864,
+        870,
+        876
+      ],
+      "frame_rgb_sha256": [
+        "01f0b4849f631c3d9adfe8096408b644fa7c2e52836b83aceb5b81beb2bac278",
+        "878afb2348dc90b51d3c72ae76fe663454e2a3bdefca261acf5684f98e446773",
+        "74d113323987bfe52d23e743d650c935a5c5007e6f432308c82b510245af6d6c"
+      ],
+      "geometry_issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "classification": "burst_geometry_unstable_or_missing",
+      "endpoint_review": "Visual endpoint reviewed; does not establish all preceding burst frames stable."
+    }
+  ],
+  "expanded_replay": {
+    "duration_seconds": 90,
+    "windows": 224,
+    "advice_windows": 115,
+    "discard_windows": 62,
+    "gold_trusted_windows": 224,
+    "after30_seconds": {
+      "windows": 150,
+      "advice_windows": 58,
+      "discard_windows": 32
+    }
+  },
+  "primary_opened_gold_crop_regression": {
+    "queries": 15,
+    "changed_predictions": 0,
+    "accepted_correct_M4": 4,
+    "below_threshold_unknown": 11,
+    "details": [
+      {
+        "frame": 84,
+        "truth": "M4",
+        "baseline": [
+          "M4",
+          0.9867777824401855
+        ],
+        "candidate": [
+          "M4",
+          0.9867777824401855
+        ]
+      },
+      {
+        "frame": 228,
+        "truth": "M4",
+        "baseline": [
+          "M4",
+          0.9091768860816956
+        ],
+        "candidate": [
+          "M4",
+          0.9091768860816956
+        ]
+      },
+      {
+        "frame": 336,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.3443441092967987
+        ],
+        "candidate": [
+          "M1",
+          0.3443441092967987
+        ]
+      },
+      {
+        "frame": 516,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.3417239785194397
+        ],
+        "candidate": [
+          "M1",
+          0.3417239785194397
+        ]
+      },
+      {
+        "frame": 684,
+        "truth": "M4",
+        "baseline": [
+          "M7",
+          0.3639422655105591
+        ],
+        "candidate": [
+          "M7",
+          0.3639422655105591
+        ]
+      },
+      {
+        "frame": 936,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.34348753094673157
+        ],
+        "candidate": [
+          "M1",
+          0.34348753094673157
+        ]
+      },
+      {
+        "frame": 1200,
+        "truth": "M4",
+        "baseline": [
+          "M4",
+          0.9104623794555664
+        ],
+        "candidate": [
+          "M4",
+          0.9104623794555664
+        ]
+      },
+      {
+        "frame": 1308,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.3472159504890442
+        ],
+        "candidate": [
+          "M1",
+          0.3472159504890442
+        ]
+      },
+      {
+        "frame": 1776,
+        "truth": "M4",
+        "baseline": [
+          "M4",
+          0.9117187261581421
+        ],
+        "candidate": [
+          "M4",
+          0.9117187261581421
+        ]
+      },
+      {
+        "frame": 1908,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.34238550066947937
+        ],
+        "candidate": [
+          "M1",
+          0.34238550066947937
+        ]
+      },
+      {
+        "frame": 2004,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.3412817418575287
+        ],
+        "candidate": [
+          "M1",
+          0.3412817418575287
+        ]
+      },
+      {
+        "frame": 2220,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.34240368008613586
+        ],
+        "candidate": [
+          "M1",
+          0.34240368008613586
+        ]
+      },
+      {
+        "frame": 2340,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.34318265318870544
+        ],
+        "candidate": [
+          "M1",
+          0.34318265318870544
+        ]
+      },
+      {
+        "frame": 2460,
+        "truth": "M4",
+        "baseline": [
+          "M7",
+          0.3667140305042267
+        ],
+        "candidate": [
+          "M7",
+          0.3667140305042267
+        ]
+      },
+      {
+        "frame": 2604,
+        "truth": "M4",
+        "baseline": [
+          "M1",
+          0.34101590514183044
+        ],
+        "candidate": [
+          "M1",
+          0.34101590514183044
+        ]
+      }
+    ],
+    "limit": "Previously persisted M4 is correct; individual current crop low scores remain UNKNOWN. This is not15 newly recognized Gold identities."
+  },
+  "new_meld_count_blocker": {
+    "windows": 32,
+    "first_frame": 1800,
+    "last_frame": 2340,
+    "reviewed_frame1800": {
+      "own_concealed_count": 10,
+      "visible_own_meld_groups": 2,
+      "recorded_groups": 1,
+      "recorded_group_face_count": 4,
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "image_file_sha256": "9de9cc09f143e35753c2ab3e7f7a55c7cae7315ab7737bc93fcf69eb5ccb59d8"
+    },
+    "next_action": "Diagnose and correct own-meld geometry grouping, preserve concealed count validation; no meld-face identity claim."
+  },
+  "artifact_sha256": {
+    "s8_added_90s.py": "2528c9a651c83f14674204bd39fcd5fa07c124d82c40245283b44e88a3dbce56",
+    "s8_added_90s.json": "ad06847170ec2141f40f10355cd29e96ad17ef3c64d338fd3cdc0b6e42a46bfe",
+    "remaining17_review.png": "893c3c09914f10714d05eb16ac2c4caa6206555d3008f10f02aec2eb2e5cb782",
+    "s8_primary_gold_regression.py": "910aec980c35bbb9dec36dc39ae7254a62d972184c7c00c3f1020fbf7cb72fdb"
+  },
+  "limits": [
+    "Revealed same-source development, includes training frames; no independent accuracy claim.",
+    "115 advice windows have not all been visually reviewed. Earlier7 reviewed hands belong only to first30s.",
+    "Gold224 includes persisted memory, not224 independent identity reads.",
+    "OCR excluded; structural advice counts do not validate strategy strength, public remaining counts or Windows performance.",
+    "No threshold relaxation, runtime integration, reference bundle update or new installer."
+  ]
+}
