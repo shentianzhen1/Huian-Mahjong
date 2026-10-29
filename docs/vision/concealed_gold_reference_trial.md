@@ -2,7 +2,7 @@
 
 The explicit private-packet adapter accepts a row with `role: concealed_gold`, `truth`, `crop`, and `rgb_sha256`, alongside existing packet metadata. The crop path is relative to the selected manifest. Use only reviewed tile-only private crops.
 
-This role creates a concealed-Gold wrapper outside the opened-indicator classifier. It delegates ordinary and opened-indicator methods unchanged. A weak full-bank prediction can receive a reference score only when the passing reference classes uniquely agree with its original identity. Confident original predictions remain unchanged. Scores are developmental NCC, not calibrated probabilities.
+This role creates a concealed-Gold wrapper outside the opened-indicator classifier. It delegates ordinary and opened-indicator methods unchanged. Reference scoring searches one feature pixel of translation using replicated borders to absorb small crop shifts. A weak full-bank prediction can receive a reference score only when the passing reference classes uniquely agree with its original identity. Confident original predictions remain unchanged. Scores are developmental NCC, not calibrated probabilities.
 
 Loading such a row does not change source coverage, cross-session qualification, training labels, or ordinary/neutral/inner features. The caller's existing explicit trial/source rules still apply; adding a reference does not qualify a class for default Runtime.
 

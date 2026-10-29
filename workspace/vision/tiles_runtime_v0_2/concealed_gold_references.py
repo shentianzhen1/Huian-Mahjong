@@ -21,9 +21,12 @@ class ConcealedGoldReferenceClassifier:
         if original.confidence >= .82 or not self.references:
             return original
         query = _feature(image, region='gold_region')
+        # One feature-pixel translation absorbs small crop changes between
+        # waiting and drawn-hand geometry; reference identity must still agree.
+        query = cv2.copyMakeBorder(query, 1, 1, 1, 1, cv2.BORDER_REPLICATE)
         passing = [(tile, score) for tile, reference in self.references
                    if math.isfinite(score := float(cv2.matchTemplate(
-                       query, reference, cv2.TM_CCOEFF_NORMED)[0, 0]))
+                       query, reference, cv2.TM_CCOEFF_NORMED).max()))
                    and .82 <= score <= 1.]
         # A missing-class nearest reference cannot replace full-bank identity.
         if {tile for tile, _ in passing} != {original.tile_id}:

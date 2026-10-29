@@ -63,3 +63,16 @@ class ConcealedGoldReferenceTests(unittest.TestCase):
         self.assertEqual(result['gold_skin_covered'],original_coverage)
         self.assertEqual(raw['gold_skin_covered'],original_coverage)
         self.assertIsInstance(c.ordinary, ConcealedGoldReferenceClassifier)
+
+    def test_small_crop_shift_recovers_without_changing_identity(self):
+        from unittest.mock import patch
+        rng = np.random.default_rng(10)
+        reference = rng.normal(size=(20,16)).astype(np.float32)
+        query = np.roll(reference, 1, axis=1)
+        c = ConcealedGoldReferenceClassifier(self.original, [('SOUTH',reference)])
+        with patch('workspace.vision.tiles_v0_1.template_classifier._feature', return_value=query):
+            result = c.classify_gold_skin(None)
+            self.assertEqual(result.tile_id, 'SOUTH')
+            self.assertGreater(result.confidence, .9)
+            self.original.classify_gold_skin.return_value = Classification('M4',.72)
+            self.assertEqual(c.classify_gold_skin(None), Classification('M4',.72))
