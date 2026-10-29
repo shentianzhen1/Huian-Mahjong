@@ -1,0 +1,96 @@
+{
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "frame": 672,
+  "frame_rgb_sha256": "0233acb8a40e3214d30fa1c928b71379742dc9c703acf3f85cbb6225dfb13623",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+  "reviewed_hand": [
+    "P5",
+    "P6",
+    "S3",
+    "S4",
+    "M1",
+    "M2",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M7",
+    "M9",
+    "SOUTH",
+    "SOUTH",
+    "W",
+    "W"
+  ],
+  "trial_snapshot_hand": [
+    "P5",
+    "P6",
+    "S3",
+    "S4",
+    "M1",
+    "M2",
+    "M2",
+    "M3",
+    "M4",
+    "M3",
+    "M7",
+    "M9",
+    "SOUTH",
+    "SOUTH",
+    "W",
+    "W"
+  ],
+  "hand_trusted_before_live_confirmation": true,
+  "display_allowed": false,
+  "issues": [
+    "gold_untrusted",
+    "gold_identity_unknown",
+    "river_untrusted:0",
+    "river_untrusted:1",
+    "meld_untrusted:1",
+    "runtime_gold_frame_identity_untrusted",
+    "runtime_gold_not_fully_trusted",
+    "player_river_missing",
+    "opponent_river_missing",
+    "opponent_meld_missing",
+    "experimental_hand_sources_unvalidated"
+  ],
+  "mismatches": [
+    {
+      "index": 9,
+      "truth": "M5",
+      "snapshot_tile": "M3",
+      "component": {
+        "pixel_bbox": [
+          564,
+          440,
+          50,
+          67
+        ],
+        "normalized_bbox": [
+          0.509025,
+          0.859375,
+          0.045126,
+          0.130859
+        ],
+        "region_candidate": "hand",
+        "confidence": 0.92,
+        "frame": 672,
+        "session": "local-video-9709fdc3aa464bf2",
+        "gold_skin": false,
+        "candidate_tile_id": "M3",
+        "tile_id": "M3",
+        "tile_confidence": 0.846476,
+        "identity_reason": "accepted",
+        "classification_crop_bbox": [
+          564,
+          431,
+          50,
+          79
+        ]
+      }
+    }
+  ],
+  "scope": "First30 seconds of existing Sep26 development recording,74 processed windows,0 displayed suggestions,1 hand-trusted window. That hand has M5 misread as M3. Not independent holdout. Gold S8 remains unconfirmed; manual Gold is not a remedy for wrong concealed identities. No threshold,source gate or runtime changes."
+}

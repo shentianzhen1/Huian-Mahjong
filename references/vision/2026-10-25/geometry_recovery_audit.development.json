@@ -1,0 +1,846 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "decoded_frames": 2847,
+  "sampling": "sequential decoded ordinals every 6; overlapping 3-frame bursts; edge_seams=True",
+  "windows": 473,
+  "trusted_windows": 359,
+  "runs": [
+    {
+      "untrusted": true,
+      "start_frame": 12,
+      "windows": 5,
+      "end_frame": 36
+    },
+    {
+      "untrusted": false,
+      "start_frame": 42,
+      "windows": 2,
+      "end_frame": 48
+    },
+    {
+      "untrusted": true,
+      "start_frame": 54,
+      "windows": 5,
+      "end_frame": 78
+    },
+    {
+      "untrusted": false,
+      "start_frame": 84,
+      "windows": 1,
+      "end_frame": 84
+    },
+    {
+      "untrusted": true,
+      "start_frame": 90,
+      "windows": 7,
+      "end_frame": 126
+    },
+    {
+      "untrusted": false,
+      "start_frame": 132,
+      "windows": 14,
+      "end_frame": 210
+    },
+    {
+      "untrusted": true,
+      "start_frame": 216,
+      "windows": 2,
+      "end_frame": 222
+    },
+    {
+      "untrusted": false,
+      "start_frame": 228,
+      "windows": 1,
+      "end_frame": 228
+    },
+    {
+      "untrusted": true,
+      "start_frame": 234,
+      "windows": 5,
+      "end_frame": 258
+    },
+    {
+      "untrusted": false,
+      "start_frame": 264,
+      "windows": 6,
+      "end_frame": 294
+    },
+    {
+      "untrusted": true,
+      "start_frame": 300,
+      "windows": 5,
+      "end_frame": 324
+    },
+    {
+      "untrusted": false,
+      "start_frame": 330,
+      "windows": 11,
+      "end_frame": 390
+    },
+    {
+      "untrusted": true,
+      "start_frame": 396,
+      "windows": 6,
+      "end_frame": 426
+    },
+    {
+      "untrusted": false,
+      "start_frame": 432,
+      "windows": 12,
+      "end_frame": 498
+    },
+    {
+      "untrusted": true,
+      "start_frame": 504,
+      "windows": 2,
+      "end_frame": 510
+    },
+    {
+      "untrusted": false,
+      "start_frame": 516,
+      "windows": 12,
+      "end_frame": 582
+    },
+    {
+      "untrusted": true,
+      "start_frame": 588,
+      "windows": 4,
+      "end_frame": 606
+    },
+    {
+      "untrusted": false,
+      "start_frame": 612,
+      "windows": 1,
+      "end_frame": 612
+    },
+    {
+      "untrusted": true,
+      "start_frame": 618,
+      "windows": 2,
+      "end_frame": 624
+    },
+    {
+      "untrusted": false,
+      "start_frame": 630,
+      "windows": 7,
+      "end_frame": 666
+    },
+    {
+      "untrusted": true,
+      "start_frame": 672,
+      "windows": 2,
+      "end_frame": 678
+    },
+    {
+      "untrusted": false,
+      "start_frame": 684,
+      "windows": 3,
+      "end_frame": 696
+    },
+    {
+      "untrusted": true,
+      "start_frame": 702,
+      "windows": 7,
+      "end_frame": 738
+    },
+    {
+      "untrusted": false,
+      "start_frame": 744,
+      "windows": 29,
+      "end_frame": 912
+    },
+    {
+      "untrusted": true,
+      "start_frame": 918,
+      "windows": 2,
+      "end_frame": 924
+    },
+    {
+      "untrusted": false,
+      "start_frame": 930,
+      "windows": 3,
+      "end_frame": 942
+    },
+    {
+      "untrusted": true,
+      "start_frame": 948,
+      "windows": 6,
+      "end_frame": 978
+    },
+    {
+      "untrusted": false,
+      "start_frame": 984,
+      "windows": 34,
+      "end_frame": 1182
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1188,
+      "windows": 2,
+      "end_frame": 1194
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1200,
+      "windows": 3,
+      "end_frame": 1212
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1218,
+      "windows": 3,
+      "end_frame": 1230
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1236,
+      "windows": 10,
+      "end_frame": 1290
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1296,
+      "windows": 2,
+      "end_frame": 1302
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1308,
+      "windows": 5,
+      "end_frame": 1332
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1338,
+      "windows": 3,
+      "end_frame": 1350
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1356,
+      "windows": 64,
+      "end_frame": 1734
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1740,
+      "windows": 6,
+      "end_frame": 1770
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1776,
+      "windows": 1,
+      "end_frame": 1776
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1782,
+      "windows": 5,
+      "end_frame": 1806
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1812,
+      "windows": 14,
+      "end_frame": 1890
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1896,
+      "windows": 2,
+      "end_frame": 1902
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1908,
+      "windows": 3,
+      "end_frame": 1920
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1926,
+      "windows": 2,
+      "end_frame": 1932
+    },
+    {
+      "untrusted": false,
+      "start_frame": 1938,
+      "windows": 9,
+      "end_frame": 1986
+    },
+    {
+      "untrusted": true,
+      "start_frame": 1992,
+      "windows": 2,
+      "end_frame": 1998
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2004,
+      "windows": 3,
+      "end_frame": 2016
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2022,
+      "windows": 3,
+      "end_frame": 2034
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2040,
+      "windows": 28,
+      "end_frame": 2202
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2208,
+      "windows": 2,
+      "end_frame": 2214
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2220,
+      "windows": 2,
+      "end_frame": 2226
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2232,
+      "windows": 2,
+      "end_frame": 2238
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2244,
+      "windows": 13,
+      "end_frame": 2316
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2322,
+      "windows": 2,
+      "end_frame": 2328
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2334,
+      "windows": 5,
+      "end_frame": 2358
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2364,
+      "windows": 2,
+      "end_frame": 2370
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2376,
+      "windows": 11,
+      "end_frame": 2436
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2442,
+      "windows": 2,
+      "end_frame": 2448
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2454,
+      "windows": 11,
+      "end_frame": 2514
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2520,
+      "windows": 6,
+      "end_frame": 2550
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2556,
+      "windows": 6,
+      "end_frame": 2586
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2592,
+      "windows": 2,
+      "end_frame": 2598
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2604,
+      "windows": 15,
+      "end_frame": 2688
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2694,
+      "windows": 3,
+      "end_frame": 2706
+    },
+    {
+      "untrusted": false,
+      "start_frame": 2712,
+      "windows": 20,
+      "end_frame": 2826
+    },
+    {
+      "untrusted": true,
+      "start_frame": 2832,
+      "windows": 3,
+      "end_frame": 2844
+    }
+  ],
+  "code_head": "942a73084af8e26e4ac9e4960b07aabd544b7ffd",
+  "threshold": 0.82,
+  "runtime_changed": false,
+  "geometry_only": true,
+  "advice_recovery_measured": false,
+  "recovered_geometry_runs": 32,
+  "recovery_definition": "Next trusted burst endpoint minus first rejected burst endpoint, decoded frame ordinal / nominal 30fps; not wall-clock UI latency",
+  "geometry_recovery_seconds": {
+    "median": 0.5,
+    "maximum": 1.4
+  },
+  "terminal_unrecovered_run": {
+    "untrusted": true,
+    "start_frame": 2832,
+    "windows": 3,
+    "end_frame": 2844
+  },
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT_NOT_USER_APPROVED",
+  "reviewed_transition_endpoints": [
+    96,
+    108,
+    240,
+    252,
+    306,
+    318,
+    1788,
+    1800
+  ],
+  "examples": [
+    {
+      "frames": [
+        84,
+        90,
+        96
+      ],
+      "rgb_sha256": [
+        "92de61c7d31b86ae3253b406f375922677f207b1a4fc6813497fb5dc0c7c4767",
+        "302a55f427e040bbeb536c82d47feb30b5e90f1a6856c0a6cac04ffeb1be703b",
+        "9c9a2849cd3835d9b04daf5fada6ea4ac5b48dc04fbdcdb7566685204a975bd8"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 84,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 90,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 14,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 96,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 15,
+            "draw_visual": 1
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        96,
+        102,
+        108
+      ],
+      "rgb_sha256": [
+        "9c9a2849cd3835d9b04daf5fada6ea4ac5b48dc04fbdcdb7566685204a975bd8",
+        "31ed289b7813136b5245d22f0c34ac4993471c7c8d9da59400394f154a2869aa",
+        "dfa7a9e325d30584cc80a2fd54b17e161d46d511f3969270e0cd109953bcc1e1"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 96,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 15,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 102,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 15,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 108,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 9,
+            "draw_visual": 1,
+            "unknown": 5
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        228,
+        234,
+        240
+      ],
+      "rgb_sha256": [
+        "ea3685368c5393d5c2f6d60493315c0b890dcf81612b6038bd16a0eb18d2fb40",
+        "754193fe64fc92b2e00730a957d5b2f3e36d36419ae4d25080d98b8441d281fa",
+        "046c47d2e2c4a117e60064f828639e52cb56d959875a9b998f22d0403b938117"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 228,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 234,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 15,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 240,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 15,
+            "draw_visual": 1
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        240,
+        246,
+        252
+      ],
+      "rgb_sha256": [
+        "046c47d2e2c4a117e60064f828639e52cb56d959875a9b998f22d0403b938117",
+        "289d83f8d52736603107b539e33d9505371f7ce5ccf2aa231c1cee3f8fccc5d1",
+        "9b944ea04bff2690dbd8200239b7bf5889ab47669ce9d48acbdd5a069fd35cba"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 240,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 15,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 246,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 12,
+            "draw_visual": 1,
+            "unknown": 2
+          }
+        },
+        {
+          "frame": 252,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        294,
+        300,
+        306
+      ],
+      "rgb_sha256": [
+        "32bfed7f70777cecd4f5b1b5703b141863cfebe0719edaa9a3e32e17990c054b",
+        "7b85a24aca776c7556656cd2c2214692af15e381e85916d390b6fe947516a86f",
+        "eebbeaacfea5dcee6bc93f482d4fb517170a2a3e8359d666f17e3d259d08af2e"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 294,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16
+          }
+        },
+        {
+          "frame": 300,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 306,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16,
+            "draw_visual": 1
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        306,
+        312,
+        318
+      ],
+      "rgb_sha256": [
+        "eebbeaacfea5dcee6bc93f482d4fb517170a2a3e8359d666f17e3d259d08af2e",
+        "3edad8233c95773c81585bc9074dc71fb210f9cbc8c197177f3fafb5be93fe2b",
+        "d57d781fe26b672a5b38939e25e9829b0490e601475a9d8ae3201a9f7c785cbe"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 306,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 312,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16
+          }
+        },
+        {
+          "frame": 318,
+          "untrusted": false,
+          "issues": [],
+          "counts": {
+            "gold": 1,
+            "hand": 16,
+            "draw_visual": 1
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        1776,
+        1782,
+        1788
+      ],
+      "rgb_sha256": [
+        "056897ac59e2873db73f2b66b38db4e6944c6b25dc4a1232ddecc8d46d5eaa84",
+        "42326510df6d289f69a754a75b5b94ee3aa525ba80781a9e0f369807b2086d2d",
+        "08a32cd4a9f1edbd00fa594aee4b1707a5a383dc1cff35b826e5ed3251b61911"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 1776,
+          "untrusted": false,
+          "issues": [
+            "meld_candidates_detected",
+            "stacked_meld_overlap_recovered"
+          ],
+          "counts": {
+            "meld": 4,
+            "gold": 1,
+            "hand": 13,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 1782,
+          "untrusted": false,
+          "issues": [
+            "meld_candidates_detected",
+            "stacked_meld_overlap_recovered"
+          ],
+          "counts": {
+            "meld": 4,
+            "gold": 1,
+            "hand": 12,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 1788,
+          "untrusted": false,
+          "issues": [
+            "meld_candidates_detected",
+            "stacked_meld_overlap_recovered"
+          ],
+          "counts": {
+            "meld": 4,
+            "gold": 1,
+            "hand": 12,
+            "draw_visual": 1
+          }
+        }
+      ]
+    },
+    {
+      "frames": [
+        1788,
+        1794,
+        1800
+      ],
+      "rgb_sha256": [
+        "08a32cd4a9f1edbd00fa594aee4b1707a5a383dc1cff35b826e5ed3251b61911",
+        "8594a81f816d648d00ca9ba07d76d8900c5cc0e7903b1d800b99a3a7fda09e67",
+        "e58b0bcd3e40faa6ad2b39ceccf11a6632197f484804e67d488b43c16dddcc02"
+      ],
+      "untrusted": true,
+      "issues": [
+        "layout_not_stable_across_frames"
+      ],
+      "observations": [
+        {
+          "frame": 1788,
+          "untrusted": false,
+          "issues": [
+            "meld_candidates_detected",
+            "stacked_meld_overlap_recovered"
+          ],
+          "counts": {
+            "meld": 4,
+            "gold": 1,
+            "hand": 12,
+            "draw_visual": 1
+          }
+        },
+        {
+          "frame": 1794,
+          "untrusted": false,
+          "issues": [
+            "meld_candidates_detected",
+            "stacked_meld_overlap_recovered"
+          ],
+          "counts": {
+            "meld": 4,
+            "gold": 1,
+            "hand": 9,
+            "draw_visual": 1,
+            "unknown": 2
+          }
+        },
+        {
+          "frame": 1800,
+          "untrusted": false,
+          "issues": [
+            "meld_candidates_detected",
+            "stacked_meld_overlap_recovered"
+          ],
+          "counts": {
+            "meld": 4,
+            "gold": 1,
+            "hand": 13
+          }
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Cannot map the screenshot-only two blocked windows to exact source frames; this is a separately identified long-video audit.",
+    "359/473 is geometry acceptance, not hand identity accuracy or advice acceptance.",
+    "Overlapping windows from one revealed recording are not independent matches.",
+    "32 completed geometry rejection runs include initial acquisition; no claim of 32 advice recoveries.",
+    "Only selected transition frames were visually reviewed; no blanket animation classification for all114 rejected windows.",
+    "Last rejected run has no observed recovery; do not extrapolate."
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "diagnosis": "Existing Gold region is detected; ordinary white-template appearance mismatch keeps Gold NCC scores low. M4 also lacks source support and real-skin qualification.",
+  "glyph_probe": {
+    "queries": 12,
+    "baseline_top1": 10,
+    "glyph_top1": 3,
+    "decision": "Rejected; M6 confused as M1."
+  },
+  "reference_probe": [
+    {
+      "query": "gold_M1_source2_frame3097.png",
+      "truth": "M1",
+      "top2": [
+        [
+          "M4",
+          0.7276654839515686
+        ],
+        [
+          "M6",
+          0.6717235445976257
+        ]
+      ],
+      "existing_identity_gate": "below_confidence_threshold",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "gold_M6_source1_frame4884.png",
+      "truth": "M6",
+      "top2": [
+        [
+          "M4",
+          0.7585850358009338
+        ],
+        [
+          "M1",
+          0.6717235445976257
+        ]
+      ],
+      "existing_identity_gate": "below_confidence_threshold",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "gold_P5_source3_frame4243.png",
+      "truth": "P5",
+      "top2": [
+        [
+          "M1",
+          0.5005295276641846
+        ],
+        [
+          "M4",
+          0.48883113265037537
+        ]
+      ],
+      "existing_identity_gate": "below_confidence_threshold",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "gold_P7_source3_frame1414.png",
+      "truth": "P7",
+      "top2": [
+        [
+          "S8",
+          0.42735007405281067
+        ],
+        [
+          "P5",
+          0.3965674936771393
+        ]
+      ],
+      "existing_identity_gate": "below_confidence_threshold",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "gold_S8_source1_frame1628.png",
+      "truth": "S8",
+      "top2": [
+        [
+          "P5",
+          0.4356382191181183
+        ],
+        [
+          "P7",
+          0.42735007405281067
+        ]
+      ],
+      "existing_identity_gate": "below_confidence_threshold",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "gold_SOUTH_source1_frame3256.png",
+      "truth": "SOUTH",
+      "top2": [
+        [
+          "M6",
+          0.4524173438549042
+        ],
+        [
+          "M1",
+          0.3959011137485504
+        ]
+      ],
+      "existing_identity_gate": "below_confidence_threshold",
+      "existing_real_skin_covered": true,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "short_baseline:60",
+      "truth": "M6",
+      "top2": [
+        [
+          "M6",
+          0.9882982969284058
+        ],
+        [
+          "M4",
+          0.7519797682762146
+        ]
+      ],
+      "existing_identity_gate": "accepted",
+      "existing_real_skin_covered": true,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "short_baseline:120",
+      "truth": "M6",
+      "top2": [
+        [
+          "M6",
+          0.9911699891090393
+        ],
+        [
+          "M4",
+          0.7563311457633972
+        ]
+      ],
+      "existing_identity_gate": "accepted",
+      "existing_real_skin_covered": true,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "short_baseline:180",
+      "truth": "M6",
+      "top2": [
+        [
+          "M6",
+          0.9919773936271667
+        ],
+        [
+          "M4",
+          0.7575539946556091
+        ]
+      ],
+      "existing_identity_gate": "accepted",
+      "existing_real_skin_covered": true,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "long_baseline:612",
+      "truth": "M4",
+      "top2": [
+        [
+          "M4",
+          0.9121388792991638
+        ],
+        [
+          "M6",
+          0.8271059989929199
+        ]
+      ],
+      "existing_identity_gate": "class_not_cross_session_validated_in_region",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "long_baseline:1812",
+      "truth": "M4",
+      "top2": [
+        [
+          "M4",
+          0.9101307392120361
+        ],
+        [
+          "M6",
+          0.827595055103302
+        ]
+      ],
+      "existing_identity_gate": "class_not_cross_session_validated_in_region",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    },
+    {
+      "query": "long_baseline:2718",
+      "truth": "M4",
+      "top2": [
+        [
+          "M4",
+          0.9101405739784241
+        ],
+        [
+          "M6",
+          0.8255991339683533
+        ]
+      ],
+      "existing_identity_gate": "class_not_cross_session_validated_in_region",
+      "existing_real_skin_covered": false,
+      "same_rgb_reference_excluded": true
+    }
+  ],
+  "runtime_probe": [
+    {
+      "file": "ScreenRecording_09-26-2026 22-23-34_1.mp4",
+      "frames": [
+        48,
+        54,
+        60
+      ],
+      "gold_trusted": true,
+      "gold_tile": "M6",
+      "gold_observations": [
+        {
+          "frame": 48,
+          "candidate_tile_id": "M6",
+          "tile_id": "M6",
+          "tile_confidence": 0.988078,
+          "identity_reason": "accepted"
+        },
+        {
+          "frame": 54,
+          "candidate_tile_id": "M6",
+          "tile_id": "M6",
+          "tile_confidence": 0.988297,
+          "identity_reason": "accepted"
+        },
+        {
+          "frame": 60,
+          "candidate_tile_id": "M6",
+          "tile_id": "M6",
+          "tile_confidence": 0.988298,
+          "identity_reason": "accepted"
+        }
+      ]
+    },
+    {
+      "file": "ScreenRecording_10-12-2026 21-29-40_1.mp4",
+      "frames": [
+        600,
+        606,
+        612
+      ],
+      "gold_trusted": false,
+      "gold_tile": null,
+      "gold_observations": [
+        {
+          "frame": 600,
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.912463,
+          "identity_reason": "class_not_cross_session_validated_in_region"
+        },
+        {
+          "frame": 606,
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.911086,
+          "identity_reason": "class_not_cross_session_validated_in_region"
+        },
+        {
+          "frame": 612,
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.912139,
+          "identity_reason": "class_not_cross_session_validated_in_region"
+        }
+      ]
+    }
+  ],
+  "m4_reference": {
+    "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+    "frame": 90,
+    "rgb_sha256": "069c9f1316478f871e47ae6c167f5e2e335de9377290fef719712558c3de8397",
+    "authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE"
+  },
+  "additional_video_checked": {
+    "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+    "visible_gold_classes": [
+      "S8",
+      "M1"
+    ],
+    "m4_found": false
+  },
+  "candidate_policy": "Explicit opened Gold only: max original Gold NCC vs same-appearance reviewed references, preserve original confident result; supplemental result must agree with original candidate and exceed.82. Hand Gold delegates unchanged. Diagnostic wrapper only, not app wiring.",
+  "caution": "If M4 reference is withheld, M4 can match M6 reference near.827; do not enable unqualified nearest-reference acceptance. Agreement/independent verification is still needed.",
+  "next": "Separate formal source qualification from explicitly labeled read-only Gold trial, analogous to hand-source trial, without lowering.82 or promoting formal confidence."
+}

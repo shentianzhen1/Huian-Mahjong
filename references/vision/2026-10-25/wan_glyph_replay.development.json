@@ -1,0 +1,33 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "policy": "After existing trial branches, only for ordinary confidence below .82, symmetric glyph feature; require global top class to be M1..M9 and candidate feature score >=.82. Added 3 Sep26 raised M9 crops offline. Scores uncalibrated.",
+  "before": {
+    "accepted_windows": 296,
+    "discard_windows": 63
+  },
+  "after": {
+    "accepted_windows": 297,
+    "discard_windows": 64
+  },
+  "new_frames": [
+    582
+  ],
+  "lost_prior_windows": 0,
+  "changed_prior_advice": 0,
+  "distinct_discard_hand_states_before": 12,
+  "distinct_discard_hand_states_after": 12,
+  "runtime_ms": {
+    "median": 330.13,
+    "p95": 386.5
+  },
+  "decision": "Retain offline experiment, do not wire this low-yield branch yet; focus geometry failures.",
+  "limits": [
+    "One revealed match; adjacent windows not independent.",
+    "No new distinct discard hand state.",
+    "Feature score is not calibrated probability.",
+    "No independent promotion or installer capability claim."
+  ]
+}

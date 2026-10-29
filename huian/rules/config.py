@@ -12,7 +12,6 @@ class EvidenceStatus(str, Enum):
 
 # Evidence authority: RULE_STATUS.md, not legacy KNOWN_RULES.md.
 UNKNOWN_RULES = MappingProxyType({
-    "ROB_KONG_SCORING_UNKNOWN": "Payment/dealer continuation and remaining settlement flow for a declared added-kong robbery; Hu multiplier x2 is confirmed",
     # No independent kong fee: confirmed by player 2026-09-18.
     # Legacy ADD_KONG_SCORING_UNKNOWN retired 2026-09-18: completed added-kong
     # no longer blocks ordinary simulation merely because it occurred.
@@ -20,8 +19,7 @@ UNKNOWN_RULES = MappingProxyType({
     "qiangjin_hand_shape": "Exact effective Hu decomposition and room-option interaction at the opening check",
     # qiangjin_seat_priority resolved: only the acting player owns the window; PASS never hands it off.
     "qiangjin_settlement": "Multiplier, payer and dealer continuation after a Qiangjin declaration",
-    # Sanjindao timing: one-shot opening 3+ gold check or mid-hand 2->3 gold arrival; PASS closes it.
-    "sanjindao_settlement": "Non-flower base, payment, terminal flow and dealer result after the confirmed x3 declaration",
+    # Sanjindao settlement confirmed 2026-10-06: (base + completed kong fan) x3.
     "sanjinyou_trigger": "Exact executable steps shared by Erjin-You and Sanjin-You",
     "youjin_trigger": "UI/action timing and remaining edge cases around the confirmed groups-plus-one-roaming-gold structural entry condition",
     "double_you_entry": "Whether any rare direct Double-You entry exists outside the confirmed sequential Youjin upgrade path",
@@ -38,8 +36,7 @@ UNKNOWN_RULES = MappingProxyType({
     "fan_edge_cases": "Remaining gold/triplet/decomposition fan edge cases; kong table is adopted separately",
     # External variants only; see references/HUIAN_WEB_RULES_2026-09-13.md.
     # exposed_triplet_fan resolved 2026-09-18: suited exposed Peng=0, honor Peng=1.
-    # Eight-flower trigger/pass confirmed. Project working settlement is fixed 16 fan x1 with no stacking.
-    "eight_flower_real_multiplier": "Real-room Eight-Flower settlement is still unobserved; project uses fixed 16 fan with no extra multiplier/stacking",
+    # Eight-flower settlement player-confirmed 2026-10-06: fixed 16 fan x1, no stacking.
     "open_gold_procedure": "Reveal location and physical tile accounting",
     "deal_replacement_order": "Dealing order, flower replacement order and source",
     "added_kong_details": "Remaining added-kong UI/payment edge cases; fan table and rob scope are adopted",

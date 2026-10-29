@@ -1,0 +1,81 @@
+name: Windows test installer
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release_request:
+    runs-on: ubuntu-latest
+    outputs:
+      requested: ${{ steps.request.outputs.requested }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - id: request
+        env:
+          MANUAL_BUILD: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          python - <<'PYTHON'
+          import os, subprocess
+          changed = subprocess.check_output(['git', 'diff-tree', '--root', '--no-commit-id', '--name-only', '-r', 'HEAD'], text=True).splitlines()
+          requested = os.environ['MANUAL_BUILD'] == 'true' or 'packaging/installer-release-request.txt' in changed
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('requested=' + str(requested).lower() + '\n')
+          PYTHON
+  installer:
+    # A request must be changed in the HEAD commit; its mere existence is insufficient.
+    needs: release_request
+    if: needs.release_request.outputs.requested == 'true'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14.7'
+      - name: Install package dependencies
+        run: |
+          python -m venv .build-hint
+          .build-hint/Scripts/python.exe -m pip install -c packaging/constraints-windows-py314.txt '.[hint-alpha]'
+      - name: Build offline installer
+        run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
+      - name: Verify installer source commit
+        shell: pwsh
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $manifest = Get-Content dist/BUILD_INFO.json -Raw | ConvertFrom-Json
+          if ($manifest.commit -ne $env:EXPECTED_SOURCE_SHA) {
+            throw "Installer commit mismatch: expected $env:EXPECTED_SOURCE_SHA, got $($manifest.commit)"
+          }
+      - name: Extract EXE; verify payload hashes, Windows spawn and live UI smoke
+        shell: pwsh
+        run: |
+          $payload = Join-Path $env:RUNNER_TEMP 'installer-extracted'
+          $installer = (Get-ChildItem dist/*_Setup.exe | Select-Object -First 1).FullName
+          $process = Start-Process -FilePath $installer -ArgumentList @('--extract', $payload) -Wait -PassThru
+          if ($process.ExitCode -ne 0) { exit $process.ExitCode }
+          python packaging/verify_payload.py $payload
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B "$payload/launch.py" --spawn-check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B -c "import tkinter; root = tkinter.Tk(); root.withdraw(); root.destroy(); print('TK_OK')"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$payload/runtime/python.exe" -B packaging/smoke_test_installed.py $payload
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify repeated upgrade, legacy data and failed-install preservation
+        shell: pwsh
+        run: |
+          $installer = (Get-ChildItem dist/*_Setup.exe | Select-Object -First 1).FullName
+          .build-hint/Scripts/python.exe -B packaging/test_upgrade_windows.py $installer
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HuianMahjong-Windows-test-installer
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30

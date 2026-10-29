@@ -1,0 +1,125 @@
+{
+  "schema_version": "runtime_asset_inventory_v1",
+  "audit_date": "2026-10-07",
+  "audited_code_head": "9f6bdcfd287cdcefeccef4ad03857eb1d58a1cc6",
+  "scope": "Current asset inventory and real runtime loader; not a fresh accuracy validation or Vision promotion.",
+  "approved_label_count": 145,
+  "unique_template_file_count": 145,
+  "missing_template_files": [],
+  "regions": {
+    "draw_region": 2,
+    "draw_visual": 12,
+    "gold_region": 2,
+    "hand_region": 129
+  },
+  "stored_source_session_count": 12,
+  "stored_sessions_are_independent_original_matches": false,
+  "source_grouping_note": "Stored session support is not proof of independent original matches. No undocumented original-match mapping is inferred.",
+  "asset_hashes": {
+    "present_and_verified": 121,
+    "legacy_without_asset_sha256": 24,
+    "note": "sha256 records source provenance, not crop bytes; absent legacy asset_sha256 is not evidence of corruption."
+  },
+  "runtime_loader": {
+    "session": null,
+    "approved_labels": 145,
+    "training_labels": 145,
+    "ordinary_template_count": 144,
+    "gold_identity_template_count": 145,
+    "gold_skin_only_count": 1
+  },
+  "domains": {
+    "concealed_identity": {
+      "covered_classes": [
+        "B",
+        "E",
+        "G",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9",
+        "N",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "R",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "SOUTH",
+        "W"
+      ],
+      "classes_with_at_least_two_stored_sessions": [
+        "E",
+        "M1",
+        "M3",
+        "M5",
+        "M6",
+        "P1",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "R",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ],
+      "classes_missing_two_session_support": [
+        "B",
+        "G",
+        "M2",
+        "M4",
+        "M7",
+        "M8",
+        "M9",
+        "N",
+        "P2",
+        "S9",
+        "SOUTH",
+        "W"
+      ]
+    },
+    "gold_region": {
+      "covered_classes": [
+        "N",
+        "S3"
+      ],
+      "classes_with_at_least_two_stored_sessions": [],
+      "classes_missing_two_session_support": [
+        "N",
+        "S3"
+      ]
+    }
+  },
+  "historical_validation": "Existing validation reports retain their historical measurements; their 142-label inventory is superseded by this inventory only.",
+  "recovery": {
+    "confirmed_36_tile_packet": "Public meld faces: 36 faces / 12 groups / 2 original matches; not a concealed-hand bank.",
+    "legacy_v0_1_local_assets": "Not present in this checkout; completeness of historical local labels and ROIs cannot be verified. Use existing reviewed recovery tooling before requesting new recordings."
+  }
+}

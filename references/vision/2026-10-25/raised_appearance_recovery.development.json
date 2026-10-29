@@ -1,0 +1,868 @@
+{
+  "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+  "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "decoded_frames": 6512,
+  "sampling_stride": 12,
+  "rows": [
+    {
+      "frame": 12,
+      "bbox": [
+        814,
+        415,
+        49,
+        96
+      ],
+      "detected_bbox": [
+        814,
+        426,
+        49,
+        81
+      ],
+      "crop": "frame12_x814.png",
+      "rgb_sha256": "fb4b147eaabfdb58d07f73a089ebe17753a8737854d6a74ac88947b7f6b5649e",
+      "frame_rgb_sha256": "f8f9e65ac3bffac481981e86b5e1bd63e49852da0e96fc26a107f17684a5f263",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "6bacb6ce33e2ea043d654be22fa96085233cbcc348f01781d61cafc176c1a983",
+      "approved_template": false
+    },
+    {
+      "frame": 12,
+      "bbox": [
+        863,
+        415,
+        53,
+        96
+      ],
+      "detected_bbox": [
+        863,
+        426,
+        49,
+        81
+      ],
+      "crop": "frame12_x863.png",
+      "rgb_sha256": "d72190cf4a2988a91e9c9254402fa46a2908859c22a0c5d6eca93495801905ca",
+      "frame_rgb_sha256": "f8f9e65ac3bffac481981e86b5e1bd63e49852da0e96fc26a107f17684a5f263",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "59ed9b6a0927e75094d1c0279ec8f90bad5fea99ca751ee0e4c2360e46bf51d2",
+      "approved_template": false
+    },
+    {
+      "frame": 96,
+      "bbox": [
+        864,
+        419,
+        53,
+        81
+      ],
+      "detected_bbox": [
+        864,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame96_x864.png",
+      "rgb_sha256": "7e7623ab9234c453b9dbb48403018412cd48aaf03dcc7f087845e5130a1d3646",
+      "frame_rgb_sha256": "bfea4f13a2d38f0f3ee735dbdebe8825214406b69f9802986e08f033a016b99b",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "0c18400d72293545867178fb7aadc4c42f138aab30829ac8389438c88eb7612c",
+      "approved_template": false
+    },
+    {
+      "frame": 504,
+      "bbox": [
+        267,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        267,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame504_x267.png",
+      "rgb_sha256": "c5d893f573260930fe87ada581bd36059868ed11ce3cffa3937f1a071835babe",
+      "frame_rgb_sha256": "c58950b27ef3f228997412bbf2ee9203b86ba24d0500c9016a6fd6a21ac0aee4",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "b7907bbdfa735f337abab9575df254b13c4919e49f2c5f45a5ae9f07b71a5259",
+      "approved_template": false
+    },
+    {
+      "frame": 504,
+      "bbox": [
+        316,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        316,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame504_x316.png",
+      "rgb_sha256": "61cc679f4ac7f97052876ab9f1561eadb721543f6df6ca20e443c6ebbb119c81",
+      "frame_rgb_sha256": "c58950b27ef3f228997412bbf2ee9203b86ba24d0500c9016a6fd6a21ac0aee4",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "be7cf49e2b15b50898582880da44aa4fbcc3f5a032ba120311745548fdb9bb6b",
+      "approved_template": false
+    },
+    {
+      "frame": 504,
+      "bbox": [
+        365,
+        418,
+        50,
+        93
+      ],
+      "detected_bbox": [
+        365,
+        429,
+        50,
+        78
+      ],
+      "crop": "frame504_x365.png",
+      "rgb_sha256": "9758aec7aa2e0104bf39c47bd097d7d8a5df3b70a7ff77d9c1ce0a600ca25f7b",
+      "frame_rgb_sha256": "c58950b27ef3f228997412bbf2ee9203b86ba24d0500c9016a6fd6a21ac0aee4",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "8005f52a08bfe072ad6457002cf113e2bbf036e0dcbdf15112adcacd0c001140",
+      "approved_template": false
+    },
+    {
+      "frame": 528,
+      "bbox": [
+        764,
+        410,
+        49,
+        76
+      ],
+      "detected_bbox": [
+        765,
+        419,
+        48,
+        64
+      ],
+      "crop": "frame528_x764.png",
+      "rgb_sha256": "3dd264fb45a201794de135d000c68768e88c9df3046ad9dc220f77344acc710c",
+      "frame_rgb_sha256": "8e6aede6b001cdbeabd4ec2443373c93005cd3344db0d98fddcc9268776ed03a",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "b0e5d1edc0edf2bd372e23457b29e05a075f970269a4018f70070302c9e45758",
+      "approved_template": false
+    },
+    {
+      "frame": 828,
+      "bbox": [
+        665,
+        419,
+        49,
+        81
+      ],
+      "detected_bbox": [
+        665,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame828_x665.png",
+      "rgb_sha256": "de344c5e597824a197ffdbf293f5e435227c63eb90fe7dbfb8325f091367426d",
+      "frame_rgb_sha256": "9612e32d62249b05f07a7c7daf32cea27b130b404f3f1d935e7ce590503d1599",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "e98f085608355cc53af9fdc83a11fa1d6d604c65e720239f83afb7224687f2bb",
+      "approved_template": false
+    },
+    {
+      "frame": 1224,
+      "bbox": [
+        565,
+        419,
+        49,
+        81
+      ],
+      "detected_bbox": [
+        565,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame1224_x565.png",
+      "rgb_sha256": "026139f36ab25169f2048e433a1a8403326883a09471bc1086a199ebcc0494d9",
+      "frame_rgb_sha256": "a32d9445656ff0caa54edf9d53bcba56e201847b23e83738a6771f930500aeec",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "de81e2e844b6388d89eef5a36b9e47e190c685e56ec3266deac1d18c3bcd0ad8",
+      "approved_template": false
+    },
+    {
+      "frame": 1740,
+      "bbox": [
+        412,
+        419,
+        53,
+        81
+      ],
+      "detected_bbox": [
+        416,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame1740_x412.png",
+      "rgb_sha256": "f16c4879f18a2b27c7ef26b06527d1a9ed68504e81a110ac82f5e19d30646edd",
+      "frame_rgb_sha256": "fb729abad1348e8099301073d0e96280793c5698157b629a57e5d625c9a2d42f",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "91e86706f87f8d14594a303440a19baf529d884b2db56e086c649045caddf131",
+      "approved_template": false
+    },
+    {
+      "frame": 1872,
+      "bbox": [
+        412,
+        419,
+        53,
+        81
+      ],
+      "detected_bbox": [
+        416,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame1872_x412.png",
+      "rgb_sha256": "47423061d5d20812ef9aea1cb644b529a2afb2cf6d9e5484aab7a43ae2aa7e24",
+      "frame_rgb_sha256": "fbff22e4573e7bbf12059d6d5673ac3de74af08e08c460f3a3766aa6023a9651",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "d1cf58c6d75d58dbfd7d8b7ffea435ad91e108d2ebbf64e898090c5a362529a3",
+      "approved_template": false
+    },
+    {
+      "frame": 2424,
+      "bbox": [
+        863,
+        417,
+        53,
+        71
+      ],
+      "detected_bbox": [
+        864,
+        425,
+        48,
+        60
+      ],
+      "crop": "frame2424_x863.png",
+      "rgb_sha256": "7f5a149fd082c83598b5543903fa9bb7987accdb221a38f6fc038c1bb2af3e63",
+      "frame_rgb_sha256": "28c190e139a819dd273cc95663777270f1381e66c6a97bbd3356b249a4522e45",
+      "truth": "W",
+      "review_status": "TERMINAL_HU_NEGATIVE_NOT_LIVE_REFERENCE",
+      "png_sha256": "d3f99d745ddb0ac87518b12d899cdde1042f876c56f1583d4a4c0ec2d2225eb3",
+      "approved_template": false
+    },
+    {
+      "frame": 2700,
+      "bbox": [
+        814,
+        419,
+        49,
+        81
+      ],
+      "detected_bbox": [
+        814,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame2700_x814.png",
+      "rgb_sha256": "0f74959dd5a54b39f7b4292ac9e124f90fe338ec61fa8f4af9a66952602df316",
+      "frame_rgb_sha256": "e17d63153cd9128f13b3cdb12d561a3ae78d3fb03c8e48828bbeae3058a4005f",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "a3e999d3f815e4b559a4049e151580953d7594dcbea25c6188ca491c0d3b2877",
+      "approved_template": false
+    },
+    {
+      "frame": 2796,
+      "bbox": [
+        864,
+        419,
+        53,
+        81
+      ],
+      "detected_bbox": [
+        864,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame2796_x864.png",
+      "rgb_sha256": "213b3d07c865ec7b02a114eb08cff6695dedc6e4f0a25d4c2ed516125a018c46",
+      "frame_rgb_sha256": "8fd9dc80fdad00f5adf698f3f86b734c3ebef1f410f8a74603b39c81bda1d014",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "3bcf6f798264733bb2238aaca39440fdd8af8091d7d90b3723b6ebe144cab84b",
+      "approved_template": false
+    },
+    {
+      "frame": 2988,
+      "bbox": [
+        864,
+        418,
+        52,
+        65
+      ],
+      "detected_bbox": [
+        864,
+        426,
+        48,
+        54
+      ],
+      "crop": "frame2988_x864.png",
+      "rgb_sha256": "f5574ae1257e204946caeac744198c82074ddad4e0a810d965d8d06d3c01aea0",
+      "frame_rgb_sha256": "c7ffebd9e6f353525a60dcaafed035f5a0bb054d1ec0eca846deae95c64794a7",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "167f088675ae949c862dbbc7606a0546be30e5bd7be90215dce89b8e38746d65",
+      "approved_template": false
+    },
+    {
+      "frame": 3180,
+      "bbox": [
+        814,
+        415,
+        49,
+        96
+      ],
+      "detected_bbox": [
+        814,
+        426,
+        49,
+        81
+      ],
+      "crop": "frame3180_x814.png",
+      "rgb_sha256": "d10489d4c68140b013861147e3d698f43dfd23d1aa5c4a0f120fe2fe7a916a5b",
+      "frame_rgb_sha256": "f4d290831832f2437008061e4eb8f143ca8fff702f7008b5f83a77f8042740e9",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "d2dcf309380de47e69efa014610cff10faa09be3fb983bf303bc17d4d6a9d199",
+      "approved_template": false
+    },
+    {
+      "frame": 3180,
+      "bbox": [
+        863,
+        415,
+        53,
+        96
+      ],
+      "detected_bbox": [
+        863,
+        426,
+        49,
+        81
+      ],
+      "crop": "frame3180_x863.png",
+      "rgb_sha256": "886b5b2dec9f7114d700348cf5a7c44be9e0e381cdfd37cc0f1d25d7b562099d",
+      "frame_rgb_sha256": "f4d290831832f2437008061e4eb8f143ca8fff702f7008b5f83a77f8042740e9",
+      "truth": "W",
+      "review_status": "REVIEWED_RAISED_HAND_DEVELOPMENT_CANDIDATE",
+      "png_sha256": "df3a35fc996a0cf1f8faca750334e76d8af176d87bb366777825184e8f709eca",
+      "approved_template": false
+    },
+    {
+      "frame": 3324,
+      "bbox": [
+        516,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        516,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame3324_x516.png",
+      "rgb_sha256": "d72fe29abacd4502a9760c3a7cb82703c875f7830cc92f3bf3c9a7995e4106f1",
+      "frame_rgb_sha256": "7879b09ad7dbd7bf6a1c4aab7bddaed61d1352419e2cc085c8857d4eb8bec4b4",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "f6bdd7f4c1f2bb72d0b755a22575bb289452d4a46d27e853dc09ced2bd5b6777",
+      "approved_template": false
+    },
+    {
+      "frame": 3324,
+      "bbox": [
+        565,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        565,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame3324_x565.png",
+      "rgb_sha256": "1cd83e7a6ea2fc210974d5861363fca59e87eb3b61002c3f57b1dd7373d9859c",
+      "frame_rgb_sha256": "7879b09ad7dbd7bf6a1c4aab7bddaed61d1352419e2cc085c8857d4eb8bec4b4",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "dac316b5e140ac158f0f4a97dde3fc6afd7b5ba31964641cd7b1abdbfee38cc8",
+      "approved_template": false
+    },
+    {
+      "frame": 3504,
+      "bbox": [
+        615,
+        419,
+        49,
+        81
+      ],
+      "detected_bbox": [
+        615,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame3504_x615.png",
+      "rgb_sha256": "4c88a972b8cc804776ce8e76b81cb1604b93ae61b93bbd3c3f284423ac4eab5b",
+      "frame_rgb_sha256": "f9c8fc0324d604375bfba556d512ab084d9ec19b820aa0283797a99a8e58c72a",
+      "truth": "S8",
+      "review_status": "TING_BADGE_CONTROL_NOT_CONFIRMED_RAISED",
+      "png_sha256": "3f8faef323dab6ba72e2fd1ae2e3ec195320f9c50a65c238efa2efc83c00ce1c",
+      "approved_template": false
+    },
+    {
+      "frame": 4284,
+      "bbox": [
+        864,
+        419,
+        53,
+        81
+      ],
+      "detected_bbox": [
+        864,
+        429,
+        49,
+        68
+      ],
+      "crop": "frame4284_x864.png",
+      "rgb_sha256": "f7ff3fece3fb81c2eed3e416b096e7c48dad33dca84c682aa850d0ccc79957a6",
+      "frame_rgb_sha256": "e4763d1138d1e4d60c975a04479d722879479faa3f2453e5cec391f4d870c915",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "636459d47e46dff9c1461c3199fce8a623bbb75ae125b1d38f0074357e8b3fe9",
+      "approved_template": false
+    },
+    {
+      "frame": 4320,
+      "bbox": [
+        217,
+        418,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        217,
+        427,
+        49,
+        65
+      ],
+      "crop": "frame4320_x217.png",
+      "rgb_sha256": "c7d61864fc64ef3d3e036cdb3c926b65e59593454471b549d18deb79269d9b01",
+      "frame_rgb_sha256": "2a304cef3ed116967020869d4d8495f337625863dba9ab97d9377e7e51eca9ba",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "41ce833e4d6f1ac8e533bcc9f03261ebd6bec7fab31ebad0abdee140465e12c7",
+      "approved_template": false
+    },
+    {
+      "frame": 4428,
+      "bbox": [
+        715,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        715,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame4428_x715.png",
+      "rgb_sha256": "8b3dc44d4d7e5c17d3ce9d01e16e0421908aa8f464d127ebc985ec99f8e86506",
+      "frame_rgb_sha256": "bfb5227cc0b4b6fa4bcdf34ecf126827d0e7e7125cb08050312d05aa12e67ca7",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "5c68b29f3742cefc8caaaf1caf015914edfe0262089caff89e1c593b784ada27",
+      "approved_template": false
+    },
+    {
+      "frame": 4428,
+      "bbox": [
+        764,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        764,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame4428_x764.png",
+      "rgb_sha256": "6c3058d7d08646873eaba79ff75b514026d89dea47fb8de2875cc4bc5662ff6f",
+      "frame_rgb_sha256": "bfb5227cc0b4b6fa4bcdf34ecf126827d0e7e7125cb08050312d05aa12e67ca7",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "521264e0a3afaf7b6274b9a5f20a0144f70abcd6cf1ab239597c4b72d81bde5c",
+      "approved_template": false
+    },
+    {
+      "frame": 4704,
+      "bbox": [
+        263,
+        418,
+        52,
+        93
+      ],
+      "detected_bbox": [
+        267,
+        429,
+        48,
+        78
+      ],
+      "crop": "frame4704_x263.png",
+      "rgb_sha256": "c7f7cda3eda03203093a5f04520ffb423fe27bffd2d304246f722ae1191bfedf",
+      "frame_rgb_sha256": "b2e63a07b05e22aedb2729ee8f66ee6a0aa9835f309571a5f00e7ae2dfa71298",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "a08d39157efd8694fd1a82a08955b5173e7df4ec6457dc0a41162369c04d42fd",
+      "approved_template": false
+    },
+    {
+      "frame": 4704,
+      "bbox": [
+        315,
+        418,
+        50,
+        93
+      ],
+      "detected_bbox": [
+        315,
+        429,
+        50,
+        78
+      ],
+      "crop": "frame4704_x315.png",
+      "rgb_sha256": "5039e007b364a5018a63f1c9abccf8d2b04159bee4982fab3bf0d3d46c970fb5",
+      "frame_rgb_sha256": "b2e63a07b05e22aedb2729ee8f66ee6a0aa9835f309571a5f00e7ae2dfa71298",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "9aa0208e855a14f392fd733661c6d299b344d7f23cbfa4eb2a8413e684013ba3",
+      "approved_template": false
+    },
+    {
+      "frame": 4704,
+      "bbox": [
+        365,
+        418,
+        50,
+        93
+      ],
+      "detected_bbox": [
+        365,
+        429,
+        50,
+        78
+      ],
+      "crop": "frame4704_x365.png",
+      "rgb_sha256": "e7c2c1d32464da0f7ec22d1d851fa7eb21766a4ec9c74cb64b73c0ef7d88bc6b",
+      "frame_rgb_sha256": "b2e63a07b05e22aedb2729ee8f66ee6a0aa9835f309571a5f00e7ae2dfa71298",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "fc95bc1c9d4a96d7f0fb23bf12c8724ed167f19f4fe2fe2f3729305a201996ba",
+      "approved_template": false
+    },
+    {
+      "frame": 4860,
+      "bbox": [
+        715,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        715,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame4860_x715.png",
+      "rgb_sha256": "edd38771f9b92a06b4f7115ee1a8cb04ab55de146e5975e1269799d13b518dad",
+      "frame_rgb_sha256": "8a53ce87181f457af38b8bb4fabca346c739d272272024dbf2bcc1bd696ad59b",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "2beff10ece7cdefbb195ba4c31b4c18219f06742eeb8ff4b98c20cfc65f0c974",
+      "approved_template": false
+    },
+    {
+      "frame": 4860,
+      "bbox": [
+        764,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        764,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame4860_x764.png",
+      "rgb_sha256": "796e72ebc12a669969c5cfb35b78a98f17e53040fbe038290c5288599fe63d91",
+      "frame_rgb_sha256": "8a53ce87181f457af38b8bb4fabca346c739d272272024dbf2bcc1bd696ad59b",
+      "truth": "M3",
+      "review_status": "REVIEWED_RAISED_HAND_DEVELOPMENT_CANDIDATE",
+      "png_sha256": "5ed8eeb3a8a9944474f2d73834f61e5043b20079ab505badc5e36d8524700965",
+      "approved_template": false
+    },
+    {
+      "frame": 5364,
+      "bbox": [
+        263,
+        418,
+        53,
+        93
+      ],
+      "detected_bbox": [
+        267,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame5364_x263.png",
+      "rgb_sha256": "ef35309cbf606b57b4e11a2e8de414666396c3ebf05005f1bbeb8c9f2853ba61",
+      "frame_rgb_sha256": "83de99832d2c3d3ea4b7c766af7e47eea63a8ba24958dfda3b170aeb6172e13c",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "172616768a5fba8481d032de7a7b5023689dc841a0a85fd78d2c1f4a4e66cef0",
+      "approved_template": false
+    },
+    {
+      "frame": 5364,
+      "bbox": [
+        316,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        316,
+        429,
+        49,
+        78
+      ],
+      "crop": "frame5364_x316.png",
+      "rgb_sha256": "edce0298ac5d32982bf4ccf6e1dacf2e80c8d1206b141b454e0524930a2866b7",
+      "frame_rgb_sha256": "83de99832d2c3d3ea4b7c766af7e47eea63a8ba24958dfda3b170aeb6172e13c",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "db58c003f066265ab8e79b3c5a0c6ee46b9aa7671e17e76668bcba1a2fe13977",
+      "approved_template": false
+    },
+    {
+      "frame": 5364,
+      "bbox": [
+        365,
+        418,
+        50,
+        93
+      ],
+      "detected_bbox": [
+        365,
+        429,
+        50,
+        78
+      ],
+      "crop": "frame5364_x365.png",
+      "rgb_sha256": "15c4dc8ea4f7959e952998b6db91499cfb915acdfb1fda6346073b19445dfd8c",
+      "frame_rgb_sha256": "83de99832d2c3d3ea4b7c766af7e47eea63a8ba24958dfda3b170aeb6172e13c",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "0c082908353f414954a1b0f7d8378231e51314ccbbbac3178d45c2e8677842c3",
+      "approved_template": false
+    },
+    {
+      "frame": 5604,
+      "bbox": [
+        367,
+        419,
+        48,
+        63
+      ],
+      "detected_bbox": [
+        367,
+        426,
+        48,
+        53
+      ],
+      "crop": "frame5604_x367.png",
+      "rgb_sha256": "97647e31dd8f20297384057ce98b16cab29ba69c7fcc45fc0657e3ad99673aee",
+      "frame_rgb_sha256": "3cdde7a8a8e4f5fe56c02d8049cc4b04ec064fe4c239e045d738d63958dca4d3",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "be3b133245e024e52a829ae545186886da33bb688f92e07e7d2bb8623c6a5acb",
+      "approved_template": false
+    },
+    {
+      "frame": 6120,
+      "bbox": [
+        516,
+        418,
+        48,
+        93
+      ],
+      "detected_bbox": [
+        516,
+        429,
+        48,
+        78
+      ],
+      "crop": "frame6120_x516.png",
+      "rgb_sha256": "fd9e89d48649059663492a508bd027aed761fbcbd1b8d5010ca7d17aa6caaf9a",
+      "frame_rgb_sha256": "b260e61ca6d9ab7a584ab93e8dcdb0fd2de31fbfea3ef3a2c07675ced35fd83e",
+      "truth": "S8",
+      "review_status": "TING_BADGE_CONTROL_NOT_CONFIRMED_RAISED",
+      "png_sha256": "ebc523a01985a56ff5669340e65ba9a22f2fac621223be47abfcbc698d0ac9a9",
+      "approved_template": false
+    },
+    {
+      "frame": 6120,
+      "bbox": [
+        564,
+        418,
+        50,
+        93
+      ],
+      "detected_bbox": [
+        564,
+        429,
+        50,
+        78
+      ],
+      "crop": "frame6120_x564.png",
+      "rgb_sha256": "b16f6b0fd5d41696e957d2c3ab33217e83753f16c9bedf72d01ceb12eb1f8416",
+      "frame_rgb_sha256": "b260e61ca6d9ab7a584ab93e8dcdb0fd2de31fbfea3ef3a2c07675ced35fd83e",
+      "truth": "S8",
+      "review_status": "TING_BADGE_CONTROL_NOT_CONFIRMED_RAISED",
+      "png_sha256": "ff9cfafe452877c377cf62eb4cddaea05da2ca6984ed5d9448b0be49d61bb9d2",
+      "approved_template": false
+    },
+    {
+      "frame": 6156,
+      "bbox": [
+        263,
+        423,
+        53,
+        76
+      ],
+      "detected_bbox": [
+        267,
+        432,
+        48,
+        64
+      ],
+      "crop": "frame6156_x263.png",
+      "rgb_sha256": "ed570ec55e483038b925568468587cf0985c0ea3fbad0d6e97d26cf7d7e646e5",
+      "frame_rgb_sha256": "ac8dbe2872bd7d7d2724b8752b4ad804a59a17b0fcc32eb5ae61fa25cb80ef1f",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "87271a2e72587ebf5c707b299247f3f26c8b583aa4d1e4ca01166449f2b5e984",
+      "approved_template": false
+    },
+    {
+      "frame": 6264,
+      "bbox": [
+        863,
+        423,
+        54,
+        76
+      ],
+      "detected_bbox": [
+        864,
+        432,
+        49,
+        64
+      ],
+      "crop": "frame6264_x863.png",
+      "rgb_sha256": "d17990dca948bb6c3c0710f253b4e412c10bd4322ac5666b9e4e6453b79fe7d6",
+      "frame_rgb_sha256": "531c7f1a838643557412871361af3c522a8175752158d154d0cb648d79181498",
+      "truth": "UNKNOWN",
+      "review_status": "UNREVIEWED_HEURISTIC_CANDIDATE",
+      "png_sha256": "2d5b0976dd108b59cb557bedabeb6283dadfa6e1936b5635612a5141ce2b6632",
+      "approved_template": false
+    }
+  ],
+  "candidate_policy": "Hand top at least7px above median of>=8 hand components, minimum24frames between selected frame candidates. Heuristic only; neither tile truth nor exhaustive appearance inventory.",
+  "development_only": true,
+  "approved_templates": false,
+  "packet_version": "2026.10.25.1",
+  "packet_family": "raised_appearance_private",
+  "source_file_library_id": "libfile_1dbb830fad3c8191974167133ed6cca1",
+  "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT_NOT_USER_APPROVED",
+  "private_packet_library_file_id": "libfile_b9cb9a1466088191898b588576b1c855",
+  "zip_sha256": "480d5e55f1b14918d7f107d387b7e3fdbb4fb677f65d80946365ee15c396da20",
+  "pixels_committed": false,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "target_ab": [
+    {
+      "frame": 228,
+      "truth": "W",
+      "baseline": {
+        "tile": "E",
+        "score": 0.40060320496559143
+      },
+      "candidate": {
+        "tile": "W",
+        "score": 0.9033746123313904
+      }
+    },
+    {
+      "frame": 1776,
+      "truth": "M3",
+      "baseline": {
+        "tile": "S2",
+        "score": 0.5560552477836609
+      },
+      "candidate": {
+        "tile": "S2",
+        "score": 0.5560552477836609
+      }
+    }
+  ],
+  "limits": [
+    "Only one previously revealed Sep26 original match; no new independent source.",
+    "Heuristic top-height detector is not exhaustive;31 candidates remain UNKNOWN.",
+    "W at2424 is terminal Hu, excluded from the two positive reference candidates.",
+    "Three S8 crops are badge controls, not approved raised samples.",
+    "Two-reference target A/B is not full replay, correctness qualification or deployment approval.",
+    "W improves at one target; M3 target unchanged; no Runtime or packet bundle update."
+  ]
+}

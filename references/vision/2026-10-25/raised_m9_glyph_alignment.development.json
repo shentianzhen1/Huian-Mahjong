@@ -1,0 +1,59 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "query": {
+    "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+    "frame": 582,
+    "crop_xyxy": [
+      863,
+      415,
+      916,
+      511
+    ],
+    "assistant_visual_truth": "M9"
+  },
+  "extra_reference": {
+    "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "frames": [
+      828,
+      831,
+      834
+    ],
+    "crop_xyxy": [
+      664,
+      425,
+      716,
+      511
+    ]
+  },
+  "candidate": "Symmetric glyph bounding: existing dominant face normalization; gray<120 ink connected components; discard components area<3 or touching any crop border; union remaining boxes; binary mask resize 48x72; shift3 NCC. Same transform on all references and query.",
+  "top5": [
+    [
+      "M9",
+      0.9240727424621582
+    ],
+    [
+      "M8",
+      0.7132519483566284
+    ],
+    [
+      "M6",
+      0.6951678395271301
+    ],
+    [
+      "M3",
+      0.692553699016571
+    ],
+    [
+      "M5",
+      0.6823177337646484
+    ]
+  ],
+  "limits": [
+    "Single revealed diagnostic query, no generalization claim.",
+    "New binary feature scores not calibrated Runtime confidence.",
+    "Other-class false accepts and whole-hand replay not evaluated.",
+    "No application or installer wiring."
+  ]
+}

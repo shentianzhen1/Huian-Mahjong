@@ -1,0 +1,77 @@
+{
+  "development_only": true,
+  "changes_runtime_labels": false,
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+  "excluded_training_images": [
+    {
+      "image": "templates/hand/1046_hand_region_s04_S3.png",
+      "tile_id": "S3",
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "crop_file_sha256": "3c69606bf26a4675f74ab1daefda522b6ac9741dd352ed423e5d079579a8d137",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s05_S4.png",
+      "tile_id": "S4",
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "crop_file_sha256": "f06213c3f20509e880db4004ebdd2f82e0495b98e9a1a83cb0e3441702875be9",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/960_hand_region_s03_S4.png",
+      "tile_id": "S4",
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "crop_file_sha256": "4776f116f5c86ccd9b5de111d59142a68c02376b41e987b6a7997d2d9e6623e9",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s06_S5.png",
+      "tile_id": "S5",
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "crop_file_sha256": "d37966640f13281bbf19058893bfdc1e9ca2a41c4c03006dbe64a21d5d47e98a",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/960_hand_region_s04_S5.png",
+      "tile_id": "S5",
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "crop_file_sha256": "69935eaad5fa50370879c179cd92a1370c9d84d824a6160136ef3f0cbf1ab47d",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s07_S6.png",
+      "tile_id": "S6",
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "crop_file_sha256": "ebef9a657922b4f5d5e45bb8d9e72c48d0be82d9e1d08ec1d09c0e3173dfb27a",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/960_hand_region_s05_S6.png",
+      "tile_id": "S6",
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "crop_file_sha256": "2d1306abdbf9ff54627ebada3963de669ba4071c85c11ce783fa8fd1d554489b",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s08_S7.png",
+      "tile_id": "S7",
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "crop_file_sha256": "6b7716bfe38b2f5f0a93413471468993e05a28c1dc6ba714c7f6fe120f96b181",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/960_hand_region_s06_S7.png",
+      "tile_id": "S7",
+      "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "crop_file_sha256": "9cdd773305645c707d5ef070c99db60e5990f5729a5f450f5bf62ecee9660511",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s09_S8.png",
+      "tile_id": "S8",
+      "source_sha256": "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+      "crop_file_sha256": "05907b6e272b76e42fbc74d953a04456fe1dbd1e6364669fafafc8264bac34f5",
+      "reason": "Visible adjacent-tile content and/or incomplete claimed face; experimental training exclusion, no replacement identity asserted"
+    }
+  ]
+}

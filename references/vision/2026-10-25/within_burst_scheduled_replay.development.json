@@ -1,0 +1,1198 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "windows_capture_validated": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "protocol": "Simulate10Hz capture,100ms UI polling,.4s minimum launch interval, single-flight actual worker. Advance source clock by measured processing time and UI rounding; drop old captures.",
+  "processed_bursts": 130,
+  "visible_draw_episodes": 15,
+  "produced_advice_episodes": 12,
+  "completed_before_visible_end_episodes": 7,
+  "worker_ms": {
+    "median": 720.67,
+    "p95": 882.88
+  },
+  "timely_source_to_completion_seconds": {
+    "median": 1.0,
+    "p95": 1.58
+  },
+  "limits": [
+    "Simulation with host timings, not real Windows capture.",
+    "Visible draw end is conservative, not a confirmed click deadline.",
+    "Single control shares dual-worker costs, not a speed comparison.",
+    "Do not interpret offline15/15 as real-time coverage."
+  ],
+  "next": "Avoid redundant second classification for already stable unchanged hands.",
+  "rows": [
+    {
+      "completed_seconds": 0.7,
+      "frame": 6,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 429.42584100001113
+    },
+    {
+      "completed_seconds": 0.8,
+      "frame": 21,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 43.60322400000882
+    },
+    {
+      "completed_seconds": 1.2,
+      "frame": 33,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 42.67304900000113
+    },
+    {
+      "completed_seconds": 2.1,
+      "frame": 45,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 590.5672620000075
+    },
+    {
+      "completed_seconds": 2.2,
+      "frame": 63,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 45.57734800002322
+    },
+    {
+      "completed_seconds": 2.6,
+      "frame": 75,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 48.03196299999968
+    },
+    {
+      "completed_seconds": 3.7,
+      "frame": 87,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 758.0423809999957
+    },
+    {
+      "completed_seconds": 4.2,
+      "frame": 111,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 419.7939419999841
+    },
+    {
+      "completed_seconds": 4.9,
+      "frame": 126,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 654.9692789999995
+    },
+    {
+      "completed_seconds": 5.6,
+      "frame": 147,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 661.6312170000072
+    },
+    {
+      "completed_seconds": 6.3,
+      "frame": 168,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 659.5948949999979
+    },
+    {
+      "completed_seconds": 7.0,
+      "frame": 189,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 697.352273000007
+    },
+    {
+      "completed_seconds": 7.7,
+      "frame": 210,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 695.3410880000206
+    },
+    {
+      "completed_seconds": 7.8,
+      "frame": 231,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 57.69751399998313
+    },
+    {
+      "completed_seconds": 8.2,
+      "frame": 243,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 60.89498000000049
+    },
+    {
+      "completed_seconds": 8.6,
+      "frame": 255,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 50.722962999998344
+    },
+    {
+      "completed_seconds": 9.7,
+      "frame": 267,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 797.5731520000124
+    },
+    {
+      "completed_seconds": 10.4,
+      "frame": 291,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 694.4251510000186
+    },
+    {
+      "completed_seconds": 10.5,
+      "frame": 312,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 44.02545699997518
+    },
+    {
+      "completed_seconds": 11.6,
+      "frame": 324,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 744.5974109999725
+    },
+    {
+      "completed_seconds": 12.5,
+      "frame": 348,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 861.6217029999973
+    },
+    {
+      "completed_seconds": 13.4,
+      "frame": 375,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 871.3365499999952
+    },
+    {
+      "completed_seconds": 14.2,
+      "frame": 402,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 741.8483790000039
+    },
+    {
+      "completed_seconds": 15.1,
+      "frame": 426,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 830.2754679999964
+    },
+    {
+      "completed_seconds": 16.0,
+      "frame": 453,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 892.3214790000031
+    },
+    {
+      "completed_seconds": 16.8,
+      "frame": 480,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 788.0939860000069
+    },
+    {
+      "completed_seconds": 16.9,
+      "frame": 504,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 59.049840999989556
+    },
+    {
+      "completed_seconds": 18.1,
+      "frame": 516,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 896.7549659999747
+    },
+    {
+      "completed_seconds": 19.0,
+      "frame": 543,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 821.727205000002
+    },
+    {
+      "completed_seconds": 19.8,
+      "frame": 570,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 798.6020509999889
+    },
+    {
+      "completed_seconds": 20.6,
+      "frame": 594,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 735.7960399999968
+    },
+    {
+      "completed_seconds": 20.7,
+      "frame": 618,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 58.771179999979495
+    },
+    {
+      "completed_seconds": 21.8,
+      "frame": 630,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 728.9878530000067
+    },
+    {
+      "completed_seconds": 22.6,
+      "frame": 654,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 738.8054489999831
+    },
+    {
+      "completed_seconds": 23.4,
+      "frame": 678,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 773.1607249999968
+    },
+    {
+      "completed_seconds": 23.5,
+      "frame": 702,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 57.33790599998656
+    },
+    {
+      "completed_seconds": 23.9,
+      "frame": 714,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 46.72437099998206
+    },
+    {
+      "completed_seconds": 24.7,
+      "frame": 726,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 444.6947810000097
+    },
+    {
+      "completed_seconds": 25.5,
+      "frame": 741,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 773.8011409999785
+    },
+    {
+      "completed_seconds": 26.3,
+      "frame": 765,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 728.1099770000026
+    },
+    {
+      "completed_seconds": 27.1,
+      "frame": 789,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 758.168894000022
+    },
+    {
+      "completed_seconds": 27.9,
+      "frame": 813,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 734.4282679999878
+    },
+    {
+      "completed_seconds": 28.7,
+      "frame": 837,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 756.4751159999901
+    },
+    {
+      "completed_seconds": 29.5,
+      "frame": 861,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 706.8680149999977
+    },
+    {
+      "completed_seconds": 30.3,
+      "frame": 885,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 752.0177760000024
+    },
+    {
+      "completed_seconds": 31.1,
+      "frame": 909,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 735.7203010000148
+    },
+    {
+      "completed_seconds": 31.9,
+      "frame": 933,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 722.5613210000006
+    },
+    {
+      "completed_seconds": 32.0,
+      "frame": 957,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 55.64113700000917
+    },
+    {
+      "completed_seconds": 33.1,
+      "frame": 969,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 700.2738359999512
+    },
+    {
+      "completed_seconds": 33.8,
+      "frame": 993,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 683.5148480000157
+    },
+    {
+      "completed_seconds": 34.6,
+      "frame": 1014,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 700.2672469999993
+    },
+    {
+      "completed_seconds": 35.4,
+      "frame": 1038,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 716.4829459999851
+    },
+    {
+      "completed_seconds": 36.2,
+      "frame": 1062,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 740.117521000002
+    },
+    {
+      "completed_seconds": 37.0,
+      "frame": 1086,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 738.6382679999883
+    },
+    {
+      "completed_seconds": 37.8,
+      "frame": 1110,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 724.2846999999983
+    },
+    {
+      "completed_seconds": 38.5,
+      "frame": 1134,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 690.61317500001
+    },
+    {
+      "completed_seconds": 39.3,
+      "frame": 1155,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 721.4638599999716
+    },
+    {
+      "completed_seconds": 40.2,
+      "frame": 1179,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 814.5264080000061
+    },
+    {
+      "completed_seconds": 41.0,
+      "frame": 1206,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 773.0548499999941
+    },
+    {
+      "completed_seconds": 41.8,
+      "frame": 1230,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 739.7391380000045
+    },
+    {
+      "completed_seconds": 42.6,
+      "frame": 1254,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 715.1322240000013
+    },
+    {
+      "completed_seconds": 43.4,
+      "frame": 1278,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 731.0564219999947
+    },
+    {
+      "completed_seconds": 44.2,
+      "frame": 1302,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 767.3826690000283
+    },
+    {
+      "completed_seconds": 45.0,
+      "frame": 1326,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 787.4380680000286
+    },
+    {
+      "completed_seconds": 45.8,
+      "frame": 1350,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 726.6754160000346
+    },
+    {
+      "completed_seconds": 46.6,
+      "frame": 1374,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 723.7584160000097
+    },
+    {
+      "completed_seconds": 47.4,
+      "frame": 1398,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 735.867025999994
+    },
+    {
+      "completed_seconds": 48.2,
+      "frame": 1422,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 742.3508250000168
+    },
+    {
+      "completed_seconds": 49.0,
+      "frame": 1446,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 734.7974620000173
+    },
+    {
+      "completed_seconds": 49.8,
+      "frame": 1470,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 735.4983740000307
+    },
+    {
+      "completed_seconds": 50.7,
+      "frame": 1494,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 800.0589930000501
+    },
+    {
+      "completed_seconds": 51.6,
+      "frame": 1521,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 867.7448949999871
+    },
+    {
+      "completed_seconds": 52.4,
+      "frame": 1548,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 781.5305359999911
+    },
+    {
+      "completed_seconds": 53.2,
+      "frame": 1572,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 743.848507999985
+    },
+    {
+      "completed_seconds": 54.0,
+      "frame": 1596,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 719.337940999992
+    },
+    {
+      "completed_seconds": 54.8,
+      "frame": 1620,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 761.796468
+    },
+    {
+      "completed_seconds": 55.6,
+      "frame": 1644,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 748.0833939999911
+    },
+    {
+      "completed_seconds": 56.4,
+      "frame": 1668,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 732.2919060000004
+    },
+    {
+      "completed_seconds": 57.2,
+      "frame": 1692,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 781.7801349999627
+    },
+    {
+      "completed_seconds": 58.0,
+      "frame": 1716,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 789.7790229999941
+    },
+    {
+      "completed_seconds": 58.1,
+      "frame": 1740,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 57.20909800004392
+    },
+    {
+      "completed_seconds": 58.5,
+      "frame": 1752,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 50.3176170000188
+    },
+    {
+      "completed_seconds": 58.9,
+      "frame": 1764,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 66.12105099998189
+    },
+    {
+      "completed_seconds": 60.0,
+      "frame": 1776,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 749.2496990000177
+    },
+    {
+      "completed_seconds": 60.1,
+      "frame": 1800,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 60.5189350000046
+    },
+    {
+      "completed_seconds": 61.2,
+      "frame": 1812,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 726.8926720000195
+    },
+    {
+      "completed_seconds": 61.9,
+      "frame": 1836,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 673.9706260000276
+    },
+    {
+      "completed_seconds": 62.6,
+      "frame": 1857,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 649.1548579999744
+    },
+    {
+      "completed_seconds": 63.3,
+      "frame": 1878,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 654.1314099999909
+    },
+    {
+      "completed_seconds": 64.1,
+      "frame": 1899,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 714.8260480000204
+    },
+    {
+      "completed_seconds": 64.2,
+      "frame": 1923,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 64.4933709999691
+    },
+    {
+      "completed_seconds": 65.2,
+      "frame": 1935,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 667.7756450000061
+    },
+    {
+      "completed_seconds": 65.9,
+      "frame": 1956,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 674.2321849999939
+    },
+    {
+      "completed_seconds": 66.6,
+      "frame": 1977,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 675.3559740000128
+    },
+    {
+      "completed_seconds": 67.4,
+      "frame": 1998,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 710.4003919999968
+    },
+    {
+      "completed_seconds": 67.5,
+      "frame": 2022,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 66.29606500001728
+    },
+    {
+      "completed_seconds": 68.6,
+      "frame": 2034,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 712.5684910000132
+    },
+    {
+      "completed_seconds": 69.3,
+      "frame": 2058,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 674.4334709999862
+    },
+    {
+      "completed_seconds": 70.0,
+      "frame": 2079,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 686.0087669999757
+    },
+    {
+      "completed_seconds": 70.7,
+      "frame": 2100,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 675.3221619999863
+    },
+    {
+      "completed_seconds": 71.4,
+      "frame": 2121,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 688.637215999961
+    },
+    {
+      "completed_seconds": 72.1,
+      "frame": 2142,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 601.5028139999572
+    },
+    {
+      "completed_seconds": 72.8,
+      "frame": 2163,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 628.4318159999884
+    },
+    {
+      "completed_seconds": 73.7,
+      "frame": 2184,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 830.9890489999816
+    },
+    {
+      "completed_seconds": 74.5,
+      "frame": 2211,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 702.9059969999594
+    },
+    {
+      "completed_seconds": 74.6,
+      "frame": 2235,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 81.03915700002062
+    },
+    {
+      "completed_seconds": 75.6,
+      "frame": 2247,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 682.5559410000324
+    },
+    {
+      "completed_seconds": 76.3,
+      "frame": 2268,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 678.8505839999743
+    },
+    {
+      "completed_seconds": 77.0,
+      "frame": 2289,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 683.8794610000036
+    },
+    {
+      "completed_seconds": 77.7,
+      "frame": 2310,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 651.816875999998
+    },
+    {
+      "completed_seconds": 78.5,
+      "frame": 2331,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 712.1114409999905
+    },
+    {
+      "completed_seconds": 79.2,
+      "frame": 2355,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 678.9025749999951
+    },
+    {
+      "completed_seconds": 79.9,
+      "frame": 2376,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 675.867788000005
+    },
+    {
+      "completed_seconds": 80.7,
+      "frame": 2397,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 722.0244459999776
+    },
+    {
+      "completed_seconds": 81.5,
+      "frame": 2421,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 721.8231229999788
+    },
+    {
+      "completed_seconds": 82.5,
+      "frame": 2445,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 986.0336240000152
+    },
+    {
+      "completed_seconds": 83.5,
+      "frame": 2475,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 986.3883410000085
+    },
+    {
+      "completed_seconds": 84.5,
+      "frame": 2505,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 924.9940459999948
+    },
+    {
+      "completed_seconds": 84.6,
+      "frame": 2535,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 59.50487800004112
+    },
+    {
+      "completed_seconds": 85.7,
+      "frame": 2547,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 709.6615199999974
+    },
+    {
+      "completed_seconds": 86.5,
+      "frame": 2571,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 719.8794500000076
+    },
+    {
+      "completed_seconds": 87.3,
+      "frame": 2595,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 791.8301409999913
+    },
+    {
+      "completed_seconds": 88.1,
+      "frame": 2619,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 765.8473779999895
+    },
+    {
+      "completed_seconds": 88.9,
+      "frame": 2643,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 780.7778480000138
+    },
+    {
+      "completed_seconds": 89.8,
+      "frame": 2667,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 810.4830870000228
+    },
+    {
+      "completed_seconds": 89.9,
+      "frame": 2694,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 63.39536899997711
+    },
+    {
+      "completed_seconds": 91.0,
+      "frame": 2706,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 733.5510010000235
+    },
+    {
+      "completed_seconds": 91.8,
+      "frame": 2730,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 793.5289889999808
+    },
+    {
+      "completed_seconds": 93.5,
+      "frame": 2754,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 1634.9070229999825
+    },
+    {
+      "completed_seconds": 95.1,
+      "frame": 2805,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 1583.2316240000068
+    }
+  ]
+}

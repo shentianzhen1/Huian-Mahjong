@@ -1,0 +1,184 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_NOT_USER_APPROVED",
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "review_board_sha256": "6eefe78bf98121bff5dab0072813672416f627aa66fec5802ab3d6a3f3231c94",
+  "anchors": [
+    {
+      "frame": 1332,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "S4"
+      ],
+      "meld_sizes_truth": [],
+      "hand_matches": true,
+      "meld_sizes_match": true,
+      "reported_shanten": 1,
+      "reported_discards": [
+        "M3",
+        "P2",
+        "P6",
+        "S4"
+      ]
+    },
+    {
+      "frame": 2436,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "meld_sizes_truth": [
+        4
+      ],
+      "hand_matches": true,
+      "meld_sizes_match": true,
+      "reported_shanten": 1,
+      "reported_discards": []
+    },
+    {
+      "frame": 2460,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S7"
+      ],
+      "meld_sizes_truth": [
+        4
+      ],
+      "hand_matches": true,
+      "meld_sizes_match": true,
+      "reported_shanten": 0,
+      "reported_discards": [
+        "P2",
+        "P6"
+      ]
+    },
+    {
+      "frame": 2586,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "meld_sizes_truth": [
+        4
+      ],
+      "hand_matches": true,
+      "meld_sizes_match": true,
+      "reported_shanten": 0,
+      "reported_discards": []
+    },
+    {
+      "frame": 2610,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "meld_sizes_truth": [
+        4
+      ],
+      "hand_matches": true,
+      "meld_sizes_match": true,
+      "reported_shanten": 0,
+      "reported_discards": [
+        "S1",
+        "S4"
+      ]
+    },
+    {
+      "frame": 2688,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "meld_sizes_truth": [
+        4
+      ],
+      "hand_matches": true,
+      "meld_sizes_match": true,
+      "reported_shanten": 0,
+      "reported_discards": [
+        "S1",
+        "S4"
+      ]
+    }
+  ],
+  "limits": [
+    "Six anchor frames reviewed; not all 18 new windows independently annotated.",
+    "Meld sizes only: live meld identity remains UNKNOWN.",
+    "Shanten/discards are recorded outputs, not independently verified strategy truth.",
+    "No Runtime wiring, no installer update, no new source-disjoint evidence."
+  ]
+}

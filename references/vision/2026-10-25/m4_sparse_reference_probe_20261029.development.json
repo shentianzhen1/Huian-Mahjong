@@ -1,0 +1,46 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "reference": {
+    "frame": 156,
+    "bbox": [
+      565,
+      433,
+      49,
+      77
+    ],
+    "truth": "M4",
+    "frame_rgb_sha256": "f68891b95a956ceb0e2ec36eec49a9367a94e0d1c88c69f5813891f0bf1f9cf4",
+    "crop_file_sha256": "77f24d4dd4b9830d857bbd778aef753b4179d7a32725b00786226035c4353d3e",
+    "crop_rgb_sha256": "e2408aa9b9a18d5a159ca05e70239da9f0e69bba911256f378217b6c03212958",
+    "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT"
+  },
+  "bottleneck": {
+    "current_approved_ordinary_M4_reference_count": 1,
+    "before": {
+      "geometry_untrusted_windows": 15,
+      "geometry_trusted_hand_unknown_windows": 58,
+      "hand_trusted_windows": 1
+    }
+  },
+  "candidate": "Existing19-reference clean trial plus offline InnerRecoveryProbe, add one M4 crop to translated, neutral and inner feature banks; no public pixel upload or installed manifest change.",
+  "result": {
+    "processed_windows": 74,
+    "hand_trusted_windows": 57,
+    "gold_trusted_windows": 0,
+    "displayed_advice": 0,
+    "training_frame156_hand_trusted": true
+  },
+  "reviewed_checks": {
+    "frame600": "16 concealed tiles agree with visible image, including M4 and M5",
+    "frame672": "16 concealed tiles agree with previously frozen full-hand review"
+  },
+  "limits": [
+    "Reference is from same revealed recording and same hand; measured coverage includes training frame156, not independent test accuracy.",
+    "57 program hand-trusted windows have not all been visually reviewed; no claim of57 correct hands.",
+    "No new Runtime/default classifier or bundle changes. Prior234 controls did not include this added M4 reference.",
+    "Gold S8 unconfirmed, 0 advice windows; further primary-recording/heldout controls needed before any integration."
+  ]
+}

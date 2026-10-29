@@ -1,0 +1,996 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "reference_version": "2026.10.25.5",
+  "reference_count": 13,
+  "manual_gold": null,
+  "protocol": "Sequential decode; samples every6 frames; actual app worker at fixed every12 frames; source-time eligible-prior guard; real pipeline; explicit trial on. No worker-delay scheduling or Windows UI simulation.",
+  "windows": 237,
+  "accepted_windows": 172,
+  "discard_windows": 41,
+  "recovered_advice_runs": 28,
+  "recoveries": [
+    {
+      "blocked_frame": 96,
+      "recovered_frame": 132,
+      "seconds": 1.2000000000000002
+    },
+    {
+      "blocked_frame": 216,
+      "recovered_frame": 228,
+      "seconds": 0.39999999999999947
+    },
+    {
+      "blocked_frame": 240,
+      "recovered_frame": 264,
+      "seconds": 0.8000000000000007
+    },
+    {
+      "blocked_frame": 300,
+      "recovered_frame": 336,
+      "seconds": 1.1999999999999993
+    },
+    {
+      "blocked_frame": 396,
+      "recovered_frame": 432,
+      "seconds": 1.200000000000001
+    },
+    {
+      "blocked_frame": 504,
+      "recovered_frame": 516,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 588,
+      "recovered_frame": 636,
+      "seconds": 1.5999999999999979
+    },
+    {
+      "blocked_frame": 672,
+      "recovered_frame": 684,
+      "seconds": 0.40000000000000213
+    },
+    {
+      "blocked_frame": 708,
+      "recovered_frame": 744,
+      "seconds": 1.1999999999999993
+    },
+    {
+      "blocked_frame": 924,
+      "recovered_frame": 936,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 948,
+      "recovered_frame": 984,
+      "seconds": 1.1999999999999957
+    },
+    {
+      "blocked_frame": 1188,
+      "recovered_frame": 1200,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 1224,
+      "recovered_frame": 1236,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 1296,
+      "recovered_frame": 1308,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 1344,
+      "recovered_frame": 1356,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 1740,
+      "recovered_frame": 1812,
+      "seconds": 2.3999999999999986
+    },
+    {
+      "blocked_frame": 1896,
+      "recovered_frame": 1908,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 1932,
+      "recovered_frame": 1944,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 1992,
+      "recovered_frame": 2004,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 2028,
+      "recovered_frame": 2040,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2208,
+      "recovered_frame": 2220,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2232,
+      "recovered_frame": 2244,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 2328,
+      "recovered_frame": 2340,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2364,
+      "recovered_frame": 2376,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2448,
+      "recovered_frame": 2460,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2520,
+      "recovered_frame": 2556,
+      "seconds": 1.2000000000000028
+    },
+    {
+      "blocked_frame": 2592,
+      "recovered_frame": 2604,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 2700,
+      "recovered_frame": 2712,
+      "seconds": 0.4000000000000057
+    }
+  ],
+  "runs": [
+    {
+      "display_allowed": false,
+      "first_frame": 12,
+      "first_seconds": 0.4,
+      "windows": 6,
+      "last_frame": 72,
+      "last_seconds": 2.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 84,
+      "first_seconds": 2.8,
+      "windows": 1,
+      "last_frame": 84,
+      "last_seconds": 2.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 96,
+      "first_seconds": 3.2,
+      "windows": 3,
+      "last_frame": 120,
+      "last_seconds": 4.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 132,
+      "first_seconds": 4.4,
+      "windows": 7,
+      "last_frame": 204,
+      "last_seconds": 6.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 216,
+      "first_seconds": 7.2,
+      "windows": 1,
+      "last_frame": 216,
+      "last_seconds": 7.2
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 228,
+      "first_seconds": 7.6,
+      "windows": 1,
+      "last_frame": 228,
+      "last_seconds": 7.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 240,
+      "first_seconds": 8.0,
+      "windows": 2,
+      "last_frame": 252,
+      "last_seconds": 8.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 264,
+      "first_seconds": 8.8,
+      "windows": 3,
+      "last_frame": 288,
+      "last_seconds": 9.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 300,
+      "first_seconds": 10.0,
+      "windows": 3,
+      "last_frame": 324,
+      "last_seconds": 10.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 336,
+      "first_seconds": 11.2,
+      "windows": 5,
+      "last_frame": 384,
+      "last_seconds": 12.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 396,
+      "first_seconds": 13.2,
+      "windows": 3,
+      "last_frame": 420,
+      "last_seconds": 14.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 432,
+      "first_seconds": 14.4,
+      "windows": 6,
+      "last_frame": 492,
+      "last_seconds": 16.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 504,
+      "first_seconds": 16.8,
+      "windows": 1,
+      "last_frame": 504,
+      "last_seconds": 16.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 516,
+      "first_seconds": 17.2,
+      "windows": 6,
+      "last_frame": 576,
+      "last_seconds": 19.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 588,
+      "first_seconds": 19.6,
+      "windows": 4,
+      "last_frame": 624,
+      "last_seconds": 20.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 636,
+      "first_seconds": 21.2,
+      "windows": 3,
+      "last_frame": 660,
+      "last_seconds": 22.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 672,
+      "first_seconds": 22.4,
+      "windows": 1,
+      "last_frame": 672,
+      "last_seconds": 22.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 684,
+      "first_seconds": 22.8,
+      "windows": 2,
+      "last_frame": 696,
+      "last_seconds": 23.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 708,
+      "first_seconds": 23.6,
+      "windows": 3,
+      "last_frame": 732,
+      "last_seconds": 24.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 744,
+      "first_seconds": 24.8,
+      "windows": 15,
+      "last_frame": 912,
+      "last_seconds": 30.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 924,
+      "first_seconds": 30.8,
+      "windows": 1,
+      "last_frame": 924,
+      "last_seconds": 30.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 936,
+      "first_seconds": 31.2,
+      "windows": 1,
+      "last_frame": 936,
+      "last_seconds": 31.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 948,
+      "first_seconds": 31.6,
+      "windows": 3,
+      "last_frame": 972,
+      "last_seconds": 32.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 984,
+      "first_seconds": 32.8,
+      "windows": 17,
+      "last_frame": 1176,
+      "last_seconds": 39.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1188,
+      "first_seconds": 39.6,
+      "windows": 1,
+      "last_frame": 1188,
+      "last_seconds": 39.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1200,
+      "first_seconds": 40.0,
+      "windows": 2,
+      "last_frame": 1212,
+      "last_seconds": 40.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1224,
+      "first_seconds": 40.8,
+      "windows": 1,
+      "last_frame": 1224,
+      "last_seconds": 40.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1236,
+      "first_seconds": 41.2,
+      "windows": 5,
+      "last_frame": 1284,
+      "last_seconds": 42.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1296,
+      "first_seconds": 43.2,
+      "windows": 1,
+      "last_frame": 1296,
+      "last_seconds": 43.2
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1308,
+      "first_seconds": 43.6,
+      "windows": 3,
+      "last_frame": 1332,
+      "last_seconds": 44.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1344,
+      "first_seconds": 44.8,
+      "windows": 1,
+      "last_frame": 1344,
+      "last_seconds": 44.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1356,
+      "first_seconds": 45.2,
+      "windows": 32,
+      "last_frame": 1728,
+      "last_seconds": 57.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1740,
+      "first_seconds": 58.0,
+      "windows": 6,
+      "last_frame": 1800,
+      "last_seconds": 60.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1812,
+      "first_seconds": 60.4,
+      "windows": 7,
+      "last_frame": 1884,
+      "last_seconds": 62.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1896,
+      "first_seconds": 63.2,
+      "windows": 1,
+      "last_frame": 1896,
+      "last_seconds": 63.2
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1908,
+      "first_seconds": 63.6,
+      "windows": 2,
+      "last_frame": 1920,
+      "last_seconds": 64.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1932,
+      "first_seconds": 64.4,
+      "windows": 1,
+      "last_frame": 1932,
+      "last_seconds": 64.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1944,
+      "first_seconds": 64.8,
+      "windows": 4,
+      "last_frame": 1980,
+      "last_seconds": 66.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1992,
+      "first_seconds": 66.4,
+      "windows": 1,
+      "last_frame": 1992,
+      "last_seconds": 66.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2004,
+      "first_seconds": 66.8,
+      "windows": 2,
+      "last_frame": 2016,
+      "last_seconds": 67.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2028,
+      "first_seconds": 67.6,
+      "windows": 1,
+      "last_frame": 2028,
+      "last_seconds": 67.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2040,
+      "first_seconds": 68.0,
+      "windows": 14,
+      "last_frame": 2196,
+      "last_seconds": 73.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2208,
+      "first_seconds": 73.6,
+      "windows": 1,
+      "last_frame": 2208,
+      "last_seconds": 73.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2220,
+      "first_seconds": 74.0,
+      "windows": 1,
+      "last_frame": 2220,
+      "last_seconds": 74.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2232,
+      "first_seconds": 74.4,
+      "windows": 1,
+      "last_frame": 2232,
+      "last_seconds": 74.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2244,
+      "first_seconds": 74.8,
+      "windows": 7,
+      "last_frame": 2316,
+      "last_seconds": 77.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2328,
+      "first_seconds": 77.6,
+      "windows": 1,
+      "last_frame": 2328,
+      "last_seconds": 77.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2340,
+      "first_seconds": 78.0,
+      "windows": 2,
+      "last_frame": 2352,
+      "last_seconds": 78.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2364,
+      "first_seconds": 78.8,
+      "windows": 1,
+      "last_frame": 2364,
+      "last_seconds": 78.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2376,
+      "first_seconds": 79.2,
+      "windows": 6,
+      "last_frame": 2436,
+      "last_seconds": 81.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2448,
+      "first_seconds": 81.6,
+      "windows": 1,
+      "last_frame": 2448,
+      "last_seconds": 81.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2460,
+      "first_seconds": 82.0,
+      "windows": 5,
+      "last_frame": 2508,
+      "last_seconds": 83.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2520,
+      "first_seconds": 84.0,
+      "windows": 3,
+      "last_frame": 2544,
+      "last_seconds": 84.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2556,
+      "first_seconds": 85.2,
+      "windows": 3,
+      "last_frame": 2580,
+      "last_seconds": 86.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2592,
+      "first_seconds": 86.4,
+      "windows": 1,
+      "last_frame": 2592,
+      "last_seconds": 86.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2604,
+      "first_seconds": 86.8,
+      "windows": 8,
+      "last_frame": 2688,
+      "last_seconds": 89.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2700,
+      "first_seconds": 90.0,
+      "windows": 1,
+      "last_frame": 2700,
+      "last_seconds": 90.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2712,
+      "first_seconds": 90.4,
+      "windows": 2,
+      "last_frame": 2724,
+      "last_seconds": 90.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2736,
+      "first_seconds": 91.2,
+      "windows": 10,
+      "last_frame": 2844,
+      "last_seconds": 94.8
+    }
+  ],
+  "worker_median_ms": 513.9637150000453,
+  "limits": [
+    "One revealed development video; not independent accuracy.",
+    "Fixed source clock ignores worker duration; no live-latency or timely-action claim.",
+    "No manual Gold; experimental hand and reference-backed Gold trial on; strict default acceptance not measured.",
+    "Advice acceptance is not reviewed per-window correctness.",
+    "A terminal blocked run is not assumed recovered."
+  ],
+  "code_parent": "156971596757de233e8af4a2b52bc44dc6ef619c",
+  "installed_reference_bundle": "2026.10.25.5 UNCHANGED",
+  "candidate_reference_total": 15,
+  "candidate_additions": [
+    {
+      "crop": "frame3180_x863.png",
+      "truth": "W"
+    },
+    {
+      "crop": "frame4860_x764.png",
+      "truth": "M3"
+    }
+  ],
+  "private_packet_library_file_id": "libfile_b9cb9a1466088191898b588576b1c855",
+  "runtime_changed": false,
+  "baseline": {
+    "windows": 237,
+    "accepted_windows": 171,
+    "discard_windows": 40
+  },
+  "new_windows": [
+    {
+      "frames": [
+        216,
+        222,
+        228
+      ],
+      "rgb_sha256": [
+        "027860dde0a61daea812144c17dd5c3633f5b7389081357ddcd96772669f1f8d",
+        "f5135d4d188e5b7153c1f1969006c4924172e96e6a431d1c9a83147d48e7e82b",
+        "ea3685368c5393d5c2f6d60493315c0b890dcf81612b6038bd16a0eb18d2fb40"
+      ],
+      "source_seconds": 7.6,
+      "geometry_untrusted": false,
+      "display_allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2,
+      "issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "W",
+        "M2"
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": true,
+      "prior_used": true,
+      "worker_ms": 724.8477640000601,
+      "discards": [
+        {
+          "tile": "M3",
+          "shanten": 2
+        },
+        {
+          "tile": "P1",
+          "shanten": 2
+        },
+        {
+          "tile": "P4",
+          "shanten": 2
+        },
+        {
+          "tile": "P8",
+          "shanten": 2
+        },
+        {
+          "tile": "W",
+          "shanten": 2
+        }
+      ]
+    }
+  ],
+  "lost_windows": [],
+  "changed_previous_advice": [],
+  "source_frame_hashes_all_equal": true,
+  "geometry_untrusted_advice_accepts": 0,
+  "endpoint228_truth_review": {
+    "authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT_NOT_USER_APPROVED",
+    "truth": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P6",
+      "P8",
+      "S2",
+      "S3",
+      "S9",
+      "S9",
+      "M2",
+      "M2",
+      "M3",
+      "M8",
+      "M9",
+      "W",
+      "M2"
+    ],
+    "all17_endpoint_crops_match": true,
+    "prior_frames_not_completely_reannotated": true
+  },
+  "controls_cleaned": {
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "protocol": "Ten previously reviewed bad crops excluded from BOTH training and queries; Known original-match group excluded; unresolved queries exclude exact source SHA. All Sep26 packet references excluded for known Sep26 queries. Unknown sources are not established independent matches. Ordinary non-Gold control crops only.",
+    "queries": 134,
+    "baseline": {
+      "top1_correct": 105,
+      "score_ge_point82": 89,
+      "wrong_score_ge_point82": [
+        {
+          "image": "templates/hand/tile_9fe4ec26c4524a4b_M3.png",
+          "truth": "M3",
+          "query_group": "reviewed_match_concealed_recovery_a",
+          "rgb_sha256": "f6758b02c4b1f8e051c8307bd4e1be03c7ac0d68f7d23c88447e8e1f526b89ba",
+          "baseline": {
+            "tile": "M2",
+            "score": 0.8206200003623962
+          },
+          "candidate": {
+            "tile": "M3",
+            "score": 0.8777695894241333
+          }
+        }
+      ]
+    },
+    "candidate": {
+      "top1_correct": 110,
+      "score_ge_point82": 93,
+      "wrong_score_ge_point82": []
+    },
+    "changed": [
+      {
+        "image": "templates/hand/tile_590a5a3a3bade6e8_M1.png",
+        "truth": "M1",
+        "query_group": "reviewed_match_concealed_recovery_a",
+        "rgb_sha256": "e53e407458fca05f6ead66133741f4f7eee318d1adf2c42b538abdcac23b33f1",
+        "baseline": {
+          "tile": "M2",
+          "score": 0.6852691769599915
+        },
+        "candidate": {
+          "tile": "M2",
+          "score": 0.6438035368919373
+        }
+      },
+      {
+        "image": "templates/hand/tile_8b9b156526834bc6_M3.png",
+        "truth": "M3",
+        "query_group": "reviewed_match_concealed_recovery_a",
+        "rgb_sha256": "653ee996a97103416be8dfdbc93dc50d3a563f8975a69f295e85ddcf68a3d34b",
+        "baseline": {
+          "tile": "M2",
+          "score": 0.7911583781242371
+        },
+        "candidate": {
+          "tile": "M3",
+          "score": 0.9008408784866333
+        }
+      },
+      {
+        "image": "templates/hand/tile_8610212dc312ea9c_M3.png",
+        "truth": "M3",
+        "query_group": "reviewed_match_concealed_recovery_a",
+        "rgb_sha256": "8b19b6a3b6d97ecdc5d2bf11b3ad78142ddcdc43aa45954ac93b1acb449eb4a7",
+        "baseline": {
+          "tile": "M2",
+          "score": 0.8126084208488464
+        },
+        "candidate": {
+          "tile": "M3",
+          "score": 0.8659184575080872
+        }
+      },
+      {
+        "image": "templates/hand/tile_9fe4ec26c4524a4b_M3.png",
+        "truth": "M3",
+        "query_group": "reviewed_match_concealed_recovery_a",
+        "rgb_sha256": "f6758b02c4b1f8e051c8307bd4e1be03c7ac0d68f7d23c88447e8e1f526b89ba",
+        "baseline": {
+          "tile": "M2",
+          "score": 0.8206200003623962
+        },
+        "candidate": {
+          "tile": "M3",
+          "score": 0.8777695894241333
+        }
+      },
+      {
+        "image": "templates/hand/tile_f73a87a31fbf699a_M3.png",
+        "truth": "M3",
+        "query_group": "reviewed_match_concealed_recovery_a",
+        "rgb_sha256": "e6d08529649521224dd89b935ee2763742431e092121a20b86ca19bdbf692e5c",
+        "baseline": {
+          "tile": "M2",
+          "score": 0.8018134832382202
+        },
+        "candidate": {
+          "tile": "M3",
+          "score": 0.8256377577781677
+        }
+      },
+      {
+        "image": "templates/hand/tile_48184d5a6580bb48_M3.png",
+        "truth": "M3",
+        "query_group": "reviewed_match_concealed_recovery_a",
+        "rgb_sha256": "3dd19912c928e1ff2bc3be511ea1dd10328774706133f374c3a508094567ff95",
+        "baseline": {
+          "tile": "M2",
+          "score": 0.8071020245552063
+        },
+        "candidate": {
+          "tile": "M3",
+          "score": 0.911323070526123
+        }
+      }
+    ]
+  },
+  "controls_raw": {
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "protocol": "Known original-match group excluded; unresolved queries exclude exact source SHA. All Sep26 packet references excluded for known Sep26 queries. Unknown sources are not established independent matches. Ordinary non-Gold control crops only.",
+    "queries": 144,
+    "baseline": {
+      "top1_correct": 106,
+      "score_ge_point82": 91,
+      "wrong_score_ge_point82": [
+        {
+          "image": "templates/hand/tile_cf3d5cd142f9920c_S9.png",
+          "truth": "S9",
+          "query_group": "UNRESOLVED_SHA:781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+          "rgb_sha256": "a9ab22bbf018ab831334ccd84bb5e0f803b58d4feba4d1e7f2a9a7b3c63ad5b4",
+          "baseline": {
+            "tile": "S8",
+            "score": 0.8559601902961731
+          },
+          "candidate": {
+            "tile": "S8",
+            "score": 0.8559601902961731
+          }
+        },
+        {
+          "image": "templates/hand/1046_hand_region_s09_S8.png",
+          "truth": "S8",
+          "query_group": "UNRESOLVED_SHA:ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+          "rgb_sha256": "e7dd72ef6de6383c71ea14ab8073f392dd2d35129445a1003f3aa6936249bd7a",
+          "baseline": {
+            "tile": "S9",
+            "score": 0.8575494885444641
+          },
+          "candidate": {
+            "tile": "S9",
+            "score": 0.8575494885444641
+          }
+        },
+        {
+          "image": "templates/hand/tile_9fe4ec26c4524a4b_M3.png",
+          "truth": "M3",
+          "query_group": "reviewed_match_concealed_recovery_a",
+          "rgb_sha256": "f6758b02c4b1f8e051c8307bd4e1be03c7ac0d68f7d23c88447e8e1f526b89ba",
+          "baseline": {
+            "tile": "M2",
+            "score": 0.8206200003623962
+          },
+          "candidate": {
+            "tile": "M3",
+            "score": 0.8777695894241333
+          }
+        },
+        {
+          "image": "templates/hand/960_hand_region_s05_S6.png",
+          "truth": "S6",
+          "query_group": "reviewed_match_concealed_recovery_b",
+          "rgb_sha256": "540542b8b0195b8fb07247c915c66a830a0e36448fe1314b4902daf155ce763c",
+          "baseline": {
+            "tile": "S4",
+            "score": 0.8218181133270264
+          },
+          "candidate": {
+            "tile": "S4",
+            "score": 0.8218181133270264
+          }
+        }
+      ]
+    },
+    "candidate": {
+      "top1_correct": 111,
+      "score_ge_point82": 95,
+      "wrong_score_ge_point82": [
+        {
+          "image": "templates/hand/tile_cf3d5cd142f9920c_S9.png",
+          "truth": "S9",
+          "query_group": "UNRESOLVED_SHA:781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+          "rgb_sha256": "a9ab22bbf018ab831334ccd84bb5e0f803b58d4feba4d1e7f2a9a7b3c63ad5b4",
+          "baseline": {
+            "tile": "S8",
+            "score": 0.8559601902961731
+          },
+          "candidate": {
+            "tile": "S8",
+            "score": 0.8559601902961731
+          }
+        },
+        {
+          "image": "templates/hand/1046_hand_region_s09_S8.png",
+          "truth": "S8",
+          "query_group": "UNRESOLVED_SHA:ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226",
+          "rgb_sha256": "e7dd72ef6de6383c71ea14ab8073f392dd2d35129445a1003f3aa6936249bd7a",
+          "baseline": {
+            "tile": "S9",
+            "score": 0.8575494885444641
+          },
+          "candidate": {
+            "tile": "S9",
+            "score": 0.8575494885444641
+          }
+        },
+        {
+          "image": "templates/hand/960_hand_region_s05_S6.png",
+          "truth": "S6",
+          "query_group": "reviewed_match_concealed_recovery_b",
+          "rgb_sha256": "540542b8b0195b8fb07247c915c66a830a0e36448fe1314b4902daf155ce763c",
+          "baseline": {
+            "tile": "S4",
+            "score": 0.8218181133270264
+          },
+          "candidate": {
+            "tile": "S4",
+            "score": 0.8218181133270264
+          }
+        }
+      ]
+    }
+  },
+  "known_bad_crop_registry": "references/vision/2026-10-24/sampled_classifier_crop_review_v0_1.json",
+  "evaluation_correction": "Initial144 control run included ten known bad crops; retained diagnostically. Corrected134 excludes those from BOTH training and queries. Full237 replay retains actual current worker training bank, so do not pool it with cleaned-bank error controls.",
+  "next": "Before any bundle update, repeat full replay with explicitly cleaned trial training labels and compare whole-hand/negative controls. Current M3 raised target remains rejected. Neither bank is promoted."
+}

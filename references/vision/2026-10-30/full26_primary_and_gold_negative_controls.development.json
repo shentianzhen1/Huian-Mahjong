@@ -1,0 +1,576 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_commit": "ef50ee7479bd65dc586b7c16f129748a3d4f1a7f",
+  "primary_source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "primary_regression": {
+    "paired_windows": 237,
+    "changed_windows": [],
+    "candidate_runtime": {
+      "windows": 237,
+      "accepted_windows": 173,
+      "blocked_windows": 64,
+      "trusted_hand_windows": 175,
+      "trusted_gold_windows": 231,
+      "discard_windows": 42,
+      "gold_tile_votes": {
+        "M4": 231
+      },
+      "advice_runs": [
+        {
+          "display_allowed": false,
+          "windows": 6,
+          "first_frame": 12,
+          "start_seconds": 0.4,
+          "last_frame": 72,
+          "end_seconds": 2.4000000000000004
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 84,
+          "start_seconds": 2.8000000000000003,
+          "last_frame": 84,
+          "end_seconds": 2.8000000000000003
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 96,
+          "start_seconds": 3.2,
+          "last_frame": 120,
+          "end_seconds": 4.0
+        },
+        {
+          "display_allowed": true,
+          "windows": 7,
+          "first_frame": 132,
+          "start_seconds": 4.4,
+          "last_frame": 204,
+          "end_seconds": 6.800000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 216,
+          "start_seconds": 7.2,
+          "last_frame": 216,
+          "end_seconds": 7.2
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 228,
+          "start_seconds": 7.6000000000000005,
+          "last_frame": 228,
+          "end_seconds": 7.6000000000000005
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 240,
+          "start_seconds": 8.0,
+          "last_frame": 252,
+          "end_seconds": 8.4
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 264,
+          "start_seconds": 8.8,
+          "last_frame": 288,
+          "end_seconds": 9.600000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 300,
+          "start_seconds": 10.0,
+          "last_frame": 324,
+          "end_seconds": 10.8
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 336,
+          "start_seconds": 11.200000000000001,
+          "last_frame": 384,
+          "end_seconds": 12.8
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 396,
+          "start_seconds": 13.200000000000001,
+          "last_frame": 420,
+          "end_seconds": 14.000000000000002
+        },
+        {
+          "display_allowed": true,
+          "windows": 6,
+          "first_frame": 432,
+          "start_seconds": 14.4,
+          "last_frame": 492,
+          "end_seconds": 16.400000000000002
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 504,
+          "start_seconds": 16.8,
+          "last_frame": 504,
+          "end_seconds": 16.8
+        },
+        {
+          "display_allowed": true,
+          "windows": 6,
+          "first_frame": 516,
+          "start_seconds": 17.200000000000003,
+          "last_frame": 576,
+          "end_seconds": 19.200000000000003
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 588,
+          "start_seconds": 19.6,
+          "last_frame": 624,
+          "end_seconds": 20.8
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 636,
+          "start_seconds": 21.200000000000003,
+          "last_frame": 660,
+          "end_seconds": 22.0
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 672,
+          "start_seconds": 22.400000000000002,
+          "last_frame": 672,
+          "end_seconds": 22.400000000000002
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 684,
+          "start_seconds": 22.8,
+          "last_frame": 696,
+          "end_seconds": 23.200000000000003
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 708,
+          "start_seconds": 23.6,
+          "last_frame": 732,
+          "end_seconds": 24.400000000000002
+        },
+        {
+          "display_allowed": true,
+          "windows": 15,
+          "first_frame": 744,
+          "start_seconds": 24.8,
+          "last_frame": 912,
+          "end_seconds": 30.400000000000002
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 924,
+          "start_seconds": 30.8,
+          "last_frame": 924,
+          "end_seconds": 30.8
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 936,
+          "start_seconds": 31.200000000000003,
+          "last_frame": 936,
+          "end_seconds": 31.200000000000003
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 948,
+          "start_seconds": 31.6,
+          "last_frame": 972,
+          "end_seconds": 32.4
+        },
+        {
+          "display_allowed": true,
+          "windows": 17,
+          "first_frame": 984,
+          "start_seconds": 32.800000000000004,
+          "last_frame": 1176,
+          "end_seconds": 39.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1188,
+          "start_seconds": 39.6,
+          "last_frame": 1188,
+          "end_seconds": 39.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 1200,
+          "start_seconds": 40.0,
+          "last_frame": 1212,
+          "end_seconds": 40.400000000000006
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1224,
+          "start_seconds": 40.800000000000004,
+          "last_frame": 1224,
+          "end_seconds": 40.800000000000004
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 1236,
+          "start_seconds": 41.2,
+          "last_frame": 1284,
+          "end_seconds": 42.800000000000004
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1296,
+          "start_seconds": 43.2,
+          "last_frame": 1296,
+          "end_seconds": 43.2
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 1308,
+          "start_seconds": 43.6,
+          "last_frame": 1332,
+          "end_seconds": 44.400000000000006
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1344,
+          "start_seconds": 44.800000000000004,
+          "last_frame": 1344,
+          "end_seconds": 44.800000000000004
+        },
+        {
+          "display_allowed": true,
+          "windows": 32,
+          "first_frame": 1356,
+          "start_seconds": 45.2,
+          "last_frame": 1728,
+          "end_seconds": 57.6
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 1740,
+          "start_seconds": 58.00000000000001,
+          "last_frame": 1764,
+          "end_seconds": 58.800000000000004
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 1776,
+          "start_seconds": 59.2,
+          "last_frame": 1776,
+          "end_seconds": 59.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 1788,
+          "start_seconds": 59.6,
+          "last_frame": 1800,
+          "end_seconds": 60.00000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 7,
+          "first_frame": 1812,
+          "start_seconds": 60.400000000000006,
+          "last_frame": 1884,
+          "end_seconds": 62.800000000000004
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1896,
+          "start_seconds": 63.2,
+          "last_frame": 1896,
+          "end_seconds": 63.2
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 1908,
+          "start_seconds": 63.6,
+          "last_frame": 1920,
+          "end_seconds": 64.0
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1932,
+          "start_seconds": 64.4,
+          "last_frame": 1932,
+          "end_seconds": 64.4
+        },
+        {
+          "display_allowed": true,
+          "windows": 4,
+          "first_frame": 1944,
+          "start_seconds": 64.8,
+          "last_frame": 1980,
+          "end_seconds": 66.0
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1992,
+          "start_seconds": 66.4,
+          "last_frame": 1992,
+          "end_seconds": 66.4
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2004,
+          "start_seconds": 66.80000000000001,
+          "last_frame": 2016,
+          "end_seconds": 67.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2028,
+          "start_seconds": 67.60000000000001,
+          "last_frame": 2028,
+          "end_seconds": 67.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 14,
+          "first_frame": 2040,
+          "start_seconds": 68.0,
+          "last_frame": 2196,
+          "end_seconds": 73.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2208,
+          "start_seconds": 73.60000000000001,
+          "last_frame": 2208,
+          "end_seconds": 73.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 2220,
+          "start_seconds": 74.0,
+          "last_frame": 2220,
+          "end_seconds": 74.0
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2232,
+          "start_seconds": 74.4,
+          "last_frame": 2232,
+          "end_seconds": 74.4
+        },
+        {
+          "display_allowed": true,
+          "windows": 7,
+          "first_frame": 2244,
+          "start_seconds": 74.80000000000001,
+          "last_frame": 2316,
+          "end_seconds": 77.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2328,
+          "start_seconds": 77.60000000000001,
+          "last_frame": 2328,
+          "end_seconds": 77.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2340,
+          "start_seconds": 78.0,
+          "last_frame": 2352,
+          "end_seconds": 78.4
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2364,
+          "start_seconds": 78.80000000000001,
+          "last_frame": 2364,
+          "end_seconds": 78.80000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 6,
+          "first_frame": 2376,
+          "start_seconds": 79.2,
+          "last_frame": 2436,
+          "end_seconds": 81.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2448,
+          "start_seconds": 81.60000000000001,
+          "last_frame": 2448,
+          "end_seconds": 81.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 2460,
+          "start_seconds": 82.0,
+          "last_frame": 2508,
+          "end_seconds": 83.60000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 2520,
+          "start_seconds": 84.0,
+          "last_frame": 2544,
+          "end_seconds": 84.80000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 2556,
+          "start_seconds": 85.2,
+          "last_frame": 2580,
+          "end_seconds": 86.0
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2592,
+          "start_seconds": 86.4,
+          "last_frame": 2592,
+          "end_seconds": 86.4
+        },
+        {
+          "display_allowed": true,
+          "windows": 8,
+          "first_frame": 2604,
+          "start_seconds": 86.80000000000001,
+          "last_frame": 2688,
+          "end_seconds": 89.60000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2700,
+          "start_seconds": 90.0,
+          "last_frame": 2700,
+          "end_seconds": 90.0
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2712,
+          "start_seconds": 90.4,
+          "last_frame": 2724,
+          "end_seconds": 90.80000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 10,
+          "first_frame": 2736,
+          "start_seconds": 91.2,
+          "last_frame": 2844,
+          "end_seconds": 94.80000000000001
+        }
+      ],
+      "recovered_advice_runs": 29,
+      "rejection_issue_windows": {
+        "concealed_hand_count_invalid": 1,
+        "experimental_gold_sources_unvalidated": 58,
+        "experimental_hand_sources_unvalidated": 2,
+        "gold_identity_unknown": 6,
+        "gold_untrusted": 6,
+        "hand_identity_unknown": 62,
+        "hand_untrusted": 62,
+        "live_gold_carried_forward": 54,
+        "meld_identity_unknown:0": 8,
+        "meld_untrusted:0": 54,
+        "meld_untrusted:1": 64,
+        "opponent_meld_missing": 64,
+        "opponent_river_missing": 64,
+        "player_meld_count_untrusted": 54,
+        "player_river_missing": 64,
+        "river_untrusted:0": 64,
+        "river_untrusted:1": 64,
+        "runtime_gold_component_conflict": 1,
+        "runtime_gold_not_fully_trusted": 6,
+        "runtime_hand_not_fully_trusted": 62
+      }
+    }
+  },
+  "method": "Primary full replay with explicit26private packet, InnerRecoveryProbe, local dark-meld candidate and current concealed-Gold1featurepixel translation. Compare with earlier M5-added primary replay, identical .2second samples. PublicOCR deliberately excluded in both, so this does not exercise public hand-boundary gating.",
+  "compared_fields": [
+    "snapshot.own_hand",
+    "snapshot.gold_tile",
+    "snapshot.hand_trusted",
+    "snapshot.gold_trusted",
+    "snapshot.melds",
+    "snapshot.meld_trusted",
+    "hint.shanten",
+    "hint.best_discards",
+    "hint.issues",
+    "display_allowed"
+  ],
+  "ordinary_crop_gold_path_negative_controls": {
+    "total": 134,
+    "baseline": {
+      "top1_correct": 105,
+      "scores_ge_point82": 53,
+      "wrong_scores_ge_point82": 0
+    },
+    "candidate": {
+      "top1_correct": 105,
+      "scores_ge_point82": 53,
+      "wrong_scores_ge_point82": 0
+    },
+    "changed": []
+  },
+  "negative_control_method": "134cleaned ordinary crops, exclude matching querySHA from raw labels and matching packet sourceSHA rows; compare full-bank classify_gold_skin before explicit concealed-Gold wrapper with current wrapper. Same query images for both, but ordinary faces are not real gold-skinned validation.",
+  "artifacts_sha256": {
+    "full26_primary_replay.json": "a5bc71b6b5736b1d1776ca9870a6a2580b327e416676ffec25ad97365e43fbe5",
+    "full26_primary_comparison.json": "aaea7c76e1d0d3edcafade2a7793e0048c10fe038d6276454400efc677803349",
+    "concealed_gold_134_controls.json": "e0fcb923846133a3d7d78375f3048528846ad512ae1e428febc688755af5cc02"
+  },
+  "limits": [
+    "Development clips were already revealed; no independent source-disjoint promotion.",
+    "NCC diagnostic acceptance53of134 with0wrong refers only to these ordinary crops through gold normalization, not installed gold accuracy.",
+    "Packet added crops may share original match with query groups; exactSHA exclusion alone does not ensure independence.",
+    "Full-run parity is not proof of173correct hands or strategy strength.",
+    "No formal19reference manifest or installer change."
+  ]
+}

@@ -1,0 +1,307 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+  "source_original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "method": "Paired full dynamic detector/identity+realPublicStateOCR+statefuladvice, .2ssamples, offline InnerRecovery/local-dark candidates; explicit trial Goldcoverage includesP5/P7inboth. Candidate temporary28-row reference packet adds openedGold refsP7frame1414/P5frame4243; baseline26 omits only these two refs. Windows36..40s and130..134s, neither includes reference endpoints.",
+  "segments": [
+    {
+      "tile": "P7",
+      "range_seconds": [
+        36,
+        40
+      ],
+      "baseline": {
+        "windows": 9,
+        "accepted_windows": 0,
+        "discard_windows": 0,
+        "trusted_hand_windows": 4,
+        "trusted_gold_windows": 0,
+        "gold_tile_votes": {}
+      },
+      "candidate": {
+        "windows": 9,
+        "accepted_windows": 4,
+        "discard_windows": 0,
+        "trusted_hand_windows": 4,
+        "trusted_gold_windows": 9,
+        "gold_tile_votes": {
+          "P7": 9
+        }
+      },
+      "reviewed_endpoints": [
+        {
+          "frame": 1092,
+          "frame_rgb_sha256": "643001870eee828d1dccc847e6951c526dc333fbee43d0fb53740df273e96ccf",
+          "truth": [
+            "P8",
+            "P8",
+            "S4",
+            "S8",
+            "S8",
+            "M6",
+            "M7",
+            "M7",
+            "M7",
+            "M8",
+            "M9",
+            "G",
+            "G"
+          ],
+          "meld_group_sizes": [
+            3
+          ],
+          "has_discards": false
+        },
+        {
+          "frame": 1104,
+          "frame_rgb_sha256": "f31aaa70962bdfa093f8771bfb7c244d2344b15591dc5562e3ce652958ef46ba",
+          "truth": [
+            "P8",
+            "P8",
+            "S4",
+            "S8",
+            "S8",
+            "M6",
+            "M7",
+            "M7",
+            "M7",
+            "M8",
+            "M9",
+            "G",
+            "G"
+          ],
+          "meld_group_sizes": [
+            3
+          ],
+          "has_discards": false
+        },
+        {
+          "frame": 1116,
+          "frame_rgb_sha256": "5bd527ca72db6c7a3579037d936e080c26a63e2825da869dbbecf1101b8000aa",
+          "truth": [
+            "P8",
+            "P8",
+            "S4",
+            "S8",
+            "S8",
+            "M6",
+            "M7",
+            "M7",
+            "M7",
+            "M8",
+            "M9",
+            "G",
+            "G"
+          ],
+          "meld_group_sizes": [
+            3
+          ],
+          "has_discards": false
+        },
+        {
+          "frame": 1128,
+          "frame_rgb_sha256": "e75eeb542803f5f4d46ae211452049c3b9855c171938a961d0bd62466d300582",
+          "truth": [
+            "P8",
+            "P8",
+            "S4",
+            "S8",
+            "S8",
+            "M6",
+            "M7",
+            "M7",
+            "M7",
+            "M8",
+            "M9",
+            "G",
+            "G"
+          ],
+          "meld_group_sizes": [
+            3
+          ],
+          "has_discards": false
+        }
+      ],
+      "candidate_report_sha256": "f4e00c6f35612380e29bbe20767ad5bc481b7556d9efa96c2a8c4de25aaf7ba6"
+    },
+    {
+      "tile": "P5",
+      "range_seconds": [
+        130,
+        134
+      ],
+      "baseline": {
+        "windows": 9,
+        "accepted_windows": 0,
+        "discard_windows": 0,
+        "trusted_hand_windows": 6,
+        "trusted_gold_windows": 0,
+        "gold_tile_votes": {}
+      },
+      "candidate": {
+        "windows": 9,
+        "accepted_windows": 6,
+        "discard_windows": 6,
+        "trusted_hand_windows": 6,
+        "trusted_gold_windows": 9,
+        "gold_tile_votes": {
+          "P5": 9
+        }
+      },
+      "reviewed_endpoints": [
+        {
+          "frame": 3912,
+          "frame_rgb_sha256": "9149ab6cd6ef5e716187d945082f456b5ac02c05fcd2661d6a41552cd621b0d7",
+          "truth": [
+            "S3",
+            "S5",
+            "M2",
+            "M2",
+            "M4",
+            "M7",
+            "E",
+            "E",
+            "E",
+            "W",
+            "W"
+          ],
+          "meld_group_sizes": [
+            3,
+            3
+          ],
+          "has_discards": true
+        },
+        {
+          "frame": 3924,
+          "frame_rgb_sha256": "e4dae1dfea0918304203a32703d2f87ae3f4512052a480c6edda931ffce7a1f7",
+          "truth": [
+            "S3",
+            "S5",
+            "M2",
+            "M2",
+            "M4",
+            "M7",
+            "E",
+            "E",
+            "E",
+            "W",
+            "W"
+          ],
+          "meld_group_sizes": [
+            3,
+            3
+          ],
+          "has_discards": true
+        },
+        {
+          "frame": 3936,
+          "frame_rgb_sha256": "7ff43b383fa428ed9b0ec57501280eca228759b80e8206936bcd95f63852f018",
+          "truth": [
+            "S3",
+            "S5",
+            "M2",
+            "M2",
+            "M4",
+            "M7",
+            "E",
+            "E",
+            "E",
+            "W",
+            "W"
+          ],
+          "meld_group_sizes": [
+            3,
+            3
+          ],
+          "has_discards": true
+        },
+        {
+          "frame": 3948,
+          "frame_rgb_sha256": "d314d261245c55067794454891a8db842e5c2679aacdb35501b7985c0ee21f59",
+          "truth": [
+            "S3",
+            "S5",
+            "M2",
+            "M2",
+            "M4",
+            "M7",
+            "E",
+            "E",
+            "E",
+            "W",
+            "W"
+          ],
+          "meld_group_sizes": [
+            3,
+            3
+          ],
+          "has_discards": true
+        },
+        {
+          "frame": 3960,
+          "frame_rgb_sha256": "7cb6c61341b96f24b55709a177b562c3d502626bc25143991e48d88e2dc2ec5d",
+          "truth": [
+            "S3",
+            "S5",
+            "M2",
+            "M2",
+            "M4",
+            "M7",
+            "E",
+            "E",
+            "E",
+            "W",
+            "W"
+          ],
+          "meld_group_sizes": [
+            3,
+            3
+          ],
+          "has_discards": true
+        },
+        {
+          "frame": 3972,
+          "frame_rgb_sha256": "8e9b5d3516e935012bcec95855ee9ba7dfceadc89095db2961f5e4e3bd1847ea",
+          "truth": [
+            "S3",
+            "S5",
+            "M2",
+            "M2",
+            "M4",
+            "M7",
+            "E",
+            "E",
+            "E",
+            "W",
+            "W"
+          ],
+          "meld_group_sizes": [
+            3,
+            3
+          ],
+          "has_discards": true
+        }
+      ],
+      "candidate_report_sha256": "049682b562a0a497949c99016f3757df2e7e67b6099c9e5028b8902a6e2c99bd"
+    }
+  ],
+  "manual_review": {
+    "authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+    "all10displayed_endpoint_hands_match_images": true,
+    "concealed_tiles_reviewed": 118,
+    "distinct_hand_compositions": 2,
+    "meld_group_counts_match_images": true,
+    "meld_face_identities_confirmed": false
+  },
+  "limits": [
+    "Same original match, static indicator appearance near training; not independent recognition accuracy.",
+    "Runtime9Goldtrusted windows per segment include carried facts, not9independentidentities.",
+    "Paired restore demonstrates current offlinetrialchain, not default19reference bundle or Windows mirror readiness.",
+    "118tiles repeat2handcompositions; not118independentexamples.",
+    "Remaining8blocked windows retain animation/geometry/identity failures.",
+    "No private source/crop pixels uploaded, no new installer."
+  ]
+}

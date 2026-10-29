@@ -180,6 +180,77 @@ def _visible_two_face_seam(image_rgb: ndarray, box: tuple[int, int, int, int],
     return max(candidates)[1]
 
 
+def _visible_multi_face_seams(image_rgb: ndarray, box: tuple[int, int, int, int],
+                              zone: RiverZone) -> tuple[int, ...] | None:
+    """Split a 3+ face row only when every join is visible in two clean bands.
+
+    Width bounds suggest possible counts, but never prove a count. A missing
+    join, glyph-only line, or two plausible counts leaves the whole row unknown.
+    """
+    import numpy as np
+
+    x, y, width, height = box
+    frame_width = image_rgb.shape[1]
+    min_width = zone.single_width[0] * frame_width * .90
+    max_width = zone.single_width[1] * frame_width * 1.08
+    if height < 25 or width < min_width * 2.7:
+        return None
+    face = image_rgb[y:y + height, x:x + width].astype(np.float32).mean(axis=2) / 255
+    bands = (
+        face[max(0, round(height * .05)):max(1, round(height * .19))].mean(axis=0),
+        face[round(height * .55):round(height * .67)].mean(axis=0),
+    )
+    if any(not len(band) or np.isnan(band).any() for band in bands):
+        return None
+
+    solutions: list[tuple[int, ...]] = []
+    for count in range(max(3, int(width / max_width)), min(16, int(width / min_width)) + 1):
+        step = width / count
+        if not min_width <= step <= max_width:
+            continue
+        seams: list[int] = []
+        for number in range(1, count):
+            center = round(number * step)
+            radius = max(2, round(step * .07))
+            band_choices: list[list[tuple[float, int]]] = []
+            for band in bands:
+                choices: list[tuple[float, int]] = []
+                for seam in range(max(10, center - radius), min(width - 10, center + radius + 1)):
+                    left = float(np.median(band[seam - 9:seam - 5]))
+                    right = float(np.median(band[seam + 5:seam + 9]))
+                    contrast = min(left, right) - float(band[seam])
+                    if min(left, right) >= .65 and contrast >= .085:
+                        choices.append((contrast, seam))
+                band_choices.append(choices)
+            pairs = [(min(a[0], b[0]), a[1], b[1])
+                     for a in band_choices[0] for b in band_choices[1]
+                     if abs(a[1] - b[1]) <= 2]
+            if not pairs:
+                break
+            _, upper, lower = max(pairs)
+            seams.append(round((upper + lower) / 2))
+        if len(seams) == count - 1 and all(
+            min_width <= end - start <= max_width
+            for start, end in zip((0, *seams), (*seams, width))
+        ):
+            solutions.append(tuple(seams))
+    return solutions[0] if len(solutions) == 1 else None
+
+
+def _split_candidate(candidate: Any, box: tuple[int, int, int, int],
+                     seams: tuple[int, ...], frame_size: tuple[int, int]) -> list[Any]:
+    x, y, width, height = box
+    result = []
+    for start, end in zip((0, *seams), (*seams, width)):
+        raw = (x + start, y, end - start, height)
+        normalized = tuple(round(value / limit, 6) for value, limit in zip(
+            raw, (frame_size[0], frame_size[1], frame_size[0], frame_size[1])
+        ))
+        result.append(replace(candidate, pixel_bbox=raw, normalized_bbox=normalized,
+                              geometry_kind="river_split_face"))
+    return result
+
+
 def qualify_river_frame(image: Image.Image, frame: PublicGeometryFrame,
                         *, manifest: RiverManifest,
                         actual_sha256: str) -> QualifiedRiverFrame:
@@ -201,6 +272,57 @@ def qualify_river_frame(image: Image.Image, frame: PublicGeometryFrame,
     by_actor: dict[str, list[Any]] = {zone.actor: [] for zone in manifest.zones}
     trusted = {zone.actor: True for zone in manifest.zones}
     issues: list[str] = []
+    # The generic detector previously dropped wide 3+ face components from
+    # single_face candidates. Within a reviewed river, that must invalidate
+    # the actor snapshot rather than silently removing those public tiles.
+    for box in frame.oversized_bboxes:
+        for zone in manifest.zones:
+            zx, zy, zw, zh = zone.bbox
+            bx, by, bw, bh = box
+            overlap = (max(0., min(zx + zw, bx + bw) - max(zx, bx))
+                       * max(0., min(zy + zh, by + bh) - max(zy, by)))
+            # A wide component straddling the river boundary may join the
+            # whole row to a lifted tile or a meld. Its clipped footprint is
+            # not a reviewed tile box and must not be split or treated as an
+            # empty, trusted river.
+            if (not zone.contains(box)
+                    and bw >= zone.single_width[0] * 1.55
+                    and overlap / (zw * zh) >= .5):
+                trusted[zone.actor] = False
+                issue = f"{zone.actor}:river_occluded_by_oversized_component"
+                if issue not in issues:
+                    issues.append(issue)
+        zones = [
+            zone for zone in manifest.zones
+            if zone.contains(box)
+            and zone.single_height[0] <= box[3] <= zone.single_height[1]
+            and box[2] >= zone.single_width[0] * 1.55
+        ]
+        if len(zones) > 1:
+            raise ValueError("ambiguous overlapping oversized river zones")
+        if zones:
+            zone = zones[0]
+            x, y, width, height = (round(box[i] * manifest.frame_size[i % 2])
+                                   for i in range(4))
+            seams = _visible_multi_face_seams(rgb, (x, y, width, height), zone)
+            if seams is None:
+                trusted[zone.actor] = False
+                issue = f"{zone.actor}:oversized_river_component"
+                if issue not in issues:
+                    issues.append(issue)
+            else:
+                # The detector intentionally keeps oversized components out of
+                # candidates. This source-scoped geometry can restore only
+                # UNKNOWN identities, never a discard or turn assertion.
+                from workspace.vision.public_tile_detector import PublicGeometryCandidate
+                template = PublicGeometryCandidate(
+                    pixel_bbox=(x, y, width, height), normalized_bbox=box,
+                    geometry_kind="river_split_face", confidence=0.0,
+                    fill_ratio=0.0, frame=frame.frame, session=frame.session,
+                )
+                by_actor[zone.actor].extend(_split_candidate(
+                    template, (x, y, width, height), seams, manifest.frame_size))
+                issues.append(f"{zone.actor}:visible_multi_face_seams")
     for candidate in frame.candidates:
         # Existing detector calls touching faces a single_face until separated.
         # Upper-protrusion art and bottom_group must not become river facts.
@@ -227,16 +349,8 @@ def qualify_river_frame(image: Image.Image, frame: PublicGeometryFrame,
             trusted[zone.actor] = False
             issues.append(f"{zone.actor}:unsplit_wide_river_component")
             continue
-        for raw in ((x, y, seam, height), (x + seam, y, width - seam, height)):
-            px, py, pw, ph = raw
-            normalized = (round(px / manifest.frame_size[0], 6),
-                          round(py / manifest.frame_size[1], 6),
-                          round(pw / manifest.frame_size[0], 6),
-                          round(ph / manifest.frame_size[1], 6))
-            by_actor[zone.actor].append(replace(
-                candidate, pixel_bbox=raw, normalized_bbox=normalized,
-                geometry_kind="river_split_face",
-            ))
+        by_actor[zone.actor].extend(_split_candidate(
+            candidate, (x, y, width, height), (seam,), manifest.frame_size))
         issues.append(f"{zone.actor}:visible_two_face_seam")
 
     # Never stream a partial actor river when an unresolved blob is present.

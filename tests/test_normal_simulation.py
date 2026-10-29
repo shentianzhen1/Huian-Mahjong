@@ -384,11 +384,20 @@ class NormalSimulationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             real.finalize_simulation_only_outcome()
 
-    def test_run_dispatches_only_explicit_profile(self):
-        result = Simulator(config=SimulatorConfig()).run(seed=1, max_steps=1)
-        self.assertTrue(result.simulation_only)
-        self.assertNotEqual(result.phase, "OPENING_QIANGJIN_CHECK")
-        self.assertFalse(Simulator().run(seed=1).simulation_only)
+    def test_run_dispatches_explicit_legacy_and_default_target_profiles(self):
+        legacy = Simulator(config=SimulatorConfig()).run(seed=1, max_steps=1)
+        self.assertTrue(legacy.simulation_only)
+        self.assertNotEqual(legacy.phase, "OPENING_QIANGJIN_CHECK")
+        self.assertNotEqual((legacy.config or {}).get("mode"), "TARGET_ROOM_STAGED")
+
+        target = Simulator().run(seed=1, max_steps=1)
+        self.assertTrue(target.simulation_only)
+        self.assertEqual(target.config["mode"], "TARGET_ROOM_STAGED")
+        self.assertEqual(
+            target.config["opening_mode"],
+            "STAGED_SYSTEM_RANDOM_NONFLOWER",
+        )
+        self.assertIsNone(target.dice_total)
 
     def test_finished_fixture_cannot_masquerade_as_a_new_completed_hand(self):
         result, game = self.run_fixture(initial_state=boundary_state(), max_steps=1)
