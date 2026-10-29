@@ -35,3 +35,22 @@ class HandProgressCropFallbackTests(unittest.TestCase):
         self.assertIsNone(read.hand_number)
         self.assertIn('hand_unreadable', read.issues)
         self.assertEqual(read.hand_mode, 'invalid')
+
+    def test_hand_only_consensus_does_not_read_scores_or_remaining(self):
+        from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
+        score_backend = Mock(side_effect=AssertionError('score OCR must not run'))
+        status_backend = Mock(side_effect=['2/6', '2/8', '2/8'])
+        reader = PublicStateReader(score_backend=score_backend, status_backend=status_backend)
+        result = reader.read_hand_window([Image.new('RGB',(1108,512)) for _ in range(2)])
+        self.assertEqual(result.observation.hand_number, 2)
+        self.assertEqual(result.observation.hand_votes, 2)
+        self.assertIsNone(result.observation.score_pair)
+        self.assertIsNone(result.observation.remaining_tiles)
+        score_backend.assert_not_called()
+        self.assertEqual(status_backend.call_count, 3)
+
+    def test_hand_only_disagreement_cannot_authorize_boundary(self):
+        from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
+        reader = PublicStateReader(status_backend=Mock(side_effect=['2/8','3/8']))
+        result = reader.read_hand_window([Image.new('RGB',(1108,512)) for _ in range(2)])
+        self.assertIsNone(result.observation.hand_number)

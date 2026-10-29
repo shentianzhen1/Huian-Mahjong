@@ -547,18 +547,21 @@ def run_video_test(
             and last_public_attempt is not None
             and (last_public_attempt.get('observation') or {}).get('hand_number') != gold_hand_number
         )
-        ocr_due = (
-            boundary_pending
-            or
+        regular_ocr_due = (
             last_public_row is None
             or current_seconds - last_ocr_seconds >= REPLAY_OCR_INTERVAL_SECONDS
         )
+        hand_only_retry = (boundary_pending and not regular_ocr_due
+                           and callable(getattr(public_reader, 'read_hand_window', None)))
+        ocr_due = boundary_pending or regular_ocr_due
         if ocr_due:
             ocr_started = time.perf_counter()
             try:
                 # Two fresh nearby frames retain the 2-vote PublicState gate
                 # while avoiding OCR of the same overlapping frame three times.
-                public = public_reader.read_window(
+                read_public = (public_reader.read_hand_window if hand_only_retry
+                               else public_reader.read_window)
+                public = read_public(
                     tuple(item[2] for item in burst[-2:]),
                     previous=previous_public,
                     minimum_votes=2,
@@ -588,7 +591,9 @@ def run_video_test(
                     "error": f"{type(exc).__name__}: {exc}",
                 }
             last_public_attempt = public_row
-            last_ocr_seconds = current_seconds
+            public_row["read_scope"] = "hand_only_retry" if hand_only_retry else "full_public"
+            if not hand_only_retry:
+                last_ocr_seconds = current_seconds
             public_row["elapsed_ms"] = round(
                 (time.perf_counter() - ocr_started) * 1000, 3,
             )
