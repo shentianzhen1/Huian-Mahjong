@@ -107,6 +107,7 @@ def with_private_hand_packet(resources, manifest_path):
         inner_features.append((label['tile_id'], neutral(crop, trim_edges=True)))
     features = []
     opened_gold_features = []
+    concealed_gold_features = []
     for row in manifest['rows']:
         with Image.open(path.parent / row['crop']) as source:
             image = source.convert('RGB')
@@ -117,6 +118,9 @@ def with_private_hand_packet(resources, manifest_path):
             if review_path is None:
                 raise ValueError('Reviewed hand role requires a verified training review')
             role = 'hand'
+        if role == 'concealed_gold':
+            concealed_gold_features.append((row['truth'], _feature(image, region='gold_region')))
+            continue
         if role == 'opened_gold':
             opened_gold_features.append((row['truth'], _feature(image, region='gold_region')))
             continue
@@ -134,6 +138,9 @@ def with_private_hand_packet(resources, manifest_path):
     if opened_gold_features:
         from .opened_gold_references import OpenedGoldReferenceClassifier
         ordinary = OpenedGoldReferenceClassifier(ordinary, opened_gold_features)
+    if concealed_gold_features:
+        from .concealed_gold_references import ConcealedGoldReferenceClassifier
+        ordinary = ConcealedGoldReferenceClassifier(ordinary, concealed_gold_features)
     result['classifier'] = TranslatedHandClassifier(ordinary, features, neutral_features, inner_features)
     return result
 
