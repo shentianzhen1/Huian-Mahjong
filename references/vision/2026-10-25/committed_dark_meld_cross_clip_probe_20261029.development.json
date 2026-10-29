@@ -1,0 +1,2066 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "base_commit": "fe4b136b5505dc4f8f9dead8d92bc93127b0d065",
+  "method": "Evaluate committed propose_local_meld_components on baseline150/proposal130 dynamic detector outputs, edge_seams=True. Compare eligible complete_gap_groups with baseline grouping at fixed endpoints; no temporal fusion or advice rerun.",
+  "sources": {
+    "primary": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+    "secondary": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b"
+  },
+  "results": {
+    "primary": {
+      "frames": 237,
+      "changed_geometry_endpoints": []
+    },
+    "secondary": {
+      "frames": 224,
+      "changed_geometry_endpoints": [
+        {
+          "frame": 1224,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1236,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1248,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1260,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1272,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1284,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1296,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1308,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1320,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1332,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1344,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1356,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1368,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1380,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1392,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1404,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1416,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1428,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1440,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1452,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1464,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1476,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1488,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1500,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1512,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1524,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1536,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ]
+          ],
+          "baseline_groups": [
+            2
+          ],
+          "proposed_groups": [
+            3
+          ]
+        },
+        {
+          "frame": 1548,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1572,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1584,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1596,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1608,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1620,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1632,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1644,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1656,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1668,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1680,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1692,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1704,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1716,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1728,
+          "added_boxes": [],
+          "baseline_groups": [
+            4,
+            2
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1740,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1752,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1764,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1776,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1788,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1800,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1812,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1824,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1836,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1848,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1860,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1872,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1884,
+          "added_boxes": [
+            [
+              194,
+              442,
+              41,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1896,
+          "added_boxes": [
+            [
+              194,
+              442,
+              41,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1908,
+          "added_boxes": [
+            [
+              194,
+              442,
+              41,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1920,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1932,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1944,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1956,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1968,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1980,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 1992,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2004,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2016,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2028,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2040,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2052,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2064,
+          "added_boxes": [
+            [
+              194,
+              442,
+              41,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2076,
+          "added_boxes": [
+            [
+              194,
+              442,
+              41,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2088,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2100,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2112,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2124,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2136,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2148,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2160,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2172,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2184,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2196,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2208,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2220,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2232,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2244,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2256,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2268,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2280,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2292,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2304,
+          "added_boxes": [
+            [
+              194,
+              442,
+              41,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2316,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2328,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2340,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2352,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2364,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2376,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2388,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2400,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2412,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        },
+        {
+          "frame": 2424,
+          "added_boxes": [
+            [
+              194,
+              442,
+              42,
+              56
+            ],
+            [
+              337,
+              442,
+              44,
+              52
+            ]
+          ],
+          "baseline_groups": [
+            4
+          ],
+          "proposed_groups": [
+            3,
+            3
+          ]
+        }
+      ]
+    }
+  },
+  "manual_review": {
+    "authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+    "frame1224": "One3-face exposed group visible; one dark face recovery matches geometry. Hand highlight remains separate.",
+    "frame1548": "Two3-face exposed groups visible during animation. Group split3+3 matches geometry; this is not temporal stability approval.",
+    "frame1740": "Two3-face exposed groups visible; both local recovered faces match geometry."
+  },
+  "limits": [
+    "Primary237 unchanged is regression parity, not proof of complete detection accuracy.",
+    "Secondary100 corrections include only3 representative endpoints visually checked in this pass; no100-correct claim.",
+    "These remain revealed development clips, not source-disjoint holdout.",
+    "No default Runtime connection; no new installer."
+  ]
+}
