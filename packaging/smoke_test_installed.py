@@ -52,11 +52,15 @@ assert reference_count == manifest['reference_pack_count']
 assert reference_version == manifest['reference_pack_version']
 assert '校验通过' in window.reference_pack_status.get()
 reference_resources = with_private_hand_packet(prepare_runtime_resources(dataset, 'installed-assets-smoke'), reference_path)
-assert len(reference_resources['classifier'].extra_features) == 16
-assert reference_resources['classifier'].opened_gold_reference_count == 3
+assert len(reference_resources['classifier'].extra_features) == 20
+assert reference_resources['classifier'].opened_gold_reference_count == 7
 assert len(reference_resources['training_labels']) == 137
 assert reference_resources['experimental_training_review']['removed_training_labels'] == 10
-assert len(reference_resources['classifier'].extra_features) + reference_resources['classifier'].opened_gold_reference_count == reference_count
+from workspace.vision.tiles_runtime_v0_2.concealed_gold_references import ConcealedGoldReferenceClassifier
+concealed = reference_resources['classifier'].ordinary
+assert isinstance(concealed, ConcealedGoldReferenceClassifier)
+assert len(concealed.references) == 1
+assert len(reference_resources['classifier'].extra_features) + reference_resources['classifier'].opened_gold_reference_count + len(concealed.references) == reference_count
 from workspace.vision.capture_validator.auto_recorder import TemplatePhaseDetector
 phase_detector = TemplatePhaseDetector.from_project_evidence(site)
 assert sum(len(v) for v in phase_detector.templates.values()) == 6

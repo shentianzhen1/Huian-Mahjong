@@ -58,8 +58,8 @@ class ConcealedGoldReferenceTests(unittest.TestCase):
             path.write_text(json.dumps(manifest))
             result = with_private_hand_packet(raw, path)
         c = result['classifier']
-        self.assertEqual(len(c.extra_features),16)
-        self.assertEqual(c.opened_gold_reference_count,3)
+        self.assertEqual(len(c.extra_features),20)
+        self.assertEqual(c.opened_gold_reference_count,7)
         self.assertEqual(result['gold_skin_covered'],original_coverage)
         self.assertEqual(raw['gold_skin_covered'],original_coverage)
         self.assertIsInstance(c.ordinary, ConcealedGoldReferenceClassifier)
