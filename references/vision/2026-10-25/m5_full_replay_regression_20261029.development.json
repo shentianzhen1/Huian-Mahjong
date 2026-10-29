@@ -1,0 +1,494 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "method": "Offline prior local-dark geometry replay, replacing only add_m4 feature helper with added reviewed frame672 M5. Separate primary replay keeps its original geometry. OCR excluded.",
+  "results": {
+    "secondary": {
+      "paired_windows": 224,
+      "advice": 148,
+      "discards": 71,
+      "changed_windows": [
+        {
+          "frame": 1848,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                "P6",
+                "M1",
+                "M2",
+                "M3",
+                "M6",
+                "M7",
+                "SOUTH",
+                "SOUTH",
+                "W",
+                "W",
+                null
+              ],
+              [
+                "P6",
+                "M1",
+                "M2",
+                "M3",
+                "M6",
+                "M7",
+                "SOUTH",
+                "SOUTH",
+                "W",
+                "W",
+                "M5"
+              ]
+            ],
+            "snapshot.hand_trusted": [
+              false,
+              true
+            ],
+            "hint.shanten": [
+              null,
+              0
+            ],
+            "hint.best_discards": [
+              [],
+              [
+                {
+                  "discard": "P6",
+                  "shanten": 0,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                }
+              ]
+            ],
+            "hint.issues": [
+              [
+                "hand_untrusted",
+                "hand_identity_unknown",
+                "river_untrusted:0",
+                "river_untrusted:1",
+                "meld_identity_unknown:0",
+                "meld_untrusted:1",
+                "runtime_hand_not_fully_trusted",
+                "player_river_missing",
+                "opponent_river_missing",
+                "opponent_meld_missing",
+                "experimental_hand_sources_unvalidated"
+              ],
+              [
+                "river_untrusted:0",
+                "river_untrusted:1",
+                "meld_identity_unknown:0",
+                "meld_untrusted:1",
+                "player_river_missing",
+                "opponent_river_missing",
+                "opponent_meld_missing",
+                "experimental_hand_sources_unvalidated"
+              ]
+            ],
+            "display_allowed": [
+              false,
+              true
+            ]
+          }
+        },
+        {
+          "frame": 1860,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                "P6",
+                "M1",
+                "M2",
+                "M3",
+                "M6",
+                "M7",
+                "SOUTH",
+                "SOUTH",
+                "W",
+                "W",
+                "M3"
+              ],
+              [
+                "P6",
+                "M1",
+                "M2",
+                "M3",
+                "M6",
+                "M7",
+                "SOUTH",
+                "SOUTH",
+                "W",
+                "W",
+                "M5"
+              ]
+            ],
+            "hint.shanten": [
+              1,
+              0
+            ],
+            "hint.best_discards": [
+              [
+                {
+                  "discard": "M3",
+                  "shanten": 1,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                },
+                {
+                  "discard": "P6",
+                  "shanten": 1,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                }
+              ],
+              [
+                {
+                  "discard": "P6",
+                  "shanten": 0,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 1872,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                "P6",
+                "M1",
+                "M2",
+                "M3",
+                "M6",
+                "M7",
+                "SOUTH",
+                "SOUTH",
+                "W",
+                "W",
+                "M3"
+              ],
+              [
+                "P6",
+                "M1",
+                "M2",
+                "M3",
+                "M6",
+                "M7",
+                "SOUTH",
+                "SOUTH",
+                "W",
+                "W",
+                "M5"
+              ]
+            ],
+            "hint.shanten": [
+              1,
+              0
+            ],
+            "hint.best_discards": [
+              [
+                {
+                  "discard": "M3",
+                  "shanten": 1,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                },
+                {
+                  "discard": "P6",
+                  "shanten": 1,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                }
+              ],
+              [
+                {
+                  "discard": "P6",
+                  "shanten": 0,
+                  "total_live_copies": null,
+                  "effective_tile_types": []
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 2604,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M3",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ],
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M5",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 2616,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M3",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ],
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M5",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 2628,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M3",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ],
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M5",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 2640,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M3",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ],
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M5",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 2652,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M3",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ],
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M5",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ]
+            ]
+          }
+        },
+        {
+          "frame": 2664,
+          "diff": {
+            "snapshot.own_hand": [
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M3",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ],
+              [
+                null,
+                "P1",
+                "P2",
+                "S1",
+                "S1",
+                "S8",
+                "M1",
+                "M3",
+                "M5",
+                "M6",
+                "W",
+                null,
+                null,
+                null,
+                "G",
+                "B"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "primary": {
+      "paired_windows": 237,
+      "advice": 173,
+      "discards": 42,
+      "changed_windows": []
+    }
+  },
+  "manual_checks": {
+    "frame1848": "Visible full11-tile hand matches candidate; drawn M5.",
+    "frames1860_1872": "Previously reviewed M5 draws now correctly classified; shanten1 to0, discard list nowP6.",
+    "frame2604": "Next hand visible Wan sequenceM1 M3 M5 M6; correctionM3toM5 agrees, whole hand remains incomplete and blocked."
+  },
+  "limits": [
+    "Revealed same-source experiments, not independent performance.",
+    "148output windows are coverage, not148fully reviewed correct hands.",
+    "Other new-round changed frames2616..2664 not individually visually re-reviewed; remain blocked.",
+    "No source promotion/runtime integration or installer."
+  ]
+}
