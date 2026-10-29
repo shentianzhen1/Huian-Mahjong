@@ -5,6 +5,8 @@ pixels/detector thresholds and temporal validation belong to the caller.
 Groups here assert geometry only, never tile identities or legal melds.
 """
 
+from statistics import median
+
 
 def complete_gap_groups(components):
     """Return complete 3/4-face proposals, or None so callers retain baseline."""
@@ -16,7 +18,11 @@ def complete_gap_groups(components):
             continue
         previous = groups[-1][-1]['pixel_bbox']
         gap = box[0] - previous[0] - previous[2]
-        if gap > min(box[2], previous[2]) * .2:
+        group_boxes = [member['pixel_bbox'] for member in groups[-1]]
+        centre_y = median(y+h/2 for _, y, _, h in group_boxes)
+        typical_height = median(h for _, _, _, h in group_boxes)
+        vertically_aligned = abs(box[1]+box[3]/2-centre_y) <= typical_height*.8
+        if gap > min(box[2], previous[2]) * .2 or not vertically_aligned:
             groups.append([item])
         else:
             groups[-1].append(item)
@@ -46,6 +52,8 @@ def propose_local_meld_components(baseline, proposals):
                for other in [*baseline, *additions]):
             continue
         for seed in seeds:
+            if any(item.get(key) != seed.get(key) for key in ('frame', 'session')):
+                continue
             sx, sy, sw, sh = seed['pixel_bbox']
             if (abs(y-sy) <= sh*.2 and abs(h-sh) <= sh*.25
                     and -sw*.1 <= x-(sx+sw) <= sw*.45):

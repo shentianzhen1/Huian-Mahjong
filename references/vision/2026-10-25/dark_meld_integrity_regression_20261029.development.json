@@ -1,0 +1,24 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "changes": [
+    "Reject vertical outliers when forming3/4face geometric groups; preserve overlapping stacked4-face layout.",
+    "Require frame/session agreement before appending proposal to seed."
+  ],
+  "validation": {
+    "focused_tests_passed": 9,
+    "skipped": 0,
+    "primary_geometry_endpoints": 237,
+    "secondary_geometry_endpoints": 224,
+    "paired_geometry_records_equal_to_prior": true,
+    "primary_modified_endpoints": 0,
+    "secondary_modified_endpoints": 100
+  },
+  "limits": [
+    "Synthetic edge cases validate rejection behavior, not occurrence frequency in real captures.",
+    "Same development videos as prior experiment; not independent accuracy.",
+    "No full temporal advice replay rerun in this revision.",
+    "Offline module only; no installer."
+  ]
+}

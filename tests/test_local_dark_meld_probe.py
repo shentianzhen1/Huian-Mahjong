@@ -41,3 +41,18 @@ class LocalDarkMeldProbeTests(unittest.TestCase):
     def test_incomplete_groups_request_baseline_fallback(self):
         self.assertIsNone(complete_gap_groups([]))
         self.assertIsNone(complete_gap_groups(self.extra))
+
+    def test_vertical_outlier_cannot_complete_a_group(self):
+        faces = [component((0,0,40,50)), component((40,0,40,50)),
+                 component((80,100,40,50))]
+        self.assertIsNone(complete_gap_groups(faces))
+
+    def test_stacked_four_face_layout_remains_one_group(self):
+        faces = [component((0,50,40,50)), component((40,50,40,50)),
+                 component((40,20,40,50)), component((80,50,40,50))]
+        self.assertEqual([len(g) for g in complete_gap_groups(faces)], [4])
+
+    def test_cross_frame_or_session_proposals_do_not_complete_melds(self):
+        for field, value in [('frame', 1794), ('session', 'other-match')]:
+            extra = [{**x, field: value} for x in self.extra]
+            self.assertIs(propose_local_meld_components(self.base, extra), self.base)
