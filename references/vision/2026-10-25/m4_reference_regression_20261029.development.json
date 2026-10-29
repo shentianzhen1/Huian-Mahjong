@@ -1,0 +1,99 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "base_commit": "1ddd4408e27d1891a94fd476b207aeb9a112ae0a",
+  "candidate": "Existing reviewed 19-reference trial + offline InnerRecoveryProbe + the M4 crop fixed in m4_sparse_reference_probe_20261029.development.json; append to translated/neutral/inner banks only.",
+  "paired_crop_controls": {
+    "queries": 134,
+    "method": "For each query SHA, remove all matching SHA labels before building classifier; remove packet rows with the matching source SHA. Apply verified training review. Compare ordinary trial, offline inner candidate, and offline inner plus added M4.",
+    "ordinary_trial": {
+      "top1_correct": 111,
+      "scores_ge_point82": 96,
+      "wrong_scores_ge_point82": 0
+    },
+    "inner_probe": {
+      "top1_correct": 112,
+      "scores_ge_point82": 97,
+      "wrong_scores_ge_point82": 0
+    },
+    "inner_plus_m4": {
+      "top1_correct": 113,
+      "scores_ge_point82": 97,
+      "wrong_scores_ge_point82": 0
+    },
+    "changed_from_inner": [
+      {
+        "image": "templates/hand/960_hand_region_s08_M4.png",
+        "truth": "M4",
+        "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+        "baseline": [
+          "M5",
+          0.7176727056503296
+        ],
+        "inner": [
+          "M5",
+          0.7176727056503296
+        ],
+        "candidate": [
+          "M4",
+          0.7703192830085754
+        ]
+      }
+    ]
+  },
+  "primary_recording_regression": {
+    "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+    "sample_interval_seconds": 0.2,
+    "paired_windows": 237,
+    "changed_windows": 0,
+    "compared_fields": [
+      "snapshot.own_hand",
+      "snapshot.gold_tile",
+      "snapshot.hand_trusted",
+      "snapshot.gold_trusted",
+      "snapshot.melds",
+      "snapshot.meld_trusted",
+      "snapshot.rivers",
+      "snapshot.river_trusted",
+      "display_allowed",
+      "hint.shanten",
+      "hint.best_discards",
+      "hint.issues"
+    ],
+    "advice_windows": 173,
+    "discard_windows": 42,
+    "ocr": "Explicitly excluded in both paired runs; not public-state/OCR verification."
+  },
+  "gold_s8_diagnosis": {
+    "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+    "reviewed_frame": 156,
+    "crop_bbox": [
+      107,
+      41,
+      42,
+      57
+    ],
+    "truth": "S8",
+    "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+    "frame252_score": 0.381421,
+    "opened_gold_reference_supported": false,
+    "result": "M4-only candidate still has 0 Gold-trusted and 0 advice windows in first30s; missing opened-S8 support remains unresolved."
+  },
+  "artifact_sha256": {
+    "m4_controls.json": "81a2f4b24b573ee2e1f23aa47537ecd88833f7e652e0e14ae0fbea8cdf01bd7d",
+    "m4_primary_replay.json": "ff36271b7c3cc96c9c4c352920f87b2c12b1ea0719c6da4cacafa14c3ef2a113",
+    "m4_primary_comparison.json": "5c0ede831a20ca2717b07cafbd6dba82050302a4032ade349e9086a7715a4863",
+    "m4_controls.py": "618a4d229e6d7aeb524b964a7c6414ff2a084164aeba238563827700ecd2668b",
+    "m4_primary_replay.py": "17b1ca2295851c73e9b793768ff586efec241d015387ed9a0431e0f7784c096c",
+    "m4_validation_common.py": "58c920b66a96183df0a406a3abfc0fe160f05bc3f9bbbd8885958e5c7ba5059c"
+  },
+  "limits": [
+    "All clips and crop controls are revealed development data; query SHA exclusion does not ensure different original matches.",
+    "Added M4 reference comes from the Sep26 recording; it can share original-match lineage with crop controls. No independent accuracy claim.",
+    "The sole corrected control remains below .82 (M4 .770319), so accepted crop count remains97/134; top1 gain is not an accepted identity gain.",
+    "Primary display/content parity is a regression result, not proof that all 237 hands are correct.",
+    "Secondary57 hand-trusted windows remain incompletely visually reviewed. No runtime/bundle promotion and no new private crop pixels uploaded."
+  ]
+}
