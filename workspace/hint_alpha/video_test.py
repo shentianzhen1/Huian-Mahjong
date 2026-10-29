@@ -472,6 +472,7 @@ def run_video_test(
         )
         source['advice_policy'] = 'reference_trial_stateful_within_burst_identity_confirmation'
         source['gold_hand_boundary_policy'] = 'fresh_public_two_vote_initial_or_sequential_before_advice'
+        source['hand_boundary_ocr_retry'] = 'each_runtime_window_while_unresolved'
         replay_advice_kwargs['confirm_with_prior'] = True
         source['runtime_window_stride'] = 2
         source['runtime_launch_interval_seconds'] = 2 * sample_interval_seconds
@@ -518,6 +519,7 @@ def run_video_test(
     public_rows = []
     previous_public = None
     last_public_row = None
+    last_public_attempt = None
     last_ocr_seconds = float("-inf")
     gold_hand_number = None
     timeline_accumulator = VideoTimelineAccumulator(source)
@@ -537,7 +539,17 @@ def run_video_test(
             continue
         burst = tuple(window)
         current_seconds = burst[-1][1]
+        # Retry fresh two-frame OCR during an unresolved hand transition.
+        # Stable hands retain the normal interval; no reused OCR authorizes reset.
+        boundary_pending = (
+            reference_packet is not None
+            and gold_hand_number is not None
+            and last_public_attempt is not None
+            and (last_public_attempt.get('observation') or {}).get('hand_number') != gold_hand_number
+        )
         ocr_due = (
+            boundary_pending
+            or
             last_public_row is None
             or current_seconds - last_ocr_seconds >= REPLAY_OCR_INTERVAL_SECONDS
         )
@@ -575,6 +587,7 @@ def run_video_test(
                     "reused": False,
                     "error": f"{type(exc).__name__}: {exc}",
                 }
+            last_public_attempt = public_row
             last_ocr_seconds = current_seconds
             public_row["elapsed_ms"] = round(
                 (time.perf_counter() - ocr_started) * 1000, 3,

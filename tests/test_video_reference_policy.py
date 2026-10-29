@@ -73,3 +73,33 @@ class VideoReferencePolicyTests(unittest.TestCase):
                 video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
                 run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader)
             self.assertEqual(calls,expected)
+
+    def test_pending_hand_retries_ocr_without_lowering_consensus(self):
+        from dataclasses import dataclass
+        @dataclass
+        class Observation:
+            hand_number: object
+            hand_votes: int = 2
+            score_pair: object = None
+        reads=[]
+        sequence=iter([Observation(2), Observation(None,1), Observation(None,1), Observation(3)])
+        def read(images, **kwargs):
+            reads.append(len(reads))
+            return SimpleNamespace(observation=next(sequence))
+        reset_counts=[]
+        def evaluate(samples, **kwargs):
+            reset_counts.append(reset.call_count)
+            return dict(display_allowed=False,frames=[x[0] for x in samples],
+                source_seconds=[x[1] for x in samples],
+                snapshot={'hand_trusted':False,'own_hand':[], 'gold_trusted':False,'gold_tile':None},
+                hint={'phase':None,'best_discards':[],'issues':[]})
+        with TemporaryDirectory() as tmp, \
+             patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':6,'width':1108,'height':512}), \
+             patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,i*.5,object()) for i in range(11)])), \
+             patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate), \
+             patch('workspace.hint_alpha.runtime_pipeline.RuntimeAdvicePipeline.reset') as reset:
+            video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
+            run_video_test(video,dataset_root='unused',reference_packet='explicit.json',
+                           public_reader=SimpleNamespace(read_window=read))
+        self.assertEqual(len(reads),4)
+        self.assertEqual(reset_counts,[1,1,1,1,2])
