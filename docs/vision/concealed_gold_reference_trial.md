@@ -6,6 +6,6 @@ This role creates a concealed-Gold wrapper outside the opened-indicator classifi
 
 Loading such a row does not change source coverage, cross-session qualification, training labels, or ordinary/neutral/inner features. The caller's existing explicit trial/source rules still apply; adding a reference does not qualify a class for default Runtime.
 
-Validation: eight focused tests pass, including role parsing, ordinary/opened method isolation, agreement/disagreement, confident pass-through, and unchanged source coverage. A reviewed SOUTH training crop confirms wiring through self-match; this is not held-out accuracy. The new role has not yet replaced the former bank mutation in the full new-hand replay experiment.
+Validation: eight focused tests pass, including role parsing, ordinary/opened method isolation, agreement/disagreement, confident pass-through, and unchanged source coverage. A reviewed SOUTH training crop confirms wiring through self-match; this is not held-out accuracy. The explicit 26-row private trial packet now replaces all manual reference-feature bank mutations in the revealed 76–90 second replay. Across 34 paired windows, compared hands, Gold, shanten, discard candidates, issues and display status match the earlier candidate. Ten windows display advice: four from the old hand and six from the new hand. This is same-source development replay, not independent accuracy.
 
 The installed 19-reference manifest and default runtime behavior remain unchanged. No private new pixels or installer are included in this change.
