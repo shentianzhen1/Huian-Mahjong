@@ -471,6 +471,7 @@ def run_video_test(
             allow_unvalidated_hand_sources=True,
         )
         source['advice_policy'] = 'reference_trial_stateful_within_burst_identity_confirmation'
+        source['gold_hand_boundary_policy'] = 'fresh_public_two_vote_initial_or_sequential_before_advice'
         replay_advice_kwargs['confirm_with_prior'] = True
         source['runtime_window_stride'] = 2
         source['runtime_launch_interval_seconds'] = 2 * sample_interval_seconds
@@ -518,6 +519,7 @@ def run_video_test(
     previous_public = None
     last_public_row = None
     last_ocr_seconds = float("-inf")
+    gold_hand_number = None
     timeline_accumulator = VideoTimelineAccumulator(source)
 
     for sample in iter_video_samples(
@@ -534,25 +536,6 @@ def run_video_test(
         if reference_packet is not None and candidate_windows % 2 == 0:
             continue
         burst = tuple(window)
-        runtime = evaluate_burst(
-            burst,
-            session=session,
-            dataset_root=dataset_root,
-            reader=replay_runtime_reader,
-            **({**replay_advice_kwargs, "previous_captured": previous_captured} if reference_packet is not None else {}),
-        )
-        previous_captured = burst[-1][1]
-        if reference_packet is not None:
-            from .theoretical_discards import explain_theoretical_discards
-            try:
-                details = explain_theoretical_discards(runtime)
-                if details is not None:
-                    runtime['theoretical_discard_details'] = details
-            except (ValueError, KeyError, TypeError) as exc:
-                # Auxiliary explanations must not replace the accepted hint.
-                runtime['theoretical_discard_error'] = f'{type(exc).__name__}: {exc}'
-        runtime_rows.append(runtime)
-
         current_seconds = burst[-1][1]
         ocr_due = (
             last_public_row is None
@@ -613,6 +596,36 @@ def run_video_test(
                 "reused": False,
                 "skipped": True,
             }
+        # A fresh confirmed public hand must reset Gold before this window's
+        # advice. Reused/failed OCR and jumps/regressions cannot authorize reset.
+        if reference_packet is not None and public_row.get('sampled') and 'observation' in public_row:
+            from .runtime_pipeline import confirmed_public_hand_boundary
+            from types import SimpleNamespace
+            observation = SimpleNamespace(**public_row['observation'])
+            if confirmed_public_hand_boundary(gold_hand_number, observation):
+                replay_advice_kwargs['pipeline'].reset()
+                gold_hand_number = observation.hand_number
+                previous_captured = None
+
+        runtime = evaluate_burst(
+            burst,
+            session=session,
+            dataset_root=dataset_root,
+            reader=replay_runtime_reader,
+            **({**replay_advice_kwargs, "previous_captured": previous_captured} if reference_packet is not None else {}),
+        )
+        previous_captured = burst[-1][1]
+        if reference_packet is not None:
+            from .theoretical_discards import explain_theoretical_discards
+            try:
+                details = explain_theoretical_discards(runtime)
+                if details is not None:
+                    runtime['theoretical_discard_details'] = details
+            except (ValueError, KeyError, TypeError) as exc:
+                # Auxiliary explanations must not replace the accepted hint.
+                runtime['theoretical_discard_error'] = f'{type(exc).__name__}: {exc}'
+        runtime_rows.append(runtime)
+
         public_rows.append(public_row)
         timeline_started = time.perf_counter()
         new_timeline_events = timeline_accumulator.observe(runtime, public_row)

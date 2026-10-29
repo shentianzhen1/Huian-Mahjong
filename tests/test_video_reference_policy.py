@@ -46,3 +46,30 @@ class VideoReferencePolicyTests(unittest.TestCase):
             result=evaluate_burst(samples,session='runtime-live',dataset_root='unused',reader=reader,pipeline=pipeline,confirm_with_prior=True)
             self.assertEqual(result['display_allowed'],not unknown)
             self.assertFalse(result['safe_for_executor'])
+
+    def test_fresh_confirmed_hand_resets_before_current_advice(self):
+        from dataclasses import dataclass
+        @dataclass
+        class Observation:
+            hand_number: int
+            hand_votes: int = 2
+            score_pair: object = None
+        for hands, expected in [([2,3,3], [1,2,2]), ([2,5,3], [1,1,2]),
+                                ([2,1,2], [1,1,1])]:
+            calls=[]
+            reader=SimpleNamespace(read_window=lambda *a,**k: SimpleNamespace(
+                observation=Observation(hands[len(calls)])))
+            def evaluate(samples, **kwargs):
+                calls.append(reset.call_count)
+                return dict(display_allowed=False,frames=[x[0] for x in samples],
+                    source_seconds=[x[1] for x in samples],
+                    snapshot={'hand_trusted':False,'own_hand':[], 'gold_trusted':False,'gold_tile':None},
+                    hint={'phase':None,'best_discards':[],'issues':[]})
+            with TemporaryDirectory() as tmp, \
+                 patch('workspace.hint_alpha.video_test.probe_video',return_value={'fps':30,'duration_seconds':8,'width':1108,'height':512}), \
+                 patch('workspace.hint_alpha.video_test.iter_video_samples',return_value=iter([(i,float(i),object()) for i in range(7)])), \
+                 patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate), \
+                 patch('workspace.hint_alpha.runtime_pipeline.RuntimeAdvicePipeline.reset') as reset:
+                video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
+                run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader)
+            self.assertEqual(calls,expected)
