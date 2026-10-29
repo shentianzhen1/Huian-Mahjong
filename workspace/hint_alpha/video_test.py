@@ -644,6 +644,22 @@ def run_video_test(
                 runtime['theoretical_discard_error'] = f'{type(exc).__name__}: {exc}'
         runtime_rows.append(runtime)
 
+        # A newly readable hand must not expose advice with the previous
+        # hand's carried Gold while fresh OCR cannot confirm the boundary.
+        if (reference_packet is not None and gold_hand_number is not None
+                and last_public_attempt is not None
+                and (last_public_attempt.get('observation') or {}).get('hand_number') != gold_hand_number):
+            runtime['hand_boundary_pending'] = True
+            runtime['display_allowed'] = False
+            runtime['hint'] = {
+                **runtime['hint'], 'status': 'BLOCKED', 'allowed': False,
+                'phase': None, 'shanten': None, 'best_discards': [],
+                'effective_tiles': [],
+                'issues': list(dict.fromkeys((*runtime['hint'].get('issues', ()),
+                                             'replay_hand_boundary_unconfirmed'))),
+            }
+            runtime.pop('theoretical_discard_details', None)
+
         public_rows.append(public_row)
         timeline_started = time.perf_counter()
         new_timeline_events = timeline_accumulator.observe(runtime, public_row)

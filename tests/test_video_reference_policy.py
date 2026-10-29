@@ -89,7 +89,7 @@ class VideoReferencePolicyTests(unittest.TestCase):
         reset_counts=[]
         def evaluate(samples, **kwargs):
             reset_counts.append(reset.call_count)
-            return dict(display_allowed=False,frames=[x[0] for x in samples],
+            return dict(display_allowed=True,frames=[x[0] for x in samples],
                 source_seconds=[x[1] for x in samples],
                 snapshot={'hand_trusted':False,'own_hand':[], 'gold_trusted':False,'gold_tile':None},
                 hint={'phase':None,'best_discards':[],'issues':[]})
@@ -99,7 +99,14 @@ class VideoReferencePolicyTests(unittest.TestCase):
              patch('workspace.hint_alpha.video_test.evaluate_burst',side_effect=evaluate), \
              patch('workspace.hint_alpha.runtime_pipeline.RuntimeAdvicePipeline.reset') as reset:
             video=Path(tmp)/'v.mp4';video.write_bytes(b'test')
-            run_video_test(video,dataset_root='unused',reference_packet='explicit.json',
+            result = run_video_test(video,dataset_root='unused',reference_packet='explicit.json',
                            public_reader=SimpleNamespace(read_window=read))
         self.assertEqual(len(reads),4)
         self.assertEqual(reset_counts,[1,1,1,1,2])
+        self.assertEqual([row['display_allowed'] for row in result['rows']],
+                         [True, True, False, False, True])
+        for row in result['rows'][2:4]:
+            self.assertEqual(row['hint']['status'], 'BLOCKED')
+            self.assertIsNone(row['hint']['shanten'])
+            self.assertEqual(row['hint']['best_discards'], [])
+            self.assertIn('replay_hand_boundary_unconfirmed', row['hint']['issues'])
