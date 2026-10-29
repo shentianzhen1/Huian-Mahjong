@@ -105,6 +105,8 @@ class StatusLineRead:
     safe_for_executor: bool = False
     remaining_mode: str = "primary"
     raw_remaining_fallback: str | None = None
+    raw_hand_fallback: str | None = None
+    hand_mode: str = "primary"
 
     def to_candidate(
         self,
@@ -173,6 +175,15 @@ class TesseractStatusReader:
             prepare_status_crop(crops["hand_progress"])
         )
         hand = parse_hand_progress(raw_hand)
+        raw_hand_fallback = None
+        hand_mode = "primary"
+        if hand is None:
+            left, top, right, bottom = profile.hand_progress.pixel_box(image.size)
+            margin = max(1, int(round(image.height * .008)))
+            expanded = image.crop((left, max(0, top-margin), right, bottom))
+            raw_hand_fallback = self.backend(prepare_status_crop(expanded))
+            hand = parse_hand_progress(raw_hand_fallback)
+            hand_mode = "top_expand_fallback" if hand is not None else "invalid"
         issues = []
         if remaining is None:
             issues.append("remaining_unreadable")
@@ -187,4 +198,6 @@ class TesseractStatusReader:
             safe_for_executor=False,
             remaining_mode=remaining_mode,
             raw_remaining_fallback=raw_remaining_fallback,
+            raw_hand_fallback=raw_hand_fallback,
+            hand_mode=hand_mode,
         )
