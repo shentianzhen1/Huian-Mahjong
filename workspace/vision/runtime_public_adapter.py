@@ -436,6 +436,11 @@ def player_meld_snapshot_from_runtime(
         components = []
 
     clusters = _cluster_meld_components(components)
+    if report.get('experimental_local_meld_geometry') is True:
+        from .tiles_runtime_v0_2.local_dark_meld_probe import complete_gap_groups
+        candidate_groups = complete_gap_groups(components)
+        if candidate_groups is not None:
+            clusters = candidate_groups
     expected_count = _open_meld_count_from_concealed_count(
         report.get("concealed_tile_count")
     )

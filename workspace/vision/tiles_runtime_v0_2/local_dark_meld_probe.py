@@ -1,6 +1,6 @@
-"""Explicit OFFLINE geometry proposal for revealed dark-meld experiments.
+"""Explicit trial geometry proposal for revealed dark-meld experiments.
 
-Not imported by Runtime. Inputs are geometry component dictionaries; proposal
+Used only by the opt-in local-meld trial adapter. Inputs are geometry component dictionaries; proposal
 pixels/detector thresholds and temporal validation belong to the caller.
 Groups here assert geometry only, never tile identities or legal melds.
 """

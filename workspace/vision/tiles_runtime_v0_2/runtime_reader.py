@@ -422,6 +422,8 @@ def read_stable_frames(
         "safe_for_hint": False,
         "safe_for_executor": False,
     }
+    if resources.get('experimental_local_meld_geometry') is True:
+        base['experimental_local_meld_geometry'] = True
     if fused.geometry_untrusted:
         return {
             **base,

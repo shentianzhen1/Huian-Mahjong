@@ -24,4 +24,6 @@ class ReplayReferenceTests(unittest.TestCase):
         self.assertEqual(meta['training_review']['removed_training_labels'],10)
         self.assertEqual(len(base['training_labels']),original)
         self.assertTrue(adapted['geometry_detector'].keywords['edge_seams'])
+        self.assertTrue(adapted['experimental_local_meld_geometry'])
+        self.assertNotIn('experimental_local_meld_geometry',base)
         self.assertFalse(meta['formal_promotion_evidence'])

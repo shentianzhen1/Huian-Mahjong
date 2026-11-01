@@ -1537,9 +1537,8 @@ class HintAlphaApp(tk.Tk):
                 if packet:
                     resources = cached_private_hand_packet(resources, packet)
                 if edge_seams:
-                    from functools import partial
-                    from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry
-                    resources['geometry_detector'] = partial(detect_dynamic_geometry, edge_seams=True)
+                    from workspace.vision.tiles_runtime_v0_2.local_meld_trial import with_local_meld_trial
+                    resources = with_local_meld_trial(resources)
                 reader_kwargs['resources'] = resources
             # Geometry is shared read-only by both identity reads.
             from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import detect_dynamic_geometry

@@ -133,12 +133,19 @@ def evaluate_runtime_report(
     trial_tiles = ()
     trial_gold = ()
     adapter_report = report
+    meld_trial = report.get('experimental_local_meld_geometry') is True
+    if meld_trial and not (trial and experimental):
+        adapter_report = {**report, 'geometry_untrusted': True,
+                          'geometry_issues': ['experimental_meld_geometry_requires_trial']}
     if trial and experimental:
         from .hand_source_trial import trial_hand_report
-        adapter_report, trial_tiles = trial_hand_report(report)
+        adapter_report, trial_tiles = trial_hand_report(adapter_report)
         from .gold_source_trial import trial_opened_gold_report
         adapter_report, trial_gold = trial_opened_gold_report(adapter_report)
     snapshot = current_snapshot_from_runtime(adapter_report, timestamp_seconds=captured)
+    if meld_trial:
+        snapshot = replace(snapshot, river_trusted=(False, False),
+            adapter_issues=(*snapshot.adapter_issues, 'experimental_meld_geometry_unvalidated'))
     if trial_tiles:
         snapshot = replace(snapshot, river_trusted=(False, False),
             adapter_issues=(*snapshot.adapter_issues, 'experimental_hand_sources_unvalidated'))
