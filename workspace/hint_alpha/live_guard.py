@@ -40,9 +40,15 @@ class LiveAdviceGuard:
             and (self.last_result is None or captured > self.last_result)
         )
 
-    def stale(self, now):
+    def capture_stale(self, now):
+        """A lost capture invalidates the session; an old hint alone does not."""
         return self.active and (
             self.last_frame is None or now - self.last_frame > self.max_age
+        )
+
+    def stale(self, now):
+        return self.active and (
+            self.capture_stale(now)
             or (self.last_result is not None and now - self.last_result > self.max_age)
         )
 

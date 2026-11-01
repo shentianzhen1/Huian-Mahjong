@@ -1928,10 +1928,32 @@ class HintAlphaApp(tk.Tk):
             anchor="center",
         )
 
+    def _expire_runtime_advice(self):
+        """Withdraw an old hint without destroying a still-fresh capture."""
+        expired_capture = self.live_guard.last_result
+        self.live_guard.last_result = None
+        interrupt_runtime_observations()
+        self.ui_hand_ok = False
+        self.table_hand_status.set('我的手牌：UNKNOWN')
+        self.table_meld_status.set('我的副露：UNKNOWN')
+        self.turn_status.set('当前状态：UNKNOWN（识别结果已过期）')
+        self.blocked_detail.set('识别结果已过期，等待当前手牌重新确认。')
+        self.hint_latency.set('本次提示耗时：暂无')
+        self.hint_status.set('向听提示：BLOCKED（识别结果已过期）')
+        self._refresh_health()
+        self.last_runtime_event_key = None
+        if self.evidence:
+            self.evidence.mark('RUNTIME_ADVICE_EXPIRED',
+                {'captured_monotonic': expired_capture, 'safe_for_executor': False},
+                source=self.source)
+
     def tick(self):
         try:
-            if self.live_guard.stale(time.monotonic()):
-                self._invalidate_advice("画面或识别结果已过期")
+            now = time.monotonic()
+            if self.live_guard.capture_stale(now):
+                self._invalidate_advice("采集画面已过期")
+            elif self.live_guard.stale(now):
+                self._expire_runtime_advice()
             self._consume_public_result()
             self._consume_runtime_result()
             self._consume_video_test_events()

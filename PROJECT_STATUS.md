@@ -40,6 +40,10 @@ initial trusted hand. Confirmation fences buffered/queued results and their
 prior-identity votes; same-hand recovery preserves Gold, next-hand confirmation
 clears it. Manual Gold does not bypass a pending hand boundary. The Python
 console now uses the same live entry as the installer/source launcher.
+With fresh capture, advisory expiry now withdraws the hint and resets identity
+confirmation without clearing hand/Gold memory or replacing worker queues.
+Actual capture loss still invalidates the generation and clears session facts;
+stale results cannot revive advice and pending-hand blocks remain in force.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 

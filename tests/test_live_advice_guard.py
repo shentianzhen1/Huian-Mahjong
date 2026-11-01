@@ -20,6 +20,8 @@ class LiveGuardTests(unittest.TestCase):
         self.assertFalse(guard.accepts(0, 10, 11))
         guard.observe(2, 12)
         self.assertTrue(guard.stale(12.1))  # old advice despite fresh capture
+        self.assertFalse(guard.capture_stale(12.1))
+        self.assertTrue(guard.capture_stale(14.1))
 
     def test_sequence_restart_creates_new_epoch(self):
         guard = LiveAdviceGuard()

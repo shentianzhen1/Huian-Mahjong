@@ -111,6 +111,12 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
             if 'health_status' in self.__dict__:
                 self._refresh_health()
 
+    def _expire_runtime_advice(self):
+        # Reset only identity confirmation; Gold and pending-hand state remain
+        # owned by the still-active capture/hand, not by one worker's latency.
+        with self.runtime_advice_pipeline.bind():
+            return super()._expire_runtime_advice()
+
     def _consume_runtime_result(self):
         # Base UI already owns queue freshness, evidence, rendering and the
         # fail-closed Hint gate. Bind only the tracker for this synchronous call
