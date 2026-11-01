@@ -6,6 +6,8 @@ def blocked_guidance(issues, *, geometry_untrusted=False, promotion_blocked=Fals
     if geometry_untrusted:
         return '画面或牌面位置尚未稳定。请保持投屏画面完整，等待重新识别。'
     issues = set(issues)
+    if 'live_hand_boundary_unconfirmed' in issues:
+        return '局号尚未确认，已暂停向听和弃牌建议；等待当前局重新确认。'
     if any(x.startswith('live_identity_') or x == 'live_hand_meld_waiting_confirmation' for x in issues):
         return '正在确认当前手牌，请等待画面稳定。'
     messages = []

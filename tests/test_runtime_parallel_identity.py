@@ -15,6 +15,34 @@ except ImportError:
 
 @unittest.skipUnless(runtime_reader is not None, 'Vision dependencies unavailable')
 class RuntimeParallelIdentityTests(unittest.TestCase):
+    def test_trial_off_does_not_inject_bundled_reference_classifier(self):
+        from workspace.vision.tiles_runtime_v0_2 import experimental_hand_translation, local_meld_trial
+        source = ast.parse(Path('workspace/hint_alpha/app.py').read_text())
+        app = next(n for n in source.body if isinstance(n, ast.ClassDef) and n.name == 'HintAlphaApp')
+        method = next(n for n in app.body if isinstance(n, ast.FunctionDef) and n.name == '_runtime_worker')
+        namespace = {'time': time, 'queue': queue, 'PROJECT_ROOT': Path.cwd()}
+        exec(compile(ast.Module(body=[method], type_ignores=[]), '<worker>', 'exec'), namespace)
+        for enabled in (False, True, False):
+            with self.subTest(enabled=enabled):
+                output = queue.Queue()
+                seen = []
+                def read(*args, **kwargs):
+                    seen.append(kwargs.get('resources', {}).get('classifier', 'base'))
+                    self.assertEqual(kwargs['confidence_threshold'], .82)
+                    return {'geometry_untrusted': True}
+                with patch.object(runtime_reader, 'read_stable_frames', side_effect=read), \
+                     patch.object(runtime_reader, 'prepare_runtime_resources', return_value={'classifier': 'base'}), \
+                     patch.object(experimental_hand_translation, 'cached_private_hand_packet',
+                                  return_value={'classifier': 'trial'}) as loader, \
+                     patch.object(local_meld_trial, 'with_local_meld_trial', side_effect=lambda x: x), \
+                     patch.object(dynamic_geometry, 'detect_dynamic_geometry', return_value=object()):
+                    namespace['_runtime_worker'](SimpleNamespace(experimental_hand_packet=Path('bundled.json'),
+                        experimental_edge_seams=enabled), [(1, 1., Mock()), (2, 1.1, Mock())],
+                        's', 4, 1.1, output)
+                self.assertEqual(output.get_nowait()[0], 'ok')
+                self.assertEqual(loader.call_count, int(enabled))
+                self.assertEqual(seen, ['trial' if enabled else 'base'] * 2)
+
     def test_real_worker_joins_two_reads_with_original_frame_ids_and_timestamps(self):
         source=ast.parse(Path('workspace/hint_alpha/app.py').read_text())
         app=next(n for n in source.body if isinstance(n,ast.ClassDef) and n.name=='HintAlphaApp')

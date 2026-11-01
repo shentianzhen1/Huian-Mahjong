@@ -7,6 +7,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class HintAlphaLiveEntrypointTests(unittest.TestCase):
+    def test_python_console_uses_same_live_boundary_as_installer(self):
+        config = (ROOT / 'pyproject.toml').read_text(encoding='utf-8')
+        self.assertIn('huian-hint-alpha = "workspace.hint_alpha.live_app:main"', config)
+
     def test_source_launcher_uses_stateful_live_app(self):
         launcher = (ROOT / "START_HINT_ALPHA.bat").read_text(encoding="utf-8")
 

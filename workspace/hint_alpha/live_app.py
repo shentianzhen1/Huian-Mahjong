@@ -13,6 +13,7 @@ OFF; this module only affects read-only advice/state presentation.
 from __future__ import annotations
 
 import argparse
+import time
 
 from . import app as shell
 from .live_snapshot_stability import LiveSnapshotStability
@@ -42,11 +43,20 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         pipeline = getattr(self, "runtime_advice_pipeline", None)
         if pipeline is not None:
             pipeline.reset()
+            pipeline.hand_boundary_pending = False
         self._refresh_manual_gold()
         self._gold_hand_number = None
         return super()._invalidate_advice(reason)
 
     def _update_public_view(self, observation):
+        result = super()._update_public_view(observation)
+        self._update_gold_hand_boundary(observation)
+        return result
+
+    def _public_state_failed(self):
+        self._update_gold_hand_boundary(None)
+
+    def _update_gold_hand_boundary(self, observation):
         # stream_epoch is a capture generation, not a Mahjong-hand identifier.
         # Gold may legitimately change while capture generation stays constant.
         # Only an initial or sequentially confirmed PublicState hand boundary
@@ -54,7 +64,10 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         # Presentation may display a rejected OCR jump/regression. Keep the
         # trusted Gold boundary independent so that display cannot authorize
         # a later reset (e.g. 3 -> 2 -> 3 or 3 -> 5 -> 6).
-        if confirmed_public_hand_boundary(self._gold_hand_number, observation):
+        pipeline = self.runtime_advice_pipeline
+        was_pending = pipeline.hand_boundary_pending
+        boundary = confirmed_public_hand_boundary(self._gold_hand_number, observation)
+        if boundary:
             # Initial OCR establishes this same hand; keep its user selection.
             if self._gold_hand_number is None:
                 self.runtime_advice_pipeline.reset(preserve_manual_gold=True)
@@ -62,7 +75,41 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
                 self.runtime_advice_pipeline.reset()
             self._gold_hand_number = observation.hand_number
             self._refresh_manual_gold()
-        return super()._update_public_view(observation)
+        pipeline.hand_boundary_pending = bool(self._gold_hand_number is not None and not (
+            confirmed_public_hand_boundary(None, observation)
+            and observation.hand_number == self._gold_hand_number))
+        if boundary or was_pending != pipeline.hand_boundary_pending:
+            # Queued reads and partial bursts from before confirmation cannot
+            # seed the next hand, even if their capture epoch is unchanged.
+            self.runtime_observation_not_before = time.monotonic()
+            frames = self.__dict__.get('runtime_frames')
+            if frames is not None:
+                frames.clear()
+            if pipeline.stability_tracker is not None:
+                pipeline.stability_tracker.reset()
+        if boundary or pipeline.hand_boundary_pending:
+            reason = ('局号尚未确认，等待当前局重新确认。' if pipeline.hand_boundary_pending
+                      else '局号已确认，等待新的手牌画面。')
+            self.ui_hand_ok = False
+            self.ui_gold_ok = False
+            self.ui_gold_tile = None
+            if pipeline.hand_boundary_pending:
+                self.ui_hand_number_ok = False
+            for name, text in (
+                ('blocked_detail', reason),
+                ('hint_latency', '本次提示耗时：暂无'),
+                ('turn_status', f'当前状态：UNKNOWN（{reason}）'),
+                ('table_hand_status', '我的手牌：UNKNOWN'),
+                ('table_meld_status', '我的副露：UNKNOWN'),
+                ('hint_status', f'向听提示：BLOCKED（{reason}）'),
+            ):
+                variable = self.__dict__.get(name)
+                if variable is not None:
+                    variable.set(text)
+            if 'match_header_status' in self.__dict__:
+                self._refresh_header()
+            if 'health_status' in self.__dict__:
+                self._refresh_health()
 
     def _consume_runtime_result(self):
         # Base UI already owns queue freshness, evidence, rendering and the

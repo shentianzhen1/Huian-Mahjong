@@ -1528,8 +1528,8 @@ class HintAlphaApp(tk.Tk):
             frame_ids = tuple(sample[0] for sample in samples)
             images = tuple(sample[-1] for sample in samples)
             reader_kwargs = {'geometry_cache': {}}
-            packet = self.__dict__.get('experimental_hand_packet')
             edge_seams = self.__dict__.get('experimental_edge_seams', False)
+            packet = self.__dict__.get('experimental_hand_packet') if edge_seams else None
             if packet or edge_seams:
                 from workspace.vision.tiles_runtime_v0_2.runtime_reader import prepare_runtime_resources
                 from workspace.vision.tiles_runtime_v0_2.experimental_hand_translation import cached_private_hand_packet
@@ -1696,7 +1696,8 @@ class HintAlphaApp(tk.Tk):
         prior = eligible_prior_identity(report, captured=captured,
             previous_captured=previous_result, now=time.monotonic(),
             max_age=self.live_guard.max_age)
-        if prior is not None:
+        if (prior is not None and report['prior_identity_captured'] >
+                self.__dict__.get('runtime_observation_not_before', float('-inf'))):
             evaluate_runtime_report(prior, captured=report['prior_identity_captured'],
                                     experimental=experimental)
         advisory = evaluate_runtime_report(
@@ -1790,6 +1791,9 @@ class HintAlphaApp(tk.Tk):
             )
             self.last_runtime_event_key = event_key
 
+    def _public_state_failed(self):
+        """Optional live-entry hook for an unresolved public observation."""
+
     def _consume_public_result(self):
         try:
             kind, value = self.public_result_queue.get_nowait()
@@ -1799,6 +1803,7 @@ class HintAlphaApp(tk.Tk):
         if kind == "error":
             self.vision_status.set(f"PublicState暂不可用：{value}")
             self.ui_hand_number_ok = False
+            self._public_state_failed()
             self._refresh_health()
             if "OCRUnavailable" in value or "not installed" in value:
                 self.public_disabled = True

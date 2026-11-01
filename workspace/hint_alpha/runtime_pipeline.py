@@ -25,6 +25,7 @@ _ACTIVE_STABILITY_TRACKER: ContextVar[LiveSnapshotStability | None] = ContextVar
 )
 _ACTIVE_MANUAL_GOLD = ContextVar('hint_alpha_manual_gold', default=None)
 _ACTIVE_HAND_SOURCE_TRIAL = ContextVar('hint_alpha_hand_source_trial', default=False)
+_ACTIVE_HAND_BOUNDARY_PENDING = ContextVar('hint_alpha_hand_boundary_pending', default=False)
 
 
 @dataclass(frozen=True)
@@ -116,6 +117,7 @@ def evaluate_runtime_report(
     stability_tracker: LiveSnapshotStability | None = None,
     manual_gold: ManualGoldSelection | None = None,
     allow_unvalidated_hand_sources=None,
+    hand_boundary_pending=None,
 ):
     """Evaluate one Runtime burst without enabling any action path.
 
@@ -143,6 +145,18 @@ def evaluate_runtime_report(
         from .gold_source_trial import trial_opened_gold_report
         adapter_report, trial_gold = trial_opened_gold_report(adapter_report)
     snapshot = current_snapshot_from_runtime(adapter_report, timestamp_seconds=captured)
+    pending = (_ACTIVE_HAND_BOUNDARY_PENDING.get() if hand_boundary_pending is None
+               else hand_boundary_pending)
+    if pending:
+        # Preserve the old hand's opening memory internally, but neither use it
+        # nor let a possibly new hand prime opening/identity trackers.
+        snapshot = replace(snapshot, gold_tile=None, gold_trusted=False,
+            adapter_issues=(*snapshot.adapter_issues, 'live_hand_boundary_unconfirmed'))
+        confirmation = stability_tracker or _ACTIVE_STABILITY_TRACKER.get()
+        if confirmation is not None:
+            confirmation.reset()
+        return RuntimeAdvice(snapshot=snapshot, hint=analyze_snapshot_shanten(snapshot),
+            display_allowed=False, opening_fact=live_opening_fact_from_snapshot(snapshot))
     if meld_trial:
         snapshot = replace(snapshot, river_trusted=(False, False),
             adapter_issues=(*snapshot.adapter_issues, 'experimental_meld_geometry_unvalidated'))
@@ -200,6 +214,7 @@ class RuntimeAdvicePipeline:
     stability_tracker: LiveSnapshotStability | None = None
     manual_gold: ManualGoldSelection | None = None
     allow_unvalidated_hand_sources: bool = False
+    hand_boundary_pending: bool = False
 
     def select_manual_gold(self, tile_id, *, source_session, stream_epoch):
         if tile_id not in env.BASE_TILES:
@@ -225,9 +240,11 @@ class RuntimeAdvicePipeline:
         stability_token = _ACTIVE_STABILITY_TRACKER.set(self.stability_tracker)
         manual_token = _ACTIVE_MANUAL_GOLD.set(self.manual_gold)
         trial_token = _ACTIVE_HAND_SOURCE_TRIAL.set(self.allow_unvalidated_hand_sources)
+        boundary_token = _ACTIVE_HAND_BOUNDARY_PENDING.set(self.hand_boundary_pending)
         try:
             yield self
         finally:
+            _ACTIVE_HAND_BOUNDARY_PENDING.reset(boundary_token)
             _ACTIVE_HAND_SOURCE_TRIAL.reset(trial_token)
             _ACTIVE_MANUAL_GOLD.reset(manual_token)
             _ACTIVE_STABILITY_TRACKER.reset(stability_token)
@@ -242,4 +259,5 @@ class RuntimeAdvicePipeline:
             stability_tracker=self.stability_tracker,
             manual_gold=self.manual_gold,
             allow_unvalidated_hand_sources=self.allow_unvalidated_hand_sources,
+            hand_boundary_pending=self.hand_boundary_pending,
         )

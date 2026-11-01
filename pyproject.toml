@@ -12,7 +12,7 @@ requires-python = ">=3.10,<3.15"
 dependencies = []
 
 [project.scripts]
-huian-hint-alpha = "workspace.hint_alpha.app:main"
+huian-hint-alpha = "workspace.hint_alpha.live_app:main"
 huian-hint-doctor = "workspace.hint_alpha.doctor:main"
 
 [project.optional-dependencies]

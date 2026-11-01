@@ -7,8 +7,9 @@ Rule truth: RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. This page is a snapshot.
 
 Active integration: Draft [PR #126](https://github.com/shentianzhen1/Huian-Mahjong/pull/126),
 branch `codex/hint-alpha-local-test-sync-20261004`, unmerged.
-Runtime source inspected: `adc4fc1e72319fda5b121a2ddf909161f3fce87e`.
-This snapshot update changes documentation only; inspect CI on its exact new HEAD.
+Audited baseline: `adc4fc1e72319fda5b121a2ddf909161f3fce87e`.
+The current source includes the integration fixes described below;
+inspect CI on its exact HEAD rather than reusing baseline results.
 
 Latest verified installer delivery uses source
 `7f1a86e9205cbdad7462e5ea2525206e2e427b63`:
@@ -32,10 +33,15 @@ minimum-shanten discards. [#69](https://github.com/shentianzhen1/Huian-Mahjong/i
 is closed; its replay records remain historical evidence. Unknown public
 identities still block remaining-copy/danger capabilities.
 
-Source adc4fc1 has two outstanding reproduced integration risks: trial-off
-worker reference loading and live pending-hand-boundary handling with carried
-Gold. Existing focused tests passing does not resolve those findings.
-This documentation update does not fix runtime behavior.
+The current source fixes two reproduced adc4fc1 integration defects: trial-off
+workers now omit experimental references, and unresolved live hand boundaries
+suppress Gold-dependent advice. Public OCR errors also pause advice after an
+initial trusted hand. Confirmation fences buffered/queued results and their
+prior-identity votes; same-hand recovery preserves Gold, next-hand confirmation
+clears it. Manual Gold does not bypass a pending hand boundary. The Python
+console now uses the same live entry as the installer/source launcher.
+Focused regressions exercise the actual worker and live consumer. These are
+synthetic wiring checks, not independent recognition or Windows acceptance.
 
 [Issue #7](https://github.com/shentianzhen1/Huian-Mahjong/issues/7) formal
 promotion remains blocked. Same-match replay and bundled-reference self-matches
