@@ -21,6 +21,34 @@ def source_rejected_report(frame=3):
 
 
 class HandSourceTrialTests(unittest.TestCase):
+    def test_concealed_gold_trial_requires_matching_physical_reference_and_explicit_mode(self):
+        report = source_rejected_report()
+        item = next(c for c in report['components'] if c.get('candidate_tile_id') == 'P2')
+        item.update(identity_reason='class_missing_real_gold_skin_example',
+                    gold_skin=True, concealed_gold_reference_supported=True)
+        original = deepcopy(report)
+        for change in ({'concealed_gold_reference_supported':False},
+                       {'concealed_gold_reference_supported':'true'},
+                       {'gold_skin':False}, {'tile_confidence':.819},
+                       {'tile_confidence':float('nan')}, {'region_candidate':'gold'},
+                       {'region_candidate':'meld'}):
+            modified = deepcopy(report)
+            next(c for c in modified['components'] if c.get('candidate_tile_id') == 'P2').update(change)
+            self.assertFalse(trial_hand_report(modified)[1])
+        self.assertFalse(self.pipeline(False).evaluate(report,captured=1,experimental=True).display_allowed)
+        self.assertFalse(self.pipeline().evaluate(report,captured=1,experimental=False).display_allowed)
+        p = self.pipeline(stable=True)
+        self.assertFalse(p.evaluate(report,captured=1,experimental=True).display_allowed)
+        fresh = deepcopy(report)
+        fresh['frames'] = [4,5,6]
+        for c in fresh['components']:c['frame'] = 6
+        result = p.evaluate(fresh,captured=1.8,experimental=True)
+        self.assertTrue(result.display_allowed)
+        self.assertTrue(result.hand_source_trial)
+        self.assertFalse(result.safe_for_executor)
+        self.assertFalse(assess_current_snapshot(result.snapshot).allows(SnapshotCapability.DANGER_HINT))
+        self.assertEqual(report, original)
+
     def pipeline(self, enabled=True, stable=False):
         p = RuntimeAdvicePipeline(allow_unvalidated_hand_sources=enabled,
                                   stability_tracker=LiveSnapshotStability() if stable else None)

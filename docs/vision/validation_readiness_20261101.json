@@ -3,7 +3,7 @@
   "recorded_date": "2026-11-01",
   "audited_source_head": "adc4fc1e72319fda5b121a2ddf909161f3fce87e",
   "execution_issue": 7,
-  "scope": "Accessible Huian Drive folder metadata and tracked repository evidence; not raw-media inference",
+  "scope": "Accessible Drive metadata inventory with follow-up byte/frame verification and revealed development diagnostic of one existing source",
   "verified_fresh_original_match_count": 0,
   "verified_fresh_original_match_count_scope": "No fresh source-disjoint original match certified by this inventory; this is not a claim that no other recording exists",
   "formal_runtime_baseline_ready": false,
@@ -11,8 +11,8 @@
   "runtime_identity_threshold": 0.82,
   "agent_version": "V0.10",
   "safe_for_executor": false,
-  "raw_media_decoded_this_run": false,
-  "checksum_read_attempt": "Drive metadata request for SHA256/MD5 returned normalized metadata without checksum fields; source bytes were not hashed in this run",
+  "raw_media_decoded_this_run": true,
+  "checksum_read_attempt": "Initial Drive metadata requests returned no checksum fields. Follow-up downloaded one source and recomputed SHA256 plus three sequential-frame RGB hashes.",
   "collections": [
     {
       "collection_alias": "legacy_root",
@@ -184,7 +184,7 @@
       "accessible_video_files": 8,
       "original_match_group": "UNVERIFIED_IN_THIS_RUN",
       "eligibility": "NOT_CERTIFIED_FOR_BLIND_PROMOTION",
-      "reason": "Candidate metadata only; folder/date/file count do not establish match independence or absence of prior tuning. Existing diagnostics reveal at least part of these material families.",
+      "reason": "One exact source now verified and matched prior revealed PR #131. Original-match grouping against unresolved training derivatives remains uncertified; remaining files were not rehashed in this follow-up.",
       "files": [
         {
           "source_alias": "oct09_candidate_01",
@@ -224,9 +224,12 @@
         {
           "source_alias": "oct09_candidate_06",
           "size_bytes": 91154896,
-          "source_sha256": null,
+          "source_sha256": "bf1d63981d0c0964f15bfb5a985bc3622c8aa681b32b7d2e34e736c27d495d98",
           "original_match_group": null,
-          "blind_holdout_eligible": false
+          "blind_holdout_eligible": false,
+          "sha256_verified_from_download": true,
+          "prior_revealed_pr": 131,
+          "diagnostic": "references/vision/2026-11-01/oct09_gold_s5_development_diagnostic_v0_1.json"
         },
         {
           "source_alias": "oct09_candidate_07",
@@ -312,19 +315,25 @@
   ],
   "blockers": [
     "Original-match grouping and all derivative/training-reference exclusions are not certified for candidate collections",
-    "Raw source SHA and exact decoded-frame identity were not reverified in this run",
-    "No new pre-evaluation lock, reviewed truth freeze or inference result bundle was produced"
+    "Remaining source hashes/frame identities are not all reverified; one oct09 source has verified byte and RGB hashes",
+    "No certified fresh blind lock or formal promotion result; the source follow-up is revealed development, with final truth corrections after inference"
   ],
   "existing_evidence": [
     "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json",
     "references/vision/2026-10-03/new_match_eight_segment_intake_v0_1.json",
     "references/vision/2026-10-07/concealed_lineage_drive_hash_audit_v0_1.json",
-    "docs/vision/new_recording_exact_frame_rereview_20261013.md"
+    "docs/vision/new_recording_exact_frame_rereview_20261013.md",
+    "references/vision/2026-11-01/oct09_gold_s5_development_diagnostic_v0_1.json"
   ],
   "next_execution": {
     "reuse_development": "Continue detector/whole-hand and recovery regression on already revealed original matches; label outputs development only",
     "qualify_candidates": "Verify source bytes, reviewed original-match groups and reference/derivative exclusions before selecting a formal holdout",
     "formal_gate": "Use the existing frozen Issue #7 promotion contract after grouping and pre-evaluation lock; do not treat independent_batch_lock.py exact-SHA exclusion alone as proof of original-match independence"
   },
-  "privacy": "No Drive IDs, private URLs, raw media or frame pixels persisted here"
+  "privacy": "No Drive IDs, private URLs, raw media or frame pixels persisted here",
+  "development_diagnostic_executed": true,
+  "followup_source_diagnostic": "references/vision/2026-11-01/oct09_gold_s5_development_diagnostic_v0_1.json",
+  "private_reference_trial_candidate_executed": true,
+  "private_reference_trial_version": "2026.11.01.private1",
+  "private_candidate_is_independent_validation": false
 }

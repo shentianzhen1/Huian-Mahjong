@@ -16,8 +16,13 @@ def trial_hand_report(report):
             continue
         changed = dict(item)
         score = item.get('tile_confidence')
+        source_only = item.get('identity_reason') == 'class_not_cross_session_validated_in_region'
+        referenced_gold_skin = (
+            item.get('identity_reason') == 'class_missing_real_gold_skin_example'
+            and item.get('gold_skin') is True
+            and item.get('concealed_gold_reference_supported') is True)
         if (item.get('region_candidate') in {'hand', 'draw_visual'}
-                and item.get('identity_reason') == 'class_not_cross_session_validated_in_region'
+                and (source_only or referenced_gold_skin)
                 and item.get('tile_id') == 'UNKNOWN'
                 and item.get('candidate_tile_id') in env.BASE_TILES
                 and not isinstance(score, bool) and isinstance(score, Real)

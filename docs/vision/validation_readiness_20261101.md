@@ -2,7 +2,8 @@
 
 Execution and acceptance contract: [Issue #7](https://github.com/shentianzhen1/Huian-Mahjong/issues/7).
 Machine-readable [inventory](validation_readiness_20261101.json).
-This is a source qualification audit, not a new model evaluation or a new gate.
+This records initial source qualification and a subsequent revealed development
+diagnostic. It does not define a new promotion gate.
 
 ## What was checked
 
@@ -13,7 +14,7 @@ is limited to these accessible project folders, not every possible recording.
 
 For the two newer 8-file candidate collections, metadata was also requested
 with SHA256/MD5 and media fields. The connector returned normalized size/type/time
-metadata without checksums. No source SHA was recomputed from media bytes.
+metadata without checksums. At that initial step no source SHA was recomputed.
 A matching size, title or date does not establish source identity or independence.
 
 ## Qualification result
@@ -22,14 +23,42 @@ A matching size, title or date does not establish source identity or independenc
 | --- | ---: | --- |
 | legacy_root | 13 | Historical training/replay inputs; not a newly certified blind batch |
 | oct03_development | 8 | Tracked revealed development intake, overlapping first-hand clips; not 8 matches |
-| oct09_candidate | 8 | Requires exact hashes, reviewed match grouping and complete reference exclusions |
+| oct09_candidate | 8 | One source byte-hashed and matched prior revealed #131; remaining qualification gaps persist |
 | oct12_candidate | 8 | Existing revealed diagnostics and unresolved grouping; not a certified blind batch |
 
 This audit certifies **zero new fresh original matches** for formal promotion.
 That is a certification result, not a claim that no unused recording exists.
-No model inference, truth freeze, accuracy, latency or promotion result was
-produced. Current execution environment could not start the local process runner,
-so raw-video decoding and focused Python checks were unavailable in this run.
+The initial inventory step produced no model inference or promotion result;
+its local process runner was unavailable. The subsequent source diagnostic below
+used restored local decoding/inference. No formal independent result is claimed.
+
+## Follow-up: one oct09 source verified and evaluated
+
+The downloaded 91,154,896-byte source SHA starts `bf1d63981d0c0964` and exactly
+matches the existing source entry in PR #131. That PR explicitly marks the
+recording as revealed development, so it must not be relabeled as a fresh holdout.
+Its visible table context differs from the previously reviewed Sep26 recording;
+this does not certify separation from every unresolved training derivative.
+
+[Fixed development diagnostic](../../references/vision/2026-11-01/oct09_gold_s5_development_diagnostic_v0_1.json):
+20/50/80-percent decoded ordinals were selected before current inference and
+verified by sequential RGB hashes. The raised-tile checkpoint remains included
+and geometry-blocked. The two stable current frames contain 26 tile instances:
+26 correct top candidates under final native-pixel review, 24 correct accepted
+identities and two UNKNOWN concealed S5 Gold tiles. Both visual-Gold and manual
+Gold modes expose no whole-hand advice. Manual Gold plus a reviewed hand-Gold
+intervention allows structural calculation; that intervention is not Runtime.
+
+Initial manual S7 and Wan labels were corrected after prediction comparison
+triggered native-resolution crop re-review. Corrections and unchanged RGB hashes
+are retained in the diagnostic; final truth is therefore not a blind pre-inference
+freeze. The baseline model/references were not tuned during that evaluation.
+A subsequent private candidate added two reviewed S5 crops and explicit trial
+wiring for a uniquely matching concealed-Gold reference. Both stable checkpoints
+then expose structural advice; checkpoint 2608 is the reference donor positive
+control, while 4172 is only a later same-match query. The raised-tile checkpoint
+still blocks. New pixels remain private, default bundled references remain
+unchanged, and all results are development only. Issue #7 remains open.
 
 ## Existing evidence to reuse
 

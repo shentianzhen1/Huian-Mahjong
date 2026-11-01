@@ -61,6 +61,18 @@ have 255/255 reviewed tile instances and matching manual-input structural output
 They comprise only four distinct hand states in one revealed original match;
 prior identity frames and blocked windows were not fully truth-reviewed.
 This does not qualify flower recognition or independent generalization.
+An [oct09 source diagnostic](references/vision/2026-11-01/oct09_gold_s5_development_diagnostic_v0_1.json)
+now verifies one other visible table context against prior PR #131's source SHA.
+At two stable current frames, 24/26 identities are accepted correctly; two
+concealed Gold S5 tiles lack real-skin qualification. Manual indicator Gold alone
+still cannot enable advice. The third, raised-tile frame is geometry-blocked.
+An explicit reference-supported concealed-Gold trial path now consumes matching
+appearance support while preserving strict raw rejection and default behavior.
+A private 30-image pack (28 existing + 2 S5 crops), `2026.11.01.private1`, enables
+both stable checkpoints; one is the donor positive control and one is a later
+same-match query. Raised-tile geometry still blocks. New crop pixels are not in
+GitHub; default bundled references and installer remain unchanged. This is
+revealed development with corrected manual truth, not a fresh holdout.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 

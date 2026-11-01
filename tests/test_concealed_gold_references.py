@@ -98,6 +98,9 @@ class ConcealedGoldReferenceTests(unittest.TestCase):
         self.assertTrue(row['concealed_gold_reference_supported'])
         self.assertEqual(row['tile_id'],'UNKNOWN')
         self.assertEqual(row['identity_reason'],'class_missing_real_gold_skin_example')
-        # The new diagnostic flag must not silently change admission policy.
-        _, used = trial_hand_report({'components':[row]})
-        self.assertEqual(used,())
+        # Strict identity remains UNKNOWN; only the explicit reference trial
+        # adapter may consume this matching appearance support.
+        adapted, used = trial_hand_report({'components':[row]})
+        self.assertEqual(used,('SOUTH',))
+        self.assertEqual(adapted['components'][0]['tile_id'],'SOUTH')
+        self.assertEqual(row['tile_id'],'UNKNOWN')
