@@ -1,6 +1,6 @@
 # PROJECT_STATUS — Current Snapshot
 
-Snapshot date: 2026-11-01 (Asia/Shanghai). Execution truth: GitHub Issues.
+Snapshot date: 2026-11-02 (Asia/Shanghai). Execution truth: GitHub Issues.
 Rule truth: RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. This page is a snapshot.
 
 ## Source and delivery
@@ -12,18 +12,25 @@ The current source includes the integration fixes described below;
 inspect CI on its exact HEAD rather than reusing baseline results.
 
 Latest verified installer delivery uses source
-`7f1a86e9205cbdad7462e5ea2525206e2e427b63`:
-[Windows run 40916853368](https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/40916853368).
+`490326952a4ccfef95b2616ae102c97d89b1a764`:
+[Windows run 41325215919](https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/41325215919).
+It includes all runtime changes through `d066d59`, including explicit concealed-Gold
+reference trial. [Delivery verification](docs/packaging/windows_installer_sync_20261102.json)
+records the inspected archive/EXE hashes, exact source commit and Windows checks.
 Its bundled development reference version is `2026.10.30.1`: 28 tile images
 (20 ordinary concealed, 7 opened-Gold, 1 concealed-Gold SOUTH).
 The user authorized these reviewed tile-only assets in GitHub and the installer;
 raw private videos are not included. See [bundle manifest](dataset/tiles_runtime_v0_2/reference_pack/bundle.json).
-Later source changes are not automatically in that installer.
+The separate private 30-image S5 pack can be loaded by this installer; its two
+new private crop files are not included in the default bundled 28. The upgrade
+tests passed for data preservation and repeated installs. Later runtime changes
+are not automatically included; this delivery record update changes metadata only.
 
-At inspected source adc4fc1, Tests, Vision Regression, Evidence Contracts and
-CodeQL succeeded. Windows run 41274587409 passed release_request and skipped
-the installer job. A green workflow does not imply a new EXE.
-Small changes do not request a new installer.
+The installer source commit passed all 18 checks, including the actual Windows
+installer job. Its extracted payload verified 356 source files, 147 templates,
+28 references and 6 phase images, and passed live UI/spawn/Tk and upgrade checks.
+These are packaging/synthetic checks, not real mirrored-game acceptance.
+Small changes and metadata-only delivery updates do not request another installer.
 
 ## Capability and validation
 
@@ -71,7 +78,8 @@ appearance support while preserving strict raw rejection and default behavior.
 A private 30-image pack (28 existing + 2 S5 crops), `2026.11.01.private1`, enables
 both stable checkpoints; one is the donor positive control and one is a later
 same-match query. Raised-tile geometry still blocks. New crop pixels are not in
-GitHub; default bundled references and installer remain unchanged. This is
+GitHub; default bundled references remain at 28 and the updated installer is
+recorded in Source and delivery above. This is
 revealed development with corrected manual truth, not a fresh holdout.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
