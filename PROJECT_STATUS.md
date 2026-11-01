@@ -56,9 +56,11 @@ context, preserving raw issue counts. An [existing-source diagnostic](docs/visio
 has 39 windows / 25 displays; the 14 blocked windows bucket as geometry 10,
 hand boundary 2, hand identity 1 and stability 1. These are diagnostics, not accuracy.
 The low-score draw was manually reviewed as a 兰 flower and correctly rejected
-from ordinary identity. [Four selected current-frame anchors](references/vision/2026-11-01/hand2_reviewed_advisory_anchors_v0_1.json)
-have 43/43 reviewed tile instances and matching manual-input structural outputs;
-the other 21 displayed windows remain unreviewed. This does not qualify flower recognition.
+from ordinary identity. [All 25 displayed current frames in this clip](references/vision/2026-11-01/hand2_reviewed_advisory_anchors_v0_1.json)
+have 255/255 reviewed tile instances and matching manual-input structural outputs.
+They comprise only four distinct hand states in one revealed original match;
+prior identity frames and blocked windows were not fully truth-reviewed.
+This does not qualify flower recognition or independent generalization.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 
