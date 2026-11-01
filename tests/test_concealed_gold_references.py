@@ -76,3 +76,28 @@ class ConcealedGoldReferenceTests(unittest.TestCase):
             self.assertGreater(result.confidence, .9)
             self.original.classify_gold_skin.return_value = Classification('M4',.72)
             self.assertEqual(c.classify_gold_skin(None), Classification('M4',.72))
+
+    def test_support_flag_needs_passing_matching_reference(self):
+        c = ConcealedGoldReferenceClassifier(self.original, [('SOUTH', self.ref)])
+        self.assertTrue(c.concealed_gold_reference_supported(self.image, Classification('SOUTH', .9)))
+        self.assertFalse(c.concealed_gold_reference_supported(self.image, Classification('M4', .9)))
+        self.assertFalse(c.concealed_gold_reference_supported(self.image, Classification('SOUTH', .81)))
+        self.assertFalse(c.concealed_gold_reference_supported(self.image, Classification('SOUTH', float('nan'))))
+
+    def test_reader_records_support_without_qualifying_source(self):
+        from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import GeometryComponent
+        from workspace.vision.tiles_runtime_v0_2.runtime_reader import _classify_runtime_component, STANDARD_CLASSES
+        from workspace.hint_alpha.hand_source_trial import trial_hand_report
+        c = ConcealedGoldReferenceClassifier(self.original, [('SOUTH',self.ref)])
+        component = GeometryComponent((0,0,52,75),(0,0,1,1),'hand',.92,3,'trial',True)
+        row = _classify_runtime_component(component, self.image,
+            all_boxes=[component.pixel_bbox], classifier=c,
+            covered_by_region={'gold_identity':set(STANDARD_CLASSES)},
+            cross_session={'gold_identity':{'SOUTH'}}, confidence_threshold=.82,
+            gold_skin_covered=set())
+        self.assertTrue(row['concealed_gold_reference_supported'])
+        self.assertEqual(row['tile_id'],'UNKNOWN')
+        self.assertEqual(row['identity_reason'],'class_missing_real_gold_skin_example')
+        # The new diagnostic flag must not silently change admission policy.
+        _, used = trial_hand_report({'components':[row]})
+        self.assertEqual(used,())

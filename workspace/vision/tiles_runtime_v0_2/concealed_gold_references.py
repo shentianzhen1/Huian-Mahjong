@@ -14,12 +14,20 @@ class ConcealedGoldReferenceClassifier:
         return getattr(self.ordinary, name)
 
     def classify_gold_skin(self, image):
-        import cv2
-        import math
-        from workspace.vision.tiles_v0_1.template_classifier import Classification, _feature
+        from workspace.vision.tiles_v0_1.template_classifier import Classification
         original = self.ordinary.classify_gold_skin(image)
         if original.confidence >= .82 or not self.references:
             return original
+        passing = self._passing_scores(image)
+        # A missing-class nearest reference cannot replace full-bank identity.
+        if {tile for tile, _ in passing} != {original.tile_id}:
+            return original
+        return Classification(original.tile_id, max(score for _, score in passing))
+
+    def _passing_scores(self, image):
+        import cv2
+        import math
+        from workspace.vision.tiles_v0_1.template_classifier import _feature
         query = _feature(image, region='gold_region')
         # One feature-pixel translation absorbs small crop changes between
         # waiting and drawn-hand geometry; reference identity must still agree.
@@ -28,7 +36,11 @@ class ConcealedGoldReferenceClassifier:
                    if math.isfinite(score := float(cv2.matchTemplate(
                        query, reference, cv2.TM_CCOEFF_NORMED).max()))
                    and .82 <= score <= 1.]
-        # A missing-class nearest reference cannot replace full-bank identity.
-        if {tile for tile, _ in passing} != {original.tile_id}:
-            return original
-        return Classification(original.tile_id, max(score for _, score in passing))
+        return passing
+
+    def concealed_gold_reference_supported(self, image, prediction):
+        import math
+        if not math.isfinite(prediction.confidence) or not .82 <= prediction.confidence <= 1.:
+            return False
+        passing = self._passing_scores(image)
+        return {tile for tile, _ in passing} == {prediction.tile_id}

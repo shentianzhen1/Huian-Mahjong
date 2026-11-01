@@ -1,0 +1,358 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "frames": [
+    2640,
+    2646,
+    2652
+  ],
+  "bundle_version": "2026.10.30.1",
+  "bundle_count": 28,
+  "setup": "Direct resolve_bundled_references + with_private_hand_packet, edge_seams trial geometry, standard reader and two distinct identity-frame confirmation. No direct feature-bank mutation, source-coverage override, InnerRecovery or local dark-meld candidate.",
+  "result": {
+    "legacy_without_reference_flag": {
+      "display_allowed": true,
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 4,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "snapshot": {
+        "timestamp_seconds": 88.4,
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "N",
+          "N",
+          "R",
+          "G",
+          "B"
+        ],
+        "gold_tile": "SOUTH",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "raw_gold_hand_components": [
+        {
+          "pixel_bbox": [
+            118,
+            443,
+            48,
+            63
+          ],
+          "normalized_bbox": [
+            0.106498,
+            0.865234,
+            0.043321,
+            0.123047
+          ],
+          "region_candidate": "hand",
+          "confidence": 0.92,
+          "frame": 2652,
+          "session": "local-video-9709fdc3aa464bf2",
+          "gold_skin": true,
+          "candidate_tile_id": "SOUTH",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.960642,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "classification_crop_bbox": [
+            114,
+            434,
+            52,
+            75
+          ]
+        }
+      ]
+    },
+    "trial_enabled": {
+      "display_allowed": true,
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 4,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "snapshot": {
+        "timestamp_seconds": 88.4,
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "N",
+          "N",
+          "R",
+          "G",
+          "B"
+        ],
+        "gold_tile": "SOUTH",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "raw_gold_hand_components": [
+        {
+          "pixel_bbox": [
+            118,
+            443,
+            48,
+            63
+          ],
+          "normalized_bbox": [
+            0.106498,
+            0.865234,
+            0.043321,
+            0.123047
+          ],
+          "region_candidate": "hand",
+          "confidence": 0.92,
+          "frame": 2652,
+          "session": "local-video-9709fdc3aa464bf2",
+          "gold_skin": true,
+          "candidate_tile_id": "SOUTH",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.960642,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "concealed_gold_reference_supported": true,
+          "classification_crop_bbox": [
+            114,
+            434,
+            52,
+            75
+          ]
+        }
+      ]
+    },
+    "trial_disabled": {
+      "display_allowed": false,
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_frame_identity_untrusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "snapshot": {
+        "timestamp_seconds": 88.4,
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          null,
+          "P1",
+          null,
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M3",
+          "M5",
+          "M6",
+          null,
+          null,
+          null,
+          "R",
+          null,
+          null
+        ],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_frame_identity_untrusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "raw_gold_hand_components": [
+        {
+          "pixel_bbox": [
+            118,
+            443,
+            48,
+            63
+          ],
+          "normalized_bbox": [
+            0.106498,
+            0.865234,
+            0.043321,
+            0.123047
+          ],
+          "region_candidate": "hand",
+          "confidence": 0.92,
+          "frame": 2652,
+          "session": "local-video-9709fdc3aa464bf2",
+          "gold_skin": true,
+          "candidate_tile_id": "SOUTH",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.960642,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "concealed_gold_reference_supported": true,
+          "classification_crop_bbox": [
+            114,
+            434,
+            52,
+            75
+          ]
+        }
+      ]
+    }
+  },
+  "findings": [
+    "Existing source trial already accepts this real burst through class_not_cross_session_validated_in_region; no previously claimed missing-skin blocker reproduced here.",
+    "Trial disabled remains blocked. New reference support flag is diagnostic only; source gates and admission policy unchanged.",
+    "Separate synthetic reader test preserves missing-real-gold-skin rejection despite true support flag."
+  ],
+  "tests_passed": 39,
+  "skipped": 0,
+  "limitations": [
+    "One revealed same-match burst, not independent hand accuracy or live Windows latency.",
+    "No real public OCR/hand-boundary test in this burst-only check.",
+    "Reference support means compatible matching, not calibrated correctness probability.",
+    "Current installer remains7f1a86e; no new build requested."
+  ]
+}

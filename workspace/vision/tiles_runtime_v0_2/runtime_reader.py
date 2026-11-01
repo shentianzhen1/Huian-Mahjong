@@ -240,6 +240,10 @@ def _classify_runtime_component(
             and hasattr(classifier, 'opened_gold_reference_supported')):
         item['opened_gold_reference_supported'] = classifier.opened_gold_reference_supported(crop, prediction)
 
+    if (component.region_candidate in {'hand', 'draw_visual'} and gold_skin
+            and hasattr(classifier, 'concealed_gold_reference_supported')):
+        item['concealed_gold_reference_supported'] = classifier.concealed_gold_reference_supported(crop, prediction)
+
     gate_region = (
         GOLD_IDENTITY_GATE_REGION
         if gold_skin
