@@ -55,6 +55,10 @@ Replay summaries now separate prioritized structural blockers from public-identi
 context, preserving raw issue counts. An [existing-source diagnostic](docs/vision/advice_blocker_diagnostic_20261101.json)
 has 39 windows / 25 displays; the 14 blocked windows bucket as geometry 10,
 hand boundary 2, hand identity 1 and stability 1. These are diagnostics, not accuracy.
+The low-score draw was manually reviewed as a 兰 flower and correctly rejected
+from ordinary identity. [Four selected current-frame anchors](references/vision/2026-11-01/hand2_reviewed_advisory_anchors_v0_1.json)
+have 43/43 reviewed tile instances and matching manual-input structural outputs;
+the other 21 displayed windows remain unreviewed. This does not qualify flower recognition.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 

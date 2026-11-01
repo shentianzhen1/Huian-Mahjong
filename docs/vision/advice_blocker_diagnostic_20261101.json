@@ -34,5 +34,13 @@
   "development_only": true,
   "formal_promotion_evidence": false,
   "windows_capture_validated": false,
-  "safe_for_executor": false
+  "safe_for_executor": false,
+  "manual_review_followup": "references/vision/2026-11-01/hand2_reviewed_advisory_anchors_v0_1.json",
+  "low_score_window_review": {
+    "source_frame": 2148,
+    "visible_scene": "兰花出现后补花",
+    "ordinary_hand_confusion_confirmed": false,
+    "runtime_accepted_as_M9": false,
+    "classification_scope": "Manual scene review; automatic flower recognition is not qualified"
+  }
 }

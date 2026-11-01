@@ -1,0 +1,225 @@
+{
+  "schema_version": "reviewed_advisory_anchors_v1",
+  "review_date": "2026-11-01",
+  "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "runtime_source_commit": "b3e65b30651b0a238feea12a7aed8a4439d40993",
+  "reference_version": "2026.10.30.1",
+  "reference_manifest_sha256": "f26544901377f742b3916650c131b155a1508bd72f61e6d2993c0a1d2eaefe77",
+  "selection": "Four previously displayed current-frame anchors selected after observing predictions, covering pre-draw, ordinary draws and replacement draw. Not random or blind. Prior burst frames were not fully truth-reviewed.",
+  "accepted_current_frame_anchors": [
+    {
+      "source_frame": 1812,
+      "source_seconds": 60.400000000000006,
+      "reviewed_frame_rgb_sha256": "824200f1ff3749d6fe1cd61b63a873a186827c4773746db3c5c2c744de2f8864",
+      "own_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_visible_melds": [
+        [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        [
+          "S2",
+          "S3",
+          "S4"
+        ]
+      ],
+      "runtime_meld_identity_claim": false,
+      "gold_input": "S8",
+      "gold_review_scope": "Existing source-scoped Gold fact reused; not an independent Gold revalidation",
+      "runtime_display_allowed": true,
+      "structural_shanten": 1,
+      "phase": "PRE_DRAW",
+      "minimum_shanten_discards": [],
+      "checks": {
+        "current_frame_hand_exact": true,
+        "own_meld_count_exact": true,
+        "manual_input_shanten_and_phase_equal": true,
+        "minimum_shanten_discard_set_equal": true
+      }
+    },
+    {
+      "source_frame": 1848,
+      "source_seconds": 61.6,
+      "reviewed_frame_rgb_sha256": "3d1099974d13cdd9fe3533c82c4ee2a0df5b3223c75581dcfc2fcaa100ee451c",
+      "own_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "M5"
+      ],
+      "reviewed_visible_melds": [
+        [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        [
+          "S2",
+          "S3",
+          "S4"
+        ]
+      ],
+      "runtime_meld_identity_claim": false,
+      "gold_input": "S8",
+      "gold_review_scope": "Existing source-scoped Gold fact reused; not an independent Gold revalidation",
+      "runtime_display_allowed": true,
+      "structural_shanten": 0,
+      "phase": "POST_DRAW",
+      "minimum_shanten_discards": [
+        "P6"
+      ],
+      "checks": {
+        "current_frame_hand_exact": true,
+        "own_meld_count_exact": true,
+        "manual_input_shanten_and_phase_equal": true,
+        "minimum_shanten_discard_set_equal": true
+      }
+    },
+    {
+      "source_frame": 2040,
+      "source_seconds": 68.0,
+      "reviewed_frame_rgb_sha256": "5b557528ff56187e68319ae59e64d1ee6260a6b41dd9bf8f2c9bfe278cd3506d",
+      "own_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P6"
+      ],
+      "reviewed_visible_melds": [
+        [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        [
+          "S2",
+          "S3",
+          "S4"
+        ]
+      ],
+      "runtime_meld_identity_claim": false,
+      "gold_input": "S8",
+      "gold_review_scope": "Existing source-scoped Gold fact reused; not an independent Gold revalidation",
+      "runtime_display_allowed": true,
+      "structural_shanten": 0,
+      "phase": "POST_DRAW",
+      "minimum_shanten_discards": [
+        "P6"
+      ],
+      "checks": {
+        "current_frame_hand_exact": true,
+        "own_meld_count_exact": true,
+        "manual_input_shanten_and_phase_equal": true,
+        "minimum_shanten_discard_set_equal": true
+      }
+    },
+    {
+      "source_frame": 2172,
+      "source_seconds": 72.4,
+      "reviewed_frame_rgb_sha256": "1476fa840a7adf084b9a13dc645715e6179a756f2cc73f57ba59b0eb2c015c42",
+      "own_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "G"
+      ],
+      "reviewed_visible_melds": [
+        [
+          "M4",
+          "M5",
+          "M6"
+        ],
+        [
+          "S2",
+          "S3",
+          "S4"
+        ]
+      ],
+      "runtime_meld_identity_claim": false,
+      "gold_input": "S8",
+      "gold_review_scope": "Existing source-scoped Gold fact reused; not an independent Gold revalidation",
+      "runtime_display_allowed": true,
+      "structural_shanten": 0,
+      "phase": "POST_DRAW",
+      "minimum_shanten_discards": [
+        "G"
+      ],
+      "checks": {
+        "current_frame_hand_exact": true,
+        "own_meld_count_exact": true,
+        "manual_input_shanten_and_phase_equal": true,
+        "minimum_shanten_discard_set_equal": true
+      }
+    }
+  ],
+  "flower_abstention": {
+    "source_frame": 2148,
+    "source_seconds": 71.6,
+    "reviewed_frame_rgb_sha256": "88d699d0397b7ecba2b8524cf9162aa7d2e93bef3593d6945b694ba5df223000",
+    "manual_scene": "VISIBLE_FLOWER_DRAW",
+    "visible_flower_name": "兰",
+    "flower_code_assigned": false,
+    "ordinary_candidate": "M9",
+    "ordinary_score": 0.493667,
+    "runtime_identity": "UNKNOWN",
+    "identity_reason": "below_confidence_threshold",
+    "display_allowed": false,
+    "replacement_anchor_frame": 2172,
+    "replacement_visible_tile": "G",
+    "interpretation": "A rejected flower outside the ordinary 34-class identity domain; not a wrong accepted M9 and not an ordinary M9 training example."
+  },
+  "totals": {
+    "reviewed_accepted_current_frames": 4,
+    "reviewed_accepted_tile_instances": 43,
+    "exact_current_frame_hands": 4,
+    "wrong_accepted_tiles_in_reviewed_current_frames": 0,
+    "manual_input_structural_outputs_equal": 4,
+    "unreviewed_displayed_windows": 21
+  },
+  "limits": [
+    "Single revealed development source, with opt-in reference support; no independent generalization evidence.",
+    "Only the selected current-frame hand identities and visible meld count were checked; no whole-burst temporal accuracy claim.",
+    "Structural outputs are recomputed with the same project shanten implementation using reviewed hand input; this is wiring consistency, not an independent strategy-strength test or special-Hu legality proof.",
+    "Do not infer accuracy for all 25 displayed windows from these four selected anchors.",
+    "The Runtime does not have qualified flower classification; the flower scene here is manual review, not a newly implemented automatic detector."
+  ],
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "windows_capture_validated": false,
+  "safe_for_executor": false,
+  "reviewed_against_source_commit": "8da5733b57b9b7e74a5880c1d4e37517bfdc82b7"
+}
