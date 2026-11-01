@@ -2,6 +2,20 @@
 import math
 
 
+def format_advice_blockers(counts):
+    """A diagnostic priority summary, not an accuracy or counterfactual claim."""
+    if counts is None:
+        return '向听暂停原因：未统计（旧版报告）'
+    labels = {'hand_boundary': '局号未确认', 'geometry': '画面/牌面位置未稳定',
+              'stability': '等待多帧确认', 'hand_identity': '手牌未确认',
+              'gold': '金牌未确认', 'meld_count': '手牌/副露数量',
+              'display_policy': '显示模式限制', 'state_conflict': '牌面状态冲突',
+              'other_state_or_policy': '其他状态或策略限制'}
+    details = '；'.join(f'{labels.get(key, "其他状态或策略限制")} {count}窗'
+                       for key, count in counts.items())
+    return '向听暂停原因：' + (details or '无')
+
+
 def blocked_guidance(issues, *, geometry_untrusted=False, promotion_blocked=False):
     if geometry_untrusted:
         return '画面或牌面位置尚未稳定。请保持投屏画面完整，等待重新识别。'

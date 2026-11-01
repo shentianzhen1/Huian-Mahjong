@@ -38,7 +38,7 @@ from .runtime_pipeline import evaluate_runtime_report, interrupt_runtime_observa
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 from .manual_input import evaluate_manual_input, observed_score_entry
-from .user_guidance import blocked_guidance, capture_to_hint_text
+from .user_guidance import blocked_guidance, capture_to_hint_text, format_advice_blockers
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -971,7 +971,8 @@ class HintAlphaApp(tk.Tk):
                     f"{runtime['blocked_windows']}阻塞 | "
                     f"手牌可信{runtime['trusted_hand_windows']}窗 | "
                     f"金牌可信{runtime['trusted_gold_windows']}窗 | "
-                    f"金牌票数={gold_votes or 'none'}"
+                    f"金牌票数={gold_votes or 'none'}\n"
+                    + format_advice_blockers(runtime.get('structural_blocker_windows'))
                 )
                 public = result["public_state"]
                 self.video_test_public_status.set(

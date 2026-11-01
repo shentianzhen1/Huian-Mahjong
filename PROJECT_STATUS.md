@@ -51,6 +51,10 @@ unconfirmed Gold from leaving a conflict that blocks same-hand recovery.
 34 identical-pixel windows from an already revealed 14-second clip retain the
 same 9 display decisions; 11 pending windows no longer carry old Gold. This
 does not measure independent accuracy or actual Windows performance.
+Replay summaries now separate prioritized structural blockers from public-identity
+context, preserving raw issue counts. An [existing-source diagnostic](docs/vision/advice_blocker_diagnostic_20261101.json)
+has 39 windows / 25 displays; the 14 blocked windows bucket as geometry 10,
+hand boundary 2, hand identity 1 and stability 1. These are diagnostics, not accuracy.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 

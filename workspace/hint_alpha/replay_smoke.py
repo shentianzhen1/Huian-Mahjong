@@ -24,14 +24,50 @@ def sha256(path):
     return digest.hexdigest()
 
 
+def _primary_advice_blocker(row):
+    """Bucket reported gates by priority; this is not causal/accuracy scoring."""
+    hint = row.get('hint') or {}
+    issues = set(hint.get('issues') or ())
+    if row.get('hand_boundary_pending') or issues & {
+            'live_hand_boundary_unconfirmed', 'replay_hand_boundary_unconfirmed'}:
+        return 'hand_boundary'
+    if row.get('geometry_untrusted') is True:
+        return 'geometry'
+    if hint.get('allowed') is True:
+        return 'display_policy'
+    if any(i.startswith(('physical_copy_overflow:', 'invalid_tile_identity:',
+                         'meld_identity_structure_conflict:'))
+           or i == 'playable_gold_copy_overflow' for i in issues):
+        return 'state_conflict'
+    if any(i.startswith('live_identity_') or i == 'live_hand_meld_waiting_confirmation'
+           for i in issues):
+        return 'stability'
+    if issues & {'hand_untrusted', 'hand_identity_unknown', 'runtime_hand_not_fully_trusted'}:
+        return 'hand_identity'
+    if issues & {'gold_untrusted', 'gold_identity_unknown', 'runtime_gold_not_fully_trusted'}:
+        return 'gold'
+    if issues & {'player_meld_count_untrusted', 'player_meld_count_invalid',
+                 'concealed_hand_count_invalid'}:
+        return 'meld_count'
+    return 'other_state_or_policy'
+
+
 def summarize_windows(rows):
     """Describe observed advice transitions without claiming unseen recovery."""
     runs = []
     rejection_issues = Counter()
+    structural_blockers = Counter()
+    public_context = Counter()
     for row in rows:
         allowed = row['display_allowed'] is True
+        public_context.update(issue for issue in set(row['hint']['issues'])
+            if issue.startswith(('river_', 'meld_identity_unknown:'))
+            or issue in {'player_river_missing', 'opponent_river_missing',
+                         'opponent_meld_missing', 'meld_untrusted:1',
+                         'manual_public_identity_unavailable'})
         if not allowed:
             rejection_issues.update(set(row['hint']['issues']))
+            structural_blockers[_primary_advice_blocker(row)] += 1
         if not runs or runs[-1]['display_allowed'] != allowed:
             runs.append({'display_allowed': allowed, 'windows': 0,
                          'first_frame': row['frames'][-1],
@@ -48,7 +84,9 @@ def summarize_windows(rows):
         for index in range(1, len(runs))
     )
     return {'advice_runs': runs, 'recovered_advice_runs': recoveries,
-            'rejection_issue_windows': dict(sorted(rejection_issues.items()))}
+            'rejection_issue_windows': dict(sorted(rejection_issues.items())),
+            'structural_blocker_windows': dict(structural_blockers.most_common()),
+            'public_context_issue_windows': dict(sorted(public_context.items()))}
 
 
 def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
