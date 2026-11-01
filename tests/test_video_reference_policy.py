@@ -7,6 +7,58 @@ from workspace.hint_alpha.video_test import run_video_test
 from tests.test_live_snapshot_stability import burst
 
 class VideoReferencePolicyTests(unittest.TestCase):
+    def test_pending_window_cannot_poison_gold_before_same_hand_recovery(self):
+        from dataclasses import dataclass
+        from tests.test_live_opening_tracker import runtime_report
+        from workspace.hint_alpha.replay_smoke import evaluate_burst
+
+        @dataclass
+        class Observation:
+            hand_number: object
+            hand_votes: int = 2
+            score_pair: object = None
+
+        for pending in (Observation(None, 1), Observation(2, 1),
+                        Observation(5), Observation(1), RuntimeError('OCR failed')):
+            with self.subTest(pending=pending):
+                public_sequence = iter((Observation(2), pending, Observation(2)))
+                def public_read(*args, **kwargs):
+                    observation = next(public_sequence)
+                    if isinstance(observation, Exception):
+                        raise observation
+                    return SimpleNamespace(observation=observation)
+
+                windows = []
+                def evaluate(samples, **kwargs):
+                    index = len(windows)
+                    def runtime_read(images, root, *, frame_ids, identity_frame_id=None, **reader_kwargs):
+                        report = runtime_report(gold='S8' if index == 0 else 'M4',
+                            include_gold=index < 2, frames=frame_ids,
+                            session=reader_kwargs['session'])
+                        for component in report['components']:
+                            component['frame'] = identity_frame_id or frame_ids[-1]
+                        return report
+                    result = evaluate_burst(samples, **{**kwargs, 'reader': runtime_read})
+                    windows.append(result)
+                    return result
+
+                pixels = SimpleNamespace(tobytes=lambda: b'fixed synthetic pixels')
+                with TemporaryDirectory() as tmp, \
+                     patch('workspace.hint_alpha.video_test.probe_video', return_value={
+                         'fps':30, 'duration_seconds':2, 'width':1108, 'height':512}), \
+                     patch('workspace.hint_alpha.video_test.iter_video_samples', return_value=iter(
+                         (i, i*.2, pixels) for i in range(7))), \
+                     patch('workspace.hint_alpha.video_test.REPLAY_OCR_INTERVAL_SECONDS', .1), \
+                     patch('workspace.hint_alpha.video_test.evaluate_burst', side_effect=evaluate):
+                    video = Path(tmp) / 'v.mp4'
+                    video.write_bytes(b'test')
+                    result = run_video_test(video, dataset_root='unused', reference_packet='explicit.json',
+                        public_reader=SimpleNamespace(read_window=public_read))
+                self.assertEqual([row['display_allowed'] for row in result['rows']], [True, False, True])
+                self.assertIsNone(result['rows'][1]['snapshot']['gold_tile'])
+                self.assertIn('replay_hand_boundary_unconfirmed', result['rows'][1]['hint']['issues'])
+                self.assertEqual(result['rows'][2]['snapshot']['gold_tile'], 'S8')
+
     def test_trial_pipeline_is_shared_and_confirms_current_hand(self):
         seen=[]
         def evaluate(samples, **kwargs):

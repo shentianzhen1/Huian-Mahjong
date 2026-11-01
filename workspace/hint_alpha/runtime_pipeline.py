@@ -97,6 +97,13 @@ def confirmed_public_hand_boundary(previous_hand, observation, *, minimum_votes=
     return hand_number == previous_hand + 1
 
 
+def public_hand_boundary_pending(trusted_hand, observation):
+    """Shared live/replay pause policy; a same-hand number also needs consensus."""
+    return bool(trusted_hand is not None and not (
+        confirmed_public_hand_boundary(None, observation)
+        and observation.hand_number == trusted_hand))
+
+
 @dataclass(frozen=True)
 class RuntimeAdvice:
     snapshot: object

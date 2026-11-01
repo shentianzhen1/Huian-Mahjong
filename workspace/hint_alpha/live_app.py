@@ -20,6 +20,7 @@ from .live_snapshot_stability import LiveSnapshotStability
 from .runtime_pipeline import (
     RuntimeAdvicePipeline,
     confirmed_public_hand_boundary,
+    public_hand_boundary_pending,
 )
 
 
@@ -75,9 +76,7 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
                 self.runtime_advice_pipeline.reset()
             self._gold_hand_number = observation.hand_number
             self._refresh_manual_gold()
-        pipeline.hand_boundary_pending = bool(self._gold_hand_number is not None and not (
-            confirmed_public_hand_boundary(None, observation)
-            and observation.hand_number == self._gold_hand_number))
+        pipeline.hand_boundary_pending = public_hand_boundary_pending(self._gold_hand_number, observation)
         if boundary or was_pending != pipeline.hand_boundary_pending:
             # Queued reads and partial bursts from before confirmation cannot
             # seed the next hand, even if their capture epoch is unchanged.

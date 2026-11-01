@@ -1,0 +1,57 @@
+{
+  "schema_version": "replay_boundary_memory_regression_v1",
+  "date": "2026-11-01",
+  "baseline_commit": "72fd9f712727b9b1aa418397209d87345afa2627",
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "source_range_seconds": [
+    76,
+    90
+  ],
+  "reference_version": "2026.10.30.1",
+  "reference_manifest_sha256": "f26544901377f742b3916650c131b155a1508bd72f61e6d2993c0a1d2eaefe77",
+  "window_count": 34,
+  "displayed_windows_before": 9,
+  "displayed_windows_after": 9,
+  "pending_windows": 11,
+  "before_pending_gold": "S8",
+  "after_pending_gold": null,
+  "verified_comparisons": {
+    "same_source_and_references": true,
+    "all_frame_ids_and_pixels_identical": true,
+    "raw_identity_observations_unchanged": true,
+    "display_decisions_unchanged": true,
+    "nonpending_snapshots_and_hints_unchanged": true,
+    "pending_gold_removed": true,
+    "pending_advice_blocked": true
+  },
+  "synthetic_counterexample": {
+    "unconfirmed_observations": [
+      "missing",
+      "same_hand_one_vote",
+      "jump",
+      "regression",
+      "ocr_error"
+    ],
+    "baseline_display_sequence": [
+      true,
+      false,
+      false
+    ],
+    "fixed_display_sequence": [
+      true,
+      false,
+      true
+    ],
+    "same_hand_gold_after_recovery": "S8",
+    "cases": 5
+  },
+  "validation": {
+    "focused_tests_passed": 74,
+    "wrong_accept_accuracy_measured": false,
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "windows_capture_validated": false,
+    "safe_for_executor": false
+  },
+  "limits": "Already revealed development source; no independent accuracy or live latency claim. Real clip did not exhibit the synthetic persistent Gold-conflict failure; its pending state is corrected while display decisions remain unchanged."
+}

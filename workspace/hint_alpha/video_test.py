@@ -13,8 +13,10 @@ import json
 import math
 from pathlib import Path
 import time
+from types import SimpleNamespace
 
 from .replay_smoke import evaluate_burst, sha256, summarize_windows
+from .runtime_pipeline import confirmed_public_hand_boundary, public_hand_boundary_pending
 
 
 REFERENCE_FRAME_SIZE = (2796, 1290)
@@ -472,6 +474,7 @@ def run_video_test(
         )
         source['advice_policy'] = 'reference_trial_stateful_within_burst_identity_confirmation'
         source['gold_hand_boundary_policy'] = 'fresh_public_two_vote_initial_or_sequential_before_advice'
+        source['hand_boundary_memory_policy'] = 'pause_before_opening_and_identity_updates'
         source['hand_boundary_ocr_retry'] = 'each_runtime_window_while_unresolved'
         replay_advice_kwargs['confirm_with_prior'] = True
         source['runtime_window_stride'] = 2
@@ -543,9 +546,8 @@ def run_video_test(
         # Stable hands retain the normal interval; no reused OCR authorizes reset.
         boundary_pending = (
             reference_packet is not None
-            and gold_hand_number is not None
-            and last_public_attempt is not None
-            and (last_public_attempt.get('observation') or {}).get('hand_number') != gold_hand_number
+            and public_hand_boundary_pending(gold_hand_number, SimpleNamespace(
+                **((last_public_attempt or {}).get('observation') or {})))
         )
         regular_ocr_due = (
             last_public_row is None
@@ -617,13 +619,18 @@ def run_video_test(
         # A fresh confirmed public hand must reset Gold before this window's
         # advice. Reused/failed OCR and jumps/regressions cannot authorize reset.
         if reference_packet is not None and public_row.get('sampled') and 'observation' in public_row:
-            from .runtime_pipeline import confirmed_public_hand_boundary
-            from types import SimpleNamespace
             observation = SimpleNamespace(**public_row['observation'])
             if confirmed_public_hand_boundary(gold_hand_number, observation):
                 replay_advice_kwargs['pipeline'].reset()
                 gold_hand_number = observation.hand_number
                 previous_captured = None
+
+        if reference_packet is not None:
+            # Block before either identity read can update opening memory;
+            # hiding only the finished row leaves a conflict behind on recovery.
+            replay_advice_kwargs['pipeline'].hand_boundary_pending = public_hand_boundary_pending(
+                gold_hand_number, SimpleNamespace(
+                    **((last_public_attempt or {}).get('observation') or {})))
 
         runtime = evaluate_burst(
             burst,
@@ -646,9 +653,7 @@ def run_video_test(
 
         # A newly readable hand must not expose advice with the previous
         # hand's carried Gold while fresh OCR cannot confirm the boundary.
-        if (reference_packet is not None and gold_hand_number is not None
-                and last_public_attempt is not None
-                and (last_public_attempt.get('observation') or {}).get('hand_number') != gold_hand_number):
+        if reference_packet is not None and replay_advice_kwargs['pipeline'].hand_boundary_pending:
             runtime['hand_boundary_pending'] = True
             runtime['display_allowed'] = False
             runtime['hint'] = {

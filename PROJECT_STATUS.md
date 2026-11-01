@@ -44,6 +44,13 @@ With fresh capture, advisory expiry now withdraws the hint and resets identity
 confirmation without clearing hand/Gold memory or replacing worker queues.
 Actual capture loss still invalidates the generation and clears session facts;
 stale results cannot revive advice and pending-hand blocks remain in force.
+Live and reference replay now share the same two-vote pending-boundary policy.
+Replay pauses opening/identity memory updates before evaluation, preventing
+unconfirmed Gold from leaving a conflict that blocks same-hand recovery.
+[Development replay comparison](docs/vision/replay_boundary_memory_regression_20261101.json):
+34 identical-pixel windows from an already revealed 14-second clip retain the
+same 9 display decisions; 11 pending windows no longer carry old Gold. This
+does not measure independent accuracy or actual Windows performance.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 
