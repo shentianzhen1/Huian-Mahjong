@@ -1,0 +1,180 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+  "library_source": "libfile_4fba50aac3dc8191a6ebbaab27f38c42",
+  "video": "ScreenRecording_09-26-2026 22-34-04_1.mp4",
+  "source_original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+  "method": "Sequential decode six endpoints, fixed openedGold crop[107,41,42,57]. Reuse recovered1414P7and4243P5as explicit opened_gold refs in temporary28-row trial packet; four other endpoints\u00b1300frames are queries. No threshold or algorithm change.",
+  "result": {
+    "queries": [
+      {
+        "frame": 1114,
+        "truth": "P7",
+        "training_frame": false,
+        "rgb_sha256": "06b6bddda6a53c4ed46b7cb33e929fbd4459e8603403084c5812fc838dd82b60",
+        "before": [
+          "P7",
+          0.3513677418231964
+        ],
+        "after": [
+          "P7",
+          0.9977742433547974
+        ]
+      },
+      {
+        "frame": 1414,
+        "truth": "P7",
+        "training_frame": true,
+        "rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+        "before": [
+          "P7",
+          0.35076823830604553
+        ],
+        "after": [
+          "P7",
+          0.999999463558197
+        ]
+      },
+      {
+        "frame": 1714,
+        "truth": "P7",
+        "training_frame": false,
+        "rgb_sha256": "be7058377c3e1f3b34a75d7d66351395dfe85efbe6a3f592cc6f8db2df448085",
+        "before": [
+          "P7",
+          0.35313430428504944
+        ],
+        "after": [
+          "P7",
+          0.9972857236862183
+        ]
+      },
+      {
+        "frame": 3943,
+        "truth": "P5",
+        "training_frame": false,
+        "rgb_sha256": "57a045227d0de7e8c4555349728427fd79d279aae6b6530acc7b52031cd14b69",
+        "before": [
+          "P5",
+          0.46206343173980713
+        ],
+        "after": [
+          "P5",
+          0.9983298182487488
+        ]
+      },
+      {
+        "frame": 4243,
+        "truth": "P5",
+        "training_frame": true,
+        "rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+        "before": [
+          "P5",
+          0.45705223083496094
+        ],
+        "after": [
+          "P5",
+          0.9999997615814209
+        ]
+      },
+      {
+        "frame": 4543,
+        "truth": "P5",
+        "training_frame": false,
+        "rgb_sha256": "5c8399350f4d035851435b1615af2ed5e03ad34f405b496a03b0a16093e014bd",
+        "before": [
+          "P5",
+          0.4562380909919739
+        ],
+        "after": [
+          "P5",
+          0.9979651570320129
+        ]
+      }
+    ],
+    "old_six": [
+      {
+        "truth": "S8",
+        "before": [
+          "S8",
+          0.9947067499160767
+        ],
+        "after": [
+          "S8",
+          0.9947067499160767
+        ]
+      },
+      {
+        "truth": "SOUTH",
+        "before": [
+          "SOUTH",
+          0.9713212847709656
+        ],
+        "after": [
+          "SOUTH",
+          0.9713212847709656
+        ]
+      },
+      {
+        "truth": "M6",
+        "before": [
+          "M6",
+          0.9999998211860657
+        ],
+        "after": [
+          "M6",
+          0.9999998211860657
+        ]
+      },
+      {
+        "truth": "M1",
+        "before": [
+          "M1",
+          0.9999998211860657
+        ],
+        "after": [
+          "M1",
+          0.9999998211860657
+        ]
+      },
+      {
+        "truth": "P7",
+        "before": [
+          "P7",
+          0.35076823830604553
+        ],
+        "after": [
+          "P7",
+          0.999999463558197
+        ]
+      },
+      {
+        "truth": "P5",
+        "before": [
+          "P5",
+          0.45705223083496094
+        ],
+        "after": [
+          "P5",
+          0.9999997615814209
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "other_frame_queries": 4,
+    "other_frame_correct_ge_point82": 4,
+    "self_match_queries": 2,
+    "other_existing_classes_changed": 0
+  },
+  "limits": [
+    "Different frames are not independent samples: same original match and near-identical static opened indicator; source hash/RGB difference alone does not prove independent render conditions.",
+    "Six-crop classifier check, not actual detector qualification or full hand/advice replay.",
+    "M1/M6controls remain selfmatches to olderreferences, not heldoutvalidation.",
+    "Explicit temporary packet28 only; no formal19reference pack update, no newpixels uploaded, no installer."
+  ]
+}

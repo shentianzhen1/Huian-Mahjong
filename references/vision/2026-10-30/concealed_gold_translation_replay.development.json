@@ -1,0 +1,139 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "default_runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "range_seconds": [
+    90,
+    120
+  ],
+  "method": "Explicit concealed_gold reference scoring now searches1featurepixel translation in replicated border; identity must still agree with original full-bank ranking, original>=.82 unchanged, competing passing classes abstain. Same private26references, no new pixels or source qualification.",
+  "tests_passed": 13,
+  "paired_result": {
+    "windows": 74,
+    "before_advice": 36,
+    "after_advice": 41,
+    "before_discards": 0,
+    "after_discards": 4,
+    "lost_advice": 0
+  },
+  "manual_review": {
+    "authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+    "correct_endpoint_tiles": 69,
+    "all_new_endpoint_hands_match_image": true,
+    "checkpoints": [
+      {
+        "frame": 2796,
+        "frame_rgb_sha256": "0c339de9b1fb53430c154287e0f112c6eed12ecb9356cb96d0f1d2ef8397183d",
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "G",
+          "B",
+          "M2"
+        ],
+        "has_discards": true
+      },
+      {
+        "frame": 2964,
+        "frame_rgb_sha256": "dd5ea6b0eda389792087880409b4841e94e5f5a5fdeec87e17c3802d8ea61a27",
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "G",
+          "S6"
+        ],
+        "has_discards": true
+      },
+      {
+        "frame": 2976,
+        "frame_rgb_sha256": "5d9ccb4f2597277eb01c81ea576b8072b42111c5b13a993b38ff72ff7c9d23ed",
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "G",
+          "S6"
+        ],
+        "has_discards": true
+      },
+      {
+        "frame": 3156,
+        "frame_rgb_sha256": "076b503fdbdc3ad94fca71b77cfa09cf4cba5ca3cf9e6398c1f7245e6b8aba01",
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S6",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6",
+          "W"
+        ],
+        "has_discards": false
+      },
+      {
+        "frame": 3180,
+        "frame_rgb_sha256": "4a4608d44ae0258c3c01b8c3afc2e6741fd226df12663d4362324fe33ded942f",
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S6",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "P9"
+        ],
+        "has_discards": true
+      }
+    ]
+  },
+  "limits": [
+    "Known same-match development, one-pixel choice inspected on frame2796, not independent promotion evidence.",
+    "69 reviewed endpoint tiles do not establish independent accuracy;6original hand checkpoints have separate review.",
+    "Other Gold classes/whole-source regression still needed before broader integration.",
+    "NCC scores around .835 remain developmental, not calibrated probabilities.",
+    "No formal19reference manifest update; no new installer."
+  ]
+}

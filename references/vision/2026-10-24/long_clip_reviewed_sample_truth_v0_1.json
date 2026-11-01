@@ -1,0 +1,145 @@
+{
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+  "annotation_after_model_output": true,
+  "formal_promotion_evidence": false,
+  "original_match_group": "reviewed_match_2026_10_12_room324504",
+  "review_scope": "Two sampled stable bursts only, 1800/1806/1812 and 2706/2712/2718. First 600/606/612 anchor contains moving S6 discard and is not given complete-hand truth.",
+  "frames": [
+    {
+      "frame_index": 1800,
+      "rgb_sha256": "e58b0bcd3e40faa6ad2b39ceccf11a6632197f484804e67d488b43c16dddcc02",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "gold_tile": "M4"
+    },
+    {
+      "frame_index": 1806,
+      "rgb_sha256": "7e566a24939625ecc230d155509fb66cfe6dad1a13e567142711cd03038e6e08",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "gold_tile": "M4"
+    },
+    {
+      "frame_index": 1812,
+      "rgb_sha256": "baf57520de513e2b48385e65146379d3d6c5b87c69304a3d5248274209d69b2d",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "gold_tile": "M4"
+    },
+    {
+      "frame_index": 2706,
+      "rgb_sha256": "a3353c6f77deb5f255ed35b7dcaa247579b8a27340bd3eedc8eff1b51866a977",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "gold_tile": "M4"
+    },
+    {
+      "frame_index": 2712,
+      "rgb_sha256": "a57a73e73d4b17ae5be9db7308492b70b2b68853da6328af0781dcdbb0b79070",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "gold_tile": "M4"
+    },
+    {
+      "frame_index": 2718,
+      "rgb_sha256": "4e172965d83cc7e732282f098e3093c59ed40b89a9aa9a7e41223b74f23b6883",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "gold_tile": "M4"
+    }
+  ],
+  "truth_correction": {
+    "supersedes_commit": "cbb01601df101a2213d06b0ca71a69acb18454e4",
+    "reason": "Assistant misread S4/S8 as S6/G. Direct enlarged full-frame and detector-crop review confirms four separate green sticks and paired interwoven eight-bamboo glyphs. Pixel hashes unchanged.",
+    "corrected_slots": {
+      "1800/1806/1812": {
+        "8": "S6 -> S4",
+        "9": "G -> S8"
+      },
+      "2706/2712/2718": {
+        "7": "S6 -> S4",
+        "9": "G -> S8"
+      }
+    }
+  },
+  "source_group_evidence_reference": "references/vision/2026-10-19/continuous_replay_failure_baseline_v0_1.json#gold_temporal_shadow_20261024"
+}

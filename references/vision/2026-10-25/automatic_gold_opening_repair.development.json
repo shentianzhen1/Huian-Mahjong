@@ -1,0 +1,132 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "reference_version": "2026.10.25.5",
+  "manual_gold": null,
+  "processed_bursts": 235,
+  "first_gold_source_seconds": 2.6,
+  "first_gold_completed_seconds": 2.8,
+  "timely_episodes": 15,
+  "episodes": [
+    {
+      "episode": 0,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 1,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 3,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 4,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 5,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 6,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 7,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 8,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 9,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 10,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 11,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 12,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 13,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 14,
+      "advice": true,
+      "timely": true
+    },
+    {
+      "episode": 15,
+      "advice": true,
+      "timely": true
+    }
+  ],
+  "worker_median_ms": 199.1122209999503,
+  "focused_tests_passed": 82,
+  "negative_controls": [
+    {
+      "truth": "M1",
+      "prediction": "M1",
+      "confidence": 0.9999998211860657
+    },
+    {
+      "truth": "M4",
+      "prediction": "M4",
+      "confidence": 1.0
+    },
+    {
+      "truth": "M6",
+      "prediction": "M6",
+      "confidence": 0.9999998211860657
+    },
+    {
+      "truth": "P5",
+      "prediction": "P5",
+      "confidence": 0.45705223083496094
+    },
+    {
+      "truth": "P7",
+      "prediction": "P7",
+      "confidence": 0.35076823830604553
+    },
+    {
+      "truth": "S8",
+      "prediction": "S8",
+      "confidence": 0.388258695602417
+    },
+    {
+      "truth": "SOUTH",
+      "prediction": "SOUTH",
+      "confidence": 0.3394542634487152
+    }
+  ],
+  "limits": [
+    "Revealed development recording,not independent accuracy;same-match frames not independent sources.",
+    "Host timing simulation,not Windows mirroring latency.",
+    "10Hz capture/UI,400ms minimum single-flight launch;measured worker time advances recording clock.",
+    "Added M1 reference retains September26 original match grouping;formal Gold qualification unchanged;explicit read-only trial only."
+  ]
+}

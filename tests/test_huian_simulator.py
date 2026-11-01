@@ -1,6 +1,7 @@
 import unittest
 
-from workspace.simulator import Simulator, make_wall
+from huian import HuianGameState
+from workspace.simulator import Simulator, SimulatorConfig, make_wall
 
 
 class SimulatorTests(unittest.TestCase):
@@ -10,30 +11,73 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(len(wall), 144)
         self.assertTrue(all(wall.count(tile) <= 4 for tile in set(wall)))
 
-    def test_unknown_opening_stops_explicitly(self):
-        result = Simulator().run(seed=42)
+    def test_legacy_safe_stop_profile_stops_unknown_explicitly(self):
+        result = Simulator(
+            config=SimulatorConfig(normal_hand_mode=False)
+        ).run(seed=42)
         self.assertEqual(result.status, "UNRESOLVED")
         self.assertTrue(result.unresolved)
 
-    def test_opening_trace_is_reproducible_and_reaches_special_window(self):
+    def test_legacy_opening_trace_is_reproducible_and_stops_at_migration_boundary(self):
         first = Simulator().run_opening(seed=42)
         second = Simulator().run_opening(seed=42)
         self.assertEqual(first, second)
-        self.assertEqual(first.status, "READY")
+        self.assertEqual(first.status, "STOPPED_UNKNOWN")
         self.assertEqual(first.phase, "OPENING_QIANGJIN_CHECK")
-        self.assertFalse(first.unresolved)
+        self.assertTrue({
+            "qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"
+        }.issubset(set(first.unresolved)))
         self.assertEqual(len(first.events), 1)
         self.assertEqual(first.events[0]["action"]["type"], "OPEN_GOLD")
+        self.assertEqual(
+            first.events[0]["action"]["metadata"]["location_evidence"],
+            "SIMULATOR_CONVENTION",
+        )
         self.assertIn(first.dice_total, range(2, 13))
         self.assertGreater(first.wall_remaining, 16)
 
     def test_invalid_opening_input_is_not_relabelled_as_unknown(self):
         with self.assertRaises(ValueError):
             Simulator().run_opening(seed=99, dice_total=1)
+
     def test_explicit_dice_value_is_replayed(self):
         result = Simulator().run_opening(seed=99, dice_total=7)
         self.assertEqual(result.dice_total, 7)
         self.assertEqual(result.events[0]["action"]["metadata"]["dice_total"], 7)
+
+    def test_direct_terminal_special_preserves_winner_and_source(self):
+        state = HuianGameState(
+            phase="TERMINAL",
+            terminal=True,
+            terminal_reason="AUTO_ZIMO",
+            rewards=[-24, 24],
+        )
+
+        class DirectSpecialGame:
+            @property
+            def state(self):
+                return state
+
+            @property
+            def events(self):
+                return [{
+                    "seq": 0,
+                    "action": {
+                        "player": 1,
+                        "type": "QIANGJIN",
+                        "tile": None,
+                        "tiles": [],
+                        "metadata": {"win_source": "qiangjin"},
+                    },
+                }]
+
+        result = Simulator._result(
+            DirectSpecialGame(), seed=7, status="COMPLETED"
+        )
+        self.assertEqual(result.winner, 1)
+        self.assertEqual(result.win_source, "qiangjin")
+        self.assertEqual(result.rewards, (-24, 24))
+        self.assertEqual(result.terminal_reason, "AUTO_ZIMO")
 
     def test_normal_hand_mode_skips_qiangjin_and_is_reproducible(self):
         first = Simulator().run_normal_hand(seed=3)

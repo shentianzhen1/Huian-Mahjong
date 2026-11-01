@@ -1,0 +1,104 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "reference_version": "2026.10.25.4",
+  "reference_roles": {
+    "hand": 10,
+    "opened_gold": 2
+  },
+  "runtime_examples": [
+    {
+      "file": "ScreenRecording_09-26-2026 22-23-34_1.mp4",
+      "frames": [
+        48,
+        54,
+        60
+      ],
+      "strict_gold_trusted": true,
+      "gold_source_trial": false,
+      "gold_trusted": true,
+      "gold_tile": "M6",
+      "gold_observations": [
+        {
+          "frame": 48,
+          "candidate_tile_id": "M6",
+          "tile_id": "M6",
+          "tile_confidence": 0.988078,
+          "identity_reason": "accepted",
+          "opened_gold_reference_supported": true
+        },
+        {
+          "frame": 54,
+          "candidate_tile_id": "M6",
+          "tile_id": "M6",
+          "tile_confidence": 0.988297,
+          "identity_reason": "accepted",
+          "opened_gold_reference_supported": true
+        },
+        {
+          "frame": 60,
+          "candidate_tile_id": "M6",
+          "tile_id": "M6",
+          "tile_confidence": 0.988298,
+          "identity_reason": "accepted",
+          "opened_gold_reference_supported": true
+        }
+      ]
+    },
+    {
+      "file": "ScreenRecording_10-12-2026 21-29-40_1.mp4",
+      "frames": [
+        600,
+        606,
+        612
+      ],
+      "strict_gold_trusted": false,
+      "gold_source_trial": true,
+      "gold_trusted": true,
+      "gold_tile": "M4",
+      "gold_observations": [
+        {
+          "frame": 600,
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.912463,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "opened_gold_reference_supported": true
+        },
+        {
+          "frame": 606,
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.911086,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "opened_gold_reference_supported": true
+        },
+        {
+          "frame": 612,
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.912139,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "opened_gold_reference_supported": true
+        }
+      ]
+    }
+  ],
+  "automatic_m4_first12seconds": {
+    "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+    "manual_gold": null,
+    "first_trusted_source_seconds": 5.2,
+    "trusted_windows": 34,
+    "display_windows": 18,
+    "discard_windows": 4,
+    "all_trial_fact_state_tracker_ready_false": true
+  },
+  "tests": "81 focused tests,35 subtests passed",
+  "policy": "Gold trial only in explicit experimental/source-trial mode; >=.82, three distinct agreeing Gold frames and verified actual opened-Gold reference support. Original full-bank candidate agreement required by reference classifier. Raw source rejections preserved; hand/playable-Gold classification unchanged. Trial provenance persists through missing frames and is cleared on mode-off/scope changes; trial opening facts cannot authorize Environment/Executor.",
+  "limits": [
+    "Revealed source recordings; not independent Gold accuracy.",
+    "Current added opened-Gold coverage is M4/M6 only.",
+    "M4 first acquisition5.2s in this clip; first short draw can still precede Gold acquisition.",
+    "Installer not yet verified at this change."
+  ]
+}

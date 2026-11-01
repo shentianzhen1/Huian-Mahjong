@@ -1,0 +1,413 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "inventory_method": "Sequential decoded frames every6; inspect right draw ROI x943:990 y438:504 median grayscale >160; manually review each episode representative full lower-table image. Heuristic inventory is not an exhaustive action transcript.",
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_NOT_USER_APPROVED",
+  "visible_episodes": 16,
+  "flower_episode_indices": [
+    2
+  ],
+  "ordinary_or_kong_draw_episodes": 15,
+  "episodes_with_structural_discard_advice": 12,
+  "missing": [
+    {
+      "episode": 0,
+      "frames": [
+        72,
+        102
+      ],
+      "draw": "S9",
+      "cause": "At frame84 all17 tiles known after W/B additions, but live_hand_meld_waiting_confirmation; subsequent bursts straddle animation."
+    },
+    {
+      "episode": 1,
+      "frames": [
+        216,
+        240
+      ],
+      "draw": "M2",
+      "cause": "Raised W misclassified low as E at228; subsequent geometry unstable."
+    },
+    {
+      "episode": 9,
+      "frames": [
+        1746,
+        1788
+      ],
+      "draw": "S8",
+      "cause": "Raised M3 misclassified low as S2 at1776; adjacent bursts show meld/draw geometry changes."
+    }
+  ],
+  "limits": [
+    "Observed visible episodes only; not exhaustive independent game coverage.",
+    "One revealed match; all three missed episodes checked with the W/B offline candidate.",
+    "No runtime change or relaxation of confirmation from this audit."
+  ],
+  "episodes": [
+    {
+      "start": 72,
+      "end": 102,
+      "frames": [
+        72,
+        78,
+        84,
+        90,
+        96,
+        102
+      ],
+      "review_frame": 90,
+      "advice_frames": [],
+      "start_seconds": 2.4,
+      "end_seconds": 3.4
+    },
+    {
+      "start": 216,
+      "end": 240,
+      "frames": [
+        216,
+        222,
+        228,
+        234,
+        240
+      ],
+      "review_frame": 228,
+      "advice_frames": [],
+      "start_seconds": 7.2,
+      "end_seconds": 8.0
+    },
+    {
+      "start": 300,
+      "end": 306,
+      "frames": [
+        300,
+        306
+      ],
+      "review_frame": 306,
+      "advice_frames": [],
+      "start_seconds": 10.0,
+      "end_seconds": 10.2
+    },
+    {
+      "start": 318,
+      "end": 402,
+      "frames": [
+        318,
+        324,
+        330,
+        336,
+        342,
+        348,
+        354,
+        360,
+        366,
+        372,
+        378,
+        384,
+        390,
+        396,
+        402
+      ],
+      "review_frame": 360,
+      "advice_frames": [
+        336,
+        342,
+        348,
+        354,
+        360,
+        366,
+        372,
+        378,
+        384,
+        390
+      ],
+      "start_seconds": 10.6,
+      "end_seconds": 13.4
+    },
+    {
+      "start": 504,
+      "end": 594,
+      "frames": [
+        504,
+        510,
+        516,
+        522,
+        528,
+        534,
+        540,
+        546,
+        552,
+        558,
+        564,
+        570,
+        576,
+        582,
+        588,
+        594
+      ],
+      "review_frame": 552,
+      "advice_frames": [
+        522,
+        528,
+        534,
+        540,
+        546,
+        552,
+        558,
+        564,
+        570,
+        576
+      ],
+      "start_seconds": 16.8,
+      "end_seconds": 19.8
+    },
+    {
+      "start": 678,
+      "end": 708,
+      "frames": [
+        678,
+        684,
+        690,
+        696,
+        702,
+        708
+      ],
+      "review_frame": 696,
+      "advice_frames": [
+        690,
+        696
+      ],
+      "start_seconds": 22.6,
+      "end_seconds": 23.6
+    },
+    {
+      "start": 918,
+      "end": 954,
+      "frames": [
+        918,
+        924,
+        930,
+        936,
+        942,
+        948,
+        954
+      ],
+      "review_frame": 936,
+      "advice_frames": [
+        936,
+        942
+      ],
+      "start_seconds": 30.6,
+      "end_seconds": 31.8
+    },
+    {
+      "start": 1188,
+      "end": 1212,
+      "frames": [
+        1188,
+        1194,
+        1200,
+        1206,
+        1212
+      ],
+      "review_frame": 1200,
+      "advice_frames": [
+        1206,
+        1212
+      ],
+      "start_seconds": 39.6,
+      "end_seconds": 40.4
+    },
+    {
+      "start": 1296,
+      "end": 1332,
+      "frames": [
+        1296,
+        1302,
+        1308,
+        1314,
+        1320,
+        1326,
+        1332
+      ],
+      "review_frame": 1314,
+      "advice_frames": [
+        1314,
+        1320,
+        1326,
+        1332
+      ],
+      "start_seconds": 43.2,
+      "end_seconds": 44.4
+    },
+    {
+      "start": 1746,
+      "end": 1788,
+      "frames": [
+        1746,
+        1752,
+        1758,
+        1764,
+        1770,
+        1776,
+        1782,
+        1788
+      ],
+      "review_frame": 1770,
+      "advice_frames": [],
+      "start_seconds": 58.2,
+      "end_seconds": 59.6
+    },
+    {
+      "start": 1896,
+      "end": 1920,
+      "frames": [
+        1896,
+        1902,
+        1908,
+        1914,
+        1920
+      ],
+      "review_frame": 1908,
+      "advice_frames": [
+        1914,
+        1920
+      ],
+      "start_seconds": 63.2,
+      "end_seconds": 64.0
+    },
+    {
+      "start": 1992,
+      "end": 2016,
+      "frames": [
+        1992,
+        1998,
+        2004,
+        2010,
+        2016
+      ],
+      "review_frame": 2004,
+      "advice_frames": [
+        2010,
+        2016
+      ],
+      "start_seconds": 66.4,
+      "end_seconds": 67.2
+    },
+    {
+      "start": 2208,
+      "end": 2226,
+      "frames": [
+        2208,
+        2214,
+        2220,
+        2226
+      ],
+      "review_frame": 2220,
+      "advice_frames": [
+        2226
+      ],
+      "start_seconds": 73.6,
+      "end_seconds": 74.2
+    },
+    {
+      "start": 2328,
+      "end": 2358,
+      "frames": [
+        2328,
+        2334,
+        2340,
+        2346,
+        2352,
+        2358
+      ],
+      "review_frame": 2346,
+      "advice_frames": [
+        2340,
+        2346,
+        2352,
+        2358
+      ],
+      "start_seconds": 77.6,
+      "end_seconds": 78.6
+    },
+    {
+      "start": 2442,
+      "end": 2526,
+      "frames": [
+        2442,
+        2448,
+        2454,
+        2460,
+        2466,
+        2472,
+        2478,
+        2484,
+        2490,
+        2496,
+        2502,
+        2508,
+        2514,
+        2520,
+        2526
+      ],
+      "review_frame": 2484,
+      "advice_frames": [
+        2460,
+        2466,
+        2472,
+        2478,
+        2484,
+        2490,
+        2496,
+        2502,
+        2508,
+        2514
+      ],
+      "start_seconds": 81.4,
+      "end_seconds": 84.2
+    },
+    {
+      "start": 2592,
+      "end": 2688,
+      "frames": [
+        2592,
+        2598,
+        2604,
+        2610,
+        2616,
+        2622,
+        2628,
+        2634,
+        2640,
+        2646,
+        2652,
+        2658,
+        2664,
+        2670,
+        2676,
+        2682,
+        2688
+      ],
+      "review_frame": 2640,
+      "advice_frames": [
+        2610,
+        2616,
+        2622,
+        2628,
+        2634,
+        2640,
+        2646,
+        2652,
+        2658,
+        2664,
+        2670,
+        2676,
+        2682,
+        2688
+      ],
+      "start_seconds": 86.4,
+      "end_seconds": 89.6
+    }
+  ]
+}

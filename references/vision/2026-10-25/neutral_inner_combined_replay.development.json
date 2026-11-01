@@ -1,0 +1,43 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "manual_gold": "M4",
+  "single_source_trial": true,
+  "reference_version": "2026.10.25.2",
+  "policy": "After existing translated+neutral-face trial, only if still below .82, run symmetric horizontal-edge-excluded neutral-face matching; require same top class; preserve confident original results.",
+  "before": {
+    "accepted_windows": 285,
+    "discard_windows": 52
+  },
+  "after": {
+    "accepted_windows": 296,
+    "discard_windows": 63
+  },
+  "lost_previous_windows": 0,
+  "changed_previous_advice": 0,
+  "distinct_discard_hand_states": 12,
+  "offline_runtime_ms": {
+    "median": 273.05,
+    "p95": 333.18
+  },
+  "new_frames": [
+    936,
+    942,
+    2466,
+    2472,
+    2478,
+    2484,
+    2490,
+    2496,
+    2502,
+    2508,
+    2514
+  ],
+  "limits": [
+    "One revealed match with overlapping windows, not independent accuracy.",
+    "Tile crops visually checked in prior probe, new complete hands not yet reviewed.",
+    "Offline monkeypatch only, not wired to app or installer."
+  ]
+}

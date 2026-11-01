@@ -1,0 +1,46 @@
+{
+  "schema_version": "advice_blocker_development_diagnostic_v1",
+  "date": "2026-11-01",
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "source_range_seconds": [
+    60,
+    76
+  ],
+  "reference_version": "2026.10.30.1",
+  "source_runtime_commit": "b3e65b30651b0a238feea12a7aed8a4439d40993",
+  "windows": 39,
+  "displayed_windows": 25,
+  "blocked_windows": 14,
+  "structural_blocker_windows": {
+    "geometry": 10,
+    "hand_boundary": 2,
+    "hand_identity": 1,
+    "stability": 1
+  },
+  "public_context_issue_windows": {
+    "meld_identity_unknown:0": 28,
+    "meld_untrusted:1": 39,
+    "opponent_meld_missing": 39,
+    "opponent_river_missing": 39,
+    "player_river_missing": 39,
+    "river_untrusted:0": 39,
+    "river_untrusted:1": 39
+  },
+  "summary": "向听暂停原因：画面/牌面位置未稳定 10窗；局号未确认 2窗；手牌未确认 1窗；等待多帧确认 1窗",
+  "policy": "One primary category per blocked window, prioritized from reported gates; not causal attribution. Public context is counted separately. Raw rejection_issue_windows remains available.",
+  "recognition_decisions_changed": false,
+  "inputs_mutated": false,
+  "accuracy_measured": false,
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "windows_capture_validated": false,
+  "safe_for_executor": false,
+  "manual_review_followup": "references/vision/2026-11-01/hand2_reviewed_advisory_anchors_v0_1.json",
+  "low_score_window_review": {
+    "source_frame": 2148,
+    "visible_scene": "兰花出现后补花",
+    "ordinary_hand_confusion_confirmed": false,
+    "runtime_accepted_as_M9": false,
+    "classification_scope": "Manual scene review; automatic flower recognition is not qualified"
+  }
+}

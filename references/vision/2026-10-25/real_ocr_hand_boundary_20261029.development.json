@@ -1,0 +1,112 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "method": "Sequentially decode4real frames. Unmodified PublicStateReader/TesseractCLIBackend,2votes. Feed actual public observations to confirmed_public_hand_boundary and LiveOpeningTracker; initialize tracker with reviewed S8 from prior hand. Snapshot constructor is synthetic; this is public OCR plus tracker integration, not full image-to-advice replay.",
+  "observations": [
+    {
+      "frames": [
+        2340,
+        2346
+      ],
+      "observation": {
+        "top_right_score": 932,
+        "bottom_left_score": 1068,
+        "hand_number": null,
+        "remaining_tiles": 25,
+        "score_votes": 2,
+        "hand_votes": 0,
+        "remaining_votes": 2,
+        "issues": [
+          "hand_unreadable"
+        ],
+        "safe_for_executor": false
+      },
+      "boundary_confirmed": false,
+      "persisted_gold": "S8",
+      "gold_trusted": true,
+      "status_reads": [
+        {
+          "remaining_tiles": 25,
+          "hand_number": null,
+          "raw_remaining": "25",
+          "raw_hand_progress": "2/6",
+          "hand_inferred_from_transition": false,
+          "issues": [
+            "hand_unreadable"
+          ],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null
+        },
+        {
+          "remaining_tiles": 25,
+          "hand_number": null,
+          "raw_remaining": "25",
+          "raw_hand_progress": "2/6",
+          "hand_inferred_from_transition": false,
+          "issues": [
+            "hand_unreadable"
+          ],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null
+        }
+      ]
+    },
+    {
+      "frames": [
+        2604,
+        2610
+      ],
+      "observation": {
+        "top_right_score": 948,
+        "bottom_left_score": 1052,
+        "hand_number": 3,
+        "remaining_tiles": 109,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 2,
+        "issues": [],
+        "safe_for_executor": false
+      },
+      "boundary_confirmed": true,
+      "persisted_gold": null,
+      "gold_trusted": false,
+      "status_reads": [
+        {
+          "remaining_tiles": 109,
+          "hand_number": 3,
+          "raw_remaining": "109",
+          "raw_hand_progress": "3/8",
+          "hand_inferred_from_transition": false,
+          "issues": [],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null
+        },
+        {
+          "remaining_tiles": 109,
+          "hand_number": 3,
+          "raw_remaining": "109",
+          "raw_hand_progress": "3/8",
+          "hand_inferred_from_transition": false,
+          "issues": [],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null
+        }
+      ]
+    }
+  ],
+  "result": "Actual new-hand3/8 consensus clears previous S8; absent new Gold identity remains UNKNOWN.",
+  "limits": [
+    "Old hand2/8 is read2/6 and correctly rejected. No automatic correction of denominator.",
+    "Because old hand number was not established, this validates initial confirmed3 reset, not sequential2to3 from two real OCR consensuses.",
+    "Remaining count25 in first OCR window not visually validated here; no remaining-count accuracy claim.",
+    "New handGoldSOUTH still lacks corresponding qualified reference in installed19-image pack.",
+    "No new installer; b63eba1 installer checks now5/5success."
+  ]
+}

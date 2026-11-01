@@ -105,6 +105,8 @@ class StatusLineRead:
     safe_for_executor: bool = False
     remaining_mode: str = "primary"
     raw_remaining_fallback: str | None = None
+    raw_hand_fallback: str | None = None
+    hand_mode: str = "primary"
 
     def to_candidate(
         self,
@@ -147,6 +149,24 @@ class TesseractStatusReader:
             whitelist="0123456789/"
         )
 
+    def read_hand_progress(self, image, profile=None):
+        """Read only the hand index, preserving invalid-primary crop fallback."""
+        profile = profile or HuianPublicStateProfile()
+        raw_hand = self.backend(
+            prepare_status_crop(profile.hand_progress.crop(image))
+        )
+        hand = parse_hand_progress(raw_hand)
+        raw_hand_fallback = None
+        hand_mode = "primary"
+        if hand is None:
+            left, top, right, bottom = profile.hand_progress.pixel_box(image.size)
+            margin = max(1, int(round(image.height * .008)))
+            expanded = image.crop((left, max(0, top-margin), right, bottom))
+            raw_hand_fallback = self.backend(prepare_status_crop(expanded))
+            hand = parse_hand_progress(raw_hand_fallback)
+            hand_mode = "top_expand_fallback" if hand is not None else "invalid"
+        return hand, raw_hand, raw_hand_fallback, hand_mode
+
     def read(self, image, profile=None):
         profile = profile or HuianPublicStateProfile()
         crops = profile.crops(image)
@@ -169,10 +189,7 @@ class TesseractStatusReader:
             else:
                 remaining_mode = "invalid"
 
-        raw_hand = self.backend(
-            prepare_status_crop(crops["hand_progress"])
-        )
-        hand = parse_hand_progress(raw_hand)
+        hand, raw_hand, raw_hand_fallback, hand_mode = self.read_hand_progress(image, profile)
         issues = []
         if remaining is None:
             issues.append("remaining_unreadable")
@@ -187,4 +204,6 @@ class TesseractStatusReader:
             safe_for_executor=False,
             remaining_mode=remaining_mode,
             raw_remaining_fallback=raw_remaining_fallback,
+            raw_hand_fallback=raw_hand_fallback,
+            hand_mode=hand_mode,
         )

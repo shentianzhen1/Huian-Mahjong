@@ -1,0 +1,194 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_replay_changed": true,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+  "private_references": [
+    {
+      "truth": "SOUTH",
+      "frame": 2604,
+      "bbox": [
+        114,
+        434,
+        52,
+        75
+      ],
+      "rgb_sha256": "e41bf3f13a9d68d51396b716f36de39c550b444de723ec3ad8c281f2de0e37a7"
+    },
+    {
+      "truth": "N",
+      "frame": 2604,
+      "bbox": [
+        665,
+        431,
+        49,
+        79
+      ],
+      "rgb_sha256": "674166482cf951c70cbdbee76abc1ce97e2a08f56f6ff2aae3a818597b3410ae"
+    },
+    {
+      "truth": "R",
+      "frame": 2604,
+      "bbox": [
+        764,
+        433,
+        49,
+        77
+      ],
+      "rgb_sha256": "cf2eefc0c25b7490fb27a6966788e6e05d21b407394ea3ab114e98221b57b224"
+    }
+  ],
+  "method": "Offline append N/R to translated/neutral/inner ordinary banks, SOUTH gold_region feature to underlying gold_identity_templates. Existing opened-SOUTH and prior private candidate remain. Real OCR76..90s. No private pixels uploaded.",
+  "fix": "Suppress replay display/phase/shanten/discards/theoretical-details while last fresh OCR hand mismatches trusted hand boundary, including missing consensus. Keep tracker memory until confirmed boundary; no identity threshold change.",
+  "tests_passed": 23,
+  "final_result": {
+    "windows": 34,
+    "advice": 10,
+    "old_hand_advice": 4,
+    "new_hand_advice": 6,
+    "new_hand_display_frames": [
+      2604,
+      2616,
+      2628,
+      2640,
+      2652,
+      2664
+    ],
+    "previous_wrong_gold_advice_frames_now_suppressed": [
+      2556,
+      2568
+    ]
+  },
+  "reviewed_hand_at2652": [
+    "SOUTH",
+    "P1",
+    "P2",
+    "S1",
+    "S1",
+    "S8",
+    "M1",
+    "M3",
+    "M5",
+    "M6",
+    "W",
+    "N",
+    "N",
+    "R",
+    "G",
+    "B"
+  ],
+  "ordinary_crop_controls": {
+    "total": 134,
+    "baseline": {
+      "top1_correct": 111,
+      "scores_ge_point82": 96,
+      "wrong_scores_ge_point82": 0
+    },
+    "inner": {
+      "top1_correct": 112,
+      "scores_ge_point82": 97,
+      "wrong_scores_ge_point82": 0
+    },
+    "candidate": {
+      "top1_correct": 114,
+      "scores_ge_point82": 97,
+      "wrong_scores_ge_point82": 0
+    },
+    "changed": [
+      {
+        "image": "templates/hand/960_hand_region_s08_M4.png",
+        "truth": "M4",
+        "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+        "baseline": [
+          "M5",
+          0.7176727056503296
+        ],
+        "inner": [
+          "M5",
+          0.7176727056503296
+        ],
+        "candidate": [
+          "M4",
+          0.7703192830085754
+        ]
+      },
+      {
+        "image": "templates/draw/tile_4d6b1bedfe2dbb31_P2.png",
+        "truth": "P2",
+        "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+        "baseline": [
+          "S2",
+          0.629805326461792
+        ],
+        "inner": [
+          "S2",
+          0.629805326461792
+        ],
+        "candidate": [
+          "M5",
+          0.6753987669944763
+        ]
+      },
+      {
+        "image": "templates/hand/tile_ee2c702c6ae17185_R.png",
+        "truth": "R",
+        "source_sha256": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+        "baseline": [
+          "R",
+          0.7301770448684692
+        ],
+        "inner": [
+          "R",
+          0.7301770448684692
+        ],
+        "candidate": [
+          "R",
+          0.7617717981338501
+        ]
+      },
+      {
+        "image": "templates/hand/tile_92818654a41d308e_R.png",
+        "truth": "R",
+        "source_sha256": "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+        "baseline": [
+          "R",
+          0.7334252595901489
+        ],
+        "inner": [
+          "R",
+          0.7334252595901489
+        ],
+        "candidate": [
+          "R",
+          0.7920638918876648
+        ]
+      },
+      {
+        "image": "templates/hand/tile_1edd2cb9eab772ad_N.png",
+        "truth": "N",
+        "source_sha256": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+        "baseline": [
+          "G",
+          0.4978252947330475
+        ],
+        "inner": [
+          "G",
+          0.4978252947330475
+        ],
+        "candidate": [
+          "N",
+          0.7563163042068481
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "References and replay from same revealed recording/new hand; includes training endpoint2604, not independent accuracy.",
+    "One full16tile hand checkpoint reviewed, not independent6hands.",
+    "134ordinary controls exclude querySHA but not original match; do not validate added GoldSOUTH bank or all Gold classes.",
+    "Original installed19reference pack unchanged. Offline sample gains not automatically installed runtime capability.",
+    "No new installer requested."
+  ]
+}

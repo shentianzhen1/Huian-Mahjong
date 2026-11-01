@@ -1,0 +1,3471 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "default_runtime_changed": false,
+  "algorithm_changed": false,
+  "threshold": 0.82,
+  "manual_gold": "M4",
+  "single_source_trial": true,
+  "edge_seams": true,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "packet_manifest_sha256": "b38075116d262c213848b8e15ac829640c7d9d8e3a938c28b97a286619e47cac",
+  "reference_packet": {
+    "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+    "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+    "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT_NOT_APPROVED_TEMPLATES",
+    "rows": [
+      {
+        "frame": 150,
+        "slot": 2,
+        "bbox": [
+          217,
+          433,
+          49,
+          77
+        ],
+        "detected_bbox": [
+          217,
+          442,
+          48,
+          65
+        ],
+        "crop": "150_2.png",
+        "rgb_sha256": "f340e2dbf847b1c4e903b63051967c17dcf6973ff5a3a3699d68809212b066d6",
+        "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+        "truth": "S3"
+      },
+      {
+        "frame": 150,
+        "slot": 4,
+        "bbox": [
+          316,
+          433,
+          50,
+          77
+        ],
+        "detected_bbox": [
+          317,
+          442,
+          48,
+          65
+        ],
+        "crop": "150_4.png",
+        "rgb_sha256": "52771d36b0073419884b47d8735cab39e64288f3ef7826255f3e4b9bcc7f2cf0",
+        "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+        "truth": "S7"
+      },
+      {
+        "frame": 4350,
+        "slot": 4,
+        "bbox": [
+          316,
+          433,
+          50,
+          77
+        ],
+        "detected_bbox": [
+          317,
+          442,
+          48,
+          65
+        ],
+        "crop": "4350_4.png",
+        "rgb_sha256": "bbaa8f0f7047b393d5730723c0759c1c29e74bb0ebd0f8b3a4e1c89032c0c0cd",
+        "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+        "truth": "S2"
+      },
+      {
+        "frame": 4350,
+        "slot": 6,
+        "bbox": [
+          416,
+          433,
+          49,
+          77
+        ],
+        "detected_bbox": [
+          416,
+          442,
+          49,
+          65
+        ],
+        "crop": "4350_6.png",
+        "rgb_sha256": "b6384ad6ef708d9df57526d9fd3f1f0dac8c1c02eb3f2bb51627dcf216c35afb",
+        "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+        "truth": "S8"
+      },
+      {
+        "frame": 4350,
+        "slot": 8,
+        "bbox": [
+          515,
+          433,
+          50,
+          77
+        ],
+        "detected_bbox": [
+          516,
+          442,
+          48,
+          65
+        ],
+        "crop": "4350_8.png",
+        "rgb_sha256": "5f116db8da7d1042156137a2e92c955a9e74c73a9ba3b874246539ea07cf1808",
+        "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+        "truth": "S9"
+      },
+      {
+        "frame": 150,
+        "slot": 6,
+        "bbox": [
+          416,
+          433,
+          49,
+          77
+        ],
+        "detected_bbox": [
+          416,
+          442,
+          49,
+          65
+        ],
+        "crop": "150_6.png",
+        "rgb_sha256": "57497e8bd9aeb6227dc695b4d8c481d14015b95fc305ee889692a0eb061d23f3",
+        "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+        "truth": "M2"
+      },
+      {
+        "frame": 150,
+        "slot": 3,
+        "bbox": [
+          266,
+          433,
+          50,
+          77
+        ],
+        "detected_bbox": [
+          267,
+          442,
+          48,
+          65
+        ],
+        "crop": "150_3.png",
+        "rgb_sha256": "f654dfb42b9d0319eb8ec863e8be8cf32e138d38925b5e41cddb09a9c029d4e3",
+        "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+        "truth": "S4"
+      },
+      {
+        "frame": 4350,
+        "slot": 13,
+        "bbox": [
+          764,
+          433,
+          49,
+          77
+        ],
+        "detected_bbox": [
+          765,
+          442,
+          48,
+          65
+        ],
+        "crop": "4350_13.png",
+        "rgb_sha256": "5138cfd3f567ec2d5773e2ea3174379810ca8d5e4ef6182f457641a1581a2f75",
+        "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+        "truth": "M9"
+      }
+    ],
+    "revision_note": "Add reviewed M9 from existing Sep26 frame4350 slot13; retain previous seven references."
+  },
+  "private_packet_library_file_id": "libfile_a1867b712b1081918c1bb6bf31ac302d",
+  "library_version": 2,
+  "windows": 473,
+  "before_display": 229,
+  "after_display": 267,
+  "before_discard": 14,
+  "after_discard": 36,
+  "first_display_seconds": 9.0,
+  "old_display_windows_lost": 0,
+  "all_sampled_pixels_equal": true,
+  "all_geometry_flags_equal": true,
+  "reviewed_checks": [
+    {
+      "frame": 264,
+      "scored_count": 16,
+      "raw_correct": 16,
+      "min_score": 0.835577,
+      "matching_allowed_frame": 270,
+      "truth_calculation_matches": true
+    },
+    {
+      "frame": 330,
+      "scored_count": 17,
+      "raw_correct": 17,
+      "min_score": 0.83871,
+      "matching_allowed_frame": 336,
+      "truth_calculation_matches": true
+    },
+    {
+      "frame": 432,
+      "scored_count": 16,
+      "raw_correct": 16,
+      "min_score": 0.843303,
+      "matching_allowed_frame": 438,
+      "truth_calculation_matches": true
+    },
+    {
+      "frame": 546,
+      "scored_count": 17,
+      "raw_correct": 17,
+      "min_score": 0.828485,
+      "matching_allowed_frame": 522,
+      "truth_calculation_matches": true
+    }
+  ],
+  "remaining_blockers": {
+    "geometry": 114,
+    "incomplete_identity": 67,
+    "confirmation": 24,
+    "other": 1
+  },
+  "cross_group": {
+    "baseline": {
+      "queries": 134,
+      "raw_correct": 89,
+      "score_pass": 45,
+      "wrong_score_pass": 0
+    },
+    "shift3": {
+      "queries": 134,
+      "raw_correct": 103,
+      "score_pass": 82,
+      "wrong_score_pass": 0
+    }
+  },
+  "advice_runs": [
+    {
+      "display_allowed": false,
+      "windows": 43,
+      "first_frame": 12,
+      "start_seconds": 0.4,
+      "last_frame": 264,
+      "end_seconds": 8.8
+    },
+    {
+      "display_allowed": true,
+      "windows": 5,
+      "first_frame": 270,
+      "start_seconds": 9.0,
+      "last_frame": 294,
+      "end_seconds": 9.8
+    },
+    {
+      "display_allowed": false,
+      "windows": 6,
+      "first_frame": 300,
+      "start_seconds": 10.0,
+      "last_frame": 330,
+      "end_seconds": 11.0
+    },
+    {
+      "display_allowed": true,
+      "windows": 10,
+      "first_frame": 336,
+      "start_seconds": 11.200000000000001,
+      "last_frame": 390,
+      "end_seconds": 13.0
+    },
+    {
+      "display_allowed": false,
+      "windows": 7,
+      "first_frame": 396,
+      "start_seconds": 13.200000000000001,
+      "last_frame": 432,
+      "end_seconds": 14.4
+    },
+    {
+      "display_allowed": true,
+      "windows": 11,
+      "first_frame": 438,
+      "start_seconds": 14.600000000000001,
+      "last_frame": 498,
+      "end_seconds": 16.6
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 504,
+      "start_seconds": 16.8,
+      "last_frame": 516,
+      "end_seconds": 17.200000000000003
+    },
+    {
+      "display_allowed": true,
+      "windows": 10,
+      "first_frame": 522,
+      "start_seconds": 17.400000000000002,
+      "last_frame": 576,
+      "end_seconds": 19.200000000000003
+    },
+    {
+      "display_allowed": false,
+      "windows": 9,
+      "first_frame": 582,
+      "start_seconds": 19.400000000000002,
+      "last_frame": 630,
+      "end_seconds": 21.0
+    },
+    {
+      "display_allowed": true,
+      "windows": 6,
+      "first_frame": 636,
+      "start_seconds": 21.200000000000003,
+      "last_frame": 666,
+      "end_seconds": 22.200000000000003
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 672,
+      "start_seconds": 22.400000000000002,
+      "last_frame": 684,
+      "end_seconds": 22.8
+    },
+    {
+      "display_allowed": true,
+      "windows": 2,
+      "first_frame": 690,
+      "start_seconds": 23.0,
+      "last_frame": 696,
+      "end_seconds": 23.200000000000003
+    },
+    {
+      "display_allowed": false,
+      "windows": 8,
+      "first_frame": 702,
+      "start_seconds": 23.400000000000002,
+      "last_frame": 744,
+      "end_seconds": 24.8
+    },
+    {
+      "display_allowed": true,
+      "windows": 28,
+      "first_frame": 750,
+      "start_seconds": 25.0,
+      "last_frame": 912,
+      "end_seconds": 30.400000000000002
+    },
+    {
+      "display_allowed": false,
+      "windows": 12,
+      "first_frame": 918,
+      "start_seconds": 30.6,
+      "last_frame": 984,
+      "end_seconds": 32.800000000000004
+    },
+    {
+      "display_allowed": true,
+      "windows": 33,
+      "first_frame": 990,
+      "start_seconds": 33.0,
+      "last_frame": 1182,
+      "end_seconds": 39.400000000000006
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 1188,
+      "start_seconds": 39.6,
+      "last_frame": 1200,
+      "end_seconds": 40.0
+    },
+    {
+      "display_allowed": true,
+      "windows": 2,
+      "first_frame": 1206,
+      "start_seconds": 40.2,
+      "last_frame": 1212,
+      "end_seconds": 40.400000000000006
+    },
+    {
+      "display_allowed": false,
+      "windows": 4,
+      "first_frame": 1218,
+      "start_seconds": 40.6,
+      "last_frame": 1236,
+      "end_seconds": 41.2
+    },
+    {
+      "display_allowed": true,
+      "windows": 9,
+      "first_frame": 1242,
+      "start_seconds": 41.400000000000006,
+      "last_frame": 1290,
+      "end_seconds": 43.0
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 1296,
+      "start_seconds": 43.2,
+      "last_frame": 1308,
+      "end_seconds": 43.6
+    },
+    {
+      "display_allowed": true,
+      "windows": 3,
+      "first_frame": 1314,
+      "start_seconds": 43.800000000000004,
+      "last_frame": 1326,
+      "end_seconds": 44.2
+    },
+    {
+      "display_allowed": false,
+      "windows": 5,
+      "first_frame": 1332,
+      "start_seconds": 44.400000000000006,
+      "last_frame": 1356,
+      "end_seconds": 45.2
+    },
+    {
+      "display_allowed": true,
+      "windows": 63,
+      "first_frame": 1362,
+      "start_seconds": 45.400000000000006,
+      "last_frame": 1734,
+      "end_seconds": 57.800000000000004
+    },
+    {
+      "display_allowed": false,
+      "windows": 13,
+      "first_frame": 1740,
+      "start_seconds": 58.00000000000001,
+      "last_frame": 1812,
+      "end_seconds": 60.400000000000006
+    },
+    {
+      "display_allowed": true,
+      "windows": 13,
+      "first_frame": 1818,
+      "start_seconds": 60.6,
+      "last_frame": 1890,
+      "end_seconds": 63.00000000000001
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 1896,
+      "start_seconds": 63.2,
+      "last_frame": 1908,
+      "end_seconds": 63.6
+    },
+    {
+      "display_allowed": true,
+      "windows": 2,
+      "first_frame": 1914,
+      "start_seconds": 63.800000000000004,
+      "last_frame": 1920,
+      "end_seconds": 64.0
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 1926,
+      "start_seconds": 64.2,
+      "last_frame": 1938,
+      "end_seconds": 64.60000000000001
+    },
+    {
+      "display_allowed": true,
+      "windows": 8,
+      "first_frame": 1944,
+      "start_seconds": 64.8,
+      "last_frame": 1986,
+      "end_seconds": 66.2
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 1992,
+      "start_seconds": 66.4,
+      "last_frame": 2004,
+      "end_seconds": 66.80000000000001
+    },
+    {
+      "display_allowed": true,
+      "windows": 2,
+      "first_frame": 2010,
+      "start_seconds": 67.0,
+      "last_frame": 2016,
+      "end_seconds": 67.2
+    },
+    {
+      "display_allowed": false,
+      "windows": 4,
+      "first_frame": 2022,
+      "start_seconds": 67.4,
+      "last_frame": 2040,
+      "end_seconds": 68.0
+    },
+    {
+      "display_allowed": true,
+      "windows": 27,
+      "first_frame": 2046,
+      "start_seconds": 68.2,
+      "last_frame": 2202,
+      "end_seconds": 73.4
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 2208,
+      "start_seconds": 73.60000000000001,
+      "last_frame": 2220,
+      "end_seconds": 74.0
+    },
+    {
+      "display_allowed": true,
+      "windows": 1,
+      "first_frame": 2226,
+      "start_seconds": 74.2,
+      "last_frame": 2226,
+      "end_seconds": 74.2
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 2232,
+      "start_seconds": 74.4,
+      "last_frame": 2244,
+      "end_seconds": 74.80000000000001
+    },
+    {
+      "display_allowed": true,
+      "windows": 12,
+      "first_frame": 2250,
+      "start_seconds": 75.0,
+      "last_frame": 2316,
+      "end_seconds": 77.2
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 2322,
+      "start_seconds": 77.4,
+      "last_frame": 2334,
+      "end_seconds": 77.80000000000001
+    },
+    {
+      "display_allowed": true,
+      "windows": 4,
+      "first_frame": 2340,
+      "start_seconds": 78.0,
+      "last_frame": 2358,
+      "end_seconds": 78.60000000000001
+    },
+    {
+      "display_allowed": false,
+      "windows": 3,
+      "first_frame": 2364,
+      "start_seconds": 78.80000000000001,
+      "last_frame": 2376,
+      "end_seconds": 79.2
+    },
+    {
+      "display_allowed": true,
+      "windows": 9,
+      "first_frame": 2382,
+      "start_seconds": 79.4,
+      "last_frame": 2430,
+      "end_seconds": 81.0
+    },
+    {
+      "display_allowed": false,
+      "windows": 21,
+      "first_frame": 2436,
+      "start_seconds": 81.2,
+      "last_frame": 2556,
+      "end_seconds": 85.2
+    },
+    {
+      "display_allowed": true,
+      "windows": 4,
+      "first_frame": 2562,
+      "start_seconds": 85.4,
+      "last_frame": 2580,
+      "end_seconds": 86.0
+    },
+    {
+      "display_allowed": false,
+      "windows": 22,
+      "first_frame": 2586,
+      "start_seconds": 86.2,
+      "last_frame": 2712,
+      "end_seconds": 90.4
+    },
+    {
+      "display_allowed": true,
+      "windows": 3,
+      "first_frame": 2718,
+      "start_seconds": 90.60000000000001,
+      "last_frame": 2730,
+      "end_seconds": 91.0
+    },
+    {
+      "display_allowed": false,
+      "windows": 19,
+      "first_frame": 2736,
+      "start_seconds": 91.2,
+      "last_frame": 2844,
+      "end_seconds": 94.80000000000001
+    }
+  ],
+  "rows": [
+    {
+      "last_frame": 12,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 18,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 24,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 30,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 36,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 42,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 48,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 54,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 60,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 66,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 72,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 78,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 84,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 90,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 96,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 102,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 108,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 114,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 120,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 126,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 132,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 138,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 144,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 150,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 156,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 162,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 168,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 174,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 180,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 186,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 192,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 198,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 204,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 210,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 216,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 222,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 228,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 234,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 240,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 246,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 252,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 258,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 264,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 270,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 276,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 282,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 288,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 294,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 300,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 306,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 312,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 318,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 324,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 330,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 336,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 342,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 348,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 354,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 360,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 366,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 372,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 378,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 384,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 390,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 396,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 402,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 408,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 414,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 420,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 426,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 432,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 438,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 444,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 450,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 456,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 462,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 468,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 474,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 480,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 486,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 492,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 498,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 2
+    },
+    {
+      "last_frame": 504,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 510,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 516,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 522,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 528,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 534,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 540,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 546,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 552,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 558,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 564,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 570,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 576,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 582,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 588,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 594,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 600,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 606,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 612,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 618,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 624,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 630,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 636,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 642,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 648,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 654,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 660,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 666,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 672,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 678,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 684,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 690,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 696,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 702,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 708,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 714,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 720,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 726,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 732,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 738,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 744,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 750,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 756,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 762,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 768,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 774,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 780,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 786,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 792,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 798,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 804,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 810,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 816,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 822,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 828,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 834,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 840,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 846,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 852,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 858,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 864,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 870,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 876,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 882,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 888,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 894,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 900,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 906,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 912,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 918,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 924,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 930,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 936,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 942,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 948,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 954,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 960,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 966,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 972,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 978,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 984,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 990,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 996,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1002,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1008,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1014,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1020,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1026,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1032,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1038,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1044,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1050,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1056,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1062,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1068,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1074,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1080,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1086,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1092,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1098,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1104,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1110,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1116,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1122,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1128,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1134,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1140,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1146,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1152,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1158,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1164,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1170,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1176,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1182,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1188,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1194,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1200,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1206,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1212,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1218,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1224,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1230,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1236,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1242,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1248,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1254,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1260,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1266,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1272,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1278,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1284,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1290,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1296,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1302,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1308,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1314,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1320,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1326,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1332,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1338,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1344,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1350,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1356,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1362,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1368,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1374,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1380,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1386,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1392,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1398,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1404,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1410,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1416,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1422,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1428,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1434,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1440,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1446,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1452,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1458,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1464,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1470,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1476,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1482,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1488,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1494,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1500,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1506,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1512,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1518,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1524,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1530,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1536,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1542,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1548,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1554,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1560,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1566,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1572,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1578,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1584,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1590,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1596,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1602,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1608,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1614,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1620,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1626,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1632,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1638,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1644,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1650,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1656,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1662,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1668,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1674,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1680,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1686,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1692,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1698,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1704,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1710,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1716,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1722,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1728,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1734,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1740,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1746,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1752,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1758,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1764,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1770,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1776,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1782,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1788,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1794,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1800,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1806,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1812,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1818,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1824,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1830,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1836,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1842,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1848,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1854,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1860,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1866,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1872,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1878,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1884,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1890,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1896,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1902,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1908,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1914,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1920,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1926,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1932,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1938,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1944,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1950,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1956,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1962,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1968,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1974,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1980,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1986,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1992,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1998,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2004,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2010,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2016,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2022,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2028,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2034,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2040,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2046,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2052,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2058,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2064,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2070,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2076,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2082,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2088,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2094,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2100,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2106,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2112,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2118,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2124,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2130,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2136,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2142,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2148,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2154,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2160,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2166,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2172,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2178,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2184,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2190,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2196,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2202,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2208,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2214,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2220,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2226,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2232,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2238,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2244,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2250,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2256,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2262,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2268,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2274,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2280,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2286,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2292,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2298,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2304,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2310,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2316,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2322,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2328,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2334,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2340,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2346,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2352,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2358,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2364,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2370,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2376,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2382,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2388,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2394,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2400,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2406,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2412,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2418,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2424,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2430,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2436,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2442,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2448,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2454,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2460,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2466,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2472,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2478,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2484,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2490,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2496,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2502,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2508,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2514,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2520,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2526,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2532,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2538,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2544,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2550,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2556,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2562,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2568,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2574,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2580,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2586,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2592,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2598,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2604,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2610,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2616,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2622,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2628,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2634,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2640,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2646,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2652,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2658,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2664,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2670,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2676,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2682,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2688,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2694,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2700,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2706,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2712,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2718,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2724,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2730,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2736,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2742,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2748,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2754,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2760,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2766,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2772,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2778,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2784,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2790,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2796,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2802,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2808,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2814,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2820,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2826,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2832,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2838,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2844,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    }
+  ],
+  "limits": [
+    "One revealed development original match, overlapping windows are not independent hands",
+    "Four frames66 faces visually reviewed, not every267 frame reannotated",
+    "M9 reference adds one crop from same Sep26 source, not another independent source",
+    "Six cross-group sources remain unresolved exact SHA groups",
+    "Structural candidates only, no public danger or remaining-copy promotion"
+  ],
+  "validation": "Original video replay and134 crossgroup classifier queries only; no unrelated or full unit-suite reruns"
+}

@@ -1,0 +1,178 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "range_seconds": [
+    90,
+    120
+  ],
+  "method": "Same explicit26reference private packet, real publicOCR, offline inner/dark-meld candidates and pending-boundary suppression. No new reference from this interval. Same original match as training, not independent holdout.",
+  "result": {
+    "windows": 74,
+    "advice": 36,
+    "discards": 0,
+    "gold_trusted_windows": 71
+  },
+  "manual_review": {
+    "authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+    "checkpoints": [
+      {
+        "frame": 2748,
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "G",
+          "B"
+        ],
+        "meld_group_sizes": [
+          3
+        ]
+      },
+      {
+        "frame": 2856,
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6",
+          "W",
+          "G"
+        ],
+        "meld_group_sizes": [
+          3
+        ]
+      },
+      {
+        "frame": 3036,
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S1",
+          "S1",
+          "S6",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6",
+          "W"
+        ],
+        "meld_group_sizes": [
+          3
+        ]
+      },
+      {
+        "frame": 3228,
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "P9",
+          "S1",
+          "S1",
+          "S6",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6"
+        ],
+        "meld_group_sizes": [
+          3
+        ]
+      },
+      {
+        "frame": 3384,
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "S6",
+          "S8",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6"
+        ],
+        "meld_group_sizes": [
+          3,
+          3
+        ]
+      },
+      {
+        "frame": 3552,
+        "truth": [
+          "SOUTH",
+          "P1",
+          "P2",
+          "P3",
+          "S6",
+          "M1",
+          "M2",
+          "M3",
+          "M5",
+          "M6"
+        ],
+        "meld_group_sizes": [
+          3,
+          3
+        ]
+      }
+    ],
+    "correct_checkpoint_tiles": 72,
+    "scope": "First displayed endpoint for each distinct hand, not all36windows."
+  },
+  "draw_blocker": {
+    "waiting_frame2748": {
+      "south_crop": [
+        264,
+        434,
+        52,
+        75
+      ],
+      "score": 0.856555
+    },
+    "draw_frame2796": {
+      "south_crop": [
+        263,
+        431,
+        53,
+        79
+      ],
+      "score": 0.608653
+    },
+    "probe_same_draw_crop_against_reviewed2604_ref": {
+      "no_shift_ncc": 0.7431805134,
+      "one_feature_pixel_shift_ncc": 0.8355074525
+    },
+    "next_action": "Test translated concealed-Gold reference matching against other classes; no promotion from this single borderline score."
+  },
+  "limits": [
+    "Same-video revealed development, no independent accuracy claim.",
+    "Checkpoint geometry is consistent with visible one/two exposed groups; meld-face identity stillUNKNOWN.",
+    "3currentGold windows remain untrusted; persistence and original source qualification separate.",
+    "No live/default classifier/bundle change, no new installer."
+  ]
+}

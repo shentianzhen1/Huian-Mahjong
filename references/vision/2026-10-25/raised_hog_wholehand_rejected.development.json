@@ -1,0 +1,1321 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "reference_version": "2026.10.25.5",
+  "augmentation": "7 fixed variants: identity,xy translations,lower shadow,vertical compression; no query training",
+  "runs": [
+    {
+      "strict_reviewed_lineage": true,
+      "training_crops": 75,
+      "training_variants": 525,
+      "class_count": 32,
+      "target_support": {
+        "W": {
+          "reviewed_match_2026_09_26_eight_hand": 1
+        },
+        "M3": {
+          "reviewed_match_concealed_recovery_b": 1,
+          "reviewed_match_concealed_recovery_a": 5
+        }
+      },
+      "models": {
+        "linear": {
+          "queries": [
+            {
+              "frame": 228,
+              "truth": "W",
+              "crop_rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af",
+              "prediction": "W",
+              "truth_in_training": true
+            },
+            {
+              "frame": 1776,
+              "truth": "M3",
+              "crop_rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d",
+              "prediction": "M9",
+              "truth_in_training": true
+            }
+          ],
+          "training_fit_correct": 525
+        },
+        "rbf": {
+          "queries": [
+            {
+              "frame": 228,
+              "truth": "W",
+              "crop_rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 1776,
+              "truth": "M3",
+              "crop_rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d",
+              "prediction": "M3",
+              "truth_in_training": true
+            }
+          ],
+          "training_fit_correct": 525
+        }
+      }
+    },
+    {
+      "strict_reviewed_lineage": false,
+      "training_crops": 154,
+      "training_variants": 1078,
+      "class_count": 34,
+      "target_support": {
+        "W": {
+          "UNRESOLVED_SHA:0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f": 1,
+          "reviewed_match_2026_09_26_eight_hand": 1
+        },
+        "M3": {
+          "reviewed_match_concealed_recovery_b": 1,
+          "UNRESOLVED_SHA:94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919": 2,
+          "reviewed_match_concealed_recovery_a": 5
+        }
+      },
+      "models": {
+        "linear": {
+          "queries": [
+            {
+              "frame": 228,
+              "truth": "W",
+              "crop_rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af",
+              "prediction": "W",
+              "truth_in_training": true
+            },
+            {
+              "frame": 1776,
+              "truth": "M3",
+              "crop_rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d",
+              "prediction": "M9",
+              "truth_in_training": true
+            }
+          ],
+          "training_fit_correct": 1078
+        },
+        "rbf": {
+          "queries": [
+            {
+              "frame": 228,
+              "truth": "W",
+              "crop_rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af",
+              "prediction": "W",
+              "truth_in_training": true
+            },
+            {
+              "frame": 1776,
+              "truth": "M3",
+              "crop_rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d",
+              "prediction": "M3",
+              "truth_in_training": true
+            }
+          ],
+          "training_fit_correct": 1078
+        }
+      }
+    }
+  ],
+  "support_inventory": [
+    {
+      "tile": "M3",
+      "group": "reviewed_match_concealed_recovery_b",
+      "sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+      "qualified": true,
+      "id": "templates/hand/960_hand_region_s07_M3.png"
+    },
+    {
+      "tile": "M3",
+      "group": "UNRESOLVED_SHA:94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "sha": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "qualified": false,
+      "id": "templates/draw/tile_aaec99b693280ecc_M3.png"
+    },
+    {
+      "tile": "M3",
+      "group": "UNRESOLVED_SHA:94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "sha": "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+      "qualified": false,
+      "id": "templates/draw/tile_b434ca725fc0dc5b_M3.png"
+    },
+    {
+      "tile": "M3",
+      "group": "reviewed_match_concealed_recovery_a",
+      "sha": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+      "qualified": true,
+      "id": "templates/hand/tile_8b9b156526834bc6_M3.png"
+    },
+    {
+      "tile": "W",
+      "group": "UNRESOLVED_SHA:0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "sha": "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+      "qualified": false,
+      "id": "templates/hand/tile_61b63e56881ac740_W.png"
+    },
+    {
+      "tile": "M3",
+      "group": "reviewed_match_concealed_recovery_a",
+      "sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "qualified": true,
+      "id": "templates/hand/tile_8610212dc312ea9c_M3.png"
+    },
+    {
+      "tile": "M3",
+      "group": "reviewed_match_concealed_recovery_a",
+      "sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+      "qualified": true,
+      "id": "templates/hand/tile_9fe4ec26c4524a4b_M3.png"
+    },
+    {
+      "tile": "M3",
+      "group": "reviewed_match_concealed_recovery_a",
+      "sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "qualified": true,
+      "id": "templates/hand/tile_f73a87a31fbf699a_M3.png"
+    },
+    {
+      "tile": "M3",
+      "group": "reviewed_match_concealed_recovery_a",
+      "sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+      "qualified": true,
+      "id": "templates/hand/tile_48184d5a6580bb48_M3.png"
+    },
+    {
+      "tile": "W",
+      "group": "reviewed_match_2026_09_26_eight_hand",
+      "sha": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "qualified": true,
+      "id": "packet:W_source0.png"
+    }
+  ],
+  "code_parent": "948cdd07e434f839406c6149c26cdaeb5f92178d",
+  "runtime_changed": false,
+  "threshold": 0.82,
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "opencv": "5.0.0",
+    "sklearn": "1.8.0"
+  },
+  "feature_definition": "Current _feature 48x72 gray -> NumPy gradient unsigned orientation9 bins;8x8 cells;2x2 cell blocks,stride1cell;L2-Hys .2;1440 features. cv2.HOGDescriptor unavailable so this explicit implementation was used.",
+  "model_spec": {
+    "SVC_C": 10,
+    "gamma": "scale",
+    "kernels": [
+      "linear",
+      "rbf"
+    ],
+    "probability": false
+  },
+  "training_policy": "Exclude exact query source SHA; strict requires reviewed exact-SHA match registry. Packet hand refs use reviewed Sep26 group. Unresolved sources remain explicit in permissive scope; no independence claim.",
+  "wholehand_runs": [
+    {
+      "strict_reviewed_lineage": true,
+      "training_crops": 75,
+      "training_variants": 525,
+      "class_count": 32,
+      "target_support": {
+        "W": {
+          "reviewed_match_2026_09_26_eight_hand": 1
+        },
+        "M3": {
+          "reviewed_match_concealed_recovery_b": 1,
+          "reviewed_match_concealed_recovery_a": 5
+        }
+      },
+      "models": {
+        "rbf": {
+          "queries": [
+            {
+              "frame": 228,
+              "slot": 0,
+              "truth": "W",
+              "crop_rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "6cc16910a37f8c1f14836614bdd6732bd6c19c3cb123ea2225fbebb4cf458638",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "6ce07d5a9f120ac694b85c599575c028086b6be79e25b782e9a0828e22cdbaea",
+              "prediction": "P8",
+              "truth_in_training": false
+            },
+            {
+              "frame": 936,
+              "slot": 2,
+              "truth": "P3",
+              "crop_rgb_sha256": "1eb0c719385ff3b5e56c871cfa7ff28dd60d7eb64fd66635a035a91813926c63",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 3,
+              "truth": "P4",
+              "crop_rgb_sha256": "18b442e39946288b55a59ecfed99bcc423e0a33a0b2f07b2dd707b8483286d4c",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 4,
+              "truth": "P6",
+              "crop_rgb_sha256": "5e50415f69b9d864bad17e7a4894da9918587f03bfc98b04fcb367f23a534dac",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 5,
+              "truth": "S2",
+              "crop_rgb_sha256": "1b52d04d5158fd58b51e6e4fe29bfd1e717bf03a553d4c42faf156235b468f43",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 6,
+              "truth": "S3",
+              "crop_rgb_sha256": "e4d2d0479e5b4e4c52115d936609b52e97852cbdbbe3b4259b27e71871ade1d9",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 7,
+              "truth": "S4",
+              "crop_rgb_sha256": "b32c2566db9e38ee46e8ec9ea743301607a466c8e2be32e4bdc873a6cf708613",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 8,
+              "truth": "S8",
+              "crop_rgb_sha256": "bef46570ca8d2226bfd4aeca3db3eeb38c014b89b4f11f32eb6617d321cd9581",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 9,
+              "truth": "S9",
+              "crop_rgb_sha256": "244fc26254a281db3f5fa3bf53cf384c1099189b35bd8a446a5ca738c6d933b6",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "76347304d5d24978a0e28436a993d6226e1081f6d29d909abdaa13b458ef4395",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "0f626fc9729acf72e6ee8283ac37e67f648b914c2c035119593950d4d7c16d1b",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 12,
+              "truth": "M2",
+              "crop_rgb_sha256": "f78562426e9a9b95ebc3c2e55e0c541be8cede0fa274b5b7c0aa65569e3fc40b",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 13,
+              "truth": "M2",
+              "crop_rgb_sha256": "f7db44b478ac5def81311d7b99b6352c562dfb8bfcf10fcb63a5309aecd7b6b5",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 14,
+              "truth": "M2",
+              "crop_rgb_sha256": "a5cf317a1d134b9adba22e2d7f83b47bf7d1653db9ba85c06923df317ad9f894",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 15,
+              "truth": "M3",
+              "crop_rgb_sha256": "2396db7d71af20e448268693be632cbc49a9030ec8791f5738d895a3ebf8a1f0",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 16,
+              "truth": "P2",
+              "crop_rgb_sha256": "0799129866031f115c5534fb4345c59cd8abbae935b91ef8e7be80a426f51449",
+              "prediction": "P8",
+              "truth_in_training": false
+            },
+            {
+              "frame": 942,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "928d0f114e9dab863a2c7cc7805b337a8ceb0253cd96fbc1e24b541360207c2e",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "a9e40f72ec11e8a3567d180d3926b3cbada0590bbbcf59a3b9717b05ecba9533",
+              "prediction": "P8",
+              "truth_in_training": false
+            },
+            {
+              "frame": 942,
+              "slot": 2,
+              "truth": "P3",
+              "crop_rgb_sha256": "fed7236356726b473158830476ee9016a6b59eb7b63fb14c0db605dc736ff9ef",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 3,
+              "truth": "P4",
+              "crop_rgb_sha256": "cc0ad5b5d48475cd843aa9d3c53e65ad516f65b0f77600668430d0cec2a02339",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 4,
+              "truth": "P6",
+              "crop_rgb_sha256": "b49afcb236529e24e02cae4380bc8a384faa6f373895d5a2078a6a8b75f12187",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 5,
+              "truth": "S2",
+              "crop_rgb_sha256": "46c1fe43513c1cff2b0949efdae61cec14db6bd8243e4939c05b8be80c39e426",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 6,
+              "truth": "S3",
+              "crop_rgb_sha256": "c4414e726bdb515fdcf731cb438d230a214bc3f8ab33e8e49f3c0de00fed5b22",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 7,
+              "truth": "S4",
+              "crop_rgb_sha256": "41d0376a71dcd51d1a8d7c16282943122616bb096396eb02022163cddc48f830",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 8,
+              "truth": "S8",
+              "crop_rgb_sha256": "2a9999579ea481217d5bea67ddd2cd40789783e0db4a75ef92c75e4869bc56e0",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 9,
+              "truth": "S9",
+              "crop_rgb_sha256": "3d8f69d3d4447a12de190e070b16d39856212d43e0b28aaffc9f8eb60996e2f4",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "d9580d75552cf014dda20520f85041223c115229ce754c14e5584545b1f977f6",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "1ad387d82d7e0499ff3e1d124ed3abb54f6a0bd6d62eefa911a97c8ebbe1d678",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 12,
+              "truth": "M2",
+              "crop_rgb_sha256": "38e066131dda786dff7699c976abc82fd11a4206b3fa5f5917555dcb4b59f147",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 13,
+              "truth": "M2",
+              "crop_rgb_sha256": "be0ab34c22745bc8c13ffb860430798f106d907437342c38ffaebb2d629e76db",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 14,
+              "truth": "M2",
+              "crop_rgb_sha256": "3b895135c90a7b7c0f6a1f1c3325c00037e2ff1138e3144eb15182cb12168e58",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 15,
+              "truth": "M3",
+              "crop_rgb_sha256": "2d0f63c79dc9e8559ebbb0783e0d854f6a8f6117f4bc963415e857decba188de",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 16,
+              "truth": "P2",
+              "crop_rgb_sha256": "891399effed5572407f5c0c3a408f750fbc5b730fdd982764c5976fe42512475",
+              "prediction": "P8",
+              "truth_in_training": false
+            },
+            {
+              "frame": 1776,
+              "slot": 0,
+              "truth": "M3",
+              "crop_rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "0e061f67f99c807be9aed233079a0fbd3acc12234fcc3b5290729b15b345f755",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "ff6d20e04bfbee2d40da9d1e2c62c33567b96defc98de7b2accb8395feb313e9",
+              "prediction": "P5",
+              "truth_in_training": false
+            },
+            {
+              "frame": 2466,
+              "slot": 2,
+              "truth": "P2",
+              "crop_rgb_sha256": "3d227e3cd444fe0e8585b4decc25784dfbd1b112e3bace2c6c85c040e00a90a0",
+              "prediction": "P8",
+              "truth_in_training": false
+            },
+            {
+              "frame": 2466,
+              "slot": 3,
+              "truth": "P3",
+              "crop_rgb_sha256": "f40617b58be59529bdeeaf0c702d4aecb965aa47d0c43a073210209bdbe36e6c",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 4,
+              "truth": "P4",
+              "crop_rgb_sha256": "79659f81151448fe705f141c0abe8996a64e81bff19cbe19732c086920f3fa2c",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 5,
+              "truth": "P6",
+              "crop_rgb_sha256": "762d965dc64ac54bbfceab73e5416e2b6e1434bbcd6ce58c3cb754df369f44fc",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 6,
+              "truth": "S2",
+              "crop_rgb_sha256": "f5e48d52f93680eb337cb9c5f9f7527d9b281f6f92b1b96dfd2cdda1ec26db25",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 7,
+              "truth": "S3",
+              "crop_rgb_sha256": "d7ea21cd1273e4854cfc6893341e4ddea8259a4a0d3d42ca1d92310c1a645c36",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 8,
+              "truth": "S4",
+              "crop_rgb_sha256": "f54bc3916dd50661ae7969aae86dae7962515ab90d16f43d9e75ce62433c335f",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 9,
+              "truth": "S8",
+              "crop_rgb_sha256": "acd2e74e8dcffad1f18d5cd71658fddad52fabb13376768bfb26cd2e486b1514",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "a842a30713e5f8e95dba29d83776797f366afe1431af0440f542450e319ef194",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "f9905171bd82235dc15ef1d94fe0bafbc21fab7826425bf346a7b5d0f8ea6985",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 12,
+              "truth": "S9",
+              "crop_rgb_sha256": "8ad0d5dd4239241c2bea562d378b70ba2589a67d31c101c3083c29ca5232be39",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 13,
+              "truth": "S7",
+              "crop_rgb_sha256": "3595402c7b832f787543dee99ad0ab9e6b9583287c16327860a40806cd7669bb",
+              "prediction": "S7",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "83d4a1b38b3b38352921e522422aaf6c77bda7e5f1931548777fa89b80315b59",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "07413769a2619d07e883aa07c6ac39714d57856adcda52a4e2cc126161637d5c",
+              "prediction": "P5",
+              "truth_in_training": false
+            },
+            {
+              "frame": 2514,
+              "slot": 2,
+              "truth": "P2",
+              "crop_rgb_sha256": "5d680b05ed531431a494ddf53377b461e7475cbd476411fa9218b80af5438686",
+              "prediction": "P8",
+              "truth_in_training": false
+            },
+            {
+              "frame": 2514,
+              "slot": 3,
+              "truth": "P3",
+              "crop_rgb_sha256": "41f5763083333f89c3493895beb2fc8cf7dd94a9355fa99b09dfc3db4458b24e",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 4,
+              "truth": "P4",
+              "crop_rgb_sha256": "547a1e8ced65fa3973788c863c57a5a889af820018b6bd45acec033ede19e651",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 5,
+              "truth": "P6",
+              "crop_rgb_sha256": "32202067f163b7100f146b5b5afd8cab59d9e98323e4af79a933afc078906dce",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 6,
+              "truth": "S2",
+              "crop_rgb_sha256": "2b10df790686839a852b4d9e0fd29fd483add7c50475103671164b2e91267dc6",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 7,
+              "truth": "S3",
+              "crop_rgb_sha256": "69cc0667eb9407a968c47086cd30142199d70788233d3e4feb68f53409d9053d",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 8,
+              "truth": "S4",
+              "crop_rgb_sha256": "c1685940d16d081e44bea87967518762d1f85ae54c086662d9b33193f0e0be45",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 9,
+              "truth": "S8",
+              "crop_rgb_sha256": "e71cfc25944ed130489ecc32968a9a71e73d916b7d163503bdf8cdeb5ca60dc1",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "6eadcd9cd9a638d6f965a5694dcdfa4b53455b4091739f12afddcc71b03aab8d",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "3d8064c1c6d4ee2bfb342db74a4baf387680bf8ba6c7c01bbbc1f8c93d72890d",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 12,
+              "truth": "S9",
+              "crop_rgb_sha256": "6167f5f6c2a7dbac671118203fa7a26ab2a131add703fafa77244132a0b13e75",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 13,
+              "truth": "S7",
+              "crop_rgb_sha256": "cca42dfc7a243e2a371a2aa3c676df50771ac5c0cf214d637f88c99dbd8e9bc1",
+              "prediction": "S7",
+              "truth_in_training": true
+            }
+          ],
+          "training_fit_correct": 525
+        }
+      }
+    },
+    {
+      "strict_reviewed_lineage": false,
+      "training_crops": 154,
+      "training_variants": 1078,
+      "class_count": 34,
+      "target_support": {
+        "W": {
+          "UNRESOLVED_SHA:0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f": 1,
+          "reviewed_match_2026_09_26_eight_hand": 1
+        },
+        "M3": {
+          "reviewed_match_concealed_recovery_b": 1,
+          "UNRESOLVED_SHA:94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919": 2,
+          "reviewed_match_concealed_recovery_a": 5
+        }
+      },
+      "models": {
+        "rbf": {
+          "queries": [
+            {
+              "frame": 228,
+              "slot": 0,
+              "truth": "W",
+              "crop_rgb_sha256": "5a333fe58d7750e3eff4f1cf9d28e49403bc82fec8d198d8e6de6134e2da02af",
+              "prediction": "W",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "6cc16910a37f8c1f14836614bdd6732bd6c19c3cb123ea2225fbebb4cf458638",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "6ce07d5a9f120ac694b85c599575c028086b6be79e25b782e9a0828e22cdbaea",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 2,
+              "truth": "P3",
+              "crop_rgb_sha256": "1eb0c719385ff3b5e56c871cfa7ff28dd60d7eb64fd66635a035a91813926c63",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 3,
+              "truth": "P4",
+              "crop_rgb_sha256": "18b442e39946288b55a59ecfed99bcc423e0a33a0b2f07b2dd707b8483286d4c",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 4,
+              "truth": "P6",
+              "crop_rgb_sha256": "5e50415f69b9d864bad17e7a4894da9918587f03bfc98b04fcb367f23a534dac",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 5,
+              "truth": "S2",
+              "crop_rgb_sha256": "1b52d04d5158fd58b51e6e4fe29bfd1e717bf03a553d4c42faf156235b468f43",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 6,
+              "truth": "S3",
+              "crop_rgb_sha256": "e4d2d0479e5b4e4c52115d936609b52e97852cbdbbe3b4259b27e71871ade1d9",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 7,
+              "truth": "S4",
+              "crop_rgb_sha256": "b32c2566db9e38ee46e8ec9ea743301607a466c8e2be32e4bdc873a6cf708613",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 8,
+              "truth": "S8",
+              "crop_rgb_sha256": "bef46570ca8d2226bfd4aeca3db3eeb38c014b89b4f11f32eb6617d321cd9581",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 9,
+              "truth": "S9",
+              "crop_rgb_sha256": "244fc26254a281db3f5fa3bf53cf384c1099189b35bd8a446a5ca738c6d933b6",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "76347304d5d24978a0e28436a993d6226e1081f6d29d909abdaa13b458ef4395",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "0f626fc9729acf72e6ee8283ac37e67f648b914c2c035119593950d4d7c16d1b",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 12,
+              "truth": "M2",
+              "crop_rgb_sha256": "f78562426e9a9b95ebc3c2e55e0c541be8cede0fa274b5b7c0aa65569e3fc40b",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 13,
+              "truth": "M2",
+              "crop_rgb_sha256": "f7db44b478ac5def81311d7b99b6352c562dfb8bfcf10fcb63a5309aecd7b6b5",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 14,
+              "truth": "M2",
+              "crop_rgb_sha256": "a5cf317a1d134b9adba22e2d7f83b47bf7d1653db9ba85c06923df317ad9f894",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 15,
+              "truth": "M3",
+              "crop_rgb_sha256": "2396db7d71af20e448268693be632cbc49a9030ec8791f5738d895a3ebf8a1f0",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 936,
+              "slot": 16,
+              "truth": "P2",
+              "crop_rgb_sha256": "0799129866031f115c5534fb4345c59cd8abbae935b91ef8e7be80a426f51449",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "928d0f114e9dab863a2c7cc7805b337a8ceb0253cd96fbc1e24b541360207c2e",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "a9e40f72ec11e8a3567d180d3926b3cbada0590bbbcf59a3b9717b05ecba9533",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 2,
+              "truth": "P3",
+              "crop_rgb_sha256": "fed7236356726b473158830476ee9016a6b59eb7b63fb14c0db605dc736ff9ef",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 3,
+              "truth": "P4",
+              "crop_rgb_sha256": "cc0ad5b5d48475cd843aa9d3c53e65ad516f65b0f77600668430d0cec2a02339",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 4,
+              "truth": "P6",
+              "crop_rgb_sha256": "b49afcb236529e24e02cae4380bc8a384faa6f373895d5a2078a6a8b75f12187",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 5,
+              "truth": "S2",
+              "crop_rgb_sha256": "46c1fe43513c1cff2b0949efdae61cec14db6bd8243e4939c05b8be80c39e426",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 6,
+              "truth": "S3",
+              "crop_rgb_sha256": "c4414e726bdb515fdcf731cb438d230a214bc3f8ab33e8e49f3c0de00fed5b22",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 7,
+              "truth": "S4",
+              "crop_rgb_sha256": "41d0376a71dcd51d1a8d7c16282943122616bb096396eb02022163cddc48f830",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 8,
+              "truth": "S8",
+              "crop_rgb_sha256": "2a9999579ea481217d5bea67ddd2cd40789783e0db4a75ef92c75e4869bc56e0",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 9,
+              "truth": "S9",
+              "crop_rgb_sha256": "3d8f69d3d4447a12de190e070b16d39856212d43e0b28aaffc9f8eb60996e2f4",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "d9580d75552cf014dda20520f85041223c115229ce754c14e5584545b1f977f6",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "1ad387d82d7e0499ff3e1d124ed3abb54f6a0bd6d62eefa911a97c8ebbe1d678",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 12,
+              "truth": "M2",
+              "crop_rgb_sha256": "38e066131dda786dff7699c976abc82fd11a4206b3fa5f5917555dcb4b59f147",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 13,
+              "truth": "M2",
+              "crop_rgb_sha256": "be0ab34c22745bc8c13ffb860430798f106d907437342c38ffaebb2d629e76db",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 14,
+              "truth": "M2",
+              "crop_rgb_sha256": "3b895135c90a7b7c0f6a1f1c3325c00037e2ff1138e3144eb15182cb12168e58",
+              "prediction": "M2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 15,
+              "truth": "M3",
+              "crop_rgb_sha256": "2d0f63c79dc9e8559ebbb0783e0d854f6a8f6117f4bc963415e857decba188de",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 942,
+              "slot": 16,
+              "truth": "P2",
+              "crop_rgb_sha256": "891399effed5572407f5c0c3a408f750fbc5b730fdd982764c5976fe42512475",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 1776,
+              "slot": 0,
+              "truth": "M3",
+              "crop_rgb_sha256": "6fc81a8717ca843be5289f4a506bce2c07f19aac26a315ca64695cb91637833d",
+              "prediction": "M3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "0e061f67f99c807be9aed233079a0fbd3acc12234fcc3b5290729b15b345f755",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "ff6d20e04bfbee2d40da9d1e2c62c33567b96defc98de7b2accb8395feb313e9",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 2,
+              "truth": "P2",
+              "crop_rgb_sha256": "3d227e3cd444fe0e8585b4decc25784dfbd1b112e3bace2c6c85c040e00a90a0",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 3,
+              "truth": "P3",
+              "crop_rgb_sha256": "f40617b58be59529bdeeaf0c702d4aecb965aa47d0c43a073210209bdbe36e6c",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 4,
+              "truth": "P4",
+              "crop_rgb_sha256": "79659f81151448fe705f141c0abe8996a64e81bff19cbe19732c086920f3fa2c",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 5,
+              "truth": "P6",
+              "crop_rgb_sha256": "762d965dc64ac54bbfceab73e5416e2b6e1434bbcd6ce58c3cb754df369f44fc",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 6,
+              "truth": "S2",
+              "crop_rgb_sha256": "f5e48d52f93680eb337cb9c5f9f7527d9b281f6f92b1b96dfd2cdda1ec26db25",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 7,
+              "truth": "S3",
+              "crop_rgb_sha256": "d7ea21cd1273e4854cfc6893341e4ddea8259a4a0d3d42ca1d92310c1a645c36",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 8,
+              "truth": "S4",
+              "crop_rgb_sha256": "f54bc3916dd50661ae7969aae86dae7962515ab90d16f43d9e75ce62433c335f",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 9,
+              "truth": "S8",
+              "crop_rgb_sha256": "acd2e74e8dcffad1f18d5cd71658fddad52fabb13376768bfb26cd2e486b1514",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "a842a30713e5f8e95dba29d83776797f366afe1431af0440f542450e319ef194",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "f9905171bd82235dc15ef1d94fe0bafbc21fab7826425bf346a7b5d0f8ea6985",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 12,
+              "truth": "S9",
+              "crop_rgb_sha256": "8ad0d5dd4239241c2bea562d378b70ba2589a67d31c101c3083c29ca5232be39",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2466,
+              "slot": 13,
+              "truth": "S7",
+              "crop_rgb_sha256": "3595402c7b832f787543dee99ad0ab9e6b9583287c16327860a40806cd7669bb",
+              "prediction": "S7",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 0,
+              "truth": "P1",
+              "crop_rgb_sha256": "83d4a1b38b3b38352921e522422aaf6c77bda7e5f1931548777fa89b80315b59",
+              "prediction": "P1",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 1,
+              "truth": "P2",
+              "crop_rgb_sha256": "07413769a2619d07e883aa07c6ac39714d57856adcda52a4e2cc126161637d5c",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 2,
+              "truth": "P2",
+              "crop_rgb_sha256": "5d680b05ed531431a494ddf53377b461e7475cbd476411fa9218b80af5438686",
+              "prediction": "P2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 3,
+              "truth": "P3",
+              "crop_rgb_sha256": "41f5763083333f89c3493895beb2fc8cf7dd94a9355fa99b09dfc3db4458b24e",
+              "prediction": "P3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 4,
+              "truth": "P4",
+              "crop_rgb_sha256": "547a1e8ced65fa3973788c863c57a5a889af820018b6bd45acec033ede19e651",
+              "prediction": "P4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 5,
+              "truth": "P6",
+              "crop_rgb_sha256": "32202067f163b7100f146b5b5afd8cab59d9e98323e4af79a933afc078906dce",
+              "prediction": "P6",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 6,
+              "truth": "S2",
+              "crop_rgb_sha256": "2b10df790686839a852b4d9e0fd29fd483add7c50475103671164b2e91267dc6",
+              "prediction": "S2",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 7,
+              "truth": "S3",
+              "crop_rgb_sha256": "69cc0667eb9407a968c47086cd30142199d70788233d3e4feb68f53409d9053d",
+              "prediction": "S3",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 8,
+              "truth": "S4",
+              "crop_rgb_sha256": "c1685940d16d081e44bea87967518762d1f85ae54c086662d9b33193f0e0be45",
+              "prediction": "S4",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 9,
+              "truth": "S8",
+              "crop_rgb_sha256": "e71cfc25944ed130489ecc32968a9a71e73d916b7d163503bdf8cdeb5ca60dc1",
+              "prediction": "S8",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 10,
+              "truth": "S9",
+              "crop_rgb_sha256": "6eadcd9cd9a638d6f965a5694dcdfa4b53455b4091739f12afddcc71b03aab8d",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 11,
+              "truth": "S9",
+              "crop_rgb_sha256": "3d8064c1c6d4ee2bfb342db74a4baf387680bf8ba6c7c01bbbc1f8c93d72890d",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 12,
+              "truth": "S9",
+              "crop_rgb_sha256": "6167f5f6c2a7dbac671118203fa7a26ab2a131add703fafa77244132a0b13e75",
+              "prediction": "S9",
+              "truth_in_training": true
+            },
+            {
+              "frame": 2514,
+              "slot": 13,
+              "truth": "S7",
+              "crop_rgb_sha256": "cca42dfc7a243e2a371a2aa3c676df50771ac5c0cf214d637f88c99dbd8e9bc1",
+              "prediction": "S7",
+              "truth_in_training": true
+            }
+          ],
+          "training_fit_correct": 1078
+        }
+      }
+    }
+  ],
+  "wholehand_summary": [
+    {
+      "strict_reviewed_lineage": true,
+      "correct_tiles": 54,
+      "total_tiles": 62,
+      "exact_hands": 0,
+      "hands": 4,
+      "confusions": {
+        "P2->P8": 6,
+        "P2->P5": 2
+      }
+    },
+    {
+      "strict_reviewed_lineage": false,
+      "correct_tiles": 58,
+      "total_tiles": 62,
+      "exact_hands": 1,
+      "hands": 4,
+      "confusions": {
+        "S9->S8": 4
+      }
+    }
+  ],
+  "query_truth": "Frozen neutral_inner_hand_review.development.json frames936,942,2466,2514; two repeated hand states, not four independent hands. Raised targets228W/1776M3 reviewed previously.",
+  "decisions": [
+    "Do not wire model into Runtime or map SVM margins to.82.",
+    "Permissive RBF target2/2 does not outweigh whole-hand1/4 and unresolved training provenance.",
+    "Strict source-only RBF and linear each miss one raised target; no per-class kernel cherry-picking.",
+    "Need qualified appearance coverage and independent complete-hand evaluation before deployment."
+  ],
+  "limits": [
+    "Training fit is an implementation sanity check, not accuracy evidence.",
+    "All queries are previously revealed development observations.",
+    "Fixed source exclusions do not prove unknown sources are independent of query match.",
+    "No full Runtime/advice replay claimed for these SVM outputs."
+  ]
+}

@@ -1,101 +1,107 @@
 # PROJECT_STATUS — Current Snapshot
 
-**Snapshot date:** 2026-09-23  
-**Execution truth:** GitHub Issues  
-**Rule truth:** `RULE_STATUS.md` + `RULE_EVIDENCE_MATRIX.md`  
-**History:** `CHANGELOG.md` only
+Snapshot date: 2026-11-02 (Asia/Shanghai). Execution truth: GitHub Issues.
+Rule truth: RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. This page is a snapshot.
 
-本文件只保留一页当前快照，不复制 TODO / Issue 正文。
+## Source and delivery
 
-## Current Baselines
+Active integration: Draft [PR #126](https://github.com/shentianzhen1/Huian-Mahjong/pull/126),
+branch `codex/hint-alpha-local-test-sync-20261004`, unmerged.
+Audited baseline: `adc4fc1e72319fda5b121a2ddf909161f3fce87e`.
+The current source includes the integration fixes described below;
+inspect CI on its exact HEAD rather than reusing baseline results.
 
-| Area | Current baseline | Status |
-| --- | --- | --- |
-| Package metadata | `0.2.0` | umbrella wheel 内容 + workspace dependency DAG 均由 CI 锁定；真实多 distribution 拆分按 core → AI/Vision → Simulator → Hint 顺序迁移 |
-| Rules / Environment | evidence-driven Huian 2-player rules | 普通规则与普通真实结算基本闭环；特殊结算仍有 P0 缺口 |
-| Match | 2 players × 8 hands, 1000/1000 start, zero-sum | ordinary-real MatchRunner 可完整跑普通路径 |
-| AI | `CurrentAgent = MeldAwareShantenAgent V0.10` | 固定当前前沿；V0.6 主对照，V0.3 消融基线 |
-| Vision | Runtime Vision V0.2 | **experimental read-only**；formal promotion blocked |
-| Hint Alpha | V0.1 internal advisory | 只读，不点击；本地 Doctor 区分 Demo / Live Capture / PublicState OCR readiness |
-| Executor | off | Vision 独立晋级 + 后续单独安全门之前不启用 |
+Latest verified installer delivery uses source
+`490326952a4ccfef95b2616ae102c97d89b1a764`:
+[Windows run 41325215919](https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/41325215919).
+It includes all runtime changes through `d066d59`, including explicit concealed-Gold
+reference trial. [Delivery verification](docs/packaging/windows_installer_sync_20261102.json)
+records the inspected archive/EXE hashes, exact source commit and Windows checks.
+Its bundled development reference version is `2026.10.30.1`: 28 tile images
+(20 ordinary concealed, 7 opened-Gold, 1 concealed-Gold SOUTH).
+The user authorized these reviewed tile-only assets in GitHub and the installer;
+raw private videos are not included. See [bundle manifest](dataset/tiles_runtime_v0_2/reference_pack/bundle.json).
+The separate private 30-image S5 pack can be loaded by this installer; its two
+new private crop files are not included in the default bundled 28. The upgrade
+tests passed for data preservation and repeated installs. Later runtime changes
+are not automatically included; this delivery record update changes metadata only.
 
-## What Is Working
+The installer source commit passed all 18 checks, including the actual Windows
+installer job. Its extracted payload verified 356 source files, 147 templates,
+28 references and 6 phase images, and passed live UI/spawn/Tk and upgrade checks.
+These are packaging/synthetic checks, not real mirrored-game acceptance.
+Small changes and metadata-only delivery updates do not request another installer.
 
-- **Rules / Environment**
-  - 144 张实体牌守恒、庄17/闲16、补花、开金实体占牌、吃/碰/三类杠、普通胡、16张流局。
-  - 金作为万能牌但不能参与副露；开出的金固定占 1 张实体牌，因此最多 3 张可操作金。
-  - 普通番数聚合与普通平胡 / 自摸真实结算已接通；普通多拆法取最高番。
-  - 8 局总账从 1000/1000 开始，双方分数零和；庄家连庄底 +5，换庄重置。
+## Capability and validation
 
-- **Evaluation provenance**
-  - 项目 release、RuleSnapshot fingerprint、Agent version 分开记录；保存型评估升级为 schema v3。
-  - runtime `source_digest` 只覆盖 `huian` / `mahjong_framework` / `workspace.ai` / `workspace.simulator`，冻结的 `legacy_code` 不再污染重放身份。
+[Issue #45](https://github.com/shentianzhen1/Huian-Mahjong/issues/45) owns
+read-only complete-hand + visible Gold + own-meld-count structural shanten and
+minimum-shanten discards. [#69](https://github.com/shentianzhen1/Huian-Mahjong/issues/69)
+is closed; its replay records remain historical evidence. Unknown public
+identities still block remaining-copy/danger capabilities.
 
-- **AI**
-  - V0.10 仅在 CHI/PENG 窗口做副露前后牌效比较；手里有金时保持保守。
-  - 对 V0.6 两批独立评估合计 200 seed-pair / 400 场：V0.10 239 胜、V0.6 159 胜、2 平，平均配对最终分差 +54.805。
-  - V0.13 KONG 与 V0.14 PublicRollout 均未晋级；不要重新扩大这些已关闭实验。
+The current source fixes two reproduced adc4fc1 integration defects: trial-off
+workers now omit experimental references, and unresolved live hand boundaries
+suppress Gold-dependent advice. Public OCR errors also pause advice after an
+initial trusted hand. Confirmation fences buffered/queued results and their
+prior-identity votes; same-hand recovery preserves Gold, next-hand confirmation
+clears it. Manual Gold does not bypass a pending hand boundary. The Python
+console now uses the same live entry as the installer/source launcher.
+With fresh capture, advisory expiry now withdraws the hint and resets identity
+confirmation without clearing hand/Gold memory or replacing worker queues.
+Actual capture loss still invalidates the generation and clears session facts;
+stale results cannot revive advice and pending-hand blocks remain in force.
+Live and reference replay now share the same two-vote pending-boundary policy.
+Replay pauses opening/identity memory updates before evaluation, preventing
+unconfirmed Gold from leaving a conflict that blocks same-hand recovery.
+[Development replay comparison](docs/vision/replay_boundary_memory_regression_20261101.json):
+34 identical-pixel windows from an already revealed 14-second clip retain the
+same 9 display decisions; 11 pending windows no longer carry old Gold. This
+does not measure independent accuracy or actual Windows performance.
+Replay summaries now separate prioritized structural blockers from public-identity
+context, preserving raw issue counts. An [existing-source diagnostic](docs/vision/advice_blocker_diagnostic_20261101.json)
+has 39 windows / 25 displays; the 14 blocked windows bucket as geometry 10,
+hand boundary 2, hand identity 1 and stability 1. These are diagnostics, not accuracy.
+The low-score draw was manually reviewed as a 兰 flower and correctly rejected
+from ordinary identity. [All 25 displayed current frames in this clip](references/vision/2026-11-01/hand2_reviewed_advisory_anchors_v0_1.json)
+have 255/255 reviewed tile instances and matching manual-input structural outputs.
+They comprise only four distinct hand states in one revealed original match;
+prior identity frames and blocked windows were not fully truth-reviewed.
+This does not qualify flower recognition or independent generalization.
+An [oct09 source diagnostic](references/vision/2026-11-01/oct09_gold_s5_development_diagnostic_v0_1.json)
+now verifies one other visible table context against prior PR #131's source SHA.
+At two stable current frames, 24/26 identities are accepted correctly; two
+concealed Gold S5 tiles lack real-skin qualification. Manual indicator Gold alone
+still cannot enable advice. The third, raised-tile frame is geometry-blocked.
+An explicit reference-supported concealed-Gold trial path now consumes matching
+appearance support while preserving strict raw rejection and default behavior.
+A private 30-image pack (28 existing + 2 S5 crops), `2026.11.01.private1`, enables
+both stable checkpoints; one is the donor positive control and one is a later
+same-match query. Raised-tile geometry still blocks. New crop pixels are not in
+GitHub; default bundled references remain at 28 and the updated installer is
+recorded in Source and delivery above. This is
+revealed development with corrected manual truth, not a fresh holdout.
+Focused regressions exercise the actual worker and live consumer. These are
+synthetic wiring checks, not independent recognition or Windows acceptance.
 
-- **Vision / PublicState**
-  - V0.1 静态 hand+draw 严格 leave-session-out：147/149 = **98.66%**。
-  - Gold 同批时序：193/196 = **98.47%**，8/8 session 多数票正确；这不是外部泛化率。
-  - Runtime Vision V0.2 已加入动态几何、`draw_visual` 时序、session 隔离、只读 runtime reader。
-  - Public Match Reconstruction 已进入 observer/detector 阶段：`public_observers.py` 用稳定 river/meld 快照差分生成 `DISCARD` / `MELD_DELTA`；`runtime_public_adapter.py` 已把现有底部 Runtime Vision 接到我方 `MeldSnapshot` / `HAND_DELTA`；`public_tile_detector.py` 做全帧 public tile-like geometry intake；`public_candidate_tracker.py` 再用跨帧稳定性生成 APPEARED / DISAPPEARED 轨迹，并要求显式 CandidateChannel 后才能进入 RiverSnapshot；session/超时断流通过 `stream_epoch` 强制 River/Meld Observer 重新建基线，禁止跨断点推动作。公开牌身份仍保持 UNKNOWN。
-  - PublicState 同批8局已补 64 时点状态栏审计：primary remaining 44/63 正确；只在 primary 无法解析时启用右缘收窄 fallback 后为 54/63，63/63 可读。仍有 9 个 false-valid 误读，不能作为 Executor 依据，也不属于独立泛化证据。
-  - Phase 5C 已揭示且有 1 个语义区域 gate 失败，因此不能作为正式泛化证据。
-  - 独立晋级门与 Phase 5E source-disjoint 锁已落地（#49 / #50）；新增 `independent_batch_lock.py` 作为新录像进入正式盲测前的本地锁定器，先固定 SHA256 / session / 20-50-80% 帧位，再允许人工 truth。
-  - `safe_for_executor=false` 保持不变。
+[Issue #7](https://github.com/shentianzhen1/Huian-Mahjong/issues/7) formal
+promotion remains blocked. Same-match replay and bundled-reference self-matches
+are development evidence. The [source inventory](docs/vision/validation_readiness_20261101.md)
+records 37 accessible video files, with no newly certified blind original-match
+batch in this audit; file count is not match count. Actual Windows capture-to-hint
+p50/p95, wrong accepted hands and recovery acceptance remain unmeasured here.
 
-## Open Blockers
+## Review and architecture
 
-当前 Open Issues：**#1–#7、#9、#45、#69**。
+The [review split record](docs/pr126_review_slices_20261101.md) separates the
+665-path audited source diff by area. Draft [#147](https://github.com/shentianzhen1/Huian-Mahjong/pull/147)
+extracts 10 exact-blob historical evidence files onto main for separate review;
+it is not merged and has not reduced #126's diff yet.
 
-P0 只保留真实结算证据缺口：
-- **#1** 抢金：精确资格与真实终局。
-- **#2** 三金倒：真实点击后的分数 / 付款 / 庄位 / 叠加。
-- **#3** 游金：状态机主链已闭环；只剩计分回归与 #4 边界。
-- **#4** 抢杠胡 / 杠胡：共同计分阻塞点，优先于新 Agent。
-- **#5** 八花游：真实终局证据与特殊窗口优先级。
-
-P1：
-- **#6** AI：CurrentAgent 固定 V0.10；#4 未闭环前不并行开新版本。
-- **#7** Vision：只做 source-disjoint 新批次并运行冻结的 `promotion_gate.py`。
-- **#69** Public Match Reconstruction：基础契约、observer、Runtime bridge、Action Assembler、中文 Match Ledger、Public Tile Detector、Candidate Tracker、development channel calibration 与 Hand Context Assembler 已落地。开局可由 PublicState + 独立庄家/Gold 证据生成 `HAND_START / OPEN_GOLD`；公开 identity 独立标签域仍只有 17 个 approved 开发标签、11/34 类，runtime identity 继续 `UNKNOWN`。dealer-marker 真实视觉输入已落地；66fe/b389 的 player-seat/session 映射由结算 fixture 显式锁定，未知新来源仍需配置。**PR #98 首次 SHA 锁定第一局连续 378 帧全链路**：双弃牌河源限定 ROI、可见牌缝拆分、真实 detector → tracker → 双 RiverObserver → ActionAssembler → 冻结真值评估；上/下各 2 次几何河增长，但牌身份和独立回合仍 UNKNOWN，严格评估 **4/4 弃权、4 漏检、0 个可认证真阳性**，不属于独立 Vision 晋级证据。Issue #69 保持开放：后续多牌粘连、跨来源公开牌身份和独立回合验证。
-
-Product / P2：
-- **Hand Timeline V0.1**：结构化 JSON + 确定性 Markdown 已实现；首个真实样例使用归档 match_evidence_002 / 14.mp4，只写已有审计观察，缺失过程保持 UNKNOWN。
-- **#45** Hint Alpha 继续 internal/read-only；新增本地 Doctor 与自检脚本，Hint Alpha evidence session 记录 project release + RuleSnapshot + Agent provenance；Hand Timeline 草稿桥仍保持 UNKNOWN-only。
-- **#9** 低频终局规则等待直接证据。
-
-## Current Priority Order
-
-1. 收集 #1 / #2 / #4 / #5 的真实终局结算证据；#3 只做回归与 #4 交界。
-2. 新录 source-disjoint Vision 批次，锁定后只跑既定 promotion gate，不用结果反调阈值。
-3. 推进 #69 Public Match Reconstruction V0.1：PR #98 已跑通首段 source-scoped 双弃牌河 + 真实连续流水线，但 4 次机器输出均因 identity/turn UNKNOWN 被严格评估器计弃权。下一步先让多牌粘连 fail closed、扩充跨-session public identity 覆盖，再取得独立 turn 信号并做新的 source-disjoint 盲测；不把几何匹配计作端到端准确率。
-4. 已完成 Hand Timeline V0.1；后续审阅旧/新录像时按需生成 timeline，并用 Hint Alpha UNKNOWN-only 草稿桥辅助人工复核。
-5. Vision 未正式晋级前，Hint Alpha 不升级为“正式助手”；Executor 继续关闭。
-6. #4 未闭环前，不开启新的 Agent 版本线。
-
-## Required Regression Invariants
-
-- **Core coverage gate:** `huian.rules + huian.environment` measured baseline is **88%** on the 385-test suite; CI fails below **85%** aggregate coverage. This is a regression floor, not a target to game.
-
-任何 Rules / Environment / Settlement 改动至少保持：
-
-- 144 张实体牌守恒；不存在第 5 张同牌。
-- 开出的金占 1 张实体牌，最多 3 张可操作金。
-- 双人单局 / 8 局结算保持零和。
-- 局号不回退；同局剩余牌不增加。
-- 每个 CONFIRMED 真实结算规则应有对应 golden fixture / focused regression。
-- UNKNOWN 不能被静默替换成 0、默认倍率或 AI reward。
-
-## Documentation Map
-
-- `README.md` — 5 分钟上手、能力边界、文档索引。
-- GitHub Issues — **当前执行工作的唯一真相源**。
-- `TODO.md` — Open Issue 索引，不复制执行细节。
-- `RULE_STATUS.md` — 规则确认 / UNKNOWN 的唯一真相源。
-- `RULE_EVIDENCE_MATRIX.md` — 规则证据与状态机缺口。
-- `PROJECT_STATUS.md` — 本页当前集成快照。
-- `CHANGELOG.md` — 历史，不用于判断当前状态。
-- `references/` — 评估、证据、审计与失败实验归档。
+Rules / Environment / Simulator / AI / Vision / Hint / Executor stay separate.
+CurrentAgent is MeldAwareShantenAgent V0.10; identity threshold 0.82;
+Hint is internal/read-only and Executor OFF. UNKNOWN stays explicit.
+Rule implementation/installer claims require their own versioned evidence;
+confirmed-rule facts and migration status stay in their rule documents and Issues.
+Preserve 144 tiles, no fifth copies, at most three playable Gold copies and
+zero-sum settlement.

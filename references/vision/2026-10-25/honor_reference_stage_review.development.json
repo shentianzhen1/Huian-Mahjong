@@ -1,0 +1,111 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "added_reference_source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+  "added_refs": [
+    {
+      "truth": "W",
+      "frame": 0,
+      "crop_xyxy": [
+        716,
+        433,
+        766,
+        510
+      ]
+    },
+    {
+      "truth": "B",
+      "frame": 0,
+      "crop_xyxy": [
+        865,
+        433,
+        914,
+        510
+      ]
+    }
+  ],
+  "before": {
+    "display_windows": 296,
+    "discard_windows": 63
+  },
+  "raw_after": {
+    "display_windows": 310,
+    "discard_windows": 63
+  },
+  "new_frames": [
+    48,
+    138,
+    144,
+    150,
+    156,
+    162,
+    168,
+    174,
+    180,
+    186,
+    192,
+    198,
+    204,
+    210
+  ],
+  "lost_previous": 0,
+  "changed_previous_advice": 0,
+  "reviewed_anchors": [
+    {
+      "frame": 48,
+      "status": "OPENING_ANIMATION_EXCLUDE_FROM_VALID_BENEFIT"
+    },
+    {
+      "frame": 138,
+      "status": "GOLD_VISIBLE_HAND_MATCHES",
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "W"
+      ]
+    },
+    {
+      "frame": 210,
+      "status": "DRAW_TRANSITION_PRE_DRAW_STRUCTURE_ONLY",
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "W"
+      ]
+    }
+  ],
+  "limitations": [
+    "Only three stage anchors reviewed, not all new windows individually staged.",
+    "Do not call 310 the valid gameplay coverage.",
+    "No additional discard hand state.",
+    "Source pure crops remain local, bundle still 2026.10.25.2 with 8 references."
+  ]
+}

@@ -1,11 +1,11 @@
 import unittest
 
-from huian import HuianEnvironment
+from huian import HuianEnvironment, UnknownRuleError
 from huian._legacy import env
 
 
 class OpeningEnvironmentTests(unittest.TestCase):
-    def test_begin_opening_is_seeded_auditable_and_stops_at_qiangjin(self):
+    def test_legacy_begin_opening_is_seeded_auditable_and_stops_unknown(self):
         first, second = HuianEnvironment(), HuianEnvironment()
         first.reset(seed=20260914)
         second.reset(seed=20260914)
@@ -27,14 +27,23 @@ class OpeningEnvironmentTests(unittest.TestCase):
         self.assertEqual(sorted(state.physical_tiles()), sorted(env.full_wall()))
         self.assertEqual(first.events[0]["action"]["type"], "OPEN_GOLD")
         self.assertEqual(first.events[0]["action"]["metadata"]["dice_total"], 7)
+        self.assertEqual(
+            first.events[0]["action"]["metadata"]["location_evidence"],
+            "SIMULATOR_CONVENTION",
+        )
         self.assertTrue(
             first.events[0]["action"]["metadata"]["indicator_removed_from_drawable_wall"]
         )
-        actions = first.legal_actions()
-        self.assertTrue(actions)
-        self.assertTrue(all(action.player == state.dealer for action in actions))
-        self.assertFalse(any(action.player == 1 - state.dealer for action in actions))
-        self.assertTrue(any(action.type == env.ActionType.PASS_QIANGJIN for action in actions))
+        # This legacy dice-location path is deliberately not upgraded into the
+        # player-confirmed first-round runtime. The staged API owns that path;
+        # default simulator/live routing is a later migration step.
+        report = first.action_report()
+        self.assertTrue({
+            "qiangjin_hand_shape", "qiangjin_seat_priority", "qiangjin_settlement"
+        }.issubset(set(report.unresolved)))
+        with self.assertRaises(UnknownRuleError):
+            first.legal_actions()
+        self.assertIsNone(state.first_round)
 
     def test_begin_opening_rejects_duplicate_or_invalid_request(self):
         game = HuianEnvironment()

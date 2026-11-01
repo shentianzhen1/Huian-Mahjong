@@ -43,7 +43,7 @@ class RiverReplayTests(unittest.TestCase):
         }), encoding="utf-8")
         return path
 
-    def capture(self, count=51):
+    def capture(self, count=51, oversized_occlusion=False):
         cv2, np = self.cv2, self.np
 
         class SyntheticCapture:
@@ -80,7 +80,9 @@ class RiverReplayTests(unittest.TestCase):
                 rgb = np.zeros((HEIGHT, WIDTH, 3), dtype=np.uint8)
                 rgb[:, :] = (23, 67, 47)
                 if index >= 6:
-                    if index < 26:
+                    if oversized_occlusion and 26 <= index <= 30:
+                        rgb[110:140, 606:696] = 237  # 3+ merged public faces, no seam
+                    elif index < 26:
                         rgb[110:140, 646:674] = 237
                     else:
                         rgb[110:140, 618:674] = 237
@@ -128,6 +130,7 @@ class RiverReplayTests(unittest.TestCase):
         self.assertTrue(all(p["tile"] is None and p["turn_actor"] is None
                             and p["evidence_grade"] == "UNKNOWN"
                             for p in predictions))
+        self.assertTrue(all(type(p["frame_index"]) is int for p in predictions))
         self.assertEqual(result["counts"]["opponent_river_growth_observations"], 2)
         self.assertEqual(result["counts"]["player_river_growth_observations"], 2)
 
@@ -154,6 +157,97 @@ class RiverReplayTests(unittest.TestCase):
         self.assertEqual(metrics["false_negatives"], 4)
         self.assertEqual(metrics["true_positives"], 0)
         self.assertIsNone(metrics["actor_accuracy_on_aligned"])
+
+    def test_dense_slot_diagnostic_never_changes_assembled_actions(self):
+        from workspace.vision.public_dense_river_slots import DenseRiverSlotProfile
+        from workspace.vision.real_video_river_replay import replay_rivers
+
+        video = self.root / "synthetic_dense.mp4"
+        video.write_bytes(b"synthetic dense slot source")
+        sha = hashlib.sha256(video.read_bytes()).hexdigest()
+        profiles = (
+            DenseRiverSlotProfile("opponent", (
+                (646 / WIDTH, 110 / HEIGHT, 28 / WIDTH, 30 / HEIGHT),
+                (618 / WIDTH, 110 / HEIGHT, 28 / WIDTH, 30 / HEIGHT),
+            )),
+            DenseRiverSlotProfile("player", (
+                (325 / WIDTH, 257 / HEIGHT, 35 / WIDTH, 27 / HEIGHT),
+                (360 / WIDTH, 257 / HEIGHT, 35 / WIDTH, 27 / HEIGHT),
+            )),
+        )
+        with patch.object(self.cv2, "VideoCapture", side_effect=lambda _: self.capture()):
+            plain = replay_rivers(video, manifest_path=self.manifest(sha),
+                                  first_frame=0, last_frame=50)
+            augmented = replay_rivers(
+                video, manifest_path=self.manifest(sha), first_frame=0,
+                last_frame=50, dense_profiles=profiles,
+                dense_slots_independently_reviewed=True,
+            )
+        self.assertEqual(plain["machine_predictions"], augmented["machine_predictions"])
+        self.assertIsNone(plain["dense_river_diagnostic"])
+        for actor in ("opponent", "player"):
+            diagnostic = augmented["dense_river_diagnostic"][actor]
+            self.assertGreaterEqual(len(diagnostic["candidate_prefix_growth"]), 1)
+            self.assertEqual(diagnostic["actual_actions_emitted"], 0)
+            self.assertEqual(diagnostic["tile_identity"], "UNKNOWN")
+        with patch.object(self.cv2, "VideoCapture", side_effect=lambda _: self.capture()):
+            with self.assertRaisesRegex(ValueError, "independently reviewed"):
+                replay_rivers(video, manifest_path=self.manifest(sha),
+                              first_frame=0, last_frame=50, dense_profiles=profiles)
+
+    def test_private_dense_manifest_requires_exact_source_and_review(self):
+        from workspace.vision.real_video_river_replay import load_dense_profile_manifest
+        from workspace.vision.source_river_geometry import load_river_manifest
+
+        sha = "a" * 64
+        manifest = load_river_manifest(self.manifest(sha))
+        path = self.root / "private_slots.json"
+        data = {
+            "schema_version": "source_dense_river_slots_dev_v0_1",
+            "source_session": SESSION,
+            "source_sha256": sha,
+            "frame_size": [WIDTH, HEIGHT],
+            "development_only": True,
+            "slots_independently_reviewed": True,
+            "profiles": [
+                {"actor": "player", "slots": [[.1, .2, .1, .1]]},
+                {"actor": "opponent", "slots": [[.5, .2, .1, .1]]},
+            ],
+        }
+        path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertEqual(len(load_dense_profile_manifest(path, manifest)), 2)
+        for change in ({"source_sha256": "b" * 64},
+                       {"slots_independently_reviewed": False},
+                       {"frame_size": [1, 1]}):
+            path.write_text(json.dumps({**data, **change}), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "exact video source"):
+                load_dense_profile_manifest(path, manifest)
+
+
+    def test_oversized_river_gap_abstains_and_rebases_only_affected_actor(self):
+        from workspace.vision.real_video_river_replay import replay_rivers
+        video = self.root / "oversized_synthetic.mp4"
+        video.write_bytes(b"synthetic actor-specific ambiguity")
+        sha = hashlib.sha256(video.read_bytes()).hexdigest()
+        cap = self.capture(oversized_occlusion=True)
+        with patch.object(self.cv2, "VideoCapture", return_value=cap):
+            result = replay_rivers(video, manifest_path=self.manifest(sha),
+                                   first_frame=0, last_frame=50)
+        self.assertTrue(cap.released)
+        self.assertTrue(any(26 <= frame <= 30 for frame
+                            in result["untrusted_frame_indexes_by_actor"]["opponent"]))
+        self.assertEqual(result["untrusted_frame_indexes_by_actor"]["player"], [])
+        self.assertEqual(result["counts"]["opponent_ambiguity_rebaselines"], 1)
+        # A possible missed discard behind the blob cannot be counted as one
+        # certified post-occlusion action. The other actor remains continuous.
+        self.assertEqual(result["counts"]["opponent_river_growth_observations"], 1)
+        self.assertEqual(result["counts"]["player_river_growth_observations"], 2)
+        actions = result["machine_predictions"]["actions"]
+        self.assertEqual([(a["actor"], a["kind"]) for a in actions],
+                         [("opponent", "DISCARD"), ("player", "DISCARD"),
+                          ("player", "DISCARD")])
+        self.assertTrue(all(a["tile"] is None and a["turn_actor"] is None
+                            and a["evidence_grade"] == "UNKNOWN" for a in actions))
 
     def test_wrong_video_sha_aborts_before_opening_capture(self):
         from workspace.vision.real_video_river_replay import replay_rivers

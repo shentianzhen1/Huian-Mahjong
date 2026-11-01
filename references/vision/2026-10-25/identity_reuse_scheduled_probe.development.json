@@ -1,0 +1,27 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "candidate": "Reuse a UI-confirmed fresh identity when current complete signature is unchanged; retain normal current-frame pipeline and double-read for changed identity.",
+  "before": {
+    "processed_bursts": 130,
+    "produced_episodes": 12,
+    "timely_episodes": 7,
+    "worker_median_ms": 720.67
+  },
+  "candidate_result": {
+    "processed_bursts": 185,
+    "produced_episodes": 14,
+    "timely_episodes": 6,
+    "worker_median_ms": 394.01,
+    "worker_p95_ms": 790.49,
+    "double_identity_bursts": 37
+  },
+  "tests": "32 focused tests,19 subtests passed",
+  "decision": "Shelve optimization; published app unchanged. Focus on acquisition/changed-hand double-read latency.",
+  "limits": [
+    "Timing-dependent simulation, not Windows end-to-end measurement.",
+    "One run does not establish statistical regression; no timely gain established.",
+    "No threshold or frame-count relaxation."
+  ]
+}

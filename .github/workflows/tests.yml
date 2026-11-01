@@ -28,6 +28,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - name: Check all tracked active Python syntax before dependency installation
+        run: python scripts/check_python_syntax.py
       - name: Skip costly matrix for documentation/evidence-only PRs
         id: detect
         env:
@@ -55,6 +57,18 @@ jobs:
           print(f"Changed files: {len(paths)}; run full core matrix: {run_full}")
           PY
 
+  lint:
+    needs: scope
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "ruff>=0.6"
+      - name: Check fatal syntax and undefined-name errors
+        run: python -m ruff check --select E9,F63,F7,F82 huian mahjong_framework workspace tests scripts setup.py
+
   core:
     needs: scope
     name: Core regression (Python ${{ matrix.python-version }})
@@ -73,9 +87,12 @@ jobs:
         if: needs.scope.outputs.run_full == 'true'
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run core regression suite
+      - name: Install test runner
         if: needs.scope.outputs.run_full == 'true'
-        run: python -B -m unittest discover -s tests -v
+        run: python -m pip install "pytest>=8,<10"
+      - name: Run core regression suite, including function-style tests
+        if: needs.scope.outputs.run_full == 'true'
+        run: python -B -m pytest -q tests
 
   core-coverage:
     needs: scope
@@ -99,6 +116,29 @@ jobs:
         run: |
           python -m coverage run --source=huian.rules,huian.environment -m unittest discover -s tests -v
           python -m coverage report --show-missing --skip-covered --fail-under=85
+
+  dense-river-vision:
+    needs: scope
+    name: Dense river Vision function tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Complete stable required check without expensive tests
+        if: needs.scope.outputs.run_full != 'true'
+        run: echo "No relevant code or workflow changes; expensive steps omitted."
+      - uses: actions/checkout@v7
+        if: needs.scope.outputs.run_full == 'true'
+      - uses: actions/setup-python@v7
+        if: needs.scope.outputs.run_full == 'true'
+        with:
+          python-version: "3.12"
+      - name: Install Vision and test dependencies
+        if: needs.scope.outputs.run_full == 'true'
+        run: python -m pip install -e ".[vision]" "pytest>=8,<10"
+      - name: Run dense river function tests with real Vision dependencies
+        if: needs.scope.outputs.run_full == 'true'
+        run: |
+          python -c "import cv2, numpy"
+          python -B -m pytest -q tests/test_public_dense_river_slots.py
 
   legacy-advisory:
     needs: scope
@@ -148,6 +188,7 @@ jobs:
           python - <<'PY'
           import importlib.util
           from importlib.metadata import files, version
+          from pathlib import Path
 
           from huian import HuianEnvironment, HuianRules, __version__
           from workspace.ai import CurrentAgent, CURRENT_AGENT_VERSION
@@ -155,7 +196,7 @@ jobs:
 
           assert HuianEnvironment is not None
           assert HuianRules is not None
-          assert __version__ == "0.2.0"
+          assert __version__ == "0.2.1"
           assert version("huian-mahjong-assistant") == __version__
           assert CURRENT_AGENT_VERSION == "v0.10"
           assert CurrentAgent.__name__ == "MeldAwareShantenAgent"
@@ -176,6 +217,10 @@ jobs:
               "dataset/",
               "references/",
           )
+          assert not any(
+              Path(path).name.startswith("test_") and path.endswith(".py")
+              for path in installed_files
+          ), "package-local tests leaked into wheel"
           for prefix in required_prefixes:
               assert any(path.startswith(prefix) for path in installed_files), prefix
           for prefix in forbidden_prefixes:

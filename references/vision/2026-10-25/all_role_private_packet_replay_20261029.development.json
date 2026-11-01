@@ -1,0 +1,81 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "private_packet": {
+    "rows": 26,
+    "manifest_sha256": "ed49a30405a5a7d37e44ef01eecde07ea808299ead977917768800be329b827e",
+    "added_rows": [
+      {
+        "role": "concealed_gold",
+        "truth": "SOUTH",
+        "crop": "concealed_south.png",
+        "rgb_sha256": "e41bf3f13a9d68d51396b716f36de39c550b444de723ec3ad8c281f2de0e37a7"
+      },
+      {
+        "truth": "M4",
+        "crop": "added_hand_M4.png",
+        "role": "hand",
+        "rgb_sha256": "e2408aa9b9a18d5a159ca05e70239da9f0e69bba911256f378217b6c03212958"
+      },
+      {
+        "truth": "M5",
+        "crop": "added_hand_M5.png",
+        "role": "hand",
+        "rgb_sha256": "46b922bf85b6068a3aefccf9ecd6d184edd63db9b65532f0625af818772639ba"
+      },
+      {
+        "truth": "N",
+        "crop": "added_hand_N.png",
+        "role": "hand",
+        "rgb_sha256": "674166482cf951c70cbdbee76abc1ce97e2a08f56f6ff2aae3a818597b3410ae"
+      },
+      {
+        "truth": "R",
+        "crop": "added_hand_R.png",
+        "role": "hand",
+        "rgb_sha256": "cf2eefc0c25b7490fb27a6966788e6e05d21b407394ea3ab114e98221b57b224"
+      },
+      {
+        "truth": "S8",
+        "crop": "added_opened_gold_S8.png",
+        "role": "opened_gold",
+        "rgb_sha256": "be21c6daefd7c9d82a01397960e5114385d77bdda25b03f6c21d7f907f6c3a92"
+      },
+      {
+        "truth": "SOUTH",
+        "crop": "added_opened_gold_SOUTH.png",
+        "role": "opened_gold",
+        "rgb_sha256": "f7c5d16e6682fdd91ffe551b661833f618b206301dd6aadf5acb5a50059c2662"
+      }
+    ]
+  },
+  "method": "All reference features loaded through explicit private packet roles. No direct ordinary/opened/concealed reference-bank mutation. Keep offline InnerRecoveryProbe, local-dark detector/grouping, explicit gold_skin trial coverage for S8/SOUTH, real OCR and hand-boundary gate. Not a default/strict source promotion.",
+  "validation": {
+    "tests_passed": 12,
+    "paired_windows": 34,
+    "changed_compared_windows": 0,
+    "compared": [
+      "own_hand",
+      "gold_tile",
+      "hand_trusted",
+      "gold_trusted",
+      "hint.shanten",
+      "hint.best_discards",
+      "hint.issues",
+      "display_allowed"
+    ],
+    "advice": 10,
+    "old_hand_advice": 4,
+    "new_hand_advice": 6
+  },
+  "limits": [
+    "Private26-row packet includes same-video training crops; no independent accuracy claim.",
+    "No new pixel assets uploaded or formal19-row bundle update.",
+    "Gold source support is still explicit offline experiment setup; packet roles alone do not qualify sources.",
+    "The raw feature scores were not required equal; content/display parity compared.",
+    "No new installer."
+  ]
+}

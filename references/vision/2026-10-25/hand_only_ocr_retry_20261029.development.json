@@ -1,0 +1,32 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "live_runtime_changed": false,
+  "installer_requested": false,
+  "method": "Hand-only OCR consensus for extra pending-boundary retries. Full public OCR keeps2second schedule. Invalid-primary top expansion shared with normal status reading. Hand-only result contains no score/remaining claims. Reused views retain new hand until next full read.",
+  "tests_passed": 72,
+  "results": [
+    {
+      "input": "real_boundary_retry_replay.json",
+      "ocr_windows": 16,
+      "hand_only": 0,
+      "cumulative_ocr_ms": 37210.931,
+      "first_cleared_seconds": 86.80000000000001,
+      "displayed": 4
+    },
+    {
+      "input": "real_boundary_hand_only_replay.json",
+      "ocr_windows": 16,
+      "hand_only": 9,
+      "cumulative_ocr_ms": 25773.375,
+      "first_cleared_seconds": 86.80000000000001,
+      "displayed": 4
+    }
+  ],
+  "limits": [
+    "Once-per-version timings on one revealed14second segment; not controlled benchmark or live latency evidence.",
+    "No public score or remaining OCR acceptance loosened.",
+    "No new-handGoldSOUTH reference recovered, new hand advice stays blocked.",
+    "No new installer requested."
+  ]
+}

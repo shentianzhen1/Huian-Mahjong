@@ -1,0 +1,2290 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "protocol": "142 approved ordinary concealed crops; apply same frozen glyph alignment to query and reference; exclude all references sharing query source_session; no added raised or bundled references. Stored sessions are not proof of independent original matches.",
+  "queries": 142,
+  "truth_covered_after_exclusion": 128,
+  "wrong_wan_top1": 12,
+  "wrong_wan_top1_score_ge_point82": 0,
+  "limits": [
+    "Scores are uncalibrated feature similarities.",
+    "14 queries lack same-class support after exclusion; retain rather than silently drop them.",
+    "M9 has no same-class reference after this exclusion.",
+    "No independent accuracy or full replay improvement claim."
+  ],
+  "rows": [
+    {
+      "image": "templates/hand/1046_hand_region_s00_P4.png",
+      "truth": "P4",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.6276445984840393
+        ],
+        [
+          "P5",
+          0.4308258593082428
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s01_P5.png",
+      "truth": "P5",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.8936126232147217
+        ],
+        [
+          "P4",
+          0.5905560851097107
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s02_P6.png",
+      "truth": "P6",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.21567755937576294
+        ],
+        [
+          "P9",
+          0.1966535896062851
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s03_P6.png",
+      "truth": "P6",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.20481018722057343
+        ],
+        [
+          "B",
+          0.16180112957954407
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s04_S3.png",
+      "truth": "S3",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S2",
+          0.8168419003486633
+        ],
+        [
+          "S7",
+          0.7412616014480591
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s05_S4.png",
+      "truth": "S4",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S4",
+          0.8916864991188049
+        ],
+        [
+          "S6",
+          0.8572145104408264
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s06_S5.png",
+      "truth": "S5",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S2",
+          0.8870062232017517
+        ],
+        [
+          "S7",
+          0.8472495079040527
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s07_S6.png",
+      "truth": "S6",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S6",
+          0.5330235958099365
+        ],
+        [
+          "S4",
+          0.5127085447311401
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s08_S7.png",
+      "truth": "S7",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S4",
+          0.640132486820221
+        ],
+        [
+          "S6",
+          0.5850995182991028
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/1046_hand_region_s09_S8.png",
+      "truth": "S8",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S9",
+          0.8825883269309998
+        ],
+        [
+          "S7",
+          0.7164784669876099
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/1046_draw_region_s00_M5.png",
+      "truth": "M5",
+      "session": "session_7f4c1b2e",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M2",
+          0.44011691212654114
+        ],
+        [
+          "S1",
+          0.30464619398117065
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s00_P3.png",
+      "truth": "P3",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P3",
+          0.47819066047668457
+        ],
+        [
+          "M5",
+          0.24040266871452332
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s01_P4.png",
+      "truth": "P4",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.8665170669555664
+        ],
+        [
+          "P5",
+          0.5810805559158325
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s02_P5.png",
+      "truth": "P5",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.38729962706565857
+        ],
+        [
+          "P4",
+          0.26945367455482483
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s03_S4.png",
+      "truth": "S4",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S4",
+          0.5361613035202026
+        ],
+        [
+          "S7",
+          0.525787353515625
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s04_S5.png",
+      "truth": "S5",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S2",
+          0.8413510322570801
+        ],
+        [
+          "S5",
+          0.7736213207244873
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s05_S6.png",
+      "truth": "S6",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S4",
+          0.8572145104408264
+        ],
+        [
+          "S7",
+          0.5877310037612915
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s06_S7.png",
+      "truth": "S7",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S2",
+          0.8826712369918823
+        ],
+        [
+          "S5",
+          0.8472495079040527
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s07_M3.png",
+      "truth": "M3",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.3356029987335205
+        ],
+        [
+          "M7",
+          0.3258398175239563
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s08_M4.png",
+      "truth": "M4",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "SOUTH",
+          0.38178470730781555
+        ],
+        [
+          "W",
+          0.3334410488605499
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/960_hand_region_s09_M5.png",
+      "truth": "M5",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "E",
+          0.3309922516345978
+        ],
+        [
+          "M8",
+          0.3258523643016815
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/960_draw_region_s00_S3.png",
+      "truth": "S3",
+      "session": "session_5d8a0e3c",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S6",
+          0.45611411333084106
+        ],
+        [
+          "S7",
+          0.4467717707157135
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_0f8159a417ad3930_P7.png",
+      "truth": "P7",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.9576917886734009
+        ],
+        [
+          "SOUTH",
+          0.22051948308944702
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_54a8c9a2b1619277_S6.png",
+      "truth": "S6",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S6",
+          0.8341999053955078
+        ],
+        [
+          "S5",
+          0.6190920472145081
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_ead08b1382cdd408_S6.png",
+      "truth": "S6",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S6",
+          0.761498212814331
+        ],
+        [
+          "S5",
+          0.5153944492340088
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_4d6b1bedfe2dbb31_P2.png",
+      "truth": "P2",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "S5",
+          0.2550565004348755
+        ],
+        [
+          "S3",
+          0.2310352623462677
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_aaa921b08dbfec79_M8.png",
+      "truth": "M8",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M3",
+          0.7425894737243652
+        ],
+        [
+          "M5",
+          0.7089442610740662
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_d5f8cdd914564156_M6.png",
+      "truth": "M6",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M7",
+          0.7474594712257385
+        ],
+        [
+          "M9",
+          0.6999813914299011
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_aaec99b693280ecc_M3.png",
+      "truth": "M3",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.8968986868858337
+        ],
+        [
+          "M5",
+          0.7663082480430603
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_e5ad950eb1cbd1a6_P9.png",
+      "truth": "P9",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9774047136306763
+        ],
+        [
+          "M2",
+          0.15603558719158173
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_f143ec54726db832_P9.png",
+      "truth": "P9",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9111111164093018
+        ],
+        [
+          "M2",
+          0.14368726313114166
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_06bfee325cdf5903_P9.png",
+      "truth": "P9",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.8649889826774597
+        ],
+        [
+          "P8",
+          0.14041250944137573
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_779d316f10f41a81_S6.png",
+      "truth": "S6",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S6",
+          0.47060060501098633
+        ],
+        [
+          "S5",
+          0.32191911339759827
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_1e07d6c01887eb4e_P9.png",
+      "truth": "P9",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9774047136306763
+        ],
+        [
+          "M2",
+          0.15866303443908691
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_620535f30ae73827_P9.png",
+      "truth": "P9",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.8830382823944092
+        ],
+        [
+          "M5",
+          0.17191754281520844
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_68fa4d13e4d2dd4a_P7.png",
+      "truth": "P7",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.9576917886734009
+        ],
+        [
+          "P8",
+          0.21123740077018738
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_b434ca725fc0dc5b_M3.png",
+      "truth": "M3",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.9213369488716125
+        ],
+        [
+          "M8",
+          0.7439727187156677
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_9de8087eab64e57d_G.png",
+      "truth": "G",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M5",
+          0.3145735263824463
+        ],
+        [
+          "N",
+          0.30377769470214844
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_2e32e17677d10444_P5.png",
+      "truth": "P5",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9715181589126587
+        ],
+        [
+          "P4",
+          0.5775442123413086
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_37cc5f10d535dba3_P7.png",
+      "truth": "P7",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.9700987339019775
+        ],
+        [
+          "SOUTH",
+          0.22276480495929718
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_58b15ee73ce73e10_P6.png",
+      "truth": "P6",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.869604766368866
+        ],
+        [
+          "P8",
+          0.31757164001464844
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_3fb8ffb4122b20b0_P6.png",
+      "truth": "P6",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9301971793174744
+        ],
+        [
+          "P8",
+          0.33566930890083313
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_c6408037e472dc8f_P8.png",
+      "truth": "P8",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P8",
+          0.9441470503807068
+        ],
+        [
+          "P6",
+          0.3436407446861267
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_8559bbf40d2bb6cd_P8.png",
+      "truth": "P8",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P8",
+          0.9441470503807068
+        ],
+        [
+          "P6",
+          0.3455243706703186
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_fb1344bffd251bac_P6.png",
+      "truth": "P6",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9611454010009766
+        ],
+        [
+          "P8",
+          0.3455243706703186
+        ]
+      ]
+    },
+    {
+      "image": "templates/draw/tile_8514064cc2dd0141_M7.png",
+      "truth": "M7",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M6",
+          0.7474594712257385
+        ],
+        [
+          "M3",
+          0.6512883305549622
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_555cf42113e1e9b2_P4.png",
+      "truth": "P4",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9625211954116821
+        ],
+        [
+          "P5",
+          0.5871091485023499
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_a2379af56a8306f2_P6.png",
+      "truth": "P6",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9611454010009766
+        ],
+        [
+          "P8",
+          0.3399665057659149
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_f8287e38001c3b16_P6.png",
+      "truth": "P6",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.8546739816665649
+        ],
+        [
+          "P4",
+          0.298706591129303
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_1fe1aa093034c468_P9.png",
+      "truth": "P9",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9306073188781738
+        ],
+        [
+          "M5",
+          0.21261151134967804
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_4babc54891292c2b_P9.png",
+      "truth": "P9",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.8830382823944092
+        ],
+        [
+          "M5",
+          0.17191754281520844
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_635b2f76ba50aec3_P7.png",
+      "truth": "P7",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.9702174663543701
+        ],
+        [
+          "SOUTH",
+          0.21734949946403503
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_edfc5a7cf868015c_P7.png",
+      "truth": "P7",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.9700987339019775
+        ],
+        [
+          "SOUTH",
+          0.2193877249956131
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_acfa0037899841ab_P8.png",
+      "truth": "P8",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P8",
+          0.8324361443519592
+        ],
+        [
+          "P6",
+          0.3399665057659149
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_63fdb225cbac01fe_P6.png",
+      "truth": "P6",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9206418991088867
+        ],
+        [
+          "P8",
+          0.32625579833984375
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_6fbf70db65217cf7_P5.png",
+      "truth": "P5",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9615518450737
+        ],
+        [
+          "P4",
+          0.574633002281189
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_93b13b0848d7dc53_P7.png",
+      "truth": "P7",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.9702174663543701
+        ],
+        [
+          "SOUTH",
+          0.22954604029655457
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_4e6e4fd9d440aef1_P9.png",
+      "truth": "P9",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.920604944229126
+        ],
+        [
+          "M5",
+          0.21065600216388702
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_b4c44261cbe749ae_P7.png",
+      "truth": "P7",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.8880342841148376
+        ],
+        [
+          "P8",
+          0.2658310532569885
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_c501fe812a1819b1_P5.png",
+      "truth": "P5",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9756587743759155
+        ],
+        [
+          "P4",
+          0.5725509524345398
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_1cee84b323888dfd_P7.png",
+      "truth": "P7",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.3611818850040436
+        ],
+        [
+          "P6",
+          0.31083977222442627
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_e440a441ad9648c2_P9.png",
+      "truth": "P9",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.8499131202697754
+        ],
+        [
+          "P6",
+          0.1774814873933792
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_aa567ebfacb42ac3_P4.png",
+      "truth": "P4",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          1.0
+        ],
+        [
+          "P5",
+          0.5945178270339966
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_9d1cad9fdf0f71a8_P9.png",
+      "truth": "P9",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.8499131202697754
+        ],
+        [
+          "P8",
+          0.17876510322093964
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_b82d1b000e6b1c90_P5.png",
+      "truth": "P5",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9756587743759155
+        ],
+        [
+          "P4",
+          0.5732467770576477
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_338c192971cbb892_S6.png",
+      "truth": "S6",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S6",
+          0.8341999053955078
+        ],
+        [
+          "S5",
+          0.6483088135719299
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_20de04d09b0ffbc2_P7.png",
+      "truth": "P7",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.8880342841148376
+        ],
+        [
+          "P8",
+          0.2658310532569885
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_f6d2006cdbbd8e9c_P5.png",
+      "truth": "P5",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9615518450737
+        ],
+        [
+          "P4",
+          0.5908333659172058
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_bd20620a28d6a9c3_P6.png",
+      "truth": "P6",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9611454010009766
+        ],
+        [
+          "P8",
+          0.3455243706703186
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_e3532fb8aa9ac0f5_P8.png",
+      "truth": "P8",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P8",
+          0.8131129145622253
+        ],
+        [
+          "P6",
+          0.32167690992355347
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_5114bf5f0d361c0f_P9.png",
+      "truth": "P9",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9370601773262024
+        ],
+        [
+          "M5",
+          0.16176334023475647
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_f2a4ac52911d9552_P9.png",
+      "truth": "P9",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9370601773262024
+        ],
+        [
+          "P6",
+          0.16992002725601196
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_7706bffa34e5e7ff_P7.png",
+      "truth": "P7",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.8561723828315735
+        ],
+        [
+          "SOUTH",
+          0.21441181004047394
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_68cde796f31ff3b5_P6.png",
+      "truth": "P6",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9635345935821533
+        ],
+        [
+          "P4",
+          0.32332009077072144
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_75608291699bcea5_P7.png",
+      "truth": "P7",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.8494796752929688
+        ],
+        [
+          "P8",
+          0.25716760754585266
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_81101dc4927bcff4_S5.png",
+      "truth": "S5",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S5",
+          0.9079024195671082
+        ],
+        [
+          "S6",
+          0.6387194991111755
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_33e4f7ded2386160_P5.png",
+      "truth": "P5",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9614351987838745
+        ],
+        [
+          "P4",
+          0.5693749785423279
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_20d7967ef0991a4c_P8.png",
+      "truth": "P8",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P8",
+          0.8121052980422974
+        ],
+        [
+          "P6",
+          0.3255991041660309
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_ecd0b50dc1afb1ad_P9.png",
+      "truth": "P9",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P9",
+          0.9306073188781738
+        ],
+        [
+          "M5",
+          0.19654744863510132
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_12ea48d4131b07bd_P7.png",
+      "truth": "P7",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M4",
+          0.20756007730960846
+        ],
+        [
+          "M1",
+          0.1906484216451645
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_ec47a280d37ccf0f_P5.png",
+      "truth": "P5",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.8540827631950378
+        ],
+        [
+          "P4",
+          0.5054715871810913
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_e37a7e98783b26f0_S5.png",
+      "truth": "S5",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S5",
+          0.489780068397522
+        ],
+        [
+          "S6",
+          0.40102139115333557
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_45c563114e6a299a_P1.png",
+      "truth": "P1",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P1",
+          0.8528895974159241
+        ],
+        [
+          "M4",
+          0.31118565797805786
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_629f7b137c7a8629_P4.png",
+      "truth": "P4",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9736901521682739
+        ],
+        [
+          "P5",
+          0.6027154326438904
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_2e8d99ba891ae19a_P5.png",
+      "truth": "P5",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.9614351987838745
+        ],
+        [
+          "P4",
+          0.5693749785423279
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_7f19025ed9b6bad3_S8.png",
+      "truth": "S8",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S8",
+          0.88942950963974
+        ],
+        [
+          "S6",
+          0.4160371720790863
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_b5e89c609f39f02d_P3.png",
+      "truth": "P3",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P3",
+          0.8940253257751465
+        ],
+        [
+          "P5",
+          0.4660656154155731
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_8818663c01348a1c_P4.png",
+      "truth": "P4",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          1.0
+        ],
+        [
+          "P5",
+          0.5945178270339966
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_96b7e41c89c082ff_M5.png",
+      "truth": "M5",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.76446932554245
+        ],
+        [
+          "M8",
+          0.7165741920471191
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_8ec400560b0485b0_P1.png",
+      "truth": "P1",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P1",
+          1.0
+        ],
+        [
+          "M4",
+          0.23511020839214325
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_114a69cbdce223c5_P6.png",
+      "truth": "P6",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9635345935821533
+        ],
+        [
+          "P4",
+          0.31774935126304626
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_cf3d5cd142f9920c_S9.png",
+      "truth": "S9",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "S8",
+          0.8825883269309998
+        ],
+        [
+          "S7",
+          0.7788417935371399
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_214855c77244d6f2_P6.png",
+      "truth": "P6",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.873154878616333
+        ],
+        [
+          "P4",
+          0.3304708003997803
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_97df553b91572f84_P4.png",
+      "truth": "P4",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9721794128417969
+        ],
+        [
+          "P5",
+          0.5889122486114502
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_772cb6a29a9142d4_P1.png",
+      "truth": "P1",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P1",
+          1.0
+        ],
+        [
+          "M4",
+          0.23511020839214325
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_fe7c59c44379fc56_P4.png",
+      "truth": "P4",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9996110796928406
+        ],
+        [
+          "P5",
+          0.5763237476348877
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_b4a45a3b2f131062_M5.png",
+      "truth": "M5",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.7663082480430603
+        ],
+        [
+          "M8",
+          0.7016425132751465
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_519f0faa26c0134e_S5.png",
+      "truth": "S5",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S5",
+          0.9687396287918091
+        ],
+        [
+          "S4",
+          0.6055538654327393
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_d1ff14e1667b9b22_P7.png",
+      "truth": "P7",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.8494796752929688
+        ],
+        [
+          "P8",
+          0.25716760754585266
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_3b255896982cfa4e_P4.png",
+      "truth": "P4",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9996110796928406
+        ],
+        [
+          "P5",
+          0.5770277380943298
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_17702c62bc0ae7fd_P5.png",
+      "truth": "P5",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P5",
+          0.8936126232147217
+        ],
+        [
+          "P4",
+          0.6027154326438904
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_be4848adb314bc4c_P4.png",
+      "truth": "P4",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9625211954116821
+        ],
+        [
+          "P5",
+          0.5908333659172058
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_7e37ee57f96397d4_P6.png",
+      "truth": "P6",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9597349166870117
+        ],
+        [
+          "P4",
+          0.3405612111091614
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_a228f14a72f4d663_P6.png",
+      "truth": "P6",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9597349166870117
+        ],
+        [
+          "P4",
+          0.3346312344074249
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_2579bb0ed3b71b04_M9.png",
+      "truth": "M9",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M6",
+          0.6966620683670044
+        ],
+        [
+          "M3",
+          0.6954748034477234
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_3fcc11c0a830e9cc_S7.png",
+      "truth": "S7",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S7",
+          0.9080429077148438
+        ],
+        [
+          "S9",
+          0.7788417935371399
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_4d8f12145129d9de_B.png",
+      "truth": "B",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "S1",
+          0.3529972732067108
+        ],
+        [
+          "M5",
+          0.3306698799133301
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_e4748db25f494c98_S7.png",
+      "truth": "S7",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S7",
+          0.927497148513794
+        ],
+        [
+          "S8",
+          0.6853958964347839
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_3ca67d60c8d4a5ca_P7.png",
+      "truth": "P7",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P7",
+          0.8802890777587891
+        ],
+        [
+          "P8",
+          0.24009357392787933
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_5f38fd064796b864_S8.png",
+      "truth": "S8",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S8",
+          0.9015373587608337
+        ],
+        [
+          "S6",
+          0.457425057888031
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_c1d4f62119ea0cc4_S5.png",
+      "truth": "S5",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S5",
+          0.9687396287918091
+        ],
+        [
+          "S6",
+          0.6483088135719299
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_31b08ed6831568b7_P6.png",
+      "truth": "P6",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P6",
+          0.9598969221115112
+        ],
+        [
+          "P8",
+          0.32506263256073
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_28ef3b25dda96605_M9.png",
+      "truth": "M9",
+      "session": "session_59460988023cc9f1",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M8",
+          0.6993159651756287
+        ],
+        [
+          "M3",
+          0.6887447237968445
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_1be032f4fa21a3a8_S7.png",
+      "truth": "S7",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S7",
+          0.9201162457466125
+        ],
+        [
+          "S8",
+          0.7164784669876099
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_d21779b652836dd8_S8.png",
+      "truth": "S8",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S8",
+          0.9015373587608337
+        ],
+        [
+          "S6",
+          0.418287456035614
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_2f524bfdbcd1d059_P4.png",
+      "truth": "P4",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.9234189391136169
+        ],
+        [
+          "P5",
+          0.5899291038513184
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_a1ba13b5482c04c2_P4.png",
+      "truth": "P4",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P4",
+          0.8892112374305725
+        ],
+        [
+          "P5",
+          0.565259575843811
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_cd9225f1bd61526f_S4.png",
+      "truth": "S4",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S4",
+          0.8916864991188049
+        ],
+        [
+          "S6",
+          0.7650204300880432
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_ed5016521df0f72e_M1.png",
+      "truth": "M1",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M1",
+          0.9807335734367371
+        ],
+        [
+          "M6",
+          0.5788053870201111
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_590a5a3a3bade6e8_M1.png",
+      "truth": "M1",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M1",
+          0.9807335734367371
+        ],
+        [
+          "M6",
+          0.5715113878250122
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_8b9b156526834bc6_M3.png",
+      "truth": "M3",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.9991229176521301
+        ],
+        [
+          "M5",
+          0.7695252299308777
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_e25498dd9f87a10f_S1.png",
+      "truth": "S1",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "R",
+          0.3732454478740692
+        ],
+        [
+          "E",
+          0.3328336477279663
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_a26b1cef2294d06b_S1.png",
+      "truth": "S1",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "B",
+          0.36157846450805664
+        ],
+        [
+          "S4",
+          0.3451046943664551
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_de4789bc19dbc91e_S2.png",
+      "truth": "S2",
+      "session": "session_dcac8580c55879a2",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S2",
+          0.964451253414154
+        ],
+        [
+          "S7",
+          0.8820257186889648
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_c1402696f3c0cc3f_S2.png",
+      "truth": "S2",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S5",
+          0.8961248993873596
+        ],
+        [
+          "S2",
+          0.8933485746383667
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_5192089c320b9e6f_S2.png",
+      "truth": "S2",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S2",
+          0.964451253414154
+        ],
+        [
+          "S7",
+          0.8618384003639221
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_e7d5ade06a60ecb9_E.png",
+      "truth": "E",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "E",
+          0.9399282932281494
+        ],
+        [
+          "R",
+          0.5303935408592224
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_53a96e7391ae40b3_E.png",
+      "truth": "E",
+      "session": "session_94960e642f407502",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "E",
+          0.9399039149284363
+        ],
+        [
+          "R",
+          0.5451070070266724
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_2bc72278ccdb44d5_SOUTH.png",
+      "truth": "SOUTH",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "W",
+          0.5611268877983093
+        ],
+        [
+          "M4",
+          0.39089182019233704
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_2a1469a29a8605d8_SOUTH.png",
+      "truth": "SOUTH",
+      "session": "session_5e02f7d0458be0a9",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "W",
+          0.5565465092658997
+        ],
+        [
+          "M4",
+          0.40423673391342163
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_61b63e56881ac740_W.png",
+      "truth": "W",
+      "session": "session_0e565528164aa77f",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "SOUTH",
+          0.5602726936340332
+        ],
+        [
+          "M1",
+          0.33345749974250793
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_92818654a41d308e_R.png",
+      "truth": "R",
+      "session": "session_781bfe34c40993ef",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "E",
+          0.5454087853431702
+        ],
+        [
+          "R",
+          0.47909221053123474
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_ee2c702c6ae17185_R.png",
+      "truth": "R",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "R",
+          0.4952385723590851
+        ],
+        [
+          "M3",
+          0.3510196805000305
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_8610212dc312ea9c_M3.png",
+      "truth": "M3",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.9617828726768494
+        ],
+        [
+          "M5",
+          0.7606349587440491
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_9fe4ec26c4524a4b_M3.png",
+      "truth": "M3",
+      "session": "session_4d68a8e72498d729",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.9679770469665527
+        ],
+        [
+          "M5",
+          0.7638719081878662
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_f73a87a31fbf699a_M3.png",
+      "truth": "M3",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.9812579154968262
+        ],
+        [
+          "M5",
+          0.7697028517723083
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_48184d5a6580bb48_M3.png",
+      "truth": "M3",
+      "session": "session_627b6c2022d3f910",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "M3",
+          0.9991229176521301
+        ],
+        [
+          "M5",
+          0.7704992890357971
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_a6df97037ce092fb_M2.png",
+      "truth": "M2",
+      "session": "session_eight_hand_match_a",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M5",
+          0.456638902425766
+        ],
+        [
+          "R",
+          0.22942405939102173
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_9069d8fece505abc_M6.png",
+      "truth": "M6",
+      "session": "session_eight_hand_match_a",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "S5",
+          0.3091292977333069
+        ],
+        [
+          "M5",
+          0.2926510274410248
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_1edd2cb9eab772ad_N.png",
+      "truth": "N",
+      "session": "session_eight_hand_match_a",
+      "truth_covered_after_exclusion": false,
+      "top2": [
+        [
+          "M5",
+          0.3369249105453491
+        ],
+        [
+          "G",
+          0.3013801872730255
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_81d82ffc6d7f7e95_P3.png",
+      "truth": "P3",
+      "session": "session_eight_hand_match_a",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P3",
+          0.8906369209289551
+        ],
+        [
+          "P5",
+          0.417815625667572
+        ]
+      ]
+    },
+    {
+      "image": "templates/hand/tile_0d5b59c02be15c02_P8.png",
+      "truth": "P8",
+      "session": "session_eight_hand_match_a",
+      "truth_covered_after_exclusion": true,
+      "top2": [
+        [
+          "P8",
+          0.6238699555397034
+        ],
+        [
+          "S5",
+          0.39046210050582886
+        ]
+      ]
+    }
+  ]
+}

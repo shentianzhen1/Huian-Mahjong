@@ -1,6 +1,11 @@
 from __future__ import annotations
 
 import copy
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 
 from .promotion_gate import evaluate_promotion_bundle
@@ -54,6 +59,72 @@ def passing_bundle() -> dict:
 
 
 class PromotionGateTests(unittest.TestCase):
+    def test_cli_writes_rejection_report_for_invalid_metrics(self) -> None:
+        for bad in (float("inf"), float("nan"), "bad", {"nested": float("nan")}):
+            with self.subTest(value=bad), tempfile.TemporaryDirectory() as directory:
+                bundle = passing_bundle()
+                bundle["tile_identity"]["accepted_accuracy"] = bad
+                source = Path(directory) / "bundle.json"
+                output = Path(directory) / "report.json"
+                source.write_text(json.dumps(bundle), encoding="utf-8")
+                process = subprocess.run(
+                    [sys.executable, "-m", "workspace.vision.tiles_runtime_v0_2.promotion_gate",
+                     "--bundle", str(source), "--output", str(output)],
+                    capture_output=True, text=True, check=False,
+                )
+                self.assertEqual(process.returncode, 2, process.stderr)
+                report = json.loads(output.read_text(encoding="utf-8"))
+                self.assertFalse(report["passed"])
+                self.assertIn("tile_accepted_accuracy", report["failed_checks"])
+                self.assertEqual(json.loads(process.stdout), report)
+                json.dumps(report, allow_nan=False)
+
+    def test_every_metric_rejects_invalid_domain_without_raising(self) -> None:
+        valid = passing_bundle()
+        for section, metrics in valid.items():
+            for key, value in metrics.items():
+                if type(value) is bool:
+                    invalid = (0, 1, "true", [], {}, float("nan"))
+                elif type(value) is int:
+                    invalid = (True, False, -1, 1.5, "8", [], {},
+                               float("nan"), float("inf"), float("-inf"))
+                else:
+                    invalid = (True, False, -0.01, 1.01, "0.99", [], {},
+                               float("nan"), float("inf"), float("-inf"))
+                for bad in invalid:
+                    with self.subTest(metric=f"{section}.{key}", value=bad):
+                        bundle = copy.deepcopy(valid)
+                        bundle[section][key] = bad
+                        result = evaluate_promotion_bundle(bundle)
+                        self.assertFalse(result["passed"])
+                        self.assertFalse(result["formal_runtime_baseline_ready"])
+                        self.assertFalse(result["executor_ready"])
+                        self.assertTrue(any(
+                            check["reason"] in {
+                                "invalid_boolean", "invalid_count_type", "negative_count",
+                                "invalid_rate_type", "nonfinite_rate", "rate_out_of_range",
+                            } for check in result["checks"]
+                        ))
+                        json.dumps(result, allow_nan=False)
+
+    def test_integer_unit_rates_remain_valid(self) -> None:
+        bundle = passing_bundle()
+        for metrics in bundle.values():
+            for key, value in metrics.items():
+                if type(value) is float:
+                    metrics[key] = 1
+        self.assertTrue(evaluate_promotion_bundle(bundle)["passed"])
+
+    def test_malformed_sections_and_root_fail_closed(self) -> None:
+        for malformed in (None, [], "bad", 1):
+            with self.subTest(root=malformed):
+                self.assertFalse(evaluate_promotion_bundle(malformed)["passed"])
+            for section in passing_bundle():
+                with self.subTest(section=section, value=malformed):
+                    bundle = passing_bundle()
+                    bundle[section] = malformed
+                    self.assertFalse(evaluate_promotion_bundle(bundle)["passed"])
+
     def test_complete_independent_bundle_can_promote_runtime_baseline_only(self) -> None:
         result = evaluate_promotion_bundle(passing_bundle())
         self.assertTrue(result["passed"])

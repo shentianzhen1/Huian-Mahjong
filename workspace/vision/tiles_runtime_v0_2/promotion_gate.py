@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass, asdict
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -68,9 +69,35 @@ def _check(
     op: str,
     threshold: Any,
 ) -> None:
+    # The frozen thresholds also identify the metric domain: booleans,
+    # nonnegative integer counts, or finite rates in [0, 1]. Validate before
+    # comparing; Python otherwise treats True as 1 and accepts Infinity as a
+    # rate above every threshold. Malformed evidence must fail, not raise.
+    invalid_reason = None
+    if actual is not None:
+        if type(threshold) is bool:
+            if type(actual) is not bool:
+                invalid_reason = "invalid_boolean"
+        elif type(threshold) is int:
+            if type(actual) is not int:
+                invalid_reason = "invalid_count_type"
+            elif actual < 0:
+                invalid_reason = "negative_count"
+        elif type(threshold) is float:
+            if type(actual) not in (int, float):
+                invalid_reason = "invalid_rate_type"
+            elif type(actual) is float and not math.isfinite(actual):
+                invalid_reason = "nonfinite_rate"
+            elif not 0 <= actual <= 1:
+                invalid_reason = "rate_out_of_range"
+        else:
+            raise ValueError("Unsupported threshold metric domain")
     if actual is None:
         passed = False
         reason = "missing_metric"
+    elif invalid_reason:
+        passed = False
+        reason = invalid_reason
     elif op == ">=":
         passed = actual >= threshold
         reason = "passed" if passed else "below_threshold"
@@ -84,7 +111,12 @@ def _check(
         raise ValueError(f"Unsupported operator: {op}")
     checks.append({
         "name": name,
-        "actual": actual,
+        # Keep rejection reports valid JSON even when the input contains
+        # Python/JSON decoder extensions such as NaN or Infinity.
+        "actual": (
+            actual if type(actual) in (bool, int, str)
+            or (type(actual) is float and math.isfinite(actual)) else None
+        ),
         "operator": op,
         "threshold": threshold,
         "passed": passed,
@@ -322,7 +354,7 @@ def main() -> None:
 
     bundle = json.loads(Path(args.bundle).read_text(encoding="utf-8"))
     result = evaluate_promotion_bundle(bundle)
-    payload = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    payload = json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
     if args.output:
         output = Path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)

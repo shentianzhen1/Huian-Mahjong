@@ -1,0 +1,114 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": true,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "fix": "Only after invalid hand-progress primary parse, expand upper crop by0.008imageheight and OCR again; preserve valid primary and raw readings, no6to8rewrite.",
+  "tests_passed": 62,
+  "skipped": 0,
+  "real_ocr_tracker_check": [
+    {
+      "frames": [
+        2340,
+        2346
+      ],
+      "observation": {
+        "top_right_score": 932,
+        "bottom_left_score": 1068,
+        "hand_number": 2,
+        "remaining_tiles": 25,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 2,
+        "issues": [],
+        "safe_for_executor": false
+      },
+      "boundary_confirmed": true,
+      "persisted_gold": "S8",
+      "gold_trusted": true,
+      "status_reads": [
+        {
+          "remaining_tiles": 25,
+          "hand_number": 2,
+          "raw_remaining": "25",
+          "raw_hand_progress": "2/6",
+          "hand_inferred_from_transition": false,
+          "issues": [],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null,
+          "raw_hand_fallback": "2/8",
+          "hand_mode": "top_expand_fallback"
+        },
+        {
+          "remaining_tiles": 25,
+          "hand_number": 2,
+          "raw_remaining": "25",
+          "raw_hand_progress": "2/6",
+          "hand_inferred_from_transition": false,
+          "issues": [],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null,
+          "raw_hand_fallback": "2/8",
+          "hand_mode": "top_expand_fallback"
+        }
+      ]
+    },
+    {
+      "frames": [
+        2604,
+        2610
+      ],
+      "observation": {
+        "top_right_score": 948,
+        "bottom_left_score": 1052,
+        "hand_number": 3,
+        "remaining_tiles": 109,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 2,
+        "issues": [],
+        "safe_for_executor": false
+      },
+      "boundary_confirmed": true,
+      "persisted_gold": null,
+      "gold_trusted": false,
+      "status_reads": [
+        {
+          "remaining_tiles": 109,
+          "hand_number": 3,
+          "raw_remaining": "109",
+          "raw_hand_progress": "3/8",
+          "hand_inferred_from_transition": false,
+          "issues": [],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null,
+          "raw_hand_fallback": null,
+          "hand_mode": "primary"
+        },
+        {
+          "remaining_tiles": 109,
+          "hand_number": 3,
+          "raw_remaining": "109",
+          "raw_hand_progress": "3/8",
+          "hand_inferred_from_transition": false,
+          "issues": [],
+          "safe_for_executor": false,
+          "remaining_mode": "primary",
+          "raw_remaining_fallback": null,
+          "raw_hand_fallback": null,
+          "hand_mode": "primary"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Two paired endpoint windows from one revealed recording; not independent OCR accuracy.",
+    "PublicStateReader plus tracker integration; synthetic UNKNOWN Gold snapshots used to isolate persistence. Not full image-to-advice replay.",
+    "First-window remaining count25 not validated; no claim of remaining OCR correctness.",
+    "Latest b63eba1 installer predates this fix; no new installer requested."
+  ]
+}

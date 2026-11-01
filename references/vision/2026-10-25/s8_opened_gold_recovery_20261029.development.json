@@ -1,0 +1,250 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "base_commit": "7b392d7fe8b8adea50b59bd9c0b91c7208bab5b5",
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "reference": {
+    "truth": "S8",
+    "frame": 156,
+    "bbox": [
+      107,
+      41,
+      42,
+      57
+    ],
+    "crop_file_sha256": "004a592301828a0730f0e55e8db659aa52027409473696a8fc467d1a10122312",
+    "crop_rgb_sha256": "be21c6daefd7c9d82a01397960e5114385d77bdda25b03f6c21d7f907f6c3a92",
+    "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT"
+  },
+  "method": "Sequentially decode source frame156. Existing19-reference clean trial + offline inner recovery + reviewed M4 frame156. Append S8 gold_region feature only to opened-Gold bank and explicitly add S8 to offline gold_skin_covered. Other resources/threshold .82 unchanged. OCR excluded. No installed reference manifest changes.",
+  "paired_result": {
+    "windows": 74,
+    "baseline_gold_trusted": 0,
+    "candidate_gold_trusted": 74,
+    "baseline_advice": 0,
+    "candidate_advice": 57,
+    "candidate_discard_windows": 30,
+    "blocked_windows": 17,
+    "gold_votes": {
+      "S8": 74
+    }
+  },
+  "manual_review": {
+    "authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+    "checkpoints": [
+      {
+        "frame": 60,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "S7",
+          "M1",
+          "M2",
+          "M2",
+          "M4",
+          "M5",
+          "M7",
+          "M9",
+          "SOUTH",
+          "W",
+          "W",
+          "G"
+        ],
+        "frame_rgb_sha256": "16823b560df4173301c9d348b1967b677d562a3633752c5d01a52d7ba60d1551"
+      },
+      {
+        "frame": 96,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "S7",
+          "M1",
+          "M2",
+          "M2",
+          "M4",
+          "M5",
+          "M7",
+          "M9",
+          "SOUTH",
+          "W",
+          "W",
+          "G",
+          "M3"
+        ],
+        "frame_rgb_sha256": "bfea4f13a2d38f0f3ee735dbdebe8825214406b69f9802986e08f033a016b99b"
+      },
+      {
+        "frame": 156,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "S7",
+          "M1",
+          "M2",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M7",
+          "M9",
+          "SOUTH",
+          "W",
+          "W"
+        ],
+        "frame_rgb_sha256": "f68891b95a956ceb0e2ec36eec49a9367a94e0d1c88c69f5813891f0bf1f9cf4"
+      },
+      {
+        "frame": 312,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "S7",
+          "M1",
+          "M2",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M7",
+          "M9",
+          "SOUTH",
+          "W",
+          "W",
+          "SOUTH"
+        ],
+        "frame_rgb_sha256": "ffc7f330651cc1724c45e8fd017b4403913111d7c9f69f1c4b8155cf34e13a58"
+      },
+      {
+        "frame": 540,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "M1",
+          "M2",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M7",
+          "M9",
+          "SOUTH",
+          "SOUTH",
+          "W",
+          "W"
+        ],
+        "frame_rgb_sha256": "d02921a533a1a1aebac132c466f4d308c207d25b3fdf881744cd3392a8e128b0"
+      },
+      {
+        "frame": 696,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "M1",
+          "M2",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M7",
+          "M9",
+          "SOUTH",
+          "SOUTH",
+          "W",
+          "W",
+          "M6"
+        ],
+        "frame_rgb_sha256": "97694fc895f4d369375f977d5a1b24debf93c4e397feda9420a8c2ea4a52024b"
+      },
+      {
+        "frame": 888,
+        "truth": [
+          "P5",
+          "P6",
+          "S3",
+          "S4",
+          "M1",
+          "M2",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "SOUTH",
+          "SOUTH",
+          "W",
+          "W"
+        ],
+        "frame_rgb_sha256": "6e471fa6e20a777ee2e510a864a077cfdb28259042f36f89d2523433a74b47a3"
+      }
+    ],
+    "tile_count": 115,
+    "all_checkpoint_hands_match_visible_image": true,
+    "scope": "First displayed endpoint of each distinct predicted hand, not all57 windows; includes training frame156."
+  },
+  "gold_reference_sanity": {
+    "controls": [
+      {
+        "truth": "M6",
+        "baseline": [
+          "M6",
+          0.9999998211860657
+        ],
+        "candidate": [
+          "M6",
+          0.9999998211860657
+        ]
+      },
+      {
+        "truth": "M4",
+        "baseline": [
+          "M4",
+          1.0
+        ],
+        "candidate": [
+          "M4",
+          1.0
+        ]
+      },
+      {
+        "truth": "M1",
+        "baseline": [
+          "M1",
+          0.9999998211860657
+        ],
+        "candidate": [
+          "M1",
+          0.9999998211860657
+        ]
+      }
+    ],
+    "limitations": "These3 queries are existing included references: self-match sanity checks only, not held-out accuracy."
+  },
+  "artifact_sha256": {
+    "s8_added_clip.py": "9acb5b168f4a53e1713ddb1ce81af455e074e70aea3fec87aa2eb4e7755e9487",
+    "s8_added_clip.json": "8c94cc15a38dc275b31be59b0b4bccad351fdf090c11838f86a3b2cc40f248d3",
+    "s8_restored_hands.png": "fd893655dbf5077389b36dbf2cb6520369e373a52991b12bbfc3828a3ea4fdc9"
+  },
+  "limits": [
+    "Same revealed recording and same hand supply both added references and replay queries; not independent accuracy or formal promotion.",
+    "Gold74 windows include persistence from earlier identity; not74 independently verified Gold predictions.",
+    "115 correct checkpoint tiles do not prove correctness of all57 displayed windows.",
+    "Candidate advice is structural only; no public remaining-count/danger/EV or strategic quality validation.",
+    "Remaining17 blocked windows still require geometry/identity diagnosis.",
+    "No private crop pixels uploaded; no runtime/default classifier/bundle changes."
+  ]
+}

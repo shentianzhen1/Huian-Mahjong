@@ -128,6 +128,18 @@ class PublicStateReader:
             safe_for_executor=False,
         )
 
+    def read_hand_window(self, images, *, previous=None, minimum_votes=2):
+        """Fresh hand-only consensus; never infer hand from cached scores."""
+        candidates = []
+        for index, image in enumerate(images):
+            hand, _, _, _ = self.status_reader.read_hand_progress(image, self.profile)
+            candidates.append(PublicStateCandidate(
+                hand_number=hand, confidence=.90 if hand is not None else 0.,
+                source_frame=str(index)))
+        observation = fuse_public_state(candidates, previous=previous,
+                                        minimum_votes=minimum_votes)
+        return PublicStateWindowRead(frames=(), observation=observation)
+
     def read_window(
         self,
         images,

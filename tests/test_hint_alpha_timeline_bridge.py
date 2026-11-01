@@ -45,7 +45,7 @@ class HintAlphaTimelineBridgeTests(unittest.TestCase):
         )
         session.mark(
             "SETTLEMENT_PAGE",
-            {"frame": str(frame.relative_to(session.path))},
+            {"frame": frame.relative_to(session.path).as_posix()},
             source={"sequence": 12, "monotonic": 102.0},
         )
         session.close("test")

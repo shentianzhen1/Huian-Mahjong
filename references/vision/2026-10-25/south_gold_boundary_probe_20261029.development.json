@@ -1,0 +1,81 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "reference": {
+    "truth": "SOUTH",
+    "frame": 2640,
+    "frame_rgb_sha256": "274490524d74f4709ed7fcbb355e8ef5a686c4d31ce96ed55ad70b870ffb2f7e",
+    "bbox": [
+      107,
+      41,
+      42,
+      57
+    ],
+    "crop_png_sha256": "98ddb1bdffd32dbf7ec5af5e9b9da6c0518aeb989607f42ff820fd84e456462c",
+    "crop_rgb_sha256": "f7c5d16e6682fdd91ffe551b661833f618b206301dd6aadf5acb5a50059c2662",
+    "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT"
+  },
+  "method": "Add SOUTH gold_region feature to openedGold bank plus explicit offline gold_skin_covered; preserve previous M4/M5/S8/dark-meld candidate. Real OCR76..90s; threshold .82 unchanged.",
+  "result": {
+    "windows": 34,
+    "advice": 4,
+    "discards": 1,
+    "first_SOUTH_seconds": 86.8,
+    "SOUTH_windows": 8,
+    "new_hand_advice": 0,
+    "previous_primary_gold_queries": 15,
+    "changed_primary_gold_predictions": 0
+  },
+  "new_hand_blockers_at2652": [
+    {
+      "tile": "SOUTH",
+      "score": 0.721887,
+      "bbox": [
+        114,
+        434,
+        52,
+        75
+      ]
+    },
+    {
+      "tile": "N",
+      "score": 0.72234,
+      "bbox": [
+        665,
+        431,
+        49,
+        79
+      ]
+    },
+    {
+      "tile": "N",
+      "score": 0.732793,
+      "bbox": [
+        715,
+        431,
+        49,
+        79
+      ]
+    },
+    {
+      "tile": "R",
+      "score": 0.80754,
+      "bbox": [
+        764,
+        433,
+        49,
+        77
+      ]
+    }
+  ],
+  "limits": [
+    "Training reference inside same revealed clip and same new hand; no independent accuracy claim.",
+    "All8 SOUTH windows include training neighborhood and persistence; not8 independent identity tests.",
+    "Primary15 predictions unchanged includes4 accepted correctM4 and11 below-thresholdUnknown, not15correctly recognizedGold.",
+    "New concealed GoldSOUTH, N,N,R remainUNKNOWN; no new-hand advice restored.",
+    "No private new crop pixels uploaded, no bundle/default runtime integration and no installer."
+  ]
+}

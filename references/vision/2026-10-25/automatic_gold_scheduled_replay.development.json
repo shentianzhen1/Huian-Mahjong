@@ -1,0 +1,55 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "head": "d3c9ef658678dc729b615142b76ac6b81dcf4f00",
+  "reference_version": "2026.10.25.4",
+  "manual_gold": null,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "processed_bursts": 235,
+  "display_bursts": 191,
+  "discard_bursts": 46,
+  "first_gold_source_seconds": 3.4,
+  "ordinary_draw_episodes": 15,
+  "episodes_with_discard": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "timely_episodes": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "missing_episodes": [
+    0
+  ],
+  "worker_median_ms": 203.42421199995897,
+  "limits": [
+    "Known development recording, not independent recognition accuracy.",
+    "Host timing simulation; not Windows mirroring measurement.",
+    "100ms capture/UI ticks,400ms minimum single-flight launch interval; actual measured worker time advances video clock.",
+    "Episode 2 flower excluded; Gold trial explicit,Executor OFF."
+  ]
+}

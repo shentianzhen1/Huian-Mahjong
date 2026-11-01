@@ -1,0 +1,102 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "reference": {
+    "frame": 672,
+    "bbox": [
+      564,
+      431,
+      50,
+      79
+    ],
+    "truth": "M5",
+    "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT"
+  },
+  "method": "Append reviewed frame672 M5 to translated/neutral/inner banks alongside prior offline M4 candidate. No threshold or default classifier change.",
+  "draw_queries": [
+    {
+      "frame": 1860,
+      "baseline": [
+        "M3",
+        0.8328404427
+      ],
+      "candidate": [
+        "M5",
+        0.8826985955
+      ]
+    },
+    {
+      "frame": 1872,
+      "baseline": [
+        "M3",
+        0.834258
+      ],
+      "candidate": [
+        "M5",
+        0.8828222752
+      ]
+    }
+  ],
+  "paired_crop_controls": {
+    "total": 134,
+    "baseline": {
+      "top1_correct": 111,
+      "scores_ge_point82": 96,
+      "wrong_scores_ge_point82": 0
+    },
+    "inner": {
+      "top1_correct": 112,
+      "scores_ge_point82": 97,
+      "wrong_scores_ge_point82": 0
+    },
+    "candidate": {
+      "top1_correct": 113,
+      "scores_ge_point82": 97,
+      "wrong_scores_ge_point82": 0
+    },
+    "changed": [
+      {
+        "image": "templates/hand/960_hand_region_s08_M4.png",
+        "truth": "M4",
+        "source_sha256": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+        "baseline": [
+          "M5",
+          0.7176727056503296
+        ],
+        "inner": [
+          "M5",
+          0.7176727056503296
+        ],
+        "candidate": [
+          "M4",
+          0.7703192830085754
+        ]
+      },
+      {
+        "image": "templates/draw/tile_4d6b1bedfe2dbb31_P2.png",
+        "truth": "P2",
+        "source_sha256": "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+        "baseline": [
+          "S2",
+          0.629805326461792
+        ],
+        "inner": [
+          "S2",
+          0.629805326461792
+        ],
+        "candidate": [
+          "M5",
+          0.6753987669944763
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "Query-SHA exclusion as prior134 controls; no original-match independence. NewM5 reference same revealed recording as draw queries.",
+    "134-control totals unchanged from previous M4-only candidate:113top1,97accepted,0wrong above.82.",
+    "90s replay and primary full regression have NOT rerun with addedM5; cannot claim147correct windows or corrected live behavior.",
+    "Only offline reference feature additions; no private pixels uploaded and no installer."
+  ]
+}
