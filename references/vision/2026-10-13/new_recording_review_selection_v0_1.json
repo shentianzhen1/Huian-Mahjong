@@ -1,0 +1,71 @@
+{
+  "schema_version": "new_recording_review_selection_v0_1",
+  "candidate_commit": "a2c83fd837933a409cc8d6da285b59fdbbea88c2",
+  "status": "positions_locked_before_detector_classifier_evaluation",
+  "fractions": [
+    0.2,
+    0.5,
+    0.8
+  ],
+  "sources": [
+    {
+      "source_sha256": "d3e8ed231a0f7b5e856c85b6028fc918f5554fd3395097c1afd9a2e9fb268b25",
+      "size_bytes": 71948432,
+      "coded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "rotation_degrees": 90,
+      "duration_seconds": 69.615,
+      "frame_count": 4116,
+      "known_dataset_prefix_match": false,
+      "exact_sha_tracked_evidence_matches": [],
+      "original_match_group": "UNKNOWN",
+      "independence_status": "UNVERIFIED",
+      "frames": [
+        823,
+        2058,
+        3292
+      ]
+    },
+    {
+      "source_sha256": "98dfe5a05a7148eaa018e1ba8f0cb44f688bf51f87f93185a26894a89706e3e7",
+      "size_bytes": 66372077,
+      "coded_size": [
+        1290,
+        2796
+      ],
+      "display_size": [
+        2796,
+        1290
+      ],
+      "rotation_degrees": 90,
+      "duration_seconds": 58.4,
+      "frame_count": 3468,
+      "known_dataset_prefix_match": false,
+      "exact_sha_tracked_evidence_matches": [],
+      "original_match_group": "UNKNOWN",
+      "independence_status": "UNVERIFIED",
+      "frames": [
+        693,
+        1734,
+        2774
+      ]
+    }
+  ],
+  "original_match_independence_verified": false,
+  "manual_truth_status": "INITIAL_RANDOM_SEEK_REVIEW_INVALIDATED_REQUIRES_EXACT_ORDINAL_REREVIEW",
+  "formal_promotion_evidence": false,
+  "safe_for_runtime": false,
+  "safe_for_hint": false,
+  "safe_for_executor": false,
+  "initial_truth_lists_also_need_count_correction": true,
+  "accuracy_metrics_valid": false,
+  "formal_batch_minimum_recordings": 8,
+  "recording_count": 2,
+  "qualifies_formal_batch": false
+}
