@@ -1,0 +1,330 @@
+{
+  "schema_version": "vision_validation_readiness_inventory_v1",
+  "recorded_date": "2026-11-01",
+  "audited_source_head": "adc4fc1e72319fda5b121a2ddf909161f3fce87e",
+  "execution_issue": 7,
+  "scope": "Accessible Huian Drive folder metadata and tracked repository evidence; not raw-media inference",
+  "verified_fresh_original_match_count": 0,
+  "verified_fresh_original_match_count_scope": "No fresh source-disjoint original match certified by this inventory; this is not a claim that no other recording exists",
+  "formal_runtime_baseline_ready": false,
+  "independent_evaluation_executed": false,
+  "runtime_identity_threshold": 0.82,
+  "agent_version": "V0.10",
+  "safe_for_executor": false,
+  "raw_media_decoded_this_run": false,
+  "checksum_read_attempt": "Drive metadata request for SHA256/MD5 returned normalized metadata without checksum fields; source bytes were not hashed in this run",
+  "collections": [
+    {
+      "collection_alias": "legacy_root",
+      "accessible_video_files": 13,
+      "original_match_group": "UNVERIFIED_IN_THIS_RUN",
+      "eligibility": "NOT_CERTIFIED_FOR_BLIND_PROMOTION",
+      "reason": "Historical training/replay inputs; existing lineage and exact-SHA audits must be reused, not inferred from names",
+      "files": [
+        {
+          "source_alias": "legacy_root_01",
+          "size_bytes": 224134728,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_02",
+          "size_bytes": 215219701,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_03",
+          "size_bytes": 192353330,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_04",
+          "size_bytes": 189952700,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_05",
+          "size_bytes": 10709355,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_06",
+          "size_bytes": 18572048,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_07",
+          "size_bytes": 13034562,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_08",
+          "size_bytes": 12702587,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_09",
+          "size_bytes": 12068341,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_10",
+          "size_bytes": 11252194,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_11",
+          "size_bytes": 9663960,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_12",
+          "size_bytes": 9343024,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "legacy_root_13",
+          "size_bytes": 6009488,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        }
+      ]
+    },
+    {
+      "collection_alias": "oct03_development",
+      "accessible_video_files": 8,
+      "original_match_group": "UNVERIFIED_IN_THIS_RUN",
+      "eligibility": "NOT_CERTIFIED_FOR_BLIND_PROMOTION",
+      "reason": "Tracked intake identifies eight segments, overlap and revealed development use",
+      "files": [
+        {
+          "source_alias": "oct03_development_01",
+          "size_bytes": 256412544,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_02",
+          "size_bytes": 176728322,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_03",
+          "size_bytes": 159175234,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_04",
+          "size_bytes": 118269847,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_05",
+          "size_bytes": 105497852,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_06",
+          "size_bytes": 94409693,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_07",
+          "size_bytes": 89699580,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct03_development_08",
+          "size_bytes": 51996977,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        }
+      ]
+    },
+    {
+      "collection_alias": "oct09_candidate",
+      "accessible_video_files": 8,
+      "original_match_group": "UNVERIFIED_IN_THIS_RUN",
+      "eligibility": "NOT_CERTIFIED_FOR_BLIND_PROMOTION",
+      "reason": "Candidate metadata only; folder/date/file count do not establish match independence or absence of prior tuning. Existing diagnostics reveal at least part of these material families.",
+      "files": [
+        {
+          "source_alias": "oct09_candidate_01",
+          "size_bytes": 253691798,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_02",
+          "size_bytes": 140225813,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_03",
+          "size_bytes": 114399127,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_04",
+          "size_bytes": 114232414,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_05",
+          "size_bytes": 106766671,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_06",
+          "size_bytes": 91154896,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_07",
+          "size_bytes": 87922379,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct09_candidate_08",
+          "size_bytes": 47520308,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        }
+      ]
+    },
+    {
+      "collection_alias": "oct12_candidate",
+      "accessible_video_files": 8,
+      "original_match_group": "UNVERIFIED_IN_THIS_RUN",
+      "eligibility": "NOT_CERTIFIED_FOR_BLIND_PROMOTION",
+      "reason": "Candidate metadata only; folder/date/file count do not establish match independence or absence of prior tuning. Existing diagnostics reveal at least part of these material families.",
+      "files": [
+        {
+          "source_alias": "oct12_candidate_01",
+          "size_bytes": 178284430,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_02",
+          "size_bytes": 110256834,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_03",
+          "size_bytes": 108112809,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_04",
+          "size_bytes": 105045939,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_05",
+          "size_bytes": 94745983,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_06",
+          "size_bytes": 75051162,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_07",
+          "size_bytes": 71948432,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        },
+        {
+          "source_alias": "oct12_candidate_08",
+          "size_bytes": 66372077,
+          "source_sha256": null,
+          "original_match_group": null,
+          "blind_holdout_eligible": false
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Original-match grouping and all derivative/training-reference exclusions are not certified for candidate collections",
+    "Raw source SHA and exact decoded-frame identity were not reverified in this run",
+    "No new pre-evaluation lock, reviewed truth freeze or inference result bundle was produced"
+  ],
+  "existing_evidence": [
+    "references/vision/2026-09-23/continuous_video_source_intake_v0_1.json",
+    "references/vision/2026-10-03/new_match_eight_segment_intake_v0_1.json",
+    "references/vision/2026-10-07/concealed_lineage_drive_hash_audit_v0_1.json",
+    "docs/vision/new_recording_exact_frame_rereview_20261013.md"
+  ],
+  "next_execution": {
+    "reuse_development": "Continue detector/whole-hand and recovery regression on already revealed original matches; label outputs development only",
+    "qualify_candidates": "Verify source bytes, reviewed original-match groups and reference/derivative exclusions before selecting a formal holdout",
+    "formal_gate": "Use the existing frozen Issue #7 promotion contract after grouping and pre-evaluation lock; do not treat independent_batch_lock.py exact-SHA exclusion alone as proof of original-match independence"
+  },
+  "privacy": "No Drive IDs, private URLs, raw media or frame pixels persisted here"
+}

@@ -1,65 +1,60 @@
 # PROJECT_STATUS — Current Snapshot
 
-Snapshot date: 2026-10-18. Execution truth: GitHub Issues. Rule truth:
-RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. CHANGELOG.md is history only.
+Snapshot date: 2026-11-01 (Asia/Shanghai). Execution truth: GitHub Issues.
+Rule truth: RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. This page is a snapshot.
 
-## Scope and architecture
+## Source and delivery
 
-Active internal work: Draft PR #126,
-`codex/hint-alpha-local-test-sync-20261004`; package identity 0.2.1, unmerged.
-PR #117 is earlier work. CurrentAgent stays MeldAwareShantenAgent V0.10.
-Rules / Environment / AI / Simulator / Vision / Hint retain their dependency
-boundaries. Executor is OFF; Hint is read-only. No new Agent or broad UI rewrite.
+Active integration: Draft [PR #126](https://github.com/shentianzhen1/Huian-Mahjong/pull/126),
+branch `codex/hint-alpha-local-test-sync-20261004`, unmerged.
+Runtime source inspected: `adc4fc1e72319fda5b121a2ddf909161f3fce87e`.
+This snapshot update changes documentation only; inspect CI on its exact new HEAD.
 
-Issues #69/#45 prioritize trusted complete hand + visible opened Gold + own
-meld count -> ordinary structural shanten/minimum-shanten discard choices.
-Unknown public identities continue blocking remaining-copy/danger features.
-Exhaustive action transcription is not a prerequisite for basic shanten.
+Latest verified installer delivery uses source
+`7f1a86e9205cbdad7462e5ea2525206e2e427b63`:
+[Windows run 40916853368](https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/40916853368).
+Its bundled development reference version is `2026.10.30.1`: 28 tile images
+(20 ordinary concealed, 7 opened-Gold, 1 concealed-Gold SOUTH).
+The user authorized these reviewed tile-only assets in GitHub and the installer;
+raw private videos are not included. See [bundle manifest](dataset/tiles_runtime_v0_2/reference_pack/bundle.json).
+Later source changes are not automatically in that installer.
 
-## Current Vision and candidate boundary
+At inspected source adc4fc1, Tests, Vision Regression, Evidence Contracts and
+CodeQL succeeded. Windows run 41274587409 passed release_request and skipped
+the installer job. A green workflow does not imply a new EXE.
+Small changes do not request a new installer.
 
-The packaged Runtime still uses its reviewed baseline bank and threshold 0.82.
-It does not include private candidate support, primary-first UNKNOWN-only tight
-fallback or the standalone development geometry selector/rim fix.
+## Capability and validation
 
-Historical inspected Oct-3 diagnostic: Runtime 25/43 accepted, 0/3 complete
-hands; recovered development candidate 43/43, 3/3 complete, zero wrong accepts.
-These are same-match development results, not generalization or live accuracy.
+[Issue #45](https://github.com/shentianzhen1/Huian-Mahjong/issues/45) owns
+read-only complete-hand + visible Gold + own-meld-count structural shanten and
+minimum-shanten discards. [#69](https://github.com/shentianzhen1/Huian-Mahjong/issues/69)
+is closed; its replay records remain historical evidence. Unknown public
+identities still block remaining-copy/danger capabilities.
 
-The separately restored 19-support candidate and rim tie fix reached 17/17 and
-16/16 at two first-hand checkpoints from the inspected Oct-12 match. The third
-checkpoint was not rerun after the query copy truncated. Opened Gold M4 remains
-UNKNOWN, so no advisory readiness is claimed. See
-[private desktop restoration](docs/vision/private_candidate_desktop_restore_20261017.md).
-Private pixels stay outside GitHub; source sessions and clips are not independent
-original matches. Issue #7's frozen independent promotion gate remains unmet.
+Source adc4fc1 has two outstanding reproduced integration risks: trial-off
+worker reference loading and live pending-hand-boundary handling with carried
+Gold. Existing focused tests passing does not resolve those findings.
+This documentation update does not fix runtime behavior.
 
-Actual detector-path meld identity and Windows capture-to-advice p50/p95,
-accepted/blocked/wrong windows, acquisition, changed-state suppression and
-disconnect/new-hand recovery remain acceptance gaps. Green CI does not fill them.
+[Issue #7](https://github.com/shentianzhen1/Huian-Mahjong/issues/7) formal
+promotion remains blocked. Same-match replay and bundled-reference self-matches
+are development evidence. The [source inventory](docs/vision/validation_readiness_20261101.md)
+records 37 accessible video files, with no newly certified blind original-match
+batch in this audit; file count is not match count. Actual Windows capture-to-hint
+p50/p95, wrong accepted hands and recovery acceptance remain unmeasured here.
 
-## Rules and ordinary simulation
+## Review and architecture
 
-Ordinary settlement/dealer/full-match regression, completed-Kong-tail Zimo x2
-and added-Kong-only Rob-Kong ordinary x2 are established; do not reopen them as
-unknown scoring gaps. Confirmed special-rule facts have staged APIs and fixtures,
-but full opening/Qiangjin/Tianting/in-play re-prompt/simulator/live routing remains
-separate migration work. Current staged opening snapshot:
-`huian-target-2026-10-06-opening-r1`. Hidden opening position remains UNKNOWN;
-live Vision reads visible Gold/flowers. Follow rule evidence and per-rule revisions.
+The [review split record](docs/pr126_review_slices_20261101.md) separates the
+665-path audited source diff by area. Draft [#147](https://github.com/shentianzhen1/Huian-Mahjong/pull/147)
+extracts 10 exact-blob historical evidence files onto main for separate review;
+it is not merged and has not reduced #126's diff yet.
 
-## Engineering / audit
-
-Windows test builds pin Python/dependencies, verify payload inventory, use one
-`current` installation and preserve evidence outside replaced code. Actual
-mirrored-game usability is not implied by installer smoke.
-
-The [2026-10-18 audit](docs/project_audit_20261018.md) records invalid-confidence
-rejection, sequential replay/truncation handling, test isolation and documentation
-repairs. Valid-score threshold 0.82, V0.10 and promotion rules remain unchanged.
-Read CI on the exact final HEAD; never reuse a predecessor's green status.
-
-Execution owners remain Issues #69/#45/#7 (Vision/advisory), #1/#2/#5/#9
-(confirmed-rule migration) and #6 (strategy baseline preservation). This page is
-a snapshot, not a second backlog. Preserve 144 tiles, no fifth copies, at most
-three playable Gold copies, zero-sum settlement and explicit UNKNOWN.
+Rules / Environment / Simulator / AI / Vision / Hint / Executor stay separate.
+CurrentAgent is MeldAwareShantenAgent V0.10; identity threshold 0.82;
+Hint is internal/read-only and Executor OFF. UNKNOWN stays explicit.
+Rule implementation/installer claims require their own versioned evidence;
+confirmed-rule facts and migration status stay in their rule documents and Issues.
+Preserve 144 tiles, no fifth copies, at most three playable Gold copies and
+zero-sum settlement.
