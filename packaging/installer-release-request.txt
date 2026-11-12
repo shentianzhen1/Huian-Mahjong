@@ -7,3 +7,5 @@
 五条私有试用包2026.11.01.private1共30张，可单独解压后选择selected.json；新增两张私有裁图未公开到仓库，不包含在默认28张中。
 0.82阈值、AI V0.10、Hint只读、Executor关闭不变。开发录像与合成烟测不代表独立准确率或真实Windows投屏验收。
 升级前关闭旧程序，保留data目录。实际构建提交、素材版本和张数见BUILD_INFO.json；下载后的旧Setup.exe不会由升级程序自动删除。
+
+2026-11-12: Windows replay diagnostics build for the September 26 reference recording.

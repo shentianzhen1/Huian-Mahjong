@@ -191,6 +191,12 @@ class ReplayOcrCadenceTests(unittest.TestCase):
                     "gold_trusted": False,
                     "gold_tile": None,
                 },
+                "identity_observations": {"components": [
+                    {"region_candidate": "hand", "tile_id": "M1"},
+                    {"region_candidate": "draw_visual", "tile_id": "UNKNOWN",
+                     "identity_reason": "below_confidence_threshold"},
+                    {"region_candidate": "gold", "tile_id": "M6"},
+                ]},
                 "hint": {"phase": None, "best_discards": [], "issues": ["blocked"]},
             }
 
@@ -242,6 +248,12 @@ class ReplayOcrCadenceTests(unittest.TestCase):
                     public_reader=public_reader,
                 )
 
+        diagnostic = result["rows"][0]["diagnostics"]
+        self.assertEqual(diagnostic["hand_boxes"], 2)
+        self.assertEqual(diagnostic["hand_identities"], 1)
+        self.assertEqual(diagnostic["hand_unknown"], 1)
+        self.assertEqual(diagnostic["hand_rejection_reasons"], {"below_confidence_threshold": 1})
+        self.assertIn("opencv", result["runtime_environment"])
         self.assertEqual(REPLAY_OCR_INTERVAL_SECONDS, 2.0)
         self.assertEqual(public_reader.read_window.call_count, 1)
         self.assertEqual(result["public_state"]["sampled_windows"], 1)

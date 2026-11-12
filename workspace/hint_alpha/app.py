@@ -931,13 +931,17 @@ class HintAlphaApp(tk.Tk):
                 runtime = payload["runtime"]
                 snapshot = runtime.get("snapshot") or {}
                 public = payload["public_state"]
-                hand = len(snapshot.get("own_hand") or ())
+                diagnostics = runtime["diagnostics"]
+                blocker = diagnostics["primary_advice_blocker"]
                 gold = self._display_tile(snapshot.get("gold_tile"))
                 allowed = "ACCEPT" if runtime.get("display_allowed") else "BLOCK"
                 self.video_test_runtime_status.set(
                     f"Runtime Vision：窗口{payload['window_index']} | "
                     f"源视频={payload['source_seconds']:.1f}s | "
-                    f"{allowed} | 手牌={hand} | 金={gold}"
+                    f"{allowed} | 手牌框={diagnostics['hand_boxes']} | "
+                    f"已认={diagnostics['hand_identities']} | "
+                    f"未知={diagnostics['hand_unknown']} | 金={gold}\n"
+                    + format_advice_blockers({blocker: 1} if blocker else {})
                 )
                 if public.get("error"):
                     self.video_test_public_status.set(

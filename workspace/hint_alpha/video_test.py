@@ -11,11 +11,13 @@ from collections import Counter, deque
 from dataclasses import asdict
 import json
 import math
+import platform
+import sys
 from pathlib import Path
 import time
 from types import SimpleNamespace
 
-from .replay_smoke import evaluate_burst, sha256, summarize_windows
+from .replay_smoke import _primary_advice_blocker, evaluate_burst, sha256, summarize_windows
 from .runtime_pipeline import confirmed_public_hand_boundary, public_hand_boundary_pending
 
 
@@ -415,6 +417,43 @@ def summarize_video_test(runtime_rows, public_rows, source):
     }
 
 
+def _runtime_environment():
+    build_info = Path(sys.executable).parent.parent / "BUILD_INFO.json"
+    try:
+        build = json.loads(build_info.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        build = {}
+    if not isinstance(build, dict):
+        build = {}
+    return {
+        "platform": platform.system(),
+        "python": platform.python_version(),
+        "opencv": getattr(sys.modules.get("cv2"), "__version__", None),
+        "installer_commit": build.get("commit"),
+        "main_head_at_installer_build": build.get("main_head_at_build"),
+        "bundled_reference_version": build.get("reference_pack_version"),
+    }
+
+
+def _window_diagnostics(runtime):
+    components = (runtime.get("identity_observations") or {}).get("components") or ()
+    hand = [item for item in components if item.get("region_candidate") in {"hand", "draw_visual"}]
+    confirmed = sum(bool(item.get("tile_id")) and item["tile_id"] != "UNKNOWN"
+                    for item in hand)
+    return {
+        "hand_boxes": len(hand),
+        "hand_identities": confirmed,
+        "hand_unknown": len(hand) - confirmed,
+        "hand_rejection_reasons": dict(Counter(
+            item.get("identity_reason") or "unknown"
+            for item in hand if item.get("tile_id") in (None, "", "UNKNOWN")
+        )),
+        "primary_advice_blocker": (
+            None if runtime["display_allowed"] else _primary_advice_blocker(runtime)
+        ),
+    }
+
+
 def run_video_test(
     path,
     *,
@@ -665,6 +704,7 @@ def run_video_test(
             }
             runtime.pop('theoretical_discard_details', None)
 
+        runtime["diagnostics"] = _window_diagnostics(runtime)
         public_rows.append(public_row)
         timeline_started = time.perf_counter()
         new_timeline_events = timeline_accumulator.observe(runtime, public_row)
@@ -702,6 +742,7 @@ def run_video_test(
     result["stopped_early"] = bool(stop_event is not None and stop_event.is_set())
     result["generated_unix_time"] = time.time()
     result["rows"] = runtime_rows
+    result["runtime_environment"] = _runtime_environment()
     result["public_rows"] = public_rows
     result["performance"] = {
         "clock": "wall_time_not_source_time",

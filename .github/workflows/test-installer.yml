@@ -41,6 +41,8 @@ jobs:
         run: |
           python -m venv .build-hint
           .build-hint/Scripts/python.exe -m pip install -c packaging/constraints-windows-py314.txt '.[hint-alpha]'
+      - name: Record main baseline
+        run: git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main
       - name: Build offline installer
         run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
       - name: Verify installer source commit

@@ -142,6 +142,9 @@ def main():
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     manifest = {'reference_pack_version': reference_version, 'reference_pack_count': reference_count,
                 'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
+                'main_head_at_build': subprocess.check_output(
+                    ['git', 'rev-parse', '--verify', 'refs/remotes/origin/main'],
+                    cwd=ROOT, text=True).strip(),
                 'installation_layout': 'shared-data-current-v1',
                 'python_version': '.'.join(map(str, sys.version_info[:3])),
                 'dependency_versions': actual_versions,
