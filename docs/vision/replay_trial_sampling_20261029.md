@@ -105,3 +105,29 @@ Reproduce with `python -m workspace.hint_alpha.video_cli VIDEO --output REPORT -
 and repeat with `0.2`. Use the same video, reference manifest and dataset in
 both runs. The 0.1 s replay is a targeted diagnostic and its three-frame
 burst spans 0.2 s.
+
+### 90-second dense replay comparison
+
+Expanded 0.1 s to the first 90 seconds of the same Sep26 development source
+at `99a2811`. Compared against the cached 0.2 s run from the same source,
+start, duration, reference manifest, identity threshold and advice policy.
+The intervening code changes added diagnostic output and CLI options.
+Both runs used Linux OpenCV 5.1.0 and the default PublicState reader.
+
+| Sample spacing | Processed windows | Shanten displayed | Discard windows | Wall time |
+| --- | ---: | ---: | ---: | ---: |
+| 0.2 s | 224 | 151 | 68 | 126.4 s |
+| 0.1 s | 449 | 325 | 150 | 201.4 s |
+
+All 224 baseline endpoints had matching endpoint RGB hashes in the dense
+report. On those shared endpoints, the dense run gained 10 advice windows
+including seven discard windows. No existing shared-endpoint advice was
+lost. When both runs displayed advice, the shanten values, phases and discard
+candidate sets matched. The other 225 endpoints accounted for 164 advice
+windows and 75 discard windows. The P4 discard at frame 2292 also reproduced
+in the longer run. These counts describe advice output on one revealed
+recording. They do not validate new suggestions or measure independent draw
+recall. The default remains 0.2 s for the reference trial.
+
+Compare JSON reports with
+`python -m workspace.hint_alpha.replay_compare BASELINE.json CANDIDATE.json`.
