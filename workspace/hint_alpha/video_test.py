@@ -369,6 +369,46 @@ def render_video_timeline(timeline):
     return lines
 
 
+def hand_boundary_pause_intervals(public_rows):
+    """Group sampled pending windows and report the first clear observation."""
+    intervals = []
+    active = None
+    for row in public_rows:
+        boundary = row.get("gold_hand_boundary")
+        if boundary is None:
+            active = None
+            continue
+        frame = row["frames"][-1]
+        seconds = row["source_seconds"][-1]
+        if boundary["pending"]:
+            if active is None:
+                active = {
+                    "first_pending_frame": frame,
+                    "first_pending_seconds": seconds,
+                    "confirmed_hand_before_pause": boundary["confirmed_hand"],
+                    "pending_windows": 0,
+                    "pause_reasons": {},
+                    "clearance": None,
+                }
+                intervals.append(active)
+            active["last_pending_frame"] = frame
+            active["last_pending_seconds"] = seconds
+            active["pending_windows"] += 1
+            reason = boundary.get("pause_reason") or "unreported"
+            counts = active["pause_reasons"]
+            counts[reason] = counts.get(reason, 0) + 1
+        elif active is not None:
+            active["clearance"] = {
+                "frame": frame,
+                "source_seconds": seconds,
+                "seconds_since_first_pending": round(seconds - active["first_pending_seconds"], 6),
+                "confirmed_hand": boundary["confirmed_hand"],
+                "gold_reset_reason": boundary["reset_reason"],
+            }
+            active = None
+    return intervals
+
+
 def summarize_video_test(runtime_rows, public_rows, source):
     runtime_rows = list(runtime_rows)
     public_rows = list(public_rows)
@@ -444,6 +484,7 @@ def summarize_video_test(runtime_rows, public_rows, source):
             "error_windows": public_errors,
             "hand_number_votes": dict(hand_counts.most_common()),
             "score_pair_votes_top_bottom": dict(score_counts.most_common()),
+            "hand_boundary_pause_intervals": hand_boundary_pause_intervals(public_rows),
         },
     }
 

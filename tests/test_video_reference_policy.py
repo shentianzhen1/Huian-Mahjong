@@ -205,6 +205,16 @@ class VideoReferencePolicyTests(unittest.TestCase):
                          [None, None, "hand_unreadable", "hand_not_confirmed", None])
         self.assertEqual(boundaries[3]["last_hand_votes"], 1)
         self.assertEqual(boundaries[4]["last_observed_hand"], 3)
+        intervals = result["public_state"]["hand_boundary_pause_intervals"]
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0]["first_pending_frame"], 6)
+        self.assertEqual(intervals[0]["last_pending_frame"], 8)
+        self.assertEqual(intervals[0]["pause_reasons"], {"hand_unreadable": 1, "hand_not_confirmed": 1})
+        self.assertEqual(intervals[0]["clearance"], {
+            "frame": 10, "source_seconds": 5.0, "seconds_since_first_pending": 2.0,
+            "confirmed_hand": 3, "gold_reset_reason": "sequential_hand",
+        })
+
         for row in result['rows'][2:4]:
             self.assertEqual(row['hint']['status'], 'BLOCKED')
             self.assertIsNone(row['hint']['shanten'])

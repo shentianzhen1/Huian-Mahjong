@@ -265,3 +265,15 @@ This is a temporary occlusion, so the pending-hand gate is retained.
 The hand-boundary trace now records the latest OCR vote count and hand
 value, and distinguishes an unreadable hand, insufficient confirmation,
 an unexpected hand index, and an OCR error.
+
+Replay summaries now group consecutive pending windows under
+`public_state.hand_boundary_pause_intervals`. Each interval records the
+sampled endpoints, observed pause reasons, and the first endpoint where
+the boundary clears. Clearance time is measured in source video seconds;
+a cleared boundary can still leave advice blocked by a different gate.
+An interval ending with the recording has no measured clearance.
+
+Applied to the saved 0.1 s Oct12 full report, this yields two cleared
+pauses (0.2 s and 0.6 s, both without a Gold reset) and one interval
+unresolved at the end of the recording. The 0.6 s pause spans three
+pending windows, with the boundary clearing at frame 2676.
