@@ -32,7 +32,7 @@ class VideoDecodeError(ValueError):
         self.frame_index = frame_index
 
 
-def automatic_sample_interval(metadata):
+def automatic_sample_interval(metadata, *, reference_trial=False):
     """Choose a conservative no-input replay cadence from decoded metadata.
 
     Three sampled frames must stay within the existing <=0.8s temporal window,
@@ -50,7 +50,9 @@ def automatic_sample_interval(metadata):
     # roughly one third versus the earlier 0.20s cadence.
     target = 0.30
     stride = max(1, int(round(target * fps)))
-    return stride / fps
+    interval = stride / fps
+    # Alternating trial windows need denser sampling for short draw opportunities.
+    return min(interval, DEFAULT_SAMPLE_INTERVAL_SECONDS) if reference_trial else interval
 
 
 def probe_video(path):
@@ -479,11 +481,9 @@ def run_video_test(
     path = Path(path)
     source = probe_video(path)
     if sample_interval_seconds is None:
-        sample_interval_seconds = automatic_sample_interval(source)
-        # Reference trials classify two identities every other sampled window.
-        # Keep enough source samples to retain short visible draw opportunities.
-        if reference_packet is not None:
-            sample_interval_seconds = min(sample_interval_seconds, 0.2)
+        sample_interval_seconds = automatic_sample_interval(
+            source, reference_trial=reference_packet is not None,
+        )
     digest = sha256(path)
     session = source_session or "local-video-" + digest[:16]
     source.update(

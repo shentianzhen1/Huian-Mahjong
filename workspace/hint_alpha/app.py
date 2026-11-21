@@ -697,6 +697,11 @@ class HintAlphaApp(tk.Tk):
         if not self.video_test_path.get():
             self.choose_video_test_file()
 
+    def _video_reference_packet(self):
+        if self.experimental_edge_seams:
+            return self.experimental_hand_packet
+        return None
+
     def choose_video_test_file(self):
         path = filedialog.askopenfilename(
             title="选择真实对局录像",
@@ -716,7 +721,9 @@ class HintAlphaApp(tk.Tk):
             )
 
             meta = probe_video(path)
-            interval = automatic_sample_interval(meta)
+            interval = automatic_sample_interval(
+                meta, reference_trial=self._video_reference_packet() is not None,
+            )
             self.video_test_start.set("0")
             self.video_test_duration.set("0")
             self.video_test_interval.set(f"{interval:.3f}")
@@ -755,7 +762,10 @@ class HintAlphaApp(tk.Tk):
             meta = probe_video(path)
             start = 0.0
             duration = 0.0
-            interval = automatic_sample_interval(meta)
+            reference_packet = self._video_reference_packet()
+            interval = automatic_sample_interval(
+                meta, reference_trial=reference_packet is not None,
+            )
             self.video_test_start.set("0")
             self.video_test_duration.set("0")
             self.video_test_interval.set(f"{interval:.3f}")
@@ -797,6 +807,7 @@ class HintAlphaApp(tk.Tk):
                 self.video_test_stop,
                 self.video_test_queue,
                 self.video_timeline_queue,
+                reference_packet,
             ),
             daemon=True,
         )
@@ -817,9 +828,8 @@ class HintAlphaApp(tk.Tk):
         stop_event,
         output_queue,
         timeline_queue,
+        reference_packet,
     ):
-        reference_packet = (self.__dict__.get('experimental_hand_packet')
-            if self.__dict__.get('experimental_edge_seams', False) else None)
         try:
             from .video_test import probe_video, run_video_test
 
