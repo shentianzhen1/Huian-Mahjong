@@ -77,10 +77,11 @@ def main():
     shutil.copytree(base / 'DLLs', RUNTIME / 'DLLs')
     shutil.copytree(base / 'tcl', RUNTIME / 'tcl')
     shutil.copytree(base / 'Lib', RUNTIME / 'Lib',
-                    ignore=shutil.ignore_patterns('site-packages', '__pycache__', 'test', 'tests'))
+                    ignore=shutil.ignore_patterns('site-packages', '__pycache__', 'test', 'tests', 'ensurepip'))
     site = RUNTIME / 'Lib' / 'site-packages'
     shutil.copytree(ROOT / '.build-hint' / 'Lib' / 'site-packages', site,
-                    ignore=shutil.ignore_patterns('__pycache__'))
+                    ignore=shutil.ignore_patterns('__pycache__', 'pip',
+                                                  'pip-*.dist-info', 'PyWin32.chm'))
     # Overlay current source: the dependency environment may contain an older wheel.
     source_hashes = {}
     for package in ('huian', 'mahjong_framework', 'workspace/ai',

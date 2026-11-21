@@ -1,9 +1,14 @@
 """Run against an extracted installer using its bundled Python, without capture."""
 import hashlib
 import importlib.metadata
+import importlib.util
 import json
 from pathlib import Path
 import sys
+from tempfile import TemporaryDirectory
+
+import cv2
+import numpy as np
 
 root = Path(sys.argv[1]).resolve()
 site = root / 'runtime/Lib/site-packages'
@@ -19,7 +24,7 @@ for relative, expected in manifest['template_sha256'].items():
     assert hashlib.sha256((dataset / relative).read_bytes()).hexdigest() == expected, relative
 
 from workspace.hint_alpha import app, live_app
-from workspace.hint_alpha.video_test import ReplayOCRCache, _runtime_environment
+from workspace.hint_alpha.video_test import ReplayOCRCache, _runtime_environment, iter_video_samples
 from workspace.hint_alpha.manual_input import evaluate_manual_input
 from workspace.hint_alpha.runtime_pipeline import evaluate_runtime_report
 from workspace.vision.tiles_v0_1.labels import approved_labels
@@ -33,6 +38,23 @@ crop = array([[1, 2]], dtype=uint8)
 cache = ReplayOCRCache(lambda image: str(image[0, 1]))
 assert cache(crop) == cache(crop.copy()) == '2'
 assert (cache.hits, cache.misses) == (1, 1)
+
+assert importlib.util.find_spec('pip') is None
+assert importlib.util.find_spec('ensurepip') is None
+assert not (site / 'PyWin32.chm').exists()
+with TemporaryDirectory() as temporary:
+    video = str(Path(temporary) / 'replay-smoke.avi')
+    writer = cv2.VideoWriter(video, cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*'MJPG'),
+                             10.0, (64, 64))
+    try:
+        assert writer.isOpened(), 'Packaged FFmpeg video writer did not open'
+        for value in (40, 100, 160):
+            writer.write(np.full((64, 64, 3), value, dtype=np.uint8))
+    finally:
+        writer.release()
+    samples = list(iter_video_samples(video, sample_interval_seconds=0.1))
+    assert [sample[0] for sample in samples] == [0, 1, 2]
+    assert all(image.size == (64, 64) and image.mode == 'RGB' for _, _, image in samples)
 
 assert Path(app.__file__).resolve().is_relative_to(site)
 assert Path(live_app.__file__).resolve().is_relative_to(site)
