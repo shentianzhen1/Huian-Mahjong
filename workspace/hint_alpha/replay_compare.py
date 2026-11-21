@@ -42,6 +42,8 @@ def compare_video_reports(baseline, candidate):
         raise ValueError("No shared replay endpoints")
     changes = Counter()
     changed_frames = {}
+    gained_from = Counter()
+    lost_to = Counter()
     for frame in sorted(shared):
         left_digest, before = left[frame]
         right_digest, after = right[frame]
@@ -50,8 +52,21 @@ def compare_video_reports(baseline, candidate):
         before_discard, after_discard = _discard_tiles(before), _discard_tiles(after)
         labels = []
         if before["display_allowed"] != after["display_allowed"]:
-            labels.append("advice_gained" if after["display_allowed"] else "advice_lost")
+            if after["display_allowed"]:
+                labels.append("advice_gained")
+                gained_from[(before.get("diagnostics") or {}).get("primary_advice_blocker") or "unreported"] += 1
+            else:
+                labels.append("advice_lost")
+                lost_to[(after.get("diagnostics") or {}).get("primary_advice_blocker") or "unreported"] += 1
         elif before["display_allowed"]:
+            left_snapshot = before.get("snapshot") or {}
+            right_snapshot = after.get("snapshot") or {}
+            if "own_hand" in left_snapshot and "own_hand" in right_snapshot:
+                if Counter(left_snapshot["own_hand"]) != Counter(right_snapshot["own_hand"]):
+                    labels.append("concealed_hand_changed")
+            if "gold_tile" in left_snapshot and "gold_tile" in right_snapshot:
+                if left_snapshot["gold_tile"] != right_snapshot["gold_tile"]:
+                    labels.append("gold_changed")
             if before["hint"]["shanten"] != after["hint"]["shanten"]:
                 labels.append("shanten_changed")
             if before["hint"]["phase"] != after["hint"]["phase"]:
@@ -71,6 +86,8 @@ def compare_video_reports(baseline, candidate):
         "candidate_only_advice": sum(right[frame][1]["display_allowed"] for frame in right.keys() - shared),
         "candidate_only_discards": sum(bool(_discard_tiles(right[frame][1])) for frame in right.keys() - shared),
         "shared_endpoint_changes": dict(changes),
+        "advice_gained_from_blockers": dict(gained_from),
+        "advice_lost_to_blockers": dict(lost_to),
         "changed_frames": changed_frames,
     }
 

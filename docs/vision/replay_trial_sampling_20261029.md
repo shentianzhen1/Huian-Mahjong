@@ -131,3 +131,31 @@ recall. The default remains 0.2 s for the reference trial.
 
 Compare JSON reports with
 `python -m workspace.hint_alpha.replay_compare BASELINE.json CANDIDATE.json`.
+
+
+### Oct12 cross-recording check
+
+Ran both cadences on the first 45 seconds of the already revealed Oct12
+recording, SHA-256 `de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c`,
+using replay code `99a2811`, the same bundled 2026.10.30.1 references, default
+PublicState OCR, and identity threshold 0.82. Both processes overlapped, so
+their wall times describe this run only.
+
+| Sample spacing | Processed windows | Shanten displayed | Discard windows | Wall time |
+| --- | ---: | ---: | ---: | ---: |
+| 0.2 s | 112 | 75 | 21 | 73.2 s |
+| 0.1 s | 224 | 164 | 46 | 103.6 s |
+
+All 112 baseline endpoints matched candidate endpoint pixel hashes. Five
+shared endpoints recovered advice from geometry rejection, including two
+discard candidates (frames 324 and 924). No baseline advice was lost. On the
+75 shared endpoints displaying in both runs, the concealed-hand multiset,
+Gold, shanten, phase and discard candidates matched. The 112 additional
+endpoints contributed 84 advice windows and 23 discard windows.
+
+The comparison now checks concealed-hand and Gold agreement where both
+reports display advice, and counts the primary blocker on gained or lost
+shared endpoints. Across the two revealed sources, 14 of 15 shared gains
+came from baseline geometry rejection and one from identity stability.
+This is display availability on development footage. It does not validate
+the newly recovered hands or establish independent draw-level recall.

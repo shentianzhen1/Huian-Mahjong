@@ -28,12 +28,18 @@ class ReplayCompareTests(unittest.TestCase):
     def test_cadence_only_and_shared_changes_are_counted_separately(self):
         before = report((12, None), (24, "P4"), (36, "M1"))
         after = report((6, "S1"), (12, "P4"), (24, "P5"), (36, None))
+        before["rows"][0]["diagnostics"] = {"primary_advice_blocker": "geometry"}
+        after["rows"][3]["diagnostics"] = {"primary_advice_blocker": "stability"}
+        before["rows"][1]["snapshot"] = {"own_hand": ["M1"], "gold_tile": "P1"}
+        after["rows"][2]["snapshot"] = {"own_hand": ["P1"], "gold_tile": "M1"}
         result = compare_video_reports(before, after)
+        self.assertEqual(result["advice_gained_from_blockers"], {"geometry": 1})
+        self.assertEqual(result["advice_lost_to_blockers"], {"stability": 1})
         self.assertEqual(result["shared_endpoints"], 3)
         self.assertEqual(result["candidate_only_discards"], 1)
         self.assertEqual(result["changed_frames"], {
             12: ["advice_gained", "discard_gained"],
-            24: ["discard_set_changed"],
+            24: ["concealed_hand_changed", "gold_changed", "discard_set_changed"],
             36: ["advice_lost", "discard_lost"],
         })
 
