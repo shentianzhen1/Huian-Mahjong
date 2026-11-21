@@ -133,6 +133,15 @@ def main():
                  'liuju_zero_settlement.jpg', 'pinghu_11_settlement.jpg',
                  'pinghu_16_settlement.jpg', 'zimo_38_kong_settlement.jpg'):
         shutil.copy2(ROOT / evidence / name, site / evidence / name)
+    # Small JSON inputs for the offline replay comparison command.
+    diagnostics = PAYLOAD / 'diagnostics'
+    diagnostics.mkdir()
+    for relative in (
+        '2026-10-25/draw_opportunity_inventory.development.json',
+        '2026-11-21/dense_replay_reviewed_gains.development.json',
+    ):
+        source = ROOT / 'references' / 'vision' / relative
+        shutil.copy2(source, diagnostics / source.name)
     shutil.copy2(ROOT / 'packaging' / 'launch.py', PAYLOAD / 'launch.py')
     shutil.copy2(DEPENDENCY_LOCK, PAYLOAD / 'DEPENDENCIES.txt')
     (PAYLOAD / 'INSTALL_LAYOUT').write_text('shared-data-current-v1\n', encoding='ascii')

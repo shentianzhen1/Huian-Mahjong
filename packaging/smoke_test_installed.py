@@ -39,6 +39,27 @@ cache = ReplayOCRCache(lambda image: str(image[0, 1]))
 assert cache(crop) == cache(crop.copy()) == '2'
 assert (cache.hits, cache.misses) == (1, 1)
 
+# Verify the replay entry points and the score short circuit from installed modules.
+from PIL import Image
+from workspace.hint_alpha import replay_compare, video_cli
+from workspace.vision.tiles_v0_1.public_state_scores import read_score_pair
+
+assert Path(replay_compare.__file__).resolve().is_relative_to(site)
+assert Path(video_cli.__file__).resolve().is_relative_to(site)
+diagnostics = root / "diagnostics"
+draw_manifest = json.loads((diagnostics / "draw_opportunity_inventory.development.json").read_text(encoding="utf-8"))
+review_manifest = json.loads((diagnostics / "dense_replay_reviewed_gains.development.json").read_text(encoding="utf-8"))
+assert len(draw_manifest["episodes"]) - len(draw_manifest["flower_episode_indices"]) == 15
+assert sum(len(source["frames"]) for source in review_manifest["sources"]) == 15
+assert draw_manifest["development_only"] and review_manifest["development_only"]
+
+texts = iter(("1077", "1077", "923", "923"))
+score = read_score_pair(Image.new("RGB", (1000, 500)), backend=lambda _: next(texts),
+                        stop_on_score_majority=True)
+assert score.score_pair == (1077, 923) and score.mode == "direct"
+assert len(score.top_attempts) == len(score.bottom_attempts) == 2
+
+
 assert importlib.util.find_spec('pip') is None
 assert importlib.util.find_spec('ensurepip') is None
 assert not (site / 'PyWin32.chm').exists()
