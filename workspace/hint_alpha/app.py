@@ -173,7 +173,36 @@ class HintAlphaApp(tk.Tk):
             self.refresh()
         self.after(100, self.tick)
 
+    def _configure_ui_style(self):
+        style = ttk.Style(self)
+        style.theme_use("clam")
+        self.configure(background="#edf2f8")
+        style.configure("TFrame", background="#ffffff")
+        style.configure("TLabel", background="#ffffff", foreground="#24354b")
+        style.configure("TCheckbutton", background="#ffffff", foreground="#24354b")
+        style.map("TCheckbutton", background=[("active", "#eef4fc")])
+        style.configure("TNotebook", background="#edf2f8", bordercolor="#d6e0ed")
+        style.configure("TNotebook.Tab", background="#e3ebf6", foreground="#38516f", padding=(10, 5))
+        style.map("TNotebook.Tab",
+                  background=[("selected", "#ffffff"), ("active", "#f0f5fc")],
+                  foreground=[("selected", "#164a8a")])
+        style.configure("TLabelframe", background="#ffffff", bordercolor="#d6e0ed")
+        style.configure("TLabelframe.Label", background="#ffffff", foreground="#24354b")
+        style.configure("DiagnosticHeading.TLabel", foreground="#164a8a", font=("", 10, "bold"))
+        style.configure("TButton", padding=(7, 3), background="#f4f7fb", foreground="#24354b",
+                        bordercolor="#cbd8e8")
+        style.map("TButton", background=[("active", "#e7effa")],
+                  foreground=[("disabled", "#66788e")])
+        style.configure("Primary.TButton", background="#245eac", lightcolor="#245eac",
+                        darkcolor="#245eac", bordercolor="#245eac", foreground="#ffffff")
+        style.map("Primary.TButton",
+                  background=[("disabled", "#d9e2ef"), ("pressed", "#174680"), ("active", "#1d5198")],
+                  foreground=[("disabled", "#566b85")])
+        style.configure("Horizontal.TProgressbar", background="#2e70c8", troughcolor="#e5edf8",
+                        bordercolor="#d6e0ed")
+
     def _build(self):
+        self._configure_ui_style()
         width = min(1320, max(1040, self.winfo_screenwidth() - 64))
         height = min(820, max(620, self.winfo_screenheight() - 100))
         self.geometry(f"{width}x{height}")
@@ -196,7 +225,7 @@ class HintAlphaApp(tk.Tk):
         ttk.Checkbutton(
             top, text="自动按局录制", variable=self.auto_record
         ).grid(row=0, column=4, padx=6)
-        ttk.Button(top, text="开始内测", command=self.start).grid(row=0, column=5, padx=4)
+        ttk.Button(top, text="开始内测", command=self.start, style="Primary.TButton").grid(row=0, column=5, padx=4)
         ttk.Button(top, text="停止", command=self.stop).grid(row=0, column=6, padx=2)
         ttk.Button(top, text="人工录牌", command=self.open_manual_hand).grid(
             row=0, column=7, padx=4
@@ -395,7 +424,7 @@ class HintAlphaApp(tk.Tk):
 
         action_row = ttk.Frame(video_test)
         action_row.pack(fill="x", pady=10)
-        ttk.Button(action_row, text="开始自动复盘", command=self.start_video_test).pack(
+        ttk.Button(action_row, text="开始自动复盘", command=self.start_video_test, style="Primary.TButton").pack(
             side="left"
         )
         ttk.Button(action_row, text="停止复盘", command=self.stop_video_test).pack(
@@ -1063,12 +1092,12 @@ class HintAlphaApp(tk.Tk):
             ("局号与比分", self.vision_status),
             ("向听建议", self.hint_status),
         ):
-            ttk.Label(status, text=title, font=("", 10, "bold")).pack(anchor="w", pady=(5, 2))
+            ttk.Label(status, text=title, style="DiagnosticHeading.TLabel").pack(anchor="w", pady=(5, 2))
             self._wrapped_status(status, variable).pack(fill="x", pady=(0, 5))
 
-        ttk.Label(report, text="版本", font=("", 10, "bold")).pack(anchor="w")
+        ttk.Label(report, text="版本", style="DiagnosticHeading.TLabel").pack(anchor="w")
         self._wrapped_status(report, self.version_status).pack(fill="x", pady=(4, 10))
-        ttk.Label(report, text="证据位置", font=("", 10, "bold")).pack(anchor="w")
+        ttk.Label(report, text="证据位置", style="DiagnosticHeading.TLabel").pack(anchor="w")
         ttk.Entry(report, state="readonly", textvariable=self.evidence_status, width=30).pack(
             fill="x", pady=(4, 10)
         )
