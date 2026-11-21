@@ -562,6 +562,7 @@ def run_video_test(
 
     window = deque(maxlen=3)
     previous_captured = None
+    last_processed_frame = None
     candidate_windows = 0
     runtime_rows = []
     public_rows = []
