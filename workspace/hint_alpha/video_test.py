@@ -729,11 +729,26 @@ def run_video_test(
             # Pause before either identity read can update opening memory.
             pending = public_hand_boundary_pending(gold_hand_number, attempt_observation)
             replay_advice_kwargs["pipeline"].hand_boundary_pending = pending
+            observed_hand = getattr(attempt_observation, "hand_number", None)
+            hand_votes = getattr(attempt_observation, "hand_votes", 0)
+            pause_reason = None
+            if pending:
+                if (last_public_attempt or {}).get("error"):
+                    pause_reason = "ocr_error"
+                elif "hand_unreadable" in getattr(attempt_observation, "issues", ()):
+                    pause_reason = "hand_unreadable"
+                elif not confirmed_public_hand_boundary(None, attempt_observation):
+                    pause_reason = "hand_not_confirmed"
+                else:
+                    pause_reason = "unexpected_hand"
             public_row["gold_hand_boundary"] = {
                 "previous_confirmed_hand": previous_gold_hand,
                 "confirmed_hand": gold_hand_number,
                 "reset_reason": reset_reason,
                 "pending": pending,
+                "pause_reason": pause_reason,
+                "last_observed_hand": observed_hand,
+                "last_hand_votes": hand_votes,
             }
 
         runtime = evaluate_burst(

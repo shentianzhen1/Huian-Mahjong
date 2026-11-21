@@ -174,8 +174,10 @@ class VideoReferencePolicyTests(unittest.TestCase):
             hand_number: object
             hand_votes: int = 2
             score_pair: object = None
+            issues: tuple = ()
         reads=[]
-        sequence=iter([Observation(2), Observation(None,1), Observation(None,1), Observation(3)])
+        sequence=iter([Observation(2), Observation(None, 0, issues=("hand_unreadable",)),
+                       Observation(None, 1, issues=("hand_consensus",)), Observation(3)])
         def read(images, **kwargs):
             reads.append(len(reads))
             return SimpleNamespace(observation=next(sequence))
@@ -198,6 +200,11 @@ class VideoReferencePolicyTests(unittest.TestCase):
         self.assertEqual(reset_counts,[1,1,1,1,2])
         self.assertEqual([row['display_allowed'] for row in result['rows']],
                          [True, True, False, False, True])
+        boundaries = [row["gold_hand_boundary"] for row in result["public_rows"]]
+        self.assertEqual([row["pause_reason"] for row in boundaries],
+                         [None, None, "hand_unreadable", "hand_not_confirmed", None])
+        self.assertEqual(boundaries[3]["last_hand_votes"], 1)
+        self.assertEqual(boundaries[4]["last_observed_hand"], 3)
         for row in result['rows'][2:4]:
             self.assertEqual(row['hint']['status'], 'BLOCKED')
             self.assertIsNone(row['hint']['shanten'])

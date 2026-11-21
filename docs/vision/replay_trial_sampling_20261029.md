@@ -250,3 +250,18 @@ correctness. Retain the 0.2 s reference replay default.
 
 Use `--draw-inventory references/vision/2026-10-25/draw_opportunity_inventory.development.json`
 with the replay comparison command to reproduce the episode counts.
+
+### Frame 2664 hand-index dropout
+
+Re-decoded the eight OCR input frames around the lost shared endpoint.
+A game overlay crosses the top of the visible hand number in all six
+samples at 2655, 2658, 2661, 2664, 2667 and 2670. Tesseract returned
+empty text on both existing crops for each sample. After the overlay
+cleared, the existing expanded crop read 1/8 at both 2673 and 2676.
+Advice resumed at frame 2676 without a Gold reset. The 0.2 s replay did
+not run a fresh OCR read at 2664 and was still using its earlier result.
+This is a temporary occlusion, so the pending-hand gate is retained.
+
+The hand-boundary trace now records the latest OCR vote count and hand
+value, and distinguishes an unreadable hand, insufficient confirmation,
+an unexpected hand index, and an OCR error.
