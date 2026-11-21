@@ -45,7 +45,7 @@ jobs:
         run: git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main
       - name: Build offline installer
         run: .build-hint/Scripts/python.exe packaging/build_test_installer.py
-      - name: Verify installer source commit
+      - name: Verify installer source commit and EXE checksum
         shell: pwsh
         env:
           EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -53,6 +53,16 @@ jobs:
           $manifest = Get-Content dist/BUILD_INFO.json -Raw | ConvertFrom-Json
           if ($manifest.commit -ne $env:EXPECTED_SOURCE_SHA) {
             throw "Installer commit mismatch: expected $env:EXPECTED_SOURCE_SHA, got $($manifest.commit)"
+          }
+          $installers = @(Get-ChildItem dist/*_Setup.exe)
+          if ($installers.Count -ne 1 -or $installers[0].Name -cne $manifest.installer_filename) {
+            throw "Expected exactly one installer matching BUILD_INFO.json"
+          }
+          $installer = $installers[0]
+          $actual = (Get-FileHash -LiteralPath $installer.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          $recorded = (Get-Content -LiteralPath ($installer.FullName + '.sha256') -Raw).TrimEnd()
+          if ($recorded -cne "$actual  $($installer.Name)") {
+            throw "Installer filename or SHA256 sidecar mismatch"
           }
       - name: Extract EXE; verify payload hashes, Windows spawn and live UI smoke
         shell: pwsh

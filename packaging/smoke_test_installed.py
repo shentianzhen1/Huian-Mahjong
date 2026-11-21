@@ -19,10 +19,20 @@ for relative, expected in manifest['template_sha256'].items():
     assert hashlib.sha256((dataset / relative).read_bytes()).hexdigest() == expected, relative
 
 from workspace.hint_alpha import app, live_app
+from workspace.hint_alpha.video_test import ReplayOCRCache, _runtime_environment
 from workspace.hint_alpha.manual_input import evaluate_manual_input
 from workspace.hint_alpha.runtime_pipeline import evaluate_runtime_report
 from workspace.vision.tiles_v0_1.labels import approved_labels
 from workspace.vision.tiles_v0_1.template_classifier import TemplateTileClassifier
+
+build = _runtime_environment()
+assert build['installer_commit'] == manifest['commit']
+assert build['bundled_reference_version'] == manifest['reference_pack_version']
+from numpy import array, uint8
+crop = array([[1, 2]], dtype=uint8)
+cache = ReplayOCRCache(lambda image: str(image[0, 1]))
+assert cache(crop) == cache(crop.copy()) == '2'
+assert (cache.hits, cache.misses) == (1, 1)
 
 assert Path(app.__file__).resolve().is_relative_to(site)
 assert Path(live_app.__file__).resolve().is_relative_to(site)

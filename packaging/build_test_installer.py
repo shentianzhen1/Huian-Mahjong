@@ -140,7 +140,8 @@ def main():
             + '"runtime\\python.exe" -B launch.py ' + args
             + '\nif errorlevel 1 pause\n', encoding='utf-8')
     commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-    manifest = {'reference_pack_version': reference_version, 'reference_pack_count': reference_count,
+    exe = DIST / f'HuianMahjong_Test_{PROJECT_VERSION}_{BUILD_ID}_{commit[:8]}_Setup.exe'
+    manifest = {'installer_filename': exe.name, 'reference_pack_version': reference_version, 'reference_pack_count': reference_count,
                 'project_version': PROJECT_VERSION, 'build': BUILD_ID, 'commit': commit,
                 'main_head_at_build': subprocess.check_output(
                     ['git', 'rev-parse', '--verify', 'refs/remotes/origin/main'],
@@ -158,6 +159,8 @@ def main():
                     '-m', 'pip', 'freeze'], text=True).splitlines()}
     (PAYLOAD / '使用说明.txt').write_text(
         f'惠安麻将 Hint Alpha {PROJECT_VERSION} 测试版\n双击桌面快捷方式启动。无需另装 Python。\n'
+        f'构建提交：{commit[:8]} | 内置素材：{reference_version}（{reference_count}张）\n'
+        '录像诊断可导出向听阻断原因；解码中断时保留已完成结果。\n'
         '新增人工录牌向听与候选弃牌、实验实时识别向听。低置信/黑屏/断流/过期时停用。\n'
         '启动后可点人工录牌。实时识别未正式晋级，界面标为实验；识别不足时BLOCKED。\n'
         '完整V0.10合法动作建议尚未接入。Executor关闭。\n'
@@ -180,7 +183,6 @@ def main():
         for path in sorted(PAYLOAD.rglob('*')):
             if path.is_file():
                 z.write(path, path.relative_to(PAYLOAD))
-    exe = DIST / ('HuianMahjong_Test_' + PROJECT_VERSION + '_' + BUILD_ID + '_Setup.exe')
     compiler = Path('C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe')
     installer_source = BUILD / 'TestInstaller.cs'
     installer_source.write_text(
