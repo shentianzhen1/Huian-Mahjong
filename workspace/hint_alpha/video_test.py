@@ -711,21 +711,30 @@ def run_video_test(
                 "reused": False,
                 "skipped": True,
             }
-        # A fresh confirmed public hand must reset Gold before this window's
-        # advice. Reused/failed OCR and jumps/regressions cannot authorize reset.
-        if reference_packet is not None and public_row.get('sampled') and 'observation' in public_row:
-            observation = SimpleNamespace(**public_row['observation'])
-            if confirmed_public_hand_boundary(gold_hand_number, observation):
-                replay_advice_kwargs['pipeline'].reset()
-                gold_hand_number = observation.hand_number
+        if reference_packet is not None:
+            previous_gold_hand = gold_hand_number
+            attempt_observation = SimpleNamespace(
+                **((last_public_attempt or {}).get("observation") or {})
+            )
+            reset_reason = None
+            # Only fresh, confirmed OCR may reset Gold before advice.
+            if public_row.get("sampled") and confirmed_public_hand_boundary(
+                gold_hand_number, attempt_observation,
+            ):
+                reset_reason = "initial_hand" if gold_hand_number is None else "sequential_hand"
+                replay_advice_kwargs["pipeline"].reset()
+                gold_hand_number = attempt_observation.hand_number
                 previous_captured = None
 
-        if reference_packet is not None:
-            # Block before either identity read can update opening memory;
-            # hiding only the finished row leaves a conflict behind on recovery.
-            replay_advice_kwargs['pipeline'].hand_boundary_pending = public_hand_boundary_pending(
-                gold_hand_number, SimpleNamespace(
-                    **((last_public_attempt or {}).get('observation') or {})))
+            # Pause before either identity read can update opening memory.
+            pending = public_hand_boundary_pending(gold_hand_number, attempt_observation)
+            replay_advice_kwargs["pipeline"].hand_boundary_pending = pending
+            public_row["gold_hand_boundary"] = {
+                "previous_confirmed_hand": previous_gold_hand,
+                "confirmed_hand": gold_hand_number,
+                "reset_reason": reset_reason,
+                "pending": pending,
+            }
 
         runtime = evaluate_burst(
             burst,

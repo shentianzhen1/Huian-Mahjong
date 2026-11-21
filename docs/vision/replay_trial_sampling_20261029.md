@@ -208,3 +208,20 @@ The 0.2 s baseline is the opening slice of the previous 45-second replay.
 Endpoint RGB hashes and the already displayed phases, shanten values and
 discard candidates matched in both comparisons. This is a short, revealed
 development check scoped to reference replay. Live capture is unchanged.
+
+### Longer regression after initial hand retry
+
+Re-ran the Sep26 90 s and Oct12 45 s sources at 0.1 s on `7316be1`. All
+673 shared endpoint RGB hashes matched the prior reports. Sep26 retained
+325 advice and 150 discard windows. Oct12 increased from 164 to 169 advice
+windows and retained 46 discard windows. All five gains were previously
+blocked by opened Gold at frames 126–150. Previously displayed phases,
+shanten values and discard sets matched on both sources, and all 15 reviewed
+endpoints passed the automated check. OCR backend calls were unchanged on
+Sep26 (640) and increased from 403 to 443 on Oct12.
+
+Reference replay reports now include `public_rows[].gold_hand_boundary`,
+with the prior and current confirmed hand, pending state and reset reason
+(`initial_hand`, `sequential_hand`, or null). A separate 0.2 s Oct12
+opening run confirmed the first-hand reset at frame 84 on a fresh hand-only
+read, with unchanged advice summary and timeline after adding this trace.

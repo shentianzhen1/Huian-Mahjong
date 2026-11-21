@@ -162,6 +162,10 @@ class VideoReferencePolicyTests(unittest.TestCase):
         self.assertEqual(reads, [("full", (1, 2), 2), ("hand", (3, 4), 2), ("hand", (5, 6), 2)])
         reset.assert_called_once()
         self.assertTrue(result["public_rows"][-1]["reused"])
+        resets = [row["gold_hand_boundary"]["reset_reason"] for row in result["public_rows"]]
+        self.assertEqual(resets, [None, None, "initial_hand", None])
+        self.assertEqual(result["public_rows"][-1]["gold_hand_boundary"]["confirmed_hand"], 1)
+
 
     def test_pending_hand_retries_ocr_without_lowering_consensus(self):
         from dataclasses import dataclass
