@@ -59,6 +59,26 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
             'hand_identity+gold+meld_count': 1,
         })
 
+    def test_hand_stages_keep_missing_evidence_and_unconfirmed_identity_distinct(self):
+        issues = ['hand_untrusted']
+        unknown = {'region_candidate': 'draw_visual', 'tile_id': 'UNKNOWN'}
+        labeled = {'region_candidate': 'hand', 'tile_id': 'M1'}
+        rows = [
+            row(1, issues=issues, geometry_untrusted=True),
+            row(4, issues=issues),
+            row(7, issues=issues, identity_observations={'components': []}),
+            row(10, issues=issues, identity_observations={'components': [labeled, unknown]}),
+            row(13, issues=['concealed_hand_count_invalid'],
+                identity_observations={'components': [labeled]}),
+        ]
+        self.assertEqual(summarize_windows(rows)['blocked_hand_stage_windows'], {
+            'geometry_untrusted': 1,
+            'component_evidence_missing': 1,
+            'no_concealed_components_reported': 1,
+            'concealed_component_identity_unconfirmed': 1,
+            'concealed_components_labeled_hand_still_blocked': 1,
+        })
+
     def test_policy_and_physical_conflicts_are_not_called_recognition_failures(self):
         policy = row(1)
         policy['hint']['allowed'] = True

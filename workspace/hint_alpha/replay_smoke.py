@@ -56,6 +56,22 @@ def _primary_advice_blocker(row):
     return 'other_state_or_policy'
 
 
+def _blocked_hand_stage(row):
+    """Classify available diagnostic evidence without inferring missed tiles."""
+    if row.get('geometry_untrusted') is True:
+        return 'geometry_untrusted'
+    components = (row.get('identity_observations') or {}).get('components')
+    if components is None:
+        return 'component_evidence_missing'
+    hand = [component for component in components
+            if component.get('region_candidate') in {'hand', 'draw_visual'}]
+    if not hand:
+        return 'no_concealed_components_reported'
+    if any(component.get('tile_id') in (None, '', 'UNKNOWN') for component in hand):
+        return 'concealed_component_identity_unconfirmed'
+    return 'concealed_components_labeled_hand_still_blocked'
+
+
 def summarize_windows(rows):
     """Describe observed advice transitions without claiming unseen recovery."""
     runs = []
@@ -64,6 +80,7 @@ def summarize_windows(rows):
     public_context = Counter()
     input_issues = Counter()
     input_issue_combinations = Counter()
+    hand_stages = Counter()
     for row in rows:
         allowed = row['display_allowed'] is True
         public_context.update(issue for issue in set(row['hint']['issues'])
@@ -78,6 +95,8 @@ def summarize_windows(rows):
             categories = tuple(category for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items()
                                if issues & matching_issues)
             input_issues.update(categories)
+            if 'hand_identity' in categories or 'concealed_hand_count' in categories:
+                hand_stages[_blocked_hand_stage(row)] += 1
             if len(categories) > 1:
                 input_issue_combinations['+'.join(categories)] += 1
         if not runs or runs[-1]['display_allowed'] != allowed:
@@ -100,7 +119,8 @@ def summarize_windows(rows):
             'structural_blocker_windows': dict(structural_blockers.most_common()),
             'public_context_issue_windows': dict(sorted(public_context.items())),
             'blocked_window_input_issues': dict(input_issues.most_common()),
-            'blocked_window_input_issue_combinations': dict(input_issue_combinations.most_common())}
+            'blocked_window_input_issue_combinations': dict(input_issue_combinations.most_common()),
+            'blocked_hand_stage_windows': dict(hand_stages.most_common())}
 
 
 def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
