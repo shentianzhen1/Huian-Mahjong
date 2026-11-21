@@ -292,3 +292,20 @@ equal before and after the change (35 displayed windows, 15 discard windows).
 Runtime processing measured 12.31 s before and 11.39 s after in a single local
 run per configuration. The runs partially overlapped, so the observed timing
 is descriptive.
+
+### Replay score OCR early completion
+
+Replay now skips the third of three score-crop thresholds when both sides
+already have two identical valid readings and the pair totals 2000. The
+third reading cannot beat either existing majority. All other cases still
+use the full three thresholds. PublicState frame fusion and the live reader
+default are unchanged.
+
+On the same first 25 s of the Oct12 clip at 0.2 s, actual OCR backend calls
+fell from 254 to 204. Local OCR time was 25.61 s before and 20.56 s after;
+total elapsed time was 37.15 s and 31.73 s. All 62 windows matched in
+non-timing Runtime and PublicState output, including 35 displayed and
+15 discard windows. The timeline matched. These are single local runs
+per configuration and do not establish Windows timing. A separate
+single-thread Tesseract trial gave only a small local difference and was
+not adopted.

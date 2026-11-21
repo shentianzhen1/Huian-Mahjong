@@ -755,6 +755,19 @@ class TilesV01Tests(unittest.TestCase):
         self.assertFalse(read.safe_for_executor)
         self.assertEqual(read.to_candidate().score_pair, (1077, 923))
 
+    def test_score_majority_shortcut_preserves_fallback_for_nonconserving_reads(self):
+        frame = Image.new("RGB", (1000, 500), "black")
+        texts = iter(("1077", "1077", "923", "923"))
+        result = read_score_pair(frame, backend=lambda _: next(texts), stop_on_score_majority=True)
+        self.assertEqual(result.score_pair, (1077, 923))
+        self.assertEqual(result.mode, "direct")
+        self.assertEqual((len(result.top_attempts), len(result.bottom_attempts)), (2, 2))
+
+        texts = iter(("1077", "1077", "928", "928", "1077", "923"))
+        result = read_score_pair(frame, backend=lambda _: next(texts), stop_on_score_majority=True)
+        self.assertEqual(result.score_pair, (1077, 923))
+        self.assertEqual((len(result.top_attempts), len(result.bottom_attempts)), (3, 3))
+
     def test_score_reader_only_infers_missing_side_from_unique_candidate(self) -> None:
         class FakeOCR:
             def __init__(self, outputs):

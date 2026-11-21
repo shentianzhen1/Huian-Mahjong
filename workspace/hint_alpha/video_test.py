@@ -574,7 +574,9 @@ def run_video_test(
         score_cache = ReplayOCRCache(TesseractCLIBackend())
         status_cache = ReplayOCRCache(TesseractCLIBackend(whitelist="0123456789/"))
         ocr_caches = (score_cache, status_cache)
-        public_reader = PublicStateReader(score_backend=score_cache, status_backend=status_cache)
+        public_reader = PublicStateReader(
+            score_backend=score_cache, status_backend=status_cache, stop_on_score_majority=True,
+        )
 
     runtime_resources = None
     geometry_cache = {}

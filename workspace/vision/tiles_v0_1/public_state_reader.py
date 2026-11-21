@@ -95,8 +95,10 @@ class PublicStateReader:
         profile=None,
         score_backend=None,
         status_backend=None,
+        stop_on_score_majority=False,
     ):
         self.profile = profile or HuianPublicStateProfile()
+        self.stop_on_score_majority = stop_on_score_majority
         self.score_backend = score_backend or TesseractCLIBackend(
             whitelist="0123456789"
         )
@@ -112,6 +114,7 @@ class PublicStateReader:
             backend=self.score_backend,
             source_frame=source_frame,
             gray_first=False,
+            stop_on_score_majority=self.stop_on_score_majority,
         )
         status = self.status_reader.read(image, profile=self.profile)
         candidate, issues = compose_public_candidate(
