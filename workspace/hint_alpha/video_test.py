@@ -549,6 +549,7 @@ def run_video_test(
         source['gold_hand_boundary_policy'] = 'fresh_public_two_vote_initial_or_sequential_before_advice'
         source['hand_boundary_memory_policy'] = 'pause_before_opening_and_identity_updates'
         source['hand_boundary_ocr_retry'] = 'each_runtime_window_while_unresolved'
+        source['initial_hand_ocr_retry'] = 'fresh_hand_only_while_unconfirmed'
         replay_advice_kwargs['confirm_with_prior'] = True
         source['runtime_window_stride'] = 2
         source['runtime_launch_interval_seconds'] = 2 * sample_interval_seconds
@@ -643,9 +644,13 @@ def run_video_test(
             last_public_row is None
             or current_seconds - last_ocr_seconds >= REPLAY_OCR_INTERVAL_SECONDS
         )
-        hand_only_retry = (boundary_pending and not regular_ocr_due
+        # Confirm the initial index while the opening indicator is still clear,
+        # so a later full OCR read does not reset already acquired Gold mid-hand.
+        initial_hand_pending = reference_packet is not None and gold_hand_number is None
+        hand_retry_due = boundary_pending or initial_hand_pending
+        hand_only_retry = (hand_retry_due and not regular_ocr_due
                            and callable(getattr(public_reader, 'read_hand_window', None)))
-        ocr_due = boundary_pending or regular_ocr_due
+        ocr_due = hand_only_retry or boundary_pending or regular_ocr_due
         if ocr_due:
             ocr_started = time.perf_counter()
             try:

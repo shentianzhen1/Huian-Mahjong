@@ -126,6 +126,43 @@ class VideoReferencePolicyTests(unittest.TestCase):
                 run_video_test(video,dataset_root='unused',reference_packet='explicit.json',public_reader=reader)
             self.assertEqual(calls,expected)
 
+    def test_reference_replay_retries_initial_hand_before_next_full_read(self):
+        from dataclasses import dataclass
+
+        @dataclass
+        class Observation:
+            hand_number: object = None
+            hand_votes: int = 0
+            score_pair: object = None
+
+        reads = []
+        def full(images, **kwargs):
+            reads.append(("full", tuple(images), kwargs["minimum_votes"]))
+            return SimpleNamespace(observation=Observation())
+
+        def hand_only(images, **kwargs):
+            reads.append(("hand", tuple(images), kwargs["minimum_votes"]))
+            observation = Observation() if len(reads) == 2 else Observation(1, 2)
+            return SimpleNamespace(observation=observation)
+
+        def evaluate(samples, **kwargs):
+            return dict(display_allowed=False, frames=[x[0] for x in samples],
+                        source_seconds=[x[1] for x in samples], snapshot={}, hint={"issues": []})
+
+        with TemporaryDirectory() as tmp, \
+             patch('workspace.hint_alpha.video_test.probe_video', return_value={'fps': 30, 'duration_seconds': 3}), \
+             patch('workspace.hint_alpha.video_test.iter_video_samples',
+                   return_value=iter((i, i * .2, i) for i in range(9))), \
+             patch('workspace.hint_alpha.video_test.evaluate_burst', side_effect=evaluate), \
+             patch('workspace.hint_alpha.runtime_pipeline.RuntimeAdvicePipeline.reset') as reset:
+            video = Path(tmp) / 'video.mp4'
+            video.write_bytes(b'test')
+            result = run_video_test(video, dataset_root='unused', reference_packet='explicit.json',
+                                    public_reader=SimpleNamespace(read_window=full, read_hand_window=hand_only))
+        self.assertEqual(reads, [("full", (1, 2), 2), ("hand", (3, 4), 2), ("hand", (5, 6), 2)])
+        reset.assert_called_once()
+        self.assertTrue(result["public_rows"][-1]["reused"])
+
     def test_pending_hand_retries_ocr_without_lowering_consensus(self):
         from dataclasses import dataclass
         @dataclass

@@ -184,3 +184,27 @@ opened Gold, own meld count, phase, shanten, and discard set. Missing or
 blocked endpoints and value mismatches are reported by ordinal and return a
 nonzero exit status. The two original dense reports match 10/10 and 5/5
 reviewed endpoints respectively.
+
+### Initial hand confirmation and opened Gold
+
+Rechecked the first eight seconds of the revealed Oct12 recording. The
+visible opened Gold is M4. At 0.1 s, the old policy first confirmed hand 1
+at frame 126, resetting earlier experimental Gold just as the raw Gold
+classifier returned a below-threshold M1 candidate. M4 regained the trial
+gate at frame 156. Visual re-review of the relevant endpoint frames showed
+M4 throughout that dropout. Earlier windows before the Gold appeared or
+before its geometry stabilized still abstain.
+
+In reference replay, the initial unconfirmed hand now gets the same
+hand-only two-distinct-frame reads available during a pending transition.
+Initial or sequential consensus is still required for a reset.
+
+| Cadence | First confirmed hand frame, before → after | Displayed windows, before → after | Discard windows, before → after |
+| --- | ---: | ---: | ---: |
+| 0.2 s | 132 → 84 | 7 → 9 | 2 → 2 |
+| 0.1 s | 126 → 72 | 15 → 20 | 4 → 4 |
+
+The 0.2 s baseline is the opening slice of the previous 45-second replay.
+Endpoint RGB hashes and the already displayed phases, shanten values and
+discard candidates matched in both comparisons. This is a short, revealed
+development check scoped to reference replay. Live capture is unchanged.
