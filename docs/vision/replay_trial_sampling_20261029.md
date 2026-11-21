@@ -76,3 +76,32 @@ appeared in 13 windows and `component_size_inconsistent` in two.
 Failed-fusion reports now retain the real frame ordinal, trust flag, detector
 issues and per-region counts for each member of the burst. The three-frame
 agreement rule and all decision thresholds are unchanged.
+
+### Visible draw transitions and a short dense replay
+
+Reviewed all three frames for the 15 bursts whose draw-region counts differed
+while all frames passed single-frame geometry. Eight spanned a tile arriving
+or becoming fully visible in the draw slot (endpoints 84, 300, 684, 1332, 1836,
+2028, 2136, 2268). Seven spanned a tile leaving the slot or rearrangement after
+an action (36, 144, 528, 1452, 2052, 2196, 2304). Six arrivals had a discard
+suggestion at the next 0.2 s sampled burst endpoint, 0.4 s later. Frame 2136
+was the flower sequence; the later suggestion was on the replacement draw.
+
+The Gold-skinned P4 around frame 2268 had no discard suggestion during its
+visible opportunity at 0.2 s. On a new 72–79 s replay of the same SHA-verified
+source with the same 2026.10.30.1 references and OCR, 0.1 s produced a
+single P4 discard candidate at frame 2292 (76.4 s, structural shanten 0).
+The 0.2 s replay reached the same endpoint with P4 accepted in its current
+frame but insufficient prior identity confirmation. The neighboring 0.1 s
+endpoints still rejected a P5 top candidate. This is one recovered display
+in a revealed clip, with no change to the deployed cadence or identity gate.
+
+| Sample spacing | Processed windows | Shanten displayed | Discard windows |
+| --- | ---: | ---: | ---: |
+| 0.2 s | 17 | 10 | 2 |
+| 0.1 s | 34 | 22 | 5 |
+
+Reproduce with `python -m workspace.hint_alpha.video_cli VIDEO --output REPORT --start 72 --duration 7 --sample-interval 0.1 --reference-packet MANIFEST`
+and repeat with `0.2`. Use the same video, reference manifest and dataset in
+both runs. The 0.1 s replay is a targeted diagnostic and its three-frame
+burst spans 0.2 s.

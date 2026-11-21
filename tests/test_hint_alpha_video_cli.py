@@ -18,11 +18,15 @@ class VideoCliTests(unittest.TestCase):
         def run(video, **options):
             self.assertEqual(video, Path('match.mp4'))
             self.assertEqual(options['source_session'], 'original-a')
+            self.assertEqual(options['sample_interval_seconds'], 0.1)
+            self.assertEqual(options['reference_packet'], Path('selected.json'))
             options['on_window']({'source_seconds': 1.0, 'timeline_event_count': 0,
                                  'runtime': {'display_allowed': False, 'hint': {'issues': ['hand_untrusted']}}})
             return {'report_path': 'report.json', 'timeline_text_path': 'report.txt'}
         with patch('workspace.hint_alpha.video_cli.run_video_test', side_effect=run), patch('builtins.print') as output:
-            self.assertEqual(main(['match.mp4', '--output', 'report.json', '--source-session', 'original-a']), 0)
+            self.assertEqual(main(['match.mp4', '--output', 'report.json', '--source-session',
+                                   'original-a', '--sample-interval', '0.1',
+                                   '--reference-packet', 'selected.json']), 0)
         self.assertTrue(any('UNKNOWN' in str(call) for call in output.call_args_list))
 
     def test_cli_error_has_nonzero_exit(self):

@@ -24,6 +24,8 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--start', type=float, default=0.0)
     parser.add_argument('--duration', type=float, default=30.0)
+    parser.add_argument('--sample-interval', type=float, help='采样间隔（秒），省略时自动选择')
+    parser.add_argument('--reference-packet', type=Path, help='显式启用试验参考包，传入其 JSON 清单')
     parser.add_argument('--source-session', help='已核实的原始会话；用于排除同会话模板')
     parser.add_argument('--pause', action='store_true')
     args = parser.parse_args(argv)
@@ -38,7 +40,9 @@ def main(argv=None):
         result = run_video_test(args.video, dataset_root=args.dataset,
                                 output_path=args.output, start_seconds=args.start,
                                 duration_seconds=args.duration,
-                                source_session=args.source_session, on_window=progress)
+                                source_session=args.source_session, on_window=progress,
+                                sample_interval_seconds=args.sample_interval,
+                                reference_packet=args.reference_packet)
         print(f"诊断报告：{result['report_path']}\n流水文本：{result['timeline_text_path']}", flush=True)
         if decode_error := result.get("decode_error"):
             print(f"解码中断，已保留部分报告：{decode_error['message']}",
