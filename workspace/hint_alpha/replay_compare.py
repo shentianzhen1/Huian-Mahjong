@@ -92,20 +92,76 @@ def compare_video_reports(baseline, candidate):
     }
 
 
+def check_reviewed_endpoints(report, evidence):
+    """Check a completed replay against reviewed current-frame inputs and hints."""
+    if report.get("decode_error") or report.get("stopped_early"):
+        raise ValueError("Reviewed endpoint check requires a completed replay")
+    source_sha = report["source"].get("sha256")
+    matches = [
+        source for source in evidence["sources"]
+        if source_sha and source["source_sha256"] == source_sha
+    ]
+    if len(matches) != 1 or not matches[0]["frames"]:
+        raise ValueError("Expected one nonempty reviewed source for this replay SHA256")
+
+    endpoints = _endpoints(report)
+    issues_by_frame = {}
+    seen = set()
+    for expected in matches[0]["frames"]:
+        frame = expected["frame"]
+        if frame in seen:
+            raise ValueError(f"Duplicate reviewed frame {frame}")
+        seen.add(frame)
+        if frame not in endpoints:
+            issues_by_frame[frame] = ["endpoint_missing"]
+            continue
+        digest, row = endpoints[frame]
+        if digest != expected["pixel_sha256"]:
+            issues_by_frame[frame] = ["endpoint_pixel_mismatch"]
+            continue
+        if row["display_allowed"] is not True:
+            issues_by_frame[frame] = ["advice_blocked"]
+            continue
+        snapshot, hint = row["snapshot"], row["hint"]
+        observed = {
+            "hand": Counter(snapshot["own_hand"]),
+            "gold": snapshot["gold_tile"],
+            "own_meld_count": len(snapshot["melds"][0]),
+            "phase": hint["phase"],
+            "shanten": hint["shanten"],
+            "discards": _discard_tiles(row),
+        }
+        reference = {**expected, "hand": Counter(expected["hand"]),
+                     "discards": frozenset(expected["discards"])}
+        mismatches = [key for key, value in observed.items() if value != reference[key]]
+        if mismatches:
+            issues_by_frame[frame] = mismatches
+    return {
+        "development_only": True,
+        "reviewed_endpoints": len(seen),
+        "matching_endpoints": len(seen) - len(issues_by_frame),
+        "issues_by_frame": issues_by_frame,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("baseline", type=Path)
     parser.add_argument("candidate", type=Path)
+    parser.add_argument("--reviewed", type=Path, help="Check candidate against reviewed frames")
     args = parser.parse_args()
     try:
-        comparison = compare_video_reports(
-            json.loads(args.baseline.read_text(encoding="utf-8")),
-            json.loads(args.candidate.read_text(encoding="utf-8")),
-        )
+        baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
+        candidate = json.loads(args.candidate.read_text(encoding="utf-8"))
+        comparison = compare_video_reports(baseline, candidate)
+        if args.reviewed is not None:
+            evidence = json.loads(args.reviewed.read_text(encoding="utf-8"))
+            comparison["reviewed_check"] = check_reviewed_endpoints(candidate, evidence)
     except ValueError as exc:
         parser.error(str(exc))
     print(json.dumps(comparison, indent=2))
+    return int(bool(comparison.get("reviewed_check", {}).get("issues_by_frame")))
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -1,7 +1,7 @@
 from copy import deepcopy
 import unittest
 
-from workspace.hint_alpha.replay_compare import compare_video_reports
+from workspace.hint_alpha.replay_compare import check_reviewed_endpoints, compare_video_reports
 
 
 def report(*windows):
@@ -53,3 +53,26 @@ class ReplayCompareTests(unittest.TestCase):
         after["stopped_early"] = True
         with self.assertRaisesRegex(ValueError, "completed replay"):
             compare_video_reports(before, after)
+
+    def test_reviewed_endpoint_checks_pixels_inputs_and_advice(self):
+        candidate = report((12, "P4"), (24, None), (36, "P4"))
+        candidate["rows"][0]["snapshot"] = {
+            "own_hand": ["M2", "M1"], "gold_tile": "M4", "melds": [[], []],
+        }
+        expected = {"hand": ["M1", "M2"], "gold": "M4", "own_meld_count": 0,
+                    "phase": "POST_DRAW", "shanten": 1, "discards": ["P4"]}
+        evidence = {"sources": [{"source_sha256": "video", "frames": [
+            {**expected, "frame": 12, "pixel_sha256": "pixel-12"},
+            {**expected, "frame": 24, "pixel_sha256": "pixel-24"},
+            {**expected, "frame": 36, "pixel_sha256": "different"},
+            {**expected, "frame": 48, "pixel_sha256": "pixel-48"},
+        ]}]}
+        result = check_reviewed_endpoints(candidate, evidence)
+        self.assertEqual(result["matching_endpoints"], 1)
+        self.assertEqual(result["issues_by_frame"], {
+            24: ["advice_blocked"], 36: ["endpoint_pixel_mismatch"], 48: ["endpoint_missing"],
+        })
+        candidate["rows"][0]["snapshot"]["gold_tile"] = "M5"
+        candidate["rows"][0]["hint"]["best_discards"] = [{"discard": "M2"}]
+        result = check_reviewed_endpoints(candidate, evidence)
+        self.assertEqual(result["issues_by_frame"][12], ["gold", "discards"])

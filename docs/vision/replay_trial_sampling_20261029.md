@@ -175,3 +175,12 @@ The [reviewed frame records](../../references/vision/2026-11-21/dense_replay_rev
 bind transcriptions to source and frame SHA-256. Review followed prediction
 inspection and covers endpoint frames only. It does not confirm all earlier
 burst frames, hand-action legality, exposed meld identities, or blind accuracy.
+
+Use the reviewed endpoints as a local regression check by adding
+`--reviewed references/vision/2026-11-21/dense_replay_reviewed_gains.development.json`
+to the comparison command. The check selects the reviewed frames by source
+SHA-256 and checks the candidate report's endpoint hashes, concealed hand,
+opened Gold, own meld count, phase, shanten, and discard set. Missing or
+blocked endpoints and value mismatches are reported by ordinal and return a
+nonzero exit status. The two original dense reports match 10/10 and 5/5
+reviewed endpoints respectively.
