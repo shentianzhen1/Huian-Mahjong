@@ -174,14 +174,17 @@ class HintAlphaApp(tk.Tk):
         self.after(100, self.tick)
 
     def _build(self):
-        self.geometry("1320x820")
-        self.minsize(1080, 680)
+        width = min(1320, max(1040, self.winfo_screenwidth() - 64))
+        height = min(820, max(620, self.winfo_screenheight() - 100))
+        self.geometry(f"{width}x{height}")
+        self.minsize(1040, 620)
 
         top = ttk.Frame(self, padding=(10, 8))
         top.pack(fill="x")
         ttk.Label(top, text="目标窗口").grid(row=0, column=0)
-        self.selector = ttk.Combobox(top, state="readonly", width=48)
-        self.selector.grid(row=0, column=1, padx=6)
+        self.selector = ttk.Combobox(top, state="readonly", width=26)
+        self.selector.grid(row=0, column=1, sticky="ew", padx=6)
+        top.columnconfigure(1, weight=1)
         ttk.Button(top, text="刷新", command=self.refresh).grid(row=0, column=2)
         ttk.Combobox(
             top,
@@ -211,7 +214,6 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(gold_controls, text="加载参考样本", command=self.open_hand_reference_packet).pack(side="left")
 
         ttk.Label(top, textvariable=self.reference_pack_status).grid(row=2, column=0, columnspan=9, sticky='w', pady=(4, 0))
-        ttk.Label(top, text='使用步骤：① 打开手机投屏并选择窗口  ② 勾选试用识别  ③ 点击开始内测  ④ 金牌未确认时手动选择').grid(row=3, column=0, columnspan=9, sticky='w')
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(0, 8))
@@ -340,38 +342,29 @@ class HintAlphaApp(tk.Tk):
             justify="left",
         ).pack(anchor="w", fill="x", pady=(14, 0))
 
-        # --- 识别诊断：原来的预览和研发状态全部收进这里 ---
         body = ttk.Panedwindow(diagnostic, orient="horizontal")
         body.pack(fill="both", expand=True)
-        preview = ttk.Frame(body)
-        sidebar = ttk.Frame(body, width=350)
+        preview = ttk.Labelframe(body, text="采集预览", padding=6)
+        sidebar = ttk.Frame(body, padding=(8, 0, 0, 0), width=360)
         body.add(preview, weight=3)
         body.add(sidebar, weight=1)
 
-        self.canvas = tk.Canvas(preview, background="#111827", highlightthickness=0)
+        self.canvas = tk.Canvas(preview, width=560, height=270,
+                                background="#111827", highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", lambda _: self.render())
+        self._wrapped_status(preview, self.capture_status).pack(fill="x", pady=(6, 0))
 
         self.assistant_window = None
         self.diagnostics_window = None
         for variable in (self.capture_status, self.hint_status):
             variable.trace_add("write", self._update_simple_hint)
-        ttk.Label(sidebar, text="对局辅助", font=("", 12, "bold")).pack(anchor="w", pady=8)
-        ttk.Label(sidebar, textvariable=self.simple_hint, wraplength=330).pack(fill="x", pady=8)
-        ttk.Label(sidebar, textvariable=self.hint_latency, wraplength=330).pack(fill="x")
-        ttk.Button(sidebar, text="打开独立辅助窗口", command=self.open_assistant).pack(fill="x", pady=3)
-        ttk.Button(sidebar, text="查看诊断信息", command=self.open_diagnostics).pack(fill="x", pady=3)
+        self._build_diagnostic_details(sidebar)
+        actions = ttk.Frame(sidebar)
+        actions.pack(fill="x", pady=(8, 0))
+        ttk.Button(actions, text="独立诊断", command=self.open_diagnostics).pack(side="left")
+        ttk.Button(actions, text="辅助窗口", command=self.open_assistant).pack(side="left", padx=6)
         self._update_simple_hint()
-
-        ttk.Label(
-            sidebar,
-            text=(
-                "诊断页保留原始采集、OCR、Runtime Vision、证据路径和版本信息。"
-                "主页面不展示置信度等工程细节。"
-            ),
-            wraplength=330,
-            justify="left",
-        ).pack(anchor="w", pady=(12, 4))
 
         self._append_timeline(
             "unknown",
@@ -420,13 +413,13 @@ class HintAlphaApp(tk.Tk):
 
         video_body = ttk.Panedwindow(video_test, orient="horizontal")
         video_body.pack(fill="both", expand=True)
-        video_preview_frame = ttk.Frame(video_body)
-        video_result_frame = ttk.Frame(video_body, width=410)
+        video_preview_frame = ttk.Labelframe(video_body, text="录像预览", padding=6)
+        video_result_frame = ttk.Frame(video_body, width=410, padding=(8, 0, 0, 0))
         video_body.add(video_preview_frame, weight=3)
         video_body.add(video_result_frame, weight=2)
 
         self.video_test_canvas = tk.Canvas(
-            video_preview_frame, background="#111827", highlightthickness=0
+            video_preview_frame, width=530, height=250, background="#111827", highlightthickness=0
         )
         self.video_test_canvas.pack(fill="both", expand=True)
 
@@ -437,14 +430,11 @@ class HintAlphaApp(tk.Tk):
             self.video_test_source_status,
             self.video_test_runtime_status,
             self.video_test_public_status,
-            self.video_test_report_status,
         ):
-            ttk.Label(
-                video_result_frame,
-                textvariable=variable,
-                wraplength=390,
-                justify="left",
-            ).pack(anchor="w", fill="x", pady=7)
+            self._wrapped_status(video_result_frame, variable).pack(fill="x", pady=3)
+        report_path = ttk.Entry(video_result_frame, textvariable=self.video_test_report_status,
+                                state="readonly", width=38)
+        report_path.pack(side="bottom", fill="x", pady=(6, 0))
 
         ttk.Separator(video_result_frame).pack(fill="x", pady=10)
         ttk.Label(
@@ -462,7 +452,7 @@ class HintAlphaApp(tk.Tk):
         timeline_wrap.pack(fill="both", expand=True)
         self.video_timeline_text = tk.Text(
             timeline_wrap,
-            height=16,
+            height=6,
             wrap="word",
             state="disabled",
             borderwidth=0,
@@ -1054,16 +1044,55 @@ class HintAlphaApp(tk.Tk):
             anchor="w", fill="x", padx=20, pady=10)
         ttk.Button(window, text="人工录牌", command=self.open_manual_hand).pack(anchor="w", padx=20, pady=15)
 
+    @staticmethod
+    def _wrapped_status(parent, variable):
+        label = ttk.Label(parent, textvariable=variable, wraplength=310, justify="left")
+        label.bind("<Configure>", lambda event: label.configure(wraplength=max(1, event.width - 4)))
+        return label
+
+    def _build_diagnostic_details(self, parent):
+        pages = ttk.Notebook(parent)
+        pages.pack(fill="both", expand=True)
+        status = ttk.Frame(pages, padding=10)
+        report = ttk.Frame(pages, padding=10)
+        pages.add(status, text="识别状态")
+        pages.add(report, text="证据与版本")
+        for title, variable in (
+            ("录像画面与采集", self.capture_status),
+            ("手牌与金牌", self.runtime_status),
+            ("局号与比分", self.vision_status),
+            ("向听建议", self.hint_status),
+        ):
+            ttk.Label(status, text=title, font=("", 10, "bold")).pack(anchor="w", pady=(5, 2))
+            self._wrapped_status(status, variable).pack(fill="x", pady=(0, 5))
+
+        ttk.Label(report, text="版本", font=("", 10, "bold")).pack(anchor="w")
+        self._wrapped_status(report, self.version_status).pack(fill="x", pady=(4, 10))
+        ttk.Label(report, text="证据位置", font=("", 10, "bold")).pack(anchor="w")
+        ttk.Entry(report, state="readonly", textvariable=self.evidence_status, width=30).pack(
+            fill="x", pady=(4, 10)
+        )
+        ttk.Button(report, text="复制诊断摘要", command=self._copy_diagnostics).pack(anchor="w")
+
+    def _copy_diagnostics(self):
+        summary = "\n".join(variable.get() for variable in (
+            self.capture_status, self.runtime_status, self.vision_status,
+            self.hint_status, self.evidence_status, self.version_status,
+        ))
+        self.clipboard_clear()
+        self.clipboard_append(summary)
+
     def open_diagnostics(self):
         if self.diagnostics_window is not None and self.diagnostics_window.winfo_exists():
             self.diagnostics_window.lift()
             return
         window = self.diagnostics_window = tk.Toplevel(self)
-        window.title("诊断信息")
-        window.geometry("650x500")
-        for variable in (self.capture_status, self.vision_status, self.runtime_status,
-                         self.hint_status, self.evidence_status, self.version_status):
-            ttk.Label(window, textvariable=variable, wraplength=610).pack(anchor="w", fill="x", padx=15, pady=10)
+        window.title("识别诊断")
+        window.geometry("650x460")
+        window.minsize(420, 350)
+        panel = ttk.Frame(window, padding=10)
+        panel.pack(fill="both", expand=True)
+        self._build_diagnostic_details(panel)
 
     def refresh(self):
         try:

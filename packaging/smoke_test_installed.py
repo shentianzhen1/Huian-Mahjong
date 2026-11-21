@@ -106,6 +106,25 @@ assert '未知' in window.simple_hint.get()
 window.open_diagnostics()
 window.update()
 assert window.notebook.tab(0, 'text') == '实时流水'
+diagnostic = window.diagnostics_window
+assert diagnostic.winfo_exists()
+window.open_diagnostics()
+assert window.diagnostics_window is diagnostic
+window._copy_diagnostics()
+assert window.capture_status.get() in window.clipboard_get()
+assert window.version_status.get() in window.clipboard_get()
+diagnostic.destroy()
+window.geometry('1040x620')
+window.notebook.select(window.diagnostic_tab)
+window.update()
+assert window.canvas.winfo_width() > 300
+assert window.canvas.winfo_height() > 150
+window.notebook.select(window.video_test_tab)
+window.update()
+assert window.video_test_canvas.winfo_width() > 300
+assert window.video_timeline_text.winfo_height() > 40
+window.notebook.select(window.realtime_tab)
+
 window._start_evidence()
 window._append_timeline('system', 'INSTALL_SMOKE', key=('install-smoke', 1))
 window.update()
