@@ -7,7 +7,7 @@ Reports are local development diagnostics only; they are not promotion evidence.
 """
 from __future__ import annotations
 
-from collections import Counter, deque
+from collections import Counter, OrderedDict, deque
 from dataclasses import asdict
 import json
 import math
@@ -30,6 +30,29 @@ class VideoDecodeError(ValueError):
     def __init__(self, frame_index, message):
         super().__init__(message)
         self.frame_index = frame_index
+
+
+class ReplayOCRCache:
+    """Reuse OCR text for identical prepared crops within one replay."""
+
+    def __init__(self, backend):
+        self.backend = backend
+        self.entries = OrderedDict()
+        self.hits = 0
+        self.misses = 0
+
+    def __call__(self, crop):
+        key = (crop.shape, crop.dtype.str, crop.tobytes())
+        if key in self.entries:
+            self.hits += 1
+            self.entries.move_to_end(key)
+            return self.entries[key]
+        self.misses += 1
+        text = self.backend(crop)
+        self.entries[key] = text
+        if len(self.entries) > 32:
+            self.entries.popitem(last=False)
+        return text
 
 
 def automatic_sample_interval(metadata, *, reference_trial=False):
@@ -502,10 +525,15 @@ def run_video_test(
         }
     )
 
+    ocr_caches = ()
     if public_reader is None:
         from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
+        from workspace.vision.tiles_v0_1.public_state_scores import TesseractCLIBackend
 
-        public_reader = PublicStateReader()
+        score_cache = ReplayOCRCache(TesseractCLIBackend())
+        status_cache = ReplayOCRCache(TesseractCLIBackend(whitelist="0123456789/"))
+        ocr_caches = (score_cache, status_cache)
+        public_reader = PublicStateReader(score_backend=score_cache, status_backend=status_cache)
 
     runtime_resources = None
     geometry_cache = {}
@@ -779,6 +807,10 @@ def run_video_test(
         "ocr_reused_windows": sum(row.get("reused") is True for row in public_rows),
         "note": "Total also includes source probing, hashing, decoding and callbacks; stage times do not establish live latency or accuracy.",
     }
+
+    if ocr_caches:
+        result["performance"]["ocr_crop_cache_hits"] = sum(cache.hits for cache in ocr_caches)
+        result["performance"]["ocr_backend_calls"] = sum(cache.misses for cache in ocr_caches)
 
     if output_path is not None:
         output_path = Path(output_path)

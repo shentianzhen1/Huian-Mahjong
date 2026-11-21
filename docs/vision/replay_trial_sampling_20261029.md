@@ -38,3 +38,16 @@ confirmation (20), hand identity (12), and stability (2). The denser run spent
 decode interruptions or OCR exceptions occurred in either run. This remains
 a revealed offline development comparison, with no Windows live latency or
 independent promotion claim.
+
+### Exact-crop OCR reuse
+
+At 0.2 s the 62 sampled OCR windows consumed 124 distinct source frames.
+Frame ordinal caching would yield zero hits. A replay-local cache instead
+reused 250 of 896 OCR crop requests by exact prepared pixels, shape, and
+dtype. The separate score and status caches made 646 backend calls.
+
+On the same 90-second run, all 224 windows' OCR observations, Runtime
+observations, hints, and timeline matched the uncached report after removing
+timing fields. Two-frame fusion still runs for each fresh OCR window. The
+uncached run overlapped the 0.3 s benchmark and the cached run ran alone, so
+their wall-time difference is not a controlled speed estimate.

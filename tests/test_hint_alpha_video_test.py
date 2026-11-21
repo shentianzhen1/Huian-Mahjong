@@ -12,6 +12,25 @@ from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
 
 
 
+class ReplayOCRCacheTests(unittest.TestCase):
+    def test_only_identical_prepared_crops_reuse_successful_ocr_text(self):
+        from workspace.hint_alpha.video_test import ReplayOCRCache
+
+        def crop(pixels):
+            return SimpleNamespace(shape=(1, 2), dtype=SimpleNamespace(str="|u1"),
+                                   tobytes=lambda: pixels)
+
+        backend = unittest.mock.Mock(side_effect=[RuntimeError("timeout"), "2/8", "3/8"])
+        cache = ReplayOCRCache(backend)
+        with self.assertRaisesRegex(RuntimeError, "timeout"):
+            cache(crop(b"ab"))
+        self.assertEqual(cache(crop(b"ab")), "2/8")
+        self.assertEqual(cache(crop(b"ab")), "2/8")
+        self.assertEqual(cache(crop(b"ac")), "3/8")
+        self.assertEqual((cache.hits, cache.misses), (1, 3))
+        self.assertEqual(backend.call_count, 3)
+
+
 class AutomaticVideoParameterTests(unittest.TestCase):
     def test_short_match_uses_point_three_seconds(self):
         meta = {"fps": 60.0, "duration_seconds": 600.0}
