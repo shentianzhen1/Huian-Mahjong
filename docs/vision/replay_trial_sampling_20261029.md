@@ -87,7 +87,7 @@ an action (36, 144, 528, 1452, 2052, 2196, 2304). Six arrivals had a discard
 suggestion at the next 0.2 s sampled burst endpoint, 0.4 s later. Frame 2136
 was the flower sequence; the later suggestion was on the replacement draw.
 
-The Gold-skinned P4 around frame 2268 had no discard suggestion during its
+The ordinary P4 draw around frame 2268 had no discard suggestion during its
 visible opportunity at 0.2 s. On a new 72–79 s replay of the same SHA-verified
 source with the same 2026.10.30.1 references and OCR, 0.1 s produced a
 single P4 discard candidate at frame 2292 (76.4 s, structural shanten 0).
@@ -159,3 +159,19 @@ shared endpoints. Across the two revealed sources, 14 of 15 shared gains
 came from baseline geometry rejection and one from identity stability.
 This is display availability on development footage. It does not validate
 the newly recovered hands or establish independent draw-level recall.
+
+
+### Visual review of newly displayed endpoints
+
+Re-decoded and verified the RGB hash of every one of the 15 shared endpoints
+that gained advice at 0.1 s. Current-frame visual review agreed with the
+Runtime concealed tile multiset, opened-gold indicator and own meld group count
+at all 15 endpoints. The same shanten engine on manual inputs matched all
+phases, shanten values and candidate sets, including the nine discard windows.
+The P4 at Sep26 frame 2292 is an ordinary draw, with S8 as the opened Gold;
+the earlier description of P4 as Gold-skinned was incorrect.
+
+The [reviewed frame records](../../references/vision/2026-11-21/dense_replay_reviewed_gains.development.json)
+bind transcriptions to source and frame SHA-256. Review followed prediction
+inspection and covers endpoint frames only. It does not confirm all earlier
+burst frames, hand-action legality, exposed meld identities, or blind accuracy.
