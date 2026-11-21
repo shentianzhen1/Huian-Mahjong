@@ -8,7 +8,7 @@ the conservative runtime gates pass.
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
+from collections import Counter, defaultdict
 from functools import lru_cache
 import json
 import math
@@ -432,6 +432,17 @@ def read_stable_frames(
             "concealed_tile_count": None,
             "all_concealed_tile_ids_trusted": False,
             "reason": "geometry_not_stable",
+            "geometry_frame_diagnostics": [
+                {
+                    "frame": frame_id,
+                    "trusted": not geometry.geometry_untrusted,
+                    "issues": list(geometry.issues),
+                    "region_counts": dict(Counter(
+                        component.region_candidate for component in geometry.components
+                    )),
+                }
+                for frame_id, geometry in zip(frame_ids, geometry_frames)
+            ],
         }
 
     gold_identity_observations = _gold_identity_observations(

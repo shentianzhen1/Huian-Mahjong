@@ -51,3 +51,28 @@ observations, hints, and timeline matched the uncached report after removing
 timing fields. Two-frame fusion still runs for each fresh OCR window. The
 uncached run overlapped the 0.3 s benchmark and the cached run ran alone, so
 their wall-time difference is not a controlled speed estimate.
+
+### Where geometry fusion blocked advice
+
+Re-decoded the 100 distinct frames used in the 39 primary geometry blockers
+from the 0.2 s run, using the same byte-verified Sep26 source, local meld trial
+detector and OpenCV 5.1.0. All 39 reproduced the recorded fusion rejection
+reason. The burst-level results were:
+
+| Trusted detector frames out of three | Blocked windows |
+| --- | ---: |
+| 3, with differing region counts | 24 |
+| 2 | 4 |
+| 1 | 4 |
+| 0 | 7 |
+
+For the 24 windows where all frames were trusted, region counts varied for
+`draw_visual` in 15, `unknown` in 9, `hand` in 8 and `meld` in 3. Categories
+overlap. These are detector observations; they do not identify which frame is
+correct or distinguish actual game motion from unstable region classification.
+For windows with rejected per-frame geometry, `component_count_outside_reviewed_range`
+appeared in 13 windows and `component_size_inconsistent` in two.
+
+Failed-fusion reports now retain the real frame ordinal, trust flag, detector
+issues and per-region counts for each member of the burst. The three-frame
+agreement rule and all decision thresholds are unchanged.

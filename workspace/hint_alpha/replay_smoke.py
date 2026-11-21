@@ -194,6 +194,7 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
         'opening_fact': asdict(advisory.opening_fact),
         'sparse_source_burst': times[-1] - times[0] > 0.8,
         'geometry_issues': report.get('geometry_issues', []),
+        'geometry_frame_diagnostics': report.get('geometry_frame_diagnostics', []),
         'geometry_untrusted': report.get('geometry_untrusted', True),
         'safe_for_executor': False,
     }
