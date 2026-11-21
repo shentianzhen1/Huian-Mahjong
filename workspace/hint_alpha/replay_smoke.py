@@ -24,6 +24,14 @@ def sha256(path):
     return digest.hexdigest()
 
 
+STRUCTURAL_INPUT_ISSUES = {
+    'hand_identity': {'hand_untrusted', 'hand_identity_unknown', 'runtime_hand_not_fully_trusted'},
+    'gold': {'gold_untrusted', 'gold_identity_unknown', 'runtime_gold_not_fully_trusted'},
+    'meld_count': {'player_meld_count_untrusted', 'player_meld_count_invalid'},
+    'concealed_hand_count': {'concealed_hand_count_invalid'},
+}
+
+
 def _primary_advice_blocker(row):
     """Bucket reported gates by priority; this is not causal/accuracy scoring."""
     hint = row.get('hint') or {}
@@ -42,13 +50,9 @@ def _primary_advice_blocker(row):
     if any(i.startswith('live_identity_') or i == 'live_hand_meld_waiting_confirmation'
            for i in issues):
         return 'stability'
-    if issues & {'hand_untrusted', 'hand_identity_unknown', 'runtime_hand_not_fully_trusted'}:
-        return 'hand_identity'
-    if issues & {'gold_untrusted', 'gold_identity_unknown', 'runtime_gold_not_fully_trusted'}:
-        return 'gold'
-    if issues & {'player_meld_count_untrusted', 'player_meld_count_invalid',
-                 'concealed_hand_count_invalid'}:
-        return 'meld_count'
+    for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items():
+        if issues & matching_issues:
+            return 'meld_count' if category == 'concealed_hand_count' else category
     return 'other_state_or_policy'
 
 
@@ -58,6 +62,8 @@ def summarize_windows(rows):
     rejection_issues = Counter()
     structural_blockers = Counter()
     public_context = Counter()
+    input_issues = Counter()
+    input_issue_combinations = Counter()
     for row in rows:
         allowed = row['display_allowed'] is True
         public_context.update(issue for issue in set(row['hint']['issues'])
@@ -66,8 +72,14 @@ def summarize_windows(rows):
                          'opponent_meld_missing', 'meld_untrusted:1',
                          'manual_public_identity_unavailable'})
         if not allowed:
-            rejection_issues.update(set(row['hint']['issues']))
+            issues = set(row['hint']['issues'])
+            rejection_issues.update(issues)
             structural_blockers[_primary_advice_blocker(row)] += 1
+            categories = tuple(category for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items()
+                               if issues & matching_issues)
+            input_issues.update(categories)
+            if len(categories) > 1:
+                input_issue_combinations['+'.join(categories)] += 1
         if not runs or runs[-1]['display_allowed'] != allowed:
             runs.append({'display_allowed': allowed, 'windows': 0,
                          'first_frame': row['frames'][-1],
@@ -86,7 +98,9 @@ def summarize_windows(rows):
     return {'advice_runs': runs, 'recovered_advice_runs': recoveries,
             'rejection_issue_windows': dict(sorted(rejection_issues.items())),
             'structural_blocker_windows': dict(structural_blockers.most_common()),
-            'public_context_issue_windows': dict(sorted(public_context.items()))}
+            'public_context_issue_windows': dict(sorted(public_context.items())),
+            'blocked_window_input_issues': dict(input_issues.most_common()),
+            'blocked_window_input_issue_combinations': dict(input_issue_combinations.most_common())}
 
 
 def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,

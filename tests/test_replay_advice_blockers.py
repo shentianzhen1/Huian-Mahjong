@@ -41,6 +41,24 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
         self.assertEqual(sum(result['structural_blocker_windows'].values()), 4)
         self.assertEqual(rows, before)
 
+    def test_secondary_input_issues_include_overlap_and_keep_counts_distinct(self):
+        rows = [
+            row(1, geometry_untrusted=True, issues=[
+                'hand_untrusted', 'hand_identity_unknown', 'gold_untrusted',
+                'player_meld_count_untrusted', 'meld_identity_unknown:0',
+            ]),
+            row(4, issues=['concealed_hand_count_invalid']),
+            row(7, allowed=True, issues=['opponent_meld_missing']),
+        ]
+        result = summarize_windows(rows)
+        self.assertEqual(result['structural_blocker_windows'], {'geometry': 1, 'meld_count': 1})
+        self.assertEqual(result['blocked_window_input_issues'], {
+            'hand_identity': 1, 'gold': 1, 'meld_count': 1, 'concealed_hand_count': 1,
+        })
+        self.assertEqual(result['blocked_window_input_issue_combinations'], {
+            'hand_identity+gold+meld_count': 1,
+        })
+
     def test_policy_and_physical_conflicts_are_not_called_recognition_failures(self):
         policy = row(1)
         policy['hint']['allowed'] = True
