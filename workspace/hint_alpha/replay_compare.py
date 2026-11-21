@@ -144,11 +144,54 @@ def check_reviewed_endpoints(report, evidence):
     }
 
 
+def reviewed_draw_coverage(report, inventory):
+    """Count observed discard displays within reviewed source-frame intervals."""
+    source_sha = report["source"].get("sha256")
+    if not source_sha or source_sha != inventory.get("source_sha256"):
+        raise ValueError("Draw inventory source SHA256 mismatch")
+    if report.get("decode_error") or report.get("stopped_early"):
+        raise ValueError("Draw coverage requires a completed replay")
+    endpoints = _endpoints(report)
+    if not endpoints:
+        raise ValueError("Draw coverage requires replay endpoints")
+    first, last = min(endpoints), max(endpoints)
+    flowers = set(inventory["flower_episode_indices"])
+    covered = {}
+    missed = []
+    outside = []
+    discard_frames = sorted(frame for frame, (_, row) in endpoints.items() if _discard_tiles(row))
+    for index, episode in enumerate(inventory["episodes"]):
+        if index in flowers:
+            continue
+        start, end = episode["start"], episode["end"]
+        if start > end:
+            raise ValueError(f"Invalid draw interval at episode {index}")
+        if start < first or end > last:
+            outside.append(index)
+            continue
+        first_discard = next((frame for frame in discard_frames if start <= frame <= end), None)
+        if first_discard is None:
+            missed.append(index)
+        else:
+            covered[index] = {
+                "first_discard_frame": first_discard,
+                "frames_after_interval_start": first_discard - start,
+            }
+    return {
+        "development_only": True,
+        "eligible_episodes": len(covered) + len(missed),
+        "covered_episodes": covered,
+        "missed_episodes": missed,
+        "outside_report_episodes": outside,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("baseline", type=Path)
     parser.add_argument("candidate", type=Path)
     parser.add_argument("--reviewed", type=Path, help="Check candidate against reviewed frames")
+    parser.add_argument("--draw-inventory", type=Path, help="Count coverage within reviewed draw intervals")
     args = parser.parse_args()
     try:
         baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
@@ -157,6 +200,12 @@ def main():
         if args.reviewed is not None:
             evidence = json.loads(args.reviewed.read_text(encoding="utf-8"))
             comparison["reviewed_check"] = check_reviewed_endpoints(candidate, evidence)
+        if args.draw_inventory is not None:
+            inventory = json.loads(args.draw_inventory.read_text(encoding="utf-8"))
+            comparison["draw_coverage"] = {
+                "baseline": reviewed_draw_coverage(baseline, inventory),
+                "candidate": reviewed_draw_coverage(candidate, inventory),
+            }
     except ValueError as exc:
         parser.error(str(exc))
     print(json.dumps(comparison, indent=2))

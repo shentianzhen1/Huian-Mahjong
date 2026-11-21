@@ -1,7 +1,11 @@
 from copy import deepcopy
 import unittest
 
-from workspace.hint_alpha.replay_compare import check_reviewed_endpoints, compare_video_reports
+from workspace.hint_alpha.replay_compare import (
+    check_reviewed_endpoints,
+    compare_video_reports,
+    reviewed_draw_coverage,
+)
 
 
 def report(*windows):
@@ -76,3 +80,16 @@ class ReplayCompareTests(unittest.TestCase):
         candidate["rows"][0]["hint"]["best_discards"] = [{"discard": "M2"}]
         result = check_reviewed_endpoints(candidate, evidence)
         self.assertEqual(result["issues_by_frame"][12], ["gold", "discards"])
+
+    def test_draw_coverage_counts_each_reviewed_interval_once(self):
+        candidate = report((12, None), (24, "P4"), (36, "P4"), (48, None))
+        inventory = {"source_sha256": "video", "flower_episode_indices": [1],
+                     "episodes": [{"start": 20, "end": 36}, {"start": 24, "end": 24},
+                                  {"start": 40, "end": 48}, {"start": 49, "end": 50}]}
+        coverage = reviewed_draw_coverage(candidate, inventory)
+        self.assertEqual(coverage["eligible_episodes"], 2)
+        self.assertEqual(coverage["covered_episodes"], {
+            0: {"first_discard_frame": 24, "frames_after_interval_start": 4},
+        })
+        self.assertEqual(coverage["missed_episodes"], [2])
+        self.assertEqual(coverage["outside_report_episodes"], [3])

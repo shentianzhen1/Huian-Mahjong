@@ -225,3 +225,28 @@ with the prior and current confirmed hand, pending state and reset reason
 (`initial_hand`, `sequential_hand`, or null). A separate 0.2 s Oct12
 opening run confirmed the first-hand reset at frame 84 on a fresh hand-only
 read, with unchanged advice summary and timeline after adding this trace.
+
+### Full Oct12 draw-episode coverage
+
+Replayed the complete 94.9 s Oct12 development recording at `c28cdb0`,
+with the same 28-reference packet and real PublicState OCR. Checked each
+reviewed draw interval from the source-matched inventory, excluding its
+flower interval. A qualifying display has a POST_DRAW discard candidate
+at a sampled endpoint inside the inclusive reviewed frame interval.
+
+| Cadence | Replay windows | Discard windows | Reviewed draw episodes covered | Wall time |
+| --- | ---: | ---: | ---: | ---: |
+| 0.2 s | 237 | 41 | 15/15 | 156.0 s |
+| 0.1 s | 474 | 90 | 15/15 | 226.0 s |
+
+The denser replay had its first discard endpoint six source frames earlier
+in 11 episodes and 12 frames earlier in four (0.2–0.4 s at 30 fps).
+Neither cadence added a reviewed episode over the other. At shared
+frame 2664, 0.1 s lost one existing discard window because the fresh
+hand-only read had no reliable hand index. That episode already had a
+discard candidate at frame 2598. Both processes overlapped. The earlier
+source-frame positions do not measure live completion latency or candidate
+correctness. Retain the 0.2 s reference replay default.
+
+Use `--draw-inventory references/vision/2026-10-25/draw_opportunity_inventory.development.json`
+with the replay comparison command to reproduce the episode counts.
