@@ -578,6 +578,7 @@ def run_video_test(
 
     runtime_resources = None
     geometry_cache = {}
+    gold_cache = {}
     replay_advice_kwargs = {}
     if reference_packet is not None:
         from .runtime_pipeline import RuntimeAdvicePipeline
@@ -627,6 +628,7 @@ def run_video_test(
             confidence_threshold=confidence_threshold,
             resources=runtime_resources,
             geometry_cache=geometry_cache,
+            gold_cache=gold_cache,
             identity_frame_id=identity_frame_id,
         )
 

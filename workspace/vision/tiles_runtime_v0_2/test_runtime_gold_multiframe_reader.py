@@ -75,6 +75,25 @@ class RuntimeGoldMultiframeReaderTests(unittest.TestCase):
             [(100, "M5"), (101, "P5"), (102, "M5")],
         )
 
+    def test_replay_cache_reuses_classification_only_for_the_same_frame(self):
+        images = [Image.new("RGB", (16, 16), (index, 0, 0)) for index in range(3)]
+        geometries = [_Geometry(index) for index in range(3)]
+        cache = {}
+        options = dict(classifier=object(), covered_by_region={}, cross_session={},
+                       confidence_threshold=0.82, gold_skin_covered=set(), gold_cache=cache)
+
+        def classify(component, image, **kwargs):
+            return {"tile_id": f"M{image.getpixel((0, 0))[0] + 1}", "identity_reason": "accepted"}
+
+        with patch("workspace.vision.tiles_runtime_v0_2.runtime_reader._classify_runtime_component",
+                   side_effect=classify) as classify_mock:
+            first = _gold_identity_observations(images, geometries, **options)
+            second = _gold_identity_observations(images, geometries, **options)
+        self.assertEqual(classify_mock.call_count, 3)
+        self.assertEqual(first, second)
+        self.assertEqual([(row["frame"], row["tile_id"]) for row in second],
+                         [(0, "M1"), (1, "M2"), (2, "M3")])
+
     def test_untrusted_frame_stays_unknown_without_reusing_neighbor_identity(self) -> None:
         images = [Image.new("RGB", (16, 16), "white") for _ in range(3)]
         geometries = [_Geometry(200), _Geometry(201, trusted=False), _Geometry(202)]

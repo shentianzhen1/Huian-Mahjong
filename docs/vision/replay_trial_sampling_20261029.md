@@ -277,3 +277,18 @@ Applied to the saved 0.1 s Oct12 full report, this yields two cleared
 pauses (0.2 s and 0.6 s, both without a Gold reset) and one interval
 unresolved at the end of the recording. The 0.6 s pause spans three
 pending windows, with the boundary clearing at frame 2676.
+
+### Replay Gold classification reuse
+
+Reference replay evaluates the current and prior identity endpoints from the
+same burst. A bounded replay-local cache reuses the opened-Gold classification
+for the same immutable source frame, component and crop neighbors. Each
+distinct frame still contributes its own evidence, and fusion and acceptance
+run for every burst. Live capture does not supply this cache.
+
+On the first 25 s of the Oct12 reference replay at 0.2 s, all 62 windows'
+non-timing Runtime observations, advice, PublicState summary and timeline were
+equal before and after the change (35 displayed windows, 15 discard windows).
+Runtime processing measured 12.31 s before and 11.39 s after in a single local
+run per configuration. The runs partially overlapped, so the observed timing
+is descriptive.

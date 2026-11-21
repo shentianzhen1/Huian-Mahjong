@@ -278,6 +278,18 @@ def _classify_runtime_component(
     return item
 
 
+def _classify_gold_component(component, image, *, all_boxes, gold_cache=None, **options):
+    if gold_cache is None:
+        return _classify_runtime_component(component, image, all_boxes=all_boxes, **options)
+
+    key = (component, tuple(all_boxes))
+    if key not in gold_cache:
+        gold_cache[key] = _classify_runtime_component(component, image, all_boxes=all_boxes, **options)
+        if len(gold_cache) > 12:
+            gold_cache.pop(next(iter(gold_cache)))
+    return dict(gold_cache[key])
+
+
 def _gold_identity_observations(
     images: list[Image.Image],
     geometry_frames,
@@ -287,6 +299,7 @@ def _gold_identity_observations(
     cross_session: dict[str, set[str]],
     confidence_threshold: float,
     gold_skin_covered: set[str],
+    gold_cache=None,
 ) -> list[dict]:
     """Classify the visible Gold independently in every burst frame.
 
@@ -328,10 +341,11 @@ def _gold_identity_observations(
             continue
 
         all_boxes = [component.pixel_bbox for component in geometry.components]
-        classified = _classify_runtime_component(
+        classified = _classify_gold_component(
             gold_components[0],
             image,
             all_boxes=all_boxes,
+            gold_cache=gold_cache,
             classifier=classifier,
             covered_by_region=covered_by_region,
             cross_session=cross_session,
@@ -358,9 +372,14 @@ def read_stable_frames(
     confidence_threshold: float = 0.82,
     resources=None,
     geometry_cache=None,
+    gold_cache=None,
     identity_frame_id=None,
 ) -> dict:
-    """Read one 3--5 frame burst and return conservative tile observations."""
+    """Read one 3--5 frame burst and return conservative tile observations.
+
+    Optional caches belong to a single replay with immutable source frame IDs
+    and fixed classifier resources and threshold.
+    """
     images = [image.convert("RGB") for image in images]
     if not 3 <= len(images) <= 5:
         raise ValueError("Runtime stability fusion requires 3 to 5 frames")
@@ -453,6 +472,7 @@ def read_stable_frames(
         cross_session=cross_session,
         confidence_threshold=confidence_threshold,
         gold_skin_covered=gold_skin_covered,
+        gold_cache=gold_cache,
     )
 
     chosen_index = max(
@@ -461,8 +481,14 @@ def read_stable_frames(
     )
     image = images[chosen_index]
     all_boxes = [component.pixel_bbox for component in fused.components]
-    observations = [
-        _classify_runtime_component(
+    observations = []
+    for component in fused.components:
+        classify = _classify_runtime_component
+        options = {}
+        if component.region_candidate == "gold":
+            classify = _classify_gold_component
+            options["gold_cache"] = gold_cache
+        observations.append(classify(
             component,
             image,
             all_boxes=all_boxes,
@@ -471,9 +497,8 @@ def read_stable_frames(
             cross_session=cross_session,
             confidence_threshold=confidence_threshold,
             gold_skin_covered=gold_skin_covered,
-        )
-        for component in fused.components
-    ]
+            **options,
+        ))
 
     concealed = [
         item for item in observations
