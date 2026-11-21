@@ -26,6 +26,12 @@ DEFAULT_SAMPLE_INTERVAL_SECONDS = 0.20
 REPLAY_OCR_INTERVAL_SECONDS = 2.0
 
 
+class VideoDecodeError(ValueError):
+    def __init__(self, frame_index, message):
+        super().__init__(message)
+        self.frame_index = frame_index
+
+
 def automatic_sample_interval(metadata):
     """Choose a conservative no-input replay cadence from decoded metadata.
 
@@ -136,18 +142,18 @@ def iter_video_samples(
             if stop_event is not None and stop_event.is_set():
                 return
             if not cap.grab():
-                raise ValueError(f"Video decoding stopped at frame {skipped} before selected start")
+                raise VideoDecodeError(skipped, f"Video decoding stopped at frame {skipped} before selected start")
         index = start_frame
         while index < end_frame:
             if stop_event is not None and stop_event.is_set():
                 return
             ok = cap.grab()
             if not ok:
-                raise ValueError(f"Video decoding stopped at frame {index} before selected end {end_frame}")
+                raise VideoDecodeError(index, f"Video decoding stopped at frame {index} before selected end {end_frame}")
             if (index - start_frame) % stride == 0:
                 ok, frame = cap.retrieve()
                 if not ok:
-                    raise ValueError(f"Video frame {index} could not be retrieved")
+                    raise VideoDecodeError(index, f"Video frame {index} could not be retrieved")
                 pts = float(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000.0
                 yield (
                     index,
@@ -566,13 +572,29 @@ def run_video_test(
     gold_hand_number = None
     timeline_accumulator = VideoTimelineAccumulator(source)
 
-    for sample in iter_video_samples(
+    decode_error = None
+    samples = iter_video_samples(
         path,
         start_seconds=start_seconds,
         duration_seconds=duration_seconds,
         sample_interval_seconds=sample_interval_seconds,
         stop_event=stop_event,
-    ):
+    )
+    while True:
+        try:
+            sample = next(samples)
+        except StopIteration:
+            break
+        except VideoDecodeError as exc:
+            if not runtime_rows:
+                raise
+            decode_error = {
+                "frame_index": exc.frame_index,
+                "message": str(exc),
+                "last_processed_frame": last_processed_frame,
+                "last_processed_seconds": previous_captured,
+            }
+            break
         window.append(sample)
         if len(window) < 3:
             continue
@@ -679,6 +701,7 @@ def run_video_test(
             **({**replay_advice_kwargs, "previous_captured": previous_captured} if reference_packet is not None else {}),
         )
         previous_captured = burst[-1][1]
+        last_processed_frame = burst[-1][0]
         if reference_packet is not None:
             from .theoretical_discards import explain_theoretical_discards
             try:
@@ -740,6 +763,8 @@ def run_video_test(
     timeline = timeline_accumulator.to_dict()
     result["timeline"] = timeline
     result["stopped_early"] = bool(stop_event is not None and stop_event.is_set())
+    if decode_error is not None:
+        result["decode_error"] = decode_error
     result["generated_unix_time"] = time.time()
     result["rows"] = runtime_rows
     result["runtime_environment"] = _runtime_environment()

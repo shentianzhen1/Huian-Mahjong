@@ -40,6 +40,10 @@ def main(argv=None):
                                 duration_seconds=args.duration,
                                 source_session=args.source_session, on_window=progress)
         print(f"诊断报告：{result['report_path']}\n流水文本：{result['timeline_text_path']}", flush=True)
+        if decode_error := result.get("decode_error"):
+            print(f"解码中断，已保留部分报告：{decode_error['message']}",
+                  file=sys.stderr, flush=True)
+            code = 1
         print('这是开发诊断，UNKNOWN 保留；不会操作游戏。', flush=True)
     except KeyboardInterrupt:
         print('诊断已中止；本次完整报告未生成。', flush=True)

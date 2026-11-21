@@ -960,9 +960,16 @@ class HintAlphaApp(tk.Tk):
             elif kind == "done":
                 result = item[1]
                 self.video_test_running = False
-                self.video_test_progress.set(100)
+                decode_error = result.get("decode_error")
+                status = "完成"
+                if decode_error:
+                    status = "解码中断，已保留部分结果"
+                elif result.get("stopped_early"):
+                    status = "已提前停止"
+                else:
+                    self.video_test_progress.set(100)
                 self.video_timeline_heartbeat.set(
-                    f"录像复盘：完成 | 流水事件 "
+                    f"录像复盘：{status} | 流水事件 "
                     f"{len((result.get('timeline') or {}).get('events') or ())} 条"
                 )
                 source = result["source"]
@@ -990,6 +997,8 @@ class HintAlphaApp(tk.Tk):
                 timeline = result.get("timeline") or {}
                 self._set_video_timeline_lines(render_video_timeline(timeline))
                 suffix = "（已提前停止）" if result.get("stopped_early") else ""
+                if decode_error:
+                    suffix = f"（第 {decode_error['frame_index']} 帧解码中断）"
                 self.video_test_report_status.set(
                     "报告："
                     f"{result.get('report_path', '未写入')} | "

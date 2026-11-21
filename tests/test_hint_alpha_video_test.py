@@ -265,6 +265,49 @@ class ReplayOcrCadenceTests(unittest.TestCase):
 
 
 class DirectVideoRunnerTests(unittest.TestCase):
+    def test_decoder_failure_after_completed_window_writes_partial_report(self):
+        from workspace.hint_alpha.video_test import VideoDecodeError
+
+        def interrupted_samples():
+            for frame, seconds in [(0, 0.0), (6, 0.2), (12, 0.4)]:
+                yield frame, seconds, object()
+            raise VideoDecodeError(17, "Video decoding stopped at frame 17")
+
+        runtime = {
+            "display_allowed": False,
+            "frames": [0, 6, 12],
+            "source_seconds": [0.0, 0.2, 0.4],
+            "snapshot": {},
+            "hint": {"issues": []},
+        }
+        public_reader = SimpleNamespace(
+            read_window=unittest.mock.Mock(side_effect=RuntimeError("OCR unavailable"))
+        )
+        with TemporaryDirectory() as tmp:
+            video = Path(tmp) / "match.mp4"
+            video.write_bytes(b"fixture")
+            report = Path(tmp) / "result.json"
+            with (
+                patch("workspace.hint_alpha.video_test.probe_video", return_value={}),
+                patch("workspace.hint_alpha.video_test.iter_video_samples",
+                      return_value=interrupted_samples()),
+                patch("workspace.hint_alpha.video_test.evaluate_burst", return_value=runtime),
+            ):
+                result = run_video_test(
+                    video, dataset_root=tmp, output_path=report,
+                    public_reader=public_reader, sample_interval_seconds=0.2,
+                )
+
+            saved = json.loads(report.read_text(encoding="utf-8"))
+            self.assertEqual(saved["decode_error"], result["decode_error"])
+            self.assertEqual(saved["decode_error"]["frame_index"], 17)
+            self.assertEqual(saved["decode_error"]["last_processed_frame"], 12)
+            self.assertEqual(saved["decode_error"]["last_processed_seconds"], 0.4)
+            self.assertEqual(saved["runtime"]["windows"], 1)
+            self.assertFalse(saved["stopped_early"])
+            self.assertTrue(report.with_suffix(".timeline.json").exists())
+            self.assertTrue(report.with_suffix(".timeline.txt").exists())
+
     def test_runtime_continues_when_public_ocr_errors(self):
         samples = [
             (1, 0.0, object()),
