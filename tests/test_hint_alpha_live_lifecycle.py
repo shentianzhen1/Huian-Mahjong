@@ -3,7 +3,7 @@ from collections import deque
 from types import SimpleNamespace
 import queue
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from workspace.hint_alpha.live_guard import LiveAdviceGuard
 from workspace.hint_alpha.runtime_pipeline import evaluate_runtime_report
@@ -66,6 +66,40 @@ class LiveLifecycleTests(unittest.TestCase):
         self.assertIsNone(shell.public_previous)
         self.assertFalse(shell.runtime_busy)
         self.assertIn('BLOCKED', shell.hint_status.set.call_args.args[0])
+
+    def test_capture_reset_clears_visible_public_state_and_restarts_ocr(self):
+        shell = self.shell()
+        old_queue = shell.public_result_queue
+        shell.last_public_started = 10
+        shell.public_disabled = False
+        shell.ui_hand_number = 3
+        shell.ui_remaining_tiles = 44
+        shell.ui_score_pair = (1200, 800)
+        shell.ui_gold_tile = "S8"
+        shell.ui_hand_number_ok = True
+        shell.table_hand_status = Mock()
+        shell.table_meld_status = Mock()
+        shell.match_header_status = Mock()
+        shell._refresh_header = Mock()
+        HintAlphaApp._invalidate_advice(shell, "capture reset")
+
+        old_queue.put(("ok", object(), {"sequence": 100}, 0.1))
+        HintAlphaApp._consume_public_result(shell)
+        self.assertIsNone(shell.public_previous)
+        for field in ("ui_hand_number", "ui_remaining_tiles", "ui_score_pair", "ui_gold_tile"):
+            self.assertIsNone(getattr(shell, field))
+        self.assertFalse(shell.ui_hand_number_ok)
+        shell.table_hand_status.set.assert_called_once_with("我的手牌：UNKNOWN")
+        shell.table_meld_status.set.assert_called_once_with("我的副露：UNKNOWN")
+        shell._refresh_header.assert_called_once()
+
+        shell.public_frames.extend([Mock(), Mock(), Mock()])
+        shell.source = {"sequence": 3, "monotonic": 10.2}
+        shell._public_worker = Mock()
+        with patch("workspace.hint_alpha.app.threading.Thread") as thread:
+            HintAlphaApp._schedule_public_read(shell, 10.2)
+        self.assertTrue(shell.public_busy)
+        thread.return_value.start.assert_called_once()
 
     def test_queued_old_epoch_cannot_restore_hint(self):
         shell = self.shell()

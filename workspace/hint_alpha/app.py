@@ -1517,8 +1517,22 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
+        self.last_public_started = float("-inf")
+        self.ui_hand_number = None
+        self.ui_remaining_tiles = None
+        self.ui_score_pair = None
+        self.ui_gold_tile = None
+        self.ui_hand_number_ok = False
         self.ui_hand_ok = False
         self.ui_gold_ok = False
+        for name, text in (
+            ("vision_status", "PublicState：等待当前画面"),
+            ("table_hand_status", "我的手牌：UNKNOWN"),
+            ("table_meld_status", "我的副露：UNKNOWN"),
+        ):
+            variable = vars(self).get(name)
+            if variable is not None:
+                variable.set(text)
         if hasattr(self, "turn_status"):
             self.turn_status.set(f"当前状态：UNKNOWN（{reason}）")
         if hasattr(self, "blocked_detail"):
@@ -1526,6 +1540,8 @@ class HintAlphaApp(tk.Tk):
         if hasattr(self, "hint_latency"):
             self.hint_latency.set("本次提示耗时：暂无")
         self.hint_status.set(f"向听提示：BLOCKED（{reason}）；Executor OFF")
+        if "match_header_status" in vars(self):
+            self._refresh_header()
         refresh_health = getattr(self, "_refresh_health", None)
         if callable(refresh_health):
             refresh_health()
