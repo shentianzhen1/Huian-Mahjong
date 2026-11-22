@@ -38,6 +38,10 @@ class OCRUnavailable(RuntimeError):
     pass
 
 
+class OCRExecutableMissing(OCRUnavailable):
+    """The configured OCR executable could not be found or launched."""
+
+
 @dataclass(frozen=True)
 class OCRAttempt:
     threshold: int
@@ -151,7 +155,7 @@ class TesseractCLIBackend:
 
     def __call__(self, binary_image):
         if not self.available():
-            raise OCRUnavailable(
+            raise OCRExecutableMissing(
                 f"{self.command!r} is not installed or not on PATH"
             )
         ok, encoded = cv2.imencode(".png", binary_image)
@@ -182,7 +186,7 @@ class TesseractCLIBackend:
                 creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
             )
         except FileNotFoundError as exc:
-            raise OCRUnavailable(
+            raise OCRExecutableMissing(
                 f"{self.command!r} is not installed or not on PATH"
             ) from exc
         except subprocess.TimeoutExpired as exc:

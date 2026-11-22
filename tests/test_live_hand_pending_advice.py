@@ -116,6 +116,51 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.consume(101.1)
         self.assertFalse(self.app.evidence.mark.call_args.args[1]['display_allowed'])
 
+    def test_transient_ocr_failure_retries_and_recovers_same_hand(self):
+        from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
+        from workspace.vision.tiles_v0_1.public_state_scores import OCRUnavailable
+
+        self.app.public_result_queue = queue.Queue()
+        self.app.public_disabled = False
+        self.app.vision_status = Mock()
+        observation = PublicStateObservation(1000, 1000, 2, 80, 2, 2, 2)
+        self.app.public_reader = Mock()
+        self.app.public_reader.read_window.side_effect = [
+            OCRUnavailable("score OCR timed out"), SimpleNamespace(observation=observation),
+        ]
+        self.now.return_value = 101.
+        self.app._public_worker((), None, self.app.public_result_queue)
+        self.app._consume_public_result()
+        self.assertFalse(self.app.public_disabled)
+        self.assertTrue(self.app.runtime_advice_pipeline.hand_boundary_pending)
+        self.app.public_frames = [Mock(), Mock(), Mock()]
+        self.app.last_public_started = 101.
+        self.app.public_previous = None
+        with patch("workspace.hint_alpha.app.threading.Thread") as thread:
+            self.app._schedule_public_read(103.)
+        options = thread.call_args.kwargs
+        self.now.return_value = 103.
+        options["target"](*options["args"])
+        self.app._consume_public_result()
+        self.assertFalse(self.app.runtime_advice_pipeline.hand_boundary_pending)
+        self.consume(103.1)
+        event = self.app.evidence.mark.call_args.args[1]
+        self.assertTrue(event["display_allowed"])
+        self.assertEqual(event["gold_tile"], "S8")
+
+    def test_missing_ocr_engine_disables_polling(self):
+        from workspace.vision.tiles_v0_1.public_state_scores import OCRExecutableMissing
+
+        self.app.public_result_queue = queue.Queue()
+        self.app.public_disabled = False
+        self.app.vision_status = Mock()
+        self.app.public_reader = Mock()
+        self.app.public_reader.read_window.side_effect = OCRExecutableMissing("missing engine")
+        self.app._public_worker((), None, self.app.public_result_queue)
+        self.app._consume_public_result()
+        self.assertTrue(self.app.public_disabled)
+        self.assertTrue(self.app.runtime_advice_pipeline.hand_boundary_pending)
+
     def test_prior_identity_from_before_confirmation_cannot_prime_new_read(self):
         from copy import deepcopy
         from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability

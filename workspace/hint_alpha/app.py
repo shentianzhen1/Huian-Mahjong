@@ -33,6 +33,7 @@ from workspace.vision.capture_validator.backend import (
 )
 from workspace.vision.capture_validator.media import FrameHealth
 from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
+from workspace.vision.tiles_v0_1.public_state_scores import OCRExecutableMissing
 
 from .runtime_pipeline import evaluate_runtime_report, interrupt_runtime_observations
 from .evidence import EvidenceSession
@@ -1574,6 +1575,8 @@ class HintAlphaApp(tk.Tk):
                 images, previous=previous, minimum_votes=2
             )
             payload = ("ok", result)
+        except OCRExecutableMissing as exc:
+            payload = ("unavailable", f"{type(exc).__name__}: {exc}")
         except Exception as exc:
             payload = ("error", f"{type(exc).__name__}: {exc}")
         try:
@@ -1882,12 +1885,12 @@ class HintAlphaApp(tk.Tk):
         except queue.Empty:
             return
         self.public_busy = False
-        if kind == "error":
+        if kind in {"error", "unavailable"}:
             self.vision_status.set(f"PublicState暂不可用：{value}")
             self.ui_hand_number_ok = False
             self._public_state_failed()
             self._refresh_health()
-            if "OCRUnavailable" in value or "not installed" in value:
+            if kind == "unavailable":
                 self.public_disabled = True
             if self.evidence:
                 self.evidence.mark("PUBLIC_STATE_ERROR", {"error": value})
