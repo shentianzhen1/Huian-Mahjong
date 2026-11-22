@@ -70,6 +70,8 @@ class LiveLifecycleTests(unittest.TestCase):
     def test_capture_reset_clears_visible_public_state_and_restarts_ocr(self):
         shell = self.shell()
         old_queue = shell.public_result_queue
+        old_worker = shell.public_worker_thread = Mock()
+        old_worker.is_alive.return_value = True
         shell.last_public_started = 10
         shell.public_disabled = False
         shell.ui_hand_number = 3
@@ -98,8 +100,21 @@ class LiveLifecycleTests(unittest.TestCase):
         shell._public_worker = Mock()
         with patch("workspace.hint_alpha.app.threading.Thread") as thread:
             HintAlphaApp._schedule_public_read(shell, 10.2)
+            thread.assert_not_called()
+            self.assertFalse(shell.public_busy)
+            self.assertIs(shell.public_worker_thread, old_worker)
+
+            old_worker.is_alive.return_value = False
+            shell.source = {"sequence": 4, "monotonic": 10.3}
+            HintAlphaApp._schedule_public_read(shell, 10.3)
         self.assertTrue(shell.public_busy)
         thread.return_value.start.assert_called_once()
+        self.assertIs(shell.public_worker_thread, thread.return_value)
+        _, previous, source, result_queue = thread.call_args.kwargs["args"]
+        self.assertIsNone(previous)
+        self.assertEqual(source, {"sequence": 4, "monotonic": 10.3})
+        self.assertIs(result_queue, shell.public_result_queue)
+        self.assertIsNot(result_queue, old_queue)
 
     def test_queued_old_epoch_cannot_restore_hint(self):
         shell = self.shell()

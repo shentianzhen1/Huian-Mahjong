@@ -25,6 +25,7 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         app._gold_hand_number = None
         app.runtime_frames = deque()
         app.runtime_result_queue = queue.Queue()
+        app.public_worker_thread = None
         app.live_guard = LiveAdviceGuard(active=True, generation=0)
         app.evidence = Mock(session_id='runtime-live')
         app.last_runtime_event_key = None

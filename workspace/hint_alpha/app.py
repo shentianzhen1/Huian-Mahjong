@@ -88,6 +88,7 @@ class HintAlphaApp(tk.Tk):
         self.public_view_source = None
         self.public_frames = deque(maxlen=3)
         self.public_busy = False
+        self.public_worker_thread = None
         self.public_disabled = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.last_public_started = 0.0
@@ -1526,6 +1527,7 @@ class HintAlphaApp(tk.Tk):
         self.public_frames.clear()
         self.runtime_busy = False
         self.runtime_result_queue = queue.Queue(maxsize=1)
+        # Detach stale results, but keep the thread handle until its OCR exits.
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
@@ -1615,21 +1617,25 @@ class HintAlphaApp(tk.Tk):
             pass
 
     def _schedule_public_read(self, now):
+        worker = self.public_worker_thread
         if (
             self.public_disabled
             or self.public_busy
+            or (worker is not None and worker.is_alive())
             or len(self.public_frames) < 3
             or now - self.last_public_started < 1.5
         ):
             return
-        self.public_busy = True
-        self.last_public_started = now
         images = tuple(image.copy() for image in self.public_frames)
-        threading.Thread(
+        worker = threading.Thread(
             target=self._public_worker,
             args=(images, self.public_previous, dict(self.source), self.public_result_queue),
             daemon=True,
-        ).start()
+        )
+        worker.start()
+        self.public_worker_thread = worker
+        self.public_busy = True
+        self.last_public_started = now
 
     def _runtime_worker(self, samples, session_id, generation, captured, output_queue):
         try:
