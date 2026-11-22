@@ -1535,6 +1535,7 @@ class HintAlphaApp(tk.Tk):
         self.runtime_busy = False
         self.runtime_result_queue = queue.Queue(maxsize=1)
         self.last_runtime_started = float("-inf")
+        self.last_runtime_event_key = None
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
@@ -1549,6 +1550,7 @@ class HintAlphaApp(tk.Tk):
         self.ui_gold_ok = False
         for name, text in (
             ("vision_status", "PublicState：等待当前画面"),
+            ("runtime_status", "Runtime Vision：等待当前画面"),
             ("table_hand_status", "我的手牌：UNKNOWN"),
             ("table_meld_status", "我的副露：UNKNOWN"),
         ):
@@ -2174,6 +2176,7 @@ class HintAlphaApp(tk.Tk):
         self.live_guard.last_result = None
         interrupt_runtime_observations()
         self.ui_hand_ok = False
+        self.runtime_status.set('Runtime Vision：识别结果已过期，等待当前画面')
         self.table_hand_status.set('我的手牌：UNKNOWN')
         self.table_meld_status.set('我的副露：UNKNOWN')
         self.turn_status.set('当前状态：UNKNOWN（识别结果已过期）')

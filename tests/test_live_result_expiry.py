@@ -78,6 +78,9 @@ class LiveResultExpiryTests(TestCase):
         self.assertTrue(self.app.runtime_frames)
         self.assertTrue(self.app.public_frames)
         self.assertTrue(self.app.runtime_busy)
+        self.app.runtime_status.set.assert_called_with(
+            'Runtime Vision：识别结果已过期，等待当前画面'
+        )
         self.assertIn('BLOCKED', self.app.hint_status.set.call_args.args[0])
         self.assertIn('暂无', self.app.hint_latency.set.call_args.args[0])
         marks = self.app.evidence.mark.call_count
@@ -104,6 +107,26 @@ class LiveResultExpiryTests(TestCase):
         self.assertIsNot(self.app.runtime_result_queue, old_queue)
         old_queue.put(('ok', 'runtime-live', 0, 12., runtime_report(gold='S8')))
         self.assertTrue(self.app.runtime_result_queue.empty())
+
+    def test_same_runtime_error_is_logged_again_only_after_capture_reset(self):
+        app = self.app
+        app.live_guard.last_result = None
+
+        def read_error(sequence, captured):
+            app.live_guard.observe(sequence, captured)
+            app.runtime_result_queue.put((
+                'error', 'runtime-live', app.live_guard.generation, captured, 'read failed'
+            ))
+            self.tick(captured + .1)
+
+        read_error(8, 12.1)
+        read_error(9, 12.2)
+        self.assertEqual(app.evidence.mark.call_count, 1)
+        self.tick(14.3)
+        app.runtime_status.set.assert_called_with('Runtime Vision：等待当前画面')
+        read_error(10, 14.4)
+        self.assertEqual([call.args[0] for call in app.evidence.mark.call_args_list],
+                         ['RUNTIME_VISION_ERROR', 'RUNTIME_VISION_ERROR'])
 
     def test_manual_gold_survives_hint_expiry_but_needs_fresh_hand_confirmation(self):
         self.app.runtime_advice_pipeline.select_manual_gold('M4',
