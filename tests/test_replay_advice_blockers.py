@@ -51,7 +51,8 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
             row(7, allowed=True, issues=['opponent_meld_missing']),
         ]
         result = summarize_windows(rows)
-        self.assertEqual(result['structural_blocker_windows'], {'geometry': 1, 'meld_count': 1})
+        self.assertEqual(result['structural_blocker_windows'],
+                         {'geometry': 1, 'concealed_hand_count': 1})
         self.assertEqual(result['blocked_window_input_issues'], {
             'hand_identity': 1, 'gold': 1, 'meld_count': 1, 'concealed_hand_count': 1,
         })

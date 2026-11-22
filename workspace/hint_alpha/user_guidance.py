@@ -19,6 +19,7 @@ def format_advice_blockers(counts):
     labels = {'hand_boundary': '局号未确认', 'geometry': '画面/牌面位置未稳定',
               'stability': '等待多帧确认', 'hand_identity': '手牌未确认',
               'concealed_gold_reference_missing': '手牌缺少已审核的金标样本',
+              'concealed_hand_count': '手牌张数异常',
               'gold': '金牌未确认', 'meld_count': '手牌/副露数量',
               'display_policy': '显示模式限制', 'state_conflict': '牌面状态冲突',
               'other_state_or_policy': '其他状态或策略限制'}

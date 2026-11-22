@@ -64,7 +64,7 @@ def _primary_advice_blocker(row):
         if issues & matching_issues:
             if category == 'hand_identity' and any(_concealed_gold_reference_rejections(row)):
                 return 'concealed_gold_reference_missing'
-            return 'meld_count' if category == 'concealed_hand_count' else category
+            return category
     return 'other_state_or_policy'
 
 

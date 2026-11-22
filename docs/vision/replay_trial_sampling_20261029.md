@@ -459,3 +459,12 @@ bucket. This measures end-to-end display coverage in already revealed scenes,
 without a new truth review. It combines the product trial's references,
 geometry, and confirmation policy, so the coverage difference cannot be
 attributed to a single component.
+
+The Oct12 concealed-count window ends at frame 612. Visual review of frames
+600, 606 and 612 shows four bamboo moving toward the hand, with the rest
+of the row split around its insertion gap. Runtime grouped eight tiles as
+hand and seven as unknown at the endpoint. By frame 618 the moving tile
+was in the row, and advice reappeared at the sampled endpoint 636. The
+replay summary now gives concealed count its own blocker label to keep
+this case distinct from a failed meld count. The identity and count gates
+are unchanged during the animation.
