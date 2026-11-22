@@ -95,6 +95,7 @@ def summarize_windows(rows):
     hand_stages = Counter()
     missing_gold_candidates = Counter()
     missing_gold_locations = {}
+    geometry_region_changes = Counter()
     for row in rows:
         allowed = row['display_allowed'] is True
         public_context.update(issue for issue in set(row['hint']['issues'])
@@ -107,6 +108,16 @@ def summarize_windows(rows):
             rejection_issues.update(issues)
             blocker = _primary_advice_blocker(row)
             structural_blockers[blocker] += 1
+            if blocker == 'geometry' and 'layout_not_stable_across_frames' in (row.get('geometry_issues') or ()):
+                counts = [
+                    frame['region_counts'] for frame in (row.get('geometry_frame_diagnostics') or ())
+                    if frame.get('trusted') is True and isinstance(frame.get('region_counts'), dict)
+                ]
+                regions = sorted({region for frame_counts in counts for region in frame_counts})
+                geometry_region_changes.update(
+                    region for region in regions
+                    if len({frame_counts.get(region, 0) for frame_counts in counts}) > 1
+                )
             if blocker == 'concealed_gold_reference_missing':
                 # Count the same candidate once per window, even across multiple slots.
                 candidates = {item.get('candidate_tile_id')
@@ -141,6 +152,7 @@ def summarize_windows(rows):
     return {'advice_runs': runs, 'recovered_advice_runs': recoveries,
             'rejection_issue_windows': dict(sorted(rejection_issues.items())),
             'structural_blocker_windows': dict(structural_blockers.most_common()),
+            'geometry_region_count_change_windows': dict(geometry_region_changes.most_common()),
             'missing_concealed_gold_candidate_windows': dict(missing_gold_candidates.most_common()),
             'missing_concealed_gold_candidate_locations': missing_gold_locations,
             'public_context_issue_windows': dict(sorted(public_context.items())),

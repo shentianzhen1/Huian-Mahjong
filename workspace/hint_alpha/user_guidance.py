@@ -28,6 +28,15 @@ def format_advice_blockers(counts):
     return '向听暂停原因：' + (details or '无')
 
 
+def format_geometry_region_changes(counts):
+    if not counts:
+        return ''
+    labels = {'hand': '手牌', 'draw_visual': '独立摸牌区', 'gold': '开金区',
+              'meld': '副露', 'unknown': '未归类牌框'}
+    details = '；'.join(f'{labels.get(region, region)} {count}窗' for region, count in counts.items())
+    return '\n定位不稳时的牌框数量变化（可重叠）：' + details
+
+
 def blocked_guidance(issues, *, geometry_untrusted=False, promotion_blocked=False):
     if geometry_untrusted:
         return '画面或牌面位置尚未稳定。请保持投屏画面完整，等待重新识别。'

@@ -49,6 +49,7 @@ from .user_guidance import (
     blocked_guidance,
     capture_to_hint_text,
     format_advice_blockers,
+    format_geometry_region_changes,
     runtime_timing_text,
 )
 
@@ -1037,6 +1038,7 @@ class HintAlphaApp(tk.Tk):
                     f"金牌可信{runtime['trusted_gold_windows']}窗 | "
                     f"金牌票数={gold_votes or 'none'}\n"
                     + format_advice_blockers(runtime.get('structural_blocker_windows'))
+                    + format_geometry_region_changes(runtime.get('geometry_region_count_change_windows'))
                     + (f"\n待复核金标候选：{missing_gold_summary}" if missing_gold_summary else "")
                 )
                 public = result["public_state"]

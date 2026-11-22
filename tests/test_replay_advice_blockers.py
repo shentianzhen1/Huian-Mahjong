@@ -5,7 +5,7 @@ import unittest
 from tests.test_short_hand_shanten_contract import short_snapshot
 from workspace.hint_alpha.current_snapshot_advisor import analyze_snapshot_shanten
 from workspace.hint_alpha.replay_smoke import summarize_windows
-from workspace.hint_alpha.user_guidance import format_advice_blockers
+from workspace.hint_alpha.user_guidance import format_advice_blockers, format_geometry_region_changes
 
 
 def row(index, *, allowed=False, issues=(), **kwargs):
@@ -40,6 +40,24 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
                          {'hand_boundary': 1, 'geometry': 1, 'stability': 1, 'hand_identity': 1})
         self.assertEqual(sum(result['structural_blocker_windows'].values()), 4)
         self.assertEqual(rows, before)
+
+    def test_geometry_changes_compare_counts_only_between_trusted_frames(self):
+        frames = [
+            {'trusted': True, 'region_counts': {'hand': 16, 'draw_visual': 1, 'gold': 1}},
+            {'trusted': True, 'region_counts': {'hand': 17, 'gold': 1}},
+            {'trusted': False, 'region_counts': {'hand': 3, 'meld': 2}},
+        ]
+        details = dict(geometry_untrusted=True, geometry_frame_diagnostics=frames,
+                       geometry_issues=['layout_not_stable_across_frames'])
+        result = summarize_windows([
+            row(1, **details),
+            row(4, allowed=True, **details),
+            row(7, hand_boundary_pending=True, **details),
+        ])
+        counts = result['geometry_region_count_change_windows']
+        self.assertEqual(counts, {'hand': 1, 'draw_visual': 1})
+        self.assertIn('独立摸牌区 1窗', format_geometry_region_changes(counts))
+        self.assertEqual(format_geometry_region_changes(None), '')
 
     def test_secondary_input_issues_include_overlap_and_keep_counts_distinct(self):
         rows = [
