@@ -52,6 +52,15 @@ def _primary_advice_blocker(row):
         return 'stability'
     for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items():
         if issues & matching_issues:
+            if category == 'hand_identity':
+                components = (row.get('identity_observations') or {}).get('components') or ()
+                if any(
+                    item.get('region_candidate') in {'hand', 'draw_visual'}
+                    and item.get('tile_id') in (None, '', 'UNKNOWN')
+                    and item.get('identity_reason') == 'class_missing_real_gold_skin_example'
+                    for item in components
+                ):
+                    return 'concealed_gold_reference_missing'
             return 'meld_count' if category == 'concealed_hand_count' else category
     return 'other_state_or_policy'
 

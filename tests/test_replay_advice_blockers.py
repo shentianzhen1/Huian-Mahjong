@@ -59,6 +59,25 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
             'hand_identity+gold+meld_count': 1,
         })
 
+    def test_concealed_gold_coverage_has_its_own_primary_blocker(self):
+        hand = {'region_candidate': 'draw_visual', 'tile_id': 'UNKNOWN',
+                'identity_reason': 'class_missing_real_gold_skin_example'}
+        observations = {'components': [hand]}
+        rows = [
+            row(1, issues=['hand_untrusted'], identity_observations=observations),
+            row(4, issues=['hand_untrusted'], geometry_untrusted=True,
+                identity_observations=observations),
+            row(7, issues=['gold_untrusted'], identity_observations={
+                'components': [dict(hand, region_candidate='gold')],
+            }),
+        ]
+        result = summarize_windows(rows)
+        self.assertEqual(result['structural_blocker_windows'],
+                         {'concealed_gold_reference_missing': 1, 'geometry': 1, 'gold': 1})
+        self.assertEqual(result['blocked_window_input_issues']['hand_identity'], 2)
+        self.assertIn('缺少已审核的金标样本',
+                      format_advice_blockers(result['structural_blocker_windows']))
+
     def test_hand_stages_keep_missing_evidence_and_unconfirmed_identity_distinct(self):
         issues = ['hand_untrusted']
         unknown = {'region_candidate': 'draw_visual', 'tile_id': 'UNKNOWN'}
