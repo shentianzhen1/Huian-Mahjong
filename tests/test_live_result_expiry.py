@@ -124,6 +124,9 @@ class LiveResultExpiryTests(TestCase):
         self.tick(12.1)
         self.app._update_snapshot_view.assert_not_called()
         self.assertIn('BLOCKED', self.app.hint_status.set.call_args.args[0])
+        diagnostic = self.app.runtime_status.set.call_args.args[0]
+        self.assertIn('结果超时，已丢弃', diagnostic)
+        self.assertIn('牌面计算 1800 毫秒；采集到界面接收 2100 毫秒', diagnostic)
         event, payload = self.app.evidence.mark.call_args.args
         self.assertEqual(event, 'RUNTIME_RESULT_TOO_OLD')
         self.assertAlmostEqual(payload['capture_age_seconds'], 2.1)

@@ -47,6 +47,15 @@ class LiveTimelineTests(unittest.TestCase):
         self.assertIn('余牌=未知', row[6])
         self.assertIn('OCR 结果已过期', row[6])
 
+    def test_runtime_timeout_shows_capture_age_and_source_frame(self):
+        row = event_row({'kind': 'RUNTIME_RESULT_TOO_OLD',
+                         'source': {'sequence': 25}, 'payload': {
+                             'runtime_elapsed_seconds': None,
+                             'capture_age_seconds': 2.205,
+                         }})
+        self.assertEqual(row[5], '超时丢弃')
+        self.assertEqual(row[6], '来源帧 25；牌面计算 未知；采集到界面接收 2205 毫秒')
+
     def test_tail_partial_writes_no_duplicates_and_session_reset(self):
         with TemporaryDirectory() as folder:
             path = Path(folder) / 'events.jsonl'

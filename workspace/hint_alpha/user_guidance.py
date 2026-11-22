@@ -2,6 +2,16 @@
 import math
 
 
+def runtime_timing_text(worker_seconds, capture_age):
+    """Show worker duration separately from capture-to-consumer age."""
+    def milliseconds(value):
+        if type(value) in (int, float) and math.isfinite(value) and value >= 0:
+            return f'{value * 1000:.0f} 毫秒'
+        return '未知'
+
+    return f'牌面计算 {milliseconds(worker_seconds)}；采集到界面接收 {milliseconds(capture_age)}'
+
+
 def format_advice_blockers(counts):
     """A diagnostic priority summary, not an accuracy or counterfactual claim."""
     if counts is None:

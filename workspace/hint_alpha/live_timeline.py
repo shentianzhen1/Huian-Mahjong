@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
+from .user_guidance import runtime_timing_text
+
 
 def known(value):
     if value is None or value == "" or value == "UNKNOWN":
@@ -46,6 +48,13 @@ def event_row(event):
         detail = (f"比分={known(scores) if valid_scores and not issues else '未知'}；"
             f"余牌={known(observation.get('remaining_tiles')) if not issues else '未知'}；"
             f"动作=未知；问题={known(issues)}")
+    elif kind == "RUNTIME_RESULT_TOO_OLD":
+        status = "超时丢弃"
+        sequence = (event.get("source") or {}).get("sequence")
+        timing = runtime_timing_text(
+            payload.get("runtime_elapsed_seconds"), payload.get("capture_age_seconds")
+        )
+        detail = f"来源帧 {known(sequence)}；{timing}"
     elif kind == "CURRENT_SNAPSHOT_HINT":
         accepted = payload.get("display_allowed") is True
         tile = known(payload.get("gold_tile")) if accepted else "未知"

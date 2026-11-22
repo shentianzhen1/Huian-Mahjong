@@ -45,7 +45,12 @@ from .runtime_pipeline import (
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 from .manual_input import evaluate_manual_input, observed_score_entry
-from .user_guidance import blocked_guidance, capture_to_hint_text, format_advice_blockers
+from .user_guidance import (
+    blocked_guidance,
+    capture_to_hint_text,
+    format_advice_blockers,
+    runtime_timing_text,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -1796,17 +1801,23 @@ class HintAlphaApp(tk.Tk):
         now = time.monotonic()
         if not guard.accepts(generation, captured, now):
             age = now - captured
-            if self.evidence and kind == "ok" and math.isfinite(age) and age > guard.max_age:
+            if kind == "ok" and math.isfinite(age) and age > guard.max_age:
                 frames = value.get("frames", ())
-                self.evidence.mark(
-                    "RUNTIME_RESULT_TOO_OLD",
-                    {
-                        "capture_age_seconds": age,
-                        "runtime_elapsed_seconds": value.get("runtime_elapsed_seconds"),
-                        "freshness_limit_seconds": guard.max_age,
-                    },
-                    source={"sequence": frames[-1] if frames else None, "monotonic": captured},
+                worker_seconds = value.get("runtime_elapsed_seconds")
+                self.runtime_status.set(
+                    "Runtime Vision：结果超时，已丢弃\n"
+                    + runtime_timing_text(worker_seconds, age)
                 )
+                if self.evidence:
+                    self.evidence.mark(
+                        "RUNTIME_RESULT_TOO_OLD",
+                        {
+                            "capture_age_seconds": age,
+                            "runtime_elapsed_seconds": worker_seconds,
+                            "freshness_limit_seconds": guard.max_age,
+                        },
+                        source={"sequence": frames[-1] if frames else None, "monotonic": captured},
+                    )
             return
         previous_result = guard.last_result
         guard.last_result = captured
@@ -1854,7 +1865,8 @@ class HintAlphaApp(tk.Tk):
             f"{result.status} 手牌={len(snapshot.own_hand)} "
             f"金={snapshot.gold_tile or '?'} "
             f"concealed_missing={concealed_missing} "
-            f"issues={issues}"
+            f"issues={issues}\n"
+            + runtime_timing_text(report.get("runtime_elapsed_seconds"), now - captured)
         )
         self._update_snapshot_view(snapshot, result, source_label="runtime")
         runtime_promoted_for_hint = report.get("safe_for_hint") is True
