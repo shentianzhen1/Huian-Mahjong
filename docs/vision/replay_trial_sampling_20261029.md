@@ -309,3 +309,18 @@ non-timing Runtime and PublicState output, including 35 displayed and
 per configuration and do not establish Windows timing. A separate
 single-thread Tesseract trial gave only a small local difference and was
 not adopted.
+
+### Live PublicState score OCR shortcut
+
+The live UI now opts into the same conserving-score-majority shortcut as the
+offline replay. Verified using the live reader's three-frame, two-vote setup
+with real Tesseract on Oct12 source endpoints 72, 222, 420, 660, 930, 1290,
+1770, 2280, 2664 and 2676 (each sampled at offsets -6, -3 and 0). Across all
+30 frames, candidate observations matched, as did all ten fused windows.
+The occluded hand at frame 2664 stayed unknown and the hand index returned to
+1 at 2676.
+
+Score OCR calls fell from 180 to 120 and total PublicState reader time fell
+from 28.25 s to 21.83 s over ten windows in one sequential Linux run. The
+timing excludes video decode and Windows capture, so it does not establish
+real-device response latency.
