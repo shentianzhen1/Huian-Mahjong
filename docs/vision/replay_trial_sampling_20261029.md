@@ -384,3 +384,32 @@ experimental seam restored approximately equal widths and three-frame
 agreement. All recovered windows still stopped at hand identity. Neither
 configuration displayed advice in this comparison. Keep the strict detector
 default pending tile-identity review and independent match validation.
+
+### Identity rejections after recovered geometry
+
+Re-run the same 118-window comparison and inspect only the 15 windows that
+regain geometry trust. Each rejection below is a concealed hand or draw
+component in the latest frame of a window. Counts can repeat the same physical
+tile across neighboring windows.
+
+| Recording SHA256 prefix | Recovered windows | Components below 0.82 | Components missing cross-session coverage |
+| --- | ---: | ---: | ---: |
+| `de1d21b2a722` | 11 | 92 | 22 |
+| `9709fdc3aa46` | 4 | 28 | 8 |
+
+The coverage gate rejects P2 (15 windows, scores 0.849–0.896), M8
+(11 windows, 0.877–0.892), and G (4 windows, 0.868–0.881).
+The current approved concealed/draw bank has one draw crop from one recorded
+source session for each of these identities. Visual spot checks confirmed
+P2 and M8 at frame 60 of the first clip and P2 and G at frame 2700 of the
+second clip. These spot checks cover four crops. They do not establish
+independence of the match recordings or validate all repeated predictions.
+
+Every recovered window also contains at least one sub-threshold component.
+The most frequent low-score candidate is M3 (38 components in 15 windows),
+followed by S9 (21 in 11 windows). At frame 60, two M3 predictions were M2
+on visual review, while one S9 prediction matched nine bamboo. At frame 2700,
+one more M3 prediction was M5. These four spot checks establish concrete
+confusions and do not estimate their overall error rates. Adding a second
+reviewed source for P2/M8/G addresses the coverage gate only. The 0.82
+threshold and current reference bank were retained for this review.
