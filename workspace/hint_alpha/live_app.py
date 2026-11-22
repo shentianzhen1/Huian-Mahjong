@@ -62,9 +62,7 @@ class LiveHintAlphaApp(shell.HintAlphaApp):
         # Gold may legitimately change while capture generation stays constant.
         # Only an initial or sequentially confirmed PublicState hand boundary
         # can clear the previous hand's Gold; regressions/jumps fail closed.
-        # Presentation may display a rejected OCR jump/regression. Keep the
-        # trusted Gold boundary independent so that display cannot authorize
-        # a later reset (e.g. 3 -> 2 -> 3 or 3 -> 5 -> 6).
+        # Keep the trusted Gold boundary independent of the OCR display.
         pipeline = self.runtime_advice_pipeline
         was_pending = pipeline.hand_boundary_pending
         boundary = confirmed_public_hand_boundary(self._gold_hand_number, observation)

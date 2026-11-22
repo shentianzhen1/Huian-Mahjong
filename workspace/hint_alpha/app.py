@@ -35,7 +35,12 @@ from workspace.vision.capture_validator.media import FrameHealth
 from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
 from workspace.vision.tiles_v0_1.public_state_scores import OCRExecutableMissing
 
-from .runtime_pipeline import evaluate_runtime_report, interrupt_runtime_observations
+from .runtime_pipeline import (
+    confirmed_public_hand_boundary,
+    evaluate_runtime_report,
+    interrupt_runtime_observations,
+    public_hand_boundary_pending,
+)
 from .evidence import EvidenceSession
 from .live_guard import LiveAdviceGuard
 from .manual_input import evaluate_manual_input, observed_score_entry
@@ -1896,6 +1901,15 @@ class HintAlphaApp(tk.Tk):
     def _public_state_failed(self):
         """Optional live-entry hook for an unresolved public observation."""
 
+    def _clear_public_observation(self):
+        self.ui_hand_number = None
+        self.ui_remaining_tiles = None
+        self.ui_score_pair = None
+        self.ui_hand_number_ok = False
+        self._public_state_failed()
+        self._refresh_header()
+        self._refresh_health()
+
     def _consume_public_result(self):
         try:
             kind, value, source, elapsed = self.public_result_queue.get_nowait()
@@ -1904,13 +1918,7 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         if kind in {"error", "unavailable"}:
             self.vision_status.set(f"PublicState暂不可用：{value}")
-            self.ui_hand_number = None
-            self.ui_remaining_tiles = None
-            self.ui_score_pair = None
-            self.ui_hand_number_ok = False
-            self._public_state_failed()
-            self._refresh_header()
-            self._refresh_health()
+            self._clear_public_observation()
             if kind == "unavailable":
                 self.public_disabled = True
             if self.evidence:
@@ -1920,19 +1928,32 @@ class HintAlphaApp(tk.Tk):
                 )
             return
         observation = value.observation
-        self.public_previous = observation
-        self._update_public_view(observation)
-        self.vision_status.set(
-            "PublicState："
-            f"比分={observation.score_pair} "
-            f"第{observation.hand_number or '?'}局 "
-            f"余牌={observation.remaining_tiles} "
-            f"issues={','.join(observation.issues) or 'none'}"
+        previous_hand = self.public_previous.hand_number if self.public_previous else None
+        pending = (
+            public_hand_boundary_pending(previous_hand, observation)
+            and not confirmed_public_hand_boundary(previous_hand, observation)
         )
+        if pending:
+            self._clear_public_observation()
+            self.vision_status.set("PublicState：局号尚未确认，等待当前画面")
+        else:
+            self.public_previous = observation
+            self._update_public_view(observation)
+            self.vision_status.set(
+                "PublicState："
+                f"比分={observation.score_pair} "
+                f"第{observation.hand_number or '?'}局 "
+                f"余牌={observation.remaining_tiles} "
+                f"issues={','.join(observation.issues) or 'none'}"
+            )
         if self.evidence:
             self.evidence.mark(
                 "PUBLIC_STATE",
-                {"observation": asdict(observation), "ocr_elapsed_seconds": elapsed},
+                {
+                    "observation": asdict(observation),
+                    "ocr_elapsed_seconds": elapsed,
+                    "accepted_for_live_view": not pending,
+                },
                 source=source,
             )
 

@@ -29,6 +29,15 @@ class LiveTimelineTests(unittest.TestCase):
             row = event_row({'kind': 'PUBLIC_STATE', 'payload': {'observation': observation}})
             self.assertIn('比分=未知', row[6])
 
+    def test_rejected_public_read_is_unknown_in_live_timeline(self):
+        row = event_row({'kind': 'PUBLIC_STATE', 'payload': {
+            'accepted_for_live_view': False,
+            'observation': {'hand_number': 5, 'score_pair': [1100, 900],
+                            'remaining_tiles': 80}}})
+        self.assertEqual(row[1], '未知')
+        self.assertIn('比分=未知；余牌=未知', row[6])
+        self.assertIn('局号尚未确认', row[6])
+
     def test_tail_partial_writes_no_duplicates_and_session_reset(self):
         with TemporaryDirectory() as folder:
             path = Path(folder) / 'events.jsonl'

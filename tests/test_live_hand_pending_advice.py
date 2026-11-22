@@ -186,6 +186,45 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.assertTrue(self.app.public_disabled)
         self.assertTrue(self.app.runtime_advice_pipeline.hand_boundary_pending)
 
+    def test_invalid_hand_reads_leave_public_history_at_last_confirmed_hand(self):
+        from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
+
+        app = self.app
+        self.public_display.stop()
+        app.public_result_queue = queue.Queue()
+        app.vision_status = Mock()
+        app.timeline_hand = 2
+        app.timeline_scores = (1000, 1000)
+        app._append_timeline = Mock()
+        previous = PublicStateObservation(1000, 1000, 2, 81, 2, 2, 2)
+        app.public_previous = previous
+        app._update_public_view(previous)
+
+        def read(hand, votes=2):
+            observation = PublicStateObservation(1100, 900, hand, 80, 2, votes, 2)
+            app.public_result_queue.put(("ok", SimpleNamespace(observation=observation),
+                                         {"sequence": 20}, .1))
+            app._consume_public_result()
+            return app.evidence.mark.call_args.args[1]
+
+        for hand, votes in ((1, 2), (5, 2), (6, 2), (None, 1)):
+            with self.subTest(hand=hand, votes=votes):
+                payload = read(hand, votes)
+                self.assertFalse(payload["accepted_for_live_view"])
+                self.assertEqual(payload["observation"]["hand_number"], hand)
+                self.assertIs(app.public_previous, previous)
+                self.assertEqual(app.timeline_hand, 2)
+                self.assertEqual(app.timeline_scores, (1000, 1000))
+                self.assertFalse(app.ui_hand_number_ok)
+                self.assertIsNone(app.ui_score_pair)
+                self.assertTrue(app.runtime_advice_pipeline.hand_boundary_pending)
+        app._append_timeline.assert_not_called()
+
+        self.assertTrue(read(3)["accepted_for_live_view"])
+        self.assertEqual(app.timeline_hand, 3)
+        self.assertEqual(app.public_previous.hand_number, 3)
+        self.assertFalse(app.runtime_advice_pipeline.hand_boundary_pending)
+
     def test_prior_identity_from_before_confirmation_cannot_prime_new_read(self):
         from copy import deepcopy
         from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability
