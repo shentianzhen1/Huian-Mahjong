@@ -1,6 +1,7 @@
 """Fresh capture must survive an expired advisory without exposing old hints."""
 from collections import deque
 import queue
+from types import SimpleNamespace
 from unittest import TestCase, skipIf
 from unittest.mock import Mock, patch
 
@@ -11,6 +12,7 @@ from workspace.hint_alpha.runtime_pipeline import RuntimeAdvicePipeline
 
 try:
     from workspace.hint_alpha.live_app import LiveHintAlphaApp
+    from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
 except ImportError:
     LiveHintAlphaApp = None
 
@@ -28,6 +30,7 @@ class LiveResultExpiryTests(TestCase):
         app.runtime_result_queue = queue.Queue()
         app.public_result_queue = queue.Queue()
         app.public_previous = object()
+        app.public_view_source = None
         app.runtime_busy = app.public_busy = True
         app.evidence = Mock(session_id='runtime-live')
         app.source = {}
@@ -127,4 +130,66 @@ class LiveResultExpiryTests(TestCase):
         event = self.app.evidence.mark.call_args.args[1]
         self.assertFalse(event['display_allowed'])
         self.assertIn('live_hand_boundary_unconfirmed', event['issues'])
+
+    def show_public_reading(self):
+        app = self.app
+        del app._consume_public_result
+        app.live_guard.last_result = None
+        app.public_previous = None
+        app.timeline_hand = 2
+        app.timeline_scores = (1000, 1000)
+        app.ui_gold_tile = 'S8'
+        app.match_header_status = Mock()
+        app.score_header_status = Mock()
+        app.vision_status = Mock()
+        self.queue_public_reading(captured=7.5, remaining=81)
+        self.tick(12.)
+        self.assertEqual(app.ui_remaining_tiles, 81)
+
+    def queue_public_reading(self, *, captured, remaining):
+        observation = PublicStateObservation(1000, 1000, 2, remaining, 2, 2, 2)
+        self.app.public_result_queue.put((
+            'ok', SimpleNamespace(observation=observation),
+            {'sequence': 7, 'monotonic': captured}, .1,
+        ))
+
+    def test_public_reading_expires_once_while_ocr_remains_busy_then_recovers(self):
+        self.show_public_reading()
+        app = self.app
+        public_queue = app.public_result_queue
+        app.public_busy = True
+        self.tick(12.5)
+        self.assertEqual(app.ui_remaining_tiles, 81)
+
+        self.tick(12.6)
+        self.assertIsNone(app.ui_hand_number)
+        self.assertIsNone(app.ui_score_pair)
+        self.assertIsNone(app.ui_remaining_tiles)
+        self.assertTrue(app.runtime_advice_pipeline.hand_boundary_pending)
+        self.assertIs(app.public_result_queue, public_queue)
+        self.assertTrue(app.public_busy)
+        self.assertEqual(app.public_previous.remaining_tiles, 81)
+        self.assertEqual(app.evidence.mark.call_args.args[0], 'PUBLIC_STATE_EXPIRED')
+        self.assertEqual(app.evidence.mark.call_args.kwargs['source']['monotonic'], 7.5)
+        marks = app.evidence.mark.call_count
+        self.tick(12.7)
+        self.assertEqual(app.evidence.mark.call_count, marks)
+
+        self.queue_public_reading(captured=12., remaining=80)
+        self.tick(12.8)
+        self.assertEqual(app.ui_remaining_tiles, 80)
+        self.assertFalse(app.runtime_advice_pipeline.hand_boundary_pending)
+        self.read(9, 12.9)
+        self.read(12, 13.1)
+        self.assertTrue(app.evidence.mark.call_args.args[1]['display_allowed'])
+        self.assertEqual(app.evidence.mark.call_args.args[1]['gold_tile'], 'S8')
+
+    def test_queued_fresh_public_reading_supersedes_old_reading_before_expiry(self):
+        self.show_public_reading()
+        self.queue_public_reading(captured=12., remaining=80)
+        self.tick(12.6)
+        self.assertEqual(self.app.ui_remaining_tiles, 80)
+        self.assertFalse(self.app.runtime_advice_pipeline.hand_boundary_pending)
+        self.assertEqual([call.args[0] for call in self.app.evidence.mark.call_args_list],
+                         ['PUBLIC_STATE', 'PUBLIC_STATE'])
 

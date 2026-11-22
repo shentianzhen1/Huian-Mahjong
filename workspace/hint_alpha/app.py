@@ -83,6 +83,7 @@ class HintAlphaApp(tk.Tk):
         self.auto_recorder = None
         self.public_reader = PublicStateReader(stop_on_score_majority=True)
         self.public_previous = None
+        self.public_view_source = None
         self.public_frames = deque(maxlen=3)
         self.public_busy = False
         self.public_disabled = False
@@ -1526,6 +1527,7 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
+        self.public_view_source = None
         self.last_public_started = float("-inf")
         self.ui_hand_number = None
         self.ui_remaining_tiles = None
@@ -1906,6 +1908,7 @@ class HintAlphaApp(tk.Tk):
         """Optional live-entry hook for an unresolved public observation."""
 
     def _clear_public_observation(self):
+        self.public_view_source = None
         self.ui_hand_number = None
         self.ui_remaining_tiles = None
         self.ui_score_pair = None
@@ -1986,6 +1989,10 @@ class HintAlphaApp(tk.Tk):
             self.vision_status.set(f"PublicState：{rejection_reason}，等待当前画面")
         else:
             self._apply_public_observation(observation)
+            has_public_reading = any(value is not None for value in (
+                self.ui_hand_number, self.ui_score_pair, self.ui_remaining_tiles,
+            ))
+            self.public_view_source = source if has_public_reading else None
         if self.evidence:
             self.evidence.mark(
                 "PUBLIC_STATE",
@@ -1997,6 +2004,20 @@ class HintAlphaApp(tk.Tk):
                     "live_view_rejection_reason": rejection_reason,
                 },
                 source=source,
+            )
+
+    def _expire_public_observation(self, now):
+        source = self.public_view_source
+        if source is None:
+            return
+        age = now - source["monotonic"]
+        if age <= PUBLIC_STATE_MAX_CAPTURE_AGE_SECONDS:
+            return
+        self._clear_public_observation()
+        self.vision_status.set("PublicState：当前读数已过期，等待识别更新")
+        if self.evidence:
+            self.evidence.mark(
+                "PUBLIC_STATE_EXPIRED", {"capture_age_seconds": age}, source=source
             )
 
     def accept(self, item):
@@ -2127,6 +2148,7 @@ class HintAlphaApp(tk.Tk):
             elif self.live_guard.stale(now):
                 self._expire_runtime_advice()
             self._consume_public_result()
+            self._expire_public_observation(now)
             self._consume_runtime_result()
             self._consume_video_test_events()
             if self.demo:
