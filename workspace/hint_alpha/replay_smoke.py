@@ -94,6 +94,7 @@ def summarize_windows(rows):
     input_issue_combinations = Counter()
     hand_stages = Counter()
     missing_gold_candidates = Counter()
+    missing_gold_locations = {}
     for row in rows:
         allowed = row['display_allowed'] is True
         public_context.update(issue for issue in set(row['hint']['issues'])
@@ -110,7 +111,11 @@ def summarize_windows(rows):
                 # Count the same candidate once per window, even across multiple slots.
                 candidates = {item.get('candidate_tile_id')
                               for item in _concealed_gold_reference_rejections(row)}
-                missing_gold_candidates.update(sorted(candidates - {None, '', 'UNKNOWN'}))
+                for tile in sorted(candidates - {None, '', 'UNKNOWN'}):
+                    missing_gold_candidates[tile] += 1
+                    location = {'frame': row['frames'][-1], 'seconds': row['source_seconds'][-1]}
+                    bounds = missing_gold_locations.setdefault(tile, {'first': location})
+                    bounds['last'] = location
             categories = tuple(category for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items()
                                if issues & matching_issues)
             input_issues.update(categories)
@@ -137,6 +142,7 @@ def summarize_windows(rows):
             'rejection_issue_windows': dict(sorted(rejection_issues.items())),
             'structural_blocker_windows': dict(structural_blockers.most_common()),
             'missing_concealed_gold_candidate_windows': dict(missing_gold_candidates.most_common()),
+            'missing_concealed_gold_candidate_locations': missing_gold_locations,
             'public_context_issue_windows': dict(sorted(public_context.items())),
             'blocked_window_input_issues': dict(input_issues.most_common()),
             'blocked_window_input_issue_combinations': dict(input_issue_combinations.most_common()),

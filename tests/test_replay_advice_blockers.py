@@ -90,8 +90,15 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
             row(10, geometry_untrusted=True, issues=['hand_untrusted'],
                 identity_observations=observations),
         ]
-        self.assertEqual(summarize_windows(rows)['missing_concealed_gold_candidate_windows'],
-                         {'S5': 2, 'S9': 1})
+        rows[1]['source_seconds'] = [1., 1.2, 1.4]
+        result = summarize_windows(rows)
+        self.assertEqual(result['missing_concealed_gold_candidate_windows'], {'S5': 2, 'S9': 1})
+        self.assertEqual(result['missing_concealed_gold_candidate_locations'], {
+            'S5': {'first': {'frame': 3, 'seconds': .4},
+                   'last': {'frame': 6, 'seconds': 1.4}},
+            'S9': {'first': {'frame': 3, 'seconds': .4},
+                   'last': {'frame': 3, 'seconds': .4}},
+        })
 
     def test_hand_stages_keep_missing_evidence_and_unconfirmed_identity_distinct(self):
         issues = ['hand_untrusted']
