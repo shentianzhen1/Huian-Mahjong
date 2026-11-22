@@ -437,3 +437,25 @@ trusted hand or displayed advice with the strict, stateless advisory
 configuration. The opt-in product trial and independent validation are
 separate evaluations. No new material or Runtime threshold change was
 made in this comparison.
+
+### End-to-end trial-mode check of the same recordings
+
+Run the product video-test entry point from `96f5a636`, with real Tesseract,
+0.2 s sampling and the shipped `2026.10.30.1` bundle explicitly selected in
+trial mode. Default and trial use their own product behavior. Compare only
+identical three-frame bursts because trial mode evaluates every other window.
+All trial bursts had an exact frame-ordinal match in the default run.
+
+| Recording SHA256 prefix | Requested video range | Common bursts | Advice default → trial | Trial discard windows |
+| --- | --- | ---: | ---: | ---: |
+| `de1d21b2a722` | 0–25 s | 62 | 0 → 35 | 15 |
+| `9709fdc3aa46` | 85–97 s | 29 | 0 → 15 | 1 |
+
+The first run reproduces the previously recorded 35 advice and 15 discard
+windows. Across both clips, of the 41 trial abstentions, 35 stop at geometry,
+three at Gold, one at hand boundary, one at hand identity, and one at a
+concealed count mismatch. The last is reported under the existing meld/count
+bucket. This measures end-to-end display coverage in already revealed scenes,
+without a new truth review. It combines the product trial's references,
+geometry, and confirmation policy, so the coverage difference cannot be
+attributed to a single component.
