@@ -159,6 +159,23 @@ class ReplayPipelineTests(unittest.TestCase):
         self.assertTrue(all(value >= 0 for value in result['timings_ms'].values()))
         self.assertAlmostEqual(sum(result['timings_ms'].values()), result['elapsed_ms'], places=2)
 
+    def test_nominal_point_eight_second_burst_is_not_marked_sparse(self):
+        from workspace.hint_alpha.replay_smoke import evaluate_burst
+
+        class Pixels:
+            def tobytes(self):
+                return b'contract-fixture'
+
+        for last_time, sparse in ((3.2, False), (3.20001, True)):
+            with self.subTest(last_time=last_time):
+                result = evaluate_burst(
+                    [(1, 2.4, Pixels()), (2, 2.8, Pixels()), (3, last_time, Pixels())],
+                    session='s', dataset_root='unused',
+                    reader=lambda *args, **kwargs: trusted_report(),
+                )
+                self.assertEqual(result['sparse_source_burst'], sparse)
+                self.assertEqual(result['geometry_untrusted'], sparse)
+
     @staticmethod
     def _dense_replay_burst(number, *, pipeline=None, unknown=False):
         from workspace.hint_alpha.replay_smoke import evaluate_burst

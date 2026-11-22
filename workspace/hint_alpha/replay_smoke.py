@@ -160,6 +160,9 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
         raise ValueError("Source timestamps must be finite and nonnegative")
     if any(b <= a for a, b in zip(times, times[1:])):
         raise ValueError('Source frame timestamps must increase')
+    span = times[-1] - times[0]
+    # Subtracting frame-derived float timestamps can round an exact 0.8 s up.
+    sparse = span > 0.8 and not math.isclose(span, 0.8, rel_tol=0.0, abs_tol=1e-9)
     if reader is None:
         from workspace.vision.tiles_runtime_v0_2.runtime_reader import read_stable_frames
         reader = read_stable_frames
@@ -167,7 +170,7 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
     report = reader([item[2] for item in samples], dataset_root,
                     frame_ids=ids, session=session, confidence_threshold=0.82)
     report['stream_epoch'] = epoch
-    if confirm_with_prior and pipeline is not None and times[-1] - times[0] <= 0.8:
+    if confirm_with_prior and pipeline is not None and not sparse:
         from .live_guard import eligible_prior_identity
         prior = reader([item[2] for item in samples], dataset_root,
             frame_ids=ids, session=session, confidence_threshold=0.82,
@@ -181,7 +184,7 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
             pipeline.evaluate(eligible, captured=times[-2], experimental=True)
     runtime_finished = time.perf_counter()
     # Sparse screenshots may diagnose pixels, but do not establish live stability.
-    if times[-1] - times[0] > 0.8:
+    if sparse:
         report = {**report, 'geometry_untrusted': True,
                   'geometry_issues': ['sparse_source_burst']}
     if pipeline is None:
@@ -218,7 +221,7 @@ def evaluate_burst(samples, *, session, dataset_root, epoch=0, reader=None,
         'display_allowed': advisory.display_allowed,
         'hand_source_trial': advisory.hand_source_trial,
         'opening_fact': asdict(advisory.opening_fact),
-        'sparse_source_burst': times[-1] - times[0] > 0.8,
+        'sparse_source_burst': sparse,
         'geometry_issues': report.get('geometry_issues', []),
         'geometry_frame_diagnostics': report.get('geometry_frame_diagnostics', []),
         'geometry_untrusted': report.get('geometry_untrusted', True),
