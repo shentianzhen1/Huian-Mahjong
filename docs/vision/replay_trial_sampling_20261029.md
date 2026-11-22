@@ -335,5 +335,30 @@ On the ten Oct12 windows listed above, with the score shortcut enabled in
 both runs, total reader time fell from 23.36 s to 15.10 s. The slowest sampled
 window fell from 2.59 s to 1.69 s. All frame reads and fused observations were
 identical, including crop fallback evidence and frame IDs. Each configuration
-was run once on Linux after decoding the frames. Windows latency and CPU
-contention with simultaneous Runtime Vision remain unmeasured.
+was run once on Linux after decoding the frames. Windows latency remains
+unmeasured.
+
+### Live OCR and Runtime Vision running together
+
+On Linux, run the actual Hint Alpha OCR and Runtime Vision worker methods on
+the same decoded three-frame burst. Use the first six Oct12 endpoints above
+(72, 222, 420, 660, 930, 1290) and alternate the order of the configurations
+across bursts. For the second run, limit process affinity to two logical CPUs
+with `taskset -c 0,1` before importing OpenCV. OCR uses the score majority
+shortcut in both configurations.
+
+| Logical CPUs available | OCR frame workers | Total OCR time (6 windows) | Runtime Vision median | Slowest Runtime Vision window |
+| ---: | ---: | ---: | ---: | ---: |
+| 9 | 1 | 13.39 s | 48 ms | 185 ms |
+| 9 | 2 | 9.02 s | 51 ms | 204 ms |
+| 2 | 1 | 15.24 s | 79 ms | 366 ms |
+| 2 | 2 | 11.23 s | 122 ms | 432 ms |
+
+OCR frame reads and fused observations matched. Runtime Vision components,
+frame IDs and geometry trust also matched the run without simultaneous OCR.
+All measured Runtime Vision worker durations were below 2 s. The two-worker
+configuration saved about 26% of OCR time on two logical CPUs, with a 43 ms
+increase in median Runtime Vision worker duration. The live default remains
+two OCR frame workers. This test measures workers launched together on decoded
+frames. It excludes continuous capture, UI polling, the full advisory
+pipeline and Windows execution.
