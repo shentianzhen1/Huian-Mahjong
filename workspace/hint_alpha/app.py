@@ -173,6 +173,7 @@ class HintAlphaApp(tk.Tk):
         self.video_test_start = tk.StringVar(value="0")
         self.video_test_duration = tk.StringVar(value="0")
         self.video_test_interval = tk.StringVar(value="AUTO")
+        self.video_test_dense_sampling = tk.BooleanVar(value=False)
         self.video_test_source_status = tk.StringVar(value="尚未选择录像")
         self.video_test_runtime_status = tk.StringVar(value="Runtime Vision：等待测试")
         self.video_test_public_status = tk.StringVar(value="PublicState OCR：等待测试")
@@ -451,6 +452,9 @@ class HintAlphaApp(tk.Tk):
         ttk.Button(action_row, text="停止复盘", command=self.stop_video_test).pack(
             side="left", padx=6
         )
+        ttk.Checkbutton(
+            action_row, text="密集采样（约 0.1 秒）", variable=self.video_test_dense_sampling,
+        ).pack(side="left", padx=6)
         ttk.Label(
             action_row,
             text="直接读取原始视频像素；不会上传视频，不经过播放器缩放。",
@@ -763,6 +767,7 @@ class HintAlphaApp(tk.Tk):
             meta = probe_video(path)
             interval = automatic_sample_interval(
                 meta, reference_trial=self._video_reference_packet() is not None,
+                dense_sampling=self.video_test_dense_sampling.get(),
             )
             self.video_test_start.set("0")
             self.video_test_duration.set("0")
@@ -805,6 +810,7 @@ class HintAlphaApp(tk.Tk):
             reference_packet = self._video_reference_packet()
             interval = automatic_sample_interval(
                 meta, reference_trial=reference_packet is not None,
+                dense_sampling=self.video_test_dense_sampling.get(),
             )
             self.video_test_start.set("0")
             self.video_test_duration.set("0")

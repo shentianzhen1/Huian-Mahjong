@@ -41,6 +41,14 @@ class AutomaticVideoParameterTests(unittest.TestCase):
         self.assertAlmostEqual(automatic_sample_interval(meta, reference_trial=True), 0.2)
         self.assertAlmostEqual(automatic_sample_interval(meta), 0.3)
 
+    def test_explicit_dense_sampling_applies_with_or_without_trial_references(self):
+        meta = {"fps": 30.0, "duration_seconds": 600.0}
+        for trial in (False, True):
+            self.assertAlmostEqual(
+                automatic_sample_interval(meta, reference_trial=trial, dense_sampling=True),
+                0.1,
+            )
+
     def test_longer_match_stays_inside_temporal_window(self):
         medium = {"fps": 30.0, "duration_seconds": 1200.0}
         long = {"fps": 60.0, "duration_seconds": 2400.0}

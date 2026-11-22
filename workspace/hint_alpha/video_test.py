@@ -23,6 +23,7 @@ from .runtime_pipeline import confirmed_public_hand_boundary, public_hand_bounda
 
 REFERENCE_FRAME_SIZE = (2796, 1290)
 DEFAULT_SAMPLE_INTERVAL_SECONDS = 0.20
+DENSE_SAMPLE_INTERVAL_SECONDS = 0.10
 REPLAY_OCR_INTERVAL_SECONDS = 2.0
 
 
@@ -55,7 +56,7 @@ class ReplayOCRCache:
         return text
 
 
-def automatic_sample_interval(metadata, *, reference_trial=False):
+def automatic_sample_interval(metadata, *, reference_trial=False, dense_sampling=False):
     """Choose a conservative no-input replay cadence from decoded metadata.
 
     Three sampled frames must stay within the existing <=0.8s temporal window,
@@ -67,6 +68,8 @@ def automatic_sample_interval(metadata, *, reference_trial=False):
     duration = float(metadata["duration_seconds"])
     if fps <= 0 or duration <= 0:
         raise ValueError("Video metadata is invalid")
+    if dense_sampling:
+        return DENSE_SAMPLE_INTERVAL_SECONDS
     # Offline replay values throughput over live-display latency.  A 0.30s
     # cadence still keeps a 3-sample burst within the existing <=0.8s temporal
     # gate (first-to-last ~=0.6s) while cutting short-video Runtime work by

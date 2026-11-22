@@ -468,3 +468,27 @@ was in the row, and advice reappeared at the sampled endpoint 636. The
 replay summary now gives concealed count its own blocker label to keep
 this case distinct from a failed meld count. The identity and count gates
 are unchanged during the animation.
+
+### Optional dense sampling in video replay
+
+The replay UI now offers an unchecked 0.1 s dense-sampling option. The
+automatic interval remains unchanged. The option affects offline decoding
+only and does not enable trial references by itself.
+
+Using the same two trial-mode clips and real OCR above, compare the 0.2 s
+automatic trial cadence with 0.1 s. Pair rows by endpoint index and verify
+their RGB hashes. Earlier frames in each burst can differ.
+
+| Recording | Shared endpoints | Advice gained / lost on shared endpoints | Advice on all sampled endpoints at 0.2 s → 0.1 s | Discard windows at 0.2 s → 0.1 s |
+| --- | ---: | ---: | ---: | ---: |
+| Oct12 0–25 s | 62 | 4 / 0 | 35 → 81 | 15 → 32 |
+| Sep26 85–97 s | 29 | 5 / 0 | 15 → 37 | 1 → 5 |
+
+All nine gains on shared endpoints previously stopped at geometry. The
+50 shared endpoints that already showed advice retained matching hand,
+Gold, phase, shanten and discard candidates. The four Oct12 gains also
+matched existing manually reviewed endpoint hashes, hand, Gold, phase
+and shanten. Sep26 gains were not newly truth-reviewed. The total window
+counts include additional sampled endpoints. The measured Linux wall times
+were 32.2 → 48.9 s and 17.1 → 24.7 s in separate development runs. There is
+no change to the 0.82 threshold and no live or Windows validation claim.
