@@ -413,3 +413,27 @@ one more M3 prediction was M5. These four spot checks establish concrete
 confusions and do not estimate their overall error rates. Adding a second
 reviewed source for P2/M8/G addresses the coverage gate only. The 0.82
 threshold and current reference bank were retained for this review.
+
+### Wan numeral crop and bundled reference comparison
+
+On the three manually confirmed M2/M2/M5 crops above, compare NCC on the
+whole normalized face with NCC on its upper 36 of 72 rows. Both rank only
+Wan templates and exclude the exact query SHA and any registered matching
+original-match group. The second clip has no mapped match group in the
+lineage file. Both methods ranked M3 first on all three crops. In a separate
+leave-source-out check of 21 approved Wan crops, eight lacked an alternative
+same-class reference after exclusion. Among the remaining 13, both methods
+ranked the correct identity first twice. Do not adopt the upper-half crop
+based on this development probe.
+
+The existing bundled trial classifier, `2026.10.30.1`, instead ranks M2,
+M2 and M5 first at 0.858, 0.876 and 0.924. These are candidate scores and
+do not imply strict identity acceptance. With experimental edge seams held
+constant over the 15 recovered windows, the bundled reference classifier
+changes raw rejection counts from 120 low-score and 30 cross-session
+failures to one low-score and 136 cross-session failures. Different rejected
+counts include changes to candidate identity. Neither mode produced a
+trusted hand or displayed advice with the strict, stateless advisory
+configuration. The opt-in product trial and independent validation are
+separate evaluations. No new material or Runtime threshold change was
+made in this comparison.
