@@ -7,7 +7,7 @@ rather than guessed.
 """
 import argparse
 from collections import deque
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 import queue
 import threading
@@ -1910,6 +1910,38 @@ class HintAlphaApp(tk.Tk):
         self._refresh_header()
         self._refresh_health()
 
+    def _apply_public_observation(self, observation):
+        visible = observation
+        if "score_changed_inside_hand" in observation.issues:
+            visible = replace(visible, top_right_score=None, bottom_left_score=None)
+        if "remaining_increased_inside_hand" in observation.issues:
+            visible = replace(visible, remaining_tiles=None)
+
+        # A missing or rejected field must not erase the next read's baseline.
+        previous = self.public_previous
+        baseline = visible
+        if previous is not None and previous.hand_number is not None and (
+            previous.hand_number == visible.hand_number
+        ):
+            if visible.score_pair is None:
+                baseline = replace(
+                    baseline,
+                    top_right_score=previous.top_right_score,
+                    bottom_left_score=previous.bottom_left_score,
+                )
+            if visible.remaining_tiles is None:
+                baseline = replace(baseline, remaining_tiles=previous.remaining_tiles)
+
+        self.public_previous = baseline
+        self._update_public_view(visible)
+        self.vision_status.set(
+            "PublicState："
+            f"比分={visible.score_pair} "
+            f"第{visible.hand_number or '?'}局 "
+            f"余牌={visible.remaining_tiles} "
+            f"issues={','.join(visible.issues) or 'none'}"
+        )
+
     def _consume_public_result(self):
         try:
             kind, value, source, elapsed = self.public_result_queue.get_nowait()
@@ -1937,15 +1969,7 @@ class HintAlphaApp(tk.Tk):
             self._clear_public_observation()
             self.vision_status.set("PublicState：局号尚未确认，等待当前画面")
         else:
-            self.public_previous = observation
-            self._update_public_view(observation)
-            self.vision_status.set(
-                "PublicState："
-                f"比分={observation.score_pair} "
-                f"第{observation.hand_number or '?'}局 "
-                f"余牌={observation.remaining_tiles} "
-                f"issues={','.join(observation.issues) or 'none'}"
-            )
+            self._apply_public_observation(observation)
         if self.evidence:
             self.evidence.mark(
                 "PUBLIC_STATE",

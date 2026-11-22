@@ -225,6 +225,58 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.assertEqual(app.public_previous.hand_number, 3)
         self.assertFalse(app.runtime_advice_pipeline.hand_boundary_pending)
 
+    def test_same_hand_missing_or_inconsistent_fields_do_not_replace_baseline(self):
+        from workspace.vision.tiles_v0_1.public_state import (
+            PublicStateCandidate,
+            fuse_public_state,
+        )
+
+        app = self.app
+        self.public_display.stop()
+        app.public_result_queue = queue.Queue()
+        app.vision_status = Mock()
+        app.timeline_hand = 2
+        app.timeline_scores = (1000, 1000)
+        app._append_timeline = Mock()
+        app.public_previous = None
+
+        def read(top, bottom, hand, remaining):
+            candidate = PublicStateCandidate(top, bottom, hand, remaining)
+            observation = fuse_public_state(
+                (candidate, candidate), previous=app.public_previous, minimum_votes=2
+            )
+            app.public_result_queue.put(("ok", SimpleNamespace(observation=observation),
+                                         {"sequence": 20}, .1))
+            app._consume_public_result()
+            return app.evidence.mark.call_args.args[1]["observation"]
+
+        read(1000, 1000, 2, 81)
+        read(None, None, 2, None)
+        self.assertIsNone(app.ui_score_pair)
+        self.assertIsNone(app.ui_remaining_tiles)
+        self.assertEqual(app.public_previous.score_pair, (1000, 1000))
+        self.assertEqual(app.public_previous.remaining_tiles, 81)
+
+        raw = read(1100, 900, 2, 80)
+        self.assertIn("score_changed_inside_hand", raw["issues"])
+        self.assertEqual(raw["top_right_score"], 1100)
+        self.assertIsNone(app.ui_score_pair)
+        self.assertEqual(app.ui_remaining_tiles, 80)
+
+        raw = read(1000, 1000, 2, 81)
+        self.assertIn("remaining_increased_inside_hand", raw["issues"])
+        self.assertEqual(raw["remaining_tiles"], 81)
+        self.assertIsNone(app.ui_remaining_tiles)
+        self.assertEqual(app.ui_score_pair, (1000, 1000))
+        self.assertEqual(app.public_previous.remaining_tiles, 80)
+        self.assertFalse(app.runtime_advice_pipeline.hand_boundary_pending)
+        app._append_timeline.assert_not_called()
+
+        read(1100, 900, 3, 107)
+        self.assertEqual(app.ui_score_pair, (1100, 900))
+        self.assertEqual(app.ui_remaining_tiles, 107)
+        self.assertEqual(app.timeline_hand, 3)
+
     def test_prior_identity_from_before_confirmation_cannot_prime_new_read(self):
         from copy import deepcopy
         from workspace.hint_alpha.live_snapshot_stability import LiveSnapshotStability
