@@ -1,5 +1,6 @@
 """Fresh capture must survive an expired advisory without exposing old hints."""
 from collections import deque
+from pathlib import Path
 import queue
 from types import SimpleNamespace
 from unittest import TestCase, skipIf
@@ -30,7 +31,7 @@ class LiveResultExpiryTests(TestCase):
         app.runtime_result_queue = queue.Queue()
         app.public_result_queue = queue.Queue()
         app.public_previous = object()
-        app.public_view_source = None
+        app.public_view = None
         app.runtime_busy = app.public_busy = True
         app.evidence = Mock(session_id='runtime-live')
         app.source = {}
@@ -192,4 +193,34 @@ class LiveResultExpiryTests(TestCase):
         self.assertFalse(self.app.runtime_advice_pipeline.hand_boundary_pending)
         self.assertEqual([call.args[0] for call in self.app.evidence.mark.call_args_list],
                          ['PUBLIC_STATE', 'PUBLIC_STATE'])
+
+    def test_feedback_saves_visible_ocr_with_its_own_source_and_age(self):
+        self.show_public_reading()
+        app = self.app
+        partial = PublicStateObservation(None, None, 2, 80, 0, 2, 2)
+        ocr_source = {'sequence': 7, 'monotonic': 12.}
+        app.public_result_queue.put(('ok', SimpleNamespace(observation=partial),
+                                     ocr_source, .1))
+        self.tick(12.2)
+        self.assertEqual(app.public_previous.score_pair, (1000, 1000))
+
+        app.frame = object()
+        app.source = {'sequence': 9, 'monotonic': 12.2}
+        app.evidence.path = Path('session')
+        app.evidence.save_frame.return_value = app.evidence.path / 'frames' / 'feedback.png'
+        app.evidence_status = Mock()
+        self.now.return_value = 13.
+        app.mark_feedback('RECOGNITION_ERROR')
+        saved = app.evidence.save_frame.call_args.kwargs
+        self.assertEqual(saved['source'], app.source)
+        self.assertEqual(saved['payload']['public_state_source'], ocr_source)
+        self.assertEqual(saved['payload']['public_state_age_seconds'], 1.)
+        self.assertIsNone(saved['payload']['public_state']['top_right_score'])
+        self.assertEqual(saved['payload']['public_state']['remaining_tiles'], 80)
+
+        self.now.return_value = 17.1
+        app.mark_feedback('RECOGNITION_ERROR')
+        stale = app.evidence.save_frame.call_args.kwargs['payload']
+        self.assertIsNone(stale['public_state'])
+        self.assertEqual(stale['public_state_source'], ocr_source)
 

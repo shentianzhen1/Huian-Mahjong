@@ -85,7 +85,7 @@ class HintAlphaApp(tk.Tk):
             stop_on_score_majority=True, parallel_frames=True
         )
         self.public_previous = None
-        self.public_view_source = None
+        self.public_view = None
         self.public_frames = deque(maxlen=3)
         self.public_busy = False
         self.public_worker_thread = None
@@ -1531,7 +1531,7 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
-        self.public_view_source = None
+        self.public_view = None
         self.last_public_started = float("-inf")
         self.ui_hand_number = None
         self.ui_remaining_tiles = None
@@ -1916,7 +1916,7 @@ class HintAlphaApp(tk.Tk):
         """Optional live-entry hook for an unresolved public observation."""
 
     def _clear_public_observation(self):
-        self.public_view_source = None
+        self.public_view = None
         self.ui_hand_number = None
         self.ui_remaining_tiles = None
         self.ui_score_pair = None
@@ -1956,6 +1956,7 @@ class HintAlphaApp(tk.Tk):
             f"余牌={visible.remaining_tiles} "
             f"issues={','.join(visible.issues) or 'none'}"
         )
+        return visible
 
     def _consume_public_result(self):
         try:
@@ -1996,11 +1997,11 @@ class HintAlphaApp(tk.Tk):
             self._clear_public_observation()
             self.vision_status.set(f"PublicState：{rejection_reason}，等待当前画面")
         else:
-            self._apply_public_observation(observation)
+            visible = self._apply_public_observation(observation)
             has_public_reading = any(value is not None for value in (
-                self.ui_hand_number, self.ui_score_pair, self.ui_remaining_tiles,
+                visible.hand_number, visible.score_pair, visible.remaining_tiles,
             ))
-            self.public_view_source = source if has_public_reading else None
+            self.public_view = (visible, source) if has_public_reading else None
         if self.evidence:
             self.evidence.mark(
                 "PUBLIC_STATE",
@@ -2015,9 +2016,9 @@ class HintAlphaApp(tk.Tk):
             )
 
     def _expire_public_observation(self, now):
-        source = self.public_view_source
-        if source is None:
+        if self.public_view is None:
             return
+        _, source = self.public_view
         age = now - source["monotonic"]
         if age <= PUBLIC_STATE_MAX_CAPTURE_AGE_SECONDS:
             return
@@ -2082,16 +2083,20 @@ class HintAlphaApp(tk.Tk):
             messagebox.showinfo("尚无画面", "请先开始内测并等待实时画面。")
             return
         try:
+            public_state = public_state_source = public_state_age = None
+            if self.public_view is not None:
+                visible, public_state_source = self.public_view
+                public_state_age = time.monotonic() - public_state_source["monotonic"]
+                if 0 <= public_state_age <= PUBLIC_STATE_MAX_CAPTURE_AGE_SECONDS:
+                    public_state = asdict(visible)
             path = self.evidence.save_frame(
                 self.frame,
                 category.lower(),
                 source=self.source,
                 payload={
-                    "public_state": (
-                        asdict(self.public_previous)
-                        if self.public_previous is not None
-                        else None
-                    )
+                    "public_state": public_state,
+                    "public_state_source": public_state_source,
+                    "public_state_age_seconds": public_state_age,
                 },
             )
             if category == "SETTLEMENT_PAGE":
