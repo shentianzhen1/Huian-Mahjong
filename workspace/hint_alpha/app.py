@@ -1788,12 +1788,28 @@ class HintAlphaApp(tk.Tk):
             return
         self.runtime_busy = False
         current_session = self.evidence.session_id if self.evidence else None
-        if source_session != current_session or not self.live_guard.accepts(
-            generation, captured, time.monotonic()
-        ) or captured <= self.__dict__.get('runtime_observation_not_before', float('-inf')):
+        guard = self.live_guard
+        if source_session != current_session or not guard.active or generation != guard.generation:
             return
-        previous_result = self.live_guard.last_result
-        self.live_guard.last_result = captured
+        if captured <= self.__dict__.get('runtime_observation_not_before', float('-inf')):
+            return
+        now = time.monotonic()
+        if not guard.accepts(generation, captured, now):
+            age = now - captured
+            if self.evidence and kind == "ok" and math.isfinite(age) and age > guard.max_age:
+                frames = value.get("frames", ())
+                self.evidence.mark(
+                    "RUNTIME_RESULT_TOO_OLD",
+                    {
+                        "capture_age_seconds": age,
+                        "runtime_elapsed_seconds": value.get("runtime_elapsed_seconds"),
+                        "freshness_limit_seconds": guard.max_age,
+                    },
+                    source={"sequence": frames[-1] if frames else None, "monotonic": captured},
+                )
+            return
+        previous_result = guard.last_result
+        guard.last_result = captured
         if kind == "error":
             interrupt_runtime_observations()
             self.runtime_status.set(f"Runtime Vision暂不可用：{value}")

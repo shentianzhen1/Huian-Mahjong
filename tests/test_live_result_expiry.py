@@ -118,10 +118,19 @@ class LiveResultExpiryTests(TestCase):
         self.assertEqual(event['gold_tile'], 'M4')
 
     def test_stale_queued_result_cannot_restore_expired_hint(self):
-        self.app.runtime_result_queue.put(('ok', 'runtime-live', 0, 10., runtime_report()))
+        report = runtime_report(frames=(3, 4, 5))
+        report['runtime_elapsed_seconds'] = 1.8
+        self.app.runtime_result_queue.put(('ok', 'runtime-live', 0, 10., report))
         self.tick(12.1)
         self.app._update_snapshot_view.assert_not_called()
         self.assertIn('BLOCKED', self.app.hint_status.set.call_args.args[0])
+        event, payload = self.app.evidence.mark.call_args.args
+        self.assertEqual(event, 'RUNTIME_RESULT_TOO_OLD')
+        self.assertAlmostEqual(payload['capture_age_seconds'], 2.1)
+        self.assertEqual(payload['runtime_elapsed_seconds'], 1.8)
+        self.assertEqual(payload['freshness_limit_seconds'], 2.)
+        self.assertEqual(self.app.evidence.mark.call_args.kwargs['source'],
+                         {'sequence': 5, 'monotonic': 10.})
 
     def test_pending_hand_boundary_remains_blocked_after_result_expiry(self):
         self.app.runtime_advice_pipeline.hand_boundary_pending = True

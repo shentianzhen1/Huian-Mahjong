@@ -26,6 +26,7 @@ def event_row(event):
         "SESSION_STARTED": "会话开始", "CAPTURE_STARTED": "采集开始",
         "MANUAL_ENTRY_STARTED": "人工输入开始", "CURRENT_SNAPSHOT_HINT": "牌桌观察 / 向听辅助",
         "PUBLIC_STATE": "状态栏观察", "PUBLIC_STATE_EXPIRED": "状态栏读数已过期",
+        "RUNTIME_RESULT_TOO_OLD": "牌面识别结果超时",
         "BLACK_FRAME": "黑屏，动作未知",
         "CAPTURE_ERROR": "采集错误，动作未知", "RUNTIME_VISION_ERROR": "识别错误，动作未知",
         "FRAME_SAVED": "截图保存", "SETTLEMENT_PAGE": "结算页保存，结果待审阅",
