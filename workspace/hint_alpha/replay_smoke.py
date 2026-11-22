@@ -32,6 +32,16 @@ STRUCTURAL_INPUT_ISSUES = {
 }
 
 
+def _concealed_gold_reference_rejections(row):
+    components = (row.get('identity_observations') or {}).get('components') or ()
+    return (
+        item for item in components
+        if item.get('region_candidate') in {'hand', 'draw_visual'}
+        and item.get('tile_id') in (None, '', 'UNKNOWN')
+        and item.get('identity_reason') == 'class_missing_real_gold_skin_example'
+    )
+
+
 def _primary_advice_blocker(row):
     """Bucket reported gates by priority; this is not causal/accuracy scoring."""
     hint = row.get('hint') or {}
@@ -52,15 +62,8 @@ def _primary_advice_blocker(row):
         return 'stability'
     for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items():
         if issues & matching_issues:
-            if category == 'hand_identity':
-                components = (row.get('identity_observations') or {}).get('components') or ()
-                if any(
-                    item.get('region_candidate') in {'hand', 'draw_visual'}
-                    and item.get('tile_id') in (None, '', 'UNKNOWN')
-                    and item.get('identity_reason') == 'class_missing_real_gold_skin_example'
-                    for item in components
-                ):
-                    return 'concealed_gold_reference_missing'
+            if category == 'hand_identity' and any(_concealed_gold_reference_rejections(row)):
+                return 'concealed_gold_reference_missing'
             return 'meld_count' if category == 'concealed_hand_count' else category
     return 'other_state_or_policy'
 
@@ -90,6 +93,7 @@ def summarize_windows(rows):
     input_issues = Counter()
     input_issue_combinations = Counter()
     hand_stages = Counter()
+    missing_gold_candidates = Counter()
     for row in rows:
         allowed = row['display_allowed'] is True
         public_context.update(issue for issue in set(row['hint']['issues'])
@@ -100,7 +104,13 @@ def summarize_windows(rows):
         if not allowed:
             issues = set(row['hint']['issues'])
             rejection_issues.update(issues)
-            structural_blockers[_primary_advice_blocker(row)] += 1
+            blocker = _primary_advice_blocker(row)
+            structural_blockers[blocker] += 1
+            if blocker == 'concealed_gold_reference_missing':
+                # Count the same candidate once per window, even across multiple slots.
+                candidates = {item.get('candidate_tile_id')
+                              for item in _concealed_gold_reference_rejections(row)}
+                missing_gold_candidates.update(sorted(candidates - {None, '', 'UNKNOWN'}))
             categories = tuple(category for category, matching_issues in STRUCTURAL_INPUT_ISSUES.items()
                                if issues & matching_issues)
             input_issues.update(categories)
@@ -126,6 +136,7 @@ def summarize_windows(rows):
     return {'advice_runs': runs, 'recovered_advice_runs': recoveries,
             'rejection_issue_windows': dict(sorted(rejection_issues.items())),
             'structural_blocker_windows': dict(structural_blockers.most_common()),
+            'missing_concealed_gold_candidate_windows': dict(missing_gold_candidates.most_common()),
             'public_context_issue_windows': dict(sorted(public_context.items())),
             'blocked_window_input_issues': dict(input_issues.most_common()),
             'blocked_window_input_issue_combinations': dict(input_issue_combinations.most_common()),

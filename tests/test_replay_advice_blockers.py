@@ -78,6 +78,21 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
         self.assertIn('缺少已审核的金标样本',
                       format_advice_blockers(result['structural_blocker_windows']))
 
+    def test_missing_gold_candidate_counts_use_blocked_windows_not_slots(self):
+        hand = {'region_candidate': 'hand', 'tile_id': 'UNKNOWN',
+                'candidate_tile_id': 'S5',
+                'identity_reason': 'class_missing_real_gold_skin_example'}
+        observations = {'components': [hand, dict(hand), dict(hand, candidate_tile_id='S9')]}
+        rows = [
+            row(1, issues=['hand_untrusted'], identity_observations=observations),
+            row(4, issues=['hand_untrusted'], identity_observations={'components': [hand]}),
+            row(7, allowed=True, identity_observations=observations),
+            row(10, geometry_untrusted=True, issues=['hand_untrusted'],
+                identity_observations=observations),
+        ]
+        self.assertEqual(summarize_windows(rows)['missing_concealed_gold_candidate_windows'],
+                         {'S5': 2, 'S9': 1})
+
     def test_hand_stages_keep_missing_evidence_and_unconfirmed_identity_distinct(self):
         issues = ['hand_untrusted']
         unknown = {'region_candidate': 'draw_visual', 'tile_id': 'UNKNOWN'}

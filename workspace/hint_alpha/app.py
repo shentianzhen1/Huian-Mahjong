@@ -1025,6 +1025,10 @@ class HintAlphaApp(tk.Tk):
                 self._set_video_source_status(source)
                 runtime = result["runtime"]
                 gold_votes = runtime.get("gold_tile_votes") or {}
+                missing_gold = runtime.get("missing_concealed_gold_candidate_windows") or {}
+                missing_gold_summary = "、".join(
+                    f"{tile} {count}窗" for tile, count in missing_gold.items()
+                )
                 self.video_test_runtime_status.set(
                     "Runtime Vision："
                     f"{runtime['accepted_windows']}接受 / "
@@ -1033,6 +1037,7 @@ class HintAlphaApp(tk.Tk):
                     f"金牌可信{runtime['trusted_gold_windows']}窗 | "
                     f"金牌票数={gold_votes or 'none'}\n"
                     + format_advice_blockers(runtime.get('structural_blocker_windows'))
+                    + (f"\n待复核金标候选：{missing_gold_summary}" if missing_gold_summary else "")
                 )
                 public = result["public_state"]
                 self.video_test_public_status.set(
