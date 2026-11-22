@@ -362,3 +362,25 @@ increase in median Runtime Vision worker duration. The live default remains
 two OCR frame workers. This test measures workers launched together on decoded
 frames. It excludes continuous capture, UI polling, the full advisory
 pipeline and Windows execution.
+
+### Strict replay geometry and tile-edge seams
+
+After correcting rounding at the 0.8 s replay burst limit, compare the
+baseline detector with the existing experimental `edge_seams=True` option.
+Run `evaluate_burst` with the same decoded RGB pixels, standard reference
+bank, stateless advisory path and 0.82 identity threshold. Change only the
+geometry detector option in the Runtime resources. These are two previously
+reviewed recordings and contain overlapping windows.
+
+| Recording SHA256 prefix | Decoded frame ordinals | Sample stride | Windows | Geometry blocks before and after | Hand identity blocks before and after |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `de1d21b2a722` | 0–744 | 12 frames | 61 | 46 → 35 | 15 → 26 |
+| `9709fdc3aa46` | 2550–2898 | 6 frames | 57 | 27 → 23 | 30 → 34 |
+
+The experiment recovered geometry in 15 windows and lost no previously trusted
+layouts in these samples. Typical adjacent 49-pixel hand faces in the first
+recording were split into about 59 and 40 pixels by the baseline. The
+experimental seam restored approximately equal widths and three-frame
+agreement. All recovered windows still stopped at hand identity. Neither
+configuration displayed advice in this comparison. Keep the strict detector
+default pending tile-identity review and independent match validation.
