@@ -35,6 +35,11 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
             setattr(app, name, Mock())
         app._update_snapshot_view = Mock()
         app._refresh_health = Mock()
+        app.ui_hand_number = None
+        app.ui_remaining_tiles = None
+        app.ui_score_pair = None
+        app.match_header_status = Mock()
+        app.score_header_status = Mock()
         self.clock = patch('time.monotonic', return_value=100.)
         self.now = self.clock.start()
         self.addCleanup(self.clock.stop)
@@ -123,19 +128,30 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.app.public_result_queue = queue.Queue()
         self.app.public_disabled = False
         self.app.vision_status = Mock()
+        previous = PublicStateObservation(1000, 1000, 2, 81, 2, 2, 2)
         observation = PublicStateObservation(1000, 1000, 2, 80, 2, 2, 2)
+        self.public_display.stop()
+        self.app.timeline_hand = 2
+        self.app.timeline_scores = previous.score_pair
+        self.app._append_timeline = Mock()
+        self.app.public_previous = previous
+        self.app._update_public_view(previous)
         self.app.public_reader = Mock()
         self.app.public_reader.read_window.side_effect = [
             OCRUnavailable("score OCR timed out"), SimpleNamespace(observation=observation),
         ]
         self.now.return_value = 101.
-        self.app._public_worker((), None, {"sequence": 10}, self.app.public_result_queue)
+        self.app._public_worker((), previous, {"sequence": 10}, self.app.public_result_queue)
         self.app._consume_public_result()
         self.assertFalse(self.app.public_disabled)
         self.assertTrue(self.app.runtime_advice_pipeline.hand_boundary_pending)
+        self.assertIn("第 ? / 8 局", self.app.match_header_status.set.call_args.args[0])
+        self.assertIn("剩余 ? 张", self.app.match_header_status.set.call_args.args[0])
+        self.app.score_header_status.set.assert_called_with("我方 ?  ｜  对方 ?")
+        self.assertFalse(self.app.ui_hand_number_ok)
+        self.assertIs(self.app.public_previous, previous)
         self.app.public_frames = [Mock(), Mock(), Mock()]
         self.app.last_public_started = 101.
-        self.app.public_previous = None
         self.app.source = {"sequence": 20, "monotonic": 103.}
         with patch("workspace.hint_alpha.app.threading.Thread") as thread:
             self.app._schedule_public_read(103.)
@@ -144,6 +160,11 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.now.return_value = 103.
         options["target"](*options["args"])
         self.app._consume_public_result()
+        self.assertIn("第 2 / 8 局", self.app.match_header_status.set.call_args.args[0])
+        self.assertIn("剩余 80 张", self.app.match_header_status.set.call_args.args[0])
+        self.app.score_header_status.set.assert_called_with("我方 1000  ｜  对方 1000")
+        self.assertTrue(self.app.ui_hand_number_ok)
+        self.app._append_timeline.assert_not_called()
         self.assertEqual(self.app.evidence.mark.call_args.kwargs["source"]["sequence"], 20)
         self.assertIn("ocr_elapsed_seconds", self.app.evidence.mark.call_args.args[1])
         self.assertFalse(self.app.runtime_advice_pipeline.hand_boundary_pending)

@@ -1904,8 +1904,12 @@ class HintAlphaApp(tk.Tk):
         self.public_busy = False
         if kind in {"error", "unavailable"}:
             self.vision_status.set(f"PublicState暂不可用：{value}")
+            self.ui_hand_number = None
+            self.ui_remaining_tiles = None
+            self.ui_score_pair = None
             self.ui_hand_number_ok = False
             self._public_state_failed()
+            self._refresh_header()
             self._refresh_health()
             if kind == "unavailable":
                 self.public_disabled = True
