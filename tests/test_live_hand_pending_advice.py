@@ -109,7 +109,7 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
 
     def test_public_worker_error_also_pauses_advice(self):
         self.app.public_result_queue = queue.Queue()
-        self.app.public_result_queue.put(('error', 'OCR failed'))
+        self.app.public_result_queue.put(('error', 'OCR failed', None, 0.0))
         self.app.vision_status = Mock()
         self.now.return_value = 101.
         self.app._consume_public_result()
@@ -129,19 +129,23 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
             OCRUnavailable("score OCR timed out"), SimpleNamespace(observation=observation),
         ]
         self.now.return_value = 101.
-        self.app._public_worker((), None, self.app.public_result_queue)
+        self.app._public_worker((), None, {"sequence": 10}, self.app.public_result_queue)
         self.app._consume_public_result()
         self.assertFalse(self.app.public_disabled)
         self.assertTrue(self.app.runtime_advice_pipeline.hand_boundary_pending)
         self.app.public_frames = [Mock(), Mock(), Mock()]
         self.app.last_public_started = 101.
         self.app.public_previous = None
+        self.app.source = {"sequence": 20, "monotonic": 103.}
         with patch("workspace.hint_alpha.app.threading.Thread") as thread:
             self.app._schedule_public_read(103.)
         options = thread.call_args.kwargs
+        self.app.source = {"sequence": 29, "monotonic": 103.2}
         self.now.return_value = 103.
         options["target"](*options["args"])
         self.app._consume_public_result()
+        self.assertEqual(self.app.evidence.mark.call_args.kwargs["source"]["sequence"], 20)
+        self.assertIn("ocr_elapsed_seconds", self.app.evidence.mark.call_args.args[1])
         self.assertFalse(self.app.runtime_advice_pipeline.hand_boundary_pending)
         self.consume(103.1)
         event = self.app.evidence.mark.call_args.args[1]
@@ -156,7 +160,7 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.app.vision_status = Mock()
         self.app.public_reader = Mock()
         self.app.public_reader.read_window.side_effect = OCRExecutableMissing("missing engine")
-        self.app._public_worker((), None, self.app.public_result_queue)
+        self.app._public_worker((), None, {"sequence": 10}, self.app.public_result_queue)
         self.app._consume_public_result()
         self.assertTrue(self.app.public_disabled)
         self.assertTrue(self.app.runtime_advice_pipeline.hand_boundary_pending)

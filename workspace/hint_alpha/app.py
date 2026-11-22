@@ -1569,7 +1569,8 @@ class HintAlphaApp(tk.Tk):
         if errors:
             self.evidence_status.set("；".join(errors))
 
-    def _public_worker(self, images, previous, output_queue):
+    def _public_worker(self, images, previous, source, output_queue):
+        started = time.monotonic()
         try:
             result = self.public_reader.read_window(
                 images, previous=previous, minimum_votes=2
@@ -1580,7 +1581,7 @@ class HintAlphaApp(tk.Tk):
         except Exception as exc:
             payload = ("error", f"{type(exc).__name__}: {exc}")
         try:
-            output_queue.put_nowait(payload)
+            output_queue.put_nowait((*payload, source, time.monotonic() - started))
         except queue.Full:
             pass
 
@@ -1597,7 +1598,7 @@ class HintAlphaApp(tk.Tk):
         images = tuple(image.copy() for image in self.public_frames)
         threading.Thread(
             target=self._public_worker,
-            args=(images, self.public_previous, self.public_result_queue),
+            args=(images, self.public_previous, dict(self.source), self.public_result_queue),
             daemon=True,
         ).start()
 
@@ -1881,7 +1882,7 @@ class HintAlphaApp(tk.Tk):
 
     def _consume_public_result(self):
         try:
-            kind, value = self.public_result_queue.get_nowait()
+            kind, value, source, elapsed = self.public_result_queue.get_nowait()
         except queue.Empty:
             return
         self.public_busy = False
@@ -1893,7 +1894,10 @@ class HintAlphaApp(tk.Tk):
             if kind == "unavailable":
                 self.public_disabled = True
             if self.evidence:
-                self.evidence.mark("PUBLIC_STATE_ERROR", {"error": value})
+                self.evidence.mark(
+                    "PUBLIC_STATE_ERROR", {"error": value, "ocr_elapsed_seconds": elapsed},
+                    source=source,
+                )
             return
         observation = value.observation
         self.public_previous = observation
@@ -1908,8 +1912,8 @@ class HintAlphaApp(tk.Tk):
         if self.evidence:
             self.evidence.mark(
                 "PUBLIC_STATE",
-                {"observation": asdict(observation)},
-                source=self.source,
+                {"observation": asdict(observation), "ocr_elapsed_seconds": elapsed},
+                source=source,
             )
 
     def accept(self, item):
