@@ -16,6 +16,7 @@ class RuntimeScheduleLatencyTests(unittest.TestCase):
         exec(compile(ast.Module(body=[method], type_ignores=[]), '<scheduler>', 'exec'), namespace)
         schedule = namespace['_schedule_runtime_read']
         state = SimpleNamespace(demo=False, runtime_busy=False,
+            runtime_worker_thread=None,
             runtime_frames=[(i, i/10, Mock()) for i in range(3)], last_runtime_started=0.,
             evidence=SimpleNamespace(session_id='session'), _runtime_worker=Mock(),
             live_guard=SimpleNamespace(generation=1, last_frame=.4), runtime_result_queue=Mock())
@@ -28,6 +29,7 @@ class RuntimeScheduleLatencyTests(unittest.TestCase):
         schedule(state, 1.)
         thread.assert_called_once()  # still busy: do not accumulate jobs
         state.runtime_busy = False
+        thread.return_value.is_alive.return_value = False
         state.runtime_frames = state.runtime_frames[:2]
         schedule(state, 1.)
         thread.assert_called_once()  # keep the three-frame requirement
@@ -40,6 +42,7 @@ class RuntimeScheduleLatencyTests(unittest.TestCase):
         namespace = {'threading': SimpleNamespace(Thread=thread)}
         exec(compile(ast.Module(body=[method], type_ignores=[]), '<scheduler>', 'exec'), namespace)
         state = SimpleNamespace(demo=False, runtime_busy=False, single_source_hand_trial=Mock(get=Mock(return_value=True)),
+            runtime_worker_thread=None,
             runtime_frames=[(i, i/10, Mock()) for i in range(3)], last_runtime_started=0.,
             evidence=SimpleNamespace(session_id='session'), _runtime_worker=Mock(),
             live_guard=SimpleNamespace(generation=1, last_frame=.3), runtime_result_queue=Mock())

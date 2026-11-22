@@ -35,7 +35,7 @@ class TrialReferenceSwitchFenceTests(unittest.TestCase):
             evidence=SimpleNamespace(session_id='s', mark=Mock()), hint_status=Mock(),
             blocked_detail=Mock(), hint_latency=Mock(),
             experimental_runtime_advisory=False,
-            runtime_busy=True, runtime_result_queue=queue.Queue(),
+            runtime_busy=True, runtime_worker_thread=None, runtime_result_queue=queue.Queue(),
             live_guard=LiveAdviceGuard(active=True, generation=4))
 
     def toggle(self):
