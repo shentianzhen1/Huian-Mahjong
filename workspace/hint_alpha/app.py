@@ -8,6 +8,7 @@ rather than guessed.
 import argparse
 from collections import deque
 from dataclasses import asdict, replace
+import math
 from pathlib import Path
 import queue
 import threading
@@ -49,6 +50,9 @@ from .user_guidance import blocked_guidance, capture_to_hint_text, format_advice
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = PROJECT_ROOT / "data" / "hint_alpha"
+# Live PublicState OCR averaged about 2.2 s per window in the local replay.
+# Use a separate budget from Runtime Vision's advisory freshness limit.
+PUBLIC_STATE_MAX_CAPTURE_AGE_SECONDS = 5.0
 
 
 class HintAlphaApp(tk.Tk):
@@ -1960,14 +1964,26 @@ class HintAlphaApp(tk.Tk):
                 )
             return
         observation = value.observation
+        captured = source.get("monotonic")
+        age = (
+            time.monotonic() - captured
+            if isinstance(captured, (int, float)) and math.isfinite(captured)
+            else None
+        )
         previous_hand = self.public_previous.hand_number if self.public_previous else None
-        pending = (
+        rejection_reason = None
+        if age is None or age < 0:
+            rejection_reason = "OCR 采集时间无效"
+        elif age > PUBLIC_STATE_MAX_CAPTURE_AGE_SECONDS:
+            rejection_reason = "OCR 结果已过期"
+        elif (
             public_hand_boundary_pending(previous_hand, observation)
             and not confirmed_public_hand_boundary(previous_hand, observation)
-        )
-        if pending:
+        ):
+            rejection_reason = "局号尚未确认"
+        if rejection_reason:
             self._clear_public_observation()
-            self.vision_status.set("PublicState：局号尚未确认，等待当前画面")
+            self.vision_status.set(f"PublicState：{rejection_reason}，等待当前画面")
         else:
             self._apply_public_observation(observation)
         if self.evidence:
@@ -1976,7 +1992,9 @@ class HintAlphaApp(tk.Tk):
                 {
                     "observation": asdict(observation),
                     "ocr_elapsed_seconds": elapsed,
-                    "accepted_for_live_view": not pending,
+                    "capture_age_seconds": age,
+                    "accepted_for_live_view": rejection_reason is None,
+                    "live_view_rejection_reason": rejection_reason,
                 },
                 source=source,
             )

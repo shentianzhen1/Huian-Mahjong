@@ -36,7 +36,7 @@ def event_row(event):
         observation = payload.get("observation") or {}
         issues = observation.get("issues") or ()
         if payload.get("accepted_for_live_view") is False:
-            issues = (*issues, "局号尚未确认")
+            issues = (*issues, payload.get("live_view_rejection_reason") or "局号尚未确认")
         hand = known(observation.get("hand_number")) if not issues else "未知"
         scores = observation.get("score_pair")
         valid_scores = (isinstance(scores, (list, tuple)) and len(scores) == 2

@@ -38,6 +38,15 @@ class LiveTimelineTests(unittest.TestCase):
         self.assertIn('比分=未知；余牌=未知', row[6])
         self.assertIn('局号尚未确认', row[6])
 
+    def test_expired_public_read_shows_expiry_reason(self):
+        row = event_row({'kind': 'PUBLIC_STATE', 'payload': {
+            'accepted_for_live_view': False,
+            'live_view_rejection_reason': 'OCR 结果已过期',
+            'observation': {'hand_number': 3, 'remaining_tiles': 105}}})
+        self.assertEqual(row[1], '未知')
+        self.assertIn('余牌=未知', row[6])
+        self.assertIn('OCR 结果已过期', row[6])
+
     def test_tail_partial_writes_no_duplicates_and_session_reset(self):
         with TemporaryDirectory() as folder:
             path = Path(folder) / 'events.jsonl'

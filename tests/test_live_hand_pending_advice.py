@@ -203,7 +203,7 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         def read(hand, votes=2):
             observation = PublicStateObservation(1100, 900, hand, 80, 2, votes, 2)
             app.public_result_queue.put(("ok", SimpleNamespace(observation=observation),
-                                         {"sequence": 20}, .1))
+                                         {"sequence": 20, "monotonic": 99.}, .1))
             app._consume_public_result()
             return app.evidence.mark.call_args.args[1]
 
@@ -246,7 +246,7 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
                 (candidate, candidate), previous=app.public_previous, minimum_votes=2
             )
             app.public_result_queue.put(("ok", SimpleNamespace(observation=observation),
-                                         {"sequence": 20}, .1))
+                                         {"sequence": 20, "monotonic": 99.}, .1))
             app._consume_public_result()
             return app.evidence.mark.call_args.args[1]["observation"]
 
@@ -276,6 +276,41 @@ class LiveHandPendingAdviceTests(unittest.TestCase):
         self.assertEqual(app.ui_score_pair, (1100, 900))
         self.assertEqual(app.ui_remaining_tiles, 107)
         self.assertEqual(app.timeline_hand, 3)
+
+    def test_late_ocr_cannot_advance_hand_while_capture_is_fresh(self):
+        from workspace.vision.tiles_v0_1.public_state import PublicStateObservation
+
+        app = self.app
+        app.public_result_queue = queue.Queue()
+        app.vision_status = Mock()
+        previous = PublicStateObservation(1000, 1000, 2, 81, 2, 2, 2)
+        app.public_previous = previous
+        app.live_guard.observe(20, 107.9)
+        self.now.return_value = 108.
+        late = PublicStateObservation(1100, 900, 3, 105, 2, 2, 2)
+        app.public_result_queue.put(("ok", SimpleNamespace(observation=late),
+                                     {"sequence": 10, "monotonic": 102.}, .1))
+        app._consume_public_result()
+        self.assertFalse(app.public_busy)
+        self.assertFalse(app.live_guard.capture_stale(108.))
+        self.assertIs(app.public_previous, previous)
+        self.assertEqual(app._gold_hand_number, 2)
+        self.assertTrue(app.runtime_advice_pipeline.hand_boundary_pending)
+        self.assertIn("OCR 结果已过期", app.vision_status.set.call_args.args[0])
+        event = app.evidence.mark.call_args.args[1]
+        self.assertFalse(event["accepted_for_live_view"])
+        self.assertEqual(event["capture_age_seconds"], 6.)
+        self.assertEqual(event["ocr_elapsed_seconds"], .1)
+        self.assertEqual(event["observation"]["hand_number"], 3)
+
+        fresh = PublicStateObservation(1000, 1000, 2, 78, 2, 2, 2)
+        app.public_result_queue.put(("ok", SimpleNamespace(observation=fresh),
+                                     {"sequence": 20, "monotonic": 107.9}, .1))
+        app._consume_public_result()
+        self.assertIs(app.public_previous, fresh)
+        self.assertFalse(app.runtime_advice_pipeline.hand_boundary_pending)
+        self.consume(108.1)
+        self.assertEqual(app.evidence.mark.call_args.args[1]["gold_tile"], "S8")
 
     def test_prior_identity_from_before_confirmation_cannot_prime_new_read(self):
         from copy import deepcopy
