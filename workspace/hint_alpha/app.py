@@ -101,6 +101,7 @@ class HintAlphaApp(tk.Tk):
         self.live_guard = LiveAdviceGuard()
         self.runtime_frames = deque(maxlen=3)
         self.runtime_busy = False
+        self.runtime_worker_thread = None
         self.runtime_result_queue = queue.Queue(maxsize=1)
         self.last_runtime_started = 0.0
         self.last_runtime_event_key = None
@@ -1530,9 +1531,10 @@ class HintAlphaApp(tk.Tk):
         self.live_guard.invalidate()
         self.runtime_frames.clear()
         self.public_frames.clear()
+        # Detach stale results while retaining handles to any running workers.
         self.runtime_busy = False
         self.runtime_result_queue = queue.Queue(maxsize=1)
-        # Detach stale results, but keep the thread handle until its OCR exits.
+        self.last_runtime_started = float("-inf")
         self.public_busy = False
         self.public_result_queue = queue.Queue(maxsize=1)
         self.public_previous = None
@@ -1705,27 +1707,31 @@ class HintAlphaApp(tk.Tk):
         not_before = self.__dict__.get('runtime_observation_not_before', float('-inf'))
         trial = self.__dict__.get('single_source_hand_trial')
         interval = 0.3 if trial is not None and trial.get() else 0.4
+        worker = self.runtime_worker_thread
         if (
             self.demo
             or self.runtime_busy
+            or (worker is not None and worker.is_alive())
             or len(self.runtime_frames) < 3
             or now - self.last_runtime_started < interval
             or self.evidence is None
             or any(sample[1] <= not_before for sample in self.runtime_frames)
         ):
             return
-        self.runtime_busy = True
-        self.last_runtime_started = now
         samples = tuple(
             (sequence, frame_captured, image.copy())
             for sequence, frame_captured, image in self.runtime_frames
         )
-        threading.Thread(
+        worker = threading.Thread(
             target=self._runtime_worker,
             args=(samples, self.evidence.session_id, self.live_guard.generation,
                   self.live_guard.last_frame, self.runtime_result_queue),
             daemon=True,
-        ).start()
+        )
+        worker.start()
+        self.runtime_worker_thread = worker
+        self.runtime_busy = True
+        self.last_runtime_started = now
 
     @staticmethod
     def _format_shanten_hint(result):

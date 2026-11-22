@@ -116,6 +116,37 @@ class LiveLifecycleTests(unittest.TestCase):
         self.assertIs(result_queue, shell.public_result_queue)
         self.assertIsNot(result_queue, old_queue)
 
+    def test_capture_reset_waits_for_old_runtime_worker_before_restarting(self):
+        shell = self.shell()
+        shell.demo = False
+        shell.evidence = SimpleNamespace(session_id="session")
+        shell._runtime_worker = Mock()
+        shell.last_runtime_started = 10.
+        old_worker = shell.runtime_worker_thread = Mock()
+        old_worker.is_alive.return_value = True
+        old_queue = shell.runtime_result_queue
+        HintAlphaApp._invalidate_advice(shell, "capture reset")
+
+        for sequence, captured in ((4, 10.1), (5, 10.2), (6, 10.3)):
+            shell.live_guard.observe(sequence, captured)
+            shell.runtime_frames.append((sequence, captured, Mock()))
+        with patch("workspace.hint_alpha.app.threading.Thread") as thread:
+            HintAlphaApp._schedule_runtime_read(shell, 10.3)
+            thread.assert_not_called()
+            self.assertIs(shell.runtime_worker_thread, old_worker)
+            self.assertFalse(shell.runtime_busy)
+
+            old_worker.is_alive.return_value = False
+            HintAlphaApp._schedule_runtime_read(shell, 10.3)
+        thread.return_value.start.assert_called_once()
+        self.assertTrue(shell.runtime_busy)
+        self.assertIs(shell.runtime_worker_thread, thread.return_value)
+        samples, session, generation, captured, result_queue = thread.call_args.kwargs["args"]
+        self.assertEqual([sample[0] for sample in samples], [4, 5, 6])
+        self.assertEqual((session, generation, captured), ("session", 1, 10.3))
+        self.assertIs(result_queue, shell.runtime_result_queue)
+        self.assertIsNot(result_queue, old_queue)
+
     def test_queued_old_epoch_cannot_restore_hint(self):
         shell = self.shell()
         shell.evidence = SimpleNamespace(session_id='same-session')
