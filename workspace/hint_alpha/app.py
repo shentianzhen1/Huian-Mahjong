@@ -81,7 +81,9 @@ class HintAlphaApp(tk.Tk):
 
         self.evidence = None
         self.auto_recorder = None
-        self.public_reader = PublicStateReader(stop_on_score_majority=True)
+        self.public_reader = PublicStateReader(
+            stop_on_score_majority=True, parallel_frames=True
+        )
         self.public_previous = None
         self.public_view_source = None
         self.public_frames = deque(maxlen=3)

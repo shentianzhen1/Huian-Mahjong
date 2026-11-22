@@ -324,3 +324,16 @@ Score OCR calls fell from 180 to 120 and total PublicState reader time fell
 from 28.25 s to 21.83 s over ten windows in one sequential Linux run. The
 timing excludes video decode and Windows capture, so it does not establish
 real-device response latency.
+
+### Live PublicState two frame workers
+
+The live reader now processes up to two frames of each OCR window concurrently
+with its stateless Tesseract backends. It restores capture order before applying
+the same frame vote. Offline callers still default to serial reads.
+
+On the ten Oct12 windows listed above, with the score shortcut enabled in
+both runs, total reader time fell from 23.36 s to 15.10 s. The slowest sampled
+window fell from 2.59 s to 1.69 s. All frame reads and fused observations were
+identical, including crop fallback evidence and frame IDs. Each configuration
+was run once on Linux after decoding the frames. Windows latency and CPU
+contention with simultaneous Runtime Vision remain unmeasured.

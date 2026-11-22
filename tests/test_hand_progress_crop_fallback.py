@@ -1,4 +1,6 @@
 import unittest
+from threading import Event
+from types import SimpleNamespace
 from unittest.mock import Mock
 try:
     from PIL import Image
@@ -54,3 +56,26 @@ class HandProgressCropFallbackTests(unittest.TestCase):
         reader = PublicStateReader(status_backend=Mock(side_effect=['2/8','3/8']))
         result = reader.read_hand_window([Image.new('RGB',(1108,512)) for _ in range(2)])
         self.assertIsNone(result.observation.hand_number)
+
+    def test_parallel_public_state_keeps_capture_order_and_consensus(self):
+        from workspace.vision.tiles_v0_1.public_state import PublicStateCandidate
+        from workspace.vision.tiles_v0_1.public_state_reader import PublicStateReader
+
+        reader = PublicStateReader(parallel_frames=True)
+        later_frame_read = Event()
+
+        def read_frame(hand, *, previous, source_frame):
+            candidate = PublicStateCandidate(1000, 1000, hand, 90,
+                                             source_frame=source_frame)
+            if source_frame == '0':
+                self.assertTrue(later_frame_read.wait(timeout=5))
+            else:
+                later_frame_read.set()
+            return SimpleNamespace(candidate=candidate)
+
+        reader.read_frame = read_frame
+        result = reader.read_window((2, 3, 2))
+        self.assertEqual([frame.candidate.source_frame for frame in result.frames],
+                         ['0', '1', '2'])
+        self.assertEqual(result.observation.hand_number, 2)
+        self.assertEqual(result.observation.hand_votes, 2)
