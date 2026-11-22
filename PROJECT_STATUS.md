@@ -1,6 +1,6 @@
 # PROJECT_STATUS — Current Snapshot
 
-Snapshot date: 2026-11-02 (Asia/Shanghai). Execution truth: GitHub Issues.
+Snapshot date: 2026-11-22 (Asia/Shanghai). Execution truth: GitHub Issues.
 Rule truth: RULE_STATUS.md / RULE_EVIDENCE_MATRIX.md. This page is a snapshot.
 
 ## Source and delivery
@@ -12,11 +12,11 @@ The current source includes the integration fixes described below;
 inspect CI on its exact HEAD rather than reusing baseline results.
 
 Latest verified installer delivery uses source
-`490326952a4ccfef95b2616ae102c97d89b1a764`:
-[Windows run 41325215919](https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/41325215919).
-It includes all runtime changes through `d066d59`, including explicit concealed-Gold
-reference trial. [Delivery verification](docs/packaging/windows_installer_sync_20261102.json)
-records the inspected archive/EXE hashes, exact source commit and Windows checks.
+`e3ebda8e2e8d5f10df7e9502509ae65ce81a99e3`
+([Windows run 45011070560](https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/45011070560)).
+It includes two-frame parallel OCR, live-result expiry, capture-reset isolation,
+and source/timing details for live diagnostics and feedback. The installer SHA256
+is `19331bba61094fb39827aec5f43be08100bc090886460b899885768518effc1d`.
 Its bundled development reference version is `2026.10.30.1`: 28 tile images
 (20 ordinary concealed, 7 opened-Gold, 1 concealed-Gold SOUTH).
 The user authorized these reviewed tile-only assets in GitHub and the installer;
@@ -26,10 +26,11 @@ new private crop files are not included in the default bundled 28. The upgrade
 tests passed for data preservation and repeated installs. Later runtime changes
 are not automatically included; this delivery record update changes metadata only.
 
-The installer source commit passed all 18 checks, including the actual Windows
-installer job. Its extracted payload verified 356 source files, 147 templates,
-28 references and 6 phase images, and passed live UI/spawn/Tk and upgrade checks.
-These are packaging/synthetic checks, not real mirrored-game acceptance.
+The extracted payload verified 3,230 inventory entries, including 147 approved
+templates, 28 trial references and two replay comparison manifests. Windows
+startup, live UI smoke and upgrade/data preservation checks passed. A test-only
+follow-up (`ff649bb`) corrected scheduler fixtures and passed all five CI workflows.
+Real mirrored-game acceptance is still pending.
 Small changes and metadata-only delivery updates do not request another installer.
 
 ## Capability and validation
@@ -81,6 +82,13 @@ same-match query. Raised-tile geometry still blocks. New crop pixels are not in
 GitHub; default bundled references remain at 28 and the updated installer is
 recorded in Source and delivery above. This is
 revealed development with corrected manual truth, not a fresh holdout.
+The 2026-11-22 inventory check loaded the actual strict Runtime resources.
+Ordinary concealed coverage spans 34 standard identities. The real-Gold-skin
+gate has one approved hand crop for M6 (六万). The separate trial bundle has
+one concealed-Gold SOUTH (南风) and seven opened-indicator identities. Those
+trial rows do not qualify a strict Runtime class. For S5 (五条), the verified
+gap remains real-skin evidence in an independently reviewed match, with the
+raised-tile geometry failure tracked separately.
 Focused regressions exercise the actual worker and live consumer. These are
 synthetic wiring checks, not independent recognition or Windows acceptance.
 
