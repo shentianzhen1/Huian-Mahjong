@@ -444,6 +444,15 @@ class HintAlphaApp(tk.Tk):
         ).grid(row=1, column=0, columnspan=7, sticky="w", pady=(8, 0))
         video_controls.columnconfigure(1, weight=1)
 
+        range_row = ttk.Frame(video_test)
+        range_row.pack(fill="x", pady=(6, 0))
+        for label, variable in (
+            ("起始秒数", self.video_test_start),
+            ("复盘时长（秒，0 表示到结尾）", self.video_test_duration),
+        ):
+            ttk.Label(range_row, text=label).pack(side="left")
+            ttk.Entry(range_row, textvariable=variable, width=8).pack(side="left", padx=(4, 12))
+
         action_row = ttk.Frame(video_test)
         action_row.pack(fill="x", pady=10)
         ttk.Button(action_row, text="开始自动复盘", command=self.start_video_test, style="Primary.TButton").pack(
@@ -773,9 +782,9 @@ class HintAlphaApp(tk.Tk):
             self.video_test_duration.set("0")
             self.video_test_interval.set(f"{interval:.3f}")
             self.video_test_auto_status.set(
-                f"自动参数：0–{meta['duration_seconds']:.1f}s（完整录像） · "
+                f"录像全长 {meta['duration_seconds']:.1f}s · "
                 f"Vision采样约 {interval:.3f}s · OCR约每 {REPLAY_OCR_INTERVAL_SECONDS:.1f}s · "
-                "无需手工填写"
+                "可指定复盘片段"
             )
         except Exception as exc:
             self.video_test_source_status.set(f"录像无法读取：{exc}")
@@ -805,19 +814,24 @@ class HintAlphaApp(tk.Tk):
             from .video_test import automatic_sample_interval, probe_video
 
             meta = probe_video(path)
-            start = 0.0
-            duration = 0.0
+            try:
+                start = float(self.video_test_start.get().strip() or "0")
+                duration = float(self.video_test_duration.get().strip() or "0")
+            except ValueError:
+                raise ValueError("起始秒数和复盘时长请填写数字。") from None
+            if not all(math.isfinite(value) and value >= 0 for value in (start, duration)):
+                raise ValueError("起始秒数和复盘时长必须是有限的非负数。")
+            if round(start * meta["fps"]) >= meta["frame_count"]:
+                raise ValueError("起始位置已超出录像的有效画面。")
+            end = min(start + duration, meta["duration_seconds"]) if duration else meta["duration_seconds"]
             reference_packet = self._video_reference_packet()
             interval = automatic_sample_interval(
                 meta, reference_trial=reference_packet is not None,
                 dense_sampling=self.video_test_dense_sampling.get(),
             )
-            self.video_test_start.set("0")
-            self.video_test_duration.set("0")
             self.video_test_interval.set(f"{interval:.3f}")
             self.video_test_auto_status.set(
-                f"自动参数：0–{meta['duration_seconds']:.1f}s（完整录像） · "
-                f"采样约 {interval:.3f}s · 无需手工填写"
+                f"本次复盘：{start:g}–{end:g} 秒 · 采样约 {interval:.3f}s"
             )
         except Exception as exc:
             messagebox.showerror("录像测试未开始", str(exc))
@@ -837,7 +851,7 @@ class HintAlphaApp(tk.Tk):
         self.video_test_runtime_status.set("Runtime Vision：正在读取原始录像……")
         self.video_test_public_status.set("PublicState OCR：正在读取原始录像……")
         self.video_test_report_status.set("报告：自动复盘进行中")
-        self.video_timeline_heartbeat.set("录像复盘：0.0s / 正在初始化")
+        self.video_timeline_heartbeat.set(f"录像复盘：{start:g}s / 正在初始化")
         self._set_video_timeline_lines([
             "流水会边处理边更新；没有可信事件时保持 UNKNOWN，不会伪造动作。"
         ])
