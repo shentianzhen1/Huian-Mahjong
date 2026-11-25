@@ -568,6 +568,7 @@ def run_video_test(
             "start_seconds": float(start_seconds),
             "requested_duration_seconds": float(duration_seconds),
             "sample_interval_seconds": float(sample_interval_seconds),
+            "recognition_mode": "reference_trial" if reference_packet is not None else "standard",
             "ocr_interval_seconds": REPLAY_OCR_INTERVAL_SECONDS,
         }
     )

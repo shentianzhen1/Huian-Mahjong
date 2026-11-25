@@ -186,6 +186,9 @@ class HintAlphaApp(tk.Tk):
         self.video_test_duration = tk.StringVar(value="0")
         self.video_test_interval = tk.StringVar(value="AUTO")
         self.video_test_dense_sampling = tk.BooleanVar(value=False)
+        self.video_test_reference_trial = tk.BooleanVar(value=False)
+        self.video_test_reference_packet = self.experimental_hand_packet
+        self.video_test_reference_status = tk.StringVar(value=reference_message)
         self.video_test_source_status = tk.StringVar(value="尚未选择录像")
         self.video_test_runtime_status = tk.StringVar(value="Runtime Vision：等待测试")
         self.video_test_public_status = tk.StringVar(value="PublicState OCR：等待测试")
@@ -482,6 +485,17 @@ class HintAlphaApp(tk.Tk):
             text="直接读取原始视频像素；不会上传视频，不经过播放器缩放。",
         ).pack(side="left", padx=10)
 
+        reference_row = ttk.Frame(video_test)
+        reference_row.pack(fill="x", pady=(0, 8))
+        ttk.Checkbutton(
+            reference_row, text="复盘试用识别", variable=self.video_test_reference_trial,
+        ).pack(side="left")
+        ttk.Button(
+            reference_row, text="加载复盘素材",
+            command=lambda: self.open_hand_reference_packet(replay=True),
+        ).pack(side="left", padx=6)
+        ttk.Label(reference_row, textvariable=self.video_test_reference_status).pack(side="left")
+
         self.video_test_bar = ttk.Progressbar(
             video_test, variable=self.video_test_progress, maximum=100
         )
@@ -775,8 +789,10 @@ class HintAlphaApp(tk.Tk):
             self.choose_video_test_file()
 
     def _video_reference_packet(self):
-        if self.experimental_edge_seams:
-            return self.experimental_hand_packet
+        if self.video_test_reference_trial.get():
+            if self.video_test_reference_packet is None:
+                raise ValueError("复盘试用识别需要先加载参考素材。")
+            return self.video_test_reference_packet
         return None
 
     def choose_video_test_file(self):
@@ -877,7 +893,8 @@ class HintAlphaApp(tk.Tk):
                 raise ValueError("所选片段不足 3 个采样帧，请延长复盘时长或启用密集采样。")
             self.video_test_interval.set(f"{interval:.3f}")
             self.video_test_auto_status.set(
-                f"本次复盘：{start:g}–{end:g} 秒 · 采样约 {interval:.3f}s"
+                f"本次复盘：{start:g}–{end:g} 秒 · 采样约 {interval:.3f}s · "
+                f"{'试用识别' if reference_packet else '标准识别'}"
             )
         except Exception as exc:
             messagebox.showerror("录像测试未开始", str(exc))
@@ -1324,7 +1341,7 @@ class HintAlphaApp(tk.Tk):
         if self.evidence:
             self.evidence.mark('HAND_SOURCE_TRIAL_MODE', {'enabled': self.single_source_hand_trial.get()})
 
-    def open_hand_reference_packet(self):
+    def open_hand_reference_packet(self, *, replay=False):
         path = filedialog.askopenfilename(title='选择样本包解压后的 selected.json',
                                          filetypes=[('参考样本清单', '*.json')])
         if not path:
@@ -1340,10 +1357,16 @@ class HintAlphaApp(tk.Tk):
         except (OSError, ValueError, KeyError, TypeError) as exc:
             messagebox.showerror('样本未加载', str(exc), parent=self)
             return
-        self.experimental_hand_packet = Path(path)
         version = manifest.get('version') or manifest.get('packet_version') or Path(path).name
+        message = f"素材：{version}，{len(manifest['rows'])}张，已校验"
+        if replay:
+            self.video_test_reference_packet = Path(path)
+            self.video_test_reference_status.set(message)
+            self.video_test_reference_trial.set(True)
+            return
+        self.experimental_hand_packet = Path(path)
         reviewed = adapted.get('experimental_training_review', {})
-        self.reference_pack_status.set(f"素材：{version}，{len(manifest['rows'])}张，已校验")
+        self.reference_pack_status.set(message)
         self._toggle_hand_source_trial()
         self.runtime_status.set('已加载参考样本；用于内部试用，不代表识别已通过验收')
         if self.evidence:

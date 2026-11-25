@@ -16,6 +16,17 @@ except ImportError:
 
 @unittest.skipIf(HintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
 class LiveLifecycleTests(unittest.TestCase):
+    def test_replay_reference_mode_is_independent_of_live_mode(self):
+        app = Mock(experimental_edge_seams=True, video_test_reference_packet="selected.json")
+        app.video_test_reference_trial.get.return_value = False
+        self.assertIsNone(HintAlphaApp._video_reference_packet(app))
+        app.experimental_edge_seams = False
+        app.video_test_reference_trial.get.return_value = True
+        self.assertEqual(HintAlphaApp._video_reference_packet(app), "selected.json")
+        app.video_test_reference_packet = None
+        with self.assertRaisesRegex(ValueError, "加载参考素材"):
+            HintAlphaApp._video_reference_packet(app)
+
     def test_replay_rejects_short_ranges_before_stopping_live_capture(self):
         app = Mock(video_test_running=False)
         app.video_test_path.get.return_value = "match.mp4"
