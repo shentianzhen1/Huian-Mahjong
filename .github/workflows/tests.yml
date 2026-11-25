@@ -187,6 +187,8 @@ jobs:
         run: |
           python - <<'PY'
           import importlib.util
+          import os
+          import tomllib
           from importlib.metadata import files, version
           from pathlib import Path
 
@@ -196,7 +198,10 @@ jobs:
 
           assert HuianEnvironment is not None
           assert HuianRules is not None
-          assert __version__ == "0.2.1"
+          source_metadata = Path(os.environ["GITHUB_WORKSPACE"]) / "pyproject.toml"
+          with source_metadata.open("rb") as stream:
+              expected_version = tomllib.load(stream)["project"]["version"]
+          assert __version__ == expected_version, (__version__, expected_version)
           assert version("huian-mahjong-assistant") == __version__
           assert CURRENT_AGENT_VERSION == "v0.10"
           assert CurrentAgent.__name__ == "MeldAwareShantenAgent"
