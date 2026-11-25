@@ -16,6 +16,31 @@ except ImportError:
 
 @unittest.skipIf(HintAlphaApp is None, 'optional UI/Vision dependencies unavailable')
 class LiveLifecycleTests(unittest.TestCase):
+    def test_replay_rejects_short_ranges_before_stopping_live_capture(self):
+        app = Mock(video_test_running=False)
+        app.video_test_path.get.return_value = "match.mp4"
+        app.video_test_start.get.return_value = "85"
+        app.video_test_duration.get.return_value = "0.2"
+        app.video_test_dense_sampling.get.return_value = False
+        app._video_reference_packet.return_value = None
+        metadata = {"fps": 30, "frame_count": 3000, "duration_seconds": 100}
+        with (
+            patch("workspace.hint_alpha.video_test.probe_video", return_value=metadata),
+            patch("workspace.hint_alpha.app.messagebox.showerror") as showerror,
+            patch("workspace.hint_alpha.app.threading.Thread") as worker,
+        ):
+            HintAlphaApp.start_video_test(app)
+        self.assertIn("不足 3 个采样帧", showerror.call_args.args[1])
+        app.stop.assert_not_called()
+        worker.assert_not_called()
+
+    def test_replay_cannot_replace_an_active_worker(self):
+        app = Mock(video_test_running=True)
+        with patch("workspace.hint_alpha.app.messagebox.showinfo") as showinfo:
+            HintAlphaApp.start_video_test(app)
+        showinfo.assert_called_once()
+        app.video_test_path.get.assert_not_called()
+
     def test_unknown_reason_is_visible_but_promoted_gate_stays_closed(self):
         hand = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9',
                 'P1', 'P2', 'P3', 'S1', 'S2', 'S3', 'E']
