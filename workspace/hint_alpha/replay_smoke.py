@@ -96,6 +96,7 @@ def summarize_windows(rows):
     missing_gold_candidates = Counter()
     missing_gold_locations = {}
     geometry_region_changes = Counter()
+    geometry_change_patterns = Counter()
     for row in rows:
         allowed = row['display_allowed'] is True
         public_context.update(issue for issue in set(row['hint']['issues'])
@@ -114,10 +115,16 @@ def summarize_windows(rows):
                     if frame.get('trusted') is True and isinstance(frame.get('region_counts'), dict)
                 ]
                 regions = sorted({region for frame_counts in counts for region in frame_counts})
-                geometry_region_changes.update(
+                changed = [
                     region for region in regions
                     if len({frame_counts.get(region, 0) for frame_counts in counts}) > 1
-                )
+                ]
+                geometry_region_changes.update(changed)
+                if len(counts) < 2:
+                    pattern = 'insufficient_trusted_frames'
+                else:
+                    pattern = '+'.join(changed) or 'same_region_counts'
+                geometry_change_patterns[pattern] += 1
             if blocker == 'concealed_gold_reference_missing':
                 # Count the same candidate once per window, even across multiple slots.
                 candidates = {item.get('candidate_tile_id')
@@ -153,6 +160,7 @@ def summarize_windows(rows):
             'rejection_issue_windows': dict(sorted(rejection_issues.items())),
             'structural_blocker_windows': dict(structural_blockers.most_common()),
             'geometry_region_count_change_windows': dict(geometry_region_changes.most_common()),
+            'geometry_region_count_change_patterns': dict(geometry_change_patterns.most_common()),
             'missing_concealed_gold_candidate_windows': dict(missing_gold_candidates.most_common()),
             'missing_concealed_gold_candidate_locations': missing_gold_locations,
             'public_context_issue_windows': dict(sorted(public_context.items())),

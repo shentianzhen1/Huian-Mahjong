@@ -56,6 +56,7 @@ class ReplayAdviceBlockerTests(unittest.TestCase):
         ])
         counts = result['geometry_region_count_change_windows']
         self.assertEqual(counts, {'hand': 1, 'draw_visual': 1})
+        self.assertEqual(result['geometry_region_count_change_patterns'], {'draw_visual+hand': 1})
         self.assertIn('独立摸牌区 1窗', format_geometry_region_changes(counts))
         self.assertEqual(format_geometry_region_changes(None), '')
 
