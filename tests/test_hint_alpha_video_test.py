@@ -320,7 +320,7 @@ class DirectVideoRunnerTests(unittest.TestCase):
             video.write_bytes(b"fixture")
             report = Path(tmp) / "result.json"
             with (
-                patch("workspace.hint_alpha.video_test.probe_video", return_value={}),
+                patch("workspace.hint_alpha.video_test.probe_video", return_value={"duration_seconds": 2.0}),
                 patch("workspace.hint_alpha.video_test.iter_video_samples",
                       return_value=interrupted_samples()),
                 patch("workspace.hint_alpha.video_test.evaluate_burst", return_value=runtime),
@@ -336,6 +336,12 @@ class DirectVideoRunnerTests(unittest.TestCase):
             self.assertEqual(saved["decode_error"]["last_processed_frame"], 12)
             self.assertEqual(saved["decode_error"]["last_processed_seconds"], 0.4)
             self.assertEqual(saved["runtime"]["windows"], 1)
+            self.assertEqual(saved["replay_coverage"], {
+                "selected_start_seconds": 0.0,
+                "selected_end_seconds": 2.0,
+                "last_processed_frame": 12,
+                "last_processed_seconds": 0.4,
+            })
             self.assertFalse(saved["stopped_early"])
             self.assertTrue(report.with_suffix(".timeline.json").exists())
             self.assertTrue(report.with_suffix(".timeline.txt").exists())

@@ -868,6 +868,18 @@ def run_video_test(
     result = summarize_video_test(runtime_rows, public_rows, source)
     timeline = timeline_accumulator.to_dict()
     result["timeline"] = timeline
+    recording_end = source["duration_seconds"]
+    selected_end = (
+        min(float(start_seconds) + float(duration_seconds), recording_end)
+        if float(duration_seconds)
+        else recording_end
+    )
+    result["replay_coverage"] = {
+        "selected_start_seconds": float(start_seconds),
+        "selected_end_seconds": selected_end,
+        "last_processed_frame": last_processed_frame,
+        "last_processed_seconds": previous_captured,
+    }
     result["stopped_early"] = bool(stop_event is not None and stop_event.is_set())
     if decode_error is not None:
         result["decode_error"] = decode_error
