@@ -1045,8 +1045,11 @@ class HintAlphaApp(tk.Tk):
                     status = "已提前停止"
                 else:
                     self.video_test_progress.set(100)
+                coverage = result.get("replay_coverage") or {}
+                last_seconds = coverage.get("last_processed_seconds")
+                processed = f" | 已分析至 {last_seconds:.2f} 秒" if last_seconds is not None else ""
                 self.video_timeline_heartbeat.set(
-                    f"录像复盘：{status} | 流水事件 "
+                    f"录像复盘：{status}{processed} | 流水事件 "
                     f"{len((result.get('timeline') or {}).get('events') or ())} 条"
                 )
                 source = result["source"]
