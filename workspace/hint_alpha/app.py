@@ -804,6 +804,9 @@ class HintAlphaApp(tk.Tk):
         )
 
     def start_video_test(self):
+        if self.video_test_running:
+            messagebox.showinfo("录像复盘", "请等当前复盘结束或停止后再开始。")
+            return
         path = self.video_test_path.get().strip()
         if not path:
             self.choose_video_test_file()
@@ -821,9 +824,13 @@ class HintAlphaApp(tk.Tk):
                 raise ValueError("起始秒数和复盘时长请填写数字。") from None
             if not all(math.isfinite(value) and value >= 0 for value in (start, duration)):
                 raise ValueError("起始秒数和复盘时长必须是有限的非负数。")
-            if round(start * meta["fps"]) >= meta["frame_count"]:
+            fps = meta["fps"]
+            total_duration = meta["duration_seconds"]
+            if start >= total_duration or round(start * fps) >= meta["frame_count"]:
                 raise ValueError("起始位置已超出录像的有效画面。")
-            end = min(start + duration, meta["duration_seconds"]) if duration else meta["duration_seconds"]
+            end = min(start + duration, total_duration) if duration else total_duration
+            if round(end * fps) <= round(start * fps):
+                raise ValueError("所选片段没有覆盖有效画面，请增加复盘时长。")
             reference_packet = self._video_reference_packet()
             interval = automatic_sample_interval(
                 meta, reference_trial=reference_packet is not None,
