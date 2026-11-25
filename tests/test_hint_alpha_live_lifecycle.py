@@ -41,6 +41,31 @@ class LiveLifecycleTests(unittest.TestCase):
         showinfo.assert_called_once()
         app.video_test_path.get.assert_not_called()
 
+    def test_replay_failure_replaces_pending_progress_when_queue_is_full(self):
+        output = queue.Queue(maxsize=3)
+
+        def fail_after_progress(*args, on_window, **kwargs):
+            for seconds in (0.2, 0.4, 0.6):
+                on_window({"source_seconds": seconds})
+            raise OSError("report write failed")
+
+        with patch("workspace.hint_alpha.video_test.run_video_test",
+                   side_effect=fail_after_progress):
+            HintAlphaApp._video_test_worker(
+                Mock(), "match.mp4", 0.0, 1.0, 1.0, 0.2,
+                Mock(), output, queue.Queue(), None,
+            )
+
+        messages = [output.get_nowait() for _ in range(3)]
+        self.assertEqual([message[0] for message in messages], ["progress", "progress", "error"])
+        self.assertEqual(messages[-1], ("error", "OSError: report write failed"))
+        output.put_nowait(messages[-1])
+        app = Mock(video_test_running=True, video_test_queue=output,
+                   video_timeline_queue=queue.Queue())
+        HintAlphaApp._consume_video_test_events(app)
+        self.assertFalse(app.video_test_running)
+        app.video_test_report_status.set.assert_called_once_with("报告：OSError: report write failed")
+
     def test_unknown_reason_is_visible_but_promoted_gate_stays_closed(self):
         hand = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9',
                 'P1', 'P2', 'P3', 'S1', 'S2', 'S3', 'E']

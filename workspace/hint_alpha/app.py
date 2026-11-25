@@ -896,6 +896,8 @@ class HintAlphaApp(tk.Tk):
         self.video_test_progress.set(0)
         self.video_test_runtime_status.set("Runtime Vision：正在读取原始录像……")
         self.video_test_public_status.set("PublicState OCR：正在读取原始录像……")
+        self.video_test_summary_path = None
+        self.video_test_open_summary.configure(state="disabled")
         self.video_test_report_status.set("报告：自动复盘进行中")
         self.video_timeline_heartbeat.set(f"录像复盘：{start:g}s / 正在初始化")
         self._set_video_timeline_lines([
@@ -938,23 +940,22 @@ class HintAlphaApp(tk.Tk):
         timeline_queue,
         reference_packet,
     ):
+        def emit(message):
+            try:
+                output_queue.put_nowait(message)
+            except queue.Full:
+                # The replay worker is the only producer. A full queue contains
+                # older progress that can be replaced by this message.
+                try:
+                    output_queue.get_nowait()
+                except queue.Empty:
+                    pass
+                output_queue.put_nowait(message)
+
         try:
             from .video_test import run_video_test
 
             selected_span = selected_end - start
-
-            def emit(message):
-                try:
-                    output_queue.put_nowait(message)
-                except queue.Full:
-                    try:
-                        output_queue.get_nowait()
-                    except queue.Empty:
-                        pass
-                    try:
-                        output_queue.put_nowait(message)
-                    except queue.Full:
-                        pass
 
             def on_window(payload):
                 progress = min(
@@ -987,10 +988,7 @@ class HintAlphaApp(tk.Tk):
             )
             emit(("done", result))
         except Exception as exc:
-            try:
-                output_queue.put_nowait(("error", f"{type(exc).__name__}: {exc}"))
-            except queue.Full:
-                pass
+            emit(("error", f"{type(exc).__name__}: {exc}"))
 
     def _render_video_test_frame(self, image):
         if image is None:
