@@ -520,3 +520,18 @@ dragon in the 13 concealed identities and displays advice. This
 development example identifies a region-assignment miss during
 rearrangement. It does not establish the role of a separated tile
 from position alone.
+
+## Sep26 discard and hand insertion (93.5–94.8 s)
+
+Frame 2805 (93.5 s) shows the white dragon lifted from the right end of
+the hand. Frames 2808–2814 show the settled row without it and a
+separated two characters. The window ending at frame 2814 (93.8 s)
+shows two shanten in the experimental reference replay.
+At frames 2823–2832 the two characters travels into the hand and the
+row splits into two groups. In those frames, the detector reports
+seven hand, one draw and four unknown components in its untrusted
+geometry. The window ending at frame 2832 (94.4 s) has no trusted
+frames. The settled row shows 13 concealed faces from frame 2835
+onward. Advice resumes at frame 2844 (94.8 s) with the same 13
+identities and two shanten. This is a visual review of a single
+development clip with actual tile motion across the blocked windows.
