@@ -829,13 +829,15 @@ class HintAlphaApp(tk.Tk):
             if start >= total_duration or round(start * fps) >= meta["frame_count"]:
                 raise ValueError("起始位置已超出录像的有效画面。")
             end = min(start + duration, total_duration) if duration else total_duration
-            if round(end * fps) <= round(start * fps):
-                raise ValueError("所选片段没有覆盖有效画面，请增加复盘时长。")
             reference_packet = self._video_reference_packet()
             interval = automatic_sample_interval(
                 meta, reference_trial=reference_packet is not None,
                 dense_sampling=self.video_test_dense_sampling.get(),
             )
+            # Match the decoder's exclusive end frame and three-sample window.
+            stride = max(1, round(interval * fps))
+            if round(start * fps) + 2 * stride >= round(end * fps):
+                raise ValueError("所选片段不足 3 个采样帧，请延长复盘时长或启用密集采样。")
             self.video_test_interval.set(f"{interval:.3f}")
             self.video_test_auto_status.set(
                 f"本次复盘：{start:g}–{end:g} 秒 · 采样约 {interval:.3f}s"
