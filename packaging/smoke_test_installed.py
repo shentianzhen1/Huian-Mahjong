@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 import cv2
 import numpy as np
@@ -63,20 +64,6 @@ assert len(score.top_attempts) == len(score.bottom_attempts) == 2
 assert importlib.util.find_spec('pip') is None
 assert importlib.util.find_spec('ensurepip') is None
 assert not (site / 'PyWin32.chm').exists()
-with TemporaryDirectory() as temporary:
-    video = str(Path(temporary) / 'replay-smoke.avi')
-    writer = cv2.VideoWriter(video, cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*'MJPG'),
-                             10.0, (64, 64))
-    try:
-        assert writer.isOpened(), 'Packaged FFmpeg video writer did not open'
-        for value in (40, 100, 160):
-            writer.write(np.full((64, 64, 3), value, dtype=np.uint8))
-    finally:
-        writer.release()
-    samples = list(iter_video_samples(video, sample_interval_seconds=0.1))
-    assert [sample[0] for sample in samples] == [0, 1, 2]
-    assert all(image.size == (64, 64) and image.mode == 'RGB' for _, _, image in samples)
-
 assert Path(app.__file__).resolve().is_relative_to(site)
 assert Path(live_app.__file__).resolve().is_relative_to(site)
 assert Path(app.PROJECT_ROOT) == site
@@ -152,6 +139,49 @@ window.notebook.select(window.video_test_tab)
 window.update()
 assert window.video_test_canvas.winfo_width() > 300
 assert window.video_timeline_text.winfo_height() > 40
+# Drive a real, nonzero replay range through the installed application's worker.
+with TemporaryDirectory() as temporary:
+    video = Path(temporary) / 'replay-smoke.avi'
+    writer = cv2.VideoWriter(str(video), cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*'MJPG'),
+                             10.0, (64, 64))
+    try:
+        assert writer.isOpened(), 'Packaged FFmpeg video writer did not open'
+        for value in (40, 60, 80, 100, 120, 140):
+            writer.write(np.full((64, 64, 3), value, dtype=np.uint8))
+    finally:
+        writer.release()
+    samples = list(iter_video_samples(video, start_seconds=0.2, duration_seconds=0.3,
+                                      sample_interval_seconds=0.1))
+    assert [sample[0] for sample in samples] == [2, 3, 4]
+    assert all(image.size == (64, 64) and image.mode == 'RGB' for _, _, image in samples)
+
+    with patch.object(app, 'OUTPUT', Path(temporary)), patch.object(
+            app.messagebox, 'showerror', side_effect=AssertionError('Replay startup failed')):
+        window.video_test_path.set(str(video))
+        window.video_test_start.set('0.2')
+        window.video_test_duration.set('0.3')
+        window.video_test_dense_sampling.set(True)
+        window.start_video_test()
+        window.video_test_thread.join(timeout=30)
+        assert not window.video_test_thread.is_alive(), 'Installed replay worker timed out'
+        window._consume_video_test_events()
+        assert not window.video_test_running
+        assert window.video_test_progress.get() == 100, window.video_test_report_status.get()
+        assert str(window.video_test_open_summary['state']) == 'normal'
+        summary_path = Path(window.video_test_summary_path)
+        assert summary_path.parent == Path(temporary) / 'video_tests'
+        summary = json.loads(summary_path.read_text(encoding='utf-8'))
+        assert summary['runtime']['windows'] == 1
+        assert summary['runtime']['accepted_windows'] == 0
+        assert summary['replay_coverage']['selected_start_seconds'] == 0.2
+        assert summary['replay_coverage']['last_processed_frame'] == 4
+        assert 'rows' not in summary and 'path' not in summary['source']
+        full = summary_path.with_name(summary_path.name.removesuffix('.summary.json') + '.json')
+        assert json.loads(full.read_text(encoding='utf-8'))['rows'][0]['frames'] == [2, 3, 4]
+        with patch.object(app.subprocess, 'Popen') as open_report:
+            window.video_test_open_summary.invoke()
+        open_report.assert_called_once_with(['notepad.exe', str(summary_path)])
+
 window.notebook.select(window.realtime_tab)
 window.withdraw()
 
@@ -167,4 +197,4 @@ print(json.dumps({'source_files_verified': len(manifest['source_sha256']),
     'reference_version': reference_version, 'references_loaded': reference_count, 'phase_images_loaded': 6, 'shanten': hint.shanten,
     'discard_candidates': [item.discard for item in hint.best_discards],
     'unknown_abstention': True, 'live_entrypoint': True,
-    'ui': 'PASS', 'executor_enabled': False}))
+    'ui': 'PASS', 'installed_replay_report': 'PASS', 'executor_enabled': False}))
