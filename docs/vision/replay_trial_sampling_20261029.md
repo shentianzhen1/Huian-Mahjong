@@ -505,3 +505,18 @@ stable gold-colored SOUTH samples ends at 86.6 s. It displays advice via
 the experimental reference path. This review covers the indicator on one
 development recording. It does not validate earlier acceptance, hand
 identity, or live promotion.
+
+## Sep26 concealed count rejection (90.6 s)
+
+In frames 2709–2718 the video shows 11 contiguous concealed faces, a
+separated green dragon and a separated white dragon, plus a distinct
+exposed North pung. The window ending at frame 2718 (90.6 s) reports
+12 concealed identities. The green dragon is accepted from the draw
+region in the trial, and the visible white dragon is left in the
+unknown region. The concealed count guard blocks the hint. The two
+separated faces then move back into the hand row. The first stable
+post-motion window ends at frame 2742 (91.4 s), includes the white
+dragon in the 13 concealed identities and displays advice. This
+development example identifies a region-assignment miss during
+rearrangement. It does not establish the role of a separated tile
+from position alone.
