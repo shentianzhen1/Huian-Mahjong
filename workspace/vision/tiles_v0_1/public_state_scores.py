@@ -15,6 +15,7 @@ from dataclasses import dataclass
 import re
 import shutil
 import subprocess
+import sys
 
 import cv2
 import numpy as np
@@ -35,6 +36,10 @@ DEFAULT_THRESHOLDS = (70, 80, 90)
 
 class OCRUnavailable(RuntimeError):
     pass
+
+
+class OCRExecutableMissing(OCRUnavailable):
+    """The configured OCR executable could not be found or launched."""
 
 
 @dataclass(frozen=True)
@@ -150,7 +155,7 @@ class TesseractCLIBackend:
 
     def __call__(self, binary_image):
         if not self.available():
-            raise OCRUnavailable(
+            raise OCRExecutableMissing(
                 f"{self.command!r} is not installed or not on PATH"
             )
         ok, encoded = cv2.imencode(".png", binary_image)
@@ -178,9 +183,10 @@ class TesseractCLIBackend:
                 stderr=subprocess.PIPE,
                 timeout=self.timeout_seconds,
                 check=False,
+                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
             )
         except FileNotFoundError as exc:
-            raise OCRUnavailable(
+            raise OCRExecutableMissing(
                 f"{self.command!r} is not installed or not on PATH"
             ) from exc
         except subprocess.TimeoutExpired as exc:
@@ -249,6 +255,7 @@ def read_score_pair(
     thresholds=DEFAULT_THRESHOLDS,
     source_frame=None,
     gray_first=False,
+    stop_on_score_majority=False,
 ):
     """Read both visible scores from one PIL frame."""
     profile = profile or HuianPublicStateProfile()
@@ -305,12 +312,26 @@ def read_score_pair(
                 safe_for_executor=False,
             )
 
-    top_attempts = _attempts(
-        crops["top_right_score"], backend, thresholds
-    )
-    bottom_attempts = _attempts(
-        crops["bottom_left_score"], backend, thresholds
-    )
+    thresholds = tuple(thresholds)
+    majority_check = stop_on_score_majority and len(thresholds) == 3
+    initial_thresholds = thresholds[:2] if majority_check else thresholds
+    top_crop = crops["top_right_score"]
+    bottom_crop = crops["bottom_left_score"]
+    top_attempts = _attempts(top_crop, backend, initial_thresholds)
+    bottom_attempts = _attempts(bottom_crop, backend, initial_thresholds)
+    if majority_check:
+        # Two matching values per side already win each ranking, regardless
+        # of the third threshold. A conserving pair must be the first match.
+        top = top_attempts[0].value
+        bottom = bottom_attempts[0].value
+        if not (
+            top is not None and bottom is not None
+            and top_attempts[1].value == top and bottom_attempts[1].value == bottom
+            and top + bottom == MATCH_TOTAL_SCORE
+        ):
+            top_attempts += _attempts(top_crop, backend, thresholds[2:])
+            bottom_attempts += _attempts(bottom_crop, backend, thresholds[2:])
+
     top_candidates = _rank_candidates(top_attempts)
     bottom_candidates = _rank_candidates(bottom_attempts)
     top, bottom, mode = decode_score_candidates(

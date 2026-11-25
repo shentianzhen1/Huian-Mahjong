@@ -1,0 +1,1062 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "reference_version": "2026.10.25.2",
+  "manual_gold": "M4",
+  "single_source_trial": true,
+  "edge_seams": true,
+  "candidate_policy": "Preserve >=0.82 existing result; for ordinary low-score crop only, compare symmetric neutral-face features against all original raw references plus 8 bundled references, shift3 NCC; improve score only when top class agrees with original candidate. Offline monkeypatch, no live wiring.",
+  "before": {
+    "accepted_windows": 267,
+    "blocked_windows": 206,
+    "discard_windows": 36
+  },
+  "after": {
+    "accepted_windows": 285,
+    "blocked_windows": 188,
+    "discard_windows": 52
+  },
+  "lost_accepted_windows": 0,
+  "changed_previous_advice": 0,
+  "assistant_reviewed_new_score_pass_crops": 84,
+  "review_board_sha256": "f3bb285e4a1bc44803f87d9e19a2778aa23159fe89ddadeeb7f9f36775adb9f9",
+  "limitations": [
+    "84 tile crops visually reviewed by assistant, not user-approved labels.",
+    "New whole-hand outputs not yet independently reannotated.",
+    "One revealed match, overlapping windows, no calibrated confidence or independent promotion claim."
+  ],
+  "new_windows": [
+    {
+      "frames": [
+        1320,
+        1326,
+        1332
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "S4"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 1,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "M3",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P2",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P6",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2424,
+        2430,
+        2436
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 1,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2448,
+        2454,
+        2460
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S7"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "P2",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P6",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2574,
+        2580,
+        2586
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2598,
+        2604,
+        2610
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2604,
+        2610,
+        2616
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2610,
+        2616,
+        2622
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2616,
+        2622,
+        2628
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2622,
+        2628,
+        2634
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2628,
+        2634,
+        2640
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2634,
+        2640,
+        2646
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2640,
+        2646,
+        2652
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2646,
+        2652,
+        2658
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2652,
+        2658,
+        2664
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2658,
+        2664,
+        2670
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2664,
+        2670,
+        2676
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2670,
+        2676,
+        2682
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    },
+    {
+      "frames": [
+        2676,
+        2682,
+        2688
+      ],
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "S2",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S1"
+      ],
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "POST_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [
+          {
+            "discard": "S1",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S4",
+            "shanten": 0,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated"
+        ],
+        "source_session": "private-replay-de1d21b2a722d02f",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      }
+    }
+  ]
+}

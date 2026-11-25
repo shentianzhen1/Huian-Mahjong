@@ -1,0 +1,31 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_live_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "tests_passed": 23,
+  "method": "Reference-packet replay retries fresh public OCR each processed runtime window after unresolved hand read; stable hands keep2second cadence. Separate last-attempt metadata preserves prior successful display behavior on OCR errors. Existing2vote initial/sequential reset unchanged.",
+  "paired_results": [
+    {
+      "file": "real_boundary_full_replay.json",
+      "ocr_calls": 7,
+      "first_unknown_gold_seconds": 88.4,
+      "advice": 4,
+      "ocr_elapsed_ms": 14617.295
+    },
+    {
+      "file": "real_boundary_retry_replay.json",
+      "ocr_calls": 16,
+      "first_unknown_gold_seconds": 86.80000000000001,
+      "advice": 4,
+      "ocr_elapsed_ms": 37210.931
+    }
+  ],
+  "limits": [
+    "Source-time confirmation improves1.6seconds but OCRcalls7to16 and measured cumulativeOCRms14617to37211; NOT a live latency improvement claim.",
+    "Known development clip76..90s, offline M4/M5/S8 plus dark-meld candidate; not installed default recognition.",
+    "NewGoldSOUTH unrecognized, no new-hand advice restored.",
+    "No new installer requested; b63eba1 installer predates this revision."
+  ]
+}

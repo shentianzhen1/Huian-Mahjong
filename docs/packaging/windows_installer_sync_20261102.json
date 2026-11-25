@@ -1,0 +1,42 @@
+{
+  "commit": "490326952a4ccfef95b2616ae102c97d89b1a764",
+  "reference_pack_count": 28,
+  "reference_pack_version": "2026.10.30.1",
+  "exe": "HuianMahjong_Test_0.2.1_integrated-20261101-161711_Setup.exe",
+  "exe_sha256": "9b625a84c7b253115db2d411b6afa21e4b7fc124d36685ad49319b59bbcd0ea2",
+  "artifact_id": 13091092064,
+  "run_id": 41325215919,
+  "payload_files": 3710,
+  "recorded_date": "2026-11-02",
+  "functional_source_commit": "d066d59bfae2fe12712e2bc953b06eb2ee875694",
+  "project_version": "0.2.1",
+  "artifact_sha256": "8be266ef9033b3db22986c52173c972bc90e181a7592dfe47f04cacda8040dc6",
+  "workflow_url": "https://github.com/shentianzhen1/Huian-Mahjong/actions/runs/41325215919",
+  "source_files_verified": 356,
+  "templates_verified": 147,
+  "phase_images_loaded": 6,
+  "windows_checks": {
+    "source_commit_match": true,
+    "exe_extraction_and_payload_hashes": true,
+    "spawn": true,
+    "tk": true,
+    "installed_live_ui": true,
+    "repeated_upgrade": true,
+    "legacy_data_preservation": true,
+    "failed_install_preservation": true,
+    "running_app_refusal": true,
+    "data_conflict_preservation": true
+  },
+  "private_reference_pack": {
+    "version": "2026.11.01.private1",
+    "image_count": 30,
+    "included_in_default_installer": false,
+    "latest_loader_code_in_installer": true,
+    "new_private_pixels_published": false
+  },
+  "threshold": 0.82,
+  "current_agent": "V0.10",
+  "executor_enabled": false,
+  "windows_capture_validated": false,
+  "formal_promotion_evidence": false
+}

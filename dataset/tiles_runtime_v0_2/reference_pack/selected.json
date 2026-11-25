@@ -1,0 +1,595 @@
+{
+  "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+  "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+  "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT_NOT_APPROVED_TEMPLATES",
+  "rows": [
+    {
+      "frame": 150,
+      "slot": 2,
+      "bbox": [
+        217,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        217,
+        442,
+        48,
+        65
+      ],
+      "crop": "150_2.png",
+      "rgb_sha256": "f340e2dbf847b1c4e903b63051967c17dcf6973ff5a3a3699d68809212b066d6",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "S3",
+      "source_crop_name": "150_2.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 150,
+      "slot": 4,
+      "bbox": [
+        316,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        317,
+        442,
+        48,
+        65
+      ],
+      "crop": "150_4.png",
+      "rgb_sha256": "52771d36b0073419884b47d8735cab39e64288f3ef7826255f3e4b9bcc7f2cf0",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "S7",
+      "source_crop_name": "150_4.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4350,
+      "slot": 4,
+      "bbox": [
+        316,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        317,
+        442,
+        48,
+        65
+      ],
+      "crop": "4350_4.png",
+      "rgb_sha256": "bbaa8f0f7047b393d5730723c0759c1c29e74bb0ebd0f8b3a4e1c89032c0c0cd",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "S2",
+      "source_crop_name": "4350_4.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4350,
+      "slot": 6,
+      "bbox": [
+        416,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        416,
+        442,
+        49,
+        65
+      ],
+      "crop": "4350_6.png",
+      "rgb_sha256": "b6384ad6ef708d9df57526d9fd3f1f0dac8c1c02eb3f2bb51627dcf216c35afb",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "S8",
+      "source_crop_name": "4350_6.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4350,
+      "slot": 8,
+      "bbox": [
+        515,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        516,
+        442,
+        48,
+        65
+      ],
+      "crop": "4350_8.png",
+      "rgb_sha256": "5f116db8da7d1042156137a2e92c955a9e74c73a9ba3b874246539ea07cf1808",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "S9",
+      "source_crop_name": "4350_8.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 150,
+      "slot": 6,
+      "bbox": [
+        416,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        416,
+        442,
+        49,
+        65
+      ],
+      "crop": "150_6.png",
+      "rgb_sha256": "57497e8bd9aeb6227dc695b4d8c481d14015b95fc305ee889692a0eb061d23f3",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "M2",
+      "source_crop_name": "150_6.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 150,
+      "slot": 3,
+      "bbox": [
+        266,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        267,
+        442,
+        48,
+        65
+      ],
+      "crop": "150_3.png",
+      "rgb_sha256": "f654dfb42b9d0319eb8ec863e8be8cf32e138d38925b5e41cddb09a9c029d4e3",
+      "full_frame_rgb_sha256": "1618b67e0a214186bd9443269a6b2e99bf75cd8760c8c8f02570327e249813bb",
+      "truth": "S4",
+      "source_crop_name": "150_3.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4350,
+      "slot": 13,
+      "bbox": [
+        764,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        765,
+        442,
+        48,
+        65
+      ],
+      "crop": "4350_13.png",
+      "rgb_sha256": "5138cfd3f567ec2d5773e2ea3174379810ca8d5e4ef6182f457641a1581a2f75",
+      "full_frame_rgb_sha256": "124a95bb1c05c6da6c35fd5b3ca48209f409e070433d930762c4f2988e700038",
+      "truth": "M9",
+      "source_crop_name": "4350_13.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 0,
+      "slot": 12,
+      "bbox": [
+        716,
+        433,
+        50,
+        77
+      ],
+      "detected_bbox": [
+        716,
+        433,
+        50,
+        77
+      ],
+      "crop": "W_source0.png",
+      "rgb_sha256": "269a80da91a837957333851e9f8b80f499c4eddd53965d6390b09a09da41f226",
+      "full_frame_rgb_sha256": "0e6663b73edb607d1a6e81d9a59e9e75a15cf572418a45b3d8ce89b2fa3638a6",
+      "truth": "W",
+      "source_crop_name": "W_source0.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 0,
+      "slot": 15,
+      "bbox": [
+        865,
+        433,
+        49,
+        77
+      ],
+      "detected_bbox": [
+        865,
+        433,
+        49,
+        77
+      ],
+      "crop": "B_source0.png",
+      "rgb_sha256": "720381d771cd7fbf300f6f8077f82be788a536d75dd7a11e063193d8a168bfe1",
+      "full_frame_rgb_sha256": "0e6663b73edb607d1a6e81d9a59e9e75a15cf572418a45b3d8ce89b2fa3638a6",
+      "truth": "B",
+      "source_crop_name": "B_source0.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "role": "opened_gold",
+      "truth": "M6",
+      "crop": "opened_gold_M6.png",
+      "frame": 4884,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "source_crop_name": "opened_gold_M6.png"
+    },
+    {
+      "role": "opened_gold",
+      "truth": "M4",
+      "crop": "opened_gold_M4.png",
+      "frame": 90,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+      "original_match_group": "reviewed_match_2026_10_12_room324504",
+      "rgb_sha256": "069c9f1316478f871e47ae6c167f5e2e335de9377290fef719712558c3de8397",
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "source_crop_name": "opened_gold_M4.png"
+    },
+    {
+      "role": "opened_gold",
+      "truth": "M1",
+      "crop": "opened_gold_M1.png",
+      "frame": 3097,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+      "review_authority": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "source_crop_name": "opened_gold_M1.png"
+    },
+    {
+      "frame": 3180,
+      "bbox": [
+        863,
+        415,
+        53,
+        96
+      ],
+      "detected_bbox": [
+        863,
+        426,
+        49,
+        81
+      ],
+      "crop": "tile_13_W.png",
+      "rgb_sha256": "886b5b2dec9f7114d700348cf5a7c44be9e0e381cdfd37cc0f1d25d7b562099d",
+      "frame_rgb_sha256": "f4d290831832f2437008061e4eb8f143ca8fff702f7008b5f83a77f8042740e9",
+      "truth": "W",
+      "review_status": "REVIEWED_RAISED_HAND_DEVELOPMENT_CANDIDATE",
+      "png_sha256": "df3a35fc996a0cf1f8faca750334e76d8af176d87bb366777825184e8f709eca",
+      "approved_template": false,
+      "source_crop_name": "frame3180_x863.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4860,
+      "bbox": [
+        764,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        764,
+        429,
+        49,
+        78
+      ],
+      "crop": "tile_14_M3.png",
+      "rgb_sha256": "796e72ebc12a669969c5cfb35b78a98f17e53040fbe038290c5288599fe63d91",
+      "frame_rgb_sha256": "8a53ce87181f457af38b8bb4fabca346c739d272272024dbf2bcc1bd696ad59b",
+      "truth": "M3",
+      "review_status": "REVIEWED_RAISED_HAND_DEVELOPMENT_CANDIDATE",
+      "png_sha256": "5ed8eeb3a8a9944474f2d73834f61e5043b20079ab505badc5e36d8524700965",
+      "approved_template": false,
+      "source_crop_name": "frame4860_x764.png",
+      "role": "hand_reviewed_training"
+    },
+    {
+      "frame": 4857,
+      "bbox": [
+        763,
+        431,
+        50,
+        79
+      ],
+      "detected_bbox": [
+        763,
+        440,
+        50,
+        67
+      ],
+      "crop": "tile_15_M3.png",
+      "rgb_sha256": "90ae0bf2041e322e544c166d65c0d46eb5428c80598aa963103fd37dcd978cee",
+      "frame_rgb_sha256": "d5773d183c7204cc8d3993a18971413b0a1e2d8d74855e1826748b5b4c01ec41",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4857_x763.png"
+    },
+    {
+      "frame": 4861,
+      "bbox": [
+        764,
+        418,
+        49,
+        93
+      ],
+      "detected_bbox": [
+        764,
+        429,
+        49,
+        78
+      ],
+      "crop": "tile_16_M3.png",
+      "rgb_sha256": "2582afa5f35fbb913e1323464854e89babae8468c1ae24bd1edaeacabb6035bb",
+      "frame_rgb_sha256": "225cce167844e4b42a5eb18e931a8d64d112aacadf992bb9ecda4f48672416df",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4861_x764.png"
+    },
+    {
+      "frame": 4865,
+      "bbox": [
+        764,
+        415,
+        49,
+        96
+      ],
+      "detected_bbox": [
+        764,
+        426,
+        48,
+        81
+      ],
+      "crop": "tile_17_M3.png",
+      "rgb_sha256": "f441b0c23a91194898b5f5f01b04cd283b0871125ae3b4def5445a3c67673cbf",
+      "frame_rgb_sha256": "eb454b02c2a4d344fe2ac666f002a2d2427f2c704b12edc4fb15e5da72aade53",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4865_x764.png"
+    },
+    {
+      "frame": 4867,
+      "bbox": [
+        764,
+        415,
+        49,
+        96
+      ],
+      "detected_bbox": [
+        764,
+        426,
+        48,
+        81
+      ],
+      "crop": "tile_18_M3.png",
+      "rgb_sha256": "4caef8f70371cbd5f8baa6e90049225549d2067a11885e08a13e7016575cb521",
+      "frame_rgb_sha256": "7d4c4ee9666385c0220f75177fdb48db9efa02ee581b3f5da7a1024944a84ff0",
+      "truth": "M3",
+      "review_status": "ASSISTANT_REVIEWED_DEVELOPMENT_NOT_APPROVED_TEMPLATE",
+      "role": "hand_reviewed_training",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "source_crop_name": "frame4867_x764.png"
+    },
+    {
+      "role": "concealed_gold",
+      "truth": "SOUTH",
+      "crop": "concealed_south.png",
+      "rgb_sha256": "e41bf3f13a9d68d51396b716f36de39c550b444de723ec3ad8c281f2de0e37a7",
+      "frame": 2604,
+      "bbox": [
+        114,
+        434,
+        52,
+        75
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "M4",
+      "crop": "added_hand_M4.png",
+      "role": "hand",
+      "rgb_sha256": "e2408aa9b9a18d5a159ca05e70239da9f0e69bba911256f378217b6c03212958",
+      "frame": 156,
+      "bbox": [
+        565,
+        433,
+        49,
+        77
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "M5",
+      "crop": "added_hand_M5.png",
+      "role": "hand",
+      "rgb_sha256": "46b922bf85b6068a3aefccf9ecd6d184edd63db9b65532f0625af818772639ba",
+      "frame": 672,
+      "bbox": [
+        564,
+        431,
+        50,
+        79
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "N",
+      "crop": "added_hand_N.png",
+      "role": "hand",
+      "rgb_sha256": "674166482cf951c70cbdbee76abc1ce97e2a08f56f6ff2aae3a818597b3410ae",
+      "frame": 2604,
+      "bbox": [
+        665,
+        431,
+        49,
+        79
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "R",
+      "crop": "added_hand_R.png",
+      "role": "hand",
+      "rgb_sha256": "cf2eefc0c25b7490fb27a6966788e6e05d21b407394ea3ab114e98221b57b224",
+      "frame": 2604,
+      "bbox": [
+        764,
+        433,
+        49,
+        77
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "S8",
+      "crop": "added_opened_gold_S8.png",
+      "role": "opened_gold",
+      "rgb_sha256": "be21c6daefd7c9d82a01397960e5114385d77bdda25b03f6c21d7f907f6c3a92",
+      "frame": 156,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "SOUTH",
+      "crop": "added_opened_gold_SOUTH.png",
+      "role": "opened_gold",
+      "rgb_sha256": "f7c5d16e6682fdd91ffe551b661833f618b206301dd6aadf5acb5a50059c2662",
+      "frame": 2640,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "P5",
+      "role": "opened_gold",
+      "crop": "gold_P5_source3_frame4243.png",
+      "rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+      "frame": 4243,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    },
+    {
+      "truth": "P7",
+      "role": "opened_gold",
+      "crop": "gold_P7_source3_frame1414.png",
+      "rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+      "frame": 1414,
+      "bbox": [
+        107,
+        41,
+        42,
+        57
+      ],
+      "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+      "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+      "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+      "development_only": true,
+      "formal_promotion_evidence": false
+    }
+  ],
+  "revision_note": "19 reviewed development references and training review; not formal promotion.",
+  "version": "2026.10.30.1",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "approved_templates": false,
+  "experimental_training_review": {
+    "file": "training_review.json",
+    "sha256": "f5ecb3dfeb9796784026589a9c4ed7c5d79d49ba474af34715a8894fe48af530"
+  },
+  "base_installed_bundle_version": "2026.10.25.5",
+  "role": "BUNDLED_READ_ONLY_SHANTEN_TRIAL_NOT_FORMAL_PROMOTION"
+}

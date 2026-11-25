@@ -1,0 +1,653 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "installer_requested": false,
+  "trial_runtime_changed": true,
+  "tests_passed": 74,
+  "skipped": 0,
+  "bundle_version": "2026.10.30.1",
+  "activation_source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "activation_result": {
+    "baseline_trial": {
+      "display_allowed": false,
+      "snapshot": {
+        "timestamp_seconds": 60.0,
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "P6",
+          "M1",
+          "M2",
+          "M3",
+          "M6",
+          "M7",
+          "SOUTH",
+          "SOUTH",
+          "W",
+          "W"
+        ],
+        "gold_tile": "S8",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "concealed_hand_count_invalid",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "geometry_untrusted": false,
+      "meld_boxes": [
+        [
+          101,
+          442,
+          51,
+          54
+        ],
+        [
+          145,
+          442,
+          49,
+          54
+        ],
+        [
+          248,
+          442,
+          48,
+          54
+        ],
+        [
+          294,
+          442,
+          45,
+          54
+        ]
+      ],
+      "frames": [
+        1788,
+        1794,
+        1800
+      ],
+      "frame_rgb_sha256": [
+        "a1749c21aed7b9f365424b6c8675f20c5b2ad59ed0cac7fc9f5b92da2cbb5672",
+        "eedecc6872edf6cb30f59f6d80ced4cd516213fb19c373894a57fe6f785302f9",
+        "5525059bf9aff92922b0913a638c3ba8443177d259805252325fa658952cb3e9"
+      ]
+    },
+    "local_meld_trial": {
+      "display_allowed": true,
+      "snapshot": {
+        "timestamp_seconds": 60.0,
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "P6",
+          "M1",
+          "M2",
+          "M3",
+          "M6",
+          "M7",
+          "SOUTH",
+          "SOUTH",
+          "W",
+          "W"
+        ],
+        "gold_tile": "S8",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null
+            ],
+            [
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_meld_geometry_unvalidated",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 1,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_meld_geometry_unvalidated",
+          "experimental_hand_sources_unvalidated",
+          "experimental_gold_sources_unvalidated"
+        ],
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "geometry_untrusted": false,
+      "meld_boxes": [
+        [
+          101,
+          442,
+          51,
+          54
+        ],
+        [
+          145,
+          442,
+          49,
+          54
+        ],
+        [
+          248,
+          442,
+          48,
+          54
+        ],
+        [
+          294,
+          442,
+          45,
+          54
+        ],
+        [
+          194,
+          442,
+          42,
+          56
+        ],
+        [
+          337,
+          442,
+          44,
+          52
+        ]
+      ],
+      "frames": [
+        1788,
+        1794,
+        1800
+      ],
+      "frame_rgb_sha256": [
+        "a1749c21aed7b9f365424b6c8675f20c5b2ad59ed0cac7fc9f5b92da2cbb5672",
+        "eedecc6872edf6cb30f59f6d80ced4cd516213fb19c373894a57fe6f785302f9",
+        "5525059bf9aff92922b0913a638c3ba8443177d259805252325fa658952cb3e9"
+      ]
+    },
+    "local_meld_trial_disabled": {
+      "display_allowed": false,
+      "snapshot": {
+        "timestamp_seconds": 60.0,
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "P6",
+          "M1",
+          null,
+          "M3",
+          "M6",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "gold_tile": null,
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [],
+          []
+        ],
+        "hand_trusted": false,
+        "gold_trusted": false,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          false,
+          false
+        ],
+        "adapter_issues": [
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_meld_geometry_unvalidated"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "hint": {
+        "status": "BLOCKED",
+        "allowed": false,
+        "phase": null,
+        "shanten": null,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "hand_untrusted",
+          "hand_identity_unknown",
+          "gold_untrusted",
+          "gold_identity_unknown",
+          "player_meld_count_untrusted",
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_untrusted:0",
+          "meld_untrusted:1",
+          "runtime_hand_not_fully_trusted",
+          "runtime_gold_not_fully_trusted",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "experimental_meld_geometry_unvalidated"
+        ],
+        "source_session": "local-video-9709fdc3aa464bf2",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "geometry_untrusted": false,
+      "meld_boxes": [
+        [
+          101,
+          442,
+          51,
+          54
+        ],
+        [
+          145,
+          442,
+          49,
+          54
+        ],
+        [
+          248,
+          442,
+          48,
+          54
+        ],
+        [
+          294,
+          442,
+          45,
+          54
+        ],
+        [
+          194,
+          442,
+          42,
+          56
+        ],
+        [
+          337,
+          442,
+          44,
+          52
+        ]
+      ],
+      "frames": [
+        1788,
+        1794,
+        1800
+      ],
+      "frame_rgb_sha256": [
+        "a1749c21aed7b9f365424b6c8675f20c5b2ad59ed0cac7fc9f5b92da2cbb5672",
+        "eedecc6872edf6cb30f59f6d80ced4cd516213fb19c373894a57fe6f785302f9",
+        "5525059bf9aff92922b0913a638c3ba8443177d259805252325fa658952cb3e9"
+      ]
+    }
+  },
+  "control_source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "controls": {
+    "baseline_trial": [
+      {
+        "frame": 84,
+        "display_allowed": true,
+        "hand": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P6",
+          "P8",
+          "S2",
+          "S3",
+          "S9",
+          "M2",
+          "M2",
+          "M3",
+          "M8",
+          "M9",
+          "W",
+          "B",
+          "S9"
+        ],
+        "gold": "M4",
+        "melds": [],
+        "shanten": 3,
+        "discards": [
+          {
+            "discard": "M2",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "M3",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P1",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P4",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P8",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "W",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "B",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ]
+      },
+      {
+        "frame": 1776,
+        "display_allowed": true,
+        "hand": [
+          "P1",
+          "P2",
+          "P2",
+          "P3",
+          "P4",
+          "P6",
+          "S2",
+          "S3",
+          "S4",
+          "S9",
+          "S9",
+          "S9",
+          "M3",
+          "S8"
+        ],
+        "gold": "M4",
+        "melds": [
+          [
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "shanten": 1,
+        "discards": [
+          {
+            "discard": "M3",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P2",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P6",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S8",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ]
+      }
+    ],
+    "local_meld_trial": [
+      {
+        "frame": 84,
+        "display_allowed": true,
+        "hand": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P6",
+          "P8",
+          "S2",
+          "S3",
+          "S9",
+          "M2",
+          "M2",
+          "M3",
+          "M8",
+          "M9",
+          "W",
+          "B",
+          "S9"
+        ],
+        "gold": "M4",
+        "melds": [],
+        "shanten": 3,
+        "discards": [
+          {
+            "discard": "M2",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "M3",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P1",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P4",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P8",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "W",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "B",
+            "shanten": 3,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ]
+      },
+      {
+        "frame": 1776,
+        "display_allowed": true,
+        "hand": [
+          "P1",
+          "P2",
+          "P2",
+          "P3",
+          "P4",
+          "P6",
+          "S2",
+          "S3",
+          "S4",
+          "S9",
+          "S9",
+          "S9",
+          "M3",
+          "S8"
+        ],
+        "gold": "M4",
+        "melds": [
+          [
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "shanten": 1,
+        "discards": [
+          {
+            "discard": "M3",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P2",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "P6",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          },
+          {
+            "discard": "S8",
+            "shanten": 1,
+            "total_live_copies": null,
+            "effective_tile_types": []
+          }
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "Known revealed development bursts; no independent promotion.",
+    "Three captured frames plus original identities; no direct source-coverage override, InnerRecovery or private-packet addition.",
+    "Shared trial UI worker and replay resources are wired; actual Windows mirrored capture not tested here.",
+    "No new installer;7f1a86e does not include this activation."
+  ]
+}

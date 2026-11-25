@@ -6,6 +6,7 @@ __pycache__/
 data/capture_validation/
 data/hint_alpha/
 venv/
+.build-hint/
 .env
 *.log
 .DS_Store
@@ -23,6 +24,8 @@ models/*.pt
 models/*.onnx
 data/raw_frames/
 data/evaluations/
+# Issue #69 original footage, crops, local review packets and source manifests.
+data/issue69_private/
 # Vision Dataset Recovery V0.2: raw media and automatic review material stay
 # local.  The reviewed manifest, labels, ROI profiles, tile-only templates and
 # formal validation reports are intentionally tracked.

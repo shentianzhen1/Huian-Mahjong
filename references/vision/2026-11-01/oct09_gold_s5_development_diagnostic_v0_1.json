@@ -1,0 +1,498 @@
+{
+  "schema_version": "cross_source_advisory_development_diagnostic_v1",
+  "recorded_date": "2026-11-01",
+  "source_sha256": "bf1d63981d0c0964f15bfb5a985bc3622c8aa681b32b7d2e34e736c27d495d98",
+  "source_size_bytes": 91154896,
+  "decoded_size": [
+    2796,
+    1290
+  ],
+  "decoded_frame_count": 5216,
+  "runtime_source_commit": "e8b070c4ae1cc37d506c5689ddce10a7881d7415",
+  "reference_version": "2026.10.30.1",
+  "reference_count": 28,
+  "input_file_sha256": {
+    "dataset/tiles_runtime_v0_2/labels.jsonl": "92c14aa278bfe15967b8f9777f89b629e6052b9ed97105085bb573eb8779fdbb",
+    "dataset/tiles_runtime_v0_2/labels_reviewed_additions/2026-10-07_s2.jsonl": "42b36a2c7754c5c64205bcf976500d5b3ec8b2a6459524fa1b89dd600828a794",
+    "dataset/tiles_runtime_v0_2/labels_reviewed_additions/2026-10-08_s2_hard_example.jsonl": "377b39bb3ba991cc8a7369359f613c9bcf9685ede823eee08732703cb178bcf9",
+    "dataset/tiles_runtime_v0_2/reference_pack/bundle.json": "8402b4eeedbb7725c4e94dcfcb1f23adea37dbd9462b399277202d38804d9a87",
+    "dataset/tiles_runtime_v0_2/reference_pack/selected.json": "f26544901377f742b3916650c131b155a1508bd72f61e6d2993c0a1d2eaefe77"
+  },
+  "provenance": {
+    "same_byte_hash_recorded_in_prior_pr": 131,
+    "prior_path": "references/gameplay/2026-10-09/match_10_9_eight_hand/intake_v0_1.json",
+    "previously_revealed_development": true,
+    "visible_table_context_differs_from_prior_sep26_replay": true,
+    "original_match_group_qualification": "Not certified against every unresolved training derivative",
+    "independent_holdout": false,
+    "selection_locked_before_current_inference": true,
+    "selection": "20/50/80 percent decoded ordinals, including raised-tile/action-prompt scenes",
+    "truth_frozen_before_current_inference": false,
+    "initial_truth_corrected_after_model_comparison": true,
+    "truth_corrections": [
+      {
+        "source_frame": 2608,
+        "slot_index_zero_based": 6,
+        "initial": "S7",
+        "corrected": "S9",
+        "basis": "Native-resolution crop visibly shows nine bamboo pips / Wan numeral; full-frame RGB hash unchanged"
+      },
+      {
+        "source_frame": 4172,
+        "slot_index_zero_based": 6,
+        "initial": "S7",
+        "corrected": "S9",
+        "basis": "Native-resolution crop visibly shows nine bamboo pips / Wan numeral; full-frame RGB hash unchanged"
+      },
+      {
+        "source_frame": 4172,
+        "slot_index_zero_based": 7,
+        "initial": "M2",
+        "corrected": "M5",
+        "basis": "Native-resolution crop visibly shows nine bamboo pips / Wan numeral; full-frame RGB hash unchanged"
+      },
+      {
+        "source_frame": 4172,
+        "slot_index_zero_based": 8,
+        "initial": "M5",
+        "corrected": "M6",
+        "basis": "Native-resolution crop visibly shows nine bamboo pips / Wan numeral; full-frame RGB hash unchanged"
+      }
+    ],
+    "truth_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "exact_source_sha_found_in_active_branch_training_or_reference_text_before_this_intake": false,
+    "model_or_reference_tuned_after_current_inference": false
+  },
+  "read_policy": {
+    "sequential_decode": true,
+    "samples_per_checkpoint": [
+      24,
+      12,
+      0
+    ],
+    "sample_offsets_are_prior_frame_ordinals": true,
+    "source_time_uses_average_fps_not_exact_vfr_pts": true,
+    "threshold": 0.82,
+    "fresh_pipeline_for_each_checkpoint": true,
+    "within_burst_identity_confirmation": true,
+    "opt_in_reference_trial": true,
+    "same_inputs_for_both_gold_modes": true
+  },
+  "checkpoints": [
+    {
+      "source_frame": 1043,
+      "reviewed_frame_rgb_sha256": "5d45e9c694dbc6e5b85c3d1eebce5a9c9137d890b804dcbb28d40bd3ab7bfb19",
+      "scene": "RAISED_CONCEALED_TILE",
+      "reviewed_own_hand": [
+        "S5",
+        "P1",
+        "P4",
+        "P5",
+        "S1",
+        "S1",
+        "S2",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M6",
+        "M6",
+        "M7",
+        "M8",
+        "M8"
+      ],
+      "reviewed_gold_tile": "S5",
+      "reviewed_own_melds": [],
+      "modes": {
+        "visual_gold": {
+          "display_allowed": false,
+          "geometry_untrusted": true,
+          "geometry_issues": [
+            "layout_not_stable_across_frames"
+          ],
+          "detected_hand_count": 0,
+          "expected_hand_count": 16,
+          "current_frame_candidate_correct": null,
+          "accepted_correct": 0,
+          "accepted_wrong": 0,
+          "rejected_hand_slots": [],
+          "own_meld_count": 0,
+          "own_meld_count_trusted": false,
+          "gold_tile": null,
+          "gold_trusted": false,
+          "raw_gold_frame_candidates": []
+        },
+        "manual_gold": {
+          "display_allowed": false,
+          "geometry_untrusted": true,
+          "geometry_issues": [
+            "layout_not_stable_across_frames"
+          ],
+          "detected_hand_count": 0,
+          "expected_hand_count": 16,
+          "current_frame_candidate_correct": null,
+          "accepted_correct": 0,
+          "accepted_wrong": 0,
+          "rejected_hand_slots": [],
+          "own_meld_count": 0,
+          "own_meld_count_trusted": false,
+          "gold_tile": "S5",
+          "gold_trusted": true,
+          "raw_gold_frame_candidates": []
+        }
+      }
+    },
+    {
+      "source_frame": 2608,
+      "reviewed_frame_rgb_sha256": "828306d9db4c5c0fac84c7b3bf3a86432b21a872e79dbb4d7b96dcfb94a43e55",
+      "scene": "ORDINARY_TABLE",
+      "reviewed_own_hand": [
+        "S5",
+        "P1",
+        "P4",
+        "P5",
+        "S1",
+        "S1",
+        "S9",
+        "M2",
+        "M6",
+        "M6",
+        "M7",
+        "M8",
+        "M8"
+      ],
+      "reviewed_gold_tile": "S5",
+      "reviewed_own_melds": [
+        [
+          "M1",
+          "M2",
+          "M3"
+        ]
+      ],
+      "modes": {
+        "visual_gold": {
+          "display_allowed": false,
+          "geometry_untrusted": false,
+          "geometry_issues": [
+            "stable_votes=3"
+          ],
+          "detected_hand_count": 13,
+          "expected_hand_count": 13,
+          "current_frame_candidate_correct": 13,
+          "accepted_correct": 12,
+          "accepted_wrong": 0,
+          "rejected_hand_slots": [
+            {
+              "slot": 0,
+              "truth": "S5",
+              "candidate_tile_id": "S5",
+              "tile_confidence": 0.926044,
+              "identity_reason": "class_missing_real_gold_skin_example"
+            }
+          ],
+          "own_meld_count": 1,
+          "own_meld_count_trusted": true,
+          "gold_tile": null,
+          "gold_trusted": false,
+          "raw_gold_frame_candidates": [
+            {
+              "frame": 2584,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.323416,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 2596,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.323416,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 2608,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.323416,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            }
+          ]
+        },
+        "manual_gold": {
+          "display_allowed": false,
+          "geometry_untrusted": false,
+          "geometry_issues": [
+            "stable_votes=3"
+          ],
+          "detected_hand_count": 13,
+          "expected_hand_count": 13,
+          "current_frame_candidate_correct": 13,
+          "accepted_correct": 12,
+          "accepted_wrong": 0,
+          "rejected_hand_slots": [
+            {
+              "slot": 0,
+              "truth": "S5",
+              "candidate_tile_id": "S5",
+              "tile_confidence": 0.926044,
+              "identity_reason": "class_missing_real_gold_skin_example"
+            }
+          ],
+          "own_meld_count": 1,
+          "own_meld_count_trusted": true,
+          "gold_tile": "S5",
+          "gold_trusted": true,
+          "raw_gold_frame_candidates": [
+            {
+              "frame": 2584,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.323416,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 2596,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.323416,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 2608,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.323416,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            }
+          ]
+        },
+        "manual_gold_plus_reviewed_hand_gold": {
+          "counterfactual_only": true,
+          "slot0_set_to": "S5",
+          "hand_trust_asserted_by_manual_review": true,
+          "structural_calculation_allowed": true,
+          "shanten": 2,
+          "phase": "PRE_DRAW",
+          "not_runtime_display": true
+        }
+      }
+    },
+    {
+      "source_frame": 4172,
+      "reviewed_frame_rgb_sha256": "a16b5a1d237f8d6bd7f4462c655acb1a7b203dce987aa10dbb5490b699c9991f",
+      "scene": "ACTION_PROMPT",
+      "reviewed_own_hand": [
+        "S5",
+        "P1",
+        "P4",
+        "P5",
+        "S1",
+        "S1",
+        "S9",
+        "M5",
+        "M6",
+        "M6",
+        "M7",
+        "M8",
+        "M8"
+      ],
+      "reviewed_gold_tile": "S5",
+      "reviewed_own_melds": [
+        [
+          "M1",
+          "M2",
+          "M3"
+        ]
+      ],
+      "modes": {
+        "visual_gold": {
+          "display_allowed": false,
+          "geometry_untrusted": false,
+          "geometry_issues": [
+            "stable_votes=3"
+          ],
+          "detected_hand_count": 13,
+          "expected_hand_count": 13,
+          "current_frame_candidate_correct": 13,
+          "accepted_correct": 12,
+          "accepted_wrong": 0,
+          "rejected_hand_slots": [
+            {
+              "slot": 0,
+              "truth": "S5",
+              "candidate_tile_id": "S5",
+              "tile_confidence": 0.908188,
+              "identity_reason": "class_missing_real_gold_skin_example"
+            }
+          ],
+          "own_meld_count": 1,
+          "own_meld_count_trusted": true,
+          "gold_tile": null,
+          "gold_trusted": false,
+          "raw_gold_frame_candidates": [
+            {
+              "frame": 4148,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.324368,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 4160,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.324368,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 4172,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.324368,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            }
+          ]
+        },
+        "manual_gold": {
+          "display_allowed": false,
+          "geometry_untrusted": false,
+          "geometry_issues": [
+            "stable_votes=3"
+          ],
+          "detected_hand_count": 13,
+          "expected_hand_count": 13,
+          "current_frame_candidate_correct": 13,
+          "accepted_correct": 12,
+          "accepted_wrong": 0,
+          "rejected_hand_slots": [
+            {
+              "slot": 0,
+              "truth": "S5",
+              "candidate_tile_id": "S5",
+              "tile_confidence": 0.908188,
+              "identity_reason": "class_missing_real_gold_skin_example"
+            }
+          ],
+          "own_meld_count": 1,
+          "own_meld_count_trusted": true,
+          "gold_tile": "S5",
+          "gold_trusted": true,
+          "raw_gold_frame_candidates": [
+            {
+              "frame": 4148,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.324368,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 4160,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.324368,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            },
+            {
+              "frame": 4172,
+              "candidate_tile_id": "S5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.324368,
+              "identity_reason": "below_confidence_threshold",
+              "opened_gold_reference_supported": false
+            }
+          ]
+        },
+        "manual_gold_plus_reviewed_hand_gold": {
+          "counterfactual_only": true,
+          "slot0_set_to": "S5",
+          "hand_trust_asserted_by_manual_review": true,
+          "structural_calculation_allowed": true,
+          "shanten": 2,
+          "phase": "PRE_DRAW",
+          "not_runtime_display": true
+        }
+      }
+    }
+  ],
+  "stable_current_frame_totals": {
+    "stable_current_frames": 2,
+    "current_frame_tiles": 26,
+    "candidate_correct": 26,
+    "accepted_correct": 24,
+    "accepted_wrong": 0,
+    "rejected": 2
+  },
+  "finding": "At two stable checkpoints all 26 top candidates match final native-pixel review, but two concealed Gold S5 instances remain UNKNOWN for class_missing_real_gold_skin_example. Opened S5 has low confidence and no bundled reference. Manual Gold fixes only the indicator; both whole hands still block. At the raised-tile checkpoint geometry is unstable.",
+  "counterfactual": "Setting reviewed concealed S5 in addition to manual indicator S5 permits structural calculation at both stable checkpoints; this is offline intervention, not a runtime policy change.",
+  "limits": [
+    "Final truth had corrections after native-resolution re-review; all results are revealed development, not blind accuracy.",
+    "Only current-frame labels are fully reviewed; prior identities and temporal correctness are not a complete truth set.",
+    "Original-match separation from all unresolved training sources is unproven.",
+    "No crop/reference added, no model or gate changed; no independent promotion or live Windows claim."
+  ],
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "windows_capture_validated": false,
+  "safe_for_executor": false,
+  "private_candidate": {
+    "version": "2026.11.01.private1",
+    "source_sha256": "bf1d63981d0c0964f15bfb5a985bc3622c8aa681b32b7d2e34e736c27d495d98",
+    "hand_trial_source_sha256": "c8787c861c7e365dc777a92f2978c7f9f360e8b08cf0ddbd817ca6c98fba4305",
+    "checkpoints": [
+      {
+        "source_frame": 1043,
+        "reference_donor_positive_control": false,
+        "later_same_match_query": false,
+        "before_visual_display": false,
+        "after_visual_display": false,
+        "after_manual_display": false,
+        "geometry_block_preserved": true,
+        "current_hand_exact": false,
+        "structural_shanten": null
+      },
+      {
+        "source_frame": 2608,
+        "reference_donor_positive_control": true,
+        "later_same_match_query": false,
+        "before_visual_display": false,
+        "after_visual_display": true,
+        "after_manual_display": true,
+        "geometry_block_preserved": true,
+        "current_hand_exact": true,
+        "structural_shanten": 2
+      },
+      {
+        "source_frame": 4172,
+        "reference_donor_positive_control": false,
+        "later_same_match_query": true,
+        "before_visual_display": false,
+        "after_visual_display": true,
+        "after_manual_display": true,
+        "geometry_block_preserved": true,
+        "current_hand_exact": true,
+        "structural_shanten": 2
+      }
+    ],
+    "interpretation": "Two stable source checkpoints recover from 0/2 to 2/2 in explicit reference trial. Donor 2608 is an in-sample positive control. 4172 is a later checkpoint of the same match; this is not independent validation. Raised-tile geometry remains blocked.",
+    "formal_promotion_evidence": false,
+    "safe_for_executor": false,
+    "reference_images": 30,
+    "new_reference_crops": 2,
+    "raw_rejections_preserved": true,
+    "private_reference_added_after_baseline": true,
+    "archive_file_name": "huian_gold_s5_private_trial_20261101_v1.zip",
+    "archive_sha256": "4af41417dcf2dc150c9a6eed0456e9749d1767e83a9bc587e4844c75b69a94f2",
+    "new_pixels_published_to_github": false
+  }
+}

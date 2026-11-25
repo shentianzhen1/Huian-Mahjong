@@ -1,0 +1,28 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "low_crops_after_existing_trial": 215,
+  "glyph_score_ge_point82": 213,
+  "score_not_calibrated": true,
+  "visual_counterexample": {
+    "frame": 2736,
+    "truth": "S9",
+    "baseline_candidate": "S9",
+    "glyph_candidate": "S8",
+    "glyph_score": 0.9220522046089172,
+    "other_corrected_crop_in_frame": {
+      "truth": "S9",
+      "baseline": "S6",
+      "glyph": "S9"
+    }
+  },
+  "conclusion": "Reject global glyph fallback. A score increase or baseline agreement alone is not correctness evidence. Further development should isolate Wan numeral alignment from bamboo/pip patterns.",
+  "limits": [
+    "One revealed match, adjacent crops not independent.",
+    "Not all 215 crops manually annotated.",
+    "Counterexample is in a win animation; it still demonstrates feature confusion.",
+    "No whole-hand replay or live wiring for glyph candidate."
+  ]
+}

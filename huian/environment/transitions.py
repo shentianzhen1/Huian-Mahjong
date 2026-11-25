@@ -11,11 +11,41 @@ from huian.rules.context import (
     YoujinStage,
     youjin_progression_rule,
 )
+from huian.rules.first_round import (
+    cancel_first_round,
+    record_dealer_first_discard,
+    record_nondealer_first_draw,
+)
+from .special_apply import apply_qiangjin_action
 
 
 def apply_action(state, action):
     p, kind = action.player, action.type
     T = env.ActionType
+
+    # Qiangjin/Sanjindao/Eight-Flower declarations and their dedicated PASS
+    # windows are environment-owned special transitions, not ordinary claims.
+    if apply_qiangjin_action(state, action):
+        return
+
+    first = getattr(state, "first_round", None)
+    if isinstance(first, dict) and first.get("active"):
+        nondealer = 1 - state.dealer
+        # Any actual claim/Hu of the dealer's first discard means the nondealer
+        # never reaches the confirmed "first draw" Qiangjin node. Do not invent
+        # a replacement opportunity later in the hand.
+        if (p == nondealer
+                and first.get("dealer_first_discard_done")
+                and not first.get("nondealer_first_draw_done")
+                and kind in (T.CHI, T.PENG, T.MING_GANG, T.HU)):
+            cancel_first_round(state, "CLAIM_BEFORE_NONDEALER_FIRST_DRAW")
+        # Once both special opportunities have been resolved, the first real
+        # ordinary action from the nondealer closes this provenance permanently.
+        elif (p == nondealer
+              and first.get("nondealer_first_draw_done")
+              and state.phase == "AFTER_DRAW"):
+            cancel_first_round(state, "FIRST_ROUND_CONTINUED_NORMALLY")
+
     if kind == T.DRAW:
         response_draw = state.phase == "YOUJIN_RESPONSE_DRAW"
         progression_draw = state.phase == "YOUJIN_STAGE_SUCCESS"
@@ -23,6 +53,18 @@ def apply_action(state, action):
         tile = state.wall.pop(-1 if source == DrawSource.WALL_TAIL else 0)
         action.metadata["drawn_tile"] = tile
         state.hands[p].append(tile)
+        first = getattr(state, "first_round", None)
+        if (isinstance(first, dict) and first.get("active")
+                and p == 1 - state.dealer
+                and first.get("dealer_first_discard_done")
+                and not first.get("nondealer_first_draw_done")):
+            record_nondealer_first_draw(state, tile)
+            action.metadata.update(
+                first_round_nondealer_draw=True,
+                qiangjin_eligible=first["qiangjin_eligible"][p],
+                qiangjin_fan=first["qiangjin_fan"][p],
+                qiangjin_reason=first["qiangjin_reason"][p],
+            )
         if tile in env.FLOWERS:
             state.phase = "NEED_FLOWER_REPLACE"
         elif response_draw:
@@ -127,6 +169,22 @@ def apply_action(state, action):
         else:
             state.hands[p].remove(action.tile)
             state.discards[p].append(action.tile)
+            first = getattr(state, "first_round", None)
+            is_dealer_first = (
+                isinstance(first, dict) and first.get("active")
+                and p == state.dealer
+                and not first.get("dealer_first_discard_done")
+                and state.phase in ("OPENING_POST_GOLD_PENDING", "AFTER_DRAW")
+            )
+            if is_dealer_first:
+                record_dealer_first_discard(state, action.tile)
+                action.metadata.update(
+                    first_round_dealer_discard=True,
+                    dealer_tianting=first["tianting"][p],
+                    dealer_tianting_waits=list(first["tianting_waits"][p]),
+                    dealer_qiangjin_eligible=first["qiangjin_eligible"][p],
+                    dealer_qiangjin_fan=first["qiangjin_fan"][p],
+                )
             state.pending_discard = dict(player=p, tile=action.tile,
                                          river_index=len(state.discards[p]) - 1)
             state.current_player = 1 - p
@@ -180,4 +238,3 @@ def apply_action(state, action):
         state.phase = "AFTER_" + kind.value
     else:
         raise ValueError("Unsupported transition")
-

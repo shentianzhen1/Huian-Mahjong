@@ -1,0 +1,1144 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "candidate_promotion": "REJECT_PENDING_DRAW_M5_M3_WRONG_ACCEPT_FIX",
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+  "reviewed_new_windows": 32,
+  "correct_hand_windows": 30,
+  "wrong_hand_windows": 2,
+  "errors": [
+    {
+      "frame": 1860,
+      "truth": "M5",
+      "prediction": "M3",
+      "score": 0.83284
+    },
+    {
+      "frame": 1872,
+      "truth": "M5",
+      "prediction": "M3",
+      "score": 0.834258
+    }
+  ],
+  "checkpoints": [
+    {
+      "frame": 1740,
+      "frame_rgb_sha256": "fb729abad1348e8099301073d0e96280793c5698157b629a57e5d625c9a2d42f",
+      "predicted_hand": [
+        "P5",
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "P5",
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1800,
+      "frame_rgb_sha256": "5525059bf9aff92922b0913a638c3ba8443177d259805252325fa658952cb3e9",
+      "predicted_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1812,
+      "frame_rgb_sha256": "824200f1ff3749d6fe1cd61b63a873a186827c4773746db3c5c2c744de2f8864",
+      "predicted_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1824,
+      "frame_rgb_sha256": "5891067c33259d44b7be106b0cb0f10d57a9b6cf81b7c51c3d99c0a5543206bd",
+      "predicted_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1860,
+      "frame_rgb_sha256": "810d49404e691d90c2f17f0e2fcfa763d1226b6d8098300c73bc6a9eee59154c",
+      "predicted_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "M3"
+      ],
+      "reviewed_truth": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "M5"
+      ],
+      "hand_correct": false,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1872,
+      "frame_rgb_sha256": "fbff22e4573e7bbf12059d6d5673ac3de74af08e08c460f3a3766aa6023a9651",
+      "predicted_hand": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "M3"
+      ],
+      "reviewed_truth": [
+        "P6",
+        "M1",
+        "M2",
+        "M3",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "M5"
+      ],
+      "hand_correct": false,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1932,
+      "frame_rgb_sha256": "79f4dfbad5d224790de345716960eadbb7b95ba32459e6b499d408d3aa5e4082",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1944,
+      "frame_rgb_sha256": "be66f1d600bd1d3d4fc0ecbab933424a559b8096965f1fee49eea153e3c46e5c",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1956,
+      "frame_rgb_sha256": "b6b544e33d11fc33d7d1f5591122869b005322bf7966fcbdacd59f297d4a2058",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1968,
+      "frame_rgb_sha256": "5e58b4d53b42dfa49d98dc15746f3c8c01583631b7918e4e80034e80facb1e3c",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1980,
+      "frame_rgb_sha256": "9a71260e17d8d603fc983d6f64a2d6b5604d92bd04b2137e9b3908f745a4e2af",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 1992,
+      "frame_rgb_sha256": "3a10eccc518a63ff5b18531b99605a3a12de707d61f837f9e064221c87518a2e",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2004,
+      "frame_rgb_sha256": "79f9e5e3a5d7fd6095db8451aa705c92df24dfced63f28f3668d8cff76f1ba99",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2016,
+      "frame_rgb_sha256": "7d10b675c146568f81ac9b3c7a7b36298f95f1601a6dd58b5b7b5584636715e9",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2040,
+      "frame_rgb_sha256": "5b557528ff56187e68319ae59e64d1ee6260a6b41dd9bf8f2c9bfe278cd3506d",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P6"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P6"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2076,
+      "frame_rgb_sha256": "289c4fd82da56a7dad609b822f7f3b2d6002b1790caad92c341128c4dc884aa7",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2088,
+      "frame_rgb_sha256": "ec65e0fcdad4626fc96e7eb7285fb28480ca08778ac2c911d586f68d37d9e2ae",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2100,
+      "frame_rgb_sha256": "b8a759b9d3d0686807be2c23295a9df53082912c0317b4ab8bd07fc11530d192",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2112,
+      "frame_rgb_sha256": "0c077f391b2bd852120656790fbff436aa28066924bd5e533d248b3abc619197",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2124,
+      "frame_rgb_sha256": "a3bab16422a493312902c49ef96ddd42b73bceab8fd9645cfdd4a32079b435c6",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2172,
+      "frame_rgb_sha256": "1476fa840a7adf084b9a13dc645715e6179a756f2cc73f57ba59b0eb2c015c42",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "G"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "G"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2184,
+      "frame_rgb_sha256": "5d2a97205f24eea60043ae7dc1672eb5a16105c6e56766c0224ced3dd4a3ff93",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "G"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "G"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2208,
+      "frame_rgb_sha256": "638819c364057b47122b70762cf1c61390737d165e4de3c7c0d77b258839a252",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2220,
+      "frame_rgb_sha256": "3df706781cc7c14f05fa5ef0360d55a8155bb2bf2a33f72e2cda946041939958",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2232,
+      "frame_rgb_sha256": "875f483cb5c8910be4dcd85fb8e9d6c09758adf08b58293d0147e793d5420d11",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2244,
+      "frame_rgb_sha256": "ff8096eef0f8c060cd4e2b2ce266f3291f21c8b5a151ab70115cb7e8e9a7e3fd",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2256,
+      "frame_rgb_sha256": "a75254a9336b40d8a600400b791bfd15b846dab3ec58f2551c0ac7baab7d8b93",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2280,
+      "frame_rgb_sha256": "fb615b70ae1c1d8692ad3798a50530f4df38647333fc616dd3cbd4c725bc77fb",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P4"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P4"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2292,
+      "frame_rgb_sha256": "5506dc6fc176803f5043c420c5909f659613017828a0fd2acf5a0d0ba9246c3f",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P4"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W",
+        "P4"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2316,
+      "frame_rgb_sha256": "5e2cd461ee9b4ed8826d743290d86f250b150172c2dcb6b3144bb119031f71e0",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2328,
+      "frame_rgb_sha256": "dc2f18e4c935f4a7effcc65d577cca8f5dab394ace5d628796514148777e33e0",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    },
+    {
+      "frame": 2340,
+      "frame_rgb_sha256": "e6e00943692c45f8782d0c0f7b7c8914366d667b53ba4b5a071ff003e5416de2",
+      "predicted_hand": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "reviewed_truth": [
+        "M1",
+        "M2",
+        "M3",
+        "M5",
+        "M6",
+        "M7",
+        "SOUTH",
+        "SOUTH",
+        "W",
+        "W"
+      ],
+      "hand_correct": true,
+      "visible_own_meld_group_sizes": [
+        3,
+        3
+      ],
+      "meld_face_identities_validated": false
+    }
+  ],
+  "additional_blocked_frame1224": "Highlighted/raised M2 remains UNKNOWN, still blocked; no claim of full identity recovery.",
+  "limits": [
+    "Review covers current endpoint images, not every preceding identity frame.",
+    "147 displayed windows remain a coverage count, NOT147 correct hands.",
+    "Two wrong newly displayed hands invalidate promotion; thresholds remain unchanged.",
+    "Private contact-sheet pixels not uploaded. No installer."
+  ],
+  "contact_sheet_sha256": {
+    "new32_review_0.png": "360ef517e48bc05394530777935569da88e7d62faed0613665340a1a38cccbf2",
+    "new32_review_1.png": "74c4dabd819d80a061e46b407292e3eb71098f2c35d5193e3c7a3b8239c43918",
+    "new32_review_2.png": "5da6d0aa1f8f8b8822add2f61a4257b1599e1a478dfbd5204575c73735863480",
+    "new32_review_3.png": "d99fcfe81eafa719b63ebc4eb052dedeaf40f82fba29625ffab398d298f6b711",
+    "new32_review_4.png": "4efffe4aadace81e30b1172bafa6d3996aef75b0b088b84db6ed7ff638b8579d"
+  }
+}

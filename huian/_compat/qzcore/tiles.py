@@ -1,6 +1,4 @@
 
-from collections import Counter
-
 SUITS = ("M", "P", "S")  # 万 / 饼(筒) / 索(条)
 HONORS = ("E", "SOUTH", "W", "N", "R", "G", "B")
 FLOWERS = ("F1","F2","F3","F4","F5","F6","F7","F8")
@@ -35,7 +33,19 @@ def suit_rank(tile):
         return None
     return tile[0], int(tile[1:])
 
+_TILE_INDEX = {tile: index for index, tile in enumerate(BASE_TILES)}
+_BASE_TILE_SET = frozenset(BASE_TILES)
+_FLOWER_SET = frozenset(FLOWERS)
+_ALLOWED_WITH_FLOWERS = _BASE_TILE_SET | _FLOWER_SET
+
+
 def tile_index(tile):
+    # Keep tuple equality/error behavior for subclasses and non-string inputs.
+    if type(tile) is str:
+        try:
+            return _TILE_INDEX[tile]
+        except KeyError:
+            pass
     return BASE_TILES.index(tile)
 
 def index_tile(i):
@@ -49,14 +59,21 @@ def full_wall():
     return wall
 
 def validate_tile_multiset(tiles, include_flowers=True):
-    allowed = set(BASE_TILES) | (set(FLOWERS) if include_flowers else set())
-    bad = [t for t in tiles if t not in allowed]
+    # Consume iterators once. Unknown tiles take diagnostic priority over
+    # multiplicity errors, matching the existing list-input contract.
+    allowed = _ALLOWED_WITH_FLOWERS if include_flowers else _BASE_TILE_SET
+    bad = []
+    counts = {}
+    for tile in tiles:
+        if tile not in allowed:
+            bad.append(tile)
+        else:
+            counts[tile] = counts.get(tile, 0) + 1
     if bad:
         return False, f"未知牌编码: {bad}"
-    c = Counter(tiles)
-    for t,n in c.items():
-        if t in BASE_TILES and n > 4:
-            return False, f"{CN.get(t,t)} 出现 {n} 张，超过4张"
-        if t in FLOWERS and n > 1:
-            return False, f"花牌 {CN.get(t,t)} 重复出现"
+    for tile, count in counts.items():
+        if tile in _BASE_TILE_SET and count > 4:
+            return False, f"{CN.get(tile, tile)} 出现 {count} 张，超过4张"
+        if tile in _FLOWER_SET and count > 1:
+            return False, f"花牌 {CN.get(tile, tile)} 重复出现"
     return True, "OK"

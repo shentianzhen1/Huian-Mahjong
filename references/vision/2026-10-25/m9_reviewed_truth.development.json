@@ -1,0 +1,111 @@
+{
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "original_match_group": "reviewed_match_2026_10_12_room324504",
+  "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+  "annotation_after_model_output": true,
+  "formal_promotion_evidence": false,
+  "frames": [
+    {
+      "frame_index": 264,
+      "rgb_sha256": "669600cc5aa8bb368c0b8647892f04add4817a1b2249b92a719d371401ab7558",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9"
+      ],
+      "own_meld_count": 0,
+      "gold_tile": "M4",
+      "review_note": "Rightmost concealed tile is 九萬 M9; separate drawn S9 or S4 is included only where visible."
+    },
+    {
+      "frame_index": 330,
+      "rgb_sha256": "d429d94136e193a6c27713c606423262d290a70c492f40fe39241bfe53305a7b",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "S9"
+      ],
+      "own_meld_count": 0,
+      "gold_tile": "M4",
+      "review_note": "Rightmost concealed tile is 九萬 M9; separate drawn S9 or S4 is included only where visible."
+    },
+    {
+      "frame_index": 432,
+      "rgb_sha256": "31959733efc091439eb6c294eb03501eddc8e0baa58a0dce55cac6c9444c3eca",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9"
+      ],
+      "own_meld_count": 0,
+      "gold_tile": "M4",
+      "review_note": "Rightmost concealed tile is 九萬 M9; separate drawn S9 or S4 is included only where visible."
+    },
+    {
+      "frame_index": 546,
+      "rgb_sha256": "31244b3ebb2f99940c0779853143f06101ddad4dc69a729f826bff5054c3c513",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "S4"
+      ],
+      "own_meld_count": 0,
+      "gold_tile": "M4",
+      "review_note": "Rightmost concealed tile is 九萬 M9; separate drawn S9 or S4 is included only where visible."
+    }
+  ]
+}

@@ -4,6 +4,8 @@
 
 仓库当前为公开仓库，可直接 `git clone`。旧名 `Maj` 仍会重定向到现仓库。
 
+当前内测开发位于 **Draft PR #126** 的 `codex/hint-alpha-local-test-sync-20261004` 分支，未合并、未正式推广。近期目标是完整手牌＋开金＋我方副露数量可信后提供只读结构向听建议；开发候选、当前安装版、独立对局验收是三件不同的事。总体快照见 [PROJECT_STATUS.md](PROJECT_STATUS.md)，审计见 [本轮项目审计](docs/project_audit_20261018.md)。
+
 ## 5 分钟上手
 
 ```powershell
@@ -11,11 +13,11 @@ git clone https://github.com/shentianzhen1/Huian-Mahjong.git
 cd Huian-Mahjong
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -e .
-python -B -m unittest discover -s tests -v
+python -m pip install -e . pytest
+python -B -m pytest -q tests
 ```
 
-可选开发工具：`python -m pip install -e ".[dev]"`。Vision 使用 `python -m pip install -e ".[vision]"`。核心测试只依赖 Python 标准库；在仓库根目录直接跑 `unittest` 仍可以。
+可选开发工具：`python -m pip install -e ".[dev]"`。Vision 使用 `python -m pip install -e ".[vision]"`。`pytest` 会收集函数式测试和 unittest；只运行标准库 `unittest` 是较小的测试子集，不应报告为完整 CI 回归。
 
 Linux / macOS：
 
@@ -24,8 +26,8 @@ git clone https://github.com/shentianzhen1/Huian-Mahjong.git
 cd Huian-Mahjong
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e .
-python -B -m unittest discover -s tests -v
+python -m pip install -e . pytest
+python -B -m pytest -q tests
 ```
 
 ## 当前能做什么
@@ -36,21 +38,21 @@ python -B -m unittest discover -s tests -v
 - 庄底：新庄当前结算底10；同一庄家连庄每局+5且不上封顶直到第8局；庄输换庄后新庄重置10。
 - Simulator：固定牌墙/seed、交换座位、UNKNOWN证据包、8局真实普通规则MatchRunner，以及统一的整场A/B评估（最终分、分差、点炮、自摸/点炮来源、UNKNOWN）。
 - AI：当前正式前沿为 **`CurrentAgent = MeldAwareShantenAgent V0.10`**；`TenpaiRiskTieBreakAgent V0.6` 保留为固定主对照，`ShantenAgent V0.3` 保留为牌效消融基线。V0.10继承V0.6弃牌策略，只在CHI/PENG窗口比较PASS与副露后的最优强制弃牌，并且只有普通进攻元组严格改善时才副露。两批独立评估合计200个seed pair / 400场完整8局：V0.10为239胜、V0.6为159胜、2平，平均配对最终分差+54.805。KONG已接入只读影子审计，显式标注抢杠/杠胡未知项，不改变当前策略。新策略必须使用固定牌墙+正反换座+Agent身份稳定RNG，直接击败V0.10才能晋级。
-- Recorder / Vision：Recorder V0.2按局录像。Vision已用8局真实回放建立严格 `same_region + leave-session-out` 基线；修正1条人工错标后，hand+draw为147/149=**98.66%**，置信度≥0.80的127个样本为127/127正确。Gold V0.1在当前8局196个可检测帧中193帧正确=**98.47%**，8/8局多数票正确，但这仍是同批录像时序结果，不是外部泛化率。PublicState V0.1已实现比分/局数/剩余牌的多帧融合与物理约束。
+- Recorder / Vision：按局录像、动态牌面几何、手牌/摸牌/开金读取，以及比分/局数/剩余牌的多帧融合与物理约束。旧版小样本离线高分不是当前完整手牌或实时准确率；当前 Runtime 门槛固定0.82。开发补充模板、紧裁图回退和牌缝原型尚未接入安装版，独立对局与 Windows 投屏验收仍待完成。指标边界见 [快照](PROJECT_STATUS.md) 与 [候选恢复说明](docs/vision/private_candidate_desktop_restore_20261017.md)。
 
-## 当前整局流水主线（Issue #69）
+## 当前状态建议与离线流水（Issues #69/#45）
 
-公开整局重建已合并 HandTimeline/中文 Match Ledger、public river/meld observer、Runtime Vision bridge、Temporal Action Assembler、公共牌几何检测与跨帧追踪、Hand Context、庄家标记和 Player Perspective V0.1。两份已审计开发录像可以显式映射本地玩家座位，但新来源没有证据时仍保持 UNKNOWN。
+当前 Draft 集成包含 HandTimeline/中文 Match Ledger、public river/meld observer、Runtime Vision bridge、Temporal Action Assembler、公共牌几何检测与跨帧追踪、Hand Context、庄家标记和 Player Perspective V0.1。这不代表整个 Draft PR 已合并到 main。新来源没有证据时仍保持 UNKNOWN。
 
-**这还不是完整真实对局自动识别。** 当前 public identity 的初始开发标签为 17 个、覆盖 11/34 个标准牌类，同类跨来源重复为 0；公共牌候选身份仍保持 UNKNOWN。下一阶段优先用新来源标注和连续真实帧测量误轨迹、actor/turn 与真正的 RiverSnapshot，再将可靠动作接入整场流水。正式 Vision 晋级仍须通过 Issue #7 的独立盲测；Hint Alpha 只读，Executor 关闭。
+**这还不是完整真实对局自动识别。** 当前优先完整手牌、开金和自动检测路径的副露数量/身份；逐帧完整转录八局不是基础向听建议的前置条件。副露身份未确认时保持 UNKNOWN；只有自身输入完整时才允许结构向听，缺公共身份则继续关闭余张和危险提示。正式 Vision 晋级仍须通过 Issue #7 的独立盲测；Hint Alpha 只读，Executor 关闭。
 
 开发顺序、证据检查与 PR 验收说明见 [开发与证据流程](docs/development_workflow.md)。
 
 ## 当前还不能做什么
 
-- 抢金的精确资格/真实结算、三金倒真实终局、抢杠胡/杠胡结算、八花游真实倍率仍未闭环；游金主链（响应弃牌、单→双→三游、花牌与杠续行）已实现，剩余主要受杠胡/抢杠胡计分缺口阻塞；详见 [TODO.md](TODO.md) 与 GitHub Issues #1–#5。
-- AI已经接通公开8局比赛上下文（当前比分、剩余局数、庄位、庄底、连庄次数）和点炮统计。V0.11/V0.12的“排除金等待后再做即时score-aware”路径已验证为结构性几乎不可触发，因此不再沿这条死门槛继续堆版本。下一阶段优先研究有金时的副露/特殊状态EV、KONG决策，以及不依赖该死门槛的多步/整场EV；见 Issue #6。
-- Vision 已有真实牌面基线以及 Score Reader / Status Reader V0.1，但仍缺新的独立录屏批次、部分牌类覆盖、更多draw连续序列、状态栏整段多时点统计和缩放/移动/遮挡压力测试。当前同批离线高分不等于端到端泛化；见 Issue #7。
+- 玩家已确认的规则事实与端到端实现必须分开：普通杠后自摸、暗杠后自摸和补杠抢胡计分已有确认与回归；三金倒/八花及部分开局规则有分阶段API，但抢金、天听、持续提示等完整模拟/实时接线仍有迁移缺口。具体以 [RULE_STATUS.md](RULE_STATUS.md) 与执行 Issues 为准，不把未接线写成规则未知。
+- CurrentAgent 冻结在 V0.10；离线模拟上下文不等于已接入实时 UI。既有关闭的 Agent 实验不会因文档建议自动重启，当前识别工作不升级策略版本。
+- Vision 的现有模板类别覆盖不等于来源独立和整手可用。仍需独立原始对局、完整手牌、更多draw连续序列、状态栏时点、缩放/移动/遮挡压力测试及真实 Windows 采集验收；见 Issue #7。
 - Executor 未接入。Vision达到量化准确率、置信度和多帧稳定性门槛之前，不启用自动点击。
 - 开金实体牌墙记账已解决：开出的金固定占1张实体牌且不可再摸，可操作金最多3张。P2仅剩少数低频规则（天胡/天听/8局平分等）。
 
@@ -58,18 +60,18 @@ python -B -m unittest discover -s tests -v
 
 | 层 | 责任 | 当前状态 |
 | --- | --- | --- |
-| Rules | 合法性、胡牌结构、番项、结算 | 普通规则基本闭环；特殊规则仍有P0缺口 |
+| Rules | 合法性、胡牌结构、番项、结算 | 普通结算已回归；特殊规则事实与迁移进度分开记录 |
 | Environment | GameState 与确定性状态转移 | M2可用；特殊窗口逐步补齐 |
 | Simulator | 单局/8局、固定牌墙、评估 | ordinary-real 8局可完整运行；特殊结算安全停止 |
-| AI | 选择动作、EV与风险 | CurrentAgent = MeldAwareShantenAgent V0.10；V0.6固定主对照，V0.3消融基线；下一步是有金副露/KONG/多步与整场EV |
-| Vision | 画面转GameState | hand+draw严格基线98.66%；Gold当前批次多帧98.47%；Score/Status Reader 与 PublicState约束层已接，待新独立批次与压力测试 |
+| AI | 选择动作、EV与风险 | V0.10冻结；V0.6固定主对照，V0.3消融基线；不等于实时策略接线完成 |
+| Vision | 画面转观察 | Runtime与开发候选分离；独立对局、整手及实时采集仍未验收 |
 | Executor | UI执行 | 未接入，等待Vision门槛 |
 
 ## 版本与评估身份
 
 这几个版本号含义不同，不互相替代：
 
-- Project release：当前 `0.2.0`，对应 Python 安装包 / 仓库集成版本。
+- Project package：当前 Draft 分支打包身份为 `0.2.1`；不据此宣称 main 已发布该版本。
 - RuleSnapshot：用 SHA-256 fingerprint 标识精确规则证据快照；规则变化时 fingerprint 变化。
 - Agent：当前正式策略 `MeldAwareShantenAgent V0.10`，独立于项目 release。
 - Vision：Runtime Vision V0.2 是视觉子系统版本，目前仍是 experimental/read-only，不等同项目 release。
@@ -81,13 +83,13 @@ python -B -m unittest discover -s tests -v
 核心回归（GitHub Actions 当前在 Python 3.10–3.14 执行；纯文档改动除外）：
 
 ```powershell
-python -B -m unittest discover -s tests -v
+python -B -m pytest -q tests
 ```
 
 完整本地回归：
 
 ```powershell
-python -B -m unittest discover -s tests -v
+python -B -m pytest -q tests
 Push-Location legacy_code\core_v0.1.1; python -B -m unittest discover -s tests -v; Pop-Location
 Push-Location legacy_code\environment_v0.1; python -B -m unittest discover -s tests -v; Pop-Location
 .\.venv-capture\Scripts\python.exe -B -m unittest workspace.vision.capture_validator.test_capture -v

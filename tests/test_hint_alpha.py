@@ -3,7 +3,7 @@ from tempfile import TemporaryDirectory
 import unittest
 from types import SimpleNamespace
 
-from huian.rules import DEFAULT_RULE_SNAPSHOT
+from huian.rules import DEFAULT_RULE_SNAPSHOT, EvidenceStatus
 from huian.version import PROJECT_VERSION, project_manifest
 from workspace.ai import CURRENT_AGENT_VERSION
 from workspace.hint_alpha import (
@@ -40,7 +40,13 @@ class HintAlphaSafetyTests(unittest.TestCase):
         )
         self.assertEqual(unknown.state, AdvisoryState.RULE_UNKNOWN)
 
-        working = gate.evaluate(
+        research_snapshot = DEFAULT_RULE_SNAPSHOT.with_overrides(
+            label="test-working-only",
+            overrides={"settlement.eight_flower_working_fixed_fan": {
+                "status": EvidenceStatus.WORKING, "revision": 3,
+            }},
+        )
+        working = AdvisoryGate(snapshot=research_snapshot).evaluate(
             vision_confidence=0.99,
             required_rules=("settlement.eight_flower_working_fixed_fan",),
         )

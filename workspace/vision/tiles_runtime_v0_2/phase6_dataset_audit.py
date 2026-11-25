@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import hashlib
 import json
 from pathlib import Path, PurePath
@@ -67,6 +67,52 @@ def audit(dataset: Path) -> dict:
     sheet.save(sheet_path, quality=92)
 
     classes = {row["tile_id"] for row in labels if row.get("approved")}
+    domain_classes: dict[str, set[str]] = defaultdict(set)
+    domain_sessions: dict[str, dict[str, set[str]]] = defaultdict(
+        lambda: defaultdict(set)
+    )
+    concealed_identity_regions = {"hand_region", "draw_visual"}
+    gold_identity_regions = {"hand_region", "draw_visual", "gold_region"}
+    for row in labels:
+        if not row.get("approved"):
+            continue
+        region = "draw_visual" if row["region"] == "draw_region" else row["region"]
+        tile_id = row["tile_id"]
+        source_session = row.get("source_session") or row.get("source_id") or "unknown"
+        gold_skin_only = bool(row.get("gold_skin_only"))
+        if not gold_skin_only:
+            domain_classes[region].add(tile_id)
+            domain_sessions[region][tile_id].add(source_session)
+            if region in concealed_identity_regions:
+                domain_classes["concealed_identity"].add(tile_id)
+                domain_sessions["concealed_identity"][tile_id].add(source_session)
+        if region in gold_identity_regions or gold_skin_only:
+            domain_classes["gold_identity"].add(tile_id)
+            domain_sessions["gold_identity"][tile_id].add(source_session)
+
+    domain_coverage = {}
+    for region in (
+        "hand_region",
+        "draw_visual",
+        "concealed_identity",
+        "gold_region",
+        "gold_identity",
+    ):
+        covered = domain_classes.get(region, set()) & STANDARD
+        sessions = domain_sessions.get(region, {})
+        multi_session = {
+            tile_id
+            for tile_id, values in sessions.items()
+            if len(values) >= 2
+        } & STANDARD
+        domain_coverage[region] = {
+            "covered": len(covered),
+            "total": len(STANDARD),
+            "missing": sorted(STANDARD - covered),
+            "multi_session_covered": len(multi_session),
+            "not_multi_session": sorted(STANDARD - multi_session),
+        }
+
     validation_path = dataset / "validation" / "reports" / "phase6_tile_template_validation_v0_2.json"
     validation = json.loads(validation_path.read_text(encoding="utf-8"))
     report = {
@@ -75,11 +121,17 @@ def audit(dataset: Path) -> dict:
         "templates": len(images),
         "source_sessions": len({row.get("source_session") for row in labels}),
         "regions": dict(sorted(Counter(row["region"] for row in labels).items())),
+        "gold_skin_only_labels": sum(
+            bool(row.get("gold_skin_only")) and row.get("approved") is True
+            for row in labels
+        ),
         "standard_class_coverage": {
             "covered": len(classes & STANDARD),
             "total": len(STANDARD),
             "missing": sorted(STANDARD - classes),
+            "scope": "global_reporting_only",
         },
+        "classification_domain_coverage": domain_coverage,
         "traceability": {
             "missing_required_fields": missing_fields,
             "absolute_paths": absolute_paths,

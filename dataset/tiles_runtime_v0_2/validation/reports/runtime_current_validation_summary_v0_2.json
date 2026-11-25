@@ -1,0 +1,127 @@
+{
+  "schema_version": "vision_runtime_v0_2_current_validation_summary_20260930",
+  "source": {
+    "branch": "integration/issue69-replay-stack-20260926",
+    "head_sha": "9ab9f86e4627da0914af065dede8c9471d06cfed",
+    "vision_run_id": 36680663119,
+    "artifact_id": 11082051061,
+    "vision_regression": "success",
+    "core_matrix": "success"
+  },
+  "inventory": {
+    "approved_labels": 142,
+    "templates": 142,
+    "logical_source_sessions": 11,
+    "standard_classes": {
+      "covered": 34,
+      "total": 34,
+      "missing": []
+    },
+    "concealed_identity": {
+      "covered": 34,
+      "total": 34,
+      "missing": [],
+      "multi_session_covered": 22
+    },
+    "real_gold_skin_evidence": {
+      "approved_labels": 0,
+      "covered_classes": 0,
+      "classes": [],
+      "requirement": "Gold-skinned concealed identity must have at least one reviewed gold_skin_only example for the candidate class before acceptance."
+    }
+  },
+  "same_region_holdout": {
+    "scorable_labels": 117,
+    "unscorable_labels": 25,
+    "scorable_coverage": 0.823943661971831,
+    "exact_accuracy": 0.7948717948717948,
+    "category_accuracy": 0.9401709401709402,
+    "confidence_threshold": 0.82,
+    "accepted_labels": 50,
+    "accepted_fraction_of_scorable": 0.42735042735042733,
+    "accepted_accuracy": 1
+  },
+  "pooled_concealed_holdout": {
+    "approved_concealed_labels": 140,
+    "scorable_labels": 126,
+    "unscorable_labels": 14,
+    "scorable_coverage": 0.9,
+    "exact_accuracy": 0.7380952380952381,
+    "category_accuracy": 0.9444444444444444,
+    "confidence_threshold": 0.82,
+    "accepted_labels": 51,
+    "accepted_fraction_of_scorable": 0.40476190476190477,
+    "accepted_accuracy": 1,
+    "runtime_gate": {
+      "accepted_labels": 44,
+      "accepted_fraction_of_scorable": 0.3492063492063492,
+      "accepted_accuracy": 1
+    }
+  },
+  "sparse_classes": {
+    "M2": {
+      "concealed_sessions": 1,
+      "runtime_status": "UNKNOWN until cross-session support"
+    },
+    "N": {
+      "concealed_sessions": 1,
+      "runtime_status": "UNKNOWN until cross-session support"
+    },
+    "M6": {
+      "concealed_sessions": 2,
+      "holdout": [
+        {
+          "held_out": "session_781bfe34c40993ef",
+          "predicted": "M7",
+          "confidence": 0.7717844843864441,
+          "accepted": false
+        },
+        {
+          "held_out": "session_eight_hand_match_a",
+          "predicted": "M3",
+          "confidence": 0.5056347250938416,
+          "accepted": false
+        }
+      ],
+      "runtime_status": "UNKNOWN; cross-session support exists but confidence/generalization is insufficient"
+    }
+  },
+  "private_live_gold_m6_smoke": {
+    "source_media_committed": false,
+    "approximate_seconds": 110,
+    "observed_physical_copies": 2,
+    "current_gold_classifier_clean_face": [
+      {
+        "copy": 1,
+        "top1": "M6",
+        "confidence": 0.440951,
+        "threshold": 0.82,
+        "accepted": false
+      },
+      {
+        "copy": 2,
+        "top1": "M6",
+        "confidence": 0.446763,
+        "threshold": 0.82,
+        "accepted": false
+      }
+    ],
+    "experimental_glyph_preprocess": {
+      "merged": false,
+      "best_clean_copy_scores": [
+        0.6996,
+        0.6512
+      ],
+      "reason": "Improved top-1 M6 separation but remained below threshold and was unstable with Ting-overlay crops."
+    }
+  },
+  "decisions": [
+    "Do not lower the 0.82 threshold.",
+    "Do not promote M2 or N from one concealed logical session.",
+    "Do not promote the experimental glyph preprocessing yet.",
+    "Keep advisory fail-closed and Executor OFF.",
+    "Require a reviewed real gold_skin_only example before accepting a Gold-skinned concealed identity."
+  ],
+  "safe_for_hint": false,
+  "safe_for_executor": false
+}

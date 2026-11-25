@@ -1,0 +1,534 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "start_seconds": 76,
+  "duration_seconds": 14,
+  "source_commit": "e83a453e23c2aaf8e17e9edf2602a1774b066bc4",
+  "method": "Real PublicStateReader/Tesseract OCR plus actual image geometry/identity and stateful advice. Explicit offline M4/M5/S8 reference candidate and committed local-dark meld proposal; not installed-default recognition. Pipeline code hashes equal isolated source checkout.",
+  "runtime": {
+    "windows": 34,
+    "accepted_windows": 4,
+    "blocked_windows": 30,
+    "trusted_hand_windows": 4,
+    "trusted_gold_windows": 30,
+    "discard_windows": 1,
+    "gold_tile_votes": {
+      "S8": 30
+    },
+    "advice_runs": [
+      {
+        "display_allowed": true,
+        "windows": 1,
+        "first_frame": 2292,
+        "start_seconds": 76.4,
+        "last_frame": 2292,
+        "end_seconds": 76.4
+      },
+      {
+        "display_allowed": false,
+        "windows": 1,
+        "first_frame": 2304,
+        "start_seconds": 76.80000000000001,
+        "last_frame": 2304,
+        "end_seconds": 76.80000000000001
+      },
+      {
+        "display_allowed": true,
+        "windows": 3,
+        "first_frame": 2316,
+        "start_seconds": 77.2,
+        "last_frame": 2340,
+        "end_seconds": 78.0
+      },
+      {
+        "display_allowed": false,
+        "windows": 29,
+        "first_frame": 2352,
+        "start_seconds": 78.4,
+        "last_frame": 2688,
+        "end_seconds": 89.60000000000001
+      }
+    ],
+    "recovered_advice_runs": 1,
+    "rejection_issue_windows": {
+      "experimental_hand_sources_unvalidated": 8,
+      "gold_identity_unknown": 4,
+      "gold_untrusted": 4,
+      "hand_identity_unknown": 30,
+      "hand_untrusted": 30,
+      "live_gold_carried_forward": 19,
+      "meld_identity_unknown:0": 7,
+      "meld_untrusted:0": 15,
+      "meld_untrusted:1": 30,
+      "opponent_meld_missing": 30,
+      "opponent_river_missing": 30,
+      "player_meld_count_untrusted": 15,
+      "player_river_missing": 30,
+      "river_untrusted:0": 30,
+      "river_untrusted:1": 30,
+      "runtime_gold_frame_identity_untrusted": 2,
+      "runtime_gold_not_fully_trusted": 4,
+      "runtime_hand_not_fully_trusted": 30
+    }
+  },
+  "sampled_public_reads": [
+    {
+      "frames": [
+        2286,
+        2292
+      ],
+      "source_seconds": [
+        76.2,
+        76.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": 932,
+        "bottom_left_score": 1068,
+        "hand_number": 2,
+        "remaining_tiles": null,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 0,
+        "issues": [
+          "remaining_unreadable"
+        ],
+        "safe_for_executor": false,
+        "score_pair": [
+          932,
+          1068
+        ]
+      },
+      "elapsed_ms": 2285.969
+    },
+    {
+      "frames": [
+        2346,
+        2352
+      ],
+      "source_seconds": [
+        78.2,
+        78.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": 932,
+        "bottom_left_score": 1068,
+        "hand_number": 2,
+        "remaining_tiles": 25,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 2,
+        "issues": [],
+        "safe_for_executor": false,
+        "score_pair": [
+          932,
+          1068
+        ]
+      },
+      "elapsed_ms": 1977.325
+    },
+    {
+      "frames": [
+        2406,
+        2412
+      ],
+      "source_seconds": [
+        80.2,
+        80.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": 932,
+        "bottom_left_score": 1068,
+        "hand_number": 2,
+        "remaining_tiles": null,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 1,
+        "issues": [
+          "remaining_consensus"
+        ],
+        "safe_for_executor": false,
+        "score_pair": [
+          932,
+          1068
+        ]
+      },
+      "elapsed_ms": 2515.191
+    },
+    {
+      "frames": [
+        2466,
+        2472
+      ],
+      "source_seconds": [
+        82.2,
+        82.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": null,
+        "bottom_left_score": null,
+        "hand_number": null,
+        "remaining_tiles": null,
+        "score_votes": 1,
+        "hand_votes": 1,
+        "remaining_votes": 0,
+        "issues": [
+          "score_consensus",
+          "hand_consensus",
+          "remaining_unreadable"
+        ],
+        "safe_for_executor": false,
+        "score_pair": null
+      },
+      "elapsed_ms": 2001.241
+    },
+    {
+      "frames": [
+        2526,
+        2532
+      ],
+      "source_seconds": [
+        84.2,
+        84.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": 948,
+        "bottom_left_score": 1052,
+        "hand_number": null,
+        "remaining_tiles": null,
+        "score_votes": 2,
+        "hand_votes": 0,
+        "remaining_votes": 0,
+        "issues": [
+          "hand_unreadable",
+          "remaining_unreadable"
+        ],
+        "safe_for_executor": false,
+        "score_pair": [
+          948,
+          1052
+        ]
+      },
+      "elapsed_ms": 2177.152
+    },
+    {
+      "frames": [
+        2586,
+        2592
+      ],
+      "source_seconds": [
+        86.2,
+        86.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": 948,
+        "bottom_left_score": 1052,
+        "hand_number": null,
+        "remaining_tiles": null,
+        "score_votes": 2,
+        "hand_votes": 1,
+        "remaining_votes": 1,
+        "issues": [
+          "hand_consensus",
+          "remaining_consensus"
+        ],
+        "safe_for_executor": false,
+        "score_pair": [
+          948,
+          1052
+        ]
+      },
+      "elapsed_ms": 1751.057
+    },
+    {
+      "frames": [
+        2646,
+        2652
+      ],
+      "source_seconds": [
+        88.2,
+        88.4
+      ],
+      "sampled": true,
+      "reused": false,
+      "observation": {
+        "top_right_score": 948,
+        "bottom_left_score": 1052,
+        "hand_number": 3,
+        "remaining_tiles": 109,
+        "score_votes": 2,
+        "hand_votes": 2,
+        "remaining_votes": 2,
+        "issues": [],
+        "safe_for_executor": false,
+        "score_pair": [
+          948,
+          1052
+        ]
+      },
+      "elapsed_ms": 1909.36
+    }
+  ],
+  "window_gold_and_advice": [
+    {
+      "frame": 2292,
+      "seconds": 76.4,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": true
+    },
+    {
+      "frame": 2304,
+      "seconds": 76.80000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2316,
+      "seconds": 77.2,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": true
+    },
+    {
+      "frame": 2328,
+      "seconds": 77.60000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": true
+    },
+    {
+      "frame": 2340,
+      "seconds": 78.0,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": true
+    },
+    {
+      "frame": 2352,
+      "seconds": 78.4,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2364,
+      "seconds": 78.80000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2376,
+      "seconds": 79.2,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2388,
+      "seconds": 79.60000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2400,
+      "seconds": 80.0,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2412,
+      "seconds": 80.4,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2424,
+      "seconds": 80.80000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2436,
+      "seconds": 81.2,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2448,
+      "seconds": 81.60000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2460,
+      "seconds": 82.0,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2472,
+      "seconds": 82.4,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2484,
+      "seconds": 82.80000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2496,
+      "seconds": 83.2,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2508,
+      "seconds": 83.60000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2520,
+      "seconds": 84.0,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2532,
+      "seconds": 84.4,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2544,
+      "seconds": 84.80000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2556,
+      "seconds": 85.2,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2568,
+      "seconds": 85.60000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2580,
+      "seconds": 86.0,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2592,
+      "seconds": 86.4,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2604,
+      "seconds": 86.80000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2616,
+      "seconds": 87.2,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2628,
+      "seconds": 87.60000000000001,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2640,
+      "seconds": 88.0,
+      "gold": "S8",
+      "gold_trusted": true,
+      "display_allowed": false
+    },
+    {
+      "frame": 2652,
+      "seconds": 88.4,
+      "gold": null,
+      "gold_trusted": false,
+      "display_allowed": false
+    },
+    {
+      "frame": 2664,
+      "seconds": 88.80000000000001,
+      "gold": null,
+      "gold_trusted": false,
+      "display_allowed": false
+    },
+    {
+      "frame": 2676,
+      "seconds": 89.2,
+      "gold": null,
+      "gold_trusted": false,
+      "display_allowed": false
+    },
+    {
+      "frame": 2688,
+      "seconds": 89.60000000000001,
+      "gold": null,
+      "gold_trusted": false,
+      "display_allowed": false
+    }
+  ],
+  "artifact_sha256": "65c011ddd3de1313cebff1c386ed4371397c9e8deb1e635d1dd1e84c8aa229d0",
+  "limits": [
+    "Known same-source development, not independent accuracy or Windows latency.",
+    "New hand3 established only at88.4s due2sOCR sampling and preceding failed consensus; oldS8 remained carried before confirmation. No advice displayed in that transition here, not a guarantee for other clips.",
+    "New handGoldSOUTH unrecognized; absence of advice is expected, not restored new-hand functionality.",
+    "Public remaining counts not independently validated; raw OCR issues retained.",
+    "Current installer b63eba1 predates latest hand-crop fallback; no new build requested."
+  ]
+}

@@ -11,3 +11,9 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+
+  - package-ecosystem: "pip"
+    directory: "/workspace/vision/capture_validator"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

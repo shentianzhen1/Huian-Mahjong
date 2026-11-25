@@ -1,4 +1,6 @@
-"""Deterministic opening planner for the Huian online-room V0.1 profile.
+"""Legacy deterministic simulator opening convention, not a target-room position rule.
+
+The confirmed staged opening API lives in opening_flow.py.
 
 The opened gold indicator is a physical tile and is removed from the drawable
 wall. One of the four copies therefore remains permanently in the public
@@ -9,6 +11,7 @@ from dataclasses import dataclass
 
 from huian._legacy import env
 from mahjong_framework import MahjongOpeningPlugin
+from huian.rules.config import UnknownRuleError
 from .flowers import FlowerReplacementResult, replace_flowers
 
 
@@ -58,8 +61,9 @@ def deal_initial_hands(wall, dealer):
 
 
 def locate_gold_indicator(wall, dice_total):
-    """Locate the top tile of the Nth two-tile stack counted from the tail.
+    """Legacy simulator convention: top tile of the Nth two-tile stack from tail.
 
+    This mapping is NOT target-room evidence and must not infer live positions.
     A flower at that location is skipped toward the tail until a normal tile is
     found.  The wall itself is not mutated.
     """
@@ -81,15 +85,23 @@ def plan_opening(wall, dealer, dice_total):
     """Build opening zones and remove the opened gold from the drawable wall."""
     hands, remaining = deal_initial_hands(deepcopy(wall), dealer)
     replacement = replace_flowers(hands, [[], []], remaining, dealer)
+    if any(len(zone) == 8 for zone in replacement.flowers):
+        raise UnknownRuleError("eight_flower_opening_choice")
     indicator = locate_gold_indicator(replacement.wall, dice_total)
     drawable_wall = list(replacement.wall)
     opened = drawable_wall.pop(indicator.wall_index)
     if opened != indicator.tile:
         raise RuntimeError("Gold indicator index no longer matches the wall")
+    flowers = [list(zone) for zone in replacement.flowers]
+    for flower in indicator.skipped_flowers:
+        drawable_wall.remove(flower)
+        flowers[dealer].append(flower)
+        if len(flowers[dealer]) == 8:
+            raise UnknownRuleError("eight_flower_opening_force_requires_staged_api")
     return OpeningPlan(
         dealer,
         replacement.hands,
-        replacement.flowers,
+        tuple(tuple(zone) for zone in flowers),
         tuple(drawable_wall),
         replacement,
         indicator,

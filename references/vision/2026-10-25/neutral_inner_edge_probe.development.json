@@ -1,0 +1,273 @@
+{
+  "development_only": true,
+  "runtime_changed": false,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "candidate": "Before symmetric neutral-face masking, exclude each horizontal edge by max(1, round(crop_width * .04)); query and raw reference transform identical. Same shift3 NCC.",
+  "low_crops": 310,
+  "prior_neutral_pass": 84,
+  "inner_edge_pass": 66,
+  "new_score_pass": 11,
+  "lost_prior_score_pass": 29,
+  "assistant_visually_reviewed_new_crops": 11,
+  "new_rows": [
+    {
+      "frame": 936,
+      "bbox": [
+        564,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.687411
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9276622533798218
+        ],
+        [
+          "S6",
+          0.7316685914993286
+        ]
+      ]
+    },
+    {
+      "frame": 942,
+      "bbox": [
+        564,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.674616
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9107088446617126
+        ],
+        [
+          "S6",
+          0.7140523791313171
+        ]
+      ]
+    },
+    {
+      "frame": 2466,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.693694
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9343068599700928
+        ],
+        [
+          "S6",
+          0.7381387948989868
+        ]
+      ]
+    },
+    {
+      "frame": 2472,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.693849
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.934411883354187
+        ],
+        [
+          "S6",
+          0.7375107407569885
+        ]
+      ]
+    },
+    {
+      "frame": 2478,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.693769
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9344543814659119
+        ],
+        [
+          "S6",
+          0.7370771765708923
+        ]
+      ]
+    },
+    {
+      "frame": 2484,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.693796
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9344856142997742
+        ],
+        [
+          "S6",
+          0.7370107173919678
+        ]
+      ]
+    },
+    {
+      "frame": 2490,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.695245
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9339654445648193
+        ],
+        [
+          "S6",
+          0.736731231212616
+        ]
+      ]
+    },
+    {
+      "frame": 2496,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.69346
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9342886805534363
+        ],
+        [
+          "S6",
+          0.7345188856124878
+        ]
+      ]
+    },
+    {
+      "frame": 2502,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.693274
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9338854551315308
+        ],
+        [
+          "S6",
+          0.7352484464645386
+        ]
+      ]
+    },
+    {
+      "frame": 2508,
+      "bbox": [
+        763,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S9",
+        0.693235
+      ],
+      "neutral": [
+        [
+          "S9",
+          0.9338295459747314
+        ],
+        [
+          "S6",
+          0.735417366027832
+        ]
+      ]
+    },
+    {
+      "frame": 2514,
+      "bbox": [
+        564,
+        418,
+        50,
+        93
+      ],
+      "baseline": [
+        "S2",
+        0.744312
+      ],
+      "neutral": [
+        [
+          "S2",
+          0.8270121812820435
+        ],
+        [
+          "P2",
+          0.6162619590759277
+        ]
+      ]
+    }
+  ],
+  "limitations": [
+    "One revealed match; repeated frames not independent.",
+    "No full replay or Runtime wiring for this variant.",
+    "Global replacement rejected because it loses previous recoveries."
+  ]
+}

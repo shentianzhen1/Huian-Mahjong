@@ -3,3 +3,5 @@
 *.ppm -text
 *.pbm -text
 *.pnm -text
+# Reference manifests are byte-hashed alongside PNG assets; preserve LF on Windows.
+/dataset/tiles_runtime_v0_2/reference_pack/* -text

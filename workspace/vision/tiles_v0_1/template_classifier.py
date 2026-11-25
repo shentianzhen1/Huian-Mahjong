@@ -61,10 +61,21 @@ def _normalize_gold_face(image):
     suppress the badge area before template comparison.
     """
     image = image.convert("RGB")
+    # Runtime crops may include the smaller Ting overlay immediately above the
+    # concealed tile.  Keep only the dominant bright tile face before removing
+    # the gold rim; otherwise the overlay dominates template normalization.
+    face_box = _tile_face_box(image, brightness_threshold=100)
+    if face_box is not None:
+        x, y, width, height = face_box
+        image = image.crop((x, y, x + width, y + height))
     width, height = image.size
-    left = int(round(width * 0.06))
-    top = int(round(height * 0.04))
-    right = int(round(width * 0.94))
+    # Slightly tighter side/top trim removes more of the yellow UI rim while
+    # preserving the underlying glyph. This was selected only after a
+    # source-disjoint Runtime V0.2 check improved Gold exact accuracy and kept
+    # runtime-gated accepted accuracy at 100%; the 0.82 threshold is unchanged.
+    left = int(round(width * 0.075))
+    top = int(round(height * 0.045))
+    right = int(round(width * 0.925))
     bottom = int(round(height * 0.94))
     if right - left >= 8 and bottom - top >= 12:
         image = image.crop((left, top, right, bottom))
@@ -94,9 +105,15 @@ class Classification:
 class TemplateTileClassifier:
     """NCC matching over reviewed label crops; intentionally not a trained model."""
 
-    def __init__(self, templates, regional_templates=None):
+    def __init__(
+        self, templates, regional_templates=None, gold_identity_templates=None
+    ):
         self.templates = {
             tile_id: tuple(values) for tile_id, values in templates.items()
+        }
+        self.gold_identity_templates = {
+            tile_id: tuple(values)
+            for tile_id, values in (gold_identity_templates or {}).items()
         }
         self.regional_templates = {
             region: {
@@ -113,6 +130,7 @@ class TemplateTileClassifier:
         root = Path(dataset_root)
         templates = {}
         regional_templates = {}
+        gold_identity_templates = {}
         for label in labels:
             image_path = root / label["image"]
             if not image_path.exists():
@@ -130,12 +148,31 @@ class TemplateTileClassifier:
                         continue
                     crop = source.convert("RGB").crop((x, y, x + width, y + height))
             region = _canonical_region(label["region"])
+            # Gold-skinned runtime observations are normalized differently from
+            # ordinary concealed/draw tiles. Build a parallel identity bank by
+            # passing every reviewed base-tile crop through the same Gold
+            # normalization used at inference time.
+            gold_identity_templates.setdefault(label["tile_id"], []).append(
+                _feature(crop, region="gold_region")
+            )
+            # A reviewed yellow tile may be useful only for Gold identity. Do
+            # not let that UI skin become an ordinary hand/draw template.
+            if label.get("gold_skin_only"):
+                continue
             value = _feature(crop, region=region)
             templates.setdefault(label["tile_id"], []).append(value)
             regional_templates.setdefault(
                 region, {}
             ).setdefault(label["tile_id"], []).append(value)
-        return cls(templates, regional_templates)
+            if region in {"hand_region", "draw_visual"}:
+                regional_templates.setdefault(
+                    "concealed_identity", {}
+                ).setdefault(label["tile_id"], []).append(value)
+        return cls(
+            templates,
+            regional_templates,
+            gold_identity_templates=gold_identity_templates,
+        )
 
     @classmethod
     def from_dataset(cls, dataset_root):
@@ -156,6 +193,33 @@ class TemplateTileClassifier:
             score = max(float(cv2.matchTemplate(
                 sample, template, cv2.TM_CCOEFF_NORMED
             )[0, 0]) for template in examples)
+            if not np.isfinite(score):
+                score = -1.0
+            if score > best_score:
+                best_tile, best_score = tile_id, score
+        return Classification(best_tile, max(0.0, best_score))
+
+    def classify_gold_skin(self, image):
+        """Rank a concealed gold-skinned face against all reviewed classes.
+
+        The tiny gold-region label set cannot safely define the full class
+        universe.  This method normalizes away the skin and ranks against the
+        complete reviewed template bank.  Runtime identity gates still decide
+        whether the candidate has enough confidence and cross-session evidence;
+        this method never promotes a low-score candidate by itself.
+        """
+        sample = _feature(image, region="gold_region")
+        best_tile, best_score = None, float("-inf")
+        templates = self.gold_identity_templates or self.templates
+        for tile_id, examples in templates.items():
+            score = max(
+                float(
+                    cv2.matchTemplate(
+                        sample, template, cv2.TM_CCOEFF_NORMED
+                    )[0, 0]
+                )
+                for template in examples
+            )
             if not np.isfinite(score):
                 score = -1.0
             if score > best_score:

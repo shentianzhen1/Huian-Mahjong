@@ -1,5 +1,7 @@
 # 开发与证据流程（当前执行入口仍为 GitHub Issues）
 
+2026-10-06规则推进：先读取[玩家确认记录](../references/rules/2026-10-06/player_confirmed_special_rules.md)。本轮规则事实已确认；实施要逐项更新独立rule ID/revision与RuleSnapshot、状态机和回归。玩家确认与录像直接证据不能互相冒充；直接录像缺失不自动撤销玩家确认，文档同步也不自动启用旧引擎的结算。
+
 本页只规定**怎样推进工作**，不是新的进度或规则真相源。当前任务、优先级以 GitHub Issues 为准；规则事实看 `RULE_STATUS.md`，具体证据看 `RULE_EVIDENCE_MATRIX.md`；`PROJECT_STATUS.md` 只记录集成快照。
 
 ## 一次只推进一个可验收的切片
@@ -63,4 +65,4 @@ Tests 和 Vision Regression 对所有 PR 都创建 Scope 检查；为兼容当�
 
 ## 当前排期边界
 
-Public Match Reconstruction #69 优先做独立来源的公开牌身份与连续真实帧误轨迹，再做 actor/turn 和整局自动流水；P0 #1/#2/#4/#5 单独收集真实结算证据。#4 未闭环前不启动新 Agent 版本；Hint Alpha 保持只读，Executor 关闭。不要为了方便出结果，把 UNKNOWN 变成默认结算或自动点击。
+Public Match Reconstruction #69 优先做独立来源的公开牌身份与连续真实帧误轨迹，再做 actor/turn 和整局自动流水；#1/#2/#5/#9先迁移2026-10-06玩家已确认规则及回归，真实终局录像另作机会性核对。#4已由PR #125闭环；新玩家确认尚未迁移到旧引擎/RuleSnapshot前不得宣称特殊EV已可用。当前Alpha保留V0.10，Hint只读，Executor关闭。不要把UNKNOWN变成默认结算或自动点击。

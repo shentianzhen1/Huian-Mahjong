@@ -18,6 +18,10 @@ class HuianGameState(env.GameState):
     # This represents accounting only, not a guessed indicator-opening rule.
     reserved_tiles: list[str] = field(default_factory=list)
     terminal_reason: str | None = None
+    # Logical first-round provenance only. No tile stored here is physical.
+    # It records the confirmed dealer-discard/nondealer-draw Qiangjin sequence
+    # and Tianting status so rollback/hash/replay remain deterministic.
+    first_round: dict | None = None
 
     def canonical_dict(self):
         data = super().canonical_dict()
@@ -26,7 +30,8 @@ class HuianGameState(env.GameState):
                     pending_kong=self.pending_kong,
                     special_states=list(self.special_states),
                     reserved_tiles=list(self.reserved_tiles),
-                    terminal_reason=self.terminal_reason)
+                    terminal_reason=self.terminal_reason,
+                    first_round=self.first_round)
         return data
 
     def physical_tiles(self):

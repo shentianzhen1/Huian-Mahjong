@@ -1,0 +1,42 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "query_source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "query_frame": 672,
+  "query_truth": "M5",
+  "method": "134 cleaned ordinary template crops; each query excludes templates with same sha256 source key. Top1 scores from fixed translated NCC: original feature, inner neutral, inner-neutral upper half. No packet extras in these raw control banks. Source-file exclusion is not original-match independence; unknown lineage remains unresolved. Candidate scores are not calibrated Runtime confidence. Known bad crops excluded via existing training review. Query and references use identical transforms.",
+  "modes": {
+    "baseline": {
+      "correct": 108,
+      "total": 134,
+      "M5_target": [
+        0.7639020085334778,
+        "M3"
+      ]
+    },
+    "inner_neutral": {
+      "correct": 110,
+      "total": 134,
+      "M5_target": [
+        0.8497895002365112,
+        "M5"
+      ]
+    },
+    "inner_upper_half": {
+      "correct": 105,
+      "total": 134,
+      "M5_target": [
+        0.8569543361663818,
+        "M5"
+      ]
+    }
+  },
+  "primary_regression": {
+    "reviewed_crops": 234,
+    "candidate_policy": "Only consider inner-neutral winner when existing trial classification below0.82; no Runtime implementation",
+    "changed_outputs": 0,
+    "limitation": "All234 existing outputs already above0.82, so this only exercises passthrough and does not validate new fallback decisions."
+  },
+  "decision": "Do not promote upper-half feature: target succeeds but134-control Top1 falls. Inner-neutral is a recovery hypothesis for low-confidence cases; target M5 succeeds, overall134 correct110 vs108 baseline; independent new fallback negatives and whole-hand review remain required."
+}

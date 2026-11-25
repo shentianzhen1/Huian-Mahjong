@@ -7,6 +7,7 @@ import random
 
 from huian._legacy import env
 from huian.rules import HuianRulesAdapter
+from huian.rules.registry import DEFAULT_RULE_SNAPSHOT
 from huian.rules.context import (DrawSource, HuContext, WinSource, YoujinStage,
                                  youjin_progression_rule)
 from .state import HuianGameState
@@ -101,6 +102,7 @@ class HuianEnvironment:
             "action": {"player": candidate.dealer, "type": "OPEN_GOLD",
                        "tile": candidate.gold_tile, "tiles": [],
                        "metadata": {"dice_total": dice_total,
+                                    "location_evidence": "SIMULATOR_CONVENTION",
                                     "indicator_wall_index": opening.gold_indicator.wall_index,
                                     "indicator_removed_from_drawable_wall": True,
                                     "skipped_flowers": list(opening.gold_indicator.skipped_flowers)}},
@@ -113,6 +115,15 @@ class HuianEnvironment:
         self._snapshots = []
         self._seen = {self._position(candidate)}
         return self.state
+    def begin_confirmed_opening(self):
+        from .opening_flow import begin_confirmed_opening
+        return begin_confirmed_opening(self)
+
+    def reveal_opening_candidate(self, *, wall_index, current_dealer_base):
+        from .opening_flow import reveal_opening_candidate
+        return reveal_opening_candidate(
+            self, wall_index=wall_index, current_dealer_base=current_dealer_base)
+
     def begin_normal_hand(self, dice_total):
         """Simulation-only opening bypass; never resolves or enables 抢金."""
         if not self.rules.rules.config.simulation_only_normal_hand:
@@ -149,6 +160,8 @@ class HuianEnvironment:
         candidate.phase, candidate.terminal = "TERMINAL", True
         candidate.terminal_reason = "SIMULATION_" + ("PINGHU" if multiplier == 1 else "ZIMO")
         candidate.pending_discard = candidate.pending_hu = None
+        if pending["source"] == WinSource.ROB_KONG.value:
+            candidate.pending_kong = None
         self.rules.validate_state(candidate)
         self._state = candidate
         self._events.append({"seq": len(self._events), "action": {"player": winner,
@@ -400,11 +413,64 @@ class HuianEnvironment:
         self._seen.add(self._position(candidate))
         return self.state, deepcopy(event)
 
+    def finalize_sanjindao_outcome(self, *, current_dealer_base):
+        """Settle (dealer base + completed kong fan) x3; no other fan or fee."""
+        self._require_state()
+        if self._state.terminal:
+            raise ValueError("Hand is already terminal")
+        if (self._state.phase != "SANJINDAO_DECLARED"
+                or not isinstance(self._state.pending_hu, dict)):
+            raise ValueError("Sanjindao settlement requires its declaration phase")
+        if type(current_dealer_base) is not int or current_dealer_base < 0:
+            raise ValueError("current_dealer_base must be a nonnegative integer")
+        self.rules.validate_state(self._state)
+        DEFAULT_RULE_SNAPSHOT.require_confirmed("settlement.sanjindao_full")
+        declaration = deepcopy(self._state.pending_hu)
+        winner = declaration["winner"]
+        kong_fan = self.rules.rules.sanjindao_fan(self._state.melds[winner])
+        multiplier = DEFAULT_RULE_SNAPSHOT.require_confirmed(
+            "settlement.sanjindao_multiplier").value
+        net = (current_dealer_base + kong_fan) * multiplier
+        rewards = [net, -net] if winner == 0 else [-net, net]
+        before = self._state.state_hash()
+        candidate = deepcopy(self._state)
+        candidate.rewards = rewards
+        candidate.phase = "TERMINAL"
+        candidate.terminal = True
+        candidate.terminal_reason = "AUTO_SANJINDAO"
+        candidate.pending_hu = None
+        candidate.pending_discard = None
+        self.rules.validate_state(candidate)
+        event = {
+            "seq": len(self._events),
+            "action": {
+                "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
+                "metadata": {
+                    "source": "player_confirmed_rule", "special": "SANJINDAO",
+                    "evidence_status": "CONFIRMED",
+                    "evidence_id": "player_confirmed_special_rules_20261006_v1",
+                    "rule_snapshot_fingerprint": DEFAULT_RULE_SNAPSHOT.fingerprint,
+                    "current_dealer_base": current_dealer_base,
+                    "winner_fan": kong_fan, "multiplier": multiplier,
+                    "fan_policy": "COMPLETED_KONG_ONLY",
+                    "hu_declaration": declaration, "rewards": list(rewards),
+                },
+            },
+            "before_hash": before, "after_hash": candidate.state_hash(),
+            "wall_remaining": candidate.wall_remaining(),
+            "current_player_after": candidate.current_player,
+            "phase_after": candidate.phase,
+        }
+        self._state = candidate
+        self._events.append(event)
+        self._seen.add(self._position(candidate))
+        return self.state, deepcopy(event)
+
     def finalize_eight_flower_outcome(
             self, *, current_dealer_base, winner_fan=None):
-        """Settle the project Eight-Flower-You working rule.
+        """Settle the player-confirmed Eight-Flower-You rule.
 
-        Working rule chosen 2026-09-20:
+        Player confirmation 2026-10-06:
         - fixed special fan = 16;
         - Hu multiplier = x1 (no extra multiplier);
         - do not stack the ordinary eight-flower +8, gold fan, meld fan, kong fan,
@@ -419,7 +485,7 @@ class HuianEnvironment:
         self._require_state()
         if self._state.terminal:
             raise ValueError("Hand is already terminal")
-        if (self._state.phase != "EIGHT_FLOWER_YOU_DECLARED"
+        if (self._state.phase not in ("EIGHT_FLOWER_YOU_DECLARED", "OPENING_EIGHT_FLOWER_DECLARED")
                 or not isinstance(self._state.pending_hu, dict)):
             raise ValueError("Eight-flower settlement requires its declaration phase")
         if type(current_dealer_base) is not int or current_dealer_base < 0:
@@ -430,7 +496,7 @@ class HuianEnvironment:
         fixed_fan = declaration["fixed_fan"]
         multiplier = declaration["multiplier"]
         if (fixed_fan != 16 or multiplier != 1
-                or declaration.get("project_rule") is not True):
+                or declaration.get("project_rule") is not False):
             raise ValueError(
                 "Eight-flower declaration must use fixed 16 fan with no extra multiplier"
             )
@@ -439,6 +505,7 @@ class HuianEnvironment:
                 "Eight-Flower-You fan is fixed at 16; ordinary/additional fan must not stack"
             )
 
+        DEFAULT_RULE_SNAPSHOT.require_confirmed("settlement.eight_flower_real")
         net = (current_dealer_base + fixed_fan) * multiplier
         rewards = [net, -net] if winner == 0 else [-net, net]
 
@@ -447,7 +514,7 @@ class HuianEnvironment:
         candidate.rewards = rewards
         candidate.phase = "TERMINAL"
         candidate.terminal = True
-        candidate.terminal_reason = "PROJECT_EIGHT_FLOWER_YOU"
+        candidate.terminal_reason = "AUTO_EIGHT_FLOWER_YOU"
         candidate.pending_hu = None
         candidate.pending_discard = None
         self.rules.validate_state(candidate)
@@ -457,10 +524,12 @@ class HuianEnvironment:
             "action": {
                 "player": winner, "type": "END_HAND", "tile": None, "tiles": [],
                 "metadata": {
-                    "source": "project_working_rule",
+                    "source": "player_confirmed_rule",
                     "special": "EIGHT_FLOWER_YOU",
-                    "project_rule": True,
-                    "evidence_status": "WORKING",
+                    "project_rule": False,
+                    "evidence_status": "CONFIRMED",
+                    "evidence_id": "player_confirmed_special_rules_20261006_v1",
+                    "rule_snapshot_fingerprint": DEFAULT_RULE_SNAPSHOT.fingerprint,
                     "current_dealer_base": current_dealer_base,
                     "winner_fan": fixed_fan,
                     "fixed_fan": fixed_fan,
@@ -588,8 +657,7 @@ class HuianEnvironment:
                 raise ValueError("Observed win type disagrees with the Hu declaration source")
         if self._state.pending_kong is not None:
             if declaration is None or WinSource(declaration["source"]) != WinSource.ROB_KONG:
-                from huian.rules.config import UnknownRuleError
-                raise UnknownRuleError("ROB_KONG_SCORING_UNKNOWN")
+                raise ValueError("Observed settlement requires completed Kong or declared Rob-Kong Hu")
         # A verified wall-tail Hu after any completed Kong uses the
         # ordinary Zimo settlement formula. The Kong itself contributes only
         # through the caller-provided/aggregated normal fan total.

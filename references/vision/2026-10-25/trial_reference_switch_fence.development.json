@@ -1,0 +1,20 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "parent_integration_head": "d7712edf9570824109c227a1ad3d8c10a8621901",
+  "parent_ci": "five workflows success,including Windows installer",
+  "change": "Live manual trial/reference changes fence observations by captured monotonic timestamp and clear old frame buffer; pre-switch success/errors rejected. Capture epoch and manual Gold preserved.",
+  "tests": {
+    "combined_passed": 82,
+    "new_actual_ui_method_regressions": 4,
+    "full_suite_run": false
+  },
+  "identity_threshold": 0.82,
+  "executor_enabled": false,
+  "ai_version": "V0.10",
+  "installed_reference_bundle_changed": false,
+  "private_trial_packet_changed": false,
+  "new_recognition_metrics_claimed": false,
+  "windows_mirroring_validated": false,
+  "all_scheduled_burst_samples_must_be_after_switch": true
+}

@@ -87,6 +87,11 @@
       "source_sha256": "e5b8d8e116f67b13b71a1643c5b7f7b26bb4c1e0848a7ba7407d8c5644b0ed14",
       "match_group": "reviewed_match_2026_10_03_recent_real_game",
       "evidence_path": "references/vision/2026-10-07/whole_hand_truth_seed_20261003_v0_1.json"
+    },
+    {
+      "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+      "match_group": "reviewed_match_2026_10_12_room324504",
+      "evidence_path": "references/vision/2026-10-19/continuous_replay_failure_baseline_v0_1.json"
     }
   ]
 }

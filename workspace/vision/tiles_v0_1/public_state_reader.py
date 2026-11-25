@@ -1,6 +1,7 @@
 """Unified PublicState reader for the target Huian two-player room."""
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 
 from .public_state import (
@@ -95,8 +96,12 @@ class PublicStateReader:
         profile=None,
         score_backend=None,
         status_backend=None,
+        stop_on_score_majority=False,
+        parallel_frames=False,
     ):
         self.profile = profile or HuianPublicStateProfile()
+        self.stop_on_score_majority = stop_on_score_majority
+        self.parallel_frames = parallel_frames
         self.score_backend = score_backend or TesseractCLIBackend(
             whitelist="0123456789"
         )
@@ -112,6 +117,7 @@ class PublicStateReader:
             backend=self.score_backend,
             source_frame=source_frame,
             gray_first=False,
+            stop_on_score_majority=self.stop_on_score_majority,
         )
         status = self.status_reader.read(image, profile=self.profile)
         candidate, issues = compose_public_candidate(
@@ -128,6 +134,18 @@ class PublicStateReader:
             safe_for_executor=False,
         )
 
+    def read_hand_window(self, images, *, previous=None, minimum_votes=2):
+        """Fresh hand-only consensus; never infer hand from cached scores."""
+        candidates = []
+        for index, image in enumerate(images):
+            hand, _, _, _ = self.status_reader.read_hand_progress(image, self.profile)
+            candidates.append(PublicStateCandidate(
+                hand_number=hand, confidence=.90 if hand is not None else 0.,
+                source_frame=str(index)))
+        observation = fuse_public_state(candidates, previous=previous,
+                                        minimum_votes=minimum_votes)
+        return PublicStateWindowRead(frames=(), observation=observation)
+
     def read_window(
         self,
         images,
@@ -136,14 +154,21 @@ class PublicStateReader:
         expected_scores=None,
         minimum_votes=2,
     ):
-        frames = tuple(
-            self.read_frame(
+        def read_indexed_frame(item):
+            index, image = item
+            return self.read_frame(
                 image,
                 previous=previous,
                 source_frame=str(index),
             )
-            for index, image in enumerate(images)
-        )
+
+        if self.parallel_frames:
+            # The live reader owns stateless Tesseract backends; map retains
+            # capture order even when OCR finishes out of order.
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                frames = tuple(pool.map(read_indexed_frame, enumerate(images)))
+        else:
+            frames = tuple(map(read_indexed_frame, enumerate(images)))
         observation = fuse_public_state(
             [frame.candidate for frame in frames],
             previous=previous,

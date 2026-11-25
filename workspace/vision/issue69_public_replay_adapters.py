@@ -1,0 +1,148 @@
+"""Adapters from existing #69 replay reports into the public replay ledger."""
+from __future__ import annotations
+
+import math
+
+from workspace.vision.issue69_public_replay_orchestrator import PublicReplayCandidate
+from workspace.vision.public_match_reconstruction import ObservationKind, RawObservation
+
+
+def river_report_candidates(report: dict) -> tuple[PublicReplayCandidate, ...]:
+    if report.get("schema_version") != "source_river_action_replay_v0_1":
+        raise ValueError("unsupported river replay report")
+    source_session = report.get("source_session")
+    source_sha = report.get("source_sha256")
+    actions = report.get("machine_predictions", {}).get("actions", ())
+    rows = []
+    for index, action in enumerate(actions):
+        if action.get("kind") != "DISCARD":
+            continue
+        refs = tuple(action.get("evidence_refs") or ())
+        if not refs:
+            raise ValueError("river prediction missing evidence provenance")
+        frame = action.get("frame_index")
+        if frame is None:
+            frame = _frame_from_refs(refs)
+        elif type(frame) is not int or frame < 0:
+            raise ValueError("river prediction frame_index must be an exact nonnegative frame")
+        rows.append(PublicReplayCandidate(
+            channel="river",
+            timestamp_seconds=float(action["timestamp_seconds"]),
+            frame_index=frame,
+            actor_hint=action.get("actor", "UNKNOWN"),
+            kind="DISCARD",
+            source_session=source_session,
+            source_sha256=source_sha,
+            stream_epoch=int(action.get("stream_epoch", 0)),
+            evidence_refs=tuple(f"river:{index}:{ref}" for ref in refs),
+            tile=action.get("tile"),
+        ))
+    for index, removal in enumerate(report.get("river_removals", ())):
+        refs = tuple(removal.get("evidence_refs") or ())
+        frame = removal.get("frame_index")
+        if not refs or type(frame) is not int or frame < 0:
+            raise ValueError("river removal missing exact provenance")
+        rows.append(PublicReplayCandidate(
+            channel="river",
+            timestamp_seconds=float(removal["timestamp_seconds"]),
+            frame_index=frame,
+            actor_hint=removal.get("actor", "UNKNOWN"),
+            kind="RIVER_TILE_REMOVED_OR_CLAIMED",
+            source_session=source_session,
+            source_sha256=source_sha,
+            stream_epoch=int(removal.get("stream_epoch", 0)),
+            evidence_refs=tuple(f"river_removal:{index}:{ref}" for ref in refs),
+            tile=removal.get("tile"),
+        ))
+
+    return tuple(rows)
+
+
+def action_area_report_candidates(report: dict) -> tuple[PublicReplayCandidate, ...]:
+    if report.get("schema_version") != "source_action_area_geometry_v0_1":
+        raise ValueError("unsupported action-area replay report")
+    session = report.get("source_session")
+    sha = report.get("source_sha256")
+    rows = []
+    for index, item in enumerate(report.get("candidates", ())):
+        frame = item.get("frame")
+        if type(frame) is not int:
+            raise ValueError("action-area candidate missing exact frame")
+        timestamp = item.get("timestamp_seconds")
+        if (isinstance(timestamp, bool) or not isinstance(timestamp, (int, float))
+                or not math.isfinite(timestamp) or timestamp < 0):
+            raise ValueError("action-area candidate requires source PTS seconds")
+        rows.append(PublicReplayCandidate(
+            channel="action_area",
+            timestamp_seconds=float(timestamp),
+            frame_index=frame,
+            actor_hint=item.get("region_actor_hint", "UNKNOWN"),
+            kind="ACTION_AREA_ONSET",
+            source_session=session,
+            source_sha256=sha,
+            stream_epoch=0,
+            evidence_refs=(f"action_area:{index}:frame:{frame}",),
+        ))
+    return tuple(rows)
+
+
+def _frame_from_refs(refs: tuple[str, ...]) -> int:
+    # Legacy reports may omit frame_index. A single distinct source frame is
+    # unambiguous; accumulated river refs are not an event timestamp.
+    frames: set[int] = set()
+    for ref in refs:
+        parts = ref.replace("=", ":").split(":")
+        for index, token in enumerate(parts[:-1]):
+            if token == "frame" and parts[index + 1].isdigit():
+                frames.add(int(parts[index + 1]))
+    if len(frames) == 1:
+        return next(iter(frames))
+    raise ValueError("river evidence refs do not expose one exact source frame")
+
+
+def meld_observation_candidate(
+    observation: RawObservation,
+    *,
+    source_sha256: str,
+) -> PublicReplayCandidate:
+    """Adapt one stable MeldSnapshotObserver output without adding semantics."""
+    if not isinstance(observation, RawObservation):
+        raise ValueError("RawObservation required")
+    if observation.kind != ObservationKind.MELD_DELTA:
+        raise ValueError("only MELD_DELTA observations belong in meld channel")
+    session = observation.details.get("source_session")
+    epoch = observation.details.get("stream_epoch")
+    frame = observation.details.get("frame")
+    if not isinstance(session, str) or not session:
+        raise ValueError("meld observation missing source_session")
+    if type(epoch) is not int or epoch < 0:
+        raise ValueError("meld observation missing stream_epoch")
+    if type(frame) is not int or frame < 0:
+        raise ValueError("meld observation missing exact source frame")
+    refs = tuple(observation.evidence_refs)
+    if not refs:
+        raise ValueError("meld observation missing evidence provenance")
+    # Identity is exposed only when the observer explicitly marked the whole
+    # group complete. Partial identity must remain UNKNOWN at ledger level.
+    tile = None
+    if observation.details.get("tile_identity_complete") is True and observation.tiles:
+        tile = ",".join(observation.tiles)
+    group_size = observation.details.get("group_size")
+    previous_group_size = observation.details.get("previous_group_size")
+    previous_meld = tuple(observation.details.get("previous_meld") or ())
+    return PublicReplayCandidate(
+        channel="meld",
+        timestamp_seconds=float(observation.timestamp_seconds),
+        frame_index=frame,
+        actor_hint=observation.actor,
+        kind="MELD_DELTA",
+        source_session=session,
+        source_sha256=source_sha256,
+        stream_epoch=epoch,
+        evidence_refs=tuple(f"meld:{ref}" for ref in refs),
+        tile=tile,
+        tiles=(tuple(observation.tiles) if observation.details.get("tile_identity_complete") is True else tuple(None for _ in observation.details.get("tile_candidates", ()))),
+        meld_group_size=group_size,
+        previous_meld=previous_meld,
+        previous_meld_group_size=previous_group_size,
+    )

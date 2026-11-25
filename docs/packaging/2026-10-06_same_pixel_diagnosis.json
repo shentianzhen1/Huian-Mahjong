@@ -1,0 +1,335 @@
+{
+  "schema_version": "local_alpha_same_pixel_diagnosis_v0_1",
+  "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+  "original_match_lineage_verified": false,
+  "range_seconds": [
+    0,
+    3
+  ],
+  "frame_size": [
+    1108,
+    512
+  ],
+  "sample_interval_seconds": 0.3,
+  "same_sampled_pixels_verified": true,
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "package": {
+    "runtime": {
+      "windows": 8,
+      "accepted_windows": 0,
+      "blocked_windows": 8,
+      "trusted_hand_windows": 0,
+      "trusted_gold_windows": 0,
+      "discard_windows": 0,
+      "gold_tile_votes": {},
+      "advice_runs": [
+        {
+          "display_allowed": false,
+          "windows": 8,
+          "first_frame": 18,
+          "start_seconds": 0.6000000000000001,
+          "last_frame": 81,
+          "end_seconds": 2.7
+        }
+      ],
+      "recovered_advice_runs": 0,
+      "rejection_issue_windows": {
+        "gold_identity_unknown": 8,
+        "gold_untrusted": 8,
+        "hand_identity_unknown": 8,
+        "hand_untrusted": 8,
+        "meld_untrusted:1": 8,
+        "opponent_meld_missing": 8,
+        "opponent_river_missing": 8,
+        "player_river_missing": 8,
+        "river_untrusted:0": 8,
+        "river_untrusted:1": 8,
+        "runtime_gold_not_fully_trusted": 8,
+        "runtime_hand_not_fully_trusted": 8
+      }
+    },
+    "performance": {
+      "clock": "wall_time_not_source_time",
+      "total_elapsed_ms": 4896.083,
+      "runtime_total_ms": 1252.614,
+      "ocr_total_ms": 3428.881,
+      "ocr_calls": 2,
+      "ocr_reused_windows": 6,
+      "note": "Total also includes source probing, hashing, decoding and callbacks; stage times do not establish live latency or accuracy."
+    }
+  },
+  "development": {
+    "runtime": {
+      "windows": 8,
+      "accepted_windows": 0,
+      "blocked_windows": 8,
+      "trusted_hand_windows": 0,
+      "trusted_gold_windows": 0,
+      "discard_windows": 0,
+      "gold_tile_votes": {},
+      "advice_runs": [
+        {
+          "display_allowed": false,
+          "windows": 8,
+          "first_frame": 18,
+          "start_seconds": 0.6000000000000001,
+          "last_frame": 81,
+          "end_seconds": 2.7
+        }
+      ],
+      "recovered_advice_runs": 0,
+      "rejection_issue_windows": {
+        "gold_identity_unknown": 8,
+        "gold_untrusted": 8,
+        "hand_identity_unknown": 8,
+        "hand_untrusted": 8,
+        "meld_untrusted:1": 8,
+        "opponent_meld_missing": 8,
+        "opponent_river_missing": 8,
+        "player_river_missing": 8,
+        "river_untrusted:0": 8,
+        "river_untrusted:1": 8,
+        "runtime_gold_not_fully_trusted": 8,
+        "runtime_hand_not_fully_trusted": 8
+      }
+    },
+    "timing_comparable": false
+  },
+  "first_development_window": {
+    "geometry_untrusted": false,
+    "concealed_count": 15,
+    "components": [
+      {
+        "bbox": [
+          118,
+          440,
+          48,
+          67
+        ],
+        "region": "gold",
+        "candidate": "N",
+        "accepted": "UNKNOWN",
+        "confidence": 0.084751,
+        "reason": "below_confidence_threshold",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          167,
+          442,
+          49,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P3",
+        "accepted": "P3",
+        "confidence": 0.880613,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          217,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P4",
+        "accepted": "P4",
+        "confidence": 0.914221,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          267,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P5",
+        "accepted": "P5",
+        "confidence": 0.927472,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          317,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P6",
+        "accepted": "P6",
+        "confidence": 0.881066,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          367,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P6",
+        "accepted": "P6",
+        "confidence": 0.928039,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          416,
+          442,
+          49,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P6",
+        "accepted": "P6",
+        "confidence": 0.923496,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          466,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P7",
+        "accepted": "P7",
+        "confidence": 0.928147,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          516,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P7",
+        "accepted": "P7",
+        "confidence": 0.929101,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          566,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P8",
+        "accepted": "P8",
+        "confidence": 0.909095,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          615,
+          442,
+          49,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P9",
+        "accepted": "P9",
+        "confidence": 0.942394,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          665,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "P9",
+        "accepted": "P9",
+        "confidence": 0.922943,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          715,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "S2",
+        "accepted": "UNKNOWN",
+        "confidence": 0.644122,
+        "reason": "below_confidence_threshold",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          765,
+          442,
+          48,
+          65
+        ],
+        "region": "hand",
+        "candidate": "S2",
+        "accepted": "UNKNOWN",
+        "confidence": 0.72497,
+        "reason": "below_confidence_threshold",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          814,
+          442,
+          49,
+          65
+        ],
+        "region": "hand",
+        "candidate": "S5",
+        "accepted": "S5",
+        "confidence": 0.914344,
+        "reason": "accepted",
+        "gold_skin": false
+      },
+      {
+        "bbox": [
+          864,
+          442,
+          49,
+          65
+        ],
+        "region": "hand",
+        "candidate": "S5",
+        "accepted": "S5",
+        "confidence": 0.938786,
+        "reason": "accepted",
+        "gold_skin": false
+      }
+    ]
+  },
+  "limits": [
+    "Same provided clip, not independent generalization evidence",
+    "Package timing measured sequentially on Linux only; not Windows latency",
+    "Original recording lineage not verified; no same-match exclusion claim",
+    "Raw media and complete frames remain private"
+  ]
+}

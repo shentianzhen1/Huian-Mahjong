@@ -1,0 +1,438 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "candidate": "Local dark-meld proposals plus gap-based groups, offline replay only; same M4/S8 candidate references as prior90s run.",
+  "baseline": {
+    "windows": 224,
+    "advice": 115,
+    "discards": 62,
+    "count_invalid": 32
+  },
+  "result": {
+    "recovered": [
+      1740,
+      1800,
+      1812,
+      1824,
+      1860,
+      1872,
+      1932,
+      1944,
+      1956,
+      1968,
+      1980,
+      1992,
+      2004,
+      2016,
+      2040,
+      2076,
+      2088,
+      2100,
+      2112,
+      2124,
+      2172,
+      2184,
+      2208,
+      2220,
+      2232,
+      2244,
+      2256,
+      2280,
+      2292,
+      2316,
+      2328,
+      2340
+    ],
+    "lost": [],
+    "hand_changed": [
+      1224,
+      1740
+    ],
+    "candidate_runtime": {
+      "windows": 224,
+      "accepted_windows": 147,
+      "blocked_windows": 77,
+      "trusted_hand_windows": 147,
+      "trusted_gold_windows": 224,
+      "discard_windows": 70,
+      "gold_tile_votes": {
+        "S8": 224
+      },
+      "advice_runs": [
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 12,
+          "start_seconds": 0.4,
+          "last_frame": 48,
+          "end_seconds": 1.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 60,
+          "start_seconds": 2,
+          "last_frame": 72,
+          "end_seconds": 2.4000000000000004
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 84,
+          "start_seconds": 2.8000000000000003,
+          "last_frame": 84,
+          "end_seconds": 2.8000000000000003
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 96,
+          "start_seconds": 3.2,
+          "last_frame": 96,
+          "end_seconds": 3.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 108,
+          "start_seconds": 3.6,
+          "last_frame": 144,
+          "end_seconds": 4.800000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 12,
+          "first_frame": 156,
+          "start_seconds": 5.2,
+          "last_frame": 288,
+          "end_seconds": 9.600000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 300,
+          "start_seconds": 10,
+          "last_frame": 300,
+          "end_seconds": 10
+        },
+        {
+          "display_allowed": true,
+          "windows": 17,
+          "first_frame": 312,
+          "start_seconds": 10.4,
+          "last_frame": 504,
+          "end_seconds": 16.8
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 516,
+          "start_seconds": 17.200000000000003,
+          "last_frame": 528,
+          "end_seconds": 17.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 12,
+          "first_frame": 540,
+          "start_seconds": 18,
+          "last_frame": 672,
+          "end_seconds": 22.400000000000002
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 684,
+          "start_seconds": 22.8,
+          "last_frame": 684,
+          "end_seconds": 22.8
+        },
+        {
+          "display_allowed": true,
+          "windows": 12,
+          "first_frame": 696,
+          "start_seconds": 23.200000000000003,
+          "last_frame": 828,
+          "end_seconds": 27.6
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 840,
+          "start_seconds": 28.000000000000004,
+          "last_frame": 876,
+          "end_seconds": 29.200000000000003
+        },
+        {
+          "display_allowed": true,
+          "windows": 16,
+          "first_frame": 888,
+          "start_seconds": 29.6,
+          "last_frame": 1068,
+          "end_seconds": 35.6
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 1080,
+          "start_seconds": 36,
+          "last_frame": 1092,
+          "end_seconds": 36.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 10,
+          "first_frame": 1104,
+          "start_seconds": 36.800000000000004,
+          "last_frame": 1212,
+          "end_seconds": 40.400000000000006
+        },
+        {
+          "display_allowed": false,
+          "windows": 5,
+          "first_frame": 1224,
+          "start_seconds": 40.800000000000004,
+          "last_frame": 1272,
+          "end_seconds": 42.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 4,
+          "first_frame": 1284,
+          "start_seconds": 42.800000000000004,
+          "last_frame": 1320,
+          "end_seconds": 44
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1332,
+          "start_seconds": 44.400000000000006,
+          "last_frame": 1332,
+          "end_seconds": 44.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 9,
+          "first_frame": 1344,
+          "start_seconds": 44.800000000000004,
+          "last_frame": 1440,
+          "end_seconds": 48
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1452,
+          "start_seconds": 48.400000000000006,
+          "last_frame": 1452,
+          "end_seconds": 48.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 7,
+          "first_frame": 1464,
+          "start_seconds": 48.800000000000004,
+          "last_frame": 1536,
+          "end_seconds": 51.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 1548,
+          "start_seconds": 51.6,
+          "last_frame": 1572,
+          "end_seconds": 52.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 14,
+          "first_frame": 1584,
+          "start_seconds": 52.800000000000004,
+          "last_frame": 1740,
+          "end_seconds": 58.00000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 1752,
+          "start_seconds": 58.400000000000006,
+          "last_frame": 1788,
+          "end_seconds": 59.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 1800,
+          "start_seconds": 60.00000000000001,
+          "last_frame": 1824,
+          "end_seconds": 60.800000000000004
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 1836,
+          "start_seconds": 61.2,
+          "last_frame": 1848,
+          "end_seconds": 61.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 1860,
+          "start_seconds": 62.00000000000001,
+          "last_frame": 1872,
+          "end_seconds": 62.400000000000006
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 1884,
+          "start_seconds": 62.800000000000004,
+          "last_frame": 1920,
+          "end_seconds": 64
+        },
+        {
+          "display_allowed": true,
+          "windows": 8,
+          "first_frame": 1932,
+          "start_seconds": 64.4,
+          "last_frame": 2016,
+          "end_seconds": 67.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2028,
+          "start_seconds": 67.60000000000001,
+          "last_frame": 2028,
+          "end_seconds": 67.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 2040,
+          "start_seconds": 68,
+          "last_frame": 2040,
+          "end_seconds": 68
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 2052,
+          "start_seconds": 68.4,
+          "last_frame": 2064,
+          "end_seconds": 68.80000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 2076,
+          "start_seconds": 69.2,
+          "last_frame": 2124,
+          "end_seconds": 70.80000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 2136,
+          "start_seconds": 71.2,
+          "last_frame": 2160,
+          "end_seconds": 72
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2172,
+          "start_seconds": 72.4,
+          "last_frame": 2184,
+          "end_seconds": 72.80000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2196,
+          "start_seconds": 73.2,
+          "last_frame": 2196,
+          "end_seconds": 73.2
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 2208,
+          "start_seconds": 73.60000000000001,
+          "last_frame": 2256,
+          "end_seconds": 75.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2268,
+          "start_seconds": 75.60000000000001,
+          "last_frame": 2268,
+          "end_seconds": 75.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2280,
+          "start_seconds": 76,
+          "last_frame": 2292,
+          "end_seconds": 76.4
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2304,
+          "start_seconds": 76.80000000000001,
+          "last_frame": 2304,
+          "end_seconds": 76.80000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 2316,
+          "start_seconds": 77.2,
+          "last_frame": 2340,
+          "end_seconds": 78
+        },
+        {
+          "display_allowed": false,
+          "windows": 29,
+          "first_frame": 2352,
+          "start_seconds": 78.4,
+          "last_frame": 2688,
+          "end_seconds": 89.60000000000001
+        }
+      ],
+      "recovered_advice_runs": 20,
+      "rejection_issue_windows": {
+        "experimental_hand_sources_unvalidated": 15,
+        "hand_identity_unknown": 76,
+        "hand_untrusted": 77,
+        "live_gold_carried_forward": 63,
+        "live_hand_meld_waiting_confirmation": 1,
+        "meld_identity_unknown:0": 12,
+        "meld_untrusted:0": 56,
+        "meld_untrusted:1": 77,
+        "opponent_meld_missing": 77,
+        "opponent_river_missing": 77,
+        "player_meld_count_untrusted": 56,
+        "player_river_missing": 77,
+        "river_untrusted:0": 77,
+        "river_untrusted:1": 77,
+        "runtime_hand_not_fully_trusted": 76
+      }
+    }
+  },
+  "count_invalid_after": 0,
+  "hand_changes_note": "1224 empty becomes incomplete hand and remains blocked;1740 empty becomes11-tile hand and displays. Both require visual review.",
+  "limits": [
+    "Same revealed recording, parameters tuned on frame1800; no independent promotion.",
+    "New32 displayed windows not all visually reviewed.",
+    "No lost display windows does not prove unchanged candidate content or absence of wrong newly accepted hands.",
+    "No default runtime/bundle update; no new installer."
+  ]
+}

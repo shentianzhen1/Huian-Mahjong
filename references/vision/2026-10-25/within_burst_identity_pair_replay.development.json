@@ -1,0 +1,1289 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "protocol": "Actual _runtime_worker; same pixels/resources and three source frames [end-6,end-3,end] at30fps; process endpoints every6frames; compare single latest identity vs fresh prior+latest identity through existing pipeline. Offline controlled sampling, not real-time capture benchmark.",
+  "reference_version": "2026.10.25.3",
+  "manual_gold": "M4",
+  "source_trial": true,
+  "endpoints": 61,
+  "single_display": 23,
+  "dual_display": 34,
+  "single_discard": 1,
+  "dual_discard": 4,
+  "lost_display_windows": 0,
+  "new_discard_frames": [
+    78,
+    222,
+    1770
+  ],
+  "assistant_reviewed_anchor_hands_match": true,
+  "anchors": [
+    {
+      "hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "W",
+        "B",
+        "S9"
+      ],
+      "meld_sizes": [],
+      "frame": 78,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 1115.7559630000833,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "W",
+        "M2"
+      ],
+      "meld_sizes": [],
+      "frame": 222,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 797.2815379998792,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S9",
+        "S9",
+        "S9",
+        "M3",
+        "S8"
+      ],
+      "meld_sizes": [
+        4
+      ],
+      "frame": 1770,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 561.5236190005817,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    }
+  ],
+  "worker_ms": {
+    "median": 593.66,
+    "p95": 728.52
+  },
+  "limits": [
+    "Two selected intervals, not whole-video15/15 validation.",
+    "Sampling differs from historical stride6 three-frame burst; do not replace296/473 metric with these counts.",
+    "Single source and revealed evidence, not independent accuracy.",
+    "Offline worker timing, not mirrored Windows end-to-end latency."
+  ],
+  "rows": [
+    {
+      "frame": 6,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 442.99074500031566,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 12,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 52.84994900011952,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 18,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 593.6586319994603,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 24,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 48.22675400009757,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 30,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 43.56079700028204,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 36,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 583.337740999923,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 42,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 600.0851630005855,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 48,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 577.4187309998524,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 54,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 42.26307600038126,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 60,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 38.66571100024885,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 66,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 575.5925249995926,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 72,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 42.10692399919935,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 78,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 723.4406980005588,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 84,
+      "single": true,
+      "dual": true,
+      "single_discard": true,
+      "dual_discard": true,
+      "elapsed_ms": 710.0587599998107,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 90,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 43.50449700086756,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 96,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 39.79209799945238,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 102,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 666.4097170005334,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 108,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 51.442640000459505,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 114,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 425.24883300029614,
+      "dual_issues": [
+        "concealed_hand_count_invalid",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 120,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 55.75595800019073,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 126,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 708.1617670000924,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 132,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 708.6854870003663,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 138,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 707.0714279998356,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 144,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 701.4166849994581,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 150,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 700.6454029997258,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 156,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 699.8948910004401,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 162,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 693.718577999789,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 168,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 692.9963989996395,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 174,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 718.3345829998871,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 180,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 723.2937469998433,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 186,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 750.339688999702,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 192,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 752.7837620000355,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 198,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 728.5233279999375,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 204,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 720.031926000047,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 210,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 705.5256519997783,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 216,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 52.95685999954003,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 222,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 721.7421219993412,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 228,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 773.4305750000203,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 234,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 44.72996099957527,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 240,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 686.3120709995201,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 246,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 48.98847399999795,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 252,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 54.27654499999335,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 258,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 679.0346970001337,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 264,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 684.5410429996264,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 270,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 687.3249070004022,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 276,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 670.2965539998331,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 282,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 676.7562479999469,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 288,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 666.8273870000121,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 294,
+      "single": true,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 671.8157219993373,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 300,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 50.35901500014006,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1740,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 51.18009299985715,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1746,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 47.725952999826404,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1752,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 45.0508109997827,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1758,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 47.185877999254444,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1764,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 48.77814099927491,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1770,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": true,
+      "elapsed_ms": 593.0700119997709,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 1776,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 632.6045329997214,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 1782,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 52.5457940002525,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1788,
+      "single": false,
+      "dual": true,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 566.918380000061,
+      "dual_issues": [
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ]
+    },
+    {
+      "frame": 1794,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 59.65198000012606,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    },
+    {
+      "frame": 1800,
+      "single": false,
+      "dual": false,
+      "single_discard": false,
+      "dual_discard": false,
+      "elapsed_ms": 55.94394099989586,
+      "dual_issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "player_meld_count_untrusted",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing"
+      ]
+    }
+  ]
+}

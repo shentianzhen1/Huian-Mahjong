@@ -1,0 +1,107 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_NOT_USER_APPROVED",
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "anchors": [
+    {
+      "frame": 936,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "P2"
+      ],
+      "meld_sizes": [],
+      "hand_and_meld_sizes_match": true
+    },
+    {
+      "frame": 942,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "P2"
+      ],
+      "meld_sizes": [],
+      "hand_and_meld_sizes_match": true
+    },
+    {
+      "frame": 2466,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S7"
+      ],
+      "meld_sizes": [
+        4
+      ],
+      "hand_and_meld_sizes_match": true
+    },
+    {
+      "frame": 2514,
+      "hand_truth": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "S7"
+      ],
+      "meld_sizes": [
+        4
+      ],
+      "hand_and_meld_sizes_match": true
+    }
+  ],
+  "limits": [
+    "Four anchor frames, not all eleven new windows reannotated.",
+    "Meld identities remain UNKNOWN; sizes only.",
+    "16 focused tests and 11 subtests passed; final wired full replay and Windows installer not yet verified."
+  ]
+}

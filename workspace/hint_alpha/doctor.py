@@ -80,6 +80,30 @@ def _module_check(name: str, *, capability: str, required: bool) -> DoctorCheck:
     )
 
 
+def _runtime_geometry_schema_check() -> DoctorCheck:
+    try:
+        from workspace.vision.tiles_runtime_v0_2.dynamic_geometry import GeometryComponent
+    except Exception as exc:
+        return DoctorCheck(
+            "runtime.geometry_component_schema",
+            "FAIL",
+            f"cannot import Runtime geometry: {type(exc).__name__}: {exc}",
+            "runtime_vision",
+        )
+    if not hasattr(GeometryComponent, "gold_skin"):
+        return DoctorCheck(
+            "runtime.geometry_component_schema",
+            "FAIL",
+            "local Runtime Vision files are out of sync: GeometryComponent.gold_skin missing",
+            "runtime_vision",
+        )
+    return DoctorCheck(
+        "runtime.geometry_component_schema",
+        "PASS",
+        "Runtime geometry schema includes gold_skin",
+        "runtime_vision",
+    )
+
 def _writable_check(path: Path) -> DoctorCheck:
     probe = path / ".hint_alpha_doctor_write_test"
     try:
@@ -143,6 +167,7 @@ def collect_doctor_report(output_root: str | Path | None = None) -> DoctorReport
         checks.append(_module_check(module, capability="demo", required=True))
 
     checks.append(_writable_check(output))
+    checks.append(_runtime_geometry_schema_check())
 
     is_windows = platform.system() == "Windows"
     checks.append(DoctorCheck(
@@ -217,6 +242,12 @@ def _human_lines(report: DoctorReport) -> Iterable[str]:
     )
     if not report.public_state_ocr_ready:
         yield "NOTE: OCR unavailable does not disable capture or evidence recording."
+    if any(
+        item.check_id == "runtime.geometry_component_schema"
+        and item.status != "PASS"
+        for item in report.checks
+    ):
+        yield "NOTE: Runtime Vision source files are mixed/stale; sync the full branch before replay."
     yield "Executor: OFF"
 
 

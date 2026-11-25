@@ -1,0 +1,49 @@
+{
+  "schema_version": "upper_gold_role_real_smoke_v0_1",
+  "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+  "range_seconds": [
+    0,
+    3
+  ],
+  "sample_interval_seconds": 0.3,
+  "windows": 8,
+  "concealed_counts": [
+    16,
+    16,
+    16,
+    16,
+    16,
+    16,
+    16,
+    16
+  ],
+  "complete_advice_windows": 0,
+  "geometry_untrusted_first_window": false,
+  "opened_gold_bbox": [
+    110,
+    48,
+    36,
+    48
+  ],
+  "gold_skin_observations": [
+    {
+      "pixel_bbox": [
+        118,
+        442,
+        48,
+        64
+      ],
+      "region_candidate": "hand",
+      "tile_id": "UNKNOWN",
+      "identity_reason": "gold_skin_identity_unqualified"
+    }
+  ],
+  "formal_promotion_evidence": false,
+  "safe_for_executor": false,
+  "limits": [
+    "same-source development geometry smoke",
+    "upper-left indicator intake qualified only for target UI layout",
+    "Gold/S2 identities remain UNKNOWN",
+    "no Windows installation acceptance"
+  ]
+}

@@ -1,0 +1,3349 @@
+{
+  "schema_version": "continuous_replay_failure_baseline_v0_1",
+  "measured_on": "2026-10-19",
+  "source_head": "f20bfb3dd654c0267173911e2d1c4f9f71d0258f",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "threshold": 0.82,
+  "executor_enabled": false,
+  "method": {
+    "frame_access": "sequential_decoded_ordinal",
+    "sample_stride_frames": 6,
+    "frame_burst_size": 3,
+    "source_interval_seconds": 0.2,
+    "advisory_comparison": [
+      "stateless",
+      "stateful_gold_memory_and_distinct_frame_identity_confirmation"
+    ],
+    "note": "Overlapping windows are not independent samples; this is a rejection baseline, not a fully annotated accuracy evaluation."
+  },
+  "environment": {
+    "python": "3.12.14",
+    "opencv": "5.0.0",
+    "numpy": "2.3.5",
+    "pillow": "12.3.0",
+    "platform": "Linux offline host, not Windows live capture"
+  },
+  "sources": [
+    {
+      "clip": "clip_0926",
+      "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+      "source_head": "f20bfb3dd654c0267173911e2d1c4f9f71d0258f",
+      "decoded_frames": 273,
+      "reported_frames": 273,
+      "fps": 30,
+      "duration_seconds": 9.1,
+      "size": [
+        1108,
+        512
+      ],
+      "sample_stride_frames": 6,
+      "windows": 44,
+      "geometry_stable_windows": 37,
+      "all_concealed_trusted_windows": 3,
+      "stateless_advice_windows": 0,
+      "stateful_advice_windows": 0,
+      "stateless_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 41,
+        "gold_untrusted": 44,
+        "gold_identity_unknown": 44,
+        "river_untrusted:1": 44,
+        "runtime_gold_not_fully_trusted": 44,
+        "player_river_missing": 44,
+        "opponent_river_missing": 44,
+        "river_untrusted:0": 44,
+        "opponent_meld_missing": 44,
+        "hand_untrusted": 41,
+        "hand_identity_unknown": 41,
+        "meld_untrusted:1": 44,
+        "runtime_gold_frame_identity_untrusted": 37,
+        "player_meld_count_untrusted": 7,
+        "meld_untrusted:0": 7,
+        "meld_identity_unknown:0": 8
+      },
+      "stateful_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 41,
+        "gold_untrusted": 44,
+        "gold_identity_unknown": 44,
+        "river_untrusted:1": 44,
+        "runtime_gold_not_fully_trusted": 44,
+        "player_river_missing": 44,
+        "opponent_river_missing": 44,
+        "river_untrusted:0": 44,
+        "opponent_meld_missing": 44,
+        "hand_untrusted": 41,
+        "hand_identity_unknown": 41,
+        "meld_untrusted:1": 44,
+        "runtime_gold_frame_identity_untrusted": 37,
+        "player_meld_count_untrusted": 7,
+        "meld_untrusted:0": 7,
+        "meld_identity_unknown:0": 8
+      },
+      "concealed_identity_reasons": {
+        "below_confidence_threshold": 52,
+        "accepted": 520
+      },
+      "gold_frame_identity_reasons": {
+        "below_confidence_threshold": 111
+      },
+      "runtime_ms_p50": 300.65822300002765,
+      "runtime_ms_p95": 380.61803800007965,
+      "measurement_scope": "offline_host_runtime_only_not_capture_to_advice",
+      "independent_holdout": false,
+      "original_match_group": "reviewed_match_2026_09_26_first_hand",
+      "template_match_exclusion_verified": false,
+      "truth_review": "not_a_fully_reviewed_continuous_truth_set",
+      "wrong_acceptance_accuracy_measured": false,
+      "threshold": 0.82,
+      "executor_enabled": false,
+      "lineage_reference": "references/vision/2026-10-01/issue69_hand1_p6_ming_gang_mobile_clip_v0_1.json"
+    },
+    {
+      "clip": "clip_1012",
+      "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+      "source_head": "f20bfb3dd654c0267173911e2d1c4f9f71d0258f",
+      "decoded_frames": 2847,
+      "reported_frames": 2847,
+      "fps": 30,
+      "duration_seconds": 94.9,
+      "size": [
+        1108,
+        512
+      ],
+      "sample_stride_frames": 6,
+      "windows": 473,
+      "geometry_stable_windows": 241,
+      "all_concealed_trusted_windows": 0,
+      "stateless_advice_windows": 0,
+      "stateful_advice_windows": 0,
+      "stateless_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 473,
+        "player_meld_count_untrusted": 232,
+        "gold_untrusted": 473,
+        "gold_identity_unknown": 473,
+        "river_untrusted:1": 473,
+        "runtime_gold_not_fully_trusted": 473,
+        "player_river_missing": 473,
+        "opponent_river_missing": 473,
+        "river_untrusted:0": 473,
+        "opponent_meld_missing": 473,
+        "hand_untrusted": 473,
+        "hand_identity_unknown": 473,
+        "meld_untrusted:1": 473,
+        "meld_untrusted:0": 232,
+        "runtime_gold_frame_identity_untrusted": 241,
+        "meld_identity_unknown:0": 87
+      },
+      "stateful_rejection_issues": {
+        "runtime_hand_not_fully_trusted": 473,
+        "player_meld_count_untrusted": 232,
+        "gold_untrusted": 473,
+        "gold_identity_unknown": 473,
+        "river_untrusted:1": 473,
+        "runtime_gold_not_fully_trusted": 473,
+        "player_river_missing": 473,
+        "opponent_river_missing": 473,
+        "river_untrusted:0": 473,
+        "opponent_meld_missing": 473,
+        "hand_untrusted": 473,
+        "hand_identity_unknown": 473,
+        "meld_untrusted:1": 473,
+        "meld_untrusted:0": 232,
+        "runtime_gold_frame_identity_untrusted": 241,
+        "meld_identity_unknown:0": 87
+      },
+      "concealed_identity_reasons": {
+        "accepted": 1296,
+        "class_not_cross_session_validated_in_region": 421,
+        "below_confidence_threshold": 1870
+      },
+      "gold_frame_identity_reasons": {
+        "below_confidence_threshold": 723
+      },
+      "runtime_ms_p50": 207.0743429999311,
+      "runtime_ms_p95": 322.0129520000228,
+      "measurement_scope": "offline_host_runtime_only_not_capture_to_advice",
+      "independent_holdout": false,
+      "original_match_group": "reviewed_match_2026_10_12_room324504",
+      "template_match_exclusion_verified": false,
+      "truth_review": "not_a_fully_reviewed_continuous_truth_set",
+      "wrong_acceptance_accuracy_measured": false,
+      "threshold": 0.82,
+      "executor_enabled": false,
+      "lineage_reference": "references/vision/2026-10-01/concealed_template_match_lineage.development.json",
+      "original_match_group_at_baseline_measurement": "UNKNOWN",
+      "source_group_review": "gold_temporal_shadow_20261024.sources[1].source_group_evidence"
+    }
+  ],
+  "reviewed_anchor": {
+    "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+    "frame_index": 120,
+    "source_seconds": 4,
+    "rgb_sha256": "96bdf235d0e3613f19faec541e8411dff9df830f6318a507575313a7f51553c5",
+    "evidence_grade": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "annotation_after_model_output": true,
+    "truth": {
+      "concealed_hand": [
+        "M6",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P6",
+        "P6",
+        "P7",
+        "P7",
+        "P8",
+        "P9",
+        "P9",
+        "S2",
+        "S2",
+        "S5",
+        "S5"
+      ],
+      "opened_gold": "M6",
+      "own_melds": []
+    },
+    "raw_candidate_matches": 16,
+    "raw_candidate_total": 16,
+    "runtime_accepted_hand_tiles": 14,
+    "rejected_hand_tiles": [
+      {
+        "tile": "M6",
+        "score": 0.817985
+      },
+      {
+        "tile": "S2",
+        "score": 0.812364
+      }
+    ],
+    "opened_gold_candidate": "M6",
+    "opened_gold_score": 0.368945,
+    "reference_structural_shanten": 0,
+    "reference_is_automatic_pipeline_acceptance": false
+  },
+  "history": {
+    "same_short_clip_previously_measured": "docs/packaging/2026-10-06_gold_role_fix.json",
+    "interpretation": "The short-clip failure reproduces an existing unresolved blocker; this run is not a new recognition improvement."
+  },
+  "opened_gold_crop_appearance_countercheck": {
+    "measured_on": "2026-10-19",
+    "source_head": "32cd2dd7be3de24b6c489856a3a54d2c9b4ed87d",
+    "status": "REVEALED_DEVELOPMENT_NO_RUNTIME_FIX",
+    "annotation_after_model_output": true,
+    "source_filter": "exact_source_sha_only_not_original_match_disjoint",
+    "query_bank_scope": "all_current_approved_readable_labels",
+    "direct_crop_review": "Six indicator faces visibly contained in both crop types; no obvious tile truncation. This does not establish full-video geometry accuracy.",
+    "normalization_variants": [
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "runtime_gray",
+        "top1_matches": 4,
+        "total": 6,
+        "top_score_range": [
+          0.3403765559196472,
+          0.36894491314888
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "face_only_gray",
+        "top1_matches": 6,
+        "total": 6,
+        "top_score_range": [
+          0.31251779198646545,
+          0.34524470567703247
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "face_only_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.32276883721351624,
+          0.3277694284915924
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "inner_08_gray",
+        "top1_matches": 4,
+        "total": 6,
+        "top_score_range": [
+          0.395484060049057,
+          0.4295620322227478
+        ]
+      },
+      {
+        "crop": "classification_crop_bbox",
+        "mode": "inner_08_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.26933956146240234,
+          0.2987179458141327
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "runtime_gray",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.3631662130355835,
+          0.41254138946533203
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "face_only_gray",
+        "top1_matches": 3,
+        "total": 6,
+        "top_score_range": [
+          0.42409253120422363,
+          0.43741583824157715
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "face_only_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.30568456649780273,
+          0.31790730357170105
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "inner_08_gray",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.41161632537841797,
+          0.463089257478714
+        ]
+      },
+      {
+        "crop": "pixel_bbox",
+        "mode": "inner_08_edges",
+        "top1_matches": 0,
+        "total": 6,
+        "top_score_range": [
+          0.2592313289642334,
+          0.29239729046821594
+        ]
+      }
+    ],
+    "anchors": [
+      {
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "frame_index": 60,
+        "rgb_sha256": "fa07bde20084915c2ce8a2ba8858cb06d6651395419a76ff55849cf07ba1c128",
+        "reviewed_opened_gold": "M6",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M6",
+        "runtime_score": 0.36739,
+        "projection_candidate": "M6",
+        "role_invariant_candidate": "M6",
+        "wan_upper_half_candidate": "M6"
+      },
+      {
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "frame_index": 120,
+        "rgb_sha256": "96bdf235d0e3613f19faec541e8411dff9df830f6318a507575313a7f51553c5",
+        "reviewed_opened_gold": "M6",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M6",
+        "runtime_score": 0.368945,
+        "projection_candidate": "M6",
+        "role_invariant_candidate": "M6",
+        "wan_upper_half_candidate": "M6"
+      },
+      {
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "frame_index": 180,
+        "rgb_sha256": "0e56818e15e442731702c1677d3219dd4cae9b6bf2b0c63d7fa1e267a20445c0",
+        "reviewed_opened_gold": "M6",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M6",
+        "runtime_score": 0.367324,
+        "projection_candidate": "M6",
+        "role_invariant_candidate": "M6",
+        "wan_upper_half_candidate": "M6"
+      },
+      {
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "frame_index": 612,
+        "rgb_sha256": "4ba94faa32b26e23bcd75a30516df65b236c2d53b627f2dd669f830101ef1f24",
+        "reviewed_opened_gold": "M4",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M4",
+        "runtime_score": 0.346056,
+        "projection_candidate": "M1",
+        "role_invariant_candidate": "M1",
+        "wan_upper_half_candidate": "M4"
+      },
+      {
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "frame_index": 1812,
+        "rgb_sha256": "baf57520de513e2b48385e65146379d3d6c5b87c69304a3d5248274209d69b2d",
+        "reviewed_opened_gold": "M4",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M1",
+        "runtime_score": 0.340377,
+        "projection_candidate": "M1",
+        "role_invariant_candidate": "M1",
+        "wan_upper_half_candidate": "M4"
+      },
+      {
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "frame_index": 2718,
+        "rgb_sha256": "4e172965d83cc7e732282f098e3093c59ed40b89a9aa9a7e41223b74f23b6883",
+        "reviewed_opened_gold": "M4",
+        "classification_crop_bbox": [
+          107,
+          41,
+          42,
+          57
+        ],
+        "pixel_bbox": [
+          110,
+          48,
+          36,
+          48
+        ],
+        "runtime_candidate": "M1",
+        "runtime_score": 0.343158,
+        "projection_candidate": "M1",
+        "role_invariant_candidate": "M1",
+        "wan_upper_half_candidate": "M4"
+      }
+    ],
+    "existing_query_size_projection": {
+      "top1_matches": 3,
+      "total": 6
+    },
+    "existing_role_invariant": {
+      "top1_matches": 3,
+      "total": 6
+    },
+    "wan_upper_half_candidate": {
+      "definition": "Use existing _appearance_maps, choose coarse family with existing full-face scores; for M family compare [:, :48, :] with existing _full_face_score(max_shift=4), choose highest class maximum. No parameter sweep.",
+      "anchor_top1_matches": 6,
+      "anchor_total": 6,
+      "scores_are_runtime_confidence": false,
+      "cross_match_countercheck": {
+        "total": 36,
+        "scorable": 16,
+        "baseline_correct": 7,
+        "candidate_correct": 7,
+        "gains": [],
+        "regressions": [],
+        "formal_promotion_evidence": false,
+        "runtime_changed": false
+      },
+      "countercheck_query_scope": "ordinary concealed representatives; not opened-Gold queries. Of 36 queries, 20 lack an eligible reference for their true class; this is inadequate Gold generalization evidence."
+    },
+    "runtime_changed": false,
+    "threshold_changed": false,
+    "formal_promotion_evidence": false,
+    "safe_for_runtime": false,
+    "next_decision": "Do not promote these crop/feature variants. Further model work requires source-qualified opened-Gold class coverage and separate calibration plus independent whole-hand validation."
+  },
+  "learned_classifier_countercheck": {
+    "date": "2026-10-19",
+    "source_head": "49c2c0f8a37a38e52d1b638f1711a5b9924af848",
+    "configuration": {
+      "feature": "unchanged Gold grayscale followed by NumPy 48x72 HOG; 16x16 block, 8x8 stride/cell, 9 unsigned orientation bins with bilinear orientation voting and hard spatial cells; L2-Hys blocks then whole vector L2",
+      "augmentation": "nine fixed crop-preserving variants: original, brightness .72/1.18/.5, existing bottom shadow, existing yellow tone formula, blur .5, 36x48 and 24x32 bicubic down-up sampling",
+      "model": "LinearSVC C=1 and RBF SVC C=1 gamma=scale; balanced; no probability calibration; no parameter sweep"
+    },
+    "anchor_summary_correct_out_of_six": {
+      "True": {
+        "linear": 3,
+        "rbf": 0
+      },
+      "False": {
+        "linear": 6,
+        "rbf": 3
+      }
+    },
+    "training_scopes": {
+      "True": {
+        "training_labels": 65,
+        "augmented_rows": 585,
+        "classes": 29,
+        "training_original_crop_correct": {
+          "linear": 65,
+          "rbf": 65
+        }
+      },
+      "False": {
+        "training_labels": 144,
+        "augmented_rows": 1296,
+        "classes": 34,
+        "training_original_crop_correct": {
+          "linear": 144,
+          "rbf": 144
+        }
+      }
+    },
+    "source_exclusion": "Known Sep26 original match fully excluded. Oct12 group UNKNOWN; training-lineage restriction cannot establish independence for that query. Permissive includes unknown-lineage ordinary sources and is development-only.",
+    "ordinary_cross_match_scorable": 16,
+    "ordinary_cross_match_correct": {
+      "linear": 6,
+      "rbf": 6
+    },
+    "ordinary_cross_match_total": 36,
+    "anchors": [
+      {
+        "clip": "0926",
+        "frame_index": 60,
+        "truth": "M6",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M8",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 60,
+        "truth": "M6",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M6",
+          "rbf": "M6"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 120,
+        "truth": "M6",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M8",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 120,
+        "truth": "M6",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M6",
+          "rbf": "M6"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 180,
+        "truth": "M6",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M8",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "0926",
+        "frame_index": 180,
+        "truth": "M6",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M6",
+          "rbf": "M6"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 612,
+        "truth": "M4",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 612,
+        "truth": "M4",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 1812,
+        "truth": "M4",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 1812,
+        "truth": "M4",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M5"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 2718,
+        "truth": "M4",
+        "strict_lineage": true,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M3"
+        }
+      },
+      {
+        "clip": "1012",
+        "frame_index": 2718,
+        "truth": "M4",
+        "strict_lineage": false,
+        "truth_class_supported": true,
+        "predictions": {
+          "linear": "M4",
+          "rbf": "M5"
+        }
+      }
+    ],
+    "formal_promotion_evidence": false,
+    "runtime_changed": false,
+    "decision": "Do not promote either fixed HOG/SVM candidate. Scores are uncalibrated and source-qualified coverage/generalization remain inadequate."
+  },
+  "recovered_opened_gold_development_intake": {
+    "schema_version": "recovered_opened_gold_development_packet_v0_1",
+    "date": "2026-10-19",
+    "source_head": "49c2c0f8a37a38e52d1b638f1711a5b9924af848",
+    "classes": [
+      "M1",
+      "M6",
+      "P5",
+      "P7",
+      "S8",
+      "SOUTH"
+    ],
+    "source_original_match_groups": 1,
+    "approved": false,
+    "template_eligible": false,
+    "formal_promotion_evidence": false,
+    "same_match_duplicates_not_independent": true,
+    "runtime_changed": false,
+    "raw_pixels_committed_to_git": false,
+    "source_time_note": "Sequential decoded ordinals and RGB hashes are authoritative; frame/fps seconds are descriptive, not an exact VFR PTS mapping.",
+    "review_note": "These are newly extracted assistant-reviewed opened indicators. Existing source lineage evidence does not confer user confirmation of these Gold labels.",
+    "private_packet_filename": "huian_opened_gold_recovered_private_20261019.zip",
+    "private_packet_sha256": "4af91267ecbcc127294782fe94a3ea04d33d86094af88e02bc72e1a6d9c97edf",
+    "new_real_gold_skin_development_classes_beyond_current_bank": [
+      "M1",
+      "P5",
+      "P6",
+      "S8",
+      "SOUTH"
+    ],
+    "sources": [
+      {
+        "sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+        "bytes": 95922257,
+        "frames": 6512,
+        "fps": 29.997696737044144,
+        "duration_seconds": 217.08333333333334,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-02/issue69_hand234_source_segmentation_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1628,
+            "source_seconds": 54.270833333333336,
+            "rgb_sha256": "3470132cdf1540c2e94f2c8648b7e50c2f6bfd669f45bb02ebdd0a8877cde9a3",
+            "reviewed_opened_gold": "S8",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+            "runtime": {
+              "candidate_tile_id": "S8",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.388259,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 3256,
+            "source_seconds": 108.54166666666667,
+            "rgb_sha256": "ae59773b1347512f27d6e6a090d2d1799799b5f48f51073dc8652277005c5994",
+            "reviewed_opened_gold": "SOUTH",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+            "runtime": {
+              "candidate_tile_id": "SOUTH",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.339454,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 4884,
+            "source_seconds": 162.8125,
+            "rgb_sha256": "f5de77a4b5d44ac52c393366ffad504f0ac7820a67c7f2f4d9b5e2fbd9eba1d3",
+            "reviewed_opened_gold": "M6",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+            "runtime": {
+              "candidate_tile_id": "M6",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.366967,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          }
+        ]
+      },
+      {
+        "sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+        "bytes": 91535473,
+        "frames": 6194,
+        "fps": 30,
+        "duration_seconds": 206.46666666666667,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-03/bottom_s234_reference_pin_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1548,
+            "source_seconds": 51.6,
+            "rgb_sha256": "f19fae8182d6b77b505b4f86eededcc5f331e064aa002e9a9d040c77fa9c503b",
+            "reviewed_opened_gold": "S8",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "78c7628233a24b106e0d3bd5d24a98aaeb578580efc467fc3687003b2ef7c47c",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "S8",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.384214,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 3097,
+            "source_seconds": 103.23333333333333,
+            "rgb_sha256": "016216cab634a81390e543afca83a3f155878b85dd85369262f85a481732863a",
+            "reviewed_opened_gold": "M1",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+            "runtime": {
+              "candidate_tile_id": "M1",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.463979,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 4645,
+            "source_seconds": 154.83333333333334,
+            "rgb_sha256": "cce946700a3a7e04eb6f90b6e4a860b4df591bcf798c01d0ea0122b8de0c0e4f",
+            "reviewed_opened_gold": "M1",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": true,
+            "crop_rgb_sha256": "2b63296321ea11b5456063953cff8cc32410651c824a66f77b8d161993613cfd",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "M1",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.459871,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          }
+        ]
+      },
+      {
+        "sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+        "bytes": 82929640,
+        "frames": 5658,
+        "fps": 30,
+        "duration_seconds": 188.6,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-02/issue69_round8_user_confirmed_meld_identity_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1414,
+            "source_seconds": 47.13333333333333,
+            "rgb_sha256": "bc3a056c819f7f4cc08841d29114a40402223a004e7f76b66fbdf93d36d099c8",
+            "reviewed_opened_gold": "P7",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+            "runtime": {
+              "candidate_tile_id": "P7",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.350768,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          },
+          {
+            "frame_index": 2829,
+            "source_seconds": 94.3,
+            "rgb_sha256": "acfad6ec303e6db12f09b5a8ec987b4c113b02522f14e9eeb52c691c85cee729",
+            "reviewed_opened_gold": null,
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "SETTLEMENT_SCREEN_NO_OPENED_INDICATOR_QUERY",
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 4243,
+            "source_seconds": 141.43333333333334,
+            "rgb_sha256": "8945f5171343048656c204130d6b611fd71e75ea85a0256236bd31064047d980",
+            "reviewed_opened_gold": "P5",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+            "runtime": {
+              "candidate_tile_id": "P5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.457052,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": true
+          }
+        ]
+      },
+      {
+        "sha256": "3c15ab16ede323dc1e826312a624f18a4a6a90f710572d2ae69c58388bdb1d8e",
+        "bytes": 82742742,
+        "frames": 5658,
+        "fps": 30,
+        "duration_seconds": 188.6,
+        "size": [
+          1108,
+          512
+        ],
+        "original_match_group": "reviewed_match_2026_09_26_eight_hand",
+        "lineage_reference": "references/vision/2026-10-03/existing_video_meld_face_harvest_spec_v0_1.json",
+        "anchors": [
+          {
+            "frame_index": 1414,
+            "source_seconds": 47.13333333333333,
+            "rgb_sha256": "184a62dd0a2c07a996acb31aca5e46262faf1a36a35e748554d7a34e342e4d52",
+            "reviewed_opened_gold": "P7",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "28509a8a06f3017fb74515dd544c532ed81e3f2804936ab8610287fe22914b99",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "P7",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.351367,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 2829,
+            "source_seconds": 94.3,
+            "rgb_sha256": "be80ccf94ffbf2d594de890ebfd8ab24befebc762ebc87251bf83262a172bbe2",
+            "reviewed_opened_gold": null,
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "SETTLEMENT_SCREEN_NO_OPENED_INDICATOR_QUERY",
+            "pixel_crop_in_private_packet": false
+          },
+          {
+            "frame_index": 4243,
+            "source_seconds": 141.43333333333334,
+            "rgb_sha256": "ad45f4ce47536bca7e6add91b2d3aefb93ae68dc604eb5dd08d1d04858a03b80",
+            "reviewed_opened_gold": "P5",
+            "label_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+            "approved": false,
+            "status": "STAGED_DEVELOPMENT_QUERY_NOT_ADMITTED",
+            "frame_geometry_untrusted": false,
+            "crop_rgb_sha256": "61983b7e783388ab963c77435828b7a5837edd88593ff69ea89c5e99f4b6fbd7",
+            "same_match_repeat_not_new_class_or_independence_credit": true,
+            "runtime": {
+              "candidate_tile_id": "P5",
+              "tile_id": "UNKNOWN",
+              "tile_confidence": 0.457092,
+              "identity_reason": "below_confidence_threshold",
+              "pixel_bbox": [
+                110,
+                48,
+                36,
+                48
+              ],
+              "classification_crop_bbox": [
+                107,
+                41,
+                42,
+                57
+              ]
+            },
+            "pixel_crop_in_private_packet": false
+          }
+        ]
+      }
+    ],
+    "truth_correction_reference": "truth_corrections_20261024"
+  },
+  "limits": [
+    "No full continuous truth set or wrong-acceptance accuracy was measured.",
+    "The 9.1-second derived clip is not the 184-second fba5... original with the same filename; original timestamps/truth were not transferred.",
+    "The second clip original match was UNKNOWN at baseline measurement; direct room/date settlement evidence now resolves it to reviewed_match_2026_10_12_room324504. It remains revealed development.",
+    "Current-template product behavior is measured; same-match template exclusion and independent holdout status are not claimed.",
+    "Runtime timing excludes Windows capture, UI scheduling and end-to-end latency."
+  ],
+  "blocker_attribution_20261024": {
+    "source_head": "1fdc7aa60309122e94bfac2f219f0a8b409aef1c",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "automatic_acceptance_claim": false,
+    "scope": "Stateless snapshot interventions; not classifier repair, calibration, continuous truth or live validation.",
+    "truth_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "annotation_after_model_output": true,
+    "threshold": 0.82,
+    "executor_enabled": false,
+    "sources": [
+      {
+        "clip": "short",
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "truth_reference": "references/vision/2026-10-24/short_clip_reviewed_sample_truth_v0_1.json",
+        "replay_windows": 44,
+        "automatic_advice_windows": 0,
+        "comparable_windows": 37,
+        "excluded_windows": 7,
+        "calculation_allowed_windows": {
+          "machine": 0,
+          "gold_only": 3,
+          "hand_only": 0,
+          "gold_and_hand": 37
+        },
+        "raw_candidate_exact_hands": 37,
+        "rejected_candidate_decisions": {
+          "M6|below_confidence_threshold": 15,
+          "S2|below_confidence_threshold": 35,
+          "M3|below_confidence_threshold": 2
+        },
+        "gold_and_hand_shanten_distribution": {
+          "0": 37
+        },
+        "details": []
+      },
+      {
+        "clip": "long",
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "truth_reference": "references/vision/2026-10-24/long_clip_reviewed_sample_truth_v0_1.json",
+        "replay_windows": 473,
+        "automatic_advice_windows": 0,
+        "comparable_windows": 2,
+        "excluded_windows": 471,
+        "calculation_allowed_windows": {
+          "machine": 0,
+          "gold_only": 0,
+          "hand_only": 0,
+          "gold_and_hand": 2
+        },
+        "raw_candidate_exact_hands": 2,
+        "rejected_candidate_decisions": {
+          "P2|class_not_cross_session_validated_in_region": 4,
+          "S3|below_confidence_threshold": 2,
+          "S4|below_confidence_threshold": 2,
+          "S8|below_confidence_threshold": 2,
+          "S9|below_confidence_threshold": 6,
+          "S2|below_confidence_threshold": 1,
+          "S7|below_confidence_threshold": 1
+        },
+        "gold_and_hand_shanten_distribution": {
+          "1": 1,
+          "0": 1
+        },
+        "details": [
+          {
+            "frames": [
+              1800,
+              1806,
+              1812
+            ],
+            "geometry_untrusted": false,
+            "machine_hand_exact": false,
+            "original_adapter_issues": [
+              "runtime_hand_not_fully_trusted",
+              "runtime_gold_frame_identity_untrusted",
+              "runtime_gold_not_fully_trusted",
+              "player_river_missing",
+              "opponent_river_missing",
+              "opponent_meld_missing"
+            ],
+            "candidate_diagnostic": {
+              "whole_hand_exact": true,
+              "missing_true_tiles": {},
+              "extra_candidate_tiles": {},
+              "rejected_candidates": [
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.882461
+                },
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.862129
+                },
+                {
+                  "candidate_tile_id": "S3",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.611701
+                },
+                {
+                  "candidate_tile_id": "S4",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.585948
+                },
+                {
+                  "candidate_tile_id": "S8",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.817704
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.788883
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.784202
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.766816
+                }
+              ]
+            },
+            "decisions": {
+              "machine": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "hand_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_and_hand": {
+                "calculation_allowed": true,
+                "shanten": 1,
+                "phase": "PRE_DRAW",
+                "gate_issues": [
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              }
+            }
+          },
+          {
+            "frames": [
+              2706,
+              2712,
+              2718
+            ],
+            "geometry_untrusted": false,
+            "machine_hand_exact": false,
+            "original_adapter_issues": [
+              "runtime_hand_not_fully_trusted",
+              "runtime_gold_frame_identity_untrusted",
+              "runtime_gold_not_fully_trusted",
+              "player_river_missing",
+              "opponent_river_missing",
+              "opponent_meld_missing"
+            ],
+            "candidate_diagnostic": {
+              "whole_hand_exact": true,
+              "missing_true_tiles": {},
+              "extra_candidate_tiles": {},
+              "rejected_candidates": [
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.885312
+                },
+                {
+                  "candidate_tile_id": "P2",
+                  "identity_reason": "class_not_cross_session_validated_in_region",
+                  "tile_confidence": 0.84791
+                },
+                {
+                  "candidate_tile_id": "S2",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.819726
+                },
+                {
+                  "candidate_tile_id": "S3",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.589543
+                },
+                {
+                  "candidate_tile_id": "S4",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.604685
+                },
+                {
+                  "candidate_tile_id": "S7",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.743066
+                },
+                {
+                  "candidate_tile_id": "S8",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.808063
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.791571
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.761247
+                },
+                {
+                  "candidate_tile_id": "S9",
+                  "identity_reason": "below_confidence_threshold",
+                  "tile_confidence": 0.763814
+                }
+              ]
+            },
+            "decisions": {
+              "machine": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "hand_untrusted",
+                  "hand_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "hand_only": {
+                "calculation_allowed": false,
+                "shanten": null,
+                "phase": null,
+                "gate_issues": [
+                  "gold_untrusted",
+                  "gold_identity_unknown",
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              },
+              "gold_and_hand": {
+                "calculation_allowed": true,
+                "shanten": 0,
+                "phase": "PRE_DRAW",
+                "gate_issues": [
+                  "river_untrusted:0",
+                  "river_untrusted:1",
+                  "meld_identity_unknown:0",
+                  "meld_untrusted:1"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "limits": [
+      "Short 37 overlapping windows are one known development match, not 37 independent hands.",
+      "Long two windows do not represent all 473 windows; original match lineage remains UNKNOWN.",
+      "Source and RGB hashes bind sampled-frame truth; no unsampled-frame truth is inferred.",
+      "Manual substitutions are never counted as automatic recognition or promotion.",
+      "Snapshot interventions preserve machine geometry/melds/source/physical checks; no stateful confirmation/recovery claim.",
+      "Shanten numbers are calculator outputs on substituted inputs, not independent rule validation."
+    ]
+  },
+  "truth_corrections_20261024": {
+    "supersedes_commit": "cbb01601df101a2213d06b0ca71a69acb18454e4",
+    "long_clip": "Previous S6/G labels were assistant errors. Enlarged full-frame and crop review shows S4/S8; all six sampled frame labels corrected, pixels unchanged. Withdraw S6->S4 and G->S8 error claims.",
+    "gold_packet": "Previous P6 anchor is P7 (3 green + 4 red dots). Withdraw P6->P7 error claim. Corrected private packet version preserves pixel bytes.",
+    "corrected_packet_sha256": "4af91267ecbcc127294782fe94a3ea04d33d86094af88e02bc72e1a6d9c97edf",
+    "original_packet_sha256": "3c507e06395a3993f609ea09c730741eaa26cd5c17c93497629c047d0e97dfa9"
+  },
+  "gold_sift_restoration_20261024": {
+    "parent_head": "3113d5859c8c0a4492687a8e707e531b90e4ec9c",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "runtime_changed": false,
+    "threshold_changed": false,
+    "executor_enabled": false,
+    "automatic_advice_baseline_unchanged": "0/517",
+    "repairs": [
+      "Tile-only templates no longer re-cropped with original source coordinates; before repair first crop was entirely black and GoldTileClassifier.from_dataset raised ValueError; after repair all 34 classes load.",
+      "Wan identity compares the upper numeral separately instead of only the common lower Wan glyph.",
+      "Hough pip counts retained as diagnostics; no unconditional override of descriptor identity (P7 was incorrectly changed to P5)."
+    ],
+    "same_style_reference_bank_counterexample": {
+      "method": "Append six restored real-Gold NCC features to the product bank; packet query excludes its own exact crop; ranking diagnostic only",
+      "wrong_candidates_at_082": [
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "baseline": {
+            "tile": "M4",
+            "score": 0.34605610370635986
+          },
+          "candidate": {
+            "tile": "M6",
+            "score": 0.8271059989929199
+          },
+          "same_crop_excluded": false
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "baseline": {
+            "tile": "M1",
+            "score": 0.3403765559196472
+          },
+          "candidate": {
+            "tile": "M6",
+            "score": 0.827595055103302
+          },
+          "same_crop_excluded": false
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "baseline": {
+            "tile": "M1",
+            "score": 0.343158096075058
+          },
+          "candidate": {
+            "tile": "M6",
+            "score": 0.8255991339683533
+          },
+          "same_crop_excluded": false
+        }
+      ],
+      "decision": "REJECTED: three M4 anchors become high-score M6; do not admit this bank or rescale scores."
+    },
+    "query_scope": "Six previously reviewed replay anchors (M6 x3, M4 x3) and six corrected packet crops M1/M6/P5/P7/S8/SOUTH. 12 revealed anchors across seven identities, not independent matches.",
+    "full_product_reference_bank": {
+      "schema_version": "gold_sift_development_probe_v0_1",
+      "development_only": true,
+      "formal_promotion_evidence": false,
+      "runtime_changed": false,
+      "safe_for_executor": false,
+      "scores_are_runtime_confidence": false,
+      "excluded_known_matches": [],
+      "training_labels": 147,
+      "unresolved_lineage_training_labels": 147,
+      "class_count": 34,
+      "queries": 12,
+      "raw_ncc_correct": 10,
+      "raw_full_face_sift_correct": 11,
+      "candidate_correct": 12,
+      "rows": [
+        {
+          "query": "short_baseline:60",
+          "truth": "M6",
+          "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+          "crop_rgb_sha256": "17eb3db376119536a15fa309e9cf97bdcc45fd61ad2e3c11da858c5b2b39b626",
+          "ncc_candidate": "M6",
+          "ncc_score": 0.3673904538154602,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 12,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "short_baseline:120",
+          "truth": "M6",
+          "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+          "crop_rgb_sha256": "a1806c27da8529063eb6b74073b867869dd85b1190a56448a2d9b8c6afb0236c",
+          "ncc_candidate": "M6",
+          "ncc_score": 0.36894491314888,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 9,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "short_baseline:180",
+          "truth": "M6",
+          "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+          "crop_rgb_sha256": "f86bb78e64ea9e20ae19d80780ef6862e45a9fe56767965e922576c7ab94c7a0",
+          "ncc_candidate": "M6",
+          "ncc_score": 0.3673244118690491,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 9,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+          "crop_rgb_sha256": "4b15d7e38bb640412610676b9ef25d98f68584451ed933a6760b51327d6e5a38",
+          "ncc_candidate": "M4",
+          "ncc_score": 0.34605610370635986,
+          "full_face_sift_candidate": "M4",
+          "candidate": "M4",
+          "method": "sift_wan_numeral",
+          "evidence_count": 14,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+          "crop_rgb_sha256": "f594daf741c1aca87c8fa70b22ff8a908cadc448b10c0b37a967af1689d1f918",
+          "ncc_candidate": "M1",
+          "ncc_score": 0.3403765559196472,
+          "full_face_sift_candidate": "M4",
+          "candidate": "M4",
+          "method": "sift_wan_numeral",
+          "evidence_count": 14,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+          "crop_rgb_sha256": "91f16b1d00d1cc04debcdff714e1ac9d5a466281b1824bb1a350fa1f6ee79b58",
+          "ncc_candidate": "M1",
+          "ncc_score": 0.343158096075058,
+          "full_face_sift_candidate": "M4",
+          "candidate": "M4",
+          "method": "sift_wan_numeral",
+          "evidence_count": 14,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "gold_S8_source1_frame1628.png",
+          "truth": "S8",
+          "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+          "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+          "ncc_candidate": "S8",
+          "ncc_score": 0.388258695602417,
+          "full_face_sift_candidate": "S8",
+          "candidate": "S8",
+          "method": "sift",
+          "evidence_count": 38,
+          "second_best_evidence_count": 7,
+          "pip_count": null
+        },
+        {
+          "query": "gold_SOUTH_source1_frame3256.png",
+          "truth": "SOUTH",
+          "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+          "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+          "ncc_candidate": "SOUTH",
+          "ncc_score": 0.3394542634487152,
+          "full_face_sift_candidate": "SOUTH",
+          "candidate": "SOUTH",
+          "method": "sift",
+          "evidence_count": 48,
+          "second_best_evidence_count": 15,
+          "pip_count": null
+        },
+        {
+          "query": "gold_M6_source1_frame4884.png",
+          "truth": "M6",
+          "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+          "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+          "ncc_candidate": "M6",
+          "ncc_score": 0.3669673204421997,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 10,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "gold_M1_source2_frame3097.png",
+          "truth": "M1",
+          "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+          "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+          "ncc_candidate": "M1",
+          "ncc_score": 0.4639790654182434,
+          "full_face_sift_candidate": "M3",
+          "candidate": "M1",
+          "method": "sift_wan_numeral",
+          "evidence_count": 4,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "gold_P7_source3_frame1414.png",
+          "truth": "P7",
+          "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+          "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+          "ncc_candidate": "P7",
+          "ncc_score": 0.35076823830604553,
+          "full_face_sift_candidate": "P7",
+          "candidate": "P7",
+          "method": "sift",
+          "evidence_count": 20,
+          "second_best_evidence_count": 18,
+          "pip_count": 5
+        },
+        {
+          "query": "gold_P5_source3_frame4243.png",
+          "truth": "P5",
+          "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+          "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+          "ncc_candidate": "P5",
+          "ncc_score": 0.45705223083496094,
+          "full_face_sift_candidate": "P5",
+          "candidate": "P5",
+          "method": "sift",
+          "evidence_count": 27,
+          "second_best_evidence_count": 21,
+          "pip_count": 5
+        }
+      ]
+    },
+    "known_match_excluded_development_bank": {
+      "schema_version": "gold_sift_development_probe_v0_1",
+      "development_only": true,
+      "formal_promotion_evidence": false,
+      "runtime_changed": false,
+      "safe_for_executor": false,
+      "scores_are_runtime_confidence": false,
+      "excluded_known_matches": [
+        "reviewed_match_2026_09_26_eight_hand"
+      ],
+      "training_labels": 146,
+      "unresolved_lineage_training_labels": 80,
+      "class_count": 34,
+      "queries": 12,
+      "raw_ncc_correct": 6,
+      "raw_full_face_sift_correct": 11,
+      "candidate_correct": 12,
+      "rows": [
+        {
+          "query": "short_baseline:60",
+          "truth": "M6",
+          "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+          "crop_rgb_sha256": "17eb3db376119536a15fa309e9cf97bdcc45fd61ad2e3c11da858c5b2b39b626",
+          "ncc_candidate": "M7",
+          "ncc_score": 0.32125982642173767,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 12,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "short_baseline:120",
+          "truth": "M6",
+          "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+          "crop_rgb_sha256": "a1806c27da8529063eb6b74073b867869dd85b1190a56448a2d9b8c6afb0236c",
+          "ncc_candidate": "M7",
+          "ncc_score": 0.323704332113266,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 9,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "short_baseline:180",
+          "truth": "M6",
+          "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+          "crop_rgb_sha256": "f86bb78e64ea9e20ae19d80780ef6862e45a9fe56767965e922576c7ab94c7a0",
+          "ncc_candidate": "M7",
+          "ncc_score": 0.3209017813205719,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 9,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+          "crop_rgb_sha256": "4b15d7e38bb640412610676b9ef25d98f68584451ed933a6760b51327d6e5a38",
+          "ncc_candidate": "M4",
+          "ncc_score": 0.34605610370635986,
+          "full_face_sift_candidate": "M4",
+          "candidate": "M4",
+          "method": "sift_wan_numeral",
+          "evidence_count": 14,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+          "crop_rgb_sha256": "f594daf741c1aca87c8fa70b22ff8a908cadc448b10c0b37a967af1689d1f918",
+          "ncc_candidate": "M1",
+          "ncc_score": 0.3403765559196472,
+          "full_face_sift_candidate": "M4",
+          "candidate": "M4",
+          "method": "sift_wan_numeral",
+          "evidence_count": 14,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+          "crop_rgb_sha256": "91f16b1d00d1cc04debcdff714e1ac9d5a466281b1824bb1a350fa1f6ee79b58",
+          "ncc_candidate": "M1",
+          "ncc_score": 0.343158096075058,
+          "full_face_sift_candidate": "M4",
+          "candidate": "M4",
+          "method": "sift_wan_numeral",
+          "evidence_count": 14,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "gold_S8_source1_frame1628.png",
+          "truth": "S8",
+          "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+          "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+          "ncc_candidate": "S8",
+          "ncc_score": 0.388258695602417,
+          "full_face_sift_candidate": "S8",
+          "candidate": "S8",
+          "method": "sift",
+          "evidence_count": 38,
+          "second_best_evidence_count": 7,
+          "pip_count": null
+        },
+        {
+          "query": "gold_SOUTH_source1_frame3256.png",
+          "truth": "SOUTH",
+          "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+          "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+          "ncc_candidate": "SOUTH",
+          "ncc_score": 0.3394542634487152,
+          "full_face_sift_candidate": "SOUTH",
+          "candidate": "SOUTH",
+          "method": "sift",
+          "evidence_count": 48,
+          "second_best_evidence_count": 15,
+          "pip_count": null
+        },
+        {
+          "query": "gold_M6_source1_frame4884.png",
+          "truth": "M6",
+          "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+          "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+          "ncc_candidate": "M7",
+          "ncc_score": 0.32307419180870056,
+          "full_face_sift_candidate": "M6",
+          "candidate": "M6",
+          "method": "sift_wan_numeral",
+          "evidence_count": 10,
+          "second_best_evidence_count": 5,
+          "pip_count": null
+        },
+        {
+          "query": "gold_M1_source2_frame3097.png",
+          "truth": "M1",
+          "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+          "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+          "ncc_candidate": "M1",
+          "ncc_score": 0.4639790654182434,
+          "full_face_sift_candidate": "M3",
+          "candidate": "M1",
+          "method": "sift_wan_numeral",
+          "evidence_count": 4,
+          "second_best_evidence_count": 2,
+          "pip_count": null
+        },
+        {
+          "query": "gold_P7_source3_frame1414.png",
+          "truth": "P7",
+          "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+          "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+          "ncc_candidate": "P7",
+          "ncc_score": 0.35076823830604553,
+          "full_face_sift_candidate": "P7",
+          "candidate": "P7",
+          "method": "sift",
+          "evidence_count": 20,
+          "second_best_evidence_count": 18,
+          "pip_count": 5
+        },
+        {
+          "query": "gold_P5_source3_frame4243.png",
+          "truth": "P5",
+          "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+          "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+          "ncc_candidate": "P5",
+          "ncc_score": 0.45705223083496094,
+          "full_face_sift_candidate": "P5",
+          "candidate": "P5",
+          "method": "sift",
+          "evidence_count": 27,
+          "second_best_evidence_count": 21,
+          "pip_count": 5
+        }
+      ]
+    },
+    "ordinary_original_match_disjoint_stress": {
+      "summary": {
+        "ncc": {
+          "correct": 8,
+          "total": 16
+        },
+        "full_sift": {
+          "correct": 6,
+          "total": 16
+        },
+        "numeral_sift": {
+          "correct": 6,
+          "total": 16
+        },
+        "queries": 36,
+        "unscorable": 20
+      },
+      "rows": [
+        {
+          "query_image": "templates/hand/tile_a6df97037ce092fb_M2.png",
+          "query_source_sha": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+          "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+          "truth": "M2",
+          "scorable": false,
+          "ncc": "M3",
+          "full_sift": "M3",
+          "numeral_sift": "M3"
+        },
+        {
+          "query_image": "templates/hand/tile_9069d8fece505abc_M6.png",
+          "query_source_sha": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+          "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+          "truth": "M6",
+          "scorable": false,
+          "ncc": "M3",
+          "full_sift": "M8",
+          "numeral_sift": "M8"
+        },
+        {
+          "query_image": "templates/hand/tile_1edd2cb9eab772ad_N.png",
+          "query_source_sha": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+          "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+          "truth": "N",
+          "scorable": false,
+          "ncc": "P1",
+          "full_sift": "M7",
+          "numeral_sift": "M7"
+        },
+        {
+          "query_image": "templates/hand/tile_81d82ffc6d7f7e95_P3.png",
+          "query_source_sha": "d50f6722982adb0fdfe3ad8e0b9d1f4155defcfbefebd77e8f10cbc4d3b19a78",
+          "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+          "truth": "P3",
+          "scorable": true,
+          "ncc": "P3",
+          "full_sift": "P8",
+          "numeral_sift": "P8"
+        },
+        {
+          "query_image": "templates/hand/tile_0d5b59c02be15c02_P8.png",
+          "query_source_sha": "1597ef429288ad50ce26340fcda580c17c735cf3875845c4c309db5652853b22",
+          "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+          "truth": "P8",
+          "scorable": true,
+          "ncc": "P8",
+          "full_sift": "P6",
+          "numeral_sift": "P6"
+        },
+        {
+          "query_image": "templates/hand/tile_34928d2442cfb53b_S2.pgm",
+          "query_source_sha": "1560c1e04a632f07dc5f53947ba3080ed93ff927a7bd028a457f3415b0bc69a3",
+          "query_match_group": "reviewed_match_2026_09_19_eight_hand",
+          "truth": "S2",
+          "scorable": true,
+          "ncc": "S2",
+          "full_sift": "S6",
+          "numeral_sift": "S6"
+        },
+        {
+          "query_image": "templates/hand/tile_4d8f12145129d9de_B.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "B",
+          "scorable": false,
+          "ncc": "S6",
+          "full_sift": "S2",
+          "numeral_sift": "S2"
+        },
+        {
+          "query_image": "templates/hand/tile_e7d5ade06a60ecb9_E.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "E",
+          "scorable": false,
+          "ncc": "S2",
+          "full_sift": "M4",
+          "numeral_sift": "M4"
+        },
+        {
+          "query_image": "templates/draw/tile_9de8087eab64e57d_G.png",
+          "query_source_sha": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "G",
+          "scorable": false,
+          "ncc": "P8",
+          "full_sift": "M6",
+          "numeral_sift": "M6"
+        },
+        {
+          "query_image": "templates/hand/tile_590a5a3a3bade6e8_M1.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "M1",
+          "scorable": false,
+          "ncc": "M5",
+          "full_sift": "M3",
+          "numeral_sift": "M2"
+        },
+        {
+          "query_image": "templates/hand/tile_8610212dc312ea9c_M3.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "M3",
+          "scorable": true,
+          "ncc": "M5",
+          "full_sift": "M3",
+          "numeral_sift": "M3"
+        },
+        {
+          "query_image": "templates/draw/tile_8514064cc2dd0141_M7.png",
+          "query_source_sha": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "M7",
+          "scorable": false,
+          "ncc": "S2",
+          "full_sift": "M5",
+          "numeral_sift": "M5"
+        },
+        {
+          "query_image": "templates/draw/tile_aaa921b08dbfec79_M8.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "M8",
+          "scorable": false,
+          "ncc": "M5",
+          "full_sift": "M4",
+          "numeral_sift": "M6"
+        },
+        {
+          "query_image": "templates/hand/tile_45c563114e6a299a_P1.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P1",
+          "scorable": false,
+          "ncc": "N",
+          "full_sift": "M4",
+          "numeral_sift": "M3"
+        },
+        {
+          "query_image": "templates/hand/tile_8818663c01348a1c_P4.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P4",
+          "scorable": true,
+          "ncc": "P4",
+          "full_sift": "P4",
+          "numeral_sift": "P4"
+        },
+        {
+          "query_image": "templates/hand/tile_6fbf70db65217cf7_P5.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P5",
+          "scorable": true,
+          "ncc": "M5",
+          "full_sift": "P5",
+          "numeral_sift": "P5"
+        },
+        {
+          "query_image": "templates/hand/tile_a228f14a72f4d663_P6.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P6",
+          "scorable": false,
+          "ncc": "P8",
+          "full_sift": "P8",
+          "numeral_sift": "P8"
+        },
+        {
+          "query_image": "templates/hand/tile_12ea48d4131b07bd_P7.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P7",
+          "scorable": false,
+          "ncc": "P8",
+          "full_sift": "P8",
+          "numeral_sift": "P8"
+        },
+        {
+          "query_image": "templates/hand/tile_c6408037e472dc8f_P8.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P8",
+          "scorable": true,
+          "ncc": "P8",
+          "full_sift": "P8",
+          "numeral_sift": "P8"
+        },
+        {
+          "query_image": "templates/hand/tile_9d1cad9fdf0f71a8_P9.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "P9",
+          "scorable": false,
+          "ncc": "M2",
+          "full_sift": "N",
+          "numeral_sift": "N"
+        },
+        {
+          "query_image": "templates/hand/tile_ee2c702c6ae17185_R.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "R",
+          "scorable": false,
+          "ncc": "S2",
+          "full_sift": "M5",
+          "numeral_sift": "M5"
+        },
+        {
+          "query_image": "templates/hand/tile_e25498dd9f87a10f_S1.png",
+          "query_source_sha": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "S1",
+          "scorable": false,
+          "ncc": "P8",
+          "full_sift": "P5",
+          "numeral_sift": "P5"
+        },
+        {
+          "query_image": "templates/hand/tile_de4789bc19dbc91e_S2.png",
+          "query_source_sha": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "S2",
+          "scorable": true,
+          "ncc": "S2",
+          "full_sift": "S2",
+          "numeral_sift": "S2"
+        },
+        {
+          "query_image": "templates/hand/tile_cd9225f1bd61526f_S4.png",
+          "query_source_sha": "dcac8580c55879a2e12d64961caa84a2ac7fb009b422691381a3eac24e661d6a",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "S4",
+          "scorable": true,
+          "ncc": "S6",
+          "full_sift": "S2",
+          "numeral_sift": "S2"
+        },
+        {
+          "query_image": "templates/draw/tile_54a8c9a2b1619277_S6.png",
+          "query_source_sha": "4d68a8e72498d7290411e97f806913733b376dd880cbb87b02b711482a68e4fe",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "S6",
+          "scorable": true,
+          "ncc": "S4",
+          "full_sift": "S4",
+          "numeral_sift": "S4"
+        },
+        {
+          "query_image": "templates/hand/tile_d21779b652836dd8_S8.png",
+          "query_source_sha": "627b6c2022d3f910b3e2d258360440ccb17d3fb515cc0982c6f74a3b99409bed",
+          "query_match_group": "reviewed_match_concealed_recovery_a",
+          "truth": "S8",
+          "scorable": false,
+          "ncc": "S6",
+          "full_sift": "S6",
+          "numeral_sift": "S6"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s07_M3.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "M3",
+          "scorable": true,
+          "ncc": "M2",
+          "full_sift": "M3",
+          "numeral_sift": "M3"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s08_M4.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "M4",
+          "scorable": false,
+          "ncc": "M3",
+          "full_sift": "M3",
+          "numeral_sift": "M3"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s09_M5.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "M5",
+          "scorable": false,
+          "ncc": "M3",
+          "full_sift": "M3",
+          "numeral_sift": "M3"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s00_P3.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "P3",
+          "scorable": true,
+          "ncc": "P3",
+          "full_sift": "P8",
+          "numeral_sift": "P8"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s01_P4.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "P4",
+          "scorable": true,
+          "ncc": "P4",
+          "full_sift": "P8",
+          "numeral_sift": "P8"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s02_P5.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "P5",
+          "scorable": true,
+          "ncc": "M6",
+          "full_sift": "P4",
+          "numeral_sift": "P4"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s03_S4.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "S4",
+          "scorable": true,
+          "ncc": "S8",
+          "full_sift": "S2",
+          "numeral_sift": "S2"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s04_S5.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "S5",
+          "scorable": false,
+          "ncc": "P9",
+          "full_sift": "S2",
+          "numeral_sift": "S2"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s05_S6.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "S6",
+          "scorable": true,
+          "ncc": "S4",
+          "full_sift": "S4",
+          "numeral_sift": "S4"
+        },
+        {
+          "query_image": "templates/hand/960_hand_region_s06_S7.png",
+          "query_source_sha": "04bf012ce76304b7d6e085268250a9403c2f8ed8f90946cdf15f7c472b90da96",
+          "query_match_group": "reviewed_match_concealed_recovery_b",
+          "truth": "S7",
+          "scorable": false,
+          "ncc": "S2",
+          "full_sift": "S2",
+          "numeral_sift": "S2"
+        }
+      ]
+    },
+    "limits": [
+      "SIFT match counts are not calibrated Runtime confidence and are not compared to 0.82.",
+      "Known-match-excluded development bank still contains 80 unresolved-lineage labels; not independent Gold validation.",
+      "Ordinary cross-match stress uses existing approved-label truth and has 20 queries without a disjoint true-class reference; it is not a Gold-domain accuracy estimate.",
+      "16 scorable stress queries: NCC 8 correct, full SIFT 6, numeral SIFT 6; no full-SIFT-to-numeral-SIFT regression in that small stress set.",
+      "Runtime still uses the unchanged TemplateTileClassifier. This GoldTileClassifier is an isolated experimental path; no UI/Hint advice acceptance improvement is claimed."
+    ]
+  },
+  "gold_temporal_shadow_20261024": {
+    "parent_head": "8f79330b8f172cd95c588e76606549591474a4ce",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+    "truth_review": "Inspected every detected Gold crop in ordered contact sheets, plus full-frame/Gold-region opening 0..78 and settlement 2826/2832/2844. Truth is scoring-only, not read by classifier.",
+    "runtime_changed": false,
+    "threshold_changed": false,
+    "executor_enabled": false,
+    "baseline_trusted_advice_unchanged": "0/517",
+    "candidate_frames": 506,
+    "reviewed_visible_gold_frames": 508,
+    "readable_gold_misses": 2,
+    "wrong_identity_frames": 0,
+    "reviewed_no_identity_frames": 13,
+    "no_identity_false_candidates": 0,
+    "sources": [
+      {
+        "schema_version": "opened_gold_temporal_shadow_v0_1",
+        "development_only": true,
+        "formal_promotion_evidence": false,
+        "runtime_changed": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "candidate_counts_are_runtime_confidence": false,
+        "source_sha256": "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357",
+        "fps": 30.0,
+        "sampled_frames": 46,
+        "detected_gold_crops": 46,
+        "frame_status_counts": {
+          "candidate": 46
+        },
+        "candidate_counts": {
+          "M6": 46
+        },
+        "windows": 44,
+        "candidate_agreement_windows": 44,
+        "whole_geometry_trusted_agreement_windows": 37,
+        "first_candidate_agreement_source_seconds": 0.4,
+        "excluded_known_matches": [
+          "reviewed_match_2026_09_26_eight_hand"
+        ],
+        "unresolved_lineage_training_labels": 80,
+        "elapsed_seconds": 1.648,
+        "reviewed_visible_gold_frames": 46,
+        "correct_visible_gold_candidates": 46,
+        "readable_gold_missed_frames": [],
+        "wrong_identity_frames": [],
+        "reviewed_no_identity_frames": 0,
+        "no_identity_false_candidate_frames": [],
+        "reviewed_truth_ranges": [
+          {
+            "first_sample_frame": 0,
+            "last_sample_frame": 270,
+            "stride": 6,
+            "gold": "M6"
+          }
+        ],
+        "observations_sha256": "fdbadb130f46cf469c7dc6fa72e6878e309e8a16b788581091296d7acaa725f8",
+        "crop_sequence_sha256": "9623fa4c1e221b82b220d83a7f6928b01c7f3afb8922e870c15641c1988461ea",
+        "exception_observations": [],
+        "first_visible_gold_source_seconds": 0,
+        "candidate_agreement_acquisition_seconds": 0.4
+      },
+      {
+        "schema_version": "opened_gold_temporal_shadow_v0_1",
+        "development_only": true,
+        "formal_promotion_evidence": false,
+        "runtime_changed": false,
+        "safe_for_runtime": false,
+        "safe_for_hint": false,
+        "safe_for_executor": false,
+        "candidate_counts_are_runtime_confidence": false,
+        "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "fps": 30.0,
+        "sampled_frames": 475,
+        "detected_gold_crops": 461,
+        "frame_status_counts": {
+          "gold_component_count_not_one": 14,
+          "no_unique_identity": 1,
+          "candidate": 460
+        },
+        "candidate_counts": {
+          "UNKNOWN": 15,
+          "M4": 460
+        },
+        "windows": 473,
+        "candidate_agreement_windows": 458,
+        "whole_geometry_trusted_agreement_windows": 241,
+        "first_candidate_agreement_source_seconds": 2.8,
+        "excluded_known_matches": [
+          "reviewed_match_2026_09_26_eight_hand",
+          "reviewed_match_2026_10_12_room324504"
+        ],
+        "unresolved_lineage_training_labels": 80,
+        "elapsed_seconds": 14.053,
+        "reviewed_visible_gold_frames": 462,
+        "correct_visible_gold_candidates": 460,
+        "readable_gold_missed_frames": [
+          60,
+          66
+        ],
+        "wrong_identity_frames": [],
+        "reviewed_no_identity_frames": 13,
+        "no_identity_false_candidate_frames": [],
+        "reviewed_truth_ranges": [
+          {
+            "first_sample_frame": 0,
+            "last_sample_frame": 54,
+            "stride": 6,
+            "gold": null,
+            "scene": "not_opened_or_blank_opening_animation"
+          },
+          {
+            "first_sample_frame": 60,
+            "last_sample_frame": 2826,
+            "stride": 6,
+            "gold": "M4"
+          },
+          {
+            "first_sample_frame": 2832,
+            "last_sample_frame": 2844,
+            "stride": 6,
+            "gold": null,
+            "scene": "settlement"
+          }
+        ],
+        "observations_sha256": "2dd04a2d5899a2816190ecf092df09163423454b8a8a749facc64b71ccf9759c",
+        "crop_sequence_sha256": "41d32fac5054cc31483e7c2b21f40e3e6516bd948427ed8c38562cc3af2c643e",
+        "exception_observations": [
+          {
+            "frame": 0,
+            "full_frame_rgb_sha256": "9d080e395b0f3e59da566a64658fd4c550aa063c1be378a48b9f7faea6d5e1e8",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 6,
+            "full_frame_rgb_sha256": "acd0a7fbab69ee9bdd5ce9891ec3c0b68d918b168265969ae0dc85cc6fda91ca",
+            "frame_geometry_untrusted": false,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 12,
+            "full_frame_rgb_sha256": "09c3d90c943bda88d171b818e5daaf09e4fce9ffbf78c3c5181d734db9436eb8",
+            "frame_geometry_untrusted": false,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 18,
+            "full_frame_rgb_sha256": "3496179d706d746e885813341b1e26162ff7ce5d1c052bf1b52f2f9985f01641",
+            "frame_geometry_untrusted": false,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 24,
+            "full_frame_rgb_sha256": "92c7893459df7d2c7db7c83dc10f7fe05d487576ba1363c5950dc6d8fb7ebc6a",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 30,
+            "full_frame_rgb_sha256": "b687dacf02cbb46dfb9cbe185f53db2a1e09e15f59490dbf9f3d9c6f75015277",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 36,
+            "full_frame_rgb_sha256": "1937ba9b2edcb78fc99d4ff6a39a4aa1c7d053d20392bacbd2202d8f842b1c43",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 42,
+            "full_frame_rgb_sha256": "5b4860740ccb103529e3bd0f9efccfd1600e607336f466d143e05c8973b31e43",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 48,
+            "full_frame_rgb_sha256": "6a85a70bc4b983aa12e26613ea8face68fb7e068e5d87d8ad455a4f22812ef20",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 54,
+            "full_frame_rgb_sha256": "b805b36909df7f06adea34cd510efc4b5a1ba4660c898df9a8ebdc727baccc55",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "no_unique_identity",
+            "crop_bbox": [
+              107,
+              41,
+              42,
+              57
+            ],
+            "crop_rgb_sha256": "0e5de18561b83635a8e43f97592a2db3273ef285e0fb5fdefc8f90dbe738cf86",
+            "method": "sift_no_unique_match",
+            "evidence_count": 2,
+            "second": 2
+          },
+          {
+            "frame": 60,
+            "full_frame_rgb_sha256": "58de83460d1f9f1f003440b42aaa1eae316a533f5d12cfa6a364755e3667a6d3",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 66,
+            "full_frame_rgb_sha256": "e69be325ccd432bad5fde9e995854c0e8c79ebd6c639f6bf54391ba6c7eaf203",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 2832,
+            "full_frame_rgb_sha256": "1f5dafac776c6343501df34f9f6634b2dcfb583165c819c24188bb824ea96dca",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 2838,
+            "full_frame_rgb_sha256": "f207b17050b905bfed526f3d52172756a29e2761f95ff30281d9de904fa40627",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          },
+          {
+            "frame": 2844,
+            "full_frame_rgb_sha256": "1717d16b0123781c5324a6b16f1c953082f8331105c737279682e8504e00a66f",
+            "frame_geometry_untrusted": true,
+            "candidate": null,
+            "status": "gold_component_count_not_one"
+          }
+        ],
+        "first_visible_gold_source_seconds": 2.0,
+        "candidate_agreement_acquisition_seconds": 0.8,
+        "source_group_evidence": {
+          "source_frame": 2832,
+          "full_frame_rgb_sha256": "1f5dafac776c6343501df34f9f6634b2dcfb583165c819c24188bb824ea96dca",
+          "direct_visual_text": "\u623f\u53f7324504 \u7b2c1/8\u5c40 2026-10-12 21:31:14",
+          "review_authority": "ASSISTANT_DIRECT_ENLARGED_FRAME_REVIEW",
+          "original_match_group": "reviewed_match_2026_10_12_room324504",
+          "revealed_development_not_holdout": true
+        }
+      }
+    ],
+    "blank_opening_regression": {
+      "source_frame": 54,
+      "prior_candidate": "S4",
+      "prior_best_matches": 2,
+      "prior_second_matches": 2,
+      "new_candidate": "UNKNOWN",
+      "reason": "No unique descriptor winner; no arbitrary identity selected"
+    },
+    "limits": [
+      "Sampled 5fps, not every encoded frame. Overlapping three-frame windows are not independent evidence.",
+      "Whole-hand truth remains limited to previously reviewed states; this is Gold-only review.",
+      "Candidate classification continues while whole-hand geometry is bad, but does not clear that flag or enable Hint.",
+      "SIFT evidence counts are not Runtime confidence; no scores rescaled to cross 0.82.",
+      "Long clip source is now directly date/room-qualified, but both clips are revealed development and training includes 80 unresolved-lineage labels.",
+      "Acquisition times use source video clock and are not Windows capture/compute latency."
+    ]
+  },
+  "gold_scored_advice_experiment_20261024": {
+    "parent_head": "ce53ba12675345348fa35a3cfa6dfc4062f496d8",
+    "development_only": true,
+    "formal_promotion_evidence": false,
+    "default_runtime_changed": false,
+    "experimental_only": true,
+    "identity_threshold": 0.82,
+    "executor_enabled": false,
+    "model_reference": "references/vision/2026-10-24/gold_sift_score_model.development.json",
+    "model_sha256": "240e02904830bc4b80af49e2596d8d8c2638bee9c7d13841d1869a55b4188a41",
+    "training": {
+      "queries": 134,
+      "known_candidates": 128,
+      "correct_candidates": 96,
+      "groups": 9,
+      "unresolved_query_groups": 6,
+      "weighted_positive_prior": 0.6722972972972975,
+      "fit_method": "source/class-weighted logistic C=1 seed=0; no outcome class balancing",
+      "trace_sha256": "d2130743fa6bc828de5bd8d3cd4032d5bd5ca602ca1176b8becb3352265db7d6"
+    },
+    "gold_query_check": {
+      "development_only": true,
+      "formal_promotion_evidence": false,
+      "runtime_changed": false,
+      "real_queries": 12,
+      "real_passes": 6,
+      "real_wrong_passes": 0,
+      "class_removed_wrong_passes": 0,
+      "rows": [
+        {
+          "query": "short_baseline:60",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.8869154240045418,
+          "passes_082": true,
+          "features": [
+            2.5649493574615367,
+            1.791759469228055,
+            0.5833333333333334,
+            1,
+            2.4849066497880004,
+            0.9166666666666666,
+            2.4849066497880004,
+            1.0,
+            0.08066033318467686
+          ],
+          "geometry": {
+            "unique_matches": 11,
+            "unique_ratio": 0.9166666666666666,
+            "inliers": 11,
+            "inlier_ratio": 1.0,
+            "inlier_coverage": 0.08066033318467686
+          }
+        },
+        {
+          "query": "short_baseline:60",
+          "truth": "M6",
+          "candidate": "M8",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.7790209262618181,
+          "passes_082": false,
+          "features": [
+            3.58351893845611,
+            3.5263605246161616,
+            0.05714285714285714,
+            0,
+            3.58351893845611,
+            1.0,
+            3.1354942159291497,
+            0.6285714285714286,
+            0.10540921021311002
+          ],
+          "geometry": {
+            "unique_matches": 35,
+            "unique_ratio": 1.0,
+            "inliers": 22,
+            "inlier_ratio": 0.6285714285714286,
+            "inlier_coverage": 0.10540921021311002
+          }
+        },
+        {
+          "query": "short_baseline:120",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.7554741656964956,
+          "passes_082": false,
+          "features": [
+            2.302585092994046,
+            1.791759469228055,
+            0.4444444444444444,
+            1,
+            2.302585092994046,
+            1.0,
+            2.1972245773362196,
+            0.8888888888888888,
+            0.05020804211211466
+          ],
+          "geometry": {
+            "unique_matches": 9,
+            "unique_ratio": 1.0,
+            "inliers": 8,
+            "inlier_ratio": 0.8888888888888888,
+            "inlier_coverage": 0.05020804211211466
+          }
+        },
+        {
+          "query": "short_baseline:120",
+          "truth": "M6",
+          "candidate": "M7",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.059518735076035896,
+          "passes_082": false,
+          "features": [
+            1.791759469228055,
+            1.6094379124341003,
+            0.2,
+            1,
+            1.3862943611198906,
+            0.6,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "short_baseline:180",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.7540082066473669,
+          "passes_082": false,
+          "features": [
+            2.302585092994046,
+            1.791759469228055,
+            0.4444444444444444,
+            1,
+            2.302585092994046,
+            1.0,
+            2.1972245773362196,
+            0.8888888888888888,
+            0.049195026909401605
+          ],
+          "geometry": {
+            "unique_matches": 9,
+            "unique_ratio": 1.0,
+            "inliers": 8,
+            "inlier_ratio": 0.8888888888888888,
+            "inlier_coverage": 0.049195026909401605
+          }
+        },
+        {
+          "query": "short_baseline:180",
+          "truth": "M6",
+          "candidate": "M7",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.059518735076035896,
+          "passes_082": false,
+          "features": [
+            1.791759469228055,
+            1.6094379124341003,
+            0.2,
+            1,
+            1.3862943611198906,
+            0.6,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "candidate": "M4",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9233982230826081,
+          "passes_082": true,
+          "features": [
+            2.70805020110221,
+            1.0986122886681096,
+            0.8571428571428571,
+            1,
+            2.5649493574615367,
+            0.8571428571428571,
+            2.302585092994046,
+            0.75,
+            0.09078407375838884
+          ],
+          "geometry": {
+            "unique_matches": 12,
+            "unique_ratio": 0.8571428571428571,
+            "inliers": 9,
+            "inlier_ratio": 0.75,
+            "inlier_coverage": 0.09078407375838884
+          }
+        },
+        {
+          "query": "long_baseline:612",
+          "truth": "M4",
+          "candidate": "M8",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.7454893129069159,
+          "passes_082": false,
+          "features": [
+            3.4657359027997265,
+            3.4011973816621555,
+            0.06451612903225806,
+            0,
+            3.4339872044851463,
+            0.967741935483871,
+            2.995732273553991,
+            0.6333333333333333,
+            0.11685264712441122
+          ],
+          "geometry": {
+            "unique_matches": 30,
+            "unique_ratio": 0.967741935483871,
+            "inliers": 19,
+            "inlier_ratio": 0.6333333333333333,
+            "inlier_coverage": 0.11685264712441122
+          }
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "candidate": "M4",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9301846151884796,
+          "passes_082": true,
+          "features": [
+            2.70805020110221,
+            1.0986122886681096,
+            0.8571428571428571,
+            1,
+            2.5649493574615367,
+            0.8571428571428571,
+            2.3978952727983707,
+            0.8333333333333334,
+            0.09166307929190924
+          ],
+          "geometry": {
+            "unique_matches": 12,
+            "unique_ratio": 0.8571428571428571,
+            "inliers": 10,
+            "inlier_ratio": 0.8333333333333334,
+            "inlier_coverage": 0.09166307929190924
+          }
+        },
+        {
+          "query": "long_baseline:1812",
+          "truth": "M4",
+          "candidate": "M8",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.6817794252998348,
+          "passes_082": false,
+          "features": [
+            3.4965075614664802,
+            3.4339872044851463,
+            0.0625,
+            0,
+            3.4965075614664802,
+            1.0,
+            3.091042453358316,
+            0.65625,
+            0.05686394811690537
+          ],
+          "geometry": {
+            "unique_matches": 32,
+            "unique_ratio": 1.0,
+            "inliers": 21,
+            "inlier_ratio": 0.65625,
+            "inlier_coverage": 0.05686394811690537
+          }
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "candidate": "M4",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9297817241506738,
+          "passes_082": true,
+          "features": [
+            2.70805020110221,
+            1.0986122886681096,
+            0.8571428571428571,
+            1,
+            2.5649493574615367,
+            0.8571428571428571,
+            2.3978952727983707,
+            0.8333333333333334,
+            0.09087162292911498
+          ],
+          "geometry": {
+            "unique_matches": 12,
+            "unique_ratio": 0.8571428571428571,
+            "inliers": 10,
+            "inlier_ratio": 0.8333333333333334,
+            "inlier_coverage": 0.09087162292911498
+          }
+        },
+        {
+          "query": "long_baseline:2718",
+          "truth": "M4",
+          "candidate": "UNKNOWN",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.0,
+          "passes_082": false,
+          "features": [
+            3.4011973816621555,
+            3.4011973816621555,
+            0.0,
+            0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 0,
+            "unique_ratio": 0.0,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_S8_source1_frame1628.png",
+          "truth": "S8",
+          "candidate": "S8",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9354536907446022,
+          "passes_082": true,
+          "features": [
+            3.6635616461296463,
+            2.0794415416798357,
+            0.8157894736842105,
+            0,
+            3.4339872044851463,
+            0.7894736842105263,
+            3.2188758248682006,
+            0.8,
+            0.11918542377117353
+          ],
+          "geometry": {
+            "unique_matches": 30,
+            "unique_ratio": 0.7894736842105263,
+            "inliers": 24,
+            "inlier_ratio": 0.8,
+            "inlier_coverage": 0.11918542377117353
+          }
+        },
+        {
+          "query": "gold_S8_source1_frame1628.png",
+          "truth": "S8",
+          "candidate": "P4",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.019358877017901094,
+          "passes_082": false,
+          "features": [
+            2.0794415416798357,
+            1.6094379124341003,
+            0.42857142857142855,
+            0,
+            1.3862943611198906,
+            0.42857142857142855,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.42857142857142855,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_SOUTH_source1_frame3256.png",
+          "truth": "SOUTH",
+          "candidate": "SOUTH",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.9602621851587506,
+          "passes_082": true,
+          "features": [
+            3.8918202981106265,
+            2.772588722239781,
+            0.6875,
+            0,
+            3.7612001156935624,
+            0.875,
+            3.6635616461296463,
+            0.9047619047619048,
+            0.11529493194987525
+          ],
+          "geometry": {
+            "unique_matches": 42,
+            "unique_ratio": 0.875,
+            "inliers": 38,
+            "inlier_ratio": 0.9047619047619048,
+            "inlier_coverage": 0.11529493194987525
+          }
+        },
+        {
+          "query": "gold_SOUTH_source1_frame3256.png",
+          "truth": "SOUTH",
+          "candidate": "E",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.26092677180839413,
+          "passes_082": false,
+          "features": [
+            2.772588722239781,
+            2.3978952727983707,
+            0.3333333333333333,
+            0,
+            2.1972245773362196,
+            0.5333333333333333,
+            1.791759469228055,
+            0.625,
+            0.08735557348763456
+          ],
+          "geometry": {
+            "unique_matches": 8,
+            "unique_ratio": 0.5333333333333333,
+            "inliers": 5,
+            "inlier_ratio": 0.625,
+            "inlier_coverage": 0.08735557348763456
+          }
+        },
+        {
+          "query": "gold_M6_source1_frame4884.png",
+          "truth": "M6",
+          "candidate": "M6",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.7659565754927036,
+          "passes_082": false,
+          "features": [
+            2.3978952727983707,
+            1.791759469228055,
+            0.5,
+            1,
+            2.302585092994046,
+            0.9,
+            2.1972245773362196,
+            0.8888888888888888,
+            0.04912317185549741
+          ],
+          "geometry": {
+            "unique_matches": 9,
+            "unique_ratio": 0.9,
+            "inliers": 8,
+            "inlier_ratio": 0.8888888888888888,
+            "inlier_coverage": 0.04912317185549741
+          }
+        },
+        {
+          "query": "gold_M6_source1_frame4884.png",
+          "truth": "M6",
+          "candidate": "M7",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.059518735076035896,
+          "passes_082": false,
+          "features": [
+            1.791759469228055,
+            1.6094379124341003,
+            0.2,
+            1,
+            1.3862943611198906,
+            0.6,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_M1_source2_frame3097.png",
+          "truth": "M1",
+          "candidate": "M1",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.10720529143681203,
+          "passes_082": false,
+          "features": [
+            1.6094379124341003,
+            1.0986122886681096,
+            0.5,
+            1,
+            1.3862943611198906,
+            0.75,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.75,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        },
+        {
+          "query": "gold_M1_source2_frame3097.png",
+          "truth": "M1",
+          "candidate": "M3",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.745828602821157,
+          "passes_082": false,
+          "features": [
+            3.6109179126442243,
+            3.5553480614894135,
+            0.05555555555555555,
+            0,
+            3.6109179126442243,
+            1.0,
+            3.295836866004329,
+            0.7222222222222222,
+            0.06075807926520937
+          ],
+          "geometry": {
+            "unique_matches": 36,
+            "unique_ratio": 1.0,
+            "inliers": 26,
+            "inlier_ratio": 0.7222222222222222,
+            "inlier_coverage": 0.06075807926520937
+          }
+        },
+        {
+          "query": "gold_P7_source3_frame1414.png",
+          "truth": "P7",
+          "candidate": "P7",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.33513997701081966,
+          "passes_082": false,
+          "features": [
+            3.044522437723423,
+            2.9444389791664403,
+            0.1,
+            0,
+            2.833213344056216,
+            0.8,
+            2.1972245773362196,
+            0.5,
+            0.057516711111494534
+          ],
+          "geometry": {
+            "unique_matches": 16,
+            "unique_ratio": 0.8,
+            "inliers": 8,
+            "inlier_ratio": 0.5,
+            "inlier_coverage": 0.057516711111494534
+          }
+        },
+        {
+          "query": "gold_P7_source3_frame1414.png",
+          "truth": "P7",
+          "candidate": "P6",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.196397625093705,
+          "passes_082": false,
+          "features": [
+            2.9444389791664403,
+            2.70805020110221,
+            0.2222222222222222,
+            0,
+            2.1972245773362196,
+            0.4444444444444444,
+            1.791759469228055,
+            0.625,
+            0.0652816923879811
+          ],
+          "geometry": {
+            "unique_matches": 8,
+            "unique_ratio": 0.4444444444444444,
+            "inliers": 5,
+            "inlier_ratio": 0.625,
+            "inlier_coverage": 0.0652816923879811
+          }
+        },
+        {
+          "query": "gold_P5_source3_frame4243.png",
+          "truth": "P5",
+          "candidate": "P5",
+          "true_class_removed": false,
+          "correct": true,
+          "score": 0.19914258800893705,
+          "passes_082": false,
+          "features": [
+            3.332204510175204,
+            3.091042453358316,
+            0.2222222222222222,
+            0,
+            2.3978952727983707,
+            0.37037037037037035,
+            1.791759469228055,
+            0.5,
+            0.03298757678068914
+          ],
+          "geometry": {
+            "unique_matches": 10,
+            "unique_ratio": 0.37037037037037035,
+            "inliers": 5,
+            "inlier_ratio": 0.5,
+            "inlier_coverage": 0.03298757678068914
+          }
+        },
+        {
+          "query": "gold_P5_source3_frame4243.png",
+          "truth": "P5",
+          "candidate": "P4",
+          "true_class_removed": true,
+          "correct": false,
+          "score": 0.01675676189827337,
+          "passes_082": false,
+          "features": [
+            3.091042453358316,
+            2.9444389791664403,
+            0.14285714285714285,
+            0,
+            1.3862943611198906,
+            0.14285714285714285,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "geometry": {
+            "unique_matches": 3,
+            "unique_ratio": 0.14285714285714285,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "inlier_coverage": 0.0
+          }
+        }
+      ],
+      "training_trace_sha256": "d2130743fa6bc828de5bd8d3cd4032d5bd5ca602ca1176b8becb3352265db7d6"
+    },
+    "baseline": {
+      "short_accepted_windows": 0,
+      "long_accepted_windows": 0,
+      "total_windows": 517
+    },
+    "experiment": {
+      "short_accepted_windows": 1,
+      "short_windows": 44,
+      "long_accepted_windows": 0,
+      "long_windows": 473,
+      "total_accepted_windows": 1,
+      "short_discard_windows": 0,
+      "hand_draw_predictions_unchanged_windows": 517
+    },
+    "reviewed_accepted_window": {
+      "frames": [
+        246,
+        252,
+        258
+      ],
+      "pixel_sha256": [
+        "7be748be3947a0c089197c18ca0ad0d05f351b15ef18215c08e2018635a31e2c",
+        "409a72753d9d457d3019be6c3730fbddd946954c58d7550883142e0ad9bc183b",
+        "7e98237537cf896dea9c7e8fe3cd384a4924da5f0f9335674288b74fd00b7838"
+      ],
+      "source_seconds": [
+        8.200000000000001,
+        8.4,
+        8.600000000000001
+      ],
+      "snapshot": {
+        "timestamp_seconds": 8.600000000000001,
+        "source_session": "private-replay-f39bb98a0fe715e4",
+        "stream_epoch": 0,
+        "stable_frames": 3,
+        "own_hand": [
+          "M6",
+          "P3",
+          "P4",
+          "P5",
+          "P7",
+          "P7",
+          "P8",
+          "P9",
+          "P9",
+          "S2",
+          "S2",
+          "S5",
+          "S5"
+        ],
+        "gold_tile": "M6",
+        "rivers": [
+          [],
+          []
+        ],
+        "melds": [
+          [
+            [
+              null,
+              null,
+              null,
+              null
+            ]
+          ],
+          []
+        ],
+        "hand_trusted": true,
+        "gold_trusted": true,
+        "river_trusted": [
+          false,
+          false
+        ],
+        "meld_trusted": [
+          true,
+          false
+        ],
+        "adapter_issues": [
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "live_gold_carried_forward"
+        ],
+        "input_source": "runtime_vision"
+      },
+      "hint": {
+        "status": "PARTIAL",
+        "allowed": true,
+        "phase": "PRE_DRAW",
+        "shanten": 0,
+        "effective_tiles": [],
+        "best_discards": [],
+        "visible_remainders_used": false,
+        "issues": [
+          "river_untrusted:0",
+          "river_untrusted:1",
+          "meld_identity_unknown:0",
+          "meld_untrusted:1",
+          "player_river_missing",
+          "opponent_river_missing",
+          "opponent_meld_missing",
+          "live_gold_carried_forward"
+        ],
+        "source_session": "private-replay-f39bb98a0fe715e4",
+        "stream_epoch": 0,
+        "safe_for_executor": false
+      },
+      "hand_exact_against_sampled_truth": true,
+      "gold_exact": true,
+      "own_meld_count_reviewed": 1,
+      "reference_structural_shanten": 0
+    },
+    "scores_do_not_apply_to_playable_gold_hand": true,
+    "baseline_hand_scores_retained": true,
+    "limits": [
+      "Experimental backend only, not a promoted Runtime or user-ready recognition rate. One accepted window out of 517 is far below usability.",
+      "Model fits correctness scores from ordinary crop source-group-out predictions; Gold-domain calibration remains unestablished. Twelve Gold checks are revealed development and all raw Gold candidates are correct.",
+      "Artificial class-removal stress is not a measured real confusion rate. Zero passes in 12 does not prove general error rejection.",
+      "Six unresolved original-match groups use exact source SHA for splitting; they are not claimed independent.",
+      "All 517 hand/draw component predictions exactly match baseline. The new classifier method is used only when region_candidate=gold; yellow playable hand/draw remains NCC.",
+      "The successful state is PRE_DRAW shanten=0, not a discard recommendation or complete action reconstruction.",
+      "Existing Gold memory and two distinct-frame hand confirmation produce the accepted window at frame258; neither was bypassed.",
+      "Long source still has hand rejection and Gold class/source/appearance support refusals; scores alone do not unlock it."
+    ]
+  }
+}

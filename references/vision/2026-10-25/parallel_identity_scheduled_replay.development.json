@@ -1,0 +1,36 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "windows_capture_validated": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "change": "Precompute geometry once, read-only cache; two immutable identity reads in ThreadPoolExecutor(max_workers=2); keep original ID/time, freshness, source and two-identity confirmation semantics.",
+  "protocol": "Same10Hz capture/100ms UI tick,.4s minimum single-flight interval; host-measured processing advances video clock and drops old frames.",
+  "processed_bursts": 186,
+  "produced_draw_episodes": 13,
+  "timely_draw_episodes": 11,
+  "total_visible_draw_episodes": 15,
+  "worker_ms": {
+    "median": 428.16,
+    "p95": 661.46
+  },
+  "timely_source_to_completion_seconds": {
+    "median": 0.8,
+    "p95": 1.2
+  },
+  "previous_serial_timely": 7,
+  "previous_serial_worker_median_ms": 720.67,
+  "equivalence": {
+    "frames": [
+      78,
+      222,
+      1770
+    ],
+    "full_reports_identical_except_elapsed": true
+  },
+  "tests": "31 focused tests,19 subtests passed",
+  "limits": [
+    "Host timing-dependent simulation, not Windows mirroring benchmark or statistical accuracy.",
+    "Visible draw end is a conservative deadline.",
+    "No threshold or frame-count relaxation."
+  ]
+}

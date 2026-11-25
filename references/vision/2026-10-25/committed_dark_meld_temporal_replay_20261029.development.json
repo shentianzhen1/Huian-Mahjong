@@ -1,0 +1,455 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "source_sha256": "9709fdc3aa464bf2e4f111554931e2ae9867c5270cf384fcaae7811da5b97c8b",
+  "method": "Replace scratch dark-meld proposal/filter and grouping code with committed local_dark_meld_probe functions. Same offline M4/M5/S8 references,90s,3-frame geometry and2-frame identity pipeline; OCR excluded.",
+  "result": {
+    "windows": 224,
+    "changes": [],
+    "runtime": {
+      "windows": 224,
+      "accepted_windows": 148,
+      "blocked_windows": 76,
+      "trusted_hand_windows": 148,
+      "trusted_gold_windows": 224,
+      "discard_windows": 71,
+      "gold_tile_votes": {
+        "S8": 224
+      },
+      "advice_runs": [
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 12,
+          "start_seconds": 0.4,
+          "last_frame": 48,
+          "end_seconds": 1.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 60,
+          "start_seconds": 2,
+          "last_frame": 72,
+          "end_seconds": 2.4000000000000004
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 84,
+          "start_seconds": 2.8000000000000003,
+          "last_frame": 84,
+          "end_seconds": 2.8000000000000003
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 96,
+          "start_seconds": 3.2,
+          "last_frame": 96,
+          "end_seconds": 3.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 108,
+          "start_seconds": 3.6,
+          "last_frame": 144,
+          "end_seconds": 4.800000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 12,
+          "first_frame": 156,
+          "start_seconds": 5.2,
+          "last_frame": 288,
+          "end_seconds": 9.600000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 300,
+          "start_seconds": 10,
+          "last_frame": 300,
+          "end_seconds": 10
+        },
+        {
+          "display_allowed": true,
+          "windows": 17,
+          "first_frame": 312,
+          "start_seconds": 10.4,
+          "last_frame": 504,
+          "end_seconds": 16.8
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 516,
+          "start_seconds": 17.200000000000003,
+          "last_frame": 528,
+          "end_seconds": 17.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 12,
+          "first_frame": 540,
+          "start_seconds": 18,
+          "last_frame": 672,
+          "end_seconds": 22.400000000000002
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 684,
+          "start_seconds": 22.8,
+          "last_frame": 684,
+          "end_seconds": 22.8
+        },
+        {
+          "display_allowed": true,
+          "windows": 12,
+          "first_frame": 696,
+          "start_seconds": 23.200000000000003,
+          "last_frame": 828,
+          "end_seconds": 27.6
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 840,
+          "start_seconds": 28.000000000000004,
+          "last_frame": 876,
+          "end_seconds": 29.200000000000003
+        },
+        {
+          "display_allowed": true,
+          "windows": 16,
+          "first_frame": 888,
+          "start_seconds": 29.6,
+          "last_frame": 1068,
+          "end_seconds": 35.6
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 1080,
+          "start_seconds": 36,
+          "last_frame": 1092,
+          "end_seconds": 36.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 10,
+          "first_frame": 1104,
+          "start_seconds": 36.800000000000004,
+          "last_frame": 1212,
+          "end_seconds": 40.400000000000006
+        },
+        {
+          "display_allowed": false,
+          "windows": 5,
+          "first_frame": 1224,
+          "start_seconds": 40.800000000000004,
+          "last_frame": 1272,
+          "end_seconds": 42.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 4,
+          "first_frame": 1284,
+          "start_seconds": 42.800000000000004,
+          "last_frame": 1320,
+          "end_seconds": 44
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1332,
+          "start_seconds": 44.400000000000006,
+          "last_frame": 1332,
+          "end_seconds": 44.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 9,
+          "first_frame": 1344,
+          "start_seconds": 44.800000000000004,
+          "last_frame": 1440,
+          "end_seconds": 48
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1452,
+          "start_seconds": 48.400000000000006,
+          "last_frame": 1452,
+          "end_seconds": 48.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 7,
+          "first_frame": 1464,
+          "start_seconds": 48.800000000000004,
+          "last_frame": 1536,
+          "end_seconds": 51.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 1548,
+          "start_seconds": 51.6,
+          "last_frame": 1572,
+          "end_seconds": 52.400000000000006
+        },
+        {
+          "display_allowed": true,
+          "windows": 14,
+          "first_frame": 1584,
+          "start_seconds": 52.800000000000004,
+          "last_frame": 1740,
+          "end_seconds": 58.00000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 1752,
+          "start_seconds": 58.400000000000006,
+          "last_frame": 1788,
+          "end_seconds": 59.6
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 1800,
+          "start_seconds": 60.00000000000001,
+          "last_frame": 1824,
+          "end_seconds": 60.800000000000004
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 1836,
+          "start_seconds": 61.2,
+          "last_frame": 1836,
+          "end_seconds": 61.2
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 1848,
+          "start_seconds": 61.6,
+          "last_frame": 1872,
+          "end_seconds": 62.400000000000006
+        },
+        {
+          "display_allowed": false,
+          "windows": 4,
+          "first_frame": 1884,
+          "start_seconds": 62.800000000000004,
+          "last_frame": 1920,
+          "end_seconds": 64
+        },
+        {
+          "display_allowed": true,
+          "windows": 8,
+          "first_frame": 1932,
+          "start_seconds": 64.4,
+          "last_frame": 2016,
+          "end_seconds": 67.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2028,
+          "start_seconds": 67.60000000000001,
+          "last_frame": 2028,
+          "end_seconds": 67.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 1,
+          "first_frame": 2040,
+          "start_seconds": 68,
+          "last_frame": 2040,
+          "end_seconds": 68
+        },
+        {
+          "display_allowed": false,
+          "windows": 2,
+          "first_frame": 2052,
+          "start_seconds": 68.4,
+          "last_frame": 2064,
+          "end_seconds": 68.80000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 2076,
+          "start_seconds": 69.2,
+          "last_frame": 2124,
+          "end_seconds": 70.80000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 3,
+          "first_frame": 2136,
+          "start_seconds": 71.2,
+          "last_frame": 2160,
+          "end_seconds": 72
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2172,
+          "start_seconds": 72.4,
+          "last_frame": 2184,
+          "end_seconds": 72.80000000000001
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2196,
+          "start_seconds": 73.2,
+          "last_frame": 2196,
+          "end_seconds": 73.2
+        },
+        {
+          "display_allowed": true,
+          "windows": 5,
+          "first_frame": 2208,
+          "start_seconds": 73.60000000000001,
+          "last_frame": 2256,
+          "end_seconds": 75.2
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2268,
+          "start_seconds": 75.60000000000001,
+          "last_frame": 2268,
+          "end_seconds": 75.60000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 2,
+          "first_frame": 2280,
+          "start_seconds": 76,
+          "last_frame": 2292,
+          "end_seconds": 76.4
+        },
+        {
+          "display_allowed": false,
+          "windows": 1,
+          "first_frame": 2304,
+          "start_seconds": 76.80000000000001,
+          "last_frame": 2304,
+          "end_seconds": 76.80000000000001
+        },
+        {
+          "display_allowed": true,
+          "windows": 3,
+          "first_frame": 2316,
+          "start_seconds": 77.2,
+          "last_frame": 2340,
+          "end_seconds": 78
+        },
+        {
+          "display_allowed": false,
+          "windows": 29,
+          "first_frame": 2352,
+          "start_seconds": 78.4,
+          "last_frame": 2688,
+          "end_seconds": 89.60000000000001
+        }
+      ],
+      "recovered_advice_runs": 20,
+      "rejection_issue_windows": {
+        "experimental_hand_sources_unvalidated": 14,
+        "hand_identity_unknown": 75,
+        "hand_untrusted": 76,
+        "live_gold_carried_forward": 63,
+        "live_hand_meld_waiting_confirmation": 1,
+        "meld_identity_unknown:0": 11,
+        "meld_untrusted:0": 56,
+        "meld_untrusted:1": 76,
+        "opponent_meld_missing": 76,
+        "opponent_river_missing": 76,
+        "player_meld_count_untrusted": 56,
+        "player_river_missing": 76,
+        "river_untrusted:0": 76,
+        "river_untrusted:1": 76,
+        "runtime_hand_not_fully_trusted": 75
+      }
+    },
+    "geometry_untrusted_displayed": 0,
+    "blocked_geometry_issues": {
+      "stable_votes=3": 21,
+      "layout_not_stable_across_frames": 43,
+      "no_trusted_frames": 12
+    },
+    "animation_checkpoints": [
+      {
+        "frames": [
+          0,
+          6,
+          12
+        ],
+        "display_allowed": false,
+        "geometry_issues": [
+          "stable_votes=3"
+        ]
+      },
+      {
+        "frames": [
+          120,
+          126,
+          132
+        ],
+        "display_allowed": false,
+        "geometry_issues": [
+          "stable_votes=3"
+        ]
+      },
+      {
+        "frames": [
+          1212,
+          1218,
+          1224
+        ],
+        "display_allowed": false,
+        "geometry_issues": [
+          "stable_votes=3"
+        ]
+      },
+      {
+        "frames": [
+          1536,
+          1542,
+          1548
+        ],
+        "display_allowed": false,
+        "geometry_issues": [
+          "layout_not_stable_across_frames"
+        ]
+      }
+    ]
+  },
+  "compared_fields": [
+    "display_allowed",
+    "snapshot",
+    "hint",
+    "geometry_issues",
+    "geometry_untrusted",
+    "opening_fact",
+    "hand_source_trial",
+    "identity_observations"
+  ],
+  "limits": [
+    "Endpoint equivalence to previously tuned candidate is regression evidence only, not independent safety/accuracy.",
+    "148 displayed windows not all individually reviewed; known32 new endpoints have separate review and twoM5 errors corrected later.",
+    "No runtime/default detector integration or threshold change.",
+    "No new installer."
+  ]
+}

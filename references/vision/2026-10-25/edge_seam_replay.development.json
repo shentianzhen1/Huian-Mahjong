@@ -1,0 +1,3674 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "default_geometry_changed": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "algorithm": "Joined-component seam search uses top/bottom10% mask bands, ties choose closest nominal cut; legacy path retained by default",
+  "threshold": 0.82,
+  "packet_sha256": "bd6c691676b1de8400907fe0f70570f4acffcdd3e1df1c38283ca46d09f4eca3",
+  "manual_gold": "M4",
+  "single_source_hand_trial": true,
+  "windows": 473,
+  "before_display": 183,
+  "after_display": 229,
+  "before_geometry_trusted": 241,
+  "after_geometry_trusted": 359,
+  "before_discard_windows": 0,
+  "after_discard_windows": 14,
+  "old_display_windows_lost": 0,
+  "all_sampled_pixel_hashes_equal": true,
+  "reviewed_post_draw_states": [
+    {
+      "frame": 690,
+      "rgb_sha256": "a190dc3df16f3dd5b90031da92ea569f270a0efb6bac092df1ef5ba08ae2f4d6",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "S8"
+      ],
+      "own_meld_count": 0,
+      "draw_review": "S8",
+      "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+      "annotation_after_model_output": true,
+      "shanten": 1,
+      "best_discards": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "M8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        }
+      ],
+      "manual_truth_calculation_matches": true
+    },
+    {
+      "frame": 1314,
+      "rgb_sha256": "d29a2870fb38b2b5035aacbde1ba4efbe748dda37fabebf3e3ff8946cca8745e",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "S4"
+      ],
+      "own_meld_count": 0,
+      "draw_review": "S4",
+      "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+      "annotation_after_model_output": true,
+      "shanten": 1,
+      "best_discards": [
+        {
+          "discard": "M3",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S4",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        }
+      ],
+      "manual_truth_calculation_matches": true
+    },
+    {
+      "frame": 1914,
+      "rgb_sha256": "7498dd5096cbb832aa3d824a4ac6a887968cd0fff96f076bb4cc5740fd2685a8",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "SOUTH"
+      ],
+      "own_meld_count": 1,
+      "draw_review": "SOUTH",
+      "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+      "annotation_after_model_output": true,
+      "shanten": 1,
+      "best_discards": [
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "SOUTH",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        }
+      ],
+      "manual_truth_calculation_matches": true
+    },
+    {
+      "frame": 2010,
+      "rgb_sha256": "abe5d02728c8715ea3160e01d377b84c5540c0a0b6474c562836e92fb8bc4510",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "M6"
+      ],
+      "own_meld_count": 1,
+      "draw_review": "M6",
+      "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+      "annotation_after_model_output": true,
+      "shanten": 1,
+      "best_discards": [
+        {
+          "discard": "M6",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        }
+      ],
+      "manual_truth_calculation_matches": true
+    },
+    {
+      "frame": 2226,
+      "rgb_sha256": "aa7e10647136e7a6bf62bdbb0d6d5196924c5be356d59ac38889c78a66b1f1c8",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "G"
+      ],
+      "own_meld_count": 1,
+      "draw_review": "G",
+      "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+      "annotation_after_model_output": true,
+      "shanten": 1,
+      "best_discards": [
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "G",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        }
+      ],
+      "manual_truth_calculation_matches": true
+    },
+    {
+      "frame": 2340,
+      "rgb_sha256": "4835c4d1067e97a276ad220757d3a7f7b4d145ff2a30be1f572b1e9a2db93d8b",
+      "own_hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S8",
+        "S9",
+        "S9",
+        "S9",
+        "P8"
+      ],
+      "own_meld_count": 1,
+      "draw_review": "P8",
+      "review_authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT",
+      "annotation_after_model_output": true,
+      "shanten": 1,
+      "best_discards": [
+        {
+          "discard": "P1",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P2",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P4",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P6",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "P8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S8",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        },
+        {
+          "discard": "S9",
+          "shanten": 1,
+          "total_live_copies": null,
+          "effective_tile_types": []
+        }
+      ],
+      "manual_truth_calculation_matches": true
+    }
+  ],
+  "rows": [
+    {
+      "last_frame": 12,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 18,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 24,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 30,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 36,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 42,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 48,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 54,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 60,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 66,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 72,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 78,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 84,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 90,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 96,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 102,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 108,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 114,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 120,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 126,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 132,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 138,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 144,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 150,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 156,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 162,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 168,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 174,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 180,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 186,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 192,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 198,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 204,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 210,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 216,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 222,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 228,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 234,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 240,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 246,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 252,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 258,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 264,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 270,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 276,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 282,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 288,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 294,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 300,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 306,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 312,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 318,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 324,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 330,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 336,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 342,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 348,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 354,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 360,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 366,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 372,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 378,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 384,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 390,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 396,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 402,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 408,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 414,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 420,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 426,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 432,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 438,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 444,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 450,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 456,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 462,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 468,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 474,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 480,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 486,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 492,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 498,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 504,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 510,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 516,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 522,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 528,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 534,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 540,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 546,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 552,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 558,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 564,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 570,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 576,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 582,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 588,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 594,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 600,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 606,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 612,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 618,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 624,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 630,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 636,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 642,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 648,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 654,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 660,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 666,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 672,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 678,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 684,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 690,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 696,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 702,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 708,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 714,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 720,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 726,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 732,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 738,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 744,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 750,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 756,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 762,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 768,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 774,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 780,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 786,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 792,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 798,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 804,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 810,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 816,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 822,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 828,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 834,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 840,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 846,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 852,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 858,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 864,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 870,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 876,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 882,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 888,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 894,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 900,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 906,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 912,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 918,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 924,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 930,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 936,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 942,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 948,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 954,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 960,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 966,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 972,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 978,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 984,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 990,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 996,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1002,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1008,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1014,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1020,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1026,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1032,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1038,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1044,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1050,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1056,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1062,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1068,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1074,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1080,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1086,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1092,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1098,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1104,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1110,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1116,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1122,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1128,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1134,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1140,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1146,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1152,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1158,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1164,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1170,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1176,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1182,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1188,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1194,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1200,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1206,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1212,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1218,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1224,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1230,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1236,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1242,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1248,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1254,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1260,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1266,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1272,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1278,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1284,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1290,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1296,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1302,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1308,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1314,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1320,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1326,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1332,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1338,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1344,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1350,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1356,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1362,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1368,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1374,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1380,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1386,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1392,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1398,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1404,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1410,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1416,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1422,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1428,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1434,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1440,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1446,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1452,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1458,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1464,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1470,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1476,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1482,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1488,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1494,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1500,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1506,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1512,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1518,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1524,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1530,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1536,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1542,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1548,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1554,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1560,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1566,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1572,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1578,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1584,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1590,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1596,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1602,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1608,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1614,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1620,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1626,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1632,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1638,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1644,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1650,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1656,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1662,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1668,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1674,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1680,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1686,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1692,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1698,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1704,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1710,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1716,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1722,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1728,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1734,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1740,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1746,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1752,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1758,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1764,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1770,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1776,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1782,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1788,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1794,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1800,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1806,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1812,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1818,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1824,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1830,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1836,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1842,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1848,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1854,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1860,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1866,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1872,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1878,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1884,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1890,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1896,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1902,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1908,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1914,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1920,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1926,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1932,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1938,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1944,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1950,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1956,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1962,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1968,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1974,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1980,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1986,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 1992,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 1998,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2004,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2010,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2016,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2022,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2028,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2034,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2040,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2046,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2052,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2058,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2064,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2070,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2076,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2082,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2088,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2094,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2100,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2106,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2112,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2118,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2124,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2130,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2136,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2142,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2148,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2154,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2160,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2166,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2172,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2178,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2184,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2190,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2196,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2202,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2208,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2214,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2220,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2226,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2232,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2238,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2244,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2250,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2256,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2262,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2268,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2274,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2280,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2286,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2292,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2298,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2304,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2310,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2316,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2322,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2328,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2334,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2340,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2346,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2352,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2358,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "POST_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2364,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2370,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2376,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2382,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2388,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2394,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2400,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2406,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2412,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2418,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2424,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2430,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 1
+    },
+    {
+      "last_frame": 2436,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2442,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2448,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2454,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2460,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2466,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2472,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2478,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2484,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2490,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2496,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2502,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2508,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2514,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2520,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2526,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2532,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2538,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2544,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2550,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2556,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2562,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2568,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2574,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2580,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2586,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2592,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2598,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2604,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2610,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2616,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2622,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2628,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2634,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2640,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2646,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2652,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2658,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2664,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2670,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2676,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2682,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2688,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2694,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2700,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2706,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2712,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2718,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2724,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2730,
+      "geometry_untrusted": false,
+      "allowed": true,
+      "phase": "PRE_DRAW",
+      "shanten": 0
+    },
+    {
+      "last_frame": 2736,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2742,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2748,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2754,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2760,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2766,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2772,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2778,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2784,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2790,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2796,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2802,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2808,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2814,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2820,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2826,
+      "geometry_untrusted": false,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2832,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2838,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    },
+    {
+      "last_frame": 2844,
+      "geometry_untrusted": true,
+      "allowed": false,
+      "phase": null,
+      "shanten": null
+    }
+  ],
+  "tests": "52 geometry/reader/replay tests plus3 UI/dependency checks; no full suite",
+  "limits": [
+    "One revealed original match with overlapping windows, not independent accuracy",
+    "Six post-draw states visually reviewed; not every accepted frame reannotated",
+    "Structural discard candidates only; no danger or live remaining-copy evaluation",
+    "Default geometry unchanged; opt-in via CLI experimental-edge-seams or existing UI trial mode",
+    "No Windows real capture acceptance claim"
+  ],
+  "reproduction": "Repeat prior 183-window CLI with --experimental-edge-seams"
+}

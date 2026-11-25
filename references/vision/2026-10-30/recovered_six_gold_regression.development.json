@@ -1,0 +1,164 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "installer_requested": false,
+  "library_source": {
+    "library_file_id": "libfile_9c54ec26fd248191a774fe6e06b7263a",
+    "filename": "huian_opened_gold_recovered_private_20261019.zip",
+    "sha256": "4af91267ecbcc127294782fe94a3ea04d33d86094af88e02bc72e1a6d9c97edf"
+  },
+  "validation": "All6cropPNGandRGBhashes match archive manifest. Direct enlarged visual review agrees M1/M6/P5/P7/S8/SOUTH including prior P6toP7 correction.",
+  "review_authority": "ASSISTANT_VISUAL_REVIEW_REVEALED_DEVELOPMENT",
+  "original_match_groups": 1,
+  "query_results": [
+    {
+      "truth": "S8",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "frame": 1628,
+      "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+      "opened": [
+        "S8",
+        0.9947067499160767
+      ],
+      "gold_skin_before": [
+        "S8",
+        0.388258695602417
+      ],
+      "gold_skin_after": [
+        "S8",
+        0.388258695602417
+      ],
+      "exact_rgb_reference_matches": []
+    },
+    {
+      "truth": "SOUTH",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "frame": 3256,
+      "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+      "opened": [
+        "SOUTH",
+        0.9713212847709656
+      ],
+      "gold_skin_before": [
+        "SOUTH",
+        0.3394542634487152
+      ],
+      "gold_skin_after": [
+        "SOUTH",
+        0.3394542634487152
+      ],
+      "exact_rgb_reference_matches": []
+    },
+    {
+      "truth": "M6",
+      "source_sha256": "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+      "frame": 4884,
+      "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+      "opened": [
+        "M6",
+        0.9999998211860657
+      ],
+      "gold_skin_before": [
+        "M6",
+        0.3669673204421997
+      ],
+      "gold_skin_after": [
+        "M6",
+        0.3669673204421997
+      ],
+      "exact_rgb_reference_matches": [
+        {
+          "truth": "M6",
+          "role": "opened_gold"
+        }
+      ]
+    },
+    {
+      "truth": "M1",
+      "source_sha256": "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+      "frame": 3097,
+      "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+      "opened": [
+        "M1",
+        0.9999998211860657
+      ],
+      "gold_skin_before": [
+        "M1",
+        0.4639790654182434
+      ],
+      "gold_skin_after": [
+        "M1",
+        0.4639790654182434
+      ],
+      "exact_rgb_reference_matches": [
+        {
+          "truth": "M1",
+          "role": "opened_gold"
+        }
+      ]
+    },
+    {
+      "truth": "P7",
+      "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+      "frame": 1414,
+      "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+      "opened": [
+        "P7",
+        0.35076823830604553
+      ],
+      "gold_skin_before": [
+        "P7",
+        0.35076823830604553
+      ],
+      "gold_skin_after": [
+        "P7",
+        0.35076823830604553
+      ],
+      "exact_rgb_reference_matches": []
+    },
+    {
+      "truth": "P5",
+      "source_sha256": "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+      "frame": 4243,
+      "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+      "opened": [
+        "P5",
+        0.45705223083496094
+      ],
+      "gold_skin_before": [
+        "P5",
+        0.45705223083496094
+      ],
+      "gold_skin_after": [
+        "P5",
+        0.45705223083496094
+      ],
+      "exact_rgb_reference_matches": []
+    }
+  ],
+  "summary": {
+    "opened_scores_ge_point82": 4,
+    "opened_wrong_scores_ge_point82": 0,
+    "concealed_gold_wrapper_changed_predictions": 0,
+    "exact_rgb_self_queries": [
+      "M1",
+      "M6"
+    ],
+    "unmatched_rgb_queries_ge_point82": [
+      "S8",
+      "SOUTH"
+    ],
+    "unmatched_rgb_low_score": [
+      "P5",
+      "P7"
+    ]
+  },
+  "limits": [
+    "These are opened-indicator crops, not concealedGoldhand validation. They only test opened-domain regression and cross-role noninterference.",
+    "M1/M6areexactreferenceRGBselfmatches; exclude them from any held-query coverage claim.",
+    "S8/SOUTHhave different crop hashes but same original match as development references; not source-disjoint accuracy.",
+    "P5/P7 remain uncovered at .82; no labels guessed and no threshold reduction.",
+    "No private crop pixels uploaded or formal19reference pack changes; no installer."
+  ]
+}

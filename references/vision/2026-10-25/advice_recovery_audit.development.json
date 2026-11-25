@@ -1,0 +1,1593 @@
+{
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "source_sha256": "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+  "reference_version": "2026.10.25.5",
+  "reference_count": 13,
+  "manual_gold": null,
+  "protocol": "Sequential decode; samples every6 frames; actual app worker at fixed every12 frames; source-time eligible-prior guard; real pipeline; explicit trial on. No worker-delay scheduling or Windows UI simulation.",
+  "windows": 237,
+  "accepted_windows": 171,
+  "discard_windows": 40,
+  "recovered_advice_runs": 27,
+  "recoveries": [
+    {
+      "blocked_frame": 96,
+      "recovered_frame": 132,
+      "seconds": 1.2000000000000002
+    },
+    {
+      "blocked_frame": 216,
+      "recovered_frame": 264,
+      "seconds": 1.6000000000000005
+    },
+    {
+      "blocked_frame": 300,
+      "recovered_frame": 336,
+      "seconds": 1.1999999999999993
+    },
+    {
+      "blocked_frame": 396,
+      "recovered_frame": 432,
+      "seconds": 1.200000000000001
+    },
+    {
+      "blocked_frame": 504,
+      "recovered_frame": 516,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 588,
+      "recovered_frame": 636,
+      "seconds": 1.5999999999999979
+    },
+    {
+      "blocked_frame": 672,
+      "recovered_frame": 684,
+      "seconds": 0.40000000000000213
+    },
+    {
+      "blocked_frame": 708,
+      "recovered_frame": 744,
+      "seconds": 1.1999999999999993
+    },
+    {
+      "blocked_frame": 924,
+      "recovered_frame": 936,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 948,
+      "recovered_frame": 984,
+      "seconds": 1.1999999999999957
+    },
+    {
+      "blocked_frame": 1188,
+      "recovered_frame": 1200,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 1224,
+      "recovered_frame": 1236,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 1296,
+      "recovered_frame": 1308,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 1344,
+      "recovered_frame": 1356,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 1740,
+      "recovered_frame": 1812,
+      "seconds": 2.3999999999999986
+    },
+    {
+      "blocked_frame": 1896,
+      "recovered_frame": 1908,
+      "seconds": 0.3999999999999986
+    },
+    {
+      "blocked_frame": 1932,
+      "recovered_frame": 1944,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 1992,
+      "recovered_frame": 2004,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 2028,
+      "recovered_frame": 2040,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2208,
+      "recovered_frame": 2220,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2232,
+      "recovered_frame": 2244,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 2328,
+      "recovered_frame": 2340,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2364,
+      "recovered_frame": 2376,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2448,
+      "recovered_frame": 2460,
+      "seconds": 0.4000000000000057
+    },
+    {
+      "blocked_frame": 2520,
+      "recovered_frame": 2556,
+      "seconds": 1.2000000000000028
+    },
+    {
+      "blocked_frame": 2592,
+      "recovered_frame": 2604,
+      "seconds": 0.3999999999999915
+    },
+    {
+      "blocked_frame": 2700,
+      "recovered_frame": 2712,
+      "seconds": 0.4000000000000057
+    }
+  ],
+  "runs": [
+    {
+      "display_allowed": false,
+      "first_frame": 12,
+      "first_seconds": 0.4,
+      "windows": 6,
+      "last_frame": 72,
+      "last_seconds": 2.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 84,
+      "first_seconds": 2.8,
+      "windows": 1,
+      "last_frame": 84,
+      "last_seconds": 2.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 96,
+      "first_seconds": 3.2,
+      "windows": 3,
+      "last_frame": 120,
+      "last_seconds": 4.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 132,
+      "first_seconds": 4.4,
+      "windows": 7,
+      "last_frame": 204,
+      "last_seconds": 6.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 216,
+      "first_seconds": 7.2,
+      "windows": 4,
+      "last_frame": 252,
+      "last_seconds": 8.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 264,
+      "first_seconds": 8.8,
+      "windows": 3,
+      "last_frame": 288,
+      "last_seconds": 9.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 300,
+      "first_seconds": 10.0,
+      "windows": 3,
+      "last_frame": 324,
+      "last_seconds": 10.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 336,
+      "first_seconds": 11.2,
+      "windows": 5,
+      "last_frame": 384,
+      "last_seconds": 12.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 396,
+      "first_seconds": 13.2,
+      "windows": 3,
+      "last_frame": 420,
+      "last_seconds": 14.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 432,
+      "first_seconds": 14.4,
+      "windows": 6,
+      "last_frame": 492,
+      "last_seconds": 16.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 504,
+      "first_seconds": 16.8,
+      "windows": 1,
+      "last_frame": 504,
+      "last_seconds": 16.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 516,
+      "first_seconds": 17.2,
+      "windows": 6,
+      "last_frame": 576,
+      "last_seconds": 19.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 588,
+      "first_seconds": 19.6,
+      "windows": 4,
+      "last_frame": 624,
+      "last_seconds": 20.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 636,
+      "first_seconds": 21.2,
+      "windows": 3,
+      "last_frame": 660,
+      "last_seconds": 22.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 672,
+      "first_seconds": 22.4,
+      "windows": 1,
+      "last_frame": 672,
+      "last_seconds": 22.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 684,
+      "first_seconds": 22.8,
+      "windows": 2,
+      "last_frame": 696,
+      "last_seconds": 23.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 708,
+      "first_seconds": 23.6,
+      "windows": 3,
+      "last_frame": 732,
+      "last_seconds": 24.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 744,
+      "first_seconds": 24.8,
+      "windows": 15,
+      "last_frame": 912,
+      "last_seconds": 30.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 924,
+      "first_seconds": 30.8,
+      "windows": 1,
+      "last_frame": 924,
+      "last_seconds": 30.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 936,
+      "first_seconds": 31.2,
+      "windows": 1,
+      "last_frame": 936,
+      "last_seconds": 31.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 948,
+      "first_seconds": 31.6,
+      "windows": 3,
+      "last_frame": 972,
+      "last_seconds": 32.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 984,
+      "first_seconds": 32.8,
+      "windows": 17,
+      "last_frame": 1176,
+      "last_seconds": 39.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1188,
+      "first_seconds": 39.6,
+      "windows": 1,
+      "last_frame": 1188,
+      "last_seconds": 39.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1200,
+      "first_seconds": 40.0,
+      "windows": 2,
+      "last_frame": 1212,
+      "last_seconds": 40.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1224,
+      "first_seconds": 40.8,
+      "windows": 1,
+      "last_frame": 1224,
+      "last_seconds": 40.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1236,
+      "first_seconds": 41.2,
+      "windows": 5,
+      "last_frame": 1284,
+      "last_seconds": 42.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1296,
+      "first_seconds": 43.2,
+      "windows": 1,
+      "last_frame": 1296,
+      "last_seconds": 43.2
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1308,
+      "first_seconds": 43.6,
+      "windows": 3,
+      "last_frame": 1332,
+      "last_seconds": 44.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1344,
+      "first_seconds": 44.8,
+      "windows": 1,
+      "last_frame": 1344,
+      "last_seconds": 44.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1356,
+      "first_seconds": 45.2,
+      "windows": 32,
+      "last_frame": 1728,
+      "last_seconds": 57.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1740,
+      "first_seconds": 58.0,
+      "windows": 6,
+      "last_frame": 1800,
+      "last_seconds": 60.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1812,
+      "first_seconds": 60.4,
+      "windows": 7,
+      "last_frame": 1884,
+      "last_seconds": 62.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1896,
+      "first_seconds": 63.2,
+      "windows": 1,
+      "last_frame": 1896,
+      "last_seconds": 63.2
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1908,
+      "first_seconds": 63.6,
+      "windows": 2,
+      "last_frame": 1920,
+      "last_seconds": 64.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1932,
+      "first_seconds": 64.4,
+      "windows": 1,
+      "last_frame": 1932,
+      "last_seconds": 64.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 1944,
+      "first_seconds": 64.8,
+      "windows": 4,
+      "last_frame": 1980,
+      "last_seconds": 66.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 1992,
+      "first_seconds": 66.4,
+      "windows": 1,
+      "last_frame": 1992,
+      "last_seconds": 66.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2004,
+      "first_seconds": 66.8,
+      "windows": 2,
+      "last_frame": 2016,
+      "last_seconds": 67.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2028,
+      "first_seconds": 67.6,
+      "windows": 1,
+      "last_frame": 2028,
+      "last_seconds": 67.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2040,
+      "first_seconds": 68.0,
+      "windows": 14,
+      "last_frame": 2196,
+      "last_seconds": 73.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2208,
+      "first_seconds": 73.6,
+      "windows": 1,
+      "last_frame": 2208,
+      "last_seconds": 73.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2220,
+      "first_seconds": 74.0,
+      "windows": 1,
+      "last_frame": 2220,
+      "last_seconds": 74.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2232,
+      "first_seconds": 74.4,
+      "windows": 1,
+      "last_frame": 2232,
+      "last_seconds": 74.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2244,
+      "first_seconds": 74.8,
+      "windows": 7,
+      "last_frame": 2316,
+      "last_seconds": 77.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2328,
+      "first_seconds": 77.6,
+      "windows": 1,
+      "last_frame": 2328,
+      "last_seconds": 77.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2340,
+      "first_seconds": 78.0,
+      "windows": 2,
+      "last_frame": 2352,
+      "last_seconds": 78.4
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2364,
+      "first_seconds": 78.8,
+      "windows": 1,
+      "last_frame": 2364,
+      "last_seconds": 78.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2376,
+      "first_seconds": 79.2,
+      "windows": 6,
+      "last_frame": 2436,
+      "last_seconds": 81.2
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2448,
+      "first_seconds": 81.6,
+      "windows": 1,
+      "last_frame": 2448,
+      "last_seconds": 81.6
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2460,
+      "first_seconds": 82.0,
+      "windows": 5,
+      "last_frame": 2508,
+      "last_seconds": 83.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2520,
+      "first_seconds": 84.0,
+      "windows": 3,
+      "last_frame": 2544,
+      "last_seconds": 84.8
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2556,
+      "first_seconds": 85.2,
+      "windows": 3,
+      "last_frame": 2580,
+      "last_seconds": 86.0
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2592,
+      "first_seconds": 86.4,
+      "windows": 1,
+      "last_frame": 2592,
+      "last_seconds": 86.4
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2604,
+      "first_seconds": 86.8,
+      "windows": 8,
+      "last_frame": 2688,
+      "last_seconds": 89.6
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2700,
+      "first_seconds": 90.0,
+      "windows": 1,
+      "last_frame": 2700,
+      "last_seconds": 90.0
+    },
+    {
+      "display_allowed": true,
+      "first_frame": 2712,
+      "first_seconds": 90.4,
+      "windows": 2,
+      "last_frame": 2724,
+      "last_seconds": 90.8
+    },
+    {
+      "display_allowed": false,
+      "first_frame": 2736,
+      "first_seconds": 91.2,
+      "windows": 10,
+      "last_frame": 2844,
+      "last_seconds": 94.8
+    }
+  ],
+  "blocked_issue_counts": {
+    "gold_untrusted": 6,
+    "meld_untrusted:1": 66,
+    "runtime_gold_not_fully_trusted": 6,
+    "player_river_missing": 66,
+    "river_untrusted:0": 66,
+    "runtime_hand_not_fully_trusted": 64,
+    "player_meld_count_untrusted": 54,
+    "hand_untrusted": 64,
+    "gold_identity_unknown": 6,
+    "meld_untrusted:0": 54,
+    "hand_identity_unknown": 64,
+    "opponent_meld_missing": 66,
+    "river_untrusted:1": 66,
+    "opponent_river_missing": 66,
+    "experimental_hand_sources_unvalidated": 4,
+    "runtime_gold_component_conflict": 1,
+    "experimental_gold_sources_unvalidated": 60,
+    "live_gold_carried_forward": 55,
+    "concealed_hand_count_invalid": 1,
+    "meld_identity_unknown:0": 9
+  },
+  "worker_median_ms": 429.60225599995283,
+  "limits": [
+    "One revealed development video; not independent accuracy.",
+    "Fixed source clock ignores worker duration; no live-latency or timely-action claim.",
+    "No manual Gold; experimental hand and reference-backed Gold trial on; strict default acceptance not measured.",
+    "Advice acceptance is not reviewed per-window correctness.",
+    "A terminal blocked run is not assumed recovered."
+  ],
+  "code_head": "f56b5e7add900d932838ac795de72acb591e9de5",
+  "identity_threshold": 0.82,
+  "runtime_changed": false,
+  "geometry_untrusted_advice_accepts": 0,
+  "geometry_trusted_but_blocked": [
+    {
+      "frames": [
+        36,
+        42,
+        48
+      ],
+      "rgb_sha256": [
+        "1937ba9b2edcb78fc99d4ff6a39a4aa1c7d053d20392bacbd2202d8f842b1c43",
+        "5b4860740ccb103529e3bd0f9efccfd1600e607336f466d143e05c8973b31e43",
+        "6a85a70bc4b983aa12e26613ea8face68fb7e068e5d87d8ad455a4f22812ef20"
+      ],
+      "source_seconds": 1.6,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "gold_untrusted",
+        "gold_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "runtime_gold_component_conflict",
+        "runtime_gold_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated"
+      ],
+      "gold": null,
+      "hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        "W",
+        "B"
+      ],
+      "gold_source_trial": false,
+      "hand_source_trial": true,
+      "prior_used": true,
+      "worker_ms": 866.3802539999779,
+      "discards": []
+    },
+    {
+      "frames": [
+        216,
+        222,
+        228
+      ],
+      "rgb_sha256": [
+        "027860dde0a61daea812144c17dd5c3633f5b7389081357ddcd96772669f1f8d",
+        "f5135d4d188e5b7153c1f1969006c4924172e96e6a431d1c9a83147d48e7e82b",
+        "ea3685368c5393d5c2f6d60493315c0b890dcf81612b6038bd16a0eb18d2fb40"
+      ],
+      "source_seconds": 7.6,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P8",
+        "S2",
+        "S3",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M3",
+        "M8",
+        "M9",
+        null,
+        "M2"
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": true,
+      "prior_used": true,
+      "worker_ms": 402.73729800003366,
+      "discards": []
+    },
+    {
+      "frames": [
+        600,
+        606,
+        612
+      ],
+      "rgb_sha256": [
+        "379c6650507c85393c90c6ece7592a98a03a01d4846f3a91833ddbde865e5c1f",
+        "557926adf9daf9e74cf50230b929922baab90597829d5bb6dd752b586d0d4f92",
+        "4ba94faa32b26e23bcd75a30516df65b236c2d53b627f2dd669f830101ef1f24"
+      ],
+      "source_seconds": 20.4,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "concealed_hand_count_invalid",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_untrusted:1",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        "S9",
+        "S9",
+        "S9",
+        "M2",
+        "M2",
+        "M2",
+        "M3",
+        "M8"
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": true,
+      "prior_used": true,
+      "worker_ms": 469.79305900003965,
+      "discards": []
+    },
+    {
+      "frames": [
+        1764,
+        1770,
+        1776
+      ],
+      "rgb_sha256": [
+        "f7a051933d5676afd48830b34b0a2bcac67c993d29ae585de4840ab3b99c1426",
+        "940c6ec231150fe36d5c78539ffcf2728ea932c2f33a43b954c12cdc976d213e",
+        "056897ac59e2873db73f2b66b38db4e6944c6b25dc4a1232ddecc8d46d5eaa84"
+      ],
+      "source_seconds": 59.2,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_hand_sources_unvalidated",
+        "live_gold_carried_forward",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        "P1",
+        "P2",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "S2",
+        "S3",
+        "S4",
+        "S9",
+        "S9",
+        "S9",
+        null,
+        "S8"
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": true,
+      "prior_used": true,
+      "worker_ms": 1322.3405769999772,
+      "discards": []
+    },
+    {
+      "frames": [
+        2724,
+        2730,
+        2736
+      ],
+      "rgb_sha256": [
+        "e17ea0b3336398b8142d5c383fc04d2d166b7cc2a1eba7be86f50f1169c4299e",
+        "f984db63f9ffa41fe355c479ae2a0e53eeadc0f468aef12db62a0798ea0102e6",
+        "cdf24774fd93b2881fdc256db8abea4520f1b8176ea8c7b37c7d3831be8ad4ce"
+      ],
+      "source_seconds": 91.2,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "live_gold_carried_forward",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 904.2363549999664,
+      "discards": []
+    },
+    {
+      "frames": [
+        2736,
+        2742,
+        2748
+      ],
+      "rgb_sha256": [
+        "cdf24774fd93b2881fdc256db8abea4520f1b8176ea8c7b37c7d3831be8ad4ce",
+        "a9a5308b2ec481b7132ea890b5d62e5bb38b5302253da00c63bfa78af3e8933b",
+        "00e72457a2b13c48513110c9cb8771a89ae440ec7f6796ea0ee14dc41c1c1f7e"
+      ],
+      "source_seconds": 91.6,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "live_gold_carried_forward",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 1378.4639770001377,
+      "discards": []
+    },
+    {
+      "frames": [
+        2748,
+        2754,
+        2760
+      ],
+      "rgb_sha256": [
+        "00e72457a2b13c48513110c9cb8771a89ae440ec7f6796ea0ee14dc41c1c1f7e",
+        "d21ebfc7956a524cb5022d3dd1bb2b369727999be559c816c12ff15562e780a5",
+        "08a5d71c71c3e5bb8b3f7ef1f186e57b5ca424fd8c778ab026a91bad9459a708"
+      ],
+      "source_seconds": 92.0,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "live_gold_carried_forward",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 1232.6211140000396,
+      "discards": []
+    },
+    {
+      "frames": [
+        2760,
+        2766,
+        2772
+      ],
+      "rgb_sha256": [
+        "08a5d71c71c3e5bb8b3f7ef1f186e57b5ca424fd8c778ab026a91bad9459a708",
+        "cae6739070288ef3dd8b70e69e6460eee1a7be0357355f7ec980d95cd470fa22",
+        "1a5d434111fb14bb1ca345d7b572a1d28fbe5081b65ae6948b0fb0c30c3e224c"
+      ],
+      "source_seconds": 92.4,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "live_gold_carried_forward",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 1767.8587139998854,
+      "discards": []
+    },
+    {
+      "frames": [
+        2772,
+        2778,
+        2784
+      ],
+      "rgb_sha256": [
+        "1a5d434111fb14bb1ca345d7b572a1d28fbe5081b65ae6948b0fb0c30c3e224c",
+        "1259ce3d73ac8fc4639749545c6e6b939af94395c1196f367db376121d13c411",
+        "b15eb725822ba7ae51fd268e0673c4f6d7461b44892e384aba458b946a77d17d"
+      ],
+      "source_seconds": 92.8,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "live_gold_carried_forward",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 944.7876779997841,
+      "discards": []
+    },
+    {
+      "frames": [
+        2784,
+        2790,
+        2796
+      ],
+      "rgb_sha256": [
+        "b15eb725822ba7ae51fd268e0673c4f6d7461b44892e384aba458b946a77d17d",
+        "8eff86749506bab0b8b326fea5dbb048fafc7764361114d1f8106a2934884d4b",
+        "4e9d7494b3d85834fcf931e66bda1a32861bd7fb9accf2423a6fb1146afb7c84"
+      ],
+      "source_seconds": 93.2,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 1391.6619819999596,
+      "discards": []
+    },
+    {
+      "frames": [
+        2796,
+        2802,
+        2808
+      ],
+      "rgb_sha256": [
+        "4e9d7494b3d85834fcf931e66bda1a32861bd7fb9accf2423a6fb1146afb7c84",
+        "868fa1ed941ba9b53797a78e27a61732485faae546ef506426d6f03040c2b025",
+        "05ea23093e90623cb1292753725605dca55fa04b0aa9c12710f8025fea1d9171"
+      ],
+      "source_seconds": 93.6,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 1804.3722800000523,
+      "discards": []
+    },
+    {
+      "frames": [
+        2808,
+        2814,
+        2820
+      ],
+      "rgb_sha256": [
+        "05ea23093e90623cb1292753725605dca55fa04b0aa9c12710f8025fea1d9171",
+        "cdc4ab69cc1ae095327e3f77933bfa82ccc760e86723c408b91c2c44e2b100e2",
+        "be46c078a979a349b5062911c2253415d44a9e1b1748b46970ec920da38471d4"
+      ],
+      "source_seconds": 94.0,
+      "geometry_untrusted": false,
+      "display_allowed": false,
+      "phase": null,
+      "shanten": null,
+      "issues": [
+        "hand_untrusted",
+        "hand_identity_unknown",
+        "river_untrusted:0",
+        "river_untrusted:1",
+        "meld_identity_unknown:0",
+        "meld_untrusted:1",
+        "runtime_hand_not_fully_trusted",
+        "player_river_missing",
+        "opponent_river_missing",
+        "opponent_meld_missing",
+        "experimental_gold_sources_unvalidated"
+      ],
+      "gold": "M4",
+      "hand": [
+        null,
+        null,
+        null,
+        "P3",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "gold_source_trial": true,
+      "hand_source_trial": false,
+      "prior_used": true,
+      "worker_ms": 1590.8371829998487,
+      "discards": []
+    }
+  ],
+  "recovery_seconds": {
+    "median": 0.4,
+    "maximum": 2.4
+  },
+  "worker_p95_ms": 1116.144548999955,
+  "first_advice_frame": 84,
+  "first_advice_source_seconds": 2.8,
+  "focused_regression": {
+    "passed": 20,
+    "suites": [
+      "test_live_snapshot_stability",
+      "test_runtime_parallel_identity",
+      "test_live_advice_guard",
+      "test_prior_identity_freshness"
+    ]
+  },
+  "visual_review": {
+    "authority": "ASSISTANT_REVIEWED_REVEALED_DEVELOPMENT_NOT_USER_APPROVED",
+    "frame612": "Raised/moving S4 during hand rearrangement; count gate rejects",
+    "frames2736_2760_2820": "Visible Hu overlay and exposed opponent hand; end-of-hand display, not normal continuing-play recovery",
+    "frame228": "Raised W is ranked E at0.400603, remains UNKNOWN",
+    "frame1776": "Raised M3 is ranked S2 at0.556055, remains UNKNOWN"
+  },
+  "raw_rejected_components": [
+    {
+      "endpoint": 228,
+      "unknown_components": [
+        {
+          "frame": 228,
+          "region_candidate": "gold",
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.909177,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            110,
+            48,
+            36,
+            48
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "P2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.894994,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            167,
+            440,
+            49,
+            67
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "S9",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.883421,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            516,
+            440,
+            48,
+            67
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "S9",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.91117,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            564,
+            440,
+            50,
+            67
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "M2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.877429,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            615,
+            440,
+            49,
+            67
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "M2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.879277,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            665,
+            440,
+            49,
+            67
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "M8",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.839041,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            763,
+            440,
+            50,
+            67
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "M9",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.895093,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            814,
+            426,
+            49,
+            81
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "hand",
+          "candidate_tile_id": "E",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.400603,
+          "identity_reason": "below_confidence_threshold",
+          "pixel_bbox": [
+            863,
+            426,
+            49,
+            81
+          ]
+        },
+        {
+          "frame": 228,
+          "region_candidate": "draw_visual",
+          "candidate_tile_id": "M2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.885027,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            942,
+            440,
+            49,
+            67
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": 1776,
+      "unknown_components": [
+        {
+          "frame": 1776,
+          "region_candidate": "meld",
+          "candidate_tile_id": null,
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.0,
+          "identity_reason": "region_not_classified",
+          "pixel_bbox": [
+            101,
+            429,
+            44,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "gold",
+          "candidate_tile_id": "M4",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.911719,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            110,
+            48,
+            36,
+            48
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "meld",
+          "candidate_tile_id": null,
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.0,
+          "identity_reason": "region_not_classified",
+          "pixel_bbox": [
+            142,
+            442,
+            49,
+            54
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "meld",
+          "candidate_tile_id": null,
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.0,
+          "identity_reason": "region_not_classified",
+          "pixel_bbox": [
+            145,
+            429,
+            44,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "meld",
+          "candidate_tile_id": null,
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.0,
+          "identity_reason": "region_not_classified",
+          "pixel_bbox": [
+            188,
+            442,
+            48,
+            54
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "hand",
+          "candidate_tile_id": "P2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.885464,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            316,
+            440,
+            49,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "hand",
+          "candidate_tile_id": "P2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.850771,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            365,
+            440,
+            50,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "hand",
+          "candidate_tile_id": "S9",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.865874,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            715,
+            440,
+            48,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "hand",
+          "candidate_tile_id": "S9",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.916774,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            763,
+            440,
+            50,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "hand",
+          "candidate_tile_id": "S9",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.877137,
+          "identity_reason": "class_not_cross_session_validated_in_region",
+          "pixel_bbox": [
+            814,
+            440,
+            49,
+            67
+          ]
+        },
+        {
+          "frame": 1776,
+          "region_candidate": "hand",
+          "candidate_tile_id": "S2",
+          "tile_id": "UNKNOWN",
+          "tile_confidence": 0.556055,
+          "identity_reason": "below_confidence_threshold",
+          "pixel_bbox": [
+            865,
+            426,
+            47,
+            55
+          ]
+        }
+      ]
+    }
+  ]
+}

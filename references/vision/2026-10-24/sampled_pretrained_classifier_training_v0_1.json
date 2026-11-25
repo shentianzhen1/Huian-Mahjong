@@ -1,0 +1,1274 @@
+{
+  "schema_version": "sampled_pretrained_classifier_training_20261024_v0_1",
+  "parent_head": "cbb01601df101a2213d06b0ca71a69acb18454e4",
+  "development_only": true,
+  "formal_promotion_evidence": false,
+  "runtime_changed": false,
+  "executor_enabled": false,
+  "runtime_threshold": 0.82,
+  "query_truth_correction": "Long S6/G -> S4/S8; packet P6 -> P7; prior opposite error claims withdrawn.",
+  "pretrained_model": "torchvision MobileNetV3-Small ImageNet1K V1",
+  "weights_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+  "query_scope": "Five revealed sampled hands (69 tiles), five replay Gold anchors, six-class same-match Gold packet (M1/M6/P5/P7/S8/SOUTH). Repeated states are not independent hands.",
+  "baseline": {
+    "hand_raw_correct": 69,
+    "hand_raw_total": 69,
+    "whole_hand_raw_exact": 5,
+    "whole_hand_total": 5,
+    "gold_raw_correct": 9,
+    "gold_raw_total": 11,
+    "automatic_advice_windows": 0,
+    "automatic_advice_total": 517
+  },
+  "packet_sha256": "4af91267ecbcc127294782fe94a3ea04d33d86094af88e02bc72e1a6d9c97edf",
+  "runs": [
+    {
+      "name": "all_crops_old_canvas",
+      "augmentation_version": "v0_2_real_bottom_shadow",
+      "query_sources": [
+        "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+        "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+        "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+        "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357"
+      ],
+      "known_query_matches_excluded": [
+        "reviewed_match_2026_09_26_eight_hand"
+      ],
+      "training_selection": {
+        "unresolved_lineage_available": 80
+      },
+      "elapsed_seconds": 47.186,
+      "policies": {
+        "development_all_sources": {
+          "class_count": 34,
+          "missing_classes": [],
+          "training_crops": 146,
+          "training_variants": 1314,
+          "training_fit_correct": 1299,
+          "training_unresolved_source_shas": [
+            "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+            "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+            "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+            "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+            "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+            "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226"
+          ],
+          "template": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 6,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          },
+          "prototype": {
+            "concealed_correct": 62,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 1,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S3->S5": 2,
+              "S4->S5": 2
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 1,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          },
+          "linear": {
+            "concealed_correct": 58,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 2,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S3->S5": 1,
+              "S9->S7": 4,
+              "S9->S6": 2,
+              "S3->S2": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 2,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          }
+        },
+        "reviewed_sources_only": {
+          "class_count": 29,
+          "missing_classes": [
+            "M9",
+            "P2",
+            "S9",
+            "SOUTH",
+            "W"
+          ],
+          "training_crops": 66,
+          "training_variants": 594,
+          "training_fit_correct": 594,
+          "training_unresolved_source_shas": [],
+          "template": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 6,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          },
+          "prototype": {
+            "concealed_correct": 47,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 1,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S5->S4": 6,
+              "P2->P3": 4,
+              "S3->S4": 2,
+              "S9->S6": 6,
+              "S7->S6": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 1,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          },
+          "linear": {
+            "concealed_correct": 49,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 2,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S5->S4": 6,
+              "P2->P3": 4,
+              "S9->S6": 6,
+              "S7->S6": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 2,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          }
+        },
+        "development_supervised_tail": {
+          "training": {
+            "epochs": 10,
+            "frozen_prefix_blocks": 8,
+            "learned_tail_blocks": "8..12",
+            "optimizer": "AdamW lr=0.001 weight_decay=0.01",
+            "batch_size": 64,
+            "seed": 0,
+            "class_balanced_loss": true,
+            "label_smoothing": 0.05,
+            "query_used_for_training": false,
+            "query_used_for_epoch_selection": false,
+            "training_fit_correct": 1314,
+            "training_variants": 1314,
+            "history": [
+              {
+                "epoch": 1,
+                "train_loss": 2.382137
+              },
+              {
+                "epoch": 2,
+                "train_loss": 0.895976
+              },
+              {
+                "epoch": 3,
+                "train_loss": 0.708488
+              },
+              {
+                "epoch": 4,
+                "train_loss": 0.683419
+              },
+              {
+                "epoch": 5,
+                "train_loss": 0.67105
+              },
+              {
+                "epoch": 6,
+                "train_loss": 0.661238
+              },
+              {
+                "epoch": 7,
+                "train_loss": 0.656732
+              },
+              {
+                "epoch": 8,
+                "train_loss": 0.651236
+              },
+              {
+                "epoch": 9,
+                "train_loss": 0.650839
+              },
+              {
+                "epoch": 10,
+                "train_loss": 0.642379
+              }
+            ]
+          },
+          "finetuned": {
+            "concealed_correct": 64,
+            "concealed_total": 69,
+            "whole_hand_exact": 2,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M8": 1,
+              "S3->S2": 2,
+              "S9->S7": 2
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 4,
+                "total": 6
+              },
+              "replay": {
+                "correct": 5,
+                "total": 5
+              }
+            }
+          },
+          "opened_gold_predictions": [
+            {
+              "sample_id": "f39bb98a:120",
+              "frame_index": 120,
+              "slot": 16,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "a1806c27da8529063eb6b74073b867869dd85b1190a56448a2d9b8c6afb0236c",
+              "finetuned": "M6"
+            },
+            {
+              "sample_id": "f39bb98a:216",
+              "frame_index": 216,
+              "slot": 14,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "220ddeeb952ea8643f9d722fa22259ba5ec0a58080faf61448b7e773785edb69",
+              "finetuned": "M6"
+            },
+            {
+              "sample_id": "f39bb98a:252",
+              "frame_index": 252,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "55ee7b8c9c23c23ab5b5986a65c9cf277c18e7ab3765cbc4a9c90ca929824fa7",
+              "finetuned": "M6"
+            },
+            {
+              "sample_id": "de1d21b2:1812",
+              "frame_index": 1812,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M4",
+              "template": "M1",
+              "crop_rgb_sha256": "f594daf741c1aca87c8fa70b22ff8a908cadc448b10c0b37a967af1689d1f918",
+              "finetuned": "M4"
+            },
+            {
+              "sample_id": "de1d21b2:2718",
+              "frame_index": 2718,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M4",
+              "template": "M1",
+              "crop_rgb_sha256": "91f16b1d00d1cc04debcdff714e1ac9d5a466281b1824bb1a350fa1f6ee79b58",
+              "finetuned": "M4"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:1628",
+              "frame_index": 1628,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "S8",
+              "template": "S8",
+              "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+              "finetuned": "S8"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:3256",
+              "frame_index": 3256,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "SOUTH",
+              "template": "SOUTH",
+              "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:4884",
+              "frame_index": 4884,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+              "finetuned": "M6"
+            },
+            {
+              "sample_id": "gold-packet:4ffc9187:3097",
+              "frame_index": 3097,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "M1",
+              "template": "M1",
+              "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+              "finetuned": "M6"
+            },
+            {
+              "sample_id": "gold-packet:7a8edc73:1414",
+              "frame_index": 1414,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "P7",
+              "template": "P7",
+              "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+              "finetuned": "P7"
+            },
+            {
+              "sample_id": "gold-packet:7a8edc73:4243",
+              "frame_index": 4243,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "P5",
+              "template": "P5",
+              "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+              "finetuned": "P5"
+            }
+          ],
+          "concealed_wrong_predictions": [
+            {
+              "sample_id": "f39bb98a:252",
+              "frame_index": 252,
+              "slot": 0,
+              "role": "concealed",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "bbca377cdf21488e8ba2b49f0653ac37e9298ff68a66636b87675e9b2ae32174",
+              "finetuned": "M8"
+            },
+            {
+              "sample_id": "de1d21b2:1812",
+              "frame_index": 1812,
+              "slot": 7,
+              "role": "concealed",
+              "truth": "S3",
+              "template": "S3",
+              "crop_rgb_sha256": "fba2202c9e51b8419d75f0e70432d6c28c003fb5ddc82c9e8632cbd508dbe77f",
+              "finetuned": "S2"
+            },
+            {
+              "sample_id": "de1d21b2:1812",
+              "frame_index": 1812,
+              "slot": 12,
+              "role": "concealed",
+              "truth": "S9",
+              "template": "S9",
+              "crop_rgb_sha256": "c3106360f96070a26871422a769faa7f70408c950123765be8a9d1e7bb26f922",
+              "finetuned": "S7"
+            },
+            {
+              "sample_id": "de1d21b2:2718",
+              "frame_index": 2718,
+              "slot": 6,
+              "role": "concealed",
+              "truth": "S3",
+              "template": "S3",
+              "crop_rgb_sha256": "2c74b96b17f2fe08d3e2f8fdfca52502a825261591afe49bde298061630481e4",
+              "finetuned": "S2"
+            },
+            {
+              "sample_id": "de1d21b2:2718",
+              "frame_index": 2718,
+              "slot": 12,
+              "role": "concealed",
+              "truth": "S9",
+              "template": "S9",
+              "crop_rgb_sha256": "f10e8bf1820b6aa4fa08e6180e2813999b2849bf3e194cb3e83b64f81a2b04aa",
+              "finetuned": "S7"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "reviewed_crops_old_canvas",
+      "augmentation_version": "v0_2_real_bottom_shadow",
+      "query_sources": [
+        "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+        "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+        "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+        "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357"
+      ],
+      "known_query_matches_excluded": [
+        "reviewed_match_2026_09_26_eight_hand"
+      ],
+      "training_selection": {
+        "unresolved_lineage_available": 80
+      },
+      "elapsed_seconds": 45.272,
+      "policies": {
+        "development_all_sources": {
+          "class_count": 34,
+          "missing_classes": [],
+          "training_crops": 136,
+          "training_variants": 1224,
+          "training_fit_correct": 1216,
+          "training_unresolved_source_shas": [
+            "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+            "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+            "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+            "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+            "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+            "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226"
+          ],
+          "template": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 6,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          },
+          "prototype": {
+            "concealed_correct": 64,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 1,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S3->S5": 1,
+              "S3->S4": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 1,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          },
+          "linear": {
+            "concealed_correct": 66,
+            "concealed_total": 69,
+            "whole_hand_exact": 2,
+            "hands": 5,
+            "opened_gold_correct": 5,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 3,
+                "total": 6
+              },
+              "replay": {
+                "correct": 2,
+                "total": 5
+              }
+            }
+          }
+        },
+        "reviewed_sources_only": {
+          "class_count": 27,
+          "missing_classes": [
+            "M9",
+            "P2",
+            "S5",
+            "S7",
+            "S9",
+            "SOUTH",
+            "W"
+          ],
+          "training_crops": 62,
+          "training_variants": 558,
+          "training_fit_correct": 558,
+          "training_unresolved_source_shas": [],
+          "template": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 6,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          },
+          "prototype": {
+            "concealed_correct": 47,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 1,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S5->S6": 4,
+              "S5->S4": 2,
+              "P2->P3": 4,
+              "S3->S4": 2,
+              "S9->S4": 4,
+              "S9->S6": 2,
+              "S7->S6": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 1,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          },
+          "linear": {
+            "concealed_correct": 48,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 2,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S5->S6": 2,
+              "S5->S4": 4,
+              "P2->P3": 4,
+              "S3->S6": 1,
+              "S9->S6": 4,
+              "S9->S4": 2,
+              "S7->S6": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 2,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          }
+        },
+        "development_supervised_tail": {
+          "training": {
+            "epochs": 10,
+            "frozen_prefix_blocks": 8,
+            "learned_tail_blocks": "8..12",
+            "optimizer": "AdamW lr=0.001 weight_decay=0.01",
+            "batch_size": 64,
+            "seed": 0,
+            "class_balanced_loss": true,
+            "label_smoothing": 0.05,
+            "query_used_for_training": false,
+            "query_used_for_epoch_selection": false,
+            "training_fit_correct": 1224,
+            "training_variants": 1224,
+            "history": [
+              {
+                "epoch": 1,
+                "train_loss": 2.561218
+              },
+              {
+                "epoch": 2,
+                "train_loss": 0.905866
+              },
+              {
+                "epoch": 3,
+                "train_loss": 0.743585
+              },
+              {
+                "epoch": 4,
+                "train_loss": 0.696261
+              },
+              {
+                "epoch": 5,
+                "train_loss": 0.676253
+              },
+              {
+                "epoch": 6,
+                "train_loss": 0.668595
+              },
+              {
+                "epoch": 7,
+                "train_loss": 0.668947
+              },
+              {
+                "epoch": 8,
+                "train_loss": 0.676745
+              },
+              {
+                "epoch": 9,
+                "train_loss": 0.668847
+              },
+              {
+                "epoch": 10,
+                "train_loss": 0.659449
+              }
+            ]
+          },
+          "finetuned": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 5,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 3,
+                "total": 6
+              },
+              "replay": {
+                "correct": 2,
+                "total": 5
+              }
+            }
+          },
+          "opened_gold_predictions": [
+            {
+              "sample_id": "f39bb98a:120",
+              "frame_index": 120,
+              "slot": 16,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "a1806c27da8529063eb6b74073b867869dd85b1190a56448a2d9b8c6afb0236c",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "f39bb98a:216",
+              "frame_index": 216,
+              "slot": 14,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "220ddeeb952ea8643f9d722fa22259ba5ec0a58080faf61448b7e773785edb69",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "f39bb98a:252",
+              "frame_index": 252,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "55ee7b8c9c23c23ab5b5986a65c9cf277c18e7ab3765cbc4a9c90ca929824fa7",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "de1d21b2:1812",
+              "frame_index": 1812,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M4",
+              "template": "M1",
+              "crop_rgb_sha256": "f594daf741c1aca87c8fa70b22ff8a908cadc448b10c0b37a967af1689d1f918",
+              "finetuned": "M4"
+            },
+            {
+              "sample_id": "de1d21b2:2718",
+              "frame_index": 2718,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M4",
+              "template": "M1",
+              "crop_rgb_sha256": "91f16b1d00d1cc04debcdff714e1ac9d5a466281b1824bb1a350fa1f6ee79b58",
+              "finetuned": "M4"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:1628",
+              "frame_index": 1628,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "S8",
+              "template": "S8",
+              "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+              "finetuned": "S8"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:3256",
+              "frame_index": 3256,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "SOUTH",
+              "template": "SOUTH",
+              "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+              "finetuned": "M7"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:4884",
+              "frame_index": 4884,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "gold-packet:4ffc9187:3097",
+              "frame_index": 3097,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "M1",
+              "template": "M1",
+              "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "gold-packet:7a8edc73:1414",
+              "frame_index": 1414,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "P7",
+              "template": "P7",
+              "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+              "finetuned": "P7"
+            },
+            {
+              "sample_id": "gold-packet:7a8edc73:4243",
+              "frame_index": 4243,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "P5",
+              "template": "P5",
+              "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+              "finetuned": "P5"
+            }
+          ],
+          "concealed_wrong_predictions": []
+        }
+      }
+    },
+    {
+      "name": "reviewed_crops_fixed_canvas",
+      "augmentation_version": "v0_3_gold_face_white_canvas",
+      "query_sources": [
+        "4ffc9187a08df3d11df34a8a0c087b31172cf39104920cc0e9ebd5f2e72780c4",
+        "55328a7bce8271163920944abbe11fa95373b071c8add025614f4f27b078b3cb",
+        "7a8edc73293435bbbc3f449593003360ef78a4b04a42ad9db6dd62482828ec7e",
+        "de1d21b2a722d02f0866e03caf595d1d706551e689c313c9f413553e466ee81c",
+        "f39bb98a0fe715e4f31c55b68ef920207cbbe69c7048039be7ba833afb134357"
+      ],
+      "known_query_matches_excluded": [
+        "reviewed_match_2026_09_26_eight_hand"
+      ],
+      "training_selection": {
+        "unresolved_lineage_available": 80
+      },
+      "elapsed_seconds": 43.248,
+      "policies": {
+        "development_all_sources": {
+          "class_count": 34,
+          "missing_classes": [],
+          "training_crops": 136,
+          "training_variants": 1224,
+          "training_fit_correct": 1216,
+          "training_unresolved_source_shas": [
+            "0e565528164aa77faf5916f50b98678829a8987c29fb0181e49505ad7269179f",
+            "59460988023cc9f105d119597218f5a8b0d7814352ab5889d8525d8a2b6d6135",
+            "5e02f7d0458be0a923231d87921b5506ce4e15d1412bb560d59b5e61f7eb2c39",
+            "781bfe34c40993effb0bb76b5d576f9c3df400784bbd1ed8820dc0c8aacdba82",
+            "94960e642f407502278c66c8f954f062c58f3f43b5d6ce545d8c938efdd32919",
+            "ac27bc0798ed252f8a63a749e74cbbad50e7b1d0918e395ec3d56b701c11d226"
+          ],
+          "template": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 6,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          },
+          "prototype": {
+            "concealed_correct": 64,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 1,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S3->S4": 2
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 1,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          },
+          "linear": {
+            "concealed_correct": 67,
+            "concealed_total": 69,
+            "whole_hand_exact": 3,
+            "hands": 5,
+            "opened_gold_correct": 6,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 2
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 3,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          }
+        },
+        "reviewed_sources_only": {
+          "class_count": 27,
+          "missing_classes": [
+            "M9",
+            "P2",
+            "S5",
+            "S7",
+            "S9",
+            "SOUTH",
+            "W"
+          ],
+          "training_crops": 62,
+          "training_variants": 558,
+          "training_fit_correct": 558,
+          "training_unresolved_source_shas": [],
+          "template": {
+            "concealed_correct": 69,
+            "concealed_total": 69,
+            "whole_hand_exact": 5,
+            "hands": 5,
+            "opened_gold_correct": 9,
+            "opened_gold_total": 11,
+            "concealed_confusions": {},
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 6,
+                "total": 6
+              },
+              "replay": {
+                "correct": 3,
+                "total": 5
+              }
+            }
+          },
+          "prototype": {
+            "concealed_correct": 47,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 1,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S5->S6": 4,
+              "S5->S4": 2,
+              "P2->P3": 4,
+              "S3->S4": 2,
+              "S9->S4": 5,
+              "S7->S6": 1,
+              "S9->S6": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 1,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          },
+          "linear": {
+            "concealed_correct": 49,
+            "concealed_total": 69,
+            "whole_hand_exact": 0,
+            "hands": 5,
+            "opened_gold_correct": 2,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M7": 3,
+              "S5->S6": 2,
+              "S5->S4": 4,
+              "P2->P3": 4,
+              "S9->S4": 4,
+              "S7->S6": 1,
+              "S9->S6": 2
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 2,
+                "total": 6
+              },
+              "replay": {
+                "correct": 0,
+                "total": 5
+              }
+            }
+          }
+        },
+        "development_supervised_tail": {
+          "training": {
+            "epochs": 10,
+            "frozen_prefix_blocks": 8,
+            "learned_tail_blocks": "8..12",
+            "optimizer": "AdamW lr=0.001 weight_decay=0.01",
+            "batch_size": 64,
+            "seed": 0,
+            "class_balanced_loss": true,
+            "label_smoothing": 0.05,
+            "query_used_for_training": false,
+            "query_used_for_epoch_selection": false,
+            "training_fit_correct": 1224,
+            "training_variants": 1224,
+            "history": [
+              {
+                "epoch": 1,
+                "train_loss": 2.55774
+              },
+              {
+                "epoch": 2,
+                "train_loss": 0.905016
+              },
+              {
+                "epoch": 3,
+                "train_loss": 0.742769
+              },
+              {
+                "epoch": 4,
+                "train_loss": 0.698973
+              },
+              {
+                "epoch": 5,
+                "train_loss": 0.676478
+              },
+              {
+                "epoch": 6,
+                "train_loss": 0.671156
+              },
+              {
+                "epoch": 7,
+                "train_loss": 0.670303
+              },
+              {
+                "epoch": 8,
+                "train_loss": 0.679799
+              },
+              {
+                "epoch": 9,
+                "train_loss": 0.668661
+              },
+              {
+                "epoch": 10,
+                "train_loss": 0.6596
+              }
+            ]
+          },
+          "finetuned": {
+            "concealed_correct": 66,
+            "concealed_total": 69,
+            "whole_hand_exact": 2,
+            "hands": 5,
+            "opened_gold_correct": 5,
+            "opened_gold_total": 11,
+            "concealed_confusions": {
+              "M6->M5": 1,
+              "M6->M8": 1,
+              "S3->S2": 1
+            },
+            "opened_gold_by_cohort": {
+              "gold_packet": {
+                "correct": 3,
+                "total": 6
+              },
+              "replay": {
+                "correct": 2,
+                "total": 5
+              }
+            }
+          },
+          "opened_gold_predictions": [
+            {
+              "sample_id": "f39bb98a:120",
+              "frame_index": 120,
+              "slot": 16,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "a1806c27da8529063eb6b74073b867869dd85b1190a56448a2d9b8c6afb0236c",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "f39bb98a:216",
+              "frame_index": 216,
+              "slot": 14,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "220ddeeb952ea8643f9d722fa22259ba5ec0a58080faf61448b7e773785edb69",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "f39bb98a:252",
+              "frame_index": 252,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "55ee7b8c9c23c23ab5b5986a65c9cf277c18e7ab3765cbc4a9c90ca929824fa7",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "de1d21b2:1812",
+              "frame_index": 1812,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M4",
+              "template": "M1",
+              "crop_rgb_sha256": "f594daf741c1aca87c8fa70b22ff8a908cadc448b10c0b37a967af1689d1f918",
+              "finetuned": "M4"
+            },
+            {
+              "sample_id": "de1d21b2:2718",
+              "frame_index": 2718,
+              "slot": 13,
+              "role": "opened_gold",
+              "truth": "M4",
+              "template": "M1",
+              "crop_rgb_sha256": "91f16b1d00d1cc04debcdff714e1ac9d5a466281b1824bb1a350fa1f6ee79b58",
+              "finetuned": "M4"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:1628",
+              "frame_index": 1628,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "S8",
+              "template": "S8",
+              "crop_rgb_sha256": "46d006bb0b73b4169d2825fff8757760834f6eb279f65dc824bc629ab71e1812",
+              "finetuned": "S8"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:3256",
+              "frame_index": 3256,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "SOUTH",
+              "template": "SOUTH",
+              "crop_rgb_sha256": "81808622aae9306444475f6237899f105efcf3fc04fad714a11a0b2af051ab09",
+              "finetuned": "M7"
+            },
+            {
+              "sample_id": "gold-packet:55328a7b:4884",
+              "frame_index": 4884,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "39808443356fb0465aa2dbbc505b553a6fcbe392eae55108becfedb7ef05173a",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "gold-packet:4ffc9187:3097",
+              "frame_index": 3097,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "M1",
+              "template": "M1",
+              "crop_rgb_sha256": "3ce7e0ff620296b7e856905489b967b5660aee242e25eacf4c1e4eb7058c1aa8",
+              "finetuned": "G"
+            },
+            {
+              "sample_id": "gold-packet:7a8edc73:1414",
+              "frame_index": 1414,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "P7",
+              "template": "P7",
+              "crop_rgb_sha256": "22593f44ed59b7cfd623027ce93348e1a386567485278e98acb792eab6cb32a3",
+              "finetuned": "P7"
+            },
+            {
+              "sample_id": "gold-packet:7a8edc73:4243",
+              "frame_index": 4243,
+              "slot": 0,
+              "role": "opened_gold",
+              "cohort": "gold_packet",
+              "truth": "P5",
+              "template": "P5",
+              "crop_rgb_sha256": "ddcb95ecd1a6907f2d278790f8a4358089a9aa1d7ffc29812766d8f3d901d932",
+              "finetuned": "P5"
+            }
+          ],
+          "concealed_wrong_predictions": [
+            {
+              "sample_id": "f39bb98a:216",
+              "frame_index": 216,
+              "slot": 0,
+              "role": "concealed",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "d1b361ef8dfdbc73ba78e0fd1abe14f60d550499d931185ef734080b23d8bb72",
+              "finetuned": "M5"
+            },
+            {
+              "sample_id": "f39bb98a:252",
+              "frame_index": 252,
+              "slot": 0,
+              "role": "concealed",
+              "truth": "M6",
+              "template": "M6",
+              "crop_rgb_sha256": "bbca377cdf21488e8ba2b49f0653ac37e9298ff68a66636b87675e9b2ae32174",
+              "finetuned": "M8"
+            },
+            {
+              "sample_id": "de1d21b2:1812",
+              "frame_index": 1812,
+              "slot": 7,
+              "role": "concealed",
+              "truth": "S3",
+              "template": "S3",
+              "crop_rgb_sha256": "fba2202c9e51b8419d75f0e70432d6c28c003fb5ddc82c9e8632cbd508dbe77f",
+              "finetuned": "S2"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "decision": "No full-classifier replacement. Cleaned-crop neural hand candidate matches raw template accuracy on five revealed states, but its Gold ranking regresses. Unfiltered neural Gold gains M4 but loses M1/SOUTH; aggregate ties template. Correct padding augmentation retained as training-input bug fix, not accuracy improvement.",
+  "limits": [
+    "Revealed development evidence only; no independent accuracy/promotion claim.",
+    "Runtime confidence and source support acceptance were not modified; no automatic advice gain.",
+    "Permissive training includes six unresolved source SHAs; possible original-match overlap remains unknown.",
+    "Training comparison uses fixed 10 epochs and fixed hyperparameters; query set not used for gradients or epoch selection; crop/augmentation choices were examined after query exposure.",
+    "Production template candidates use existing product bank, while learned models exclude known query matches/exact SHAs; scores are not calibrated confidence."
+  ]
+}
