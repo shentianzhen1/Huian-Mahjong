@@ -492,3 +492,16 @@ and shanten. Sep26 gains were not newly truth-reviewed. The total window
 counts include additional sampled endpoints. The measured Linux wall times
 were 32.2 → 48.9 s and 17.1 → 24.7 s in separate development runs. There is
 no change to the 0.82 threshold and no live or Windows validation claim.
+
+## Sep26 opening indicator transition (85.8–86.6 s)
+
+Manually reviewed the upper-left indicator on nine original samples, frames
+2574–2598 at a stride of three. The indicator is blank or glowing from
+85.8 to 86.1 s. SOUTH becomes legible at 86.2 s, followed by the stable
+gold-colored SOUTH face at 86.3–86.6 s. The windows ending at 86.0, 86.2
+and 86.4 s cross the reveal animation. Their hand counts stay at 16 and
+their opening identity remains UNKNOWN. The first window containing three
+stable gold-colored SOUTH samples ends at 86.6 s. It displays advice via
+the experimental reference path. This review covers the indicator on one
+development recording. It does not validate earlier acceptance, hand
+identity, or live promotion.
