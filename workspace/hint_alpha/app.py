@@ -9,6 +9,8 @@ import argparse
 from collections import deque
 from dataclasses import asdict, replace
 import math
+import os
+import subprocess
 from pathlib import Path
 import queue
 import threading
@@ -65,13 +67,22 @@ PUBLIC_STATE_MAX_CAPTURE_AGE_SECONDS = 5.0
 class HintAlphaApp(tk.Tk):
     def __init__(self, demo=False, experimental_runtime_advisory=False):
         super().__init__()
-        self.title("惠安麻将 Hint Alpha V0.1 内测")
+        from .video_test import installed_build_info
+
+        build = installed_build_info()
+        build_id = build.get("build")
+        commit = build.get("commit") or ""
+        version_label = f"V{PROJECT_VERSION}"
+        if build_id:
+            version_label += f" · {build_id} · {commit[:8]}"
+        title = f"惠安麻将 Hint Alpha {version_label} 内测"
+        if experimental_runtime_advisory:
+            title += " [UNPROMOTED Runtime]"
+        self.title(title)
         self.geometry("1220x760")
         self.minsize(980, 620)
         self.demo = demo
         self.experimental_runtime_advisory = bool(experimental_runtime_advisory)
-        if self.experimental_runtime_advisory:
-            self.title("惠安麻将 Hint Alpha V0.1 内测 [UNPROMOTED Runtime]")
 
         self.session = None
         self.target = None
@@ -163,7 +174,7 @@ class HintAlphaApp(tk.Tk):
         self.evidence_status = tk.StringVar(value=f"证据目录：{OUTPUT}")
         self.version_status = tk.StringVar(
             value=(
-                f"Project {PROJECT_VERSION} | "
+                f"Project {version_label} | "
                 f"Agent {CURRENT_AGENT_NAME} {CURRENT_AGENT_VERSION} | "
                 f"Rules {DEFAULT_RULE_SNAPSHOT.label} | "
                 f"{DEFAULT_RULE_SNAPSHOT.fingerprint[:12]}"
@@ -178,6 +189,7 @@ class HintAlphaApp(tk.Tk):
         self.video_test_source_status = tk.StringVar(value="尚未选择录像")
         self.video_test_runtime_status = tk.StringVar(value="Runtime Vision：等待测试")
         self.video_test_public_status = tk.StringVar(value="PublicState OCR：等待测试")
+        self.video_test_summary_path = None
         self.video_test_report_status = tk.StringVar(value="报告：尚未生成")
         self.video_test_progress = tk.DoubleVar(value=0.0)
         self.video_test_queue = queue.Queue(maxsize=3)
@@ -496,6 +508,17 @@ class HintAlphaApp(tk.Tk):
             self.video_test_public_status,
         ):
             self._wrapped_status(video_result_frame, variable).pack(fill="x", pady=3)
+        report_buttons = ttk.Frame(video_result_frame)
+        report_buttons.pack(side="bottom", fill="x", pady=(6, 0))
+        self.video_test_open_summary = ttk.Button(
+            report_buttons, text="打开 AI 报告", state="disabled",
+            command=lambda: self._open_replay_output(self.video_test_summary_path),
+        )
+        self.video_test_open_summary.pack(side="left")
+        ttk.Button(
+            report_buttons, text="打开报告文件夹",
+            command=lambda: self._open_replay_output(OUTPUT / "video_tests", folder=True),
+        ).pack(side="left", padx=6)
         report_path = ttk.Entry(video_result_frame, textvariable=self.video_test_report_status,
                                 state="readonly", width=38)
         report_path.pack(side="bottom", fill="x", pady=(6, 0))
@@ -804,6 +827,19 @@ class HintAlphaApp(tk.Tk):
             f"相对对照 {reference[0]}×{reference[1]} 差 {delta:.2f}%"
         )
 
+    def _open_replay_output(self, path, *, folder=False):
+        if path is None:
+            return
+        path = Path(path)
+        try:
+            if folder:
+                path.mkdir(parents=True, exist_ok=True)
+                os.startfile(path)
+            else:
+                subprocess.Popen(["notepad.exe", str(path)])
+        except (AttributeError, OSError) as exc:
+            messagebox.showerror("无法打开复盘输出", str(exc))
+
     def start_video_test(self):
         if self.video_test_running:
             messagebox.showinfo("录像复盘", "请等当前复盘结束或停止后再开始。")
@@ -1086,6 +1122,10 @@ class HintAlphaApp(tk.Tk):
                 suffix = "（已提前停止）" if result.get("stopped_early") else ""
                 if decode_error:
                     suffix = f"（第 {decode_error['frame_index']} 帧解码中断）"
+                self.video_test_summary_path = result.get("summary_path")
+                self.video_test_open_summary.configure(
+                    state="normal" if self.video_test_summary_path else "disabled"
+                )
                 self.video_test_report_status.set(
                     "报告："
                     f"{result.get('report_path', '未写入')} | "

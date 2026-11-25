@@ -7,7 +7,7 @@ This is intentionally separate from RuleSnapshot and agent versions:
 """
 
 PROJECT_NAME = "huian-mahjong-assistant"
-PROJECT_VERSION = "0.2.1"
+PROJECT_VERSION = "0.2.2"
 
 
 def project_manifest():

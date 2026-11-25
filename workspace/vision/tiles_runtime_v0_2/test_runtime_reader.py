@@ -27,6 +27,16 @@ class RuntimeReaderGateTests(unittest.TestCase):
         }
         self.cross_session = {"hand_region": {"M3", "P9"}}
 
+    def test_opened_indicator_accepts_one_approved_source_at_existing_threshold(self):
+        kwargs = dict(region="gold_identity", covered_classes=self.covered,
+                      cross_session_classes={}, confidence_threshold=0.82)
+        self.assertEqual(identity_gate("SOUTH", 0.82, opened_indicator=True, **kwargs),
+                         ("SOUTH", "accepted"))
+        self.assertEqual(identity_gate("SOUTH", 0.81, opened_indicator=True, **kwargs),
+                         ("UNKNOWN", "below_confidence_threshold"))
+        self.assertEqual(identity_gate("SOUTH", 0.82, **kwargs),
+                         ("UNKNOWN", "class_not_cross_session_validated_in_region"))
+
     def gate(self, tile_id: str, confidence: float, covered=None):
         return identity_gate(
             tile_id,

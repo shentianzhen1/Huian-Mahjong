@@ -343,6 +343,11 @@ class DirectVideoRunnerTests(unittest.TestCase):
                 "last_processed_seconds": 0.4,
             })
             self.assertFalse(saved["stopped_early"])
+            summary = json.loads(Path(result["summary_path"]).read_text(encoding="utf-8"))
+            self.assertNotIn("rows", summary)
+            self.assertNotIn("path", summary["source"])
+            self.assertEqual(summary["replay_coverage"], saved["replay_coverage"])
+            self.assertEqual(summary["decode_error"], saved["decode_error"])
             self.assertTrue(report.with_suffix(".timeline.json").exists())
             self.assertTrue(report.with_suffix(".timeline.txt").exists())
 

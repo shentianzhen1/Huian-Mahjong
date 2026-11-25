@@ -138,6 +138,7 @@ def identity_gate(
     covered_classes: set[str],
     cross_session_classes: dict[str, set[str]],
     confidence_threshold: float,
+    opened_indicator: bool = False,
 ) -> tuple[str, str]:
     """Return an exact ID or UNKNOWN with an auditable rejection reason."""
     if (isinstance(confidence_threshold, bool) or not isinstance(confidence_threshold, Real)
@@ -152,7 +153,10 @@ def identity_gate(
     candidate_category = category_for(candidate_tile_id)
     if any(category_for(tile_id) == candidate_category for tile_id in missing):
         return "UNKNOWN", "category_has_missing_standard_class"
-    if candidate_tile_id not in cross_session_classes.get(region, set()):
+    if opened_indicator:
+        if candidate_tile_id not in covered_classes:
+            return "UNKNOWN", "class_missing_approved_opened_gold_reference"
+    elif candidate_tile_id not in cross_session_classes.get(region, set()):
         return "UNKNOWN", "class_not_cross_session_validated_in_region"
     return candidate_tile_id, "accepted"
 
@@ -260,6 +264,7 @@ def _classify_runtime_component(
         covered_classes=covered_by_region.get(gate_region, set()),
         cross_session_classes=cross_session,
         confidence_threshold=confidence_threshold,
+        opened_indicator=component.region_candidate == "gold",
     )
     if (
         gold_skin

@@ -93,6 +93,10 @@ unknown = evaluate_runtime_report(dict(session='smoke', stream_epoch=0,
 assert not unknown.display_allowed and not unknown.safe_for_executor
 app.OUTPUT = root / 'data/hint_alpha'
 window = live_app.LiveHintAlphaApp(demo=True, experimental_runtime_advisory=True)
+assert manifest['project_version'] in window.title()
+assert manifest['commit'][:8] in window.title()
+assert manifest['build'] in window.version_status.get()
+assert str(window.video_test_open_summary['state']) == 'disabled'
 assert window.public_reader.stop_on_score_majority
 assert window.runtime_advice_pipeline is not None
 assert '暂无' in window.hint_latency.get()

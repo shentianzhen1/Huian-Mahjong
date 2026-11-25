@@ -492,14 +492,17 @@ def summarize_video_test(runtime_rows, public_rows, source):
     }
 
 
-def _runtime_environment():
+def installed_build_info():
     build_info = Path(sys.executable).parent.parent / "BUILD_INFO.json"
     try:
         build = json.loads(build_info.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         build = {}
-    if not isinstance(build, dict):
-        build = {}
+    return build if isinstance(build, dict) else {}
+
+
+def _runtime_environment():
+    build = installed_build_info()
     return {
         "platform": platform.system(),
         "python": platform.python_version(),
@@ -918,6 +921,16 @@ def run_video_test(
             "\n".join(render_video_timeline(timeline)) + "\n",
             encoding="utf-8",
         )
+        summary_path = output_path.with_suffix(".summary.json")
+        summary = {key: value for key, value in result.items()
+                   if key not in {"rows", "public_rows", "timeline", "source"}}
+        summary["source"] = {key: value for key, value in source.items() if key != "path"}
+        summary["timeline_event_count"] = len(timeline.get("events", ()))
+        summary_path.write_text(
+            json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        result["summary_path"] = str(summary_path)
         result["report_path"] = str(output_path)
         result["timeline_json_path"] = str(timeline_json)
         result["timeline_text_path"] = str(timeline_text)
