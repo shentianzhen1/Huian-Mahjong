@@ -49,6 +49,7 @@ from .user_guidance import (
     blocked_guidance,
     capture_to_hint_text,
     format_advice_blockers,
+    format_replay_window_blocker,
     format_geometry_region_changes,
     runtime_timing_text,
 )
@@ -1018,7 +1019,7 @@ class HintAlphaApp(tk.Tk):
                     f"{allowed} | 手牌框={diagnostics['hand_boxes']} | "
                     f"已认={diagnostics['hand_identities']} | "
                     f"未知={diagnostics['hand_unknown']} | 金={gold}\n"
-                    + format_advice_blockers({blocker: 1} if blocker else {})
+                    + format_replay_window_blocker(blocker, runtime.get("geometry_issues") or ())
                 )
                 if public.get("error"):
                     self.video_test_public_status.set(

@@ -37,6 +37,15 @@ def format_geometry_region_changes(counts):
     return '\n定位不稳时的牌框数量变化（可重叠）：' + details
 
 
+def format_replay_window_blocker(blocker, geometry_issues):
+    if blocker == 'geometry':
+        if 'no_trusted_frames' in geometry_issues:
+            return '向听暂停：当前窗口没有可用的牌区定位。'
+        if 'layout_not_stable_across_frames' in geometry_issues:
+            return '向听暂停：连续帧的牌区布局不一致，等待画面稳定。'
+    return format_advice_blockers({blocker: 1} if blocker else {})
+
+
 def blocked_guidance(issues, *, geometry_untrusted=False, promotion_blocked=False):
     if geometry_untrusted:
         return '画面或牌面位置尚未稳定。请保持投屏画面完整，等待重新识别。'
