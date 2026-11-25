@@ -480,21 +480,14 @@ class HintAlphaApp(tk.Tk):
         ttk.Checkbutton(
             action_row, text="密集采样（约 0.1 秒）", variable=self.video_test_dense_sampling,
         ).pack(side="left", padx=6)
-        ttk.Label(
-            action_row,
-            text="直接读取原始视频像素；不会上传视频，不经过播放器缩放。",
-        ).pack(side="left", padx=10)
-
-        reference_row = ttk.Frame(video_test)
-        reference_row.pack(fill="x", pady=(0, 8))
         ttk.Checkbutton(
-            reference_row, text="复盘试用识别", variable=self.video_test_reference_trial,
+            range_row, text="复盘试用识别", variable=self.video_test_reference_trial,
         ).pack(side="left")
         ttk.Button(
-            reference_row, text="加载复盘素材",
+            range_row, text="加载复盘素材",
             command=lambda: self.open_hand_reference_packet(replay=True),
         ).pack(side="left", padx=6)
-        ttk.Label(reference_row, textvariable=self.video_test_reference_status).pack(side="left")
+        ttk.Label(action_row, textvariable=self.video_test_reference_status).pack(side="left", padx=10)
 
         self.video_test_bar = ttk.Progressbar(
             video_test, variable=self.video_test_progress, maximum=100
