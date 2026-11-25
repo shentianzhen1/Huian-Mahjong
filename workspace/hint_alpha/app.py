@@ -870,6 +870,7 @@ class HintAlphaApp(tk.Tk):
                 path,
                 start,
                 duration,
+                end,
                 interval,
                 self.video_test_stop,
                 self.video_test_queue,
@@ -891,6 +892,7 @@ class HintAlphaApp(tk.Tk):
         path,
         start,
         duration,
+        selected_end,
         interval,
         stop_event,
         output_queue,
@@ -898,14 +900,9 @@ class HintAlphaApp(tk.Tk):
         reference_packet,
     ):
         try:
-            from .video_test import probe_video, run_video_test
+            from .video_test import run_video_test
 
-            meta = probe_video(path)
-            if duration == 0:
-                selected_end = meta["duration_seconds"]
-            else:
-                selected_end = min(meta["duration_seconds"], start + duration)
-            selected_span = max(0.001, selected_end - start)
+            selected_span = selected_end - start
 
             def emit(message):
                 try:
@@ -930,12 +927,13 @@ class HintAlphaApp(tk.Tk):
                 emit(("progress", progress, payload))
 
             stamp = time.strftime("%Y%m%d_%H%M%S")
+            run_id = time.time_ns()
             safe_stem = "".join(
                 char if char.isalnum() or char in "-_" else "_"
                 for char in Path(path).stem
             )[:60]
             report_path = (
-                OUTPUT / "video_tests" / f"{stamp}_{safe_stem or 'video'}.json"
+                OUTPUT / "video_tests" / f"{stamp}_{run_id}_{safe_stem or 'video'}.json"
             )
             result = run_video_test(
                 path,
